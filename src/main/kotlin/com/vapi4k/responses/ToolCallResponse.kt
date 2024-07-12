@@ -16,10 +16,10 @@
 
 package com.vapi4k.responses
 
-import ToolCallService
 import com.vapi4k.common.JsonExtensions.get
 import com.vapi4k.common.JsonExtensions.jsonList
 import com.vapi4k.common.JsonExtensions.stringValue
+import com.vapi4k.dsl.assistant.ToolCallService
 import com.vapi4k.enums.ToolCallMessageType
 import com.vapi4k.enums.ToolCallRoleType
 import com.vapi4k.enums.ToolCallRoleType.ASSISTANT

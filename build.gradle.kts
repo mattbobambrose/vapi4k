@@ -28,7 +28,7 @@ plugins {
     //id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
-val vstr = "1.0.0"
+val vstr = "1.0.1"
 
 group = "com.vapi4k"
 version = vstr
@@ -76,15 +76,13 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                groupId = "com.vapi4k"
-                artifactId = "vapi4k-core"
-                version = vstr
-                from(components["java"])
-            }
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.vapi4k"
+            artifactId = "vapi4k-core"
+            version = vstr
+            from(components["java"])
         }
     }
 }
