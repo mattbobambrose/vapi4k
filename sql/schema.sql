@@ -1,7 +1,6 @@
 -- drop schema if exists vapi4k cascade;
 
 create schema if not exists vapi4k;
-
 create table if not exists vapi4k.messages
 (
     id            serial primary key,

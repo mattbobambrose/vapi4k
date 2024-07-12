@@ -16,9 +16,6 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -28,10 +25,7 @@ import io.ktor.server.plugins.compression.deflate
 import io.ktor.server.plugins.compression.gzip
 import io.ktor.server.plugins.compression.minimumSize
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.plugins.cors.routing.CORS
-import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.request.path
-import io.ktor.server.response.respondText
 import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
 
@@ -60,11 +54,11 @@ fun Application.configureKtor() {
     })
   }
 
-  install(StatusPages) {
-    exception<Throwable> { call, cause ->
-      call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
-    }
-  }
+//  install(StatusPages) {
+//    exception<Throwable> { call, cause ->
+//      call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
+//    }
+//  }
 
 //  install(ShutDownUrl.ApplicationCallPlugin) {
 //    // The URL that will be intercepted (you can also use the application.conf's ktor.deployment.shutdown.url key)
@@ -74,17 +68,17 @@ fun Application.configureKtor() {
 //  }
 
 
-  install(CORS) {
-    anyHost()
-    allowHeader(HttpHeaders.ContentType)
-    allowHeader(HttpHeaders.AuthenticationInfo)
-    allowHeader(HttpHeaders.Authorization)
-
-    allowMethod(HttpMethod.Get)
-    allowMethod(HttpMethod.Options)
-    allowMethod(HttpMethod.Put)
-    allowMethod(HttpMethod.Patch)
-    allowMethod(HttpMethod.Delete)
-    allowCredentials = true
-  }
+//  install(CORS) {
+//    anyHost()
+//    allowHeader(HttpHeaders.ContentType)
+//    allowHeader(HttpHeaders.AuthenticationInfo)
+//    allowHeader(HttpHeaders.Authorization)
+//
+//    allowMethod(HttpMethod.Get)
+//    allowMethod(HttpMethod.Options)
+//    allowMethod(HttpMethod.Put)
+//    allowMethod(HttpMethod.Patch)
+//    allowMethod(HttpMethod.Delete)
+//    allowCredentials = true
+//  }
 }

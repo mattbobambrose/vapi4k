@@ -48,23 +48,20 @@ repositories {
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("io.ktor:ktor-server-host-common-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-status-pages-jvm:$ktor_version")
+
+    implementation("io.ktor:ktor-server-cio-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-compression-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-html-builder-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-cors:$ktor_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinx_html_version")
-    implementation("org.jetbrains:kotlin-css-jvm:$css_version")
-    implementation("org.postgresql:postgresql:$postgres_version")
-    implementation("com.h2database:h2:$h2_version")
-    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
-    implementation("io.ktor:ktor-server-cio-jvm")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("io.github.oshai:kotlin-logging-jvm:$logging_version")
+
+//    implementation("io.ktor:ktor-server-cors:$ktor_version")
+//    implementation("io.ktor:ktor-server-host-common-jvm:$ktor_version")
+//    implementation("io.ktor:ktor-server-status-pages-jvm:$ktor_version")
+//    implementation("io.ktor:ktor-server-html-builder-jvm:$ktor_version")
+//    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinx_html_version")
+//    implementation("org.jetbrains:kotlin-css-jvm:$css_version")
+
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("com.impossibl.pgjdbc-ng:pgjdbc-ng-all:$pgjdbcVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
@@ -72,6 +69,10 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+
+    implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("io.github.oshai:kotlin-logging-jvm:$logging_version")
+
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
@@ -91,26 +92,22 @@ kotlin {
     jvmToolchain(17)
 }
 
-tasks.register<Jar>("uberJar") {
-    archiveClassifier.set("uber")
-
-    from(sourceSets.main.get().output)
-
-    dependsOn(configurations.runtimeClasspath)
-    from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-    })
-
-    manifest {
-        attributes["Main-Class"] = "com.vapi4k.ApplicationKt"
+tasks {
+    register<Jar>("uberJar") {
+        archiveClassifier.set("uber")
+        from(sourceSets.main.get().output)
+        dependsOn(configurations.runtimeClasspath)
+        from({
+            configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+        })
+        manifest { attributes["Main-Class"] = "com.vapi4k.ApplicationKt" }
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-        listOf("BETA").any { candidate.version.uppercase().contains(it) }
+    withType<DependencyUpdatesTask> {
+        rejectVersionIf {
+            listOf("BETA", "-RC").any { candidate.version.uppercase().contains(it) }
+        }
     }
 }
 
