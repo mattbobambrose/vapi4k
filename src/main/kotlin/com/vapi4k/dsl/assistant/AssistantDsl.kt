@@ -17,6 +17,8 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.Constants.NAME_SEPARATOR
+import com.vapi4k.dsl.assistant.AssistantDsl.populateFunctionDto
+import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject
 import com.vapi4k.plugin.Vapi4kConfig
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
@@ -36,14 +38,17 @@ import kotlin.reflect.full.declaredFunctions
 annotation class AssistantDslMarker
 
 object AssistantDsl {
-  private val Parameter.p: P? get() = annotations.firstOrNull { it is P } as P?
+  private val Parameter.param: Param? get() = annotations.firstOrNull { it is Param } as Param?
   private val Method.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
   private val KFunction<*>.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
   private val Method.hasTool get() = toolCall != null
   private val KFunction<*>.hasTool get() = toolCall != null
   internal val Method.isAsync get() = returnType == Unit::class.java
 
-  fun assistant(config: Vapi4kConfig, block: Assistant.() -> Unit) =
+  fun assistant(
+    config: Vapi4kConfig,
+    block: Assistant.() -> Unit,
+  ) =
     AssistantRequestMessageResponse().apply {
       val assistant = AssistantDto()
       messageResponse.assistant = assistant
@@ -58,20 +63,23 @@ object AssistantDsl {
     val constructors = obj::class.java.constructors
     if (constructors.size != 1) {
       error("Only one constructor is allowed. Found ${constructors.size}")
-    }
-    if (constructors.first().parameterCount != 0) {
+    } else if (constructors.first().parameterCount != 0) {
       error("Constructor must have no parameters")
     }
 
     val methods = obj::class.java.declaredMethods
     val cnt = methods.count { it.hasTool }
-    if (cnt == 0) {
-      error("No methods with @Tool annotation found")
+
+    return when {
+      cnt == 0 ->
+        error("No method with ${ToolCall::class.simpleName} annotation found in class ${obj::class.qualifiedName}")
+
+      cnt > 1 ->
+        error("Only one method with ${ToolCall::class.simpleName} annotation is allowed in class ${obj::class.qualifiedName}")
+
+      else ->
+        methods.first { it.hasTool }
     }
-    if (cnt > 1) {
-      error("Only one method with @Tool annotation is allowed")
-    }
-    return methods.first { it.hasTool }
   }
 
   internal fun populateFunctionDto(
@@ -100,20 +108,23 @@ object AssistantDsl {
 
           jparams
             .zip(kparams)
-            .forEach { (param, kParam) ->
-              val name = kParam.name ?: param.name
+            .forEach { (jParam, kParam) ->
+              val name = kParam.name ?: jParam.name
               if (!kParam.isOptional)
                 parameters.required += name
               parameters.properties!![name] = FunctionPropertyDesc(
-                type = param.llmType,
-                description = param.p?.description ?: "The $name parameter"
+                type = jParam.llmType,
+                description = jParam.param?.description ?: "The $name parameter"
               )
             }
         }
       }
     }
 
-  private class ToolAssist(val toolCall: ToolCall, val method: Method) {
+  private class ToolAssist(
+    val toolCall: ToolCall,
+    val method: Method,
+  ) {
     private val toolHasName: Boolean get() = toolCall.name.isNotEmpty()
     private val toolHasDescription: Boolean get() = toolCall.description.isNotEmpty()
 
@@ -155,14 +166,14 @@ annotation class ToolCall(
 
 @Retention(RUNTIME)
 @Target(VALUE_PARAMETER)
-annotation class P(val description: String)
+annotation class Param(val description: String)
 
 @AssistantDslMarker
 data class Functions(val model: Model) {
   fun function(obj: Any) {
     model.modelDto.functions += FunctionDto().apply {
-      AssistantDsl.verifyObject(obj)
-      AssistantDsl.populateFunctionDto(obj, this)
+      verifyObject(obj)
+      populateFunctionDto(obj, this)
     }.also { func ->
       if (model.modelDto.functions.any { func.name == it.name }) {
         error("Duplicate function name declared: ${func.name}")
