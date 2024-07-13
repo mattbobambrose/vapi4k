@@ -16,11 +16,9 @@
 
 package com.vapi4k.plugin
 
-import com.vapi4k.common.JsonExtensions.get
-import com.vapi4k.common.JsonExtensions.stringValue
-import com.vapi4k.common.Utils.lambda
 import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.dsl.vapi4k.ServerRequestType.Companion.isToolCall
 import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.dsl.vapi4k.ServerRequestType.TOOL_CALL
 import com.vapi4k.plugin.RequestResponseCallback.Companion.requestCallback
@@ -32,6 +30,10 @@ import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantRespo
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.JsonUtils.toJsonElement
+import com.vapi4k.utils.Utils.lambda
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
@@ -55,7 +57,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.concurrent.thread
 import kotlin.time.Duration
 import kotlin.time.measureTimedValue
@@ -99,25 +100,25 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             ASSISTANT_REQUEST -> {
               val response = getAssistantResponse(config, request)
               call.respond(response)
-              lambda { Json.encodeToJsonElement(response) }
+              lambda { response.toJsonElement() }
             }
 
             FUNCTION_CALL -> {
               val response = getFunctionCallResponse(request)
               call.respond(response)
-              lambda { Json.encodeToJsonElement(response) }
+              lambda { response.toJsonElement() }
             }
 
             TOOL_CALL -> {
               val response = getToolCallResponse(request)
               call.respond(response)
-              lambda { Json.encodeToJsonElement(response) }
+              lambda { response.toJsonElement() }
             }
 
             else -> {
               val response = SimpleMessageResponse("$requestType received")
               call.respond(response)
-              lambda { Json.encodeToJsonElement(response) }
+              lambda { response.toJsonElement() }
             }
           }
         }
@@ -137,13 +138,13 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
           invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
 
-          if (requestType != TOOL_CALL) {
+          if (requestType.isToolCall) {
             call.respond(HttpStatusCode.BadRequest, "Invalid message type: requires ToolCallRequest")
           } else {
             val (response, duration) = measureTimedValue {
               val response = getToolCallResponse(request)
               call.respond(response)
-              lambda { Json.encodeToJsonElement(response) }
+              lambda { response.toJsonElement() }
             }
             invokeResponseCallbacks(requestResponseCallbackChannel, requestType, response, duration)
           }
@@ -153,7 +154,10 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 }
 
-fun startRequestCallbackThread(requestResponseCallbackChannel: Channel<RequestResponseCallback>, config: Vapi4kConfig) {
+fun startRequestCallbackThread(
+  requestResponseCallbackChannel: Channel<RequestResponseCallback>,
+  config: Vapi4kConfig,
+) {
   thread {
     while (true) {
       runCatching {
@@ -215,7 +219,7 @@ data class RequestResponseCallback(
   val requestType: ServerRequestType,
   val request: JsonElement? = null,
   val response: (() -> JsonElement)? = null,
-  val elapsed: Duration = Duration.ZERO
+  val elapsed: Duration = Duration.ZERO,
 ) {
   companion object {
     fun requestCallback(

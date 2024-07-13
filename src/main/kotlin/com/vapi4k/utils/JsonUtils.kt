@@ -14,17 +14,20 @@
  *
  */
 
-package com.vapi4k.common
+package com.vapi4k.utils
 
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-object JsonExtensions {
+object JsonUtils {
   val JsonElement.stringValue get() = jsonPrimitive.content
+  val JsonElement.jsonList get() = jsonArray.toList()
 
   private fun JsonElement.element(key: String) =
     jsonObject[key] ?: throw IllegalArgumentException("JsonElement key $key not found")
@@ -34,9 +37,42 @@ object JsonExtensions {
       .fold(this) { acc, key -> acc.element(key) }
 
 
-  val JsonElement.jsonList get() = jsonArray.toList()
+  inline fun <reified T> JsonElement.toObjectList() = jsonArray.map { Json.decodeFromJsonElement<T>(it) }
 
-  inline fun <reified T> JsonElement.toObjList() = jsonArray.map { Json.decodeFromJsonElement<T>(it) }
+  val prettyFormat by lazy { Json { prettyPrint = true } }
+  val rawFormat by lazy { Json { prettyPrint = false } }
 
+  inline fun <reified T> T.toJsonString(prettyPrint: Boolean = false) =
+    (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)
 
+  inline fun <reified T> T.toJsonElement() = Json.encodeToJsonElement(this)
+
+  inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)
+
+  inline fun <reified T> String.toObject() = Json.decodeFromString<T>(this)
 }
+
+
+//@Serializable
+//data class Person(
+//  val name: String,
+//  val age: Int,
+//)
+//
+//fun main() {
+//
+//  val p = Person("John", 25)
+//  val je = p.toJsonElement()
+//  val str = p.toJsonString()
+//
+//  println(je)
+//  println(str)
+//
+//  printObject(je)
+//  logObject(je)
+//  printObject(str)
+//  logObject(str)
+//  logObject(je.toObject<Person>())
+//  logObject(je.toJsonElement())
+//
+//}

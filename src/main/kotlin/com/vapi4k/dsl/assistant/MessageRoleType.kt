@@ -14,10 +14,12 @@
  *
  */
 
-package com.vapi4k.enums
+package com.vapi4k.dsl.assistant
 
-enum class MessageRoleType {
-  SYSTEM, USER, ASSISTANT, TOOL, FUNCTION;
-
-  val roleValue get() = name.lowercase()
+enum class MessageRoleType(val desc: String) {
+  SYSTEM("system"),
+  USER("user"),
+  ASSISTANT("assistant"),
+  TOOL("tool"),
+  FUNCTION("function");
 }

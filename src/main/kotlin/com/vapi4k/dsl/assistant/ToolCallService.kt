@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.enums.ToolCallRoleType.ASSISTANT
+import com.vapi4k.dsl.vapi4k.ToolCallRoleType.ASSISTANT
 import kotlinx.serialization.json.JsonElement
 
 abstract class ToolCallService() {

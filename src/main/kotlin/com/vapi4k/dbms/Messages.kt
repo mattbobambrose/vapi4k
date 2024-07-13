@@ -14,24 +14,25 @@
  *
  */
 
-package com.vapi4k.common
+package com.vapi4k.dbms
 
-import com.vapi4k.dbms.Messages
 import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.plugin.RequestResponseType.REQUEST
 import com.vapi4k.plugin.RequestResponseType.RESPONSE
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.vapi4k.utils.JsonUtils.toJsonString
 import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.time.Duration
 
-object MessageLog {
-  fun insertRequest(type: ServerRequestType, json: JsonElement) {
+object Messages {
+  fun insertRequest(
+    type: ServerRequestType,
+    request: JsonElement,
+  ) {
     transaction {
-      Messages.insert { rec ->
-        val str = Json.encodeToString(json)
+      val str = request.toJsonString(true)
+      MessagesTable.insert { rec ->
         rec[messageType] = REQUEST.name
         rec[requestType] = type.desc
         rec[messageJsonb] = str
@@ -41,10 +42,14 @@ object MessageLog {
     }
   }
 
-  fun insertResponse(type: ServerRequestType, json: JsonElement, elapsed: Duration) {
+  fun insertResponse(
+    type: ServerRequestType,
+    response: JsonElement,
+    elapsed: Duration,
+  ) {
     transaction {
-      Messages.insert { rec ->
-        val str = Json.encodeToString(json)
+      val str = response.toJsonString(true)
+      MessagesTable.insert { rec ->
         rec[messageType] = RESPONSE.name
         rec[requestType] = type.desc
         rec[messageJsonb] = str

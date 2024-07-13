@@ -16,11 +16,10 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.Utils.ensureEndsWith
-import com.vapi4k.common.Utils.trimLeadingSpaces
-import com.vapi4k.enums.MessageRoleType
 import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
+import com.vapi4k.utils.Utils.trimLeadingSpaces
+import kotlin.reflect.KProperty
 
 interface ModelUnion {
   var provider: String
@@ -35,32 +34,13 @@ data class Model(
   internal val assistant: Assistant,
   internal val modelDto: ModelDto,
 ) : ModelUnion by modelDto {
-  internal val config get() = assistant.config
+  private val messages get() = modelDto.messages
 
-  private fun getMessageValue(roleType: MessageRoleType) =
-    with(modelDto.messages.filter { it.role == roleType.roleValue }) {
-      if (isEmpty()) "" else (joinToString("") { it.content }).ensureEndsWith(" ")
-    }
-
-  var assistantMessage: String
-    get() = getMessageValue(MessageRoleType.ASSISTANT)
-    set(content) = modelDto.message(MessageRoleType.ASSISTANT, content)
-
-  var functionMessage: String
-    get() = getMessageValue(MessageRoleType.FUNCTION)
-    set(content) = modelDto.message(MessageRoleType.FUNCTION, content)
-
-  var systemMessage: String
-    get() = getMessageValue(MessageRoleType.SYSTEM)
-    set(content) = modelDto.message(MessageRoleType.SYSTEM, content)
-
-  var toolMessage: String
-    get() = getMessageValue(MessageRoleType.TOOL)
-    set(content) = modelDto.message(MessageRoleType.TOOL, content)
-
-  var userMessage: String
-    get() = getMessageValue(MessageRoleType.USER)
-    set(content) = modelDto.message(MessageRoleType.USER, content)
+  var systemMessage by MessageDelegate(MessageRoleType.SYSTEM)
+  var assistantMessage by MessageDelegate(MessageRoleType.ASSISTANT)
+  var functionMessage by MessageDelegate(MessageRoleType.FUNCTION)
+  var toolMessage by MessageDelegate(MessageRoleType.TOOL)
+  var userMessage by MessageDelegate(MessageRoleType.USER)
 
   fun tools(block: Tools.() -> Unit) {
     Tools(this).apply(block)
@@ -71,14 +51,30 @@ data class Model(
   }
 
   companion object {
-    private fun ModelDto.message(
+    private class MessageDelegate(val messageRoleType: MessageRoleType) {
+      operator fun getValue(
+        model: Model,
+        property: KProperty<*>,
+      ): String {
+        val msgs = model.messages.filter { it.role == messageRoleType.desc }
+        return if (msgs.isEmpty()) "" else (msgs.joinToString("") { it.content })
+      }
+
+      operator fun setValue(
+        model: Model,
+        property: KProperty<*>,
+        newVal: String,
+      ) = model.message(messageRoleType, newVal)
+    }
+
+    private fun Model.message(
       role: MessageRoleType,
       content: String,
     ) {
       // Remove any existing messages with the same role
-      messages.removeAll { it.role == role.roleValue }
-      // We are using trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
-      messages += RoleMessage(role.roleValue, content.trimLeadingSpaces())
+      messages.removeAll { it.role == role.desc }
+      // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
+      messages += RoleMessage(role.desc, content.trimLeadingSpaces())
     }
   }
 }

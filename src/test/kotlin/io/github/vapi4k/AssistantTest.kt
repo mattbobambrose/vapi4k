@@ -16,18 +16,17 @@
 
 package io.github.vapi4k
 
-import com.vapi4k.common.JsonExtensions.get
-import com.vapi4k.common.JsonExtensions.stringValue
 import com.vapi4k.dsl.assistant.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.dsl.assistant.ToolMessageType
 import com.vapi4k.dsl.vapi4k.Vapi4kDsl.configure
-import com.vapi4k.enums.ToolMessageType
 import com.vapi4k.plugin.Vapi4kConfig
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.JsonUtils.toJsonElement
 import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertEquals
 import kotlin.test.Test
@@ -39,10 +38,12 @@ class WeatherLookupService0 {
 }
 
 class AssistantTest {
-  val config = Vapi4kConfig().apply {
-    configure {
-      serverUrl = "HelloWorld"
-      serverUrlSecret = "12345"
+  init {
+    Vapi4kConfig().apply {
+      configure {
+        serverUrl = "HelloWorld"
+        serverUrlSecret = "12345"
+      }
     }
   }
 
@@ -66,7 +67,7 @@ class AssistantTest {
 
 //  @Test
 //  fun testRegular() {
-//    val assistant = assistant(config) {
+//    val assistant = assistant {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -89,7 +90,7 @@ class AssistantTest {
 //
 //  @Test
 //  fun `test reverse delay order`() {
-//    val assistant = assistant(config) {
+//    val assistant = assistant {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -115,7 +116,7 @@ class AssistantTest {
 //
 //  @Test
 //  fun `test message with no millis`() {
-//    val assistant = assistant(config) {
+//    val assistant = assistant {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -138,7 +139,7 @@ class AssistantTest {
 //  @Test
 //  fun `test defective with no delayed message`() {
 //    val exception = assertThrows(IllegalStateException::class.java) {
-//      assistant(config) {
+//      assistant {
 //        firstMessage = messageOne
 //        model {
 //          provider = prov
@@ -161,7 +162,7 @@ class AssistantTest {
 //
 //  @Test
 //  fun `multiple message`() {
-//    val assistant = assistant(config) {
+//    val assistant = assistant {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -187,7 +188,7 @@ class AssistantTest {
 //
 //  @Test
 //  fun `multiple message unordered`() {
-//    val assistant = assistant(config) {
+//    val assistant = assistant {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -213,7 +214,7 @@ class AssistantTest {
 //
 //  @Test
 //  fun `multiple delay time`() {
-//    val assistant = assistant(config) {
+//    val assistant = assistant {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -239,7 +240,7 @@ class AssistantTest {
 //
 //  @Test
 //  fun `multiple message multiple delay time`() {
-//    val assistant = assistant(config) {
+//    val assistant = assistant {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -267,7 +268,7 @@ class AssistantTest {
 //
 //  @Test
 //  fun `chicago illinois message`() {
-//    val assistant = assistant(config) {
+//    val assistant = assistant {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -322,7 +323,6 @@ class AssistantTest {
 //
 //  @Test
 //  fun `chicago illinois message reverse conditions`() {
-//    val assistant = assistant(config) {
 //      firstMessage = messageOne
 //      model {
 //        provider = prov
@@ -384,7 +384,7 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message reverse conditions`() {
-    val assistant = assistant(config) {
+    val assistant = assistant {
       firstMessage = messageOne
       model {
         provider = prov
@@ -448,36 +448,58 @@ class AssistantTest {
   @Test
   fun `check non-default FirstMessageModeType values`() {
     val assistant =
-      assistant(config) {
+      assistant {
         firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
       }
 
-    val element = Json.encodeToJsonElement(assistant)
+    val element = assistant.toJsonElement()
     assertEquals(
-      element.get("assistant.firstMessageMode").stringValue,
-      ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL.desc
+      ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL.desc,
+      element.get("assistant.firstMessageMode").stringValue
     )
   }
 
   @Test
-  fun `check assistant client messages`() {
+  fun `check assistant client messages 1`() {
     val assistant =
-      assistant(config) {
+      assistant {
         clientMessages -= AssistantClientMessageType.HANG
       }
 
-    val element = Json.encodeToJsonElement(assistant)
-    assertEquals(element["assistant.clientMessages"].jsonArray.size, 9)
+    val element = assistant.toJsonElement()
+    assertEquals(9, element["assistant.clientMessages"].jsonArray.size)
   }
 
   @Test
-  fun `check assistant server messages`() {
+  fun `check assistant client messages 2`() {
     val assistant =
-      assistant(config) {
+      assistant {
+        clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
+      }
+
+    val element = assistant.toJsonElement()
+    assertEquals(8, element["assistant.clientMessages"].jsonArray.size)
+  }
+
+  @Test
+  fun `check assistant server messages 1`() {
+    val assistant =
+      assistant {
         serverMessages -= AssistantServerMessageType.HANG
       }
 
-    val element = Json.encodeToJsonElement(assistant)
-    assertEquals(element["assistant.serverMessages"].jsonArray.size, 8)
+    val element = assistant.toJsonElement()
+    assertEquals(8, element["assistant.serverMessages"].jsonArray.size)
+  }
+
+  @Test
+  fun `check assistant server messages 2`() {
+    val assistant =
+      assistant {
+        serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
+      }
+
+    val element = assistant.toJsonElement()
+    assertEquals(7, element["assistant.serverMessages"].jsonArray.size)
   }
 }

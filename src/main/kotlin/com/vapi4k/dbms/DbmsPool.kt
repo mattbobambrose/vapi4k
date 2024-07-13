@@ -22,7 +22,7 @@ import org.jetbrains.exposed.sql.Database
 import kotlin.time.Duration.Companion.minutes
 
 object DbmsPool {
-  private val dbms by lazy {
+  private val database: Database by lazy {
     Database.connect(
       HikariDataSource(
         HikariConfig().apply {
@@ -39,5 +39,5 @@ object DbmsPool {
     )
   }
 
-  fun connectToDbms() = dbms
+  fun connectToDbms() = database
 }

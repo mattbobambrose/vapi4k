@@ -14,28 +14,21 @@
  *
  */
 
-package com.vapi4k.common
+package com.vapi4k.utils
 
 import com.vapi4k.plugin.Vapi4kPlugin.logger
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.vapi4k.utils.JsonUtils.toJsonString
 
 object DslUtils {
-  inline fun <reified T> T.logObject() {
-    val format = Json { prettyPrint = true }
-    val s = format.encodeToString(this)
-    logger.info { "${T::class.simpleName} JSON object:\n$s" }
-  }
+  inline fun <reified T> logObject(
+    value: T,
+    prettify: Boolean = false,
+  ) = logger.info { "${T::class.simpleName} JSON:\n${value?.toJsonString(prettify) ?: ""}" }
 
-  inline fun <reified T> T.printObject(prettify: Boolean = false) {
-    if (this is String) {
-      println(this)
-    } else {
-      val format = Json { prettyPrint = prettify }
-      val s = format.encodeToString(this)
-      println("${T::class.simpleName} JSON object:\n$s")
-    }
-  }
+  inline fun <reified T> printObject(
+    value: T,
+    prettify: Boolean = false,
+  ) = println("${T::class.simpleName} JSON:\n$${value?.toJsonString(prettify) ?: ""}\"")
 
   val isLoggingEnabled: Boolean get() = System.getenv("LOGGING_ENABLED")?.toBoolean() ?: false
 }

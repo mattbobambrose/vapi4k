@@ -27,16 +27,19 @@ import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class AssistantRequestResponse(
-  var destination: Destination = Destination(),
   var assistantId: String = "",
   var assistant: AssistantDto = AssistantDto(),
-  var assistantOverrides: AssistantOverrides? = null,
+  var destination: Destination = Destination(),
+  var assistantOverrides: AssistantOverrides = AssistantOverrides(),
   var squadId: String = "",
-  var squad: Squad? = null,
+  var squad: Squad = Squad(),
   var error: String = "",
 ) {
   companion object {
-    suspend fun getAssistantResponse(config: Vapi4kConfig, request: JsonElement) =
+    internal suspend fun getAssistantResponse(
+      config: Vapi4kConfig,
+      request: JsonElement,
+    ) =
       config.assistantRequest?.invoke(config, request) ?: error("onAssistantRequest{} not called")
   }
 }

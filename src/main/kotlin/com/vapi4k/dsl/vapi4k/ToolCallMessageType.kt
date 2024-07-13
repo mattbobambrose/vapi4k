@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.enums
+package com.vapi4k.dsl.vapi4k
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

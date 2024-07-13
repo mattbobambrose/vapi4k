@@ -47,12 +47,13 @@ interface AssistantUnion {
 }
 
 @AssistantDslMarker
-data class Assistant(
-  internal val config: Vapi4kConfig,
-  internal val assistantDto: AssistantDto,
-) :
+data class Assistant(internal val assistantDto: AssistantDto) :
   AssistantUnion by assistantDto {
   fun model(block: Model.() -> Unit) {
     Model(this, assistantDto.model).apply(block)
+  }
+
+  companion object {
+    internal lateinit var config: Vapi4kConfig
   }
 }

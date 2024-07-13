@@ -19,8 +19,6 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.common.Constants.NAME_SEPARATOR
 import com.vapi4k.dsl.assistant.AssistantDsl.populateFunctionDto
 import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject
-import com.vapi4k.plugin.Vapi4kConfig
-import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.FunctionDto.FunctionParameters.FunctionPropertyDesc
@@ -45,14 +43,9 @@ object AssistantDsl {
   private val KFunction<*>.hasTool get() = toolCall != null
   internal val Method.isAsync get() = returnType == Unit::class.java
 
-  fun assistant(
-    config: Vapi4kConfig,
-    block: Assistant.() -> Unit,
-  ) =
+  fun assistant(block: Assistant.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      val assistant = AssistantDto()
-      messageResponse.assistant = assistant
-      Assistant(config, assistant).apply(block)
+      Assistant(messageResponse.assistant).apply(block)
     }.messageResponse
 
   fun assistantId(id: String) =
@@ -61,7 +54,10 @@ object AssistantDsl {
 
   private val legalTypes = setOf(String::class.java.typeName, Unit::class.java.typeName, "void")
 
-  internal fun verifyObject(isFunction: Boolean, obj: Any): Method {
+  internal fun verifyObject(
+    isFunction: Boolean,
+    obj: Any,
+  ): Method {
     val constructors = obj::class.java.constructors
     if (constructors.size != 1) {
       error("Only one constructor is allowed. Found ${constructors.size}")
