@@ -31,11 +31,14 @@ enum class ToolCallMessageType(val desc: String) {
   override fun toString() = desc
 }
 
-object ToolCallMessageTypeSerializer : KSerializer<ToolCallMessageType> {
+private object ToolCallMessageTypeSerializer : KSerializer<ToolCallMessageType> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", PrimitiveKind.STRING)
 
-  override fun serialize(encoder: Encoder, value: ToolCallMessageType) {
-    encoder.encodeString(value.desc)
+  override fun serialize(
+    encoder: Encoder,
+    messageType: ToolCallMessageType,
+  ) {
+    encoder.encodeString(messageType.desc)
   }
 
   override fun deserialize(decoder: Decoder) =

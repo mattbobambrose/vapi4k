@@ -18,14 +18,12 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.plugin.Vapi4kConfig
 import com.vapi4k.responses.assistant.AssistantDto
-import com.vapi4k.responses.assistant.ModelDto
 
 interface AssistantUnion {
   var name: String
-  var hipaaEnabled: Boolean
   var firstMessage: String
-  var firstMessageMode: String
   var recordingEnabled: Boolean
+  var hipaaEnabled: Boolean
   var serverUrl: String
   var serverUrlSecret: String
   var forwardingPhoneNumber: String
@@ -43,6 +41,7 @@ interface AssistantUnion {
   var backgroundDenoisingEnabled: Boolean
   var modelOutputInMessagesEnabled: Boolean
   var llmRequestNonPunctuatedDelaySeconds: Double
+  var firstMessageMode: FirstMessageModeType
 }
 
 @AssistantDslMarker
@@ -52,8 +51,7 @@ data class Assistant(
 ) :
   AssistantUnion by assistantDto {
   fun model(block: Model.() -> Unit) {
-    val model = ModelDto()
-    assistantDto.model = model
-    Model(this, model).apply(block)
+    Model(this, assistantDto.model).apply(block)
   }
+
 }

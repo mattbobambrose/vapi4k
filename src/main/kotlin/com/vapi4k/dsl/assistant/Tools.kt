@@ -17,6 +17,8 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.dsl.assistant.AssistantDsl.isAsync
+import com.vapi4k.dsl.assistant.AssistantDsl.populateFunctionDto
+import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.enums.ToolMessageType
 import com.vapi4k.responses.assistant.ToolDto
@@ -25,11 +27,11 @@ import com.vapi4k.responses.assistant.ToolDto
 data class Tools(val model: Model) {
   private fun tool(endpoint: Endpoint, obj: Any, block: Tool.() -> Unit) {
     model.modelDto.tools += ToolDto().apply {
-      val method = AssistantDsl.verifyObject(obj)
+      val method = verifyObject(obj)
       type = "function"
       async = method.isAsync
       messages = mutableListOf()
-      AssistantDsl.populateFunctionDto(obj, function)
+      populateFunctionDto(obj, function)
       val tool = Tool(this)
       block(tool)
       if (messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type } == null) {

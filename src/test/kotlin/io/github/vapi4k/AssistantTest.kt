@@ -16,17 +16,31 @@
 
 package io.github.vapi4k
 
-import WeatherLookupService0
+import com.vapi4k.common.JsonExtensions.get
+import com.vapi4k.common.JsonExtensions.stringValue
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
+import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST
+import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
+import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.vapi4k.Vapi4kDsl.configure
 import com.vapi4k.enums.ToolMessageType.REQUEST_COMPLETE
 import com.vapi4k.enums.ToolMessageType.REQUEST_FAILED
 import com.vapi4k.enums.ToolMessageType.REQUEST_RESPONSE_DELAYED
 import com.vapi4k.enums.ToolMessageType.REQUEST_START
 import com.vapi4k.plugin.Vapi4kConfig
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
+
+
+class WeatherLookupService0 {
+  @ToolCall
+  fun func() {
+  }
+}
 
 class AssistantTest {
   val config = Vapi4kConfig().apply {
@@ -344,6 +358,7 @@ class AssistantTest {
         }
       }
     }
+
     with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_START.type && it.conditions.isEmpty() }) {
       assertEquals(startMessage, content)
     }
@@ -370,6 +385,55 @@ class AssistantTest {
       assertEquals(chicagoIllinoisDelayedMessage + "2", content)
       assertEquals(3000, timingMilliseconds)
     }
+  }
+
+  @Test
+  fun `check non-default FirstMessageModeType values`() {
+    val assistant =
+      assistant(config) {
+        firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
+//        model {
+//          provider = prov
+//          model = mod
+//        }
+      }
+
+    val json = Json.encodeToString(assistant)
+    val element = Json.parseToJsonElement(json)
+    assertEquals(
+      element.get("assistant.firstMessageMode").stringValue,
+      ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL.desc
+    )
+  }
+
+  @Test
+  fun `check default FirstMessageModeType values`() {
+    val assistant =
+      assistant(config) {
+        firstMessage = messageOne
+        firstMessageMode = ASSISTANT_SPEAKS_FIRST
+      }
+
+    val json = Json.encodeToString(assistant)
+    val element = Json.parseToJsonElement(json)
+    assertEquals(element.get("assistant.firstMessageMode").stringValue, ASSISTANT_SPEAKS_FIRST.desc)
+  }
+
+  @Test
+  fun `check unassigned FirstMessageModeType values`() {
+    val assistant =
+      assistant(config) {
+        firstMessage = messageOne
+        firstMessageMode = ASSISTANT_SPEAKS_FIRST
+//        model {
+//          provider = prov
+//          model = mod
+//        }
+      }
+
+    val element = Json.encodeToJsonElement(assistant)
+    println(element)
+    assertEquals(element.get("assistant.firstMessageMode").stringValue, ASSISTANT_SPEAKS_FIRST.desc)
   }
 
 }
