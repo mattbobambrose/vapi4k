@@ -23,11 +23,12 @@ import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST
 import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.vapi4k.Vapi4kDsl.configure
+import com.vapi4k.enums.ToolMessageType
 import com.vapi4k.plugin.Vapi4kConfig
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
-import org.junit.Assert.assertThrows
+import org.junit.Assert.assertEquals
 import kotlin.test.Test
 
 class WeatherLookupService0 {
@@ -415,29 +416,29 @@ class AssistantTest {
       }
     }
 
-    with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_START.type && it.conditions.isEmpty() }) {
+    with(assistant.assistant.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isEmpty() }) {
       assertEquals(startMessage, content)
     }
-    with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_COMPLETE.type && it.conditions.isEmpty() }) {
+    with(assistant.assistant.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isEmpty() }) {
       assertEquals(completeMessage, content)
     }
-    with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_FAILED.type && it.conditions.isEmpty() }) {
+    with(assistant.assistant.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isEmpty() }) {
       assertEquals(failedMessage, content)
     }
-    with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_RESPONSE_DELAYED.type && it.conditions.isEmpty() }) {
+    with(assistant.assistant.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isEmpty() }) {
       assertEquals(delayedMessage, content)
       assertEquals(1000, timingMilliseconds)
     }
-    with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_START.type && it.conditions.isNotEmpty() }) {
+    with(assistant.assistant.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isNotEmpty() }) {
       assertEquals(chicagoIllinoisStartMessage + "2", content)
     }
-    with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_COMPLETE.type && it.conditions.isNotEmpty() }) {
+    with(assistant.assistant.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isNotEmpty() }) {
       assertEquals(chicagoIllinoisCompleteMessage + "2", content)
     }
-    with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_FAILED.type && it.conditions.isNotEmpty() }) {
+    with(assistant.assistant.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isNotEmpty() }) {
       assertEquals(chicagoIllinoisFailedMessage + "2", content)
     }
-    with(assistant.assistant.model.tools.first().messages.single { it.type == REQUEST_RESPONSE_DELAYED.type && it.conditions.isNotEmpty() }) {
+    with(assistant.assistant.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isNotEmpty() }) {
       assertEquals(chicagoIllinoisDelayedMessage + "2", content)
       assertEquals(3000, timingMilliseconds)
     }

@@ -72,23 +72,21 @@ object AssistantDsl {
     val methods = obj::class.java.declaredMethods
     val cnt = methods.count { it.hasTool }
 
-    return when {
+    when {
       cnt == 0 ->
         error("No method with ${ToolCall::class.simpleName} annotation found in class ${obj::class.qualifiedName}")
 
       cnt > 1 ->
         error("Only one method with ${ToolCall::class.simpleName} annotation is allowed in class ${obj::class.qualifiedName}")
+    }
 
-      else ->
-        methods.first { it.hasTool }
+    return with(methods.first { it.hasTool }) {
+      if (returnType.name in legalTypes) this
+      else {
+        val str = if (isFunction) "Function" else "Tool"
+        error("$str $name must return a String or Unit, but instead returns ${returnType.name}")
+      }
     }
-    
-    val method = methods.first { it.hasTool }
-    if (method.returnType.name !in legalTypes) {
-      val str = if (isFunction) "Function" else "Tool"
-      error("$str ${method.name} must return a String or Unit, but instead returns ${method.returnType.name}")
-    }
-    return methods.first { it.hasTool }
   }
 
   internal fun populateFunctionDto(

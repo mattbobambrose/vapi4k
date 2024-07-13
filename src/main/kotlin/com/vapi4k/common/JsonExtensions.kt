@@ -26,7 +26,8 @@ import kotlinx.serialization.json.jsonPrimitive
 object JsonExtensions {
   val JsonElement.stringValue get() = jsonPrimitive.content
 
-  private fun JsonElement.element(key: String) = jsonObject[key] ?: throw IllegalArgumentException("Key $key not found")
+  private fun JsonElement.element(key: String) =
+    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key $key not found")
 
   operator fun JsonElement.get(vararg keys: String): JsonElement =
     keys.flatMap { it.split(".") }
