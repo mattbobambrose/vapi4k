@@ -23,14 +23,18 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 
 object ResponseUtils {
+  private val voidTypes = setOf(Unit::class.java.typeName, "void")
+
   fun invokeMethod(
     service: Any,
     methodName: String,
     args: JsonElement,
   ): String {
     val method = service::class.java.declaredMethods.single { it.name == methodName }
+    val isVoid = method.returnType.typeName in voidTypes
     val argNames = args.jsonObject.keys
-    return method.invoke(service, *argNames.map { args[it].stringValue }.toTypedArray<String>()).toString()
+    val result = method.invoke(service, *argNames.map { args[it].stringValue }.toTypedArray<String>())
+    return if (isVoid) "" else result.toString()
   }
 
   fun deriveNames(funcName: String): Pair<String, String> {
