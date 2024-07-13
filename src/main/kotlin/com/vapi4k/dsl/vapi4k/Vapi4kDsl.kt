@@ -61,7 +61,7 @@ object Vapi4kDsl {
   fun Vapi4kConfig.onRequest(
     requestType: ServerRequestType,
     vararg requestTypes: ServerRequestType,
-    block: suspend (request: JsonElement) -> Unit,
+    block: suspend (requestType: ServerRequestType, request: JsonElement) -> Unit,
   ) {
     perRequests += requestType to block
     requestTypes.forEach { perRequests += it to block }
@@ -76,7 +76,7 @@ object Vapi4kDsl {
   fun Vapi4kConfig.onResponse(
     requestType: ServerRequestType,
     vararg requestTypes: ServerRequestType,
-    block: suspend (request: JsonElement, elapsed: Duration) -> Unit,
+    block: suspend (requestType: ServerRequestType, request: JsonElement, elapsed: Duration) -> Unit,
   ) {
     perResponses += requestType to block
     requestTypes.forEach { perResponses += it to block }

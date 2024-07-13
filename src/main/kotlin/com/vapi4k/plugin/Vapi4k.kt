@@ -170,8 +170,8 @@ fun startRequestCallbackThread(
                     config.allRequests.forEach { launch { it.invoke(requestType, request!!) } }
                     config.perRequests
                       .filter { it.first == requestType }
-                      .forEach { (_, block) ->
-                        launch { block(request!!) }
+                      .forEach { (reqType, block) ->
+                        launch { block(reqType, request!!) }
                       }
                   }
 
@@ -186,8 +186,8 @@ fun startRequestCallbackThread(
                       config.allResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
                       config.perResponses
                         .filter { it.first == requestType }
-                        .forEach { (_, block) ->
-                          launch { block(resp, elapsed) }
+                        .forEach { (reqType, block) ->
+                          launch { block(reqType, resp, elapsed) }
                         }
                     }
                   }

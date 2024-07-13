@@ -35,10 +35,11 @@ class Vapi4kConfig {
   internal var assistantRequest: (suspend (config: Vapi4kConfig, request: JsonElement) -> AssistantRequestResponse)? =
     null
   internal var allRequests = mutableListOf<(suspend (requestType: ServerRequestType, request: JsonElement) -> Unit)>()
-  internal val perRequests = mutableListOf<Pair<ServerRequestType, suspend (JsonElement) -> Unit>>()
+  internal val perRequests = mutableListOf<Pair<ServerRequestType, suspend (ServerRequestType, JsonElement) -> Unit>>()
   internal val allResponses =
     mutableListOf<(suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit)>()
-  internal val perResponses = mutableListOf<Pair<ServerRequestType, suspend (JsonElement, Duration) -> Unit>>()
+  internal val perResponses =
+    mutableListOf<Pair<ServerRequestType, suspend (ServerRequestType, JsonElement, Duration) -> Unit>>()
 
   internal val configProperties: Vapi4kConfigProperties = Vapi4kConfigProperties()
   internal val toolCallEndpoints = mutableListOf<Endpoint>()
