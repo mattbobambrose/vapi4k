@@ -23,9 +23,9 @@ import com.vapi4k.responses.assistant.ToolDto
 
 @AssistantDslMarker
 data class Tools(val model: Model) {
-  private fun tool(endpoint: Endpoint, obj: Any, block: Tool.() -> Unit) {
+  private fun addTool(endpoint: Endpoint, obj: Any, block: Tool.() -> Unit) {
     model.modelDto.tools += ToolDto().apply {
-      val method = AssistantDsl.verifyObject(obj)
+      val method = AssistantDsl.verifyObject(false, obj)
       type = "function"
       async = method.isAsync
       messages = mutableListOf()
@@ -52,13 +52,13 @@ data class Tools(val model: Model) {
     }
   }
 
-  fun tool(endpointName: String = "", obj: Any, block: Tool.() -> Unit) {
+  fun tool(endpointName: String = "", obj: Any, block: Tool.() -> Unit = {}) {
     val endpoint = model.config.getEndpoint(endpointName)
-    tool(endpoint, obj, block)
+    addTool(endpoint, obj, block)
   }
 
-  fun tool(obj: Any, block: Tool.() -> Unit) {
+  fun tool(obj: Any, block: Tool.() -> Unit = {}) {
     val endpoint = model.config.getEmptyEndpoint() ?: model.config.defaultToolCallEndpoint
-    tool(endpoint, obj, block)
+    addTool(endpoint, obj, block)
   }
 }

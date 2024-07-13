@@ -30,7 +30,8 @@ object ResponseUtils {
   ): String {
     val method = service::class.java.declaredMethods.single { it.name == methodName }
     val argNames = args.jsonObject.keys
-    return method.invoke(service, *argNames.map { args[it].stringValue }.toTypedArray<String>()).toString()
+    val result = method.invoke(service, *argNames.map { args[it].stringValue }.toTypedArray<String>())
+    return if (result is Unit) "" else result.toString()
   }
 
   fun deriveNames(funcName: String): Pair<String, String> {

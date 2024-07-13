@@ -54,7 +54,9 @@ object AssistantDsl {
     AssistantRequestMessageResponse()
       .apply { messageResponse.assistantId = id }.messageResponse
 
-  internal fun verifyObject(obj: Any): Method {
+  private val legalTypes = setOf(String::class.java.typeName, Unit::class.java.typeName, "void")
+
+  internal fun verifyObject(isFunction: Boolean, obj: Any): Method {
     val constructors = obj::class.java.constructors
     if (constructors.size != 1) {
       error("Only one constructor is allowed. Found ${constructors.size}")
@@ -70,6 +72,12 @@ object AssistantDsl {
     }
     if (cnt > 1) {
       error("Only one method with @Tool annotation is allowed")
+    }
+    val method = methods.first { it.hasTool }
+
+    if (method.returnType.name !in legalTypes) {
+      val str = if (isFunction) "Function" else "Tool"
+      error("$str ${method.name} must return a String or Unit, but instead returns ${method.returnType.name}")
     }
     return methods.first { it.hasTool }
   }
@@ -161,7 +169,7 @@ annotation class P(val description: String)
 data class Functions(val model: Model) {
   fun function(obj: Any) {
     model.modelDto.functions += FunctionDto().apply {
-      AssistantDsl.verifyObject(obj)
+      AssistantDsl.verifyObject(true, obj)
       AssistantDsl.populateFunctionDto(obj, this)
     }.also { func ->
       if (model.modelDto.functions.any { func.name == it.name }) {
