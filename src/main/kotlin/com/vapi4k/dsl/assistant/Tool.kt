@@ -16,11 +16,10 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.enums.ToolMessageType
-import com.vapi4k.enums.ToolMessageType.REQUEST_COMPLETE
-import com.vapi4k.enums.ToolMessageType.REQUEST_FAILED
-import com.vapi4k.enums.ToolMessageType.REQUEST_RESPONSE_DELAYED
-import com.vapi4k.enums.ToolMessageType.REQUEST_START
+import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_COMPLETE
+import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_FAILED
+import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_RESPONSE_DELAYED
+import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_START
 import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.responses.assistant.ToolMessage
 import com.vapi4k.responses.assistant.ToolMessageCondition

@@ -16,6 +16,7 @@
 
 package com.vapi4k.plugin
 
+import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
@@ -26,6 +27,11 @@ import kotlin.time.Duration
 
 @Vapi4KDslMarker
 class Vapi4kConfig {
+
+  init {
+    Assistant.config = this
+  }
+
   internal var assistantRequest: (suspend (config: Vapi4kConfig, request: JsonElement) -> AssistantRequestResponse)? =
     null
   internal var allRequests = mutableListOf<(suspend (requestType: ServerRequestType, request: JsonElement) -> Unit)>()

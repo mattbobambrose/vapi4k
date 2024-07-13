@@ -14,11 +14,11 @@
  *
  */
 
-package com.vapi4k.enums
+package com.vapi4k.dsl.assistant
 
 enum class ToolMessageType(val type: String) {
   REQUEST_START("request-start"),
   REQUEST_COMPLETE("request-complete"),
   REQUEST_FAILED("request-failed"),
-  REQUEST_RESPONSE_DELAYED("request-response-delayed")
+  REQUEST_RESPONSE_DELAYED("request-response-delayed");
 }

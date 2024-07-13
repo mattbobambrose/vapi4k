@@ -16,10 +16,10 @@
 
 package io.github.vapi4k
 
-import com.vapi4k.common.JsonExtensions.get
-import com.vapi4k.common.JsonExtensions.jsonList
-import com.vapi4k.common.JsonExtensions.stringValue
-import com.vapi4k.common.JsonExtensions.toObjList
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.jsonList
+import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.JsonUtils.toObjectList
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
@@ -356,7 +356,7 @@ class JsonExtensionTest {
     )
 
     val je = Json.parseToJsonElement(j)
-    val k = je["servers"].toObjList<Server>()
+    val k = je["servers"].toObjectList<Server>()
     for (server in k) {
       println(server.url)
     }

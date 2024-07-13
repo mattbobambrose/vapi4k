@@ -20,12 +20,15 @@ import com.vapi4k.dsl.assistant.AssistantDsl.isAsync
 import com.vapi4k.dsl.assistant.AssistantDsl.populateFunctionDto
 import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject
 import com.vapi4k.dsl.vapi4k.Endpoint
-import com.vapi4k.enums.ToolMessageType
 import com.vapi4k.responses.assistant.ToolDto
 
 @AssistantDslMarker
 data class Tools(val model: Model) {
-  private fun addTool(endpoint: Endpoint, obj: Any, block: Tool.() -> Unit) {
+  private fun addTool(
+    endpoint: Endpoint,
+    obj: Any,
+    block: Tool.() -> Unit,
+  ) {
     model.modelDto.tools += ToolDto().apply {
       val method = verifyObject(false, obj)
       type = "function"
@@ -54,13 +57,20 @@ data class Tools(val model: Model) {
     }
   }
 
-  fun tool(endpointName: String = "", obj: Any, block: Tool.() -> Unit = {}) {
-    val endpoint = model.config.getEndpoint(endpointName)
+  fun tool(
+    endpointName: String = "",
+    obj: Any,
+    block: Tool.() -> Unit = {},
+  ) {
+    val endpoint = Assistant.config.getEndpoint(endpointName)
     addTool(endpoint, obj, block)
   }
 
-  fun tool(obj: Any, block: Tool.() -> Unit = {}) {
-    val endpoint = model.config.getEmptyEndpoint() ?: model.config.defaultToolCallEndpoint
+  fun tool(
+    obj: Any,
+    block: Tool.() -> Unit = {},
+  ) {
+    val endpoint = with(Assistant.config) { getEmptyEndpoint() ?: defaultToolCallEndpoint }
     addTool(endpoint, obj, block)
   }
 }

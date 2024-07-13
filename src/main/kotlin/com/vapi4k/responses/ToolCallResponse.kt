@@ -16,19 +16,19 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.common.JsonExtensions.get
-import com.vapi4k.common.JsonExtensions.jsonList
-import com.vapi4k.common.JsonExtensions.stringValue
 import com.vapi4k.dsl.assistant.ToolCallService
-import com.vapi4k.enums.ToolCallMessageType
-import com.vapi4k.enums.ToolCallMessageType.REQUEST_COMPLETE
-import com.vapi4k.enums.ToolCallMessageType.REQUEST_FAILED
-import com.vapi4k.enums.ToolCallRoleType
-import com.vapi4k.enums.ToolCallRoleType.ASSISTANT
+import com.vapi4k.dsl.vapi4k.ToolCallMessageType
+import com.vapi4k.dsl.vapi4k.ToolCallMessageType.REQUEST_COMPLETE
+import com.vapi4k.dsl.vapi4k.ToolCallMessageType.REQUEST_FAILED
+import com.vapi4k.dsl.vapi4k.ToolCallRoleType
+import com.vapi4k.dsl.vapi4k.ToolCallRoleType.ASSISTANT
 import com.vapi4k.plugin.Vapi4kPlugin.logger
 import com.vapi4k.responses.ResponseUtils.deriveNames
 import com.vapi4k.responses.ResponseUtils.invokeMethod
 import com.vapi4k.responses.assistant.ToolMessageCondition
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.jsonList
+import com.vapi4k.utils.JsonUtils.stringValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 

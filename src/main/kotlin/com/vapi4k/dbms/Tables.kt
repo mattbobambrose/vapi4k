@@ -14,12 +14,19 @@
  *
  */
 
-package com.vapi4k.common
+package com.vapi4k.dbms
 
-object Utils {
-  internal fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
-  internal fun String.ensureEndsWith(s: String) = if (endsWith(s)) this else this + s
-  internal fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import org.jetbrains.exposed.sql.kotlin.datetime.duration
 
-  fun <T> lambda(block: T) = block
+object MessagesTable : IntIdTable("vapi4k.messages") {
+  val created = datetime("created")
+  val messageType = text("message_type")
+  val requestType = text("request_type")
+
+  //  val messageJsonb = jsonb("message_jsonb", format)
+  val messageJsonb = text("message_jsonb")
+  val messageJson = text("message_json")
+  val elapsedTime = duration("elapsed_time")
 }

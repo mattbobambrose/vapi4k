@@ -30,6 +30,12 @@ import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
 
 fun Application.configureKtor() {
+  install(ContentNegotiation) {
+    json(Json {
+      ignoreUnknownKeys = true
+    })
+  }
+
   install(Compression) {
     gzip {
       priority = 1.0
@@ -45,40 +51,4 @@ fun Application.configureKtor() {
     filter { call -> call.request.path().startsWith("/") }
   }
 
-  install(ContentNegotiation) {
-    json(Json {
-      prettyPrint = true
-      isLenient = true
-      ignoreUnknownKeys = true
-//    encodeDefaults = false
-    })
-  }
-
-//  install(StatusPages) {
-//    exception<Throwable> { call, cause ->
-//      call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
-//    }
-//  }
-
-//  install(ShutDownUrl.ApplicationCallPlugin) {
-//    // The URL that will be intercepted (you can also use the application.conf's ktor.deployment.shutdown.url key)
-//    shutDownUrl = "/ktor/application/shutdown"
-//    // A function that will be executed to get the exit code of the process
-//    exitCodeSupplier = { 0 } // ApplicationCall.() -> Int
-//  }
-
-
-//  install(CORS) {
-//    anyHost()
-//    allowHeader(HttpHeaders.ContentType)
-//    allowHeader(HttpHeaders.AuthenticationInfo)
-//    allowHeader(HttpHeaders.Authorization)
-//
-//    allowMethod(HttpMethod.Get)
-//    allowMethod(HttpMethod.Options)
-//    allowMethod(HttpMethod.Put)
-//    allowMethod(HttpMethod.Patch)
-//    allowMethod(HttpMethod.Delete)
-//    allowCredentials = true
-//  }
 }

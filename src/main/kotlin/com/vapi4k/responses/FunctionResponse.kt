@@ -16,11 +16,11 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.common.JsonExtensions.get
-import com.vapi4k.common.JsonExtensions.stringValue
 import com.vapi4k.plugin.Vapi4kPlugin.logger
 import com.vapi4k.responses.ResponseUtils.deriveNames
 import com.vapi4k.responses.ResponseUtils.invokeMethod
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.stringValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 

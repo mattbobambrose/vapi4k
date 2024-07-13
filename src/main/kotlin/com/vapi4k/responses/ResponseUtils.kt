@@ -17,8 +17,8 @@
 package com.vapi4k.responses
 
 import com.vapi4k.common.Constants
-import com.vapi4k.common.JsonExtensions.get
-import com.vapi4k.common.JsonExtensions.stringValue
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 
