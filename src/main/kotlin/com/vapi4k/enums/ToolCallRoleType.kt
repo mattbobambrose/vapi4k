@@ -29,11 +29,14 @@ enum class ToolCallRoleType(val desc: String) {
   ASSISTANT("assistant"), SYSTEM("system");
 }
 
-object ToolCallRoleSerializer : KSerializer<ToolCallRoleType> {
+private object ToolCallRoleSerializer : KSerializer<ToolCallRoleType> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallRole", PrimitiveKind.STRING)
 
-  override fun serialize(encoder: Encoder, value: ToolCallRoleType) {
-    encoder.encodeString(value.desc)
+  override fun serialize(
+    encoder: Encoder,
+    roleType: ToolCallRoleType,
+  ) {
+    encoder.encodeString(roleType.desc)
   }
 
   override fun deserialize(decoder: Decoder) =

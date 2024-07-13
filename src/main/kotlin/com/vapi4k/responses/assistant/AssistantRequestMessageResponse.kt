@@ -16,7 +16,6 @@
 
 package com.vapi4k.responses.assistant
 
-
 import com.vapi4k.responses.AssistantRequestResponse
 import kotlinx.serialization.Serializable
 

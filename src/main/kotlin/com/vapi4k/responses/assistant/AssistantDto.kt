@@ -16,15 +16,18 @@
 
 package com.vapi4k.responses.assistant
 
-
 import com.vapi4k.dsl.assistant.AssistantUnion
+import com.vapi4k.dsl.assistant.FirstMessageModeType
+import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.EncodeDefault.Mode
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssistantDto(
   override var name: String = "",
+  @EncodeDefault(Mode.ALWAYS)
   override var firstMessage: String = "",
-  override var firstMessageMode: String = "",
   override var recordingEnabled: Boolean = false,
   override var hipaaEnabled: Boolean = false,
   override var serverUrl: String = "",
@@ -45,6 +48,10 @@ data class AssistantDto(
   override var backgroundDenoisingEnabled: Boolean = false,
   override var modelOutputInMessagesEnabled: Boolean = false,
   override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
+
+  // Set via enum
+  @EncodeDefault(Mode.ALWAYS)
+  override var firstMessageMode: FirstMessageModeType = ASSISTANT_SPEAKS_FIRST,
 
   var model: ModelDto = ModelDto(),
   var transcriber: Transcriber = Transcriber(),

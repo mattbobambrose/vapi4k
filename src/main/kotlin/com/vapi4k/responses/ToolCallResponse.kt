@@ -21,6 +21,8 @@ import com.vapi4k.common.JsonExtensions.jsonList
 import com.vapi4k.common.JsonExtensions.stringValue
 import com.vapi4k.dsl.assistant.ToolCallService
 import com.vapi4k.enums.ToolCallMessageType
+import com.vapi4k.enums.ToolCallMessageType.REQUEST_COMPLETE
+import com.vapi4k.enums.ToolCallMessageType.REQUEST_FAILED
 import com.vapi4k.enums.ToolCallRoleType
 import com.vapi4k.enums.ToolCallRoleType.ASSISTANT
 import com.vapi4k.plugin.Vapi4kPlugin.logger
@@ -103,12 +105,12 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
 
     private fun ToolCallResult.requestCompleteMessage(
       msg: String,
-      role: ToolCallRoleType = ASSISTANT,
+      roleType: ToolCallRoleType = ASSISTANT,
       vararg conditions: ToolMessageCondition,
     ) {
       message += ToolCallMessage().apply {
-        type = ToolCallMessageType.REQUEST_COMPLETE
-        this.role = role
+        type = REQUEST_COMPLETE
+        role = roleType
         content = msg
         if (conditions.isNotEmpty()) {
           this.conditions = conditions.toList()
@@ -121,7 +123,7 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
       vararg conditions: ToolMessageCondition,
     ) {
       message += ToolCallMessage().apply {
-        type = ToolCallMessageType.REQUEST_FAILED
+        type = REQUEST_FAILED
         content = msg
         if (conditions.isNotEmpty()) {
           this.conditions = conditions.toList()
