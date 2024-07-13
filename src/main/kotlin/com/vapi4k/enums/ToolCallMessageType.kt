@@ -26,9 +26,8 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ToolCallMessageTypeSerializer::class)
 enum class ToolCallMessageType(val desc: String) {
-  REQUEST_COMPLETE("request-complete"), REQUEST_FAILED("request-failed");
-
-  override fun toString() = desc
+  REQUEST_COMPLETE("request-complete"),
+  REQUEST_FAILED("request-failed");
 }
 
 private object ToolCallMessageTypeSerializer : KSerializer<ToolCallMessageType> {
@@ -36,9 +35,9 @@ private object ToolCallMessageTypeSerializer : KSerializer<ToolCallMessageType> 
 
   override fun serialize(
     encoder: Encoder,
-    messageType: ToolCallMessageType,
+    value: ToolCallMessageType,
   ) {
-    encoder.encodeString(messageType.desc)
+    encoder.encodeString(value.desc)
   }
 
   override fun deserialize(decoder: Decoder) =

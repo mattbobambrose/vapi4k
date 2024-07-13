@@ -20,9 +20,9 @@ private object FirstMessageModeTypeSerializer : KSerializer<FirstMessageModeType
 
   override fun serialize(
     encoder: Encoder,
-    modeType: FirstMessageModeType,
+    value: FirstMessageModeType,
   ) {
-    encoder.encodeString(modeType.desc)
+    encoder.encodeString(value.desc)
   }
 
   override fun deserialize(decoder: Decoder) =

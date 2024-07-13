@@ -42,6 +42,8 @@ interface AssistantUnion {
   var modelOutputInMessagesEnabled: Boolean
   var llmRequestNonPunctuatedDelaySeconds: Double
   var firstMessageMode: FirstMessageModeType
+  var clientMessages: MutableSet<AssistantClientMessageType>
+  var serverMessages: MutableSet<AssistantServerMessageType>
 }
 
 @AssistantDslMarker
@@ -53,5 +55,4 @@ data class Assistant(
   fun model(block: Model.() -> Unit) {
     Model(this, assistantDto.model).apply(block)
   }
-
 }

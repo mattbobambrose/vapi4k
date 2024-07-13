@@ -16,17 +16,16 @@
 
 package com.vapi4k.responses.assistant
 
+import com.vapi4k.dsl.assistant.AssistantClientMessageType
+import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.AssistantUnion
 import com.vapi4k.dsl.assistant.FirstMessageModeType
 import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST
-import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.EncodeDefault.Mode
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssistantDto(
   override var name: String = "",
-  @EncodeDefault(Mode.ALWAYS)
   override var firstMessage: String = "",
   override var recordingEnabled: Boolean = false,
   override var hipaaEnabled: Boolean = false,
@@ -38,7 +37,7 @@ data class AssistantDto(
   override var dialKeypadFunctionEnabled: Boolean = false,
   override var responseDelaySeconds: Double = 0.0,
   override var llmRequestDelaySeconds: Double = 0.0,
-  override var silenceTimeoutSeconds: Int = 0,
+  override var silenceTimeoutSeconds: Int = 30,
   override var maxDurationSeconds: Int = 0,
   override var backgroundSound: String = "",
   override var numWordsToInterruptAssistant: Int = 0,
@@ -49,13 +48,13 @@ data class AssistantDto(
   override var modelOutputInMessagesEnabled: Boolean = false,
   override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
 
-  // Set via enum
-  @EncodeDefault(Mode.ALWAYS)
-  override var firstMessageMode: FirstMessageModeType = ASSISTANT_SPEAKS_FIRST,
-
-  var model: ModelDto = ModelDto(),
   var transcriber: Transcriber = Transcriber(),
+  var model: ModelDto = ModelDto(),
   var voice: Voice = Voice(),
+
+  // Set via enum
+  // @EncodeDefault(Mode.ALWAYS)
+  override var firstMessageMode: FirstMessageModeType = ASSISTANT_SPEAKS_FIRST,
 
   var voicemailDetection: VoicemailDetection? = null,
   var metadata: Metadata? = null,
@@ -63,7 +62,33 @@ data class AssistantDto(
   var artifactPlan: ArtifactPlan? = null,
   var messagePlan: MessagePlan? = null,
 
-  var clientMessages: MutableList<String> = mutableListOf(),
-  var serverMessages: MutableList<String> = mutableListOf(),
+  override var clientMessages: MutableSet<AssistantClientMessageType> =
+    mutableSetOf(
+      AssistantClientMessageType.CONVERSATION_UPDATE,
+      AssistantClientMessageType.FUNCTION_CALL,
+      AssistantClientMessageType.HANG,
+      AssistantClientMessageType.MODEL_OUTPUT,
+      AssistantClientMessageType.SPEECH_UPDATE,
+      AssistantClientMessageType.STATUS_UPDATE,
+      AssistantClientMessageType.TRANSCRIPT,
+      AssistantClientMessageType.TOOL_CALLS,
+      AssistantClientMessageType.USER_INTERRUPTED,
+      AssistantClientMessageType.VOICE_INPUT,
+    ),
+
+  override var serverMessages: MutableSet<AssistantServerMessageType> =
+    mutableSetOf(
+      AssistantServerMessageType.CONVERSATION_UPDATE,
+      AssistantServerMessageType.END_OF_CALL_REPORT,
+      AssistantServerMessageType.FUNCTION_CALL,
+      AssistantServerMessageType.HANG,
+      AssistantServerMessageType.SPEECH_UPDATE,
+      AssistantServerMessageType.STATUS_UPDATE,
+      AssistantServerMessageType.TOOL_CALLS,
+      AssistantServerMessageType.TRANSFER_DESTINATION_REQUEST,
+      AssistantServerMessageType.USER_INTERRUPTED,
+    ),
+
   var endCallPhrases: MutableList<String> = mutableListOf(),
-) : AssistantUnion
+
+  ) : AssistantUnion

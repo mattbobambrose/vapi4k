@@ -26,7 +26,8 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ToolCallRoleSerializer::class)
 enum class ToolCallRoleType(val desc: String) {
-  ASSISTANT("assistant"), SYSTEM("system");
+  ASSISTANT("assistant"),
+  SYSTEM("system");
 }
 
 private object ToolCallRoleSerializer : KSerializer<ToolCallRoleType> {
@@ -34,9 +35,9 @@ private object ToolCallRoleSerializer : KSerializer<ToolCallRoleType> {
 
   override fun serialize(
     encoder: Encoder,
-    roleType: ToolCallRoleType,
+    value: ToolCallRoleType,
   ) {
-    encoder.encodeString(roleType.desc)
+    encoder.encodeString(value.desc)
   }
 
   override fun deserialize(decoder: Decoder) =

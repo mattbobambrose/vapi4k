@@ -18,16 +18,17 @@ package io.github.vapi4k
 
 import com.vapi4k.common.JsonExtensions.get
 import com.vapi4k.common.JsonExtensions.stringValue
+import com.vapi4k.dsl.assistant.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
-import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST
+import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.vapi4k.Vapi4kDsl.configure
 import com.vapi4k.enums.ToolMessageType
 import com.vapi4k.plugin.Vapi4kConfig
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertEquals
 import kotlin.test.Test
 
@@ -449,14 +450,9 @@ class AssistantTest {
     val assistant =
       assistant(config) {
         firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
-//        model {
-//          provider = prov
-//          model = mod
-//        }
       }
 
-    val json = Json.encodeToString(assistant)
-    val element = Json.parseToJsonElement(json)
+    val element = Json.encodeToJsonElement(assistant)
     assertEquals(
       element.get("assistant.firstMessageMode").stringValue,
       ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL.desc
@@ -464,32 +460,24 @@ class AssistantTest {
   }
 
   @Test
-  fun `check default FirstMessageModeType values`() {
+  fun `check assistant client messages`() {
     val assistant =
       assistant(config) {
-        firstMessage = messageOne
-        firstMessageMode = ASSISTANT_SPEAKS_FIRST
-      }
-
-    val json = Json.encodeToString(assistant)
-    val element = Json.parseToJsonElement(json)
-    assertEquals(element.get("assistant.firstMessageMode").stringValue, ASSISTANT_SPEAKS_FIRST.desc)
-  }
-
-  @Test
-  fun `check unassigned FirstMessageModeType values`() {
-    val assistant =
-      assistant(config) {
-        firstMessage = messageOne
-        firstMessageMode = ASSISTANT_SPEAKS_FIRST
-//        model {
-//          provider = prov
-//          model = mod
-//        }
+        clientMessages -= AssistantClientMessageType.HANG
       }
 
     val element = Json.encodeToJsonElement(assistant)
-    println(element)
-    assertEquals(element.get("assistant.firstMessageMode").stringValue, ASSISTANT_SPEAKS_FIRST.desc)
+    assertEquals(element["assistant.clientMessages"].jsonArray.size, 9)
+  }
+
+  @Test
+  fun `check assistant server messages`() {
+    val assistant =
+      assistant(config) {
+        serverMessages -= AssistantServerMessageType.HANG
+      }
+
+    val element = Json.encodeToJsonElement(assistant)
+    assertEquals(element["assistant.serverMessages"].jsonArray.size, 8)
   }
 }
