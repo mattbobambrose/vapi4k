@@ -65,7 +65,7 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
                         result = toolResult.getOrNull().orEmpty()
                         if (service is ToolCallService) {
                           val (content, role) = service.onRequestComplete(request, result)
-                          requestCompleteMessage(content, role)
+                          requestCompleteMessage(role, content, emptySet())
                         }
                       } else {
                         val errorMsg =
@@ -73,7 +73,7 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
                         error = errorMsg
                         if (service is ToolCallService) {
                           val content = service.onRequestFailed(request, error)
-                          requestFailedMessage(content)
+                          requestFailedMessage(content, emptySet())
                         }
                         logger.error(toolResult.exceptionOrNull()) { errorMsg }
                         errorMessage = errorMsg
@@ -104,9 +104,9 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
     }
 
     private fun ToolCallResult.requestCompleteMessage(
-      msg: String,
       roleType: ToolCallRoleType = ASSISTANT,
-      vararg conditions: ToolMessageCondition,
+      msg: String,
+      conditions: Set<ToolMessageCondition>,
     ) {
       message += ToolCallMessage().apply {
         type = REQUEST_COMPLETE
@@ -120,7 +120,7 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
 
     private fun ToolCallResult.requestFailedMessage(
       msg: String,
-      vararg conditions: ToolMessageCondition,
+      conditions: Set<ToolMessageCondition>,
     ) {
       message += ToolCallMessage().apply {
         type = REQUEST_FAILED
