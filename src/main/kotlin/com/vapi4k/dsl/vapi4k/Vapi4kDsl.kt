@@ -18,6 +18,8 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.plugin.Vapi4kConfig
 import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.stringValue
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
@@ -81,5 +83,10 @@ object Vapi4kDsl {
     perResponses += requestType to block
     requestTypes.forEach { perResponses += it to block }
   }
-}
 
+  val JsonElement.statusUpdateError: String
+    get() = runCatching {
+      this["message.inboundPhoneCallDebuggingArtifacts.assistantRequestError"].stringValue
+    }.getOrNull().orEmpty()
+  val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
+}

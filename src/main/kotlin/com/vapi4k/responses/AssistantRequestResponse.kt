@@ -30,9 +30,9 @@ data class AssistantRequestResponse(
   var assistantId: String = "",
   var assistant: AssistantDto = AssistantDto(),
   var destination: Destination = Destination(),
-  var assistantOverrides: AssistantOverrides = AssistantOverrides(),
+  var assistantOverrides: AssistantOverrides? = null,
   var squadId: String = "",
-  var squad: Squad = Squad(),
+  var squad: Squad? = null,
   var error: String = "",
 ) {
   companion object {

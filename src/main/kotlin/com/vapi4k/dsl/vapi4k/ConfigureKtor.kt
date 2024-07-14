@@ -33,6 +33,7 @@ fun Application.configureKtor() {
   install(ContentNegotiation) {
     json(Json {
       ignoreUnknownKeys = true
+      isLenient = true
     })
   }
 

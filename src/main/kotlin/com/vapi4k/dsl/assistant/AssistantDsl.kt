@@ -28,6 +28,7 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
 import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
 import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredFunctions
 
@@ -41,7 +42,7 @@ object AssistantDsl {
   private val KFunction<*>.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
   private val Method.hasTool get() = toolCall != null
   private val KFunction<*>.hasTool get() = toolCall != null
-  internal val Method.isAsync get() = returnType == Unit::class.java
+  internal val KFunction<*>.isAsync get() = returnType.classifier as KClass<*> == Unit::class
 
   fun assistant(block: Assistant.() -> Unit) =
     AssistantRequestMessageResponse().apply {
@@ -52,12 +53,12 @@ object AssistantDsl {
     AssistantRequestMessageResponse()
       .apply { messageResponse.assistantId = id }.messageResponse
 
-  private val legalTypes = setOf(String::class.java.typeName, Unit::class.java.typeName, "void")
+  private val legalTypes = setOf(String::class, Unit::class)
 
   internal fun verifyObject(
     isFunction: Boolean,
     obj: Any,
-  ): Method {
+  ): KFunction<*> {
     val constructors = obj::class.java.constructors
     if (constructors.size != 1) {
       error("Only one constructor is allowed. Found ${constructors.size}")
@@ -65,7 +66,7 @@ object AssistantDsl {
       error("Constructor must have no parameters")
     }
 
-    val methods = obj::class.java.declaredMethods
+    val methods = obj::class.declaredFunctions
     val cnt = methods.count { it.hasTool }
 
     when {
@@ -77,10 +78,11 @@ object AssistantDsl {
     }
 
     return with(methods.first { it.hasTool }) {
-      if (returnType.name in legalTypes) this
+      val returnClass = returnType.classifier as KClass<*>
+      if (returnClass in legalTypes) this
       else {
         val str = if (isFunction) "Function" else "Tool"
-        error("$str $name must return a String or Unit, but instead returns ${returnType.name}")
+        error("$str $name must return a String or Unit, but instead returns ${returnClass.qualifiedName}")
       }
     }
   }
