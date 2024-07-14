@@ -38,9 +38,16 @@ object JsonElementUtils {
   val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
 
   val JsonElement.customerNumber
-    get() =
-      if (isAssistantRequest)
-        this["message.call.customer.number"].stringValue
-      else
-        error("JsonElement is not na assistant request")
+    get() = if (isAssistantRequest)
+      this["message.call.customer.number"].stringValue
+    else
+      error("JsonElement is not an assistant request")
+
+  val JsonElement.statusUpdateError: String
+    get() = if (isStatusUpdate)
+      this["message.inboundPhoneCallDebuggingArtifacts.assistantRequestError"].stringValue
+    else
+      error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
+
+  val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
 }

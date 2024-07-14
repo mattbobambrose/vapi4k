@@ -19,8 +19,6 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.responses.AssistantRequestResponse
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
@@ -102,14 +100,4 @@ class Vapi4kConfig internal constructor() {
     perResponses += requestType to block
     requestTypes.forEach { perResponses += it to block }
   }
-
-  val JsonElement.isStatusUpdate: Boolean get() = this["message.type"].stringValue == ServerRequestType.STATUS_UPDATE.desc
-  val JsonElement.statusUpdateError: String
-    get() = if (!isStatusUpdate) {
-      error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
-    } else {
-      this["message.inboundPhoneCallDebuggingArtifacts.assistantRequestError"].stringValue
-    }
-
-  val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
 }

@@ -24,13 +24,12 @@ import com.vapi4k.utils.JsonUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 
-object Utils {
-  internal fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
-  internal fun String.ensureEndsWith(s: String) = if (endsWith(s)) this else this + s
-  internal fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }
+internal object Utils {
+  fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
+  fun String.ensureEndsWith(s: String) = if (endsWith(s)) this else this + s
+  fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }
 
-  internal fun <T> lambda(block: T) = block
-
+  fun <T> lambda(block: T) = block
 
   val JsonElement.functionName
     get() = if (isFunctionCall) this["message.functionCall.name"].stringValue else error("JsonElement is not a function call")
