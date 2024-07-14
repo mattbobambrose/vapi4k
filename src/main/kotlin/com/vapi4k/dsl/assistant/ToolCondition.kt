@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_COMPLETE
 import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_FAILED
 import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_RESPONSE_DELAYED
@@ -25,7 +26,7 @@ import com.vapi4k.responses.assistant.ToolMessageCondition
 import kotlin.reflect.KProperty
 
 @AssistantDslMarker
-class Condition(
+class ToolCondition internal constructor(
   val tool: Tool,
   val conditionSet: Set<ToolMessageCondition>,
 ) {
@@ -50,12 +51,12 @@ class Condition(
   companion object {
     private class ConditionDelegate(val requestType: ToolMessageType) {
       operator fun getValue(
-        condition: Condition,
+        condition: ToolCondition,
         property: KProperty<*>,
       ) = with(condition) { messages.singleOrNull(requestType.isMatch(conditionSet))?.content ?: "" }
 
       operator fun setValue(
-        condition: Condition,
+        condition: ToolCondition,
         property: KProperty<*>,
         newVal: String,
       ) =

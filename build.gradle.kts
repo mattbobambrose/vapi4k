@@ -1,14 +1,11 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
-val css_version: String by project
-val exposed_version: String by project
-val h2_version: String by project
-val kotlin_version: String by project
-val kotlinx_html_version: String by project
-val logback_version: String by project
-val logging_version: String by project
-val postgres_version: String by project
-val ktor_version: String by project
+val cssVersion: String by project
+val kotlinVersion: String by project
+val kotlinxHtmlVersion: String by project
+val logbackVersion: String by project
+val loggingVersion: String by project
+val ktorVersion: String by project
 val hikariVersion: String by project
 val pgjdbcVersion: String by project
 val postgresVersion: String by project
@@ -49,18 +46,11 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("io.ktor:ktor-server-cio-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-compression-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
-
-//    implementation("io.ktor:ktor-server-cors:$ktor_version")
-//    implementation("io.ktor:ktor-server-host-common-jvm:$ktor_version")
-//    implementation("io.ktor:ktor-server-status-pages-jvm:$ktor_version")
-//    implementation("io.ktor:ktor-server-html-builder-jvm:$ktor_version")
-//    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinx_html_version")
-//    implementation("org.jetbrains:kotlin-css-jvm:$css_version")
+    implementation("io.ktor:ktor-server-cio-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-compression-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("com.impossibl.pgjdbc-ng:pgjdbc-ng-all:$pgjdbcVersion")
@@ -70,11 +60,11 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
 
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("io.github.oshai:kotlin-logging-jvm:$logging_version")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("io.github.oshai:kotlin-logging-jvm:$loggingVersion")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
 }
 
 publishing {

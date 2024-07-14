@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.AssistantDslMarker
 import com.vapi4k.common.Constants.NAME_SEPARATOR
 import com.vapi4k.dsl.assistant.AssistantDsl.populateFunctionDto
 import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject
@@ -31,10 +32,6 @@ import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredFunctions
-
-@DslMarker
-@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
-annotation class AssistantDslMarker
 
 object AssistantDsl {
   private val Parameter.param: Param? get() = annotations.firstOrNull { it is Param } as Param?
@@ -174,7 +171,7 @@ annotation class ToolCall(
 annotation class Param(val description: String)
 
 @AssistantDslMarker
-data class Functions(val model: Model) {
+data class Functions internal constructor(val model: Model) {
   fun function(obj: Any) {
     model.modelDto.functions += FunctionDto().apply {
       verifyObject(true, obj)

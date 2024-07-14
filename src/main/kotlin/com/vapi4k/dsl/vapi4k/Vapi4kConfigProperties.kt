@@ -16,16 +16,15 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.Vapi4KDslMarker
 import com.vapi4k.common.Constants.DEFAULT_SERVER_URL
 import com.vapi4k.utils.Utils.ensureStartsWith
 import java.net.URI
 
 @Vapi4KDslMarker
-class Vapi4kConfigProperties {
+class Vapi4kConfigProperties internal constructor() {
   internal val serverUrlPath
-    get() = if (serverUrl.isEmpty()) DEFAULT_SERVER_URL else URI(serverUrl).toURL().path.ensureStartsWith(
-      "/"
-    )
+    get() = if (serverUrl.isEmpty()) DEFAULT_SERVER_URL else URI(serverUrl).toURL().path.ensureStartsWith("/")
 
   var serverUrl = ""
   var serverUrlSecret = ""

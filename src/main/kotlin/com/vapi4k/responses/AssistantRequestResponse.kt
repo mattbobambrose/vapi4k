@@ -17,7 +17,7 @@
 package com.vapi4k.responses
 
 
-import com.vapi4k.plugin.Vapi4kConfig
+import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverrides
 import com.vapi4k.responses.assistant.Destination
@@ -37,9 +37,8 @@ data class AssistantRequestResponse(
 ) {
   companion object {
     internal suspend fun getAssistantResponse(
-      config: Vapi4kConfig,
       request: JsonElement,
     ) =
-      config.assistantRequest?.invoke(config, request) ?: error("onAssistantRequest{} not called")
+      Assistant.config.assistantRequest?.invoke(request) ?: error("onAssistantRequest{} not called")
   }
 }

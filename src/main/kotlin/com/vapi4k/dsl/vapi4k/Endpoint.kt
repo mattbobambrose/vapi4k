@@ -16,11 +16,12 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.Vapi4KDslMarker
 import com.vapi4k.utils.Utils.ensureStartsWith
 import java.net.URI
 
 @Vapi4KDslMarker
-class Endpoint {
+class Endpoint internal constructor() {
   internal val path get() = URI(url).toURL().path.ensureStartsWith("/")
   var name = ""
   var url = ""

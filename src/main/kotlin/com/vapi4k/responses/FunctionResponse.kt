@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.plugin.Vapi4kPlugin.logger
+import com.vapi4k.Vapi4k.logger
 import com.vapi4k.responses.ResponseUtils.deriveNames
 import com.vapi4k.responses.ResponseUtils.invokeMethod
 import com.vapi4k.utils.JsonUtils.get

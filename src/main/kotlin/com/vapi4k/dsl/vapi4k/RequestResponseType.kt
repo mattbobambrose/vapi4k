@@ -14,21 +14,9 @@
  *
  */
 
-package com.vapi4k.utils
+package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.Vapi4k.logger
-import com.vapi4k.utils.JsonUtils.toJsonString
-
-object DslUtils {
-  inline fun <reified T> logObject(
-    value: T,
-    prettify: Boolean = false,
-  ) = logger.info { "${T::class.simpleName} JSON:\n${value?.toJsonString(prettify) ?: ""}" }
-
-  inline fun <reified T> printObject(
-    value: T,
-    prettify: Boolean = false,
-  ) = println("${T::class.simpleName} JSON:\n$${value?.toJsonString(prettify) ?: ""}\"")
-
-  val isLoggingEnabled: Boolean get() = System.getenv("LOGGING_ENABLED")?.toBoolean() ?: false
+enum class RequestResponseType {
+  REQUEST,
+  RESPONSE
 }

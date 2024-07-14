@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.AssistantDslMarker
 import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.utils.Utils.trimLeadingSpaces
@@ -30,7 +31,7 @@ interface ModelUnion {
 }
 
 @AssistantDslMarker
-data class Model(
+data class Model internal constructor(
   internal val assistant: Assistant,
   internal val modelDto: ModelDto,
 ) : ModelUnion by modelDto {

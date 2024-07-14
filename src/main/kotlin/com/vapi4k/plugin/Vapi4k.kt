@@ -16,16 +16,19 @@
 
 package com.vapi4k.plugin
 
+import com.vapi4k.Vapi4k.RequestResponseCallback
+import com.vapi4k.Vapi4k.invokeRequestCallbacks
+import com.vapi4k.Vapi4k.invokeResponseCallbacks
+import com.vapi4k.Vapi4k.isValidSecret
+import com.vapi4k.Vapi4k.logger
+import com.vapi4k.Vapi4k.startCallbackThread
+import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.dsl.vapi4k.ServerRequestType.Companion.isToolCall
 import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.dsl.vapi4k.ServerRequestType.TOOL_CALL
-import com.vapi4k.plugin.RequestResponseCallback.Companion.requestCallback
-import com.vapi4k.plugin.RequestResponseCallback.Companion.responseCallback
-import com.vapi4k.plugin.RequestResponseType.REQUEST
-import com.vapi4k.plugin.RequestResponseType.RESPONSE
-import com.vapi4k.plugin.Vapi4kPlugin.logger
+import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantResponse
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
@@ -34,9 +37,7 @@ import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.Utils.lambda
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.ApplicationStarting
@@ -50,29 +51,17 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlin.concurrent.thread
-import kotlin.time.Duration
 import kotlin.time.measureTimedValue
-
-object Vapi4kPlugin {
-  val logger = KotlinLogging.logger {}
-}
 
 val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",
   createConfiguration = { Vapi4kConfig() },
 ) {
-  val config = pluginConfig
   val requestResponseCallbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
 
-  startRequestCallbackThread(requestResponseCallbackChannel, config)
+  startCallbackThread(requestResponseCallbackChannel)
 
   environment?.monitor?.apply {
     subscribe(ApplicationStarting) { it.environment.log.info("Vapi4kServer is starting") }
@@ -82,6 +71,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 
   application.routing {
+    val config = Assistant.config
+
     get("/") { call.respondText("Hello World!") }
     get("/ping") { call.respondText("pong") }
 
@@ -98,7 +89,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         val (response, duration) = measureTimedValue {
           when (requestType) {
             ASSISTANT_REQUEST -> {
-              val response = getAssistantResponse(config, request)
+              val response = getAssistantResponse(request)
               call.respond(response)
               lambda { response.toJsonElement() }
             }
@@ -153,102 +144,3 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     }
   }
 }
-
-fun startRequestCallbackThread(
-  requestResponseCallbackChannel: Channel<RequestResponseCallback>,
-  config: Vapi4kConfig,
-) {
-  thread {
-    while (true) {
-      runCatching {
-        runBlocking {
-          for (callback in requestResponseCallbackChannel) {
-            coroutineScope {
-              with(callback) {
-                when (callback.type) {
-                  REQUEST -> {
-                    config.allRequests.forEach { launch { it.invoke(requestType, request!!) } }
-                    config.perRequests
-                      .filter { it.first == requestType }
-                      .forEach { (reqType, block) ->
-                        launch { block(reqType, request!!) }
-                      }
-                  }
-
-                  RESPONSE -> {
-                    if (config.allResponses.isNotEmpty() || config.perResponses.isNotEmpty()) {
-                      val resp = try {
-                        response!!.invoke()
-                      } catch (e: Exception) {
-                        logger.error(e) { "Error creating response" }
-                        error("Error creating response")
-                      }
-                      config.allResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
-                      config.perResponses
-                        .filter { it.first == requestType }
-                        .forEach { (reqType, block) ->
-                          launch { block(reqType, resp, elapsed) }
-                        }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-private suspend fun PipelineContext<Unit, ApplicationCall>.isValidSecret(
-  configPropertiesSecret: String,
-): Boolean {
-  val secret = call.request.headers["x-vapi-secret"]
-  return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
-    logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
-    call.respond(HttpStatusCode.Forbidden, "Invalid secret")
-    false
-  } else {
-    true
-  }
-}
-
-data class RequestResponseCallback(
-  val type: RequestResponseType,
-  val requestType: ServerRequestType,
-  val request: JsonElement? = null,
-  val response: (() -> JsonElement)? = null,
-  val elapsed: Duration = Duration.ZERO,
-) {
-  companion object {
-    fun requestCallback(
-      requestType: ServerRequestType,
-      request: JsonElement,
-    ) = RequestResponseCallback(REQUEST, requestType, request)
-
-    fun responseCallback(
-      requestType: ServerRequestType,
-      response: () -> JsonElement,
-      elapsed: Duration,
-    ) = RequestResponseCallback(RESPONSE, requestType, response = response, elapsed = elapsed)
-  }
-}
-
-enum class RequestResponseType {
-  REQUEST,
-  RESPONSE
-}
-
-private suspend fun invokeRequestCallbacks(
-  channel: Channel<RequestResponseCallback>,
-  requestType: ServerRequestType,
-  request: JsonElement,
-) = channel.send(requestCallback(requestType, request))
-
-private suspend fun invokeResponseCallbacks(
-  channel: Channel<RequestResponseCallback>,
-  requestType: ServerRequestType,
-  response: () -> JsonElement,
-  elapsed: Duration,
-) = channel.send(responseCallback(requestType, response, elapsed))

@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantDsl.isAsync
 import com.vapi4k.dsl.assistant.AssistantDsl.populateFunctionDto
 import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject
@@ -23,7 +24,7 @@ import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.responses.assistant.ToolDto
 
 @AssistantDslMarker
-data class Tools(val model: Model) {
+data class Tools internal constructor(val model: Model) {
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,

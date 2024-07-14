@@ -16,9 +16,9 @@
 
 package com.vapi4k.dbms
 
+import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
+import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
 import com.vapi4k.dsl.vapi4k.ServerRequestType
-import com.vapi4k.plugin.RequestResponseType.REQUEST
-import com.vapi4k.plugin.RequestResponseType.RESPONSE
 import com.vapi4k.utils.JsonUtils.toJsonString
 import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.insert

@@ -16,13 +16,10 @@
 
 package com.vapi4k.responses
 
+import com.vapi4k.Vapi4k.logger
 import com.vapi4k.dsl.assistant.ToolCallService
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType
-import com.vapi4k.dsl.vapi4k.ToolCallMessageType.REQUEST_COMPLETE
-import com.vapi4k.dsl.vapi4k.ToolCallMessageType.REQUEST_FAILED
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
-import com.vapi4k.dsl.vapi4k.ToolCallRoleType.ASSISTANT
-import com.vapi4k.plugin.Vapi4kPlugin.logger
 import com.vapi4k.responses.ResponseUtils.deriveNames
 import com.vapi4k.responses.ResponseUtils.invokeMethod
 import com.vapi4k.responses.assistant.ToolMessageCondition
@@ -64,16 +61,14 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
                       if (toolResult.isSuccess) {
                         result = toolResult.getOrNull().orEmpty()
                         if (service is ToolCallService) {
-                          val (content, role) = service.onRequestComplete(request, result)
-                          requestCompleteMessage(role, content, emptySet())
+                          message += service.onRequestComplete(request, result).messages
                         }
                       } else {
                         val errorMsg =
                           "Error invoking method $className.$methodName: ${toolResult.exceptionOrNull()?.message}"
                         error = errorMsg
                         if (service is ToolCallService) {
-                          val content = service.onRequestFailed(request, error)
-                          requestFailedMessage(content, emptySet())
+                          message += service.onRequestFailed(request, error).messages
                         }
                         logger.error(toolResult.exceptionOrNull()) { errorMsg }
                         errorMessage = errorMsg
@@ -102,34 +97,6 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
         error("Error receiving tool call: ${result.exceptionOrNull()?.message}")
       }
     }
-
-    private fun ToolCallResult.requestCompleteMessage(
-      roleType: ToolCallRoleType = ASSISTANT,
-      msg: String,
-      conditions: Set<ToolMessageCondition>,
-    ) {
-      message += ToolCallMessage().apply {
-        type = REQUEST_COMPLETE
-        role = roleType
-        content = msg
-        if (conditions.isNotEmpty()) {
-          this.conditions = conditions.toList()
-        }
-      }
-    }
-
-    private fun ToolCallResult.requestFailedMessage(
-      msg: String,
-      conditions: Set<ToolMessageCondition>,
-    ) {
-      message += ToolCallMessage().apply {
-        type = REQUEST_FAILED
-        content = msg
-        if (conditions.isNotEmpty()) {
-          this.conditions = conditions.toList()
-        }
-      }
-    }
   }
 }
 
@@ -145,7 +112,7 @@ data class ToolCallResult(
   var toolCallId: String = "",
   var name: String = "",
   var result: String = "",
-  // TODO: Ask Vapi if this should be messages
+  // TODO: Ask Vapi if this should be messages (plural)
   var message: MutableList<ToolCallMessage> = mutableListOf(),
   var error: String = "",
 )
