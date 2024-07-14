@@ -51,28 +51,3 @@ object JsonUtils {
 
   inline fun <reified T> String.toObject() = Json.decodeFromString<T>(this)
 }
-
-
-//@Serializable
-//data class Person(
-//  val name: String,
-//  val age: Int,
-//)
-//
-//fun main() {
-//
-//  val p = Person("John", 25)
-//  val je = p.toJsonElement()
-//  val str = p.toJsonString()
-//
-//  println(je)
-//  println(str)
-//
-//  printObject(je)
-//  logObject(je)
-//  printObject(str)
-//  logObject(str)
-//  logObject(je.toObject<Person>())
-//  logObject(je.toJsonElement())
-//
-//}

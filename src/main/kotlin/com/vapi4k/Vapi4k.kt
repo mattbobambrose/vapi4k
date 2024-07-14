@@ -58,38 +58,42 @@ object Vapi4k {
               coroutineScope {
                 with(callback) {
                   when (callback.type) {
-                    REQUEST -> {
-                      config.allRequests.forEach { launch { it.invoke(requestType, request!!) } }
-                      config.perRequests
-                        .filter { it.first == requestType }
-                        .forEach { (reqType, block) ->
-                          launch { block(reqType, request!!) }
-                        }
-                    }
-
-                    RESPONSE -> {
-                      if (config.allResponses.isNotEmpty() || config.perResponses.isNotEmpty()) {
-                        val resp = try {
-                          response!!.invoke()
-                        } catch (e: Exception) {
-                          logger.error(e) { "Error creating response" }
-                          error("Error creating response")
-                        }
-                        config.allResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
-                        config.perResponses
+                    REQUEST ->
+                      with(config) {
+                        allRequests.forEach { launch { it.invoke(request!!) } }
+                        perRequests
                           .filter { it.first == requestType }
                           .forEach { (reqType, block) ->
-                            launch { block(reqType, resp, elapsed) }
+                            launch { block(request!!) }
                           }
                       }
-                    }
+
+                    RESPONSE ->
+                      with(config) {
+                        if (allResponses.isNotEmpty() || perResponses.isNotEmpty()) {
+                          val resp =
+                            runCatching {
+                              response!!.invoke()
+                            }.onFailure { e ->
+                              logger.error(e) { "Error creating response" }
+                              error("Error creating response")
+                            }.getOrThrow()
+
+                          allResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
+                          perResponses
+                            .filter { it.first == requestType }
+                            .forEach { (reqType, block) ->
+                              launch { block(reqType, resp, elapsed) }
+                            }
+                        }
+                      }
                   }
                 }
               }
             }
           }
         }.onFailure {
-          logger.error(it) { "Error processing request response callback" }
+          logger.error(it) { "Error processing request response callback: ${it.message}" }
         }
       }
     }

@@ -19,14 +19,13 @@ import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
 import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.responses.AssistantRequestResponse
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.JsonElementUtils.customerNumber
 import kotlinx.serialization.json.JsonElement
 
 fun myAssistantRequest(
   ibc: JsonElement,
 ): AssistantRequestResponse =
-  (when (ibc["message.call.customer.number"].stringValue) {
+  (when (ibc.customerNumber) {
     "+14156721042" -> assistantId("44792a91-d7f9-4915-9445-0991aeef97bc")
     "+19256836490" -> getAssistant("Matthew")
     "+17039395869" -> getAssistant("Justin")

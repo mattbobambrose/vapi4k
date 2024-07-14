@@ -19,6 +19,7 @@ package com.vapi4k.dbms
 import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
 import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
 import com.vapi4k.dsl.vapi4k.ServerRequestType
+import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonUtils.toJsonString
 import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.insert
@@ -26,15 +27,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.time.Duration
 
 object Messages {
-  fun insertRequest(
-    type: ServerRequestType,
-    request: JsonElement,
-  ) {
+  fun insertRequest(request: JsonElement) {
     transaction {
       val str = request.toJsonString(true)
       MessagesTable.insert { rec ->
         rec[messageType] = REQUEST.name
-        rec[requestType] = type.desc
+        rec[requestType] = request.requestType.desc
         rec[messageJsonb] = str
         rec[messageJson] = str
         rec[elapsedTime] = Duration.ZERO

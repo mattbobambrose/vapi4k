@@ -16,10 +16,42 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.utils.JsonElementUtils.isFunctionCall
+import com.vapi4k.utils.JsonElementUtils.isToolCall
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.jsonList
+import com.vapi4k.utils.JsonUtils.stringValue
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonArray
+
 object Utils {
   internal fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
   internal fun String.ensureEndsWith(s: String) = if (endsWith(s)) this else this + s
   internal fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }
 
   internal fun <T> lambda(block: T) = block
+
+
+  val JsonElement.functionName
+    get() = if (isFunctionCall) this["message.functionCall.name"].stringValue else error("JsonElement is not a function call")
+
+  val JsonElement.functionParameters
+    get() = if (isFunctionCall) this["message.functionCall.parameters"] else error("JsonElement is not a function call")
+
+  val JsonElement.toolCallId
+    get() = if (isToolCall) this["id"].stringValue else error("JsonElement is not a tool call")
+
+  val JsonElement.toolCallList
+    get() = if (isToolCall) this["message.toolCallList"].jsonList else error("JsonElement is not a tool call")
+
+  val JsonElement.toolCallName
+    get() = if (isToolCall) this["function.name"].stringValue else error("JsonElement is not a tool call")
+
+  val JsonElement.toolCallArguments
+    get() = if (isToolCall) this["function.arguments"] else error("JsonElement is not a tool call")
+
+  val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
+
+  val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
+
 }

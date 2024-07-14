@@ -24,6 +24,9 @@ import com.vapi4k.utils.JsonUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
+typealias RequestArgs = suspend (JsonElement) -> Unit
+typealias ResponseArgs = suspend (requestType: ServerRequestType, JsonElement, Duration) -> Unit
+
 @Vapi4KDslMarker
 class Vapi4kConfig internal constructor() {
 
@@ -31,14 +34,11 @@ class Vapi4kConfig internal constructor() {
     Assistant.config = this
   }
 
-  internal var assistantRequest: (suspend (request: JsonElement) -> AssistantRequestResponse)? =
-    null
-  internal var allRequests = mutableListOf<(suspend (requestType: ServerRequestType, request: JsonElement) -> Unit)>()
-  internal val perRequests = mutableListOf<Pair<ServerRequestType, suspend (ServerRequestType, JsonElement) -> Unit>>()
-  internal val allResponses =
-    mutableListOf<(suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit)>()
-  internal val perResponses =
-    mutableListOf<Pair<ServerRequestType, suspend (ServerRequestType, JsonElement, Duration) -> Unit>>()
+  internal var assistantRequest: (suspend (request: JsonElement) -> AssistantRequestResponse)? = null
+  internal var allRequests = mutableListOf<(RequestArgs)>()
+  internal val perRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
+  internal val allResponses = mutableListOf<ResponseArgs>()
+  internal val perResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
   internal val configProperties: Vapi4kConfigProperties = Vapi4kConfigProperties()
   internal val toolCallEndpoints = mutableListOf<Endpoint>()
@@ -75,14 +75,14 @@ class Vapi4kConfig internal constructor() {
       error("onAssistantRequest{} can be called only once")
   }
 
-  fun onAllRequests(block: suspend (requestType: ServerRequestType, request: JsonElement) -> Unit) {
+  fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
     allRequests += block
   }
 
   fun onRequest(
     requestType: ServerRequestType,
     vararg requestTypes: ServerRequestType,
-    block: suspend (requestType: ServerRequestType, request: JsonElement) -> Unit,
+    block: suspend (request: JsonElement) -> Unit,
   ) {
     perRequests += requestType to block
     requestTypes.forEach { perRequests += it to block }

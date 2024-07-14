@@ -23,7 +23,6 @@ import com.vapi4k.Vapi4k.isValidSecret
 import com.vapi4k.Vapi4k.logger
 import com.vapi4k.Vapi4k.startCallbackThread
 import com.vapi4k.dsl.assistant.Assistant
-import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.dsl.vapi4k.ServerRequestType.Companion.isToolCall
 import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
@@ -33,8 +32,7 @@ import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantRespo
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.Utils.lambda
 import io.ktor.http.HttpStatusCode
@@ -82,7 +80,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       if (isValidSecret(config.configProperties.serverUrlSecret)) {
         val json = call.receive<String>()
         val request = Json.parseToJsonElement(json)
-        val requestType = ServerRequestType.fromString(request["message.type"].stringValue)
+        val requestType = request.requestType
 
         invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
 
@@ -125,7 +123,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         if (isValidSecret(endpoint.secret)) {
           val json = call.receive<String>()
           val request = Json.parseToJsonElement(json)
-          val requestType = ServerRequestType.fromString(request["message.type"].stringValue)
+          val requestType = request.requestType
 
           invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
 

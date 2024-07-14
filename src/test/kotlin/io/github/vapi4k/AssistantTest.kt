@@ -27,7 +27,8 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.JsonUtils.toJsonElement
-import kotlinx.serialization.json.jsonArray
+import com.vapi4k.utils.Utils.assistantClientMessages
+import com.vapi4k.utils.Utils.assistantServerMessages
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
@@ -469,7 +470,7 @@ class AssistantTest {
       }
 
     val element = assistant.toJsonElement()
-    assertEquals(9, element["assistant.clientMessages"].jsonArray.size)
+    assertEquals(9, element.assistantClientMessages.size)
   }
 
   @Test
@@ -480,7 +481,7 @@ class AssistantTest {
       }
 
     val element = assistant.toJsonElement()
-    assertEquals(8, element["assistant.clientMessages"].jsonArray.size)
+    assertEquals(8, element.assistantClientMessages.size)
   }
 
   @Test
@@ -491,7 +492,7 @@ class AssistantTest {
       }
 
     val element = assistant.toJsonElement()
-    assertEquals(8, element["assistant.serverMessages"].jsonArray.size)
+    assertEquals(8, element.assistantServerMessages.size)
   }
 
   @Test
@@ -502,6 +503,6 @@ class AssistantTest {
       }
 
     val element = assistant.toJsonElement()
-    assertEquals(7, element["assistant.serverMessages"].jsonArray.size)
+    assertEquals(7, element.assistantServerMessages.size)
   }
 }
