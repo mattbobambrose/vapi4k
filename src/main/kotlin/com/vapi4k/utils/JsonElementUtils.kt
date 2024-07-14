@@ -45,9 +45,13 @@ object JsonElementUtils {
 
   val JsonElement.statusUpdateError: String
     get() = if (isStatusUpdate)
-      this["message.inboundPhoneCallDebuggingArtifacts.assistantRequestError"].stringValue
+      runCatching {
+        this["message.inboundPhoneCallDebuggingArtifacts.assistantRequestError"].stringValue
+      }.getOrElse { "" }
     else
       error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
 
   val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
+
+  val JsonElement.messageCallId get() = this["message.call.id"].stringValue
 }
