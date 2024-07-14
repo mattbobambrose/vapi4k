@@ -47,7 +47,7 @@ interface AssistantUnion {
 }
 
 @AssistantDslMarker
-data class Assistant(internal val assistantDto: AssistantDto) :
+data class Assistant internal constructor(internal val assistantDto: AssistantDto) :
   AssistantUnion by assistantDto {
   fun model(block: Model.() -> Unit) {
     Model(this, assistantDto.model).apply(block)

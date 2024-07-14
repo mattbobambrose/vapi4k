@@ -23,7 +23,7 @@ import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.responses.assistant.ToolDto
 
 @AssistantDslMarker
-data class Tools(val model: Model) {
+data class Tools internal constructor(val model: Model) {
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,

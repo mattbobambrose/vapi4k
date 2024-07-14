@@ -27,7 +27,7 @@ import com.vapi4k.responses.assistant.ToolMessageCondition.Companion.toolMessage
 import kotlin.reflect.KProperty
 
 @AssistantDslMarker
-class Tool(internal val toolDto: ToolDto) {
+class Tool internal constructor(internal val toolDto: ToolDto) {
   private val messages get() = toolDto.messages
 
   var futureDelay = -1

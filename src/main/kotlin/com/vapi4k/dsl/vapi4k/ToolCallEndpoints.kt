@@ -19,7 +19,7 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.dsl.assistant.Assistant
 
 @Vapi4KDslMarker
-class ToolCallEndpoints {
+class ToolCallEndpoints internal constructor() {
   internal fun ToolCallEndpoints.hasName(endpoint: Endpoint) =
     Assistant.config.toolCallEndpoints.any { it.name == endpoint.name }
 

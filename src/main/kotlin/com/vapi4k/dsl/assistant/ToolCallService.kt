@@ -37,13 +37,13 @@ abstract class ToolCallService() {
 }
 
 @AssistantDslMarker
-class RequestCompleteCondition {
+class RequestCompleteCondition internal constructor() {
   var role = ToolCallRoleType.ASSISTANT
   var requestCompleteMessage = ""
 }
 
 @AssistantDslMarker
-class RequestFailedCondition {
+class RequestFailedCondition internal constructor() {
   var requestFailedMessage = ""
 }
 
@@ -65,7 +65,7 @@ abstract class AbstractRequest {
       .apply { messages += this }
 }
 
-class RequestComplete : AbstractRequest() {
+class RequestComplete internal constructor() : AbstractRequest() {
   var role = ToolCallRoleType.ASSISTANT
   var requestCompleteMessage = ""
 
@@ -95,7 +95,7 @@ class RequestComplete : AbstractRequest() {
   }
 }
 
-class RequestFailed : AbstractRequest() {
+class RequestFailed internal constructor() : AbstractRequest() {
   var requestFailedMessage = ""
 
   fun condition(

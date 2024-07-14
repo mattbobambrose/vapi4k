@@ -25,7 +25,7 @@ import com.vapi4k.responses.assistant.ToolMessageCondition
 import kotlin.reflect.KProperty
 
 @AssistantDslMarker
-class ToolCondition(
+class ToolCondition internal constructor(
   val tool: Tool,
   val conditionSet: Set<ToolMessageCondition>,
 ) {

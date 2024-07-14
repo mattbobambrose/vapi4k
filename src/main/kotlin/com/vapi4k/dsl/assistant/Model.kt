@@ -30,7 +30,7 @@ interface ModelUnion {
 }
 
 @AssistantDslMarker
-data class Model(
+data class Model internal constructor(
   internal val assistant: Assistant,
   internal val modelDto: ModelDto,
 ) : ModelUnion by modelDto {

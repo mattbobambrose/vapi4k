@@ -174,7 +174,7 @@ annotation class ToolCall(
 annotation class Param(val description: String)
 
 @AssistantDslMarker
-data class Functions(val model: Model) {
+data class Functions internal constructor(val model: Model) {
   fun function(obj: Any) {
     model.modelDto.functions += FunctionDto().apply {
       verifyObject(true, obj)

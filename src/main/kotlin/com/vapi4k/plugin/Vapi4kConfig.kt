@@ -26,7 +26,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
 @Vapi4KDslMarker
-class Vapi4kConfig {
+class Vapi4kConfig internal constructor() {
 
   init {
     Assistant.config = this
