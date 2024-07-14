@@ -103,10 +103,13 @@ class Vapi4kConfig internal constructor() {
     requestTypes.forEach { perResponses += it to block }
   }
 
+  val JsonElement.isStatusUpdate: Boolean get() = this["message.type"].stringValue == ServerRequestType.STATUS_UPDATE.desc
   val JsonElement.statusUpdateError: String
-    get() = runCatching {
+    get() = if (!isStatusUpdate) {
+      error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
+    } else {
       this["message.inboundPhoneCallDebuggingArtifacts.assistantRequestError"].stringValue
-    }.getOrNull().orEmpty()
+    }
 
   val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
 }
