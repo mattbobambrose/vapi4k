@@ -73,10 +73,10 @@ class Tool(internal val toolDto: ToolDto) {
 
   fun condition(
     requiredCondition: ToolMessageCondition,
-    vararg conditions: ToolMessageCondition,
+    vararg additional: ToolMessageCondition,
     block: ToolCondition.() -> Unit,
   ) {
-    val conditionsSet = mutableSetOf(requiredCondition).apply { addAll(conditions.toSet()) }
+    val conditionsSet = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
     ToolCondition(this, conditionsSet).apply(block)
   }
 

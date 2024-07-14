@@ -16,13 +16,12 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType.REQUEST_COMPLETE
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType.REQUEST_FAILED
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
 import com.vapi4k.responses.ToolCallMessage
 import com.vapi4k.responses.assistant.ToolMessageCondition
-import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.EncodeDefault.Mode
 import kotlinx.serialization.json.JsonElement
 
 abstract class ToolCallService() {
@@ -39,7 +38,6 @@ abstract class ToolCallService() {
 
 @AssistantDslMarker
 class RequestCompleteCondition {
-  @EncodeDefault(Mode.ALWAYS)
   var role = ToolCallRoleType.ASSISTANT
   var requestCompleteMessage = ""
 }
@@ -49,32 +47,39 @@ class RequestFailedCondition {
   var requestFailedMessage = ""
 }
 
-class RequestComplete {
+abstract class AbstractRequest {
   internal val messages = mutableListOf<ToolCallMessage>()
 
+  protected fun addToolCallMessage(
+    type: ToolCallMessageType,
+    content: String,
+    conditions: Set<ToolMessageCondition> = emptySet(),
+  ): ToolCallMessage =
+    ToolCallMessage()
+      .apply {
+        this.type = type
+        this.content = content
+        if (conditions.isNotEmpty())
+          this.conditions = conditions.toList()
+      }
+      .apply { messages += this }
+}
+
+class RequestComplete : AbstractRequest() {
   var role = ToolCallRoleType.ASSISTANT
   var requestCompleteMessage = ""
 
   fun condition(
     requiredCondition: ToolMessageCondition,
-    vararg conditions: ToolMessageCondition,
+    vararg additional: ToolMessageCondition,
     block: RequestCompleteCondition.() -> Unit,
   ) {
     RequestCompleteCondition()
       .apply(block)
       .also { rcc ->
         if (requestCompleteMessage.isNotEmpty()) {
-          messages += ToolCallMessage().apply {
-            type = REQUEST_COMPLETE
-            role = rcc.role
-            content = rcc.requestCompleteMessage
-            mutableSetOf(requiredCondition).apply { addAll(conditions.toSet()) }.toSet()
-              .also { conditions ->
-                if (conditions.isNotEmpty()) {
-                  this.conditions = conditions.toList()
-                }
-              }
-          }
+          val cond = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
+          addToolCallMessage(REQUEST_COMPLETE, rcc.requestCompleteMessage, cond).apply { role = rcc.role }
         }
       }
   }
@@ -84,41 +89,26 @@ class RequestComplete {
       RequestComplete()
         .apply(block)
         .also { rc ->
-          if (rc.requestCompleteMessage.isNotEmpty()) {
-            rc.messages += ToolCallMessage().apply {
-              type = REQUEST_COMPLETE
-              role = rc.role
-              content = rc.requestCompleteMessage
-            }
-          }
+          if (rc.requestCompleteMessage.isNotEmpty())
+            rc.addToolCallMessage(REQUEST_COMPLETE, rc.requestCompleteMessage).apply { role = rc.role }
         }
   }
 }
 
-class RequestFailed {
-  internal val messages = mutableListOf<ToolCallMessage>()
-
+class RequestFailed : AbstractRequest() {
   var requestFailedMessage = ""
 
   fun condition(
     requiredCondition: ToolMessageCondition,
-    vararg conditions: ToolMessageCondition,
+    vararg additional: ToolMessageCondition,
     block: RequestFailedCondition.() -> Unit,
   ) {
     RequestFailedCondition()
       .apply(block)
       .also { rfc ->
         if (requestFailedMessage.isNotEmpty()) {
-          messages += ToolCallMessage().apply {
-            type = REQUEST_FAILED
-            content = rfc.requestFailedMessage
-            mutableSetOf(requiredCondition).apply { addAll(conditions.toSet()) }.toSet()
-              .also { conditions ->
-                if (conditions.isNotEmpty()) {
-                  this.conditions = conditions.toList()
-                }
-              }
-          }
+          val conds = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
+          addToolCallMessage(REQUEST_FAILED, rfc.requestFailedMessage, conds)
         }
       }
   }
@@ -128,12 +118,8 @@ class RequestFailed {
       RequestFailed()
         .apply(block)
         .also { rf ->
-          if (rf.requestFailedMessage.isNotEmpty()) {
-            rf.messages += ToolCallMessage().apply {
-              type = REQUEST_FAILED
-              content = rf.requestFailedMessage
-            }
-          }
+          if (rf.requestFailedMessage.isNotEmpty())
+            rf.addToolCallMessage(REQUEST_FAILED, rf.requestFailedMessage)
         }
   }
 }
