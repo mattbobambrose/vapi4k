@@ -14,13 +14,13 @@
  *
  */
 
+import com.vapi4k.Vapi4k.logger
 import com.vapi4k.dbms.Messages.insertRequest
 import com.vapi4k.dbms.Messages.insertResponse
 import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.dsl.vapi4k.ServerRequestType.STATUS_UPDATE
 import com.vapi4k.dsl.vapi4k.ServerRequestType.TOOL_CALL
-import com.vapi4k.dsl.vapi4k.Vapi4kConfig.Companion.logger
 import com.vapi4k.dsl.vapi4k.configureKtor
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.utils.DslUtils.logObject

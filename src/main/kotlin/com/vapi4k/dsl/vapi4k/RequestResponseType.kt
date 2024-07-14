@@ -16,9 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
-@DslMarker
-@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
-annotation class Vapi4KDslMarker
-
-object Vapi4kDsl {
+enum class RequestResponseType {
+  REQUEST,
+  RESPONSE
 }

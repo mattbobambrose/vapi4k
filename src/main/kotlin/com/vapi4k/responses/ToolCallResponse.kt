@@ -16,10 +16,10 @@
 
 package com.vapi4k.responses
 
+import com.vapi4k.Vapi4k.logger
 import com.vapi4k.dsl.assistant.ToolCallService
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
-import com.vapi4k.plugin.Vapi4kPlugin.logger
 import com.vapi4k.responses.ResponseUtils.deriveNames
 import com.vapi4k.responses.ResponseUtils.invokeMethod
 import com.vapi4k.responses.assistant.ToolMessageCondition

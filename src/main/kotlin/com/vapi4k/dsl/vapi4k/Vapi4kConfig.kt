@@ -16,11 +16,11 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
@@ -109,8 +109,4 @@ class Vapi4kConfig internal constructor() {
     }.getOrNull().orEmpty()
 
   val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
-
-  companion object {
-    val logger = KotlinLogging.logger {}
-  }
 }

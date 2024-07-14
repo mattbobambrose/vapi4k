@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantDsl.isAsync
 import com.vapi4k.dsl.assistant.AssistantDsl.populateFunctionDto
 import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject

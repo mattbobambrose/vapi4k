@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_COMPLETE
 import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_FAILED
 import com.vapi4k.dsl.assistant.ToolMessageType.REQUEST_RESPONSE_DELAYED

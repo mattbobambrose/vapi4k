@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.vapi4k.Vapi4kConfig.Companion.logger
+import com.vapi4k.Vapi4k.logger
 
 enum class ServerRequestType(val desc: String) {
   ASSISTANT_REQUEST("assistant-request"),
