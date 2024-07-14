@@ -19,8 +19,8 @@ package com.vapi4k.responses
 import com.vapi4k.Vapi4k.logger
 import com.vapi4k.responses.ResponseUtils.deriveNames
 import com.vapi4k.responses.ResponseUtils.invokeMethod
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.Utils.functionName
+import com.vapi4k.utils.Utils.functionParameters
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -30,27 +30,28 @@ class FunctionResponse(var result: String = "") {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
-          val funcName = request["message.functionCall.name"].stringValue
-          val args = request["message.functionCall.parameters"]
+          val funcName = request.functionName
+          val args = request.functionParameters
           val (className, methodName) = deriveNames(funcName)
-          val serviceInstance = runCatching {
-            with(Class.forName(className)) {
-              this.kotlin.objectInstance ?: this.constructors.toList().first().newInstance()
+          val serviceInstance =
+            runCatching {
+              with(Class.forName(className)) {
+                kotlin.objectInstance ?: this.constructors.toList().first().newInstance()
+              }
             }
-          }
-          response.result = if (serviceInstance.isSuccess) {
-            val service = serviceInstance.getOrNull() ?: error("Error creating instance of $className")
-            val toolResult = runCatching { invokeMethod(service, methodName, args) }
-            if (toolResult.isSuccess) {
-              toolResult.getOrNull().orEmpty()
+
+          response.result =
+            if (serviceInstance.isSuccess) {
+              val service = serviceInstance.getOrThrow()
+              val toolResult = runCatching { invokeMethod(service, methodName, args) }
+              toolResult.getOrElse {
+                logger.error(toolResult.exceptionOrNull()) { "Error invoking method $className.$methodName" }
+                "Error calling function"
+              }
             } else {
-              logger.error(toolResult.exceptionOrNull()) { "Error invoking method $className.$methodName" }
-              "Error calling function"
+              logger.error(serviceInstance.exceptionOrNull()) { "Error creating instance of $className" }
+              "Error creating instance"
             }
-          } else {
-            logger.error(serviceInstance.exceptionOrNull()) { "Error creating instance of $className" }
-            "Error creating instance"
-          }
         }
 
   }

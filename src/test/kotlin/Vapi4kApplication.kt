@@ -25,6 +25,7 @@ import com.vapi4k.dsl.vapi4k.configureKtor
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.utils.DslUtils.logObject
 import com.vapi4k.utils.DslUtils.printObject
+import com.vapi4k.utils.JsonElementUtils.requestType
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 
@@ -77,26 +78,26 @@ fun Application.module() {
       myAssistantRequest(assistantRequest)
     }
 
-    onAllRequests { requestType, request ->
-      logger.info { "All requests: $requestType" }
-      insertRequest(requestType, request)
+    onAllRequests { request ->
+      logger.info { "All requests: ${request.requestType}" }
+      insertRequest(request)
       logObject(request)
       printObject(request)
     }
 
-    onRequest(TOOL_CALL) { requestType, request ->
+    onRequest(TOOL_CALL) { request ->
       logger.info { "Tool call: $request" }
     }
 
-    onRequest(FUNCTION_CALL) { requestType, request ->
+    onRequest(FUNCTION_CALL) { request ->
       logger.info { "Function call: $request" }
     }
 
-    onRequest(STATUS_UPDATE) { requestType, request ->
+    onRequest(STATUS_UPDATE) { request ->
       logger.info { "Status update: STATUS_UPDATE" }
     }
 
-    onRequest(STATUS_UPDATE) { requestType, request ->
+    onRequest(STATUS_UPDATE) { request ->
 //      if (request.hasStatusUpdateError) {
 //        logger.info { "Status update error: ${request.statusUpdateError}" }
 //      }
@@ -109,7 +110,7 @@ fun Application.module() {
       insertResponse(requestType, response, elapsedTime)
     }
 
-    onResponse(ASSISTANT_REQUEST) { type, response, elapsed ->
+    onResponse(ASSISTANT_REQUEST) { requestType, response, elapsed ->
 //      logger.info { "Response: $response" }
     }
   }

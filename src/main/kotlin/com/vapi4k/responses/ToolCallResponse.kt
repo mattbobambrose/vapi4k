@@ -23,29 +23,30 @@ import com.vapi4k.dsl.vapi4k.ToolCallRoleType
 import com.vapi4k.responses.ResponseUtils.deriveNames
 import com.vapi4k.responses.ResponseUtils.invokeMethod
 import com.vapi4k.responses.assistant.ToolMessageCondition
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.jsonList
-import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.Utils.toolCallArguments
+import com.vapi4k.utils.Utils.toolCallId
+import com.vapi4k.utils.Utils.toolCallList
+import com.vapi4k.utils.Utils.toolCallName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class ToolCallResponse(var messageResponse: MessageResponse = MessageResponse()) {
   companion object {
-    fun getToolCallResponse(request: JsonElement): ToolCallResponse {
-      val result = runCatching {
+    fun getToolCallResponse(request: JsonElement): ToolCallResponse =
+      runCatching {
         ToolCallResponse()
           .also { response ->
             var errorMessage = ""
-            val toolCallList = request["message.toolCallList"].jsonList
+            val toolCallList = request.toolCallList
 
             for (toolCall in toolCallList) {
               response.apply {
                 messageResponse.apply {
                   results += ToolCallResult().apply {
-                    toolCallId = toolCall["id"].stringValue
-                    val funcName = toolCall["function.name"].stringValue
-                    val args = toolCall["function.arguments"]
+                    toolCallId = toolCall.toolCallId
+                    val funcName = toolCall.toolCallName
+                    val args = toolCall.toolCallArguments
                     name = funcName
 
                     val (className, methodName) = deriveNames(funcName)
@@ -89,17 +90,12 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
               }
             }
           }
+      }.getOrElse {
+        logger.error(it) { "Error receiving tool call: ${it.message}" }
+        error("Error receiving tool call: ${it.message}")
       }
-      return if (result.isSuccess) {
-        result.getOrNull() ?: error("Error receiving tool call response: null result value")
-      } else {
-        logger.error(result.exceptionOrNull()) { "Error receiving tool call: ${result.exceptionOrNull()?.message}" }
-        error("Error receiving tool call: ${result.exceptionOrNull()?.message}")
-      }
-    }
   }
 }
-
 
 @Serializable
 data class MessageResponse(
