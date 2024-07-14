@@ -33,10 +33,17 @@ class Tool(internal val toolDto: ToolDto) {
   var futureDelay = -1
 
   private class MessageDelegate(val requestType: ToolMessageType) {
-    operator fun getValue(thisRef: Tool, property: KProperty<*>) =
+    operator fun getValue(
+      thisRef: Tool,
+      property: KProperty<*>,
+    ) =
       thisRef.messages.singleOrNull(requestType.isMatching)?.content ?: ""
 
-    operator fun setValue(thisRef: Tool, property: KProperty<*>, newVal: String) =
+    operator fun setValue(
+      thisRef: Tool,
+      property: KProperty<*>,
+      newVal: String,
+    ) =
       with(thisRef) {
         if (messages.any(requestType.isMatching)) {
           messages.single(requestType.isMatching).content = newVal
@@ -67,68 +74,69 @@ class Tool(internal val toolDto: ToolDto) {
   fun condition(
     requiredCondition: ToolMessageCondition,
     vararg conditions: ToolMessageCondition,
-    block: Condition.() -> Unit,
+    block: ToolCondition.() -> Unit,
   ) {
-    val fullConditionsSet = mutableSetOf(requiredCondition).apply { addAll(conditions.toSet()) }
-    Condition(this, fullConditionsSet).apply(block)
+    val conditionsSet = mutableSetOf(requiredCondition).apply { addAll(conditions.toSet()) }
+    ToolCondition(this, conditionsSet).apply(block)
   }
 
-  infix fun String.eq(value: String) =
-    toolMessageCondition(this, "eq", value)
-
-  infix fun String.neq(value: String) =
-    toolMessageCondition(this, "neq", value)
-
-  infix fun String.gt(value: String) =
-    toolMessageCondition(this, "gt", value)
-
-  infix fun String.gte(value: String) =
-    toolMessageCondition(this, "gte", value)
-
-  infix fun String.lt(value: String) =
-    toolMessageCondition(this, "lt", value)
-
-  infix fun String.lte(value: String) =
-    toolMessageCondition(this, "lte", value)
-
-  infix fun String.eq(value: Int) =
-    toolMessageCondition(this, "eq", value)
-
-  infix fun String.neq(value: Int) =
-    toolMessageCondition(this, "neq", value)
-
-  infix fun String.gt(value: Int) =
-    toolMessageCondition(this, "gt", value)
-
-  infix fun String.gte(value: Int) =
-    toolMessageCondition(this, "gte", value)
-
-  infix fun String.lt(value: Int) =
-    toolMessageCondition(this, "lt", value)
-
-  infix fun String.lte(value: Int) =
-    toolMessageCondition(this, "lte", value)
-
-  infix fun String.eq(value: Boolean) =
-    toolMessageCondition(this, "eq", value)
-
-  infix fun String.neq(value: Boolean) =
-    toolMessageCondition(this, "neq", value)
-
-  infix fun String.gt(value: Boolean) =
-    toolMessageCondition(this, "gt", value)
-
-  infix fun String.gte(value: Boolean) =
-    toolMessageCondition(this, "gte", value)
-
-  infix fun String.lt(value: Boolean) =
-    toolMessageCondition(this, "lt", value)
-
-  infix fun String.lte(value: Boolean) =
-    toolMessageCondition(this, "lte", value)
 
   companion object {
     private val ToolMessageType.isMatching: (ToolMessage) -> Boolean
       get() = { it.type == type && it.conditions.isEmpty() }
   }
 }
+
+infix fun String.eq(value: String) =
+  toolMessageCondition(this, "eq", value)
+
+infix fun String.neq(value: String) =
+  toolMessageCondition(this, "neq", value)
+
+infix fun String.gt(value: String) =
+  toolMessageCondition(this, "gt", value)
+
+infix fun String.gte(value: String) =
+  toolMessageCondition(this, "gte", value)
+
+infix fun String.lt(value: String) =
+  toolMessageCondition(this, "lt", value)
+
+infix fun String.lte(value: String) =
+  toolMessageCondition(this, "lte", value)
+
+infix fun String.eq(value: Int) =
+  toolMessageCondition(this, "eq", value)
+
+infix fun String.neq(value: Int) =
+  toolMessageCondition(this, "neq", value)
+
+infix fun String.gt(value: Int) =
+  toolMessageCondition(this, "gt", value)
+
+infix fun String.gte(value: Int) =
+  toolMessageCondition(this, "gte", value)
+
+infix fun String.lt(value: Int) =
+  toolMessageCondition(this, "lt", value)
+
+infix fun String.lte(value: Int) =
+  toolMessageCondition(this, "lte", value)
+
+infix fun String.eq(value: Boolean) =
+  toolMessageCondition(this, "eq", value)
+
+infix fun String.neq(value: Boolean) =
+  toolMessageCondition(this, "neq", value)
+
+infix fun String.gt(value: Boolean) =
+  toolMessageCondition(this, "gt", value)
+
+infix fun String.gte(value: Boolean) =
+  toolMessageCondition(this, "gte", value)
+
+infix fun String.lt(value: Boolean) =
+  toolMessageCondition(this, "lt", value)
+
+infix fun String.lte(value: Boolean) =
+  toolMessageCondition(this, "lte", value)

@@ -32,7 +32,7 @@ class Vapi4kConfig {
     Assistant.config = this
   }
 
-  internal var assistantRequest: (suspend (config: Vapi4kConfig, request: JsonElement) -> AssistantRequestResponse)? =
+  internal var assistantRequest: (suspend (request: JsonElement) -> AssistantRequestResponse)? =
     null
   internal var allRequests = mutableListOf<(suspend (requestType: ServerRequestType, request: JsonElement) -> Unit)>()
   internal val perRequests = mutableListOf<Pair<ServerRequestType, suspend (ServerRequestType, JsonElement) -> Unit>>()

@@ -23,9 +23,7 @@ import java.net.URI
 @Vapi4KDslMarker
 class Vapi4kConfigProperties {
   internal val serverUrlPath
-    get() = if (serverUrl.isEmpty()) DEFAULT_SERVER_URL else URI(serverUrl).toURL().path.ensureStartsWith(
-      "/"
-    )
+    get() = if (serverUrl.isEmpty()) DEFAULT_SERVER_URL else URI(serverUrl).toURL().path.ensureStartsWith("/")
 
   var serverUrl = ""
   var serverUrlSecret = ""

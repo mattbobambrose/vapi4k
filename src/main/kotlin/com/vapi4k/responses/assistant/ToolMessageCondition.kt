@@ -27,7 +27,7 @@ data class ToolMessageCondition(
 ) {
   companion object {
     fun toolMessageCondition(param: String, operator: String, value: String) =
-      ToolMessageCondition(param, operator, value.toString())
+      ToolMessageCondition(param, operator, value)
 
     fun toolMessageCondition(param: String, operator: String, value: Int) =
       ToolMessageCondition(param, operator, value.toString())

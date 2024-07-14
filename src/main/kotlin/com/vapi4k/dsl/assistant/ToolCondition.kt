@@ -25,7 +25,7 @@ import com.vapi4k.responses.assistant.ToolMessageCondition
 import kotlin.reflect.KProperty
 
 @AssistantDslMarker
-class Condition(
+class ToolCondition(
   val tool: Tool,
   val conditionSet: Set<ToolMessageCondition>,
 ) {
@@ -50,12 +50,12 @@ class Condition(
   companion object {
     private class ConditionDelegate(val requestType: ToolMessageType) {
       operator fun getValue(
-        condition: Condition,
+        condition: ToolCondition,
         property: KProperty<*>,
       ) = with(condition) { messages.singleOrNull(requestType.isMatch(conditionSet))?.content ?: "" }
 
       operator fun setValue(
-        condition: Condition,
+        condition: ToolCondition,
         property: KProperty<*>,
         newVal: String,
       ) =

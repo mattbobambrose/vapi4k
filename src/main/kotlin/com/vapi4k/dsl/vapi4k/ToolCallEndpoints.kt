@@ -16,13 +16,13 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.plugin.Vapi4kConfig
+import com.vapi4k.dsl.assistant.Assistant
 
 @Vapi4KDslMarker
-class ToolCallEndpoints(val config: Vapi4kConfig) {
+class ToolCallEndpoints {
   internal fun ToolCallEndpoints.hasName(endpoint: Endpoint) =
-    config.toolCallEndpoints.any { it.name == endpoint.name }
+    Assistant.config.toolCallEndpoints.any { it.name == endpoint.name }
 
   internal fun ToolCallEndpoints.hasUrl(endpoint: Endpoint) =
-    config.toolCallEndpoints.any { it.url == endpoint.url }
+    Assistant.config.toolCallEndpoints.any { it.url == endpoint.url }
 }

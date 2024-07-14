@@ -16,6 +16,7 @@
 
 package com.vapi4k.plugin
 
+import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.dsl.vapi4k.ServerRequestType.Companion.isToolCall
@@ -69,10 +70,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",
   createConfiguration = { Vapi4kConfig() },
 ) {
-  val config = pluginConfig
   val requestResponseCallbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
 
-  startRequestCallbackThread(requestResponseCallbackChannel, config)
+  startRequestCallbackThread(requestResponseCallbackChannel)
 
   environment?.monitor?.apply {
     subscribe(ApplicationStarting) { it.environment.log.info("Vapi4kServer is starting") }
@@ -85,10 +85,10 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     get("/") { call.respondText("Hello World!") }
     get("/ping") { call.respondText("pong") }
 
-    val serverPath = config.configProperties.serverUrlPath
+    val serverPath = Assistant.config.configProperties.serverUrlPath
     logger.info { "Adding POST serverUrl endpoint at $serverPath" }
     post(serverPath) {
-      if (isValidSecret(config.configProperties.serverUrlSecret)) {
+      if (isValidSecret(Assistant.config.configProperties.serverUrlSecret)) {
         val json = call.receive<String>()
         val request = Json.parseToJsonElement(json)
         val requestType = ServerRequestType.fromString(request["message.type"].stringValue)
@@ -98,7 +98,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         val (response, duration) = measureTimedValue {
           when (requestType) {
             ASSISTANT_REQUEST -> {
-              val response = getAssistantResponse(config, request)
+              val response = getAssistantResponse(request)
               call.respond(response)
               lambda { response.toJsonElement() }
             }
@@ -127,7 +127,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       }
     }
 
-    config.toolCallEndpoints.forEach { endpoint ->
+    Assistant.config.toolCallEndpoints.forEach { endpoint ->
       val toolCallPath = endpoint.path
       logger.info { "Adding POST toolCall endpoint ${endpoint.name}: ${endpoint.path}" }
       post(toolCallPath) {
@@ -156,7 +156,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
 fun startRequestCallbackThread(
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
-  config: Vapi4kConfig,
 ) {
   thread {
     while (true) {
@@ -167,8 +166,8 @@ fun startRequestCallbackThread(
               with(callback) {
                 when (callback.type) {
                   REQUEST -> {
-                    config.allRequests.forEach { launch { it.invoke(requestType, request!!) } }
-                    config.perRequests
+                    Assistant.config.allRequests.forEach { launch { it.invoke(requestType, request!!) } }
+                    Assistant.config.perRequests
                       .filter { it.first == requestType }
                       .forEach { (reqType, block) ->
                         launch { block(reqType, request!!) }
@@ -176,15 +175,15 @@ fun startRequestCallbackThread(
                   }
 
                   RESPONSE -> {
-                    if (config.allResponses.isNotEmpty() || config.perResponses.isNotEmpty()) {
+                    if (Assistant.config.allResponses.isNotEmpty() || Assistant.config.perResponses.isNotEmpty()) {
                       val resp = try {
                         response!!.invoke()
                       } catch (e: Exception) {
                         logger.error(e) { "Error creating response" }
                         error("Error creating response")
                       }
-                      config.allResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
-                      config.perResponses
+                      Assistant.config.allResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
+                      Assistant.config.perResponses
                         .filter { it.first == requestType }
                         .forEach { (reqType, block) ->
                           launch { block(reqType, resp, elapsed) }

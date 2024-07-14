@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.plugin.Vapi4kConfig
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.JsonUtils.get
@@ -36,7 +37,7 @@ object Vapi4kDsl {
   }
 
   fun ToolCallEndpoints.endpoint(block: Endpoint.() -> Unit) {
-    config.toolCallEndpoints += Endpoint().apply(block).also { endpoint ->
+    Assistant.config.toolCallEndpoints += Endpoint().apply(block).also { endpoint ->
       when {
         hasName(endpoint) && endpoint.name.isEmpty() -> error("Duplicate blank endpoint names")
         hasName(endpoint) -> error("Duplicate endpoint name: ${endpoint.name}")
@@ -46,14 +47,16 @@ object Vapi4kDsl {
   }
 
   fun Vapi4kConfig.toolCallEndpoints(block: ToolCallEndpoints.() -> Unit) {
-    ToolCallEndpoints(this).apply(block)
+    ToolCallEndpoints().apply(block)
   }
 
   fun Vapi4kConfig.onAssistantRequest(
-    block: suspend (config: Vapi4kConfig, request: JsonElement) -> AssistantRequestResponse,
+    block: suspend (request: JsonElement) -> AssistantRequestResponse,
   ) {
-    if (assistantRequest == null) assistantRequest = block
-    else error("onAssistantRequest{} can be called only once")
+    if (assistantRequest == null)
+      assistantRequest = block
+    else
+      error("onAssistantRequest{} can be called only once")
   }
 
   fun Vapi4kConfig.onAllRequests(block: suspend (requestType: ServerRequestType, request: JsonElement) -> Unit) {

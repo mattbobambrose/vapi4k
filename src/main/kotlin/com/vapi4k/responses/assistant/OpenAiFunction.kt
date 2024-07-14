@@ -28,7 +28,7 @@ data class OpenAiFunction(
     var name: String = "",
     var async: Boolean = false,
     var serverUrl: String = "",
-    var parameters: Function.Parameters = Function.Parameters(),
+    var parameters: Parameters = Parameters(),
     var description: String = "",
     var serverUrlSecret: String = "",
   ) {
