@@ -24,7 +24,7 @@ import com.vapi4k.responses.ToolCallMessage
 import com.vapi4k.responses.assistant.ToolMessageCondition
 import kotlinx.serialization.json.JsonElement
 
-abstract class ToolCallService() {
+abstract class ToolCallService {
   open fun onRequestComplete(
     toolCallRequest: JsonElement,
     result: String,

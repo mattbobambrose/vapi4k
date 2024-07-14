@@ -16,6 +16,8 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.dsl.vapi4k.Vapi4kConfig.Companion.logger
+
 enum class ServerRequestType(val desc: String) {
   ASSISTANT_REQUEST("assistant-request"),
   CONVERSATION_UPDATE("conversation-update"),
@@ -38,7 +40,7 @@ enum class ServerRequestType(val desc: String) {
       try {
         entries.first { it.desc == desc }
       } catch (e: Exception) {
-        Vapi4kDsl.logger.error(e) { "Invalid ServerMessageType: $desc" }
+        logger.error(e) { "Invalid ServerMessageType: $desc" }
         UNKNOWN
       }
   }

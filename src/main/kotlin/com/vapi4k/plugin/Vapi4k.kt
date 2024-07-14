@@ -22,11 +22,12 @@ import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.dsl.vapi4k.ServerRequestType.Companion.isToolCall
 import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.dsl.vapi4k.ServerRequestType.TOOL_CALL
+import com.vapi4k.dsl.vapi4k.Vapi4kConfig
+import com.vapi4k.dsl.vapi4k.Vapi4kConfig.Companion.logger
 import com.vapi4k.plugin.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.plugin.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.plugin.RequestResponseType.REQUEST
 import com.vapi4k.plugin.RequestResponseType.RESPONSE
-import com.vapi4k.plugin.Vapi4kPlugin.logger
 import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantResponse
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
@@ -35,7 +36,6 @@ import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.Utils.lambda
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
@@ -61,10 +61,6 @@ import kotlinx.serialization.json.JsonElement
 import kotlin.concurrent.thread
 import kotlin.time.Duration
 import kotlin.time.measureTimedValue
-
-object Vapi4kPlugin {
-  val logger = KotlinLogging.logger {}
-}
 
 val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",

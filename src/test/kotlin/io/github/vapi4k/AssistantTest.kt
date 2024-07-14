@@ -23,8 +23,7 @@ import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.dsl.assistant.ToolMessageType
 import com.vapi4k.dsl.assistant.eq
-import com.vapi4k.dsl.vapi4k.Vapi4kDsl.configure
-import com.vapi4k.plugin.Vapi4kConfig
+import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.JsonUtils.toJsonElement
