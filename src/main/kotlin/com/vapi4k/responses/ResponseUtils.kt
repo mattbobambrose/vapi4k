@@ -16,6 +16,7 @@
 
 package com.vapi4k.responses
 
+import com.vapi4k.Vapi4k.logger
 import com.vapi4k.common.Constants
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
@@ -31,6 +32,7 @@ object ResponseUtils {
     methodName: String,
     args: JsonElement,
   ): String {
+    logger.info { "Invoking method $methodName with methods: ${service::class.java.declaredMethods.map { it.name }}" }
     val method = service::class.java.declaredMethods.single { it.name == methodName }
     val argNames = args.jsonObject.keys
     val result = method.invoke(service, *argNames.map { args[it].stringValue }.toTypedArray<String>())

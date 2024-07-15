@@ -17,8 +17,10 @@
 package com.vapi4k.responses
 
 import com.vapi4k.Vapi4k.logger
+import com.vapi4k.dsl.assistant.Functions.Companion.functionCache
 import com.vapi4k.responses.ResponseUtils.deriveNames
 import com.vapi4k.responses.ResponseUtils.invokeMethod
+import com.vapi4k.utils.JsonElementUtils.phoneNumber
 import com.vapi4k.utils.Utils.functionName
 import com.vapi4k.utils.Utils.functionParameters
 import kotlinx.serialization.Serializable
@@ -36,7 +38,9 @@ class FunctionResponse(var result: String = "") {
           val serviceInstance =
             runCatching {
               with(Class.forName(className)) {
-                kotlin.objectInstance ?: this.constructors.toList().first().newInstance()
+                kotlin.objectInstance ?: functionCache.get(request.phoneNumber)?.get(className)
+                ?: error("No object instance found for $className")
+//                this.constructors.toList().first().newInstance()
               }
             }
 

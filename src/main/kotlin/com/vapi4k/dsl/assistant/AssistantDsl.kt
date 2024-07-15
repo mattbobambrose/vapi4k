@@ -23,8 +23,11 @@ import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.FunctionDto.FunctionParameters.FunctionPropertyDesc
+import com.vapi4k.utils.JsonElementUtils.phoneNumber
+import kotlinx.serialization.json.JsonElement
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
 import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
@@ -41,9 +44,9 @@ object AssistantDsl {
   private val KFunction<*>.hasTool get() = toolCall != null
   internal val KFunction<*>.isAsync get() = returnType.classifier as KClass<*> == Unit::class
 
-  fun assistant(block: Assistant.() -> Unit) =
+  fun assistant(request: JsonElement, block: Assistant.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      Assistant(messageResponse.assistant).apply(block)
+      Assistant(request, messageResponse.assistant).apply(block)
     }.messageResponse
 
   fun assistantId(id: String) =
@@ -56,12 +59,12 @@ object AssistantDsl {
     isFunction: Boolean,
     obj: Any,
   ): KFunction<*> {
-    val constructors = obj::class.java.constructors
-    if (constructors.size != 1) {
-      error("Only one constructor is allowed. Found ${constructors.size}")
-    } else if (constructors.first().parameterCount != 0) {
-      error("Constructor must have no parameters")
-    }
+//    val constructors = obj::class.java.constructors
+//    if (constructors.size != 1) {
+//      error("Only one constructor is allowed. Found ${constructors.size}")
+//    } else if (constructors.first().parameterCount != 0) {
+//      error("Constructor must have no parameters")
+//    }
 
     val methods = obj::class.declaredFunctions
     val cnt = methods.count { it.hasTool }
@@ -176,10 +179,19 @@ data class Functions internal constructor(val model: Model) {
     model.modelDto.functions += FunctionDto().apply {
       verifyObject(true, obj)
       populateFunctionDto(obj, this)
+      if (!functionCache.containsKey(model.assistant.request.phoneNumber)) {
+        functionCache[model.assistant.request.phoneNumber] = mutableMapOf()
+      }
+      val map = functionCache[model.assistant.request.phoneNumber]!!
+      map[obj::class.java.name] = obj
     }.also { func ->
       if (model.modelDto.functions.any { func.name == it.name }) {
         error("Duplicate function name declared: ${func.name}")
       }
     }
+  }
+
+  companion object {
+    val functionCache = ConcurrentHashMap<String, MutableMap<String, Any>>()
   }
 }

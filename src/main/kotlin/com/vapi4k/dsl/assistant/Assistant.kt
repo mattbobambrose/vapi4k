@@ -19,6 +19,7 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.responses.assistant.AssistantDto
+import kotlinx.serialization.json.JsonElement
 
 interface AssistantUnion {
   var name: String
@@ -48,7 +49,7 @@ interface AssistantUnion {
 }
 
 @AssistantDslMarker
-data class Assistant internal constructor(internal val assistantDto: AssistantDto) :
+data class Assistant internal constructor(internal val request: JsonElement, internal val assistantDto: AssistantDto) :
   AssistantUnion by assistantDto {
   fun model(block: Model.() -> Unit) {
     Model(this, assistantDto.model).apply(block)

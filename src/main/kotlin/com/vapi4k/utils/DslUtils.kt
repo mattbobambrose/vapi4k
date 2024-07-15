@@ -31,4 +31,7 @@ object DslUtils {
   ) = println("${T::class.simpleName} JSON:\n$${value?.toJsonString(prettify) ?: ""}\"")
 
   val isLoggingEnabled: Boolean get() = System.getenv("LOGGING_ENABLED")?.toBoolean() ?: false
+
+  fun String.includeIf(condition: Boolean) = if (condition) this else ""
+
 }

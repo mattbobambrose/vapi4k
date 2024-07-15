@@ -37,11 +37,8 @@ object JsonElementUtils {
   val JsonElement.isTransferDestinationRequest get() = requestType == ServerRequestType.TRANSFER_DESTINATION_REQUEST
   val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
 
-  val JsonElement.customerNumber
-    get() = if (isAssistantRequest)
-      this["message.call.customer.number"].stringValue
-    else
-      error("JsonElement is not an assistant request")
+  val JsonElement.phoneNumber
+    get() = this["message.call.customer.number"].stringValue
 
   val JsonElement.statusUpdateError: String
     get() = if (isStatusUpdate)
