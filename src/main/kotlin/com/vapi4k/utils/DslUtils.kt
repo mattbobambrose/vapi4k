@@ -32,6 +32,5 @@ object DslUtils {
 
   val isLoggingEnabled: Boolean get() = System.getenv("LOGGING_ENABLED")?.toBoolean() ?: false
 
-  fun String.includeIf(condition: Boolean) = if (condition) this else ""
-
+  fun String.includeIf(condition: Boolean, otherWise: String = "") = if (condition) this else otherWise
 }
