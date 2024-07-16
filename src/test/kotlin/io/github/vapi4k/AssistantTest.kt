@@ -21,6 +21,7 @@ import com.vapi4k.dsl.assistant.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
+import com.vapi4k.dsl.assistant.ToolCache.resetCaches
 import com.vapi4k.dsl.assistant.ToolMessageType
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
@@ -60,10 +61,10 @@ class AssistantTest {
   val chicagoIllinoisFailedMessage = "This is the Chicago Illinois request failed message"
   val chicagoIllinoisDelayedMessage = "This is the Chicago Illinois request delayed message"
 
-
   @Test
   fun testRegular() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -87,7 +88,8 @@ class AssistantTest {
 
   @Test
   fun `test reverse delay order`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -114,7 +116,8 @@ class AssistantTest {
 
   @Test
   fun `test message with no millis`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -137,7 +140,8 @@ class AssistantTest {
 
   @Test
   fun `test defective with no delayed message`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val exception =
       assertThrows(IllegalStateException::class.java) {
         assistant(request) {
@@ -163,7 +167,8 @@ class AssistantTest {
 
   @Test
   fun `multiple message`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -190,7 +195,8 @@ class AssistantTest {
 
   @Test
   fun `multiple message unordered`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -217,7 +223,8 @@ class AssistantTest {
 
   @Test
   fun `multiple delay time`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -244,7 +251,8 @@ class AssistantTest {
 
   @Test
   fun `multiple message multiple delay time`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -273,7 +281,8 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -332,7 +341,8 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message reverse conditions 1`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -398,7 +408,8 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message reverse conditions 2`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -462,7 +473,8 @@ class AssistantTest {
 
   @Test
   fun `check non-default FirstMessageModeType values`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
     }
@@ -476,7 +488,8 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 1`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       clientMessages -= AssistantClientMessageType.HANG
     }
@@ -487,7 +500,8 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 2`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
     }
@@ -498,7 +512,8 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 1`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       serverMessages -= AssistantServerMessageType.HANG
     }
@@ -509,7 +524,8 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 2`() {
-    val request = "{}".toJsonElement()
+    val request = assistantRequest.toJsonElement()
+    resetCaches()
     val assistant = assistant(request) {
       serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
     }
@@ -517,4 +533,17 @@ class AssistantTest {
     val element = assistant.toJsonElement()
     assertEquals(7, element.assistantServerMessages.size)
   }
+
+  val assistantRequest = """
+    {
+    "message": {
+        "type": "assistant-request",
+        "call": {
+            "id": "00dbe917-37fd-4d3f-8cc0-ac6be0923f40",
+            "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b"
+        },
+        "timestamp": "2024-07-13T21:27:59.870Z"
+    }
+}
+  """
 }

@@ -32,7 +32,8 @@ data class AssistantRequestResponse(
   var destination: Destination = Destination(),
   var assistantOverrides: AssistantOverrides? = null,
   var squadId: String = "",
-  var squad: SquadDto = SquadDto(),
+  // Do not initialize this to a SquadDto
+  var squad: SquadDto? = null,
   var error: String = "",
 ) {
   companion object {

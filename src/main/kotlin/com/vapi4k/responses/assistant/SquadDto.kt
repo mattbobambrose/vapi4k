@@ -24,7 +24,8 @@ import kotlinx.serialization.Serializable
 data class SquadDto(
   override var name: String = "",
 
-  val members: MutableList<MemberDto> = mutableListOf(),
+  // This cannot be initialized to a mutable list
+  var members: MutableList<MemberDto>? = null,
   var membersOverrides: AssistantOverrides = AssistantOverrides(),
   val id: String = "",
   val orgId: String = "",

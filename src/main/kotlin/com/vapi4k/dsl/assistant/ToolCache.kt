@@ -43,6 +43,13 @@ internal object ToolCache {
 
   val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
 
+  fun resetCaches() {
+    toolCallCache.clear()
+    functionCache.clear()
+    toolCallCacheIsActive = false
+    functionCacheIsActive = false
+  }
+
   fun addToolCallToCache(
     messageCallId: String,
     obj: Any,

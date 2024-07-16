@@ -18,6 +18,7 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
+import com.vapi4k.responses.assistant.SquadDto
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
@@ -43,7 +44,10 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      Squad(request, messageResponse.squad).apply(block)
+      if (messageResponse.squad == null) {
+        messageResponse.squad = SquadDto()
+      }
+      Squad(request, messageResponse.squad!!).apply(block)
     }.messageResponse
 
   fun squadId(id: String) =
