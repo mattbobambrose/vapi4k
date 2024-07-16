@@ -18,14 +18,14 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.Vapi4k.logger
 import com.vapi4k.dsl.assistant.FunctionUtils.ToolCallInfo
-import com.vapi4k.dsl.assistant.FunctionUtils.findFunction
-import com.vapi4k.dsl.assistant.FunctionUtils.findMethod
-import com.vapi4k.dsl.assistant.FunctionUtils.toolMethod
 import com.vapi4k.dsl.assistant.ToolCache.FunctionDetails.Companion.toFunctionDetails
 import com.vapi4k.responses.ToolCallMessage
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.Utils.asKClass
+import com.vapi4k.utils.Utils.findFunction
+import com.vapi4k.utils.Utils.findMethod
+import com.vapi4k.utils.Utils.toolMethod
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonElement

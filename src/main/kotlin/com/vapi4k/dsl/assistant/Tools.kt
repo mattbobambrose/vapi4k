@@ -17,14 +17,14 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.AssistantDslMarker
-import com.vapi4k.dsl.assistant.FunctionUtils.isAsync
 import com.vapi4k.dsl.assistant.FunctionUtils.populateFunctionDto
-import com.vapi4k.dsl.assistant.FunctionUtils.toolFunction
 import com.vapi4k.dsl.assistant.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.ToolCache.addToolCallToCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
+import com.vapi4k.utils.Utils.isUnitReturnType
+import com.vapi4k.utils.Utils.toolFunction
 
 @AssistantDslMarker
 data class Tools internal constructor(val model: Model) {
@@ -40,7 +40,7 @@ data class Tools internal constructor(val model: Model) {
 
       with(toolDto) {
         type = "function"
-        async = obj.toolFunction.isAsync
+        async = obj.toolFunction.isUnitReturnType
       }
 
       // Apply block to tool

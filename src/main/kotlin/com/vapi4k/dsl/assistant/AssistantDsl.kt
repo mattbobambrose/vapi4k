@@ -24,7 +24,6 @@ import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
 import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 
 object AssistantDsl {
-
   fun assistant(
     request: JsonElement,
     block: Assistant.() -> Unit,

@@ -18,25 +18,16 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.utils.Utils.asKClass
+import com.vapi4k.utils.Utils.functions
+import com.vapi4k.utils.Utils.hasTool
+import com.vapi4k.utils.Utils.param
+import com.vapi4k.utils.Utils.toolCall
+import com.vapi4k.utils.Utils.toolFunction
+import com.vapi4k.utils.Utils.toolMethod
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
-import kotlin.reflect.KFunction
-import kotlin.reflect.full.declaredFunctions
 
 internal object FunctionUtils {
-  val Parameter.param: Param? get() = annotations.firstOrNull { it is Param } as Param?
-  val Method.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
-  val KFunction<*>.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
-  val Method.hasTool get() = toolCall != null
-  val KFunction<*>.hasTool get() = toolCall != null
-  val KFunction<*>.isAsync get() = returnType.asKClass() == Unit::class
-  val Any.functions get() = this::class.declaredFunctions
-  val Any.methods get() = this::class.java.declaredMethods
-  val Any.toolFunction get() = functions.first { it.hasTool }
-  val Any.toolMethod get() = methods.first { it.hasTool }
-  fun Any.findMethod(methodName: String) = methods.single { it.name == methodName }
-  fun Any.findFunction(methodName: String) = functions.single { it.name == methodName }
-
   private val legalTypes = setOf(String::class, Unit::class)
 
 
