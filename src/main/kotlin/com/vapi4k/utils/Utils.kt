@@ -16,13 +16,6 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.utils.JsonElementUtils.isFunctionCall
-import com.vapi4k.utils.JsonElementUtils.isToolCall
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.jsonList
-import com.vapi4k.utils.JsonUtils.stringValue
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.jsonArray
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -33,27 +26,6 @@ internal object Utils {
 
   fun <T> lambda(block: T) = block
 
-  val JsonElement.functionName
-    get() = if (isFunctionCall) this["message.functionCall.name"].stringValue else error("JsonElement is not a function call")
-
-  val JsonElement.functionParameters
-    get() = if (isFunctionCall) this["message.functionCall.parameters"] else error("JsonElement is not a function call")
-
-  val JsonElement.toolCallList
-    get() = if (isToolCall) this["message.toolCallList"].jsonList else error("JsonElement is not a tool call")
-
-  val JsonElement.toolCallId
-    get() = this["id"].stringValue
-
-  val JsonElement.toolCallName
-    get() = this["function.name"].stringValue
-
-  val JsonElement.toolCallArguments
-    get() = this["function.arguments"]
-
-  val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
-
-  val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 
   fun KType.asKClass() = classifier as KClass<*>
 }

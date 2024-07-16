@@ -17,15 +17,15 @@
 package com.vapi4k.responses
 
 import com.vapi4k.Vapi4k.logger
-import com.vapi4k.dsl.assistant.ToolCache.toolCache
+import com.vapi4k.dsl.assistant.ToolCache.toolCallCache
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
 import com.vapi4k.responses.assistant.ToolMessageCondition
-import com.vapi4k.utils.JsonElementUtils.phoneNumber
-import com.vapi4k.utils.Utils.toolCallArguments
-import com.vapi4k.utils.Utils.toolCallId
-import com.vapi4k.utils.Utils.toolCallList
-import com.vapi4k.utils.Utils.toolCallName
+import com.vapi4k.utils.JsonElementUtils.messageCallId
+import com.vapi4k.utils.JsonElementUtils.toolCallArguments
+import com.vapi4k.utils.JsonElementUtils.toolCallId
+import com.vapi4k.utils.JsonElementUtils.toolCallList
+import com.vapi4k.utils.JsonElementUtils.toolCallName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -44,7 +44,7 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
                 toolCallResponse.messageResponse.also { messageResponse ->
                   messageResponse.results += ToolCallResult().also { toolCallResult ->
 
-                    val phoneNumber = request.phoneNumber
+                    val messageCallId = request.messageCallId
                     val funcName = toolCall.toolCallName
                     val args = toolCall.toolCallArguments
 
@@ -53,8 +53,8 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
 
                     toolCallResult.result =
                       runCatching {
-                        val functionInfo = toolCache[phoneNumber] ?: error("Session not found: $phoneNumber")
-                        functionInfo.getFunction(funcName)
+                        (toolCallCache[messageCallId] ?: error("Message Call ID not found: $messageCallId"))
+                          .getFunction(funcName)
                           .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->
                             toolCallResult.error = errorMsg
                             errorMessage = errorMsg

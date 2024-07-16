@@ -18,9 +18,9 @@ package com.vapi4k.responses
 
 import com.vapi4k.Vapi4k.logger
 import com.vapi4k.dsl.assistant.ToolCache.functionCache
-import com.vapi4k.utils.JsonElementUtils.phoneNumber
-import com.vapi4k.utils.Utils.functionName
-import com.vapi4k.utils.Utils.functionParameters
+import com.vapi4k.utils.JsonElementUtils.functionName
+import com.vapi4k.utils.JsonElementUtils.functionParameters
+import com.vapi4k.utils.JsonElementUtils.messageCallId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -30,11 +30,11 @@ class FunctionResponse(var result: String = "") {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
-          val phoneNumber = request.phoneNumber
+          val messageCallId = request.messageCallId
           val funcName = request.functionName
           val args = request.functionParameters
           response.result = runCatching {
-            val functionInfo = functionCache[phoneNumber] ?: error("Session not found: $phoneNumber")
+            val functionInfo = functionCache[messageCallId] ?: error("Session not found: $messageCallId")
             functionInfo.getFunction(funcName).invokeToolMethod(args, request)
           }.getOrElse { e ->
             val errorMsg = e.message ?: "Error invoking function"

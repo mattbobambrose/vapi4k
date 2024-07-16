@@ -30,20 +30,35 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.full.declaredFunctions
+import kotlin.time.DurationUnit.MILLISECONDS
+import kotlin.time.DurationUnit.SECONDS
 
 internal object ToolCache {
-  val toolCache = ConcurrentHashMap<String, FunctionInfo>()
+  val toolCallCache = ConcurrentHashMap<String, FunctionInfo>()
   val functionCache = ConcurrentHashMap<String, FunctionInfo>()
 
-  fun addToolToCache(
+  fun addToolCallToCache(
     phoneNumber: String,
     obj: Any,
-  ) = addToCache(toolCache, "Tool", phoneNumber, obj)
+  ) = addToCache(toolCallCache, "Tool", phoneNumber, obj)
 
   fun addFunctionToCache(
     phoneNumber: String,
     obj: Any,
   ) = addToCache(functionCache, "Function", phoneNumber, obj)
+
+  fun removeToolCallFromCache(
+    messageCallId: String,
+    block: (FunctionInfo) -> Unit,
+  ): FunctionInfo? =
+    toolCallCache.remove(messageCallId)?.also { it -> block(it) }
+
+  fun removeFunctionFromCache(
+    messageCallId: String,
+    block: (FunctionInfo) -> Unit,
+  ): FunctionInfo? =
+    functionCache.remove(messageCallId)?.also { it -> block(it) }
+
 
   private fun addToCache(
     cache: ConcurrentHashMap<String, FunctionInfo>,
@@ -63,15 +78,17 @@ internal object ToolCache {
       with(functionDetails) { error("$prefix \"$toolFuncName\" has already been declared in $className.$methodName()") }
   }
 
-  internal class FunctionInfo() {
+  class FunctionInfo() {
     val created: Instant = Clock.System.now()
     val functions = mutableMapOf<String, FunctionDetails>()
     val age get() = Clock.System.now() - created
+    val ageSecs get() = age.toString(unit = SECONDS)
+    val ageMillis get() = age.toString(unit = MILLISECONDS)
 
     fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
   }
 
-  internal class FunctionDetails(val obj: Any) {
+  class FunctionDetails(val obj: Any) {
     val className = obj::class.java.name
     val methodName = obj.toolMethod.name
 
