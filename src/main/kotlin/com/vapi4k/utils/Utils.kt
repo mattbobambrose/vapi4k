@@ -39,23 +39,21 @@ internal object Utils {
   val JsonElement.functionParameters
     get() = if (isFunctionCall) this["message.functionCall.parameters"] else error("JsonElement is not a function call")
 
-  val JsonElement.toolCallId
-    get() = if (isToolCall) this["id"].stringValue else error("JsonElement is not a tool call")
-
   val JsonElement.toolCallList
     get() = if (isToolCall) this["message.toolCallList"].jsonList else error("JsonElement is not a tool call")
 
+  val JsonElement.toolCallId
+    get() = this["id"].stringValue
+
   val JsonElement.toolCallName
-    get() = if (isToolCall) this["function.name"].stringValue else error("JsonElement is not a tool call")
+    get() = this["function.name"].stringValue
 
   val JsonElement.toolCallArguments
-    get() = if (isToolCall) this["function.arguments"] else error("JsonElement is not a tool call")
+    get() = this["function.arguments"]
 
   val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
 
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
-
-  fun KType.asClass() = classifier as Class<*>
 
   fun KType.asKClass() = classifier as KClass<*>
 }

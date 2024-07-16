@@ -30,7 +30,7 @@ object JsonUtils {
   val JsonElement.jsonList get() = jsonArray.toList()
 
   private fun JsonElement.element(key: String) =
-    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key $key not found")
+    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
 
   operator fun JsonElement.get(vararg keys: String): JsonElement =
     keys.flatMap { it.split(".") }
