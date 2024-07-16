@@ -19,7 +19,7 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.FunctionUtils.isAsync
 import com.vapi4k.dsl.assistant.FunctionUtils.populateFunctionDto
-import com.vapi4k.dsl.assistant.FunctionUtils.toolKFunction
+import com.vapi4k.dsl.assistant.FunctionUtils.toolFunction
 import com.vapi4k.dsl.assistant.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.ToolCache.addToolCallToCache
 import com.vapi4k.dsl.vapi4k.Endpoint
@@ -38,9 +38,10 @@ data class Tools internal constructor(val model: Model) {
       populateFunctionDto(obj, toolDto.function)
       addToolCallToCache(model.assistant.request.messageCallId, obj)
 
-      toolDto.type = "function"
-      toolDto.async = obj.toolKFunction.isAsync
-      toolDto.messages = mutableListOf()
+      with(toolDto) {
+        type = "function"
+        async = obj.toolFunction.isAsync
+      }
 
       // Apply block to tool
       val tool = Tool(toolDto).apply(block)

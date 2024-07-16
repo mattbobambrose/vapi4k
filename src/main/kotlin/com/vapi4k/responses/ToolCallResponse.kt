@@ -50,7 +50,6 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
 
                     toolCallResult.toolCallId = toolCall.toolCallId
                     toolCallResult.name = funcName
-
                     toolCallResult.result =
                       runCatching {
                         (toolCallCache[messageCallId] ?: error("Message Call ID not found: $messageCallId"))
