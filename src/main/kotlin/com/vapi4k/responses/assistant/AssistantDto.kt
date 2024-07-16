@@ -21,10 +21,14 @@ import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.AssistantUnion
 import com.vapi4k.dsl.assistant.FirstMessageModeType
 import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST
+import com.vapi4k.dsl.assistant.Squad.Member.AssistantDto.TransportConfiguration
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssistantDto(
+  // TODO: Came from squad assistant
+  val transportConfigurations: List<TransportConfiguration> = listOf(),
+
   override var name: String = "",
   override var firstMessage: String = "",
   override var recordingEnabled: Boolean = false,
@@ -32,8 +36,11 @@ data class AssistantDto(
   override var serverUrl: String = "",
   override var serverUrlSecret: String = "",
   // TODO: This needs to be added to docs
+  // forwadingPhoneNumber might not have come in json
   override var forwardingPhoneNumber: String = "",
+  // TODO: Not in docs or squad
   override var endCallFunctionEnabled: Boolean = false,
+  // TODO: Not in docs or squad
   override var dialKeypadFunctionEnabled: Boolean = false,
   override var responseDelaySeconds: Double = 0.0,
   override var llmRequestDelaySeconds: Double = 0.0,
