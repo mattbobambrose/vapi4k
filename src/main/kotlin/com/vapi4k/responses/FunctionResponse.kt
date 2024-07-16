@@ -17,9 +17,7 @@
 package com.vapi4k.responses
 
 import com.vapi4k.Vapi4k.logger
-import com.vapi4k.dsl.assistant.Functions.Companion.functionCache
-import com.vapi4k.responses.ResponseUtils.deriveNames
-import com.vapi4k.responses.ResponseUtils.invokeMethod
+import com.vapi4k.dsl.assistant.ToolCache.functionCache
 import com.vapi4k.utils.JsonElementUtils.phoneNumber
 import com.vapi4k.utils.Utils.functionName
 import com.vapi4k.utils.Utils.functionParameters
@@ -32,31 +30,17 @@ class FunctionResponse(var result: String = "") {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
+          val phoneNumber = request.phoneNumber
           val funcName = request.functionName
           val args = request.functionParameters
-          val (className, methodName) = deriveNames(funcName)
-          val serviceInstance =
-            runCatching {
-              with(Class.forName(className)) {
-                kotlin.objectInstance ?: functionCache.get(request.phoneNumber)?.get(className)
-                ?: error("No object instance found for $className")
-//                this.constructors.toList().first().newInstance()
-              }
-            }
-
-          response.result =
-            if (serviceInstance.isSuccess) {
-              val service = serviceInstance.getOrThrow()
-              val toolResult = runCatching { invokeMethod(service, methodName, args) }
-              toolResult.getOrElse {
-                logger.error(toolResult.exceptionOrNull()) { "Error invoking method $className.$methodName" }
-                "Error calling function"
-              }
-            } else {
-              logger.error(serviceInstance.exceptionOrNull()) { "Error creating instance of $className" }
-              "Error creating instance"
-            }
+          response.result = runCatching {
+            val functionInfo = functionCache[phoneNumber] ?: error("Session not found: $phoneNumber")
+            functionInfo.getFunction(funcName).invokeToolMethod(args, request)
+          }.getOrElse { e ->
+            val errorMsg = e.message ?: "Error invoking function"
+            logger.error(e) { errorMsg }
+            errorMsg
+          }
         }
-
   }
 }

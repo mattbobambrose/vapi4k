@@ -17,11 +17,14 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.AssistantDslMarker
-import com.vapi4k.dsl.assistant.AssistantDsl.isAsync
-import com.vapi4k.dsl.assistant.AssistantDsl.populateFunctionDto
-import com.vapi4k.dsl.assistant.AssistantDsl.verifyObject
+import com.vapi4k.dsl.assistant.FunctionUtils.isAsync
+import com.vapi4k.dsl.assistant.FunctionUtils.populateFunctionDto
+import com.vapi4k.dsl.assistant.FunctionUtils.toolKFunction
+import com.vapi4k.dsl.assistant.FunctionUtils.verifyObject
+import com.vapi4k.dsl.assistant.ToolCache.addToolToCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.responses.assistant.ToolDto
+import com.vapi4k.utils.JsonElementUtils.phoneNumber
 
 @AssistantDslMarker
 data class Tools internal constructor(val model: Model) {
@@ -30,30 +33,34 @@ data class Tools internal constructor(val model: Model) {
     obj: Any,
     block: Tool.() -> Unit,
   ) {
-    model.modelDto.tools += ToolDto().apply {
-      val method = verifyObject(false, obj)
-      type = "function"
-      async = method.isAsync
-      messages = mutableListOf()
-      populateFunctionDto(obj, function)
-      val tool = Tool(this)
-      block(tool)
-      if (messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type } == null) {
+    model.tools += ToolDto().also { toolDto ->
+      verifyObject(false, obj)
+      populateFunctionDto(obj, toolDto.function)
+      addToolToCache(model.assistant.request.phoneNumber, obj)
+
+      toolDto.type = "function"
+      toolDto.async = obj.toolKFunction.isAsync
+      toolDto.messages = mutableListOf()
+
+      // Apply block to tool
+      val tool = Tool(toolDto).apply(block)
+
+      if (toolDto.messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type } == null) {
         if (tool.futureDelay != -1) {
           error("delayedMillis must be set when using requestDelayedMessage")
         }
       }
 
-      with(server) {
+      with(toolDto.server) {
         url = endpoint.url
         secret = endpoint.secret
         if (endpoint.timeoutSeconds != -1) {
           timeoutSeconds = endpoint.timeoutSeconds
         }
       }
-    }.also { tool ->
-      if (model.modelDto.tools.any { tool.function.name == it.function.name }) {
-        error("Duplicate tool name declared: ${tool.function.name}")
+    }.also { toolDto ->
+      if (model.tools.any { toolDto.function.name == it.function.name }) {
+        error("Duplicate tool name declared: ${toolDto.function.name}")
       }
     }
   }

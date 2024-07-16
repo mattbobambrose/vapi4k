@@ -19,9 +19,9 @@ package io.github.vapi4k
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.jsonList
 import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.JsonUtils.toObjectList
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 
 class JsonExtensionTest {
@@ -305,31 +305,31 @@ class JsonExtensionTest {
 
   @Test
   fun testStringValue() {
-    val obj = Json.parseToJsonElement(json)
+    val obj = json.toJsonElement()
     assert(obj["message"]["type"].stringValue == "tool-calls")
   }
 
   @Test
   fun testPathVarargs() {
-    val obj = Json.parseToJsonElement(json)
+    val obj = json.toJsonElement()
     assert(obj["message", "type"].stringValue == "tool-calls")
   }
 
   @Test
   fun testPathString() {
-    val obj = Json.parseToJsonElement(json)
+    val obj = json.toJsonElement()
     assert(obj["message.type"].stringValue == "tool-calls")
   }
 
   @Test
   fun testArrayValues() {
-    val obj = Json.parseToJsonElement(json)
+    val obj = json.toJsonElement()
     assert(obj["message.toolWithToolCallList"].jsonList.size == 1)
   }
 
   @Test
   fun testOnceAgain() {
-    val j = """
+    val str = """
       {
         "async": false,
         "servers": [
@@ -355,9 +355,9 @@ class JsonExtensionTest {
       val secret: String,
     )
 
-    val je = Json.parseToJsonElement(j)
-    val k = je["servers"].toObjectList<Server>()
-    for (server in k) {
+    val jsonElement = str.toJsonElement()
+    val servers = jsonElement["servers"].toObjectList<Server>()
+    for (server in servers) {
       println(server.url)
     }
   }

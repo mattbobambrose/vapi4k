@@ -63,7 +63,8 @@ class AssistantTest {
 
   @Test
   fun testRegular() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -86,7 +87,8 @@ class AssistantTest {
 
   @Test
   fun `test reverse delay order`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -112,7 +114,8 @@ class AssistantTest {
 
   @Test
   fun `test message with no millis`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -134,31 +137,34 @@ class AssistantTest {
 
   @Test
   fun `test defective with no delayed message`() {
-    val exception = assertThrows(IllegalStateException::class.java) {
-      assistant {
-        firstMessage = messageOne
-        model {
-          provider = prov
-          model = mod
+    val request = "{}".toJsonElement()
+    val exception =
+      assertThrows(IllegalStateException::class.java) {
+        assistant(request) {
+          firstMessage = messageOne
+          model {
+            provider = prov
+            model = mod
 
-          systemMessage = sysMessage
-          tools {
-            tool(WeatherLookupService0()) {
-              requestStartMessage = startMessage
-              requestCompleteMessage = completeMessage
-              requestFailedMessage = failedMessage
-              delayedMillis = 2000
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                requestStartMessage = startMessage
+                requestCompleteMessage = completeMessage
+                requestFailedMessage = failedMessage
+                delayedMillis = 2000
+              }
             }
           }
         }
       }
-    }
     assertEquals("delayedMillis must be set when using requestDelayedMessage", exception.message)
   }
 
   @Test
   fun `multiple message`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -184,7 +190,8 @@ class AssistantTest {
 
   @Test
   fun `multiple message unordered`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -210,7 +217,8 @@ class AssistantTest {
 
   @Test
   fun `multiple delay time`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -236,7 +244,8 @@ class AssistantTest {
 
   @Test
   fun `multiple message multiple delay time`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -264,7 +273,8 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -322,7 +332,8 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message reverse conditions 1`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -387,7 +398,8 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message reverse conditions 2`() {
-    val assistant = assistant {
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
       firstMessage = messageOne
       model {
         provider = prov
@@ -450,10 +462,10 @@ class AssistantTest {
 
   @Test
   fun `check non-default FirstMessageModeType values`() {
-    val assistant =
-      assistant {
-        firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
-      }
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
+      firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
+    }
 
     val element = assistant.toJsonElement()
     assertEquals(
@@ -464,10 +476,10 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 1`() {
-    val assistant =
-      assistant {
-        clientMessages -= AssistantClientMessageType.HANG
-      }
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
+      clientMessages -= AssistantClientMessageType.HANG
+    }
 
     val element = assistant.toJsonElement()
     assertEquals(9, element.assistantClientMessages.size)
@@ -475,10 +487,10 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 2`() {
-    val assistant =
-      assistant {
-        clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
-      }
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
+      clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
+    }
 
     val element = assistant.toJsonElement()
     assertEquals(8, element.assistantClientMessages.size)
@@ -486,10 +498,10 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 1`() {
-    val assistant =
-      assistant {
-        serverMessages -= AssistantServerMessageType.HANG
-      }
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
+      serverMessages -= AssistantServerMessageType.HANG
+    }
 
     val element = assistant.toJsonElement()
     assertEquals(8, element.assistantServerMessages.size)
@@ -497,10 +509,10 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 2`() {
-    val assistant =
-      assistant {
-        serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
-      }
+    val request = "{}".toJsonElement()
+    val assistant = assistant(request) {
+      serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
+    }
 
     val element = assistant.toJsonElement()
     assertEquals(7, element.assistantServerMessages.size)

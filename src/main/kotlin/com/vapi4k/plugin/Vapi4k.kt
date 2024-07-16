@@ -23,6 +23,7 @@ import com.vapi4k.Vapi4k.isValidSecret
 import com.vapi4k.Vapi4k.logger
 import com.vapi4k.Vapi4k.startCallbackThread
 import com.vapi4k.dsl.assistant.Assistant
+import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.dsl.vapi4k.ServerRequestType.Companion.isToolCall
 import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
@@ -36,6 +37,7 @@ import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.Utils.lambda
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.ApplicationStarting
@@ -49,8 +51,8 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
+import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.channels.Channel
-import kotlinx.serialization.json.Json
 import kotlin.time.measureTimedValue
 
 val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
@@ -75,70 +77,85 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     get("/ping") { call.respondText("pong") }
 
     val serverPath = config.configProperties.serverUrlPath
-    logger.info { "Adding POST serverUrl endpoint at $serverPath" }
+    logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
     post(serverPath) {
-      if (isValidSecret(config.configProperties.serverUrlSecret)) {
-        val json = call.receive<String>()
-        val request = Json.parseToJsonElement(json)
-        val requestType = request.requestType
-
-        invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
-
-        val (response, duration) = measureTimedValue {
-          when (requestType) {
-            ASSISTANT_REQUEST -> {
-              val response = getAssistantResponse(request)
-              call.respond(response)
-              lambda { response.toJsonElement() }
-            }
-
-            FUNCTION_CALL -> {
-              val response = getFunctionCallResponse(request)
-              call.respond(response)
-              lambda { response.toJsonElement() }
-            }
-
-            TOOL_CALL -> {
-              val response = getToolCallResponse(request)
-              call.respond(response)
-              lambda { response.toJsonElement() }
-            }
-
-            else -> {
-              val response = SimpleMessageResponse("$requestType received")
-              call.respond(response)
-              lambda { response.toJsonElement() }
-            }
-          }
-        }
-
-        invokeResponseCallbacks(requestResponseCallbackChannel, requestType, response, duration)
-      }
+      handleServerPathPost(requestResponseCallbackChannel)
     }
 
     config.toolCallEndpoints.forEach { endpoint ->
       val toolCallPath = endpoint.path
-      logger.info { "Adding POST toolCall endpoint ${endpoint.name}: ${endpoint.path}" }
+      logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
       post(toolCallPath) {
-        if (isValidSecret(endpoint.secret)) {
-          val json = call.receive<String>()
-          val request = Json.parseToJsonElement(json)
-          val requestType = request.requestType
-
-          invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
-
-          if (requestType.isToolCall) {
-            call.respond(HttpStatusCode.BadRequest, "Invalid message type: requires ToolCallRequest")
-          } else {
-            val (response, duration) = measureTimedValue {
-              val response = getToolCallResponse(request)
-              call.respond(response)
-              lambda { response.toJsonElement() }
-            }
-            invokeResponseCallbacks(requestResponseCallbackChannel, requestType, response, duration)
-          }
-        }
+        handleToolCallPathPost(endpoint, requestResponseCallbackChannel)
       }
     }
   }
 }
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.handleServerPathPost(
+  requestResponseCallbackChannel: Channel<RequestResponseCallback>,
+) {
+  val config = Assistant.config
+  if (isValidSecret(config.configProperties.serverUrlSecret)) {
+    val json = call.receive<String>()
+    val request = json.toJsonElement()
+    val requestType = request.requestType
+
+    invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
+
+    val (response, duration) = measureTimedValue {
+      when (requestType) {
+        ASSISTANT_REQUEST -> {
+          val response = getAssistantResponse(request)
+          call.respond(response)
+          lambda { response.toJsonElement() }
+        }
+
+        FUNCTION_CALL -> {
+          val response = getFunctionCallResponse(request)
+          call.respond(response)
+          lambda { response.toJsonElement() }
+        }
+
+        TOOL_CALL -> {
+          val response = getToolCallResponse(request)
+          call.respond(response)
+          lambda { response.toJsonElement() }
+        }
+
+        else -> {
+          val response = SimpleMessageResponse("$requestType received")
+          call.respond(response)
+          lambda { response.toJsonElement() }
+        }
+      }
+    }
+
+    invokeResponseCallbacks(requestResponseCallbackChannel, requestType, response, duration)
+  }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.handleToolCallPathPost(
+  endpoint: Endpoint,
+  requestResponseCallbackChannel: Channel<RequestResponseCallback>,
+) {
+  if (isValidSecret(endpoint.secret)) {
+    val json = call.receive<String>()
+    val request = json.toJsonElement()
+    val requestType = request.requestType
+
+    invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
+
+    if (requestType.isToolCall) {
+      call.respond(HttpStatusCode.BadRequest, "Invalid message type: requires ToolCallRequest")
+    } else {
+      val (response, duration) = measureTimedValue {
+        val response = getToolCallResponse(request)
+        call.respond(response)
+        lambda { response.toJsonElement() }
+      }
+      invokeResponseCallbacks(requestResponseCallbackChannel, requestType, response, duration)
+    }
+  }
+}
+

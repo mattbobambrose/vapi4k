@@ -36,6 +36,8 @@ data class Model internal constructor(
   internal val modelDto: ModelDto,
 ) : ModelUnion by modelDto {
   private val messages get() = modelDto.messages
+  internal val tools get() = modelDto.tools
+  internal val functions get() = modelDto.functions
 
   var systemMessage by MessageDelegate(MessageRoleType.SYSTEM)
   var assistantMessage by MessageDelegate(MessageRoleType.ASSISTANT)

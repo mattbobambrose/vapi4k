@@ -17,6 +17,5 @@
 package com.vapi4k.common
 
 object Constants {
-  const val NAME_SEPARATOR = "--"
   const val DEFAULT_SERVER_URL = "vapi4k"
 }

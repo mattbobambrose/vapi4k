@@ -27,19 +27,14 @@ fun myAssistantRequest(
 ): AssistantRequestResponse =
   (when (ibc.phoneNumber) {
     "+14156721042" -> assistantId("44792a91-d7f9-4915-9445-0991aeef97bc")
-    "+19256836490" -> getAssistant("Matthew")
-    "+17039395869" -> getAssistant("Justin")
-    "+14249039001" -> getAssistant("Renee")
-    "+15168539128" -> getAssistant("Kyla")
-    "+18675986778" -> getAssistant("Bella")
-    "+17868322287" -> getAssistant("Bella")
-    else -> getAssistant("")
+    else -> getAssistant(ibc, "")
   })
 
 fun getAssistant(
+  request: JsonElement,
   callerName: String = "Bill",
 ) =
-  assistant {
+  assistant(request) {
     firstMessage =
       """
             Hi there. My name is Ellen. I'd like to collect some information from you

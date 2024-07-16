@@ -23,6 +23,8 @@ import com.vapi4k.utils.JsonUtils.jsonList
 import com.vapi4k.utils.JsonUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 internal object Utils {
   fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
@@ -53,4 +55,7 @@ internal object Utils {
 
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 
+  fun KType.asClass() = classifier as Class<*>
+
+  fun KType.asKClass() = classifier as KClass<*>
 }

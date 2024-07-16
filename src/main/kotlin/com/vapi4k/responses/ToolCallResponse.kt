@@ -17,12 +17,11 @@
 package com.vapi4k.responses
 
 import com.vapi4k.Vapi4k.logger
-import com.vapi4k.dsl.assistant.ToolCallService
+import com.vapi4k.dsl.assistant.ToolCache.toolCache
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
-import com.vapi4k.responses.ResponseUtils.deriveNames
-import com.vapi4k.responses.ResponseUtils.invokeMethod
 import com.vapi4k.responses.assistant.ToolMessageCondition
+import com.vapi4k.utils.JsonElementUtils.phoneNumber
 import com.vapi4k.utils.Utils.toolCallArguments
 import com.vapi4k.utils.Utils.toolCallId
 import com.vapi4k.utils.Utils.toolCallList
@@ -41,50 +40,34 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
             val toolCallList = request.toolCallList
 
             for (toolCall in toolCallList) {
-              response.apply {
-                messageResponse.apply {
-                  results += ToolCallResult().apply {
-                    toolCallId = toolCall.toolCallId
+              response.also { toolCallResponse ->
+                toolCallResponse.messageResponse.also { messageResponse ->
+                  messageResponse.results += ToolCallResult().also { toolCallResult ->
+
+                    val phoneNumber = request.phoneNumber
                     val funcName = toolCall.toolCallName
                     val args = toolCall.toolCallArguments
-                    name = funcName
 
-                    val (className, methodName) = deriveNames(funcName)
-                    val serviceInstance = runCatching {
-                      with(Class.forName(className)) {
-                        kotlin.objectInstance ?: constructors.toList().first().newInstance()
-                      }
-                    }
+                    toolCallResult.toolCallId = toolCall.toolCallId
+                    toolCallResult.name = funcName
 
-                    if (serviceInstance.isSuccess) {
-                      val service = serviceInstance.getOrNull() ?: error("Error creating instance of $className")
-                      val toolResult = runCatching { invokeMethod(service, methodName, args) }
-                      if (toolResult.isSuccess) {
-                        result = toolResult.getOrNull().orEmpty()
-                        if (service is ToolCallService) {
-                          message += service.onRequestComplete(request, result).messages
-                        }
-                      } else {
-                        val errorMsg =
-                          "Error invoking method $className.$methodName: ${toolResult.exceptionOrNull()?.message}"
-                        error = errorMsg
-                        if (service is ToolCallService) {
-                          message += service.onRequestFailed(request, error).messages
-                        }
-                        logger.error(toolResult.exceptionOrNull()) { errorMsg }
-                        errorMessage = errorMsg
+                    toolCallResult.result =
+                      runCatching {
+                        val functionInfo = toolCache[phoneNumber] ?: error("Session not found: $phoneNumber")
+                        functionInfo.getFunction(funcName)
+                          .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->
+                            toolCallResult.error = errorMsg
+                            errorMessage = errorMsg
+                          }
+                      }.getOrElse { e ->
+                        val errorMsg = e.message ?: "Error invoking tool"
+                        logger.error(e) { errorMsg }
+                        errorMsg
                       }
-                    } else {
-                      val errorMsg =
-                        "Error creating instance of $className: ${serviceInstance.exceptionOrNull()?.message}"
-                      error = errorMsg
-                      logger.error(serviceInstance.exceptionOrNull()) { errorMsg }
-                      errorMessage = errorMsg
-                    }
                   }
 
                   if (errorMessage.isNotEmpty()) {
-                    error = errorMessage
+                    messageResponse.error = errorMessage
                   }
                 }
               }

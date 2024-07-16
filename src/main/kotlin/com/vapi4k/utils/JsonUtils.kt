@@ -36,7 +36,6 @@ object JsonUtils {
     keys.flatMap { it.split(".") }
       .fold(this) { acc, key -> acc.element(key) }
 
-
   inline fun <reified T> JsonElement.toObjectList() = jsonArray.map { Json.decodeFromJsonElement<T>(it) }
 
   val prettyFormat by lazy { Json { prettyPrint = true } }
@@ -46,6 +45,8 @@ object JsonUtils {
     (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)
 
   inline fun <reified T> T.toJsonElement() = Json.encodeToJsonElement(this)
+
+  fun String.toJsonElement() = Json.parseToJsonElement(this)
 
   inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)
 
