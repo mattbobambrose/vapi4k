@@ -23,6 +23,7 @@ import com.vapi4k.Vapi4k.isValidSecret
 import com.vapi4k.Vapi4k.logger
 import com.vapi4k.Vapi4k.startCallbackThread
 import com.vapi4k.dsl.assistant.Assistant
+import com.vapi4k.dsl.assistant.ToolCache.cacheIsActive
 import com.vapi4k.dsl.assistant.ToolCache.removeFunctionFromCache
 import com.vapi4k.dsl.assistant.ToolCache.removeToolCallFromCache
 import com.vapi4k.dsl.vapi4k.Endpoint
@@ -137,7 +138,7 @@ private suspend fun CallContext.handleServerPathPost(requestResponseCallbackChan
             notFound = false
           }
 
-          if (notFound)
+          if (notFound && cacheIsActive)
             logger.warn { "EOCR unable to free toolCalls or functions for messageCallId: $messageCallId" }
 
           val response = SimpleMessageResponse("End of call report received")

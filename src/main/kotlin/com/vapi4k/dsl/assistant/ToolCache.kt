@@ -37,27 +37,36 @@ internal object ToolCache {
   val toolCallCache = ConcurrentHashMap<String, FunctionInfo>()
   val functionCache = ConcurrentHashMap<String, FunctionInfo>()
 
+  private var toolCallCacheIsActive = false
+  private var functionCacheIsActive = false
+
+  val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
+
   fun addToolCallToCache(
     phoneNumber: String,
     obj: Any,
-  ) = addToCache(toolCallCache, "Tool", phoneNumber, obj)
+  ) {
+    toolCallCacheIsActive = true
+    addToCache(toolCallCache, "Tool", phoneNumber, obj)
+  }
 
   fun addFunctionToCache(
     phoneNumber: String,
     obj: Any,
-  ) = addToCache(functionCache, "Function", phoneNumber, obj)
+  ) {
+    functionCacheIsActive = true
+    addToCache(functionCache, "Function", phoneNumber, obj)
+  }
 
   fun removeToolCallFromCache(
     messageCallId: String,
     block: (FunctionInfo) -> Unit,
-  ): FunctionInfo? =
-    toolCallCache.remove(messageCallId)?.also { it -> block(it) }
+  ): FunctionInfo? = toolCallCache.remove(messageCallId)?.also { it -> block(it) }
 
   fun removeFunctionFromCache(
     messageCallId: String,
     block: (FunctionInfo) -> Unit,
-  ): FunctionInfo? =
-    functionCache.remove(messageCallId)?.also { it -> block(it) }
+  ): FunctionInfo? = functionCache.remove(messageCallId)?.also { it -> block(it) }
 
 
   private fun addToCache(
