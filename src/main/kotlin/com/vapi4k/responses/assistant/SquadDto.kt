@@ -17,12 +17,17 @@
 package com.vapi4k.responses.assistant
 
 
+import com.vapi4k.dsl.assistant.SquadUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Member(
-  var assistantId: String = "",
-  var assistant: AssistantDto = AssistantDto(),
-  var assistantOverrides: AssistantOverrides = AssistantOverrides(),
-  var assistantDestinations: List<AssistantDestination> = listOf(),
-)
+data class SquadDto(
+  override var name: String = "",
+
+  val members: MutableList<MemberDto> = mutableListOf(),
+  var membersOverrides: AssistantOverrides = AssistantOverrides(),
+  val id: String = "",
+  val orgId: String = "",
+  val createdAt: String = "",
+  val updatedAt: String = ""
+) : SquadUnion

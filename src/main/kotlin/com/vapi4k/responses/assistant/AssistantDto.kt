@@ -21,7 +21,6 @@ import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.AssistantUnion
 import com.vapi4k.dsl.assistant.FirstMessageModeType
 import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST
-import com.vapi4k.dsl.assistant.Squad.Member.AssistantDto.TransportConfiguration
 import kotlinx.serialization.Serializable
 
 @Serializable

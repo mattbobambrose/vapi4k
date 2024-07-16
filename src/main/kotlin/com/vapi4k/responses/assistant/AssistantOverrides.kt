@@ -20,6 +20,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssistantOverrides(
+  // TODO: Came from squad assistant
+  val transportConfigurations: List<TransportConfiguration> = listOf(),
   var transcriber: Transcriber = Transcriber(),
   var model: ModelDto = ModelDto(),
   var voice: Voice = Voice(),

@@ -20,8 +20,9 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Squad(
-  var name: String = "",
-  var members: List<Member> = listOf(),
-  var membersOverrides: MembersOverrides = MembersOverrides(),
+data class MemberDto(
+  var assistantId: String = "",
+  var assistant: AssistantDto = AssistantDto(),
+  var assistantOverrides: AssistantOverrides = AssistantOverrides(),
+  var assistantDestinations: List<AssistantDestination> = listOf(),
 )

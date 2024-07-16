@@ -16,6 +16,7 @@
 
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
+import com.vapi4k.dsl.assistant.AssistantDsl.squad
 import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.responses.AssistantRequestResponse
@@ -26,9 +27,37 @@ fun myAssistantRequest(
   ibc: JsonElement,
 ): AssistantRequestResponse =
   (when (ibc.phoneNumber) {
-    "+14156721042" -> assistantId("44792a91-d7f9-4915-9445-0991aeef97bc")
+    "+14156721042" -> assistantId {
+      id = "44792a91-d7f9-4915-9445-0991aeef97bc"
+    }
+
     else -> getAssistant(ibc, "")
   })
+
+fun getSquad(request: JsonElement): AssistantRequestResponse {
+  return squad(request) {
+    name = "Squad Name"
+    members {
+      member {
+        assistantId {
+          id = "paul"
+        }
+        assistant {
+
+        }
+      }
+      member {
+        assistant {
+          name = "Assistant Name"
+          model {
+            provider = "openai"
+            model = "gpt-4-turbo"
+          }
+        }
+      }
+    }
+  }
+}
 
 fun getAssistant(
   request: JsonElement,

@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverrides
 import com.vapi4k.responses.assistant.Destination
-import com.vapi4k.responses.assistant.Squad
+import com.vapi4k.responses.assistant.SquadDto
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -32,7 +32,7 @@ data class AssistantRequestResponse(
   var destination: Destination = Destination(),
   var assistantOverrides: AssistantOverrides? = null,
   var squadId: String = "",
-  var squad: Squad? = null,
+  var squad: SquadDto = SquadDto(),
   var error: String = "",
 ) {
   companion object {

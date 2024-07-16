@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
@@ -24,7 +25,6 @@ import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
 import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 
 object AssistantDsl {
-
   fun assistant(
     request: JsonElement,
     block: Assistant.() -> Unit,
@@ -33,11 +33,31 @@ object AssistantDsl {
       Assistant(request, messageResponse.assistant).apply(block)
     }.messageResponse
 
-  fun assistantId(id: String) =
+  fun assistantId(block: AssistantId.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      messageResponse.assistantId = id
+      AssistantId(messageResponse).apply(block)
     }.messageResponse
 
+  fun squad(
+    request: JsonElement,
+    block: Squad.() -> Unit,
+  ) =
+    AssistantRequestMessageResponse().apply {
+      Squad(request, messageResponse.squad).apply(block)
+    }.messageResponse
+
+  fun squadId(id: String) =
+    AssistantRequestMessageResponse().apply {
+      messageResponse.squadId = id
+    }.messageResponse
+
+  data class AssistantId internal constructor(val messageResponse: AssistantRequestResponse) {
+    var id
+      get() = messageResponse.assistantId
+      set(value) {
+        messageResponse.assistantId = value
+      }
+  }
 }
 
 @Retention(RUNTIME)

@@ -14,22 +14,14 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.responses.assistant
 
+import kotlinx.serialization.Serializable
 
-import com.vapi4k.AssistantDslMarker
-import com.vapi4k.responses.assistant.SquadDto
-import kotlinx.serialization.json.JsonElement
-
-interface SquadUnion {
-  var name: String
-}
-
-@AssistantDslMarker
-data class Squad internal constructor(val request: JsonElement, internal val squadDto: SquadDto) :
-  SquadUnion by squadDto {
-  fun members(block: Members.() -> Unit) {
-    Members(this).apply(block)
-//      squadDto.membersOverrides = members.membersOverrides
-  }
-}
+@Serializable
+data class TransportConfiguration(
+  val provider: String = "",
+  val timeout: Int = 0,
+  val record: Boolean = false,
+  val recordingChannels: String = ""
+)
