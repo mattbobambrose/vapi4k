@@ -23,12 +23,11 @@ import com.vapi4k.dsl.vapi4k.RequestResponseType
 import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
 import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
 import com.vapi4k.dsl.vapi4k.ServerRequestType
+import com.vapi4k.plugin.CallContext
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
-import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -120,7 +119,7 @@ object Vapi4k {
     }
   }
 
-  internal suspend fun PipelineContext<Unit, ApplicationCall>.isValidSecret(
+  internal suspend fun CallContext.isValidSecret(
     configPropertiesSecret: String,
   ): Boolean {
     val secret = call.request.headers["x-vapi-secret"]

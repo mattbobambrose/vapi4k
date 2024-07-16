@@ -18,62 +18,93 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.Vapi4k.logger
 import com.vapi4k.dsl.assistant.FunctionUtils.ToolCallInfo
-import com.vapi4k.dsl.assistant.FunctionUtils.toolMethod
 import com.vapi4k.dsl.assistant.ToolCache.FunctionDetails.Companion.toFunctionDetails
 import com.vapi4k.responses.ToolCallMessage
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.Utils.asKClass
+import com.vapi4k.utils.Utils.findFunction
+import com.vapi4k.utils.Utils.findMethod
+import com.vapi4k.utils.Utils.toolMethod
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.reflect.full.declaredFunctions
+import kotlin.time.DurationUnit.MILLISECONDS
+import kotlin.time.DurationUnit.SECONDS
 
 internal object ToolCache {
-  val toolCache = ConcurrentHashMap<String, FunctionInfo>()
+  val toolCallCache = ConcurrentHashMap<String, FunctionInfo>()
   val functionCache = ConcurrentHashMap<String, FunctionInfo>()
 
-  fun addToolToCache(
-    phoneNumber: String,
+  private var toolCallCacheIsActive = false
+  private var functionCacheIsActive = false
+
+  val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
+
+  fun addToolCallToCache(
+    messageCallId: String,
     obj: Any,
-  ) = addToCache(toolCache, "Tool", phoneNumber, obj)
+  ) {
+    toolCallCacheIsActive = true
+    addToCache(toolCallCache, "Tool", messageCallId, obj)
+  }
 
   fun addFunctionToCache(
-    phoneNumber: String,
+    messageCallId: String,
     obj: Any,
-  ) = addToCache(functionCache, "Function", phoneNumber, obj)
+  ) {
+    functionCacheIsActive = true
+    addToCache(functionCache, "Function", messageCallId, obj)
+  }
+
+  fun removeToolCallFromCache(
+    messageCallId: String,
+    block: (FunctionInfo) -> Unit,
+  ): FunctionInfo? = toolCallCache.remove(messageCallId)?.also { it -> block(it) }
+
+  fun removeFunctionFromCache(
+    messageCallId: String,
+    block: (FunctionInfo) -> Unit,
+  ): FunctionInfo? = functionCache.remove(messageCallId)?.also { it -> block(it) }
+
 
   private fun addToCache(
     cache: ConcurrentHashMap<String, FunctionInfo>,
     prefix: String,
-    phoneNumber: String,
+    messageCallId: String,
     obj: Any,
   ) {
     val method = obj.toolMethod
     val tci = ToolCallInfo(method)
     val toolFuncName = tci.llmName
-    val functionInfo = cache.computeIfAbsent(phoneNumber) { FunctionInfo() }
-    val functionDetails = functionInfo.functions[toolFuncName]
+    val funcInfo = cache.computeIfAbsent(messageCallId) { FunctionInfo() }
+    val funcDetails = funcInfo.functions[toolFuncName]
 
-    if (functionDetails == null)
-      functionInfo.functions[toolFuncName] = obj.toFunctionDetails()
-    else
-      with(functionDetails) { error("$prefix \"$toolFuncName\" has already been declared in $className.$methodName()") }
+    if (funcDetails == null) {
+      val newFuncDetails = obj.toFunctionDetails()
+      funcInfo.functions[toolFuncName] = newFuncDetails
+      logger.info { "Added $prefix \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$messageCallId]" }
+    } else {
+      error("$prefix \"$toolFuncName\" has already been declared in ${funcDetails.fqName}")
+    }
   }
 
-  internal class FunctionInfo() {
+  class FunctionInfo() {
     val created: Instant = Clock.System.now()
     val functions = mutableMapOf<String, FunctionDetails>()
     val age get() = Clock.System.now() - created
+    val ageSecs get() = age.toString(unit = SECONDS)
+    val ageMillis get() = age.toString(unit = MILLISECONDS)
 
     fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
   }
 
-  internal class FunctionDetails(val obj: Any) {
+  class FunctionDetails(val obj: Any) {
     val className = obj::class.java.name
     val methodName = obj.toolMethod.name
+    val fqName get() = "$className.$methodName()"
 
     fun invokeToolMethod(
       args: JsonElement,
@@ -84,7 +115,7 @@ internal object ToolCache {
       val results = runCatching {
         invokeMethod(args)
       }.getOrElse { e ->
-        val errorMsg = "Error invoking method $className.$methodName(): ${e.message}"
+        val errorMsg = "Error invoking method $fqName: ${e.message}"
         errorAction(errorMsg)
         if (obj is ToolCallService)
           message += obj.onRequestFailed(request, errorMsg).messages
@@ -98,13 +129,12 @@ internal object ToolCache {
     }
 
     fun invokeMethod(args: JsonElement): String {
-      logger.info { "Invoking method \"$methodName()\" with methods: ${obj::class.java.declaredMethods.map { it.name }}" }
-      val method = obj::class.java.declaredMethods.single { it.name == methodName }
+      logger.info { "Invoking method $fqName" }
+      val method = obj.findMethod(methodName)
+      val function = obj.findFunction(methodName)
+      val isVoid = function.returnType.asKClass() == Unit::class
       val argNames = args.jsonObject.keys
       val result = method.invoke(obj, *argNames.map { args[it].stringValue }.toTypedArray<String>())
-
-      val kFunction = obj::class.declaredFunctions.single { it.name == methodName }
-      val isVoid = kFunction.returnType.asKClass() == Unit::class
       return if (isVoid) "" else result.toString()
     }
 

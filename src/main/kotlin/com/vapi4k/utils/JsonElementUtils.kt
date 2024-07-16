@@ -18,8 +18,10 @@ package com.vapi4k.utils
 
 import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.jsonList
 import com.vapi4k.utils.JsonUtils.stringValue
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonArray
 
 object JsonElementUtils {
 
@@ -37,8 +39,9 @@ object JsonElementUtils {
   val JsonElement.isTransferDestinationRequest get() = requestType == ServerRequestType.TRANSFER_DESTINATION_REQUEST
   val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
 
-  val JsonElement.phoneNumber
-    get() = this["message.call.customer.number"].stringValue
+  val JsonElement.messageCallId get() = this["message.call.id"].stringValue
+
+  val JsonElement.phoneNumber get() = this["message.call.customer.number"].stringValue
 
   val JsonElement.statusUpdateError: String
     get() = if (isStatusUpdate)
@@ -50,5 +53,22 @@ object JsonElementUtils {
 
   val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
 
-  val JsonElement.messageCallId get() = this["message.call.id"].stringValue
+  val JsonElement.functionName
+    get() = if (isFunctionCall) this["message.functionCall.name"].stringValue else error("JsonElement is not a function call")
+
+  val JsonElement.functionParameters
+    get() = if (isFunctionCall) this["message.functionCall.parameters"] else error("JsonElement is not a function call")
+
+  val JsonElement.toolCallList
+    get() = if (isToolCall) this["message.toolCallList"].jsonList else error("JsonElement is not a tool call")
+
+  val JsonElement.toolCallId get() = this["id"].stringValue
+
+  val JsonElement.toolCallName get() = this["function.name"].stringValue
+
+  val JsonElement.toolCallArguments get() = this["function.arguments"]
+
+  val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
+
+  val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 }

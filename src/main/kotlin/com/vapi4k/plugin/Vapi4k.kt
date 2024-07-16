@@ -23,9 +23,13 @@ import com.vapi4k.Vapi4k.isValidSecret
 import com.vapi4k.Vapi4k.logger
 import com.vapi4k.Vapi4k.startCallbackThread
 import com.vapi4k.dsl.assistant.Assistant
+import com.vapi4k.dsl.assistant.ToolCache.cacheIsActive
+import com.vapi4k.dsl.assistant.ToolCache.removeFunctionFromCache
+import com.vapi4k.dsl.assistant.ToolCache.removeToolCallFromCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.dsl.vapi4k.ServerRequestType.Companion.isToolCall
+import com.vapi4k.dsl.vapi4k.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.dsl.vapi4k.ServerRequestType.TOOL_CALL
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
@@ -33,6 +37,7 @@ import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantRespo
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
+import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.Utils.lambda
@@ -59,9 +64,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",
   createConfiguration = { Vapi4kConfig() },
 ) {
-  val requestResponseCallbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
+  val callbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
 
-  startCallbackThread(requestResponseCallbackChannel)
+  startCallbackThread(callbackChannel)
 
   environment?.monitor?.apply {
     subscribe(ApplicationStarting) { it.environment.log.info("Vapi4kServer is starting") }
@@ -78,23 +83,19 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
     val serverPath = config.configProperties.serverUrlPath
     logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
-    post(serverPath) {
-      handleServerPathPost(requestResponseCallbackChannel)
-    }
+    post(serverPath) { handleServerPathPost(callbackChannel) }
 
     config.toolCallEndpoints.forEach { endpoint ->
       val toolCallPath = endpoint.path
       logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
       post(toolCallPath) {
-        handleToolCallPathPost(endpoint, requestResponseCallbackChannel)
+        handleToolCallPathPost(endpoint, callbackChannel)
       }
     }
   }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.handleServerPathPost(
-  requestResponseCallbackChannel: Channel<RequestResponseCallback>,
-) {
+private suspend fun CallContext.handleServerPathPost(requestResponseCallbackChannel: Channel<RequestResponseCallback>) {
   val config = Assistant.config
   if (isValidSecret(config.configProperties.serverUrlSecret)) {
     val json = call.receive<String>()
@@ -123,6 +124,28 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.handleServerPathPost(
           lambda { response.toJsonElement() }
         }
 
+        END_OF_CALL_REPORT -> {
+          val messageCallId = request.messageCallId
+          var notFound = true
+
+          removeToolCallFromCache(messageCallId) { funcInfo ->
+            logger.info { "EOCR removed ${funcInfo.functions.size} toolCall objects [${funcInfo.ageSecs}] " }
+            notFound = false
+          }
+
+          removeFunctionFromCache(messageCallId) { funcInfo ->
+            logger.info { "EOCR removed ${funcInfo.functions.size} function objects [${funcInfo.ageSecs}] " }
+            notFound = false
+          }
+
+          if (notFound && cacheIsActive)
+            logger.warn { "EOCR unable to free toolCalls or functions for messageCallId: $messageCallId" }
+
+          val response = SimpleMessageResponse("End of call report received")
+          call.respond(response)
+          lambda { response.toJsonElement() }
+        }
+
         else -> {
           val response = SimpleMessageResponse("$requestType received")
           call.respond(response)
@@ -135,7 +158,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.handleServerPathPost(
   }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.handleToolCallPathPost(
+private suspend fun CallContext.handleToolCallPathPost(
   endpoint: Endpoint,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
@@ -159,3 +182,4 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.handleToolCallPathPos
   }
 }
 
+typealias CallContext = PipelineContext<Unit, ApplicationCall>

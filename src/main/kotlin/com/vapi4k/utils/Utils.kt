@@ -16,15 +16,14 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.utils.JsonElementUtils.isFunctionCall
-import com.vapi4k.utils.JsonElementUtils.isToolCall
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.jsonList
-import com.vapi4k.utils.JsonUtils.stringValue
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.jsonArray
+import com.vapi4k.dsl.assistant.Param
+import com.vapi4k.dsl.assistant.ToolCall
+import java.lang.reflect.Method
+import java.lang.reflect.Parameter
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.KType
+import kotlin.reflect.full.declaredFunctions
 
 internal object Utils {
   fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
@@ -33,27 +32,18 @@ internal object Utils {
 
   fun <T> lambda(block: T) = block
 
-  val JsonElement.functionName
-    get() = if (isFunctionCall) this["message.functionCall.name"].stringValue else error("JsonElement is not a function call")
-
-  val JsonElement.functionParameters
-    get() = if (isFunctionCall) this["message.functionCall.parameters"] else error("JsonElement is not a function call")
-
-  val JsonElement.toolCallList
-    get() = if (isToolCall) this["message.toolCallList"].jsonList else error("JsonElement is not a tool call")
-
-  val JsonElement.toolCallId
-    get() = this["id"].stringValue
-
-  val JsonElement.toolCallName
-    get() = this["function.name"].stringValue
-
-  val JsonElement.toolCallArguments
-    get() = this["function.arguments"]
-
-  val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
-
-  val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
-
+  val KFunction<*>.isUnitReturnType get() = returnType.asKClass() == Unit::class
+  val Any.functions get() = this::class.declaredFunctions
+  val Any.methods get() = this::class.java.declaredMethods
+  fun Any.findMethod(methodName: String) = methods.single { it.name == methodName }
+  fun Any.findFunction(methodName: String) = functions.single { it.name == methodName }
   fun KType.asKClass() = classifier as KClass<*>
+
+  val Parameter.param: Param? get() = annotations.firstOrNull { it is Param } as Param?
+  val Method.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
+  val KFunction<*>.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
+  val Method.hasTool get() = toolCall != null
+  val KFunction<*>.hasTool get() = toolCall != null
+  val Any.toolFunction get() = functions.first { it.hasTool }
+  val Any.toolMethod get() = methods.first { it.hasTool }
 }

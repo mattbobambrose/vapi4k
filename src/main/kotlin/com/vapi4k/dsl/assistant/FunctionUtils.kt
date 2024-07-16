@@ -18,21 +18,16 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.utils.Utils.asKClass
+import com.vapi4k.utils.Utils.functions
+import com.vapi4k.utils.Utils.hasTool
+import com.vapi4k.utils.Utils.param
+import com.vapi4k.utils.Utils.toolCall
+import com.vapi4k.utils.Utils.toolFunction
+import com.vapi4k.utils.Utils.toolMethod
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
-import kotlin.reflect.KFunction
-import kotlin.reflect.full.declaredFunctions
 
 internal object FunctionUtils {
-  private val Parameter.param: Param? get() = annotations.firstOrNull { it is Param } as Param?
-  private val Method.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
-  internal val KFunction<*>.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
-  private val Method.hasTool get() = toolCall != null
-  internal val KFunction<*>.hasTool get() = toolCall != null
-  internal val KFunction<*>.isAsync get() = returnType.asKClass() == Unit::class
-  internal val Any.toolKFunction get() = this::class.declaredFunctions.first { it.hasTool }
-  internal val Any.toolMethod get() = this::class.java.declaredMethods.first { it.hasTool }
-
   private val legalTypes = setOf(String::class, Unit::class)
 
 
@@ -40,8 +35,7 @@ internal object FunctionUtils {
     isFunction: Boolean,
     obj: Any,
   ) {
-    val methods = obj::class.declaredFunctions
-    val cnt = methods.count { it.hasTool }
+    val cnt = obj.functions.count { it.hasTool }
 
     when {
       cnt == 0 ->
@@ -51,7 +45,7 @@ internal object FunctionUtils {
         error("Only one method with ${ToolCall::class.simpleName} annotation is allowed in class ${obj::class.qualifiedName}")
     }
 
-    return with(methods.first { it.hasTool }) {
+    return with(obj.functions.first { it.hasTool }) {
       val returnClass = returnType.asKClass()
       if (returnClass !in legalTypes) {
         val str = if (isFunction) "Function" else "Tool"
@@ -62,11 +56,11 @@ internal object FunctionUtils {
 
   internal fun populateFunctionDto(
     obj: Any,
-    function: FunctionDto = FunctionDto(),
+    dto: FunctionDto = FunctionDto(),
   ) =
-    function.also { dto ->
-      val method = obj::class.java.declaredMethods.first { it.hasTool }
-      val kFunc = obj::class.declaredFunctions.first { it.hasTool }
+    dto.also { dto ->
+      val method = obj.toolMethod
+      val function = obj.toolFunction
       ToolCallInfo(method).also { tci ->
 
         dto.name = tci.llmName
@@ -78,10 +72,10 @@ internal object FunctionUtils {
         // Reduce the size of kparams if the first parameter is the object itself
         val jparams = method.parameters.toList()
         val kparams =
-          if (jparams.size == kFunc.parameters.size)
-            kFunc.parameters
+          if (jparams.size == function.parameters.size)
+            function.parameters
           else
-            kFunc.parameters.subList(1, kFunc.parameters.size)
+            function.parameters.subList(1, function.parameters.size)
 
         jparams
           .zip(kparams)
