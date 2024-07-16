@@ -30,12 +30,11 @@ object JsonUtils {
   val JsonElement.jsonList get() = jsonArray.toList()
 
   private fun JsonElement.element(key: String) =
-    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key $key not found")
+    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
 
   operator fun JsonElement.get(vararg keys: String): JsonElement =
     keys.flatMap { it.split(".") }
       .fold(this) { acc, key -> acc.element(key) }
-
 
   inline fun <reified T> JsonElement.toObjectList() = jsonArray.map { Json.decodeFromJsonElement<T>(it) }
 
@@ -46,6 +45,8 @@ object JsonUtils {
     (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)
 
   inline fun <reified T> T.toJsonElement() = Json.encodeToJsonElement(this)
+
+  fun String.toJsonElement() = Json.parseToJsonElement(this)
 
   inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)
 
