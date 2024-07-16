@@ -129,12 +129,12 @@ private suspend fun CallContext.handleServerPathPost(requestResponseCallbackChan
           var notFound = true
 
           removeToolCallFromCache(messageCallId) { funcInfo ->
-            logger.info { "EOCR removed ${funcInfo.functions.size} toolCall objects [${funcInfo.ageMillis}] " }
+            logger.info { "EOCR removed ${funcInfo.functions.size} toolCall objects [${funcInfo.ageSecs}] " }
             notFound = false
           }
 
           removeFunctionFromCache(messageCallId) { funcInfo ->
-            logger.info { "EOCR removed ${funcInfo.functions.size} function objects [${funcInfo.ageMillis}] " }
+            logger.info { "EOCR removed ${funcInfo.functions.size} function objects [${funcInfo.ageSecs}] " }
             notFound = false
           }
 

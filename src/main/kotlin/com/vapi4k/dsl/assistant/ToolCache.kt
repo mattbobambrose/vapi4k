@@ -43,19 +43,19 @@ internal object ToolCache {
   val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
 
   fun addToolCallToCache(
-    phoneNumber: String,
+    messageCallId: String,
     obj: Any,
   ) {
     toolCallCacheIsActive = true
-    addToCache(toolCallCache, "Tool", phoneNumber, obj)
+    addToCache(toolCallCache, "Tool", messageCallId, obj)
   }
 
   fun addFunctionToCache(
-    phoneNumber: String,
+    messageCallId: String,
     obj: Any,
   ) {
     functionCacheIsActive = true
-    addToCache(functionCache, "Function", phoneNumber, obj)
+    addToCache(functionCache, "Function", messageCallId, obj)
   }
 
   fun removeToolCallFromCache(
@@ -72,19 +72,21 @@ internal object ToolCache {
   private fun addToCache(
     cache: ConcurrentHashMap<String, FunctionInfo>,
     prefix: String,
-    phoneNumber: String,
+    messageCallId: String,
     obj: Any,
   ) {
     val method = obj.toolMethod
     val tci = ToolCallInfo(method)
     val toolFuncName = tci.llmName
-    val functionInfo = cache.computeIfAbsent(phoneNumber) { FunctionInfo() }
+    val functionInfo = cache.computeIfAbsent(messageCallId) { FunctionInfo() }
     val functionDetails = functionInfo.functions[toolFuncName]
 
-    if (functionDetails == null)
+    if (functionDetails == null) {
       functionInfo.functions[toolFuncName] = obj.toFunctionDetails()
-    else
+      logger.info { "Added $prefix \"$toolFuncName\" added to cache for $messageCallId" }
+    } else {
       with(functionDetails) { error("$prefix \"$toolFuncName\" has already been declared in $className.$methodName()") }
+    }
   }
 
   class FunctionInfo() {
