@@ -14,15 +14,10 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.enums
 
-import kotlinx.serialization.KSerializer
+import com.vapi4k.common.Serializers.FirstMessageModeTypeSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = FirstMessageModeTypeSerializer::class)
 enum class FirstMessageModeType(val desc: String) {
@@ -32,16 +27,3 @@ enum class FirstMessageModeType(val desc: String) {
   UNKNOWN("unknown");
 }
 
-private object FirstMessageModeTypeSerializer : KSerializer<FirstMessageModeType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: FirstMessageModeType,
-  ) {
-    encoder.encodeString(value.desc)
-  }
-
-  override fun deserialize(decoder: Decoder) =
-    FirstMessageModeType.entries.first { it.desc == decoder.decodeString() }
-}

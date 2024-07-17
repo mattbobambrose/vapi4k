@@ -16,10 +16,10 @@
 
 package com.vapi4k.responses.assistant
 
-import com.vapi4k.dsl.assistant.AssistantClientMessageType
-import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.AssistantUnion
-import com.vapi4k.dsl.assistant.FirstMessageModeType
+import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
+import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import kotlinx.serialization.Serializable
 
 @Serializable

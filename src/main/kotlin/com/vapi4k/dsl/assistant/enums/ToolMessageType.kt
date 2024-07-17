@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.enums
 
 enum class ToolMessageType(val type: String) {
   REQUEST_START("request-start"),

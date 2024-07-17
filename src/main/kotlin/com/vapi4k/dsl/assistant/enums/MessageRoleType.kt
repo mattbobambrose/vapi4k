@@ -14,14 +14,12 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.common.Serializers.ToolCallMessageTypeSerializer
-import kotlinx.serialization.Serializable
-
-@Serializable(with = ToolCallMessageTypeSerializer::class)
-enum class ToolCallMessageType(val desc: String) {
-  REQUEST_COMPLETE("request-complete"),
-  REQUEST_FAILED("request-failed");
+enum class MessageRoleType(val desc: String) {
+  SYSTEM("system"),
+  USER("user"),
+  ASSISTANT("assistant"),
+  TOOL("tool"),
+  FUNCTION("function");
 }
-

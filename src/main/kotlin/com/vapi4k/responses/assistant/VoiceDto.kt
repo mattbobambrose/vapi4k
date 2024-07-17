@@ -17,9 +17,9 @@
 package com.vapi4k.responses.assistant
 
 
-import com.vapi4k.dsl.assistant.ProviderType
-import com.vapi4k.dsl.assistant.VoiceType
 import com.vapi4k.dsl.assistant.VoiceUnion
+import com.vapi4k.dsl.assistant.enums.ProviderType
+import com.vapi4k.dsl.assistant.enums.VoiceType
 import kotlinx.serialization.Serializable
 
 @Serializable

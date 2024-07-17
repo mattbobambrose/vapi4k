@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.utils.Utils.trimLeadingSpaces

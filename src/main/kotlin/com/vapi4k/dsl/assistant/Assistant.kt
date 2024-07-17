@@ -17,6 +17,9 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
+import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.responses.assistant.AssistantDto
 import kotlinx.serialization.json.JsonElement

@@ -20,6 +20,7 @@ import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.ToolCache.addToolCallToCache
+import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId

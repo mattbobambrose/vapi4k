@@ -14,15 +14,10 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.enums
 
-import kotlinx.serialization.KSerializer
+import com.vapi4k.common.Serializers.AssistantClientMessageTypeSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = AssistantClientMessageTypeSerializer::class)
 enum class AssistantClientMessageType(val desc: String) {
@@ -41,17 +36,3 @@ enum class AssistantClientMessageType(val desc: String) {
   VOICE_INPUT("voice-input");
 }
 
-private object AssistantClientMessageTypeSerializer : KSerializer<AssistantClientMessageType> {
-  override val descriptor: SerialDescriptor =
-    PrimitiveSerialDescriptor("AssistantClientMessageType", PrimitiveKind.STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: AssistantClientMessageType,
-  ) {
-    encoder.encodeString(value.desc)
-  }
-
-  override fun deserialize(decoder: Decoder) =
-    AssistantClientMessageType.entries.first { it.desc == decoder.decodeString() }
-}

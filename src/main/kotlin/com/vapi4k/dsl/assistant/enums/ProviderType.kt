@@ -14,12 +14,14 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.enums
 
-enum class MessageRoleType(val desc: String) {
-  SYSTEM("system"),
-  USER("user"),
-  ASSISTANT("assistant"),
-  TOOL("tool"),
-  FUNCTION("function");
+import com.vapi4k.common.Serializers.ProviderTypeSerializer
+import kotlinx.serialization.Serializable
+
+@Serializable(with = ProviderTypeSerializer::class)
+enum class ProviderType(val desc: String) {
+  AZURE("azure"),
+  UNKNOWN("unknown")
 }
+

@@ -16,6 +16,8 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.dsl.assistant.enums.ProviderType
+import com.vapi4k.dsl.assistant.enums.VoiceType
 import com.vapi4k.responses.assistant.PunctuationType
 import com.vapi4k.responses.assistant.VoiceDto
 
