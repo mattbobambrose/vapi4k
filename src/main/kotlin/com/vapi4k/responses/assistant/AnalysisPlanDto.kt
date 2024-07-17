@@ -20,6 +20,14 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ArtifactPlan(
-  var videoRecordingEnabled: Boolean = false
+data class AnalysisPlanDto(
+  var summaryPrompt: String = "",
+  var summaryRequestTimeoutSeconds: Double = 0.0,
+  var structuredDataRequestTimeoutSeconds: Double = 0.0,
+  var successEvaluationPrompt: String = "",
+  var successEvaluationRubric: String = "",
+  var successEvaluationRequestTimeoutSeconds: Double = 0.0,
+  var structuredDataPrompt: String = "",
+  // Do not initialize this to a StructuredDataSchema
+  var structuredDataSchema: StructuredDataSchema? = null,
 )

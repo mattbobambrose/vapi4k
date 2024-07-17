@@ -18,13 +18,6 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.assistant.PunctuationType
 import com.vapi4k.responses.assistant.VoiceDto
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 interface VoiceUnion {
   var inputPreprocessingEnabled: Boolean
@@ -39,24 +32,3 @@ interface VoiceUnion {
 
 data class Voice internal constructor(val voiceDto: VoiceDto) : VoiceUnion by voiceDto
 
-@Serializable(with = VoiceTypeSerializer::class)
-enum class VoiceType(val desc: String) {
-  ANDREW("Andrew"),
-  BRIAN("Brian"),
-  EMMA("Emma"),
-  UNKNOWN("Unknown")
-}
-
-private object VoiceTypeSerializer : KSerializer<VoiceType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("VoiceType", PrimitiveKind.STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: VoiceType,
-  ) {
-    encoder.encodeString(value.desc)
-  }
-
-  override fun deserialize(decoder: Decoder) =
-    VoiceType.entries.first { it.desc == decoder.decodeString() }
-}

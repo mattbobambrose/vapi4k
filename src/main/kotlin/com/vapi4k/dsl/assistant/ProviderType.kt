@@ -18,7 +18,7 @@ package com.vapi4k.dsl.assistant
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -31,7 +31,7 @@ enum class ProviderType(val desc: String) {
 }
 
 private object ProviderTypeSerializer : KSerializer<ProviderType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ProviderType", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ProviderType", STRING)
 
   override fun serialize(
     encoder: Encoder,

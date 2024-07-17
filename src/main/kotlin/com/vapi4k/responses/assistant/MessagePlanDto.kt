@@ -20,8 +20,8 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MessagePlan(
+data class MessagePlanDto(
   var idleMessages: List<String> = listOf(),
   var idleMessageMaxSpokenCount: Double = 0.0,
-  var idleTimeoutSeconds: Double = 0.0
+  var idleTimeoutSeconds: Double = 0.0,
 )

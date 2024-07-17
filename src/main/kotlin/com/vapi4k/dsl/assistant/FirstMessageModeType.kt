@@ -18,7 +18,7 @@ package com.vapi4k.dsl.assistant
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -28,11 +28,12 @@ import kotlinx.serialization.encoding.Encoder
 enum class FirstMessageModeType(val desc: String) {
   ASSISTANT_SPEAKS_FIRST("assistant-speaks-first"),
   ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL("assistant-speaks-first-with-model-generated-message"),
-  ASSISTANT_WAITS_FOR_USE("assistant-waits-for-user");
+  ASSISTANT_WAITS_FOR_USE("assistant-waits-for-user"),
+  UNKNOWN("unknown");
 }
 
 private object FirstMessageModeTypeSerializer : KSerializer<FirstMessageModeType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", STRING)
 
   override fun serialize(
     encoder: Encoder,

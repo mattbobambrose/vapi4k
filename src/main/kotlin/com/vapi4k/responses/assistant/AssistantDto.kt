@@ -20,7 +20,6 @@ import com.vapi4k.dsl.assistant.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.AssistantUnion
 import com.vapi4k.dsl.assistant.FirstMessageModeType
-import com.vapi4k.dsl.assistant.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -58,16 +57,14 @@ data class AssistantDto(
   var voice: VoiceDto = VoiceDto(),
   var transcriber: TranscriberDto = TranscriberDto(),
 
-  // Set via enum
-  // @EncodeDefault(Mode.ALWAYS)
-  override var firstMessageMode: FirstMessageModeType = ASSISTANT_SPEAKS_FIRST,
+  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNKNOWN,
 
   // TODO: Add verbs and enums
-  var voicemailDetection: VoicemailDetection? = null,
+  var voicemailDetection: VoicemailDetectionDto? = null,
   var metadata: Metadata? = null,
-  var analysisPlan: AnalysisPlan? = null,
-  var artifactPlan: ArtifactPlan? = null,
-  var messagePlan: MessagePlan? = null,
+  var analysisPlan: AnalysisPlanDto? = null,
+  var artifactPlan: ArtifactPlanDto? = null,
+  var messagePlan: MessagePlanDto? = null,
 
   override var clientMessages: MutableSet<AssistantClientMessageType> =
     mutableSetOf(

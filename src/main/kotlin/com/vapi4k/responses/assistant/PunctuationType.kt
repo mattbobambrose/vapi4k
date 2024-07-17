@@ -18,7 +18,7 @@ package com.vapi4k.responses.assistant
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -44,7 +44,7 @@ enum class PunctuationType(val desc: String) {
 }
 
 private object PunctuationTypeSerializer : KSerializer<PunctuationType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("PunctuationType", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("PunctuationType", STRING)
 
   override fun serialize(
     encoder: Encoder,

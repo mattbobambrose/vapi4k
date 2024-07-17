@@ -20,12 +20,6 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VoicemailDetection(
-  var provider: String = "",
-  var voicemailDetectionTypes: List<String> = listOf(),
-  var enabled: Boolean = false,
-  var machineDetectionTimeout: Int = 0,
-  var machineDetectionSpeechThreshold: Int = 0,
-  var machineDetectionSpeechEndThreshold: Int = 0,
-  var machineDetectionSilenceTimeout: Int = 0
+data class ArtifactPlanDto(
+  var videoRecordingEnabled: Boolean = false,
 )

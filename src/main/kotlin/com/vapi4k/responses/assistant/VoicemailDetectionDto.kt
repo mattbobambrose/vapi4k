@@ -20,14 +20,12 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AnalysisPlan(
-  var summaryPrompt: String = "",
-  var summaryRequestTimeoutSeconds: Double = 0.0,
-  var structuredDataRequestTimeoutSeconds: Double = 0.0,
-  var successEvaluationPrompt: String = "",
-  var successEvaluationRubric: String = "",
-  var successEvaluationRequestTimeoutSeconds: Double = 0.0,
-  var structuredDataPrompt: String = "",
-  // Do not initialize this to a StructuredDataSchema
-  var structuredDataSchema: StructuredDataSchema? = null,
+data class VoicemailDetectionDto(
+  var provider: String = "",
+  var voicemailDetectionTypes: List<String> = listOf(),
+  var enabled: Boolean = false,
+  var machineDetectionTimeout: Int = 0,
+  var machineDetectionSpeechThreshold: Int = 0,
+  var machineDetectionSpeechEndThreshold: Int = 0,
+  var machineDetectionSilenceTimeout: Int = 0,
 )
