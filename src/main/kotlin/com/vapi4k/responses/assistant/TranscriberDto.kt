@@ -20,7 +20,7 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Transcriber(
+data class TranscriberDto(
   var provider: String = "",
   var model: String = "",
   var language: String = "",

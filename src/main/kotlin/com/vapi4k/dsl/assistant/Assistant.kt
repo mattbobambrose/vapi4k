@@ -55,6 +55,12 @@ data class Assistant internal constructor(internal val request: JsonElement, int
     Model(this, assistantDto.model).apply(block)
   }
 
+  fun voice(block: Voice.() -> Unit) {
+    Voice(assistantDto.voice).apply(block)
+  }
+
+
+
   companion object {
     internal lateinit var config: Vapi4kConfig
   }

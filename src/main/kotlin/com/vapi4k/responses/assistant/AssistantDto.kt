@@ -54,14 +54,15 @@ data class AssistantDto(
   override var modelOutputInMessagesEnabled: Boolean = false,
   override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
 
-  var transcriber: Transcriber = Transcriber(),
   var model: ModelDto = ModelDto(),
-  var voice: Voice = Voice(),
+  var voice: VoiceDto = VoiceDto(),
+  var transcriber: TranscriberDto = TranscriberDto(),
 
   // Set via enum
   // @EncodeDefault(Mode.ALWAYS)
   override var firstMessageMode: FirstMessageModeType = ASSISTANT_SPEAKS_FIRST,
 
+  // TODO: Add verbs and enums
   var voicemailDetection: VoicemailDetection? = null,
   var metadata: Metadata? = null,
   var analysisPlan: AnalysisPlan? = null,

@@ -22,9 +22,9 @@ import kotlinx.serialization.Serializable
 data class AssistantOverrides(
   // TODO: Came from squad assistant
   val transportConfigurations: List<TransportConfiguration> = listOf(),
-  var transcriber: Transcriber = Transcriber(),
+  var transcriber: TranscriberDto = TranscriberDto(),
   var model: ModelDto = ModelDto(),
-  var voice: Voice = Voice(),
+  var voice: VoiceDto = VoiceDto(),
   var firstMessageMode: String = "",
   var recordingEnabled: Boolean = false,
   var hipaaEnabled: Boolean = false,

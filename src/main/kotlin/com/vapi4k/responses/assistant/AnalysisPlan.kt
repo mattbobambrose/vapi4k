@@ -28,5 +28,6 @@ data class AnalysisPlan(
   var successEvaluationRubric: String = "",
   var successEvaluationRequestTimeoutSeconds: Double = 0.0,
   var structuredDataPrompt: String = "",
-  var structuredDataSchema: StructuredDataSchema = StructuredDataSchema(),
+  // Do not initialize this to a StructuredDataSchema
+  var structuredDataSchema: StructuredDataSchema? = null,
 )

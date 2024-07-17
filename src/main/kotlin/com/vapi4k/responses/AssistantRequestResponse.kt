@@ -20,8 +20,8 @@ package com.vapi4k.responses
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverrides
-import com.vapi4k.responses.assistant.Destination
 import com.vapi4k.responses.assistant.SquadDto
+import com.vapi4k.responses.assistant.TransferDestinationDto
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -29,7 +29,7 @@ import kotlinx.serialization.json.JsonElement
 data class AssistantRequestResponse(
   var assistantId: String = "",
   var assistant: AssistantDto = AssistantDto(),
-  var destination: Destination = Destination(),
+  var destination: TransferDestinationDto = TransferDestinationDto(),
   var assistantOverrides: AssistantOverrides? = null,
   var squadId: String = "",
   // Do not initialize this to a SquadDto

@@ -17,16 +17,19 @@
 package com.vapi4k.responses.assistant
 
 
+import com.vapi4k.dsl.assistant.ProviderType
+import com.vapi4k.dsl.assistant.VoiceType
+import com.vapi4k.dsl.assistant.VoiceUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Voice(
-  var inputPreprocessingEnabled: Boolean = false,
-  var inputReformattingEnabled: Boolean = false,
-  var inputMinCharacters: Int = 0,
-  var inputPunctuationBoundaries: List<String> = listOf(),
-  var fillerInjectionEnabled: Boolean = false,
-  var provider: String = "",
-  var voiceId: String = "",
-  var speed: Double = 0.0
-)
+data class VoiceDto(
+  override var inputPreprocessingEnabled: Boolean = false,
+  override var inputReformattingEnabled: Boolean = false,
+  override var inputMinCharacters: Int = 0,
+  override var fillerInjectionEnabled: Boolean = false,
+  override var provider: ProviderType = ProviderType.UNKNOWN,
+  override var voiceId: VoiceType = VoiceType.UNKNOWN,
+  override var speed: Double = 0.0,
+  override var inputPunctuationBoundaries: List<PunctuationType> = listOf()
+) : VoiceUnion

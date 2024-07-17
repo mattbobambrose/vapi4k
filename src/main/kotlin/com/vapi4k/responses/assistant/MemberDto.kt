@@ -24,5 +24,5 @@ data class MemberDto(
   var assistantId: String = "",
   var assistant: AssistantDto = AssistantDto(),
   var assistantOverrides: AssistantOverrides = AssistantOverrides(),
-  var assistantDestinations: List<AssistantDestination> = listOf(),
+  var assistantDestinations: MutableList<AssistantDestinationDto> = mutableListOf(),
 )

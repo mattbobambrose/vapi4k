@@ -19,7 +19,7 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Destination(
+data class TransferDestinationDto(
   var type: String = "",
   var number: String = "",
   var message: String = "",

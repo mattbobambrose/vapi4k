@@ -17,12 +17,13 @@
 package com.vapi4k.responses.assistant
 
 
+import com.vapi4k.dsl.assistant.Member.AssistantDestinationUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssistantDestination(
+data class AssistantDestinationDto(
   var type: String = "",
-  var assistantName: String = "",
-  var message: String = "",
-  var description: String = ""
-)
+  override var assistantName: String = "",
+  override var message: String = "",
+  override var description: String = ""
+) : AssistantDestinationUnion
