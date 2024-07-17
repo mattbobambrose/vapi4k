@@ -16,10 +16,11 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.responses.assistant.AssistantDestinationDto
+import com.vapi4k.AssistantDslMarker
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.MemberDto
 
+@AssistantDslMarker
 data class Member(internal val members: Members, internal val memberDto: MemberDto) {
   private var errorMsg = ""
   fun assistantId(block: AssistantId.() -> Unit) {
@@ -53,23 +54,4 @@ data class Member(internal val members: Members, internal val memberDto: MemberD
         memberDto.assistantId = value
       }
   }
-
-  data class AssistantDestinations internal constructor(val member: Member, val memberDto: MemberDto) {
-    fun destination(block: AssistantDestination.() -> Unit) {
-      memberDto.assistantDestinations +=
-        AssistantDestination(AssistantDestinationDto().apply { type = "assistant" })
-          .apply(block).dto
-    }
-  }
-
-  interface AssistantDestinationUnion {
-    //    var type: String
-    var assistantName: String
-    var message: String
-    var description: String
-  }
-
-  data class AssistantDestination internal constructor(
-    val dto: AssistantDestinationDto
-  ) : AssistantDestinationUnion by dto
 }
