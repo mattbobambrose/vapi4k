@@ -99,7 +99,7 @@ internal object FunctionUtils {
       else -> "object"
     }
 
-  internal class ToolCallInfo(val method: Method) {
+  internal class ToolCallInfo(private val method: Method) {
     private val toolCall get() = method.toolCall!!
     private val toolHasName: Boolean get() = toolCall.name.isNotEmpty()
     private val toolHasDescription: Boolean get() = toolCall.description.isNotEmpty()

@@ -25,7 +25,6 @@ import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
 import com.vapi4k.responses.assistant.PunctuationType
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -36,7 +35,7 @@ object Serializers {
 
   internal object AssistantClientMessageTypeSerializer : KSerializer<AssistantClientMessageType> {
     override val descriptor: SerialDescriptor =
-      PrimitiveSerialDescriptor("AssistantClientMessageType", PrimitiveKind.STRING)
+      PrimitiveSerialDescriptor("AssistantClientMessageType", STRING)
 
     override fun serialize(
       encoder: Encoder,

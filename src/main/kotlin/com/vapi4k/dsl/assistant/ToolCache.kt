@@ -69,12 +69,12 @@ internal object ToolCache {
   fun removeToolCallFromCache(
     messageCallId: String,
     block: (FunctionInfo) -> Unit,
-  ): FunctionInfo? = toolCallCache.remove(messageCallId)?.also { it -> block(it) }
+  ): FunctionInfo? = toolCallCache.remove(messageCallId)?.also { block(it) }
 
   fun removeFunctionFromCache(
     messageCallId: String,
     block: (FunctionInfo) -> Unit,
-  ): FunctionInfo? = functionCache.remove(messageCallId)?.also { it -> block(it) }
+  ): FunctionInfo? = functionCache.remove(messageCallId)?.also { block(it) }
 
 
   private fun addToCache(
@@ -98,7 +98,7 @@ internal object ToolCache {
     }
   }
 
-  class FunctionInfo() {
+  internal class FunctionInfo {
     val created: Instant = Clock.System.now()
     val functions = mutableMapOf<String, FunctionDetails>()
     val age get() = Clock.System.now() - created
@@ -108,7 +108,7 @@ internal object ToolCache {
     fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
   }
 
-  class FunctionDetails(val obj: Any) {
+  internal class FunctionDetails(val obj: Any) {
     val className = obj::class.java.name
     val methodName = obj.toolMethod.name
     val fqName get() = "$className.$methodName()"
@@ -135,7 +135,7 @@ internal object ToolCache {
       return results
     }
 
-    fun invokeMethod(args: JsonElement): String {
+    private fun invokeMethod(args: JsonElement): String {
       logger.info { "Invoking method $fqName" }
       val method = obj.findMethod(methodName)
       val function = obj.findFunction(methodName)

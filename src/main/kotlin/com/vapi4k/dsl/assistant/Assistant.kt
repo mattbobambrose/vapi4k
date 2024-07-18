@@ -56,7 +56,7 @@ data class Assistant internal constructor(
   internal val request: JsonElement,
   internal val requestResponse: AssistantRequestMessageResponse
 ) : AssistantUnion by requestResponse.messageResponse.assistant {
-  internal val assistantDto get() = requestResponse.messageResponse.assistant
+  private val assistantDto get() = requestResponse.messageResponse.assistant
 
   fun model(block: Model.() -> Unit) {
     Model(this, assistantDto.model).apply(block)
