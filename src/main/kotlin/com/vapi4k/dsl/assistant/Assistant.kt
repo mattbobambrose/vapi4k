@@ -67,7 +67,7 @@ data class Assistant internal constructor(
   }
 
   fun overrides(block: AssistantOverrides.() -> Unit) {
-    AssistantOverrides(requestResponse.messageResponse.assistantOverrides).apply(block)
+    AssistantOverrides(request, requestResponse.messageResponse.assistantOverrides).apply(block)
   }
 
   companion object {

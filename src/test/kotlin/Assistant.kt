@@ -18,16 +18,16 @@ import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
 import com.vapi4k.dsl.assistant.AssistantDsl.squad
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
-import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.responses.assistant.eq
 import com.vapi4k.utils.JsonElementUtils.phoneNumber
 import kotlinx.serialization.json.JsonElement
 
 fun myAssistantRequest(
-  ibc: JsonElement,
+  request: JsonElement,
 ): AssistantRequestResponse =
-  (when (ibc.phoneNumber) {
-    "+14156721042" -> assistantId {
+  (when (request.phoneNumber) {
+    "+14156721042" -> assistantId(request) {
       id = "44792a91-d7f9-4915-9445-0991aeef97bc"
 
       overrides {
@@ -39,7 +39,7 @@ fun myAssistantRequest(
       }
     }
 
-    else -> getAssistant(ibc, "")
+    else -> getAssistant(request, "")
   })
 
 fun getSquad(request: JsonElement): AssistantRequestResponse {

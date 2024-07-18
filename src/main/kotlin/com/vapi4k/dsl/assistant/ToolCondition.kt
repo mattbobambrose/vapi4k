@@ -28,8 +28,8 @@ import kotlin.reflect.KProperty
 
 @AssistantDslMarker
 class ToolCondition internal constructor(
-  val tool: Tool,
-  val conditionSet: Set<ToolMessageCondition>,
+  internal val tool: Tool,
+  internal val conditionSet: Set<ToolMessageCondition>,
 ) {
   private val messages get() = tool.toolDto.messages
   private val isMatchingRRD: (ToolMessage) -> Boolean

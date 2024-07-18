@@ -18,6 +18,7 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.AssistantDslMarker
 import com.vapi4k.responses.assistant.AssistantOverridesDto
+import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesUnion {
   var firstMessageMode: String
@@ -44,8 +45,11 @@ interface AssistantOverridesUnion {
 }
 
 @AssistantDslMarker
-data class AssistantOverrides internal constructor(internal val overridesDto: AssistantOverridesDto) :
-  AssistantOverridesUnion by overridesDto {
+data class AssistantOverrides internal constructor(
+  internal val request: JsonElement,
+  internal val overridesDto: AssistantOverridesDto
+) : AssistantOverridesUnion by overridesDto {
+
   fun model(block: ModelOverride.() -> Unit) {
     ModelOverride(this, overridesDto.model).apply(block)
   }

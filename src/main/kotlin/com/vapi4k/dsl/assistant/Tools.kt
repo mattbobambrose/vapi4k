@@ -22,22 +22,28 @@ import com.vapi4k.dsl.assistant.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.ToolCache.addToolCallToCache
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.vapi4k.Endpoint
+import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.ToolDto
-import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.Utils.isUnitReturnType
 import com.vapi4k.utils.Utils.toolFunction
 
+internal interface AbstractModel {
+  val toolDtos: MutableList<ToolDto>
+  val messageCallId: String
+  val functions: MutableList<FunctionDto>
+}
+
 @AssistantDslMarker
-data class Tools internal constructor(val model: Model) {
+data class Tools internal constructor(internal val model: AbstractModel) {
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,
     block: Tool.() -> Unit,
   ) {
-    model.tools += ToolDto().also { toolDto ->
+    model.toolDtos += ToolDto().also { toolDto ->
       verifyObject(false, obj)
       populateFunctionDto(obj, toolDto.function)
-      addToolCallToCache(model.assistant.request.messageCallId, obj)
+      addToolCallToCache(model.messageCallId, obj)
 
       with(toolDto) {
         type = "function"
@@ -45,13 +51,7 @@ data class Tools internal constructor(val model: Model) {
       }
 
       // Apply block to tool
-      val tool = Tool(toolDto).apply(block)
-
-      if (toolDto.messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type } == null) {
-        if (tool.futureDelay != -1) {
-          error("delayedMillis must be set when using requestDelayedMessage")
-        }
-      }
+      Tool(toolDto).apply(block).apply { verifyFutureDelay(toolDto) }
 
       with(toolDto.server) {
         url = endpoint.url
@@ -61,7 +61,7 @@ data class Tools internal constructor(val model: Model) {
         }
       }
     }.also { toolDto ->
-      if (model.tools.any { toolDto.function.name == it.function.name }) {
+      if (model.toolDtos.any { toolDto.function.name == it.function.name }) {
         error("Duplicate tool name declared: ${toolDto.function.name}")
       }
     }
@@ -82,5 +82,15 @@ data class Tools internal constructor(val model: Model) {
   ) {
     val endpoint = with(Assistant.config) { getEmptyEndpoint() ?: defaultToolCallEndpoint }
     addTool(endpoint, obj, block)
+  }
+
+  companion object {
+    private fun Tool.verifyFutureDelay(toolDto: ToolDto) {
+      if (toolDto.messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type } == null) {
+        if (futureDelay != -1) {
+          error("delayedMillis must be set when using requestDelayedMessage")
+        }
+      }
+    }
   }
 }

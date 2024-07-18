@@ -20,15 +20,14 @@ import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.responses.assistant.RoleMessage
 import kotlin.reflect.KProperty
 
-internal interface ModelDelegate {
+internal interface AbstractModelDelegate {
   val messages: MutableList<RoleMessage>
-
   fun message(role: MessageRoleType, content: String)
 }
 
-internal class MessageDelegate(val messageRoleType: MessageRoleType) {
+internal class ModelMessageDelegate(val messageRoleType: MessageRoleType) {
   operator fun getValue(
-    model: ModelDelegate,
+    model: AbstractModelDelegate,
     property: KProperty<*>,
   ): String {
     val msgs = model.messages.filter { it.role == messageRoleType.desc }
@@ -36,7 +35,7 @@ internal class MessageDelegate(val messageRoleType: MessageRoleType) {
   }
 
   operator fun setValue(
-    model: ModelDelegate,
+    model: AbstractModelDelegate,
     property: KProperty<*>,
     newVal: String,
   ) = model.message(messageRoleType, newVal)

@@ -20,22 +20,24 @@ import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
+import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.Utils.trimLeadingSpaces
 
 @AssistantDslMarker
 data class ModelOverride internal constructor(
   internal val assistant: AssistantOverrides,
   internal val modelDto: ModelDto,
-) : ModelDelegate, ModelUnion by modelDto {
+) : AbstractModel, AbstractModelDelegate, ModelUnion by modelDto {
   override val messages get() = modelDto.messages
-  internal val tools get() = modelDto.tools
-  internal val functions get() = modelDto.functions
+  override val toolDtos get() = modelDto.tools
+  override val functions get() = modelDto.functions
+  override val messageCallId get() = assistant.request.messageCallId
 
-  var systemMessage by MessageDelegate(MessageRoleType.SYSTEM)
-  var assistantMessage by MessageDelegate(MessageRoleType.ASSISTANT)
-  var functionMessage by MessageDelegate(MessageRoleType.FUNCTION)
-  var toolMessage by MessageDelegate(MessageRoleType.TOOL)
-  var userMessage by MessageDelegate(MessageRoleType.USER)
+  var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
+  var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)
+  var functionMessage by ModelMessageDelegate(MessageRoleType.FUNCTION)
+  var toolMessage by ModelMessageDelegate(MessageRoleType.TOOL)
+  var userMessage by ModelMessageDelegate(MessageRoleType.USER)
 
   fun tools(block: Tools.() -> Unit) {
     Tools(this).apply(block)

@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MemberDto(
     var assistantId: String = "",
-    var assistant: AssistantDto = AssistantDto(),
-    var assistantOverrides: AssistantOverridesDto = AssistantOverridesDto(),
-    var assistantDestinations: MutableList<AssistantDestinationDto> = mutableListOf(),
+    val assistant: AssistantDto = AssistantDto(),
+    val assistantOverrides: AssistantOverridesDto = AssistantOverridesDto(),
+    val assistantDestinations: MutableList<AssistantDestinationDto> = mutableListOf(),
 )

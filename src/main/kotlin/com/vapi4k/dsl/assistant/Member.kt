@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.AssistantDslMarker
-import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
@@ -27,8 +26,9 @@ data class Member(internal val members: Members, internal val memberDto: MemberD
     if (errorMsg.isNotEmpty()) {
       error(errorMsg)
     } else {
-      errorMsg = "Member already has an assistantId assigned"
       AssistantId(memberDto).apply(block)
+      // errorMsg is set to a value to prevent further assignment of assistantId
+      errorMsg = "Member already has an assistantId assigned"
     }
   }
 
@@ -36,10 +36,11 @@ data class Member(internal val members: Members, internal val memberDto: MemberD
     if (errorMsg.isNotEmpty()) {
       error(errorMsg)
     } else {
+//      memberDto.assistant = AssistantDto().also { assistantDto ->
+      Assistant(members.squad.request, members.squad.requestMessageResponse).apply(block)
+//      }
+      // errorMsg is set to a value to prevent further assignment of assistantId
       errorMsg = "Member already has an assistant assigned"
-      memberDto.assistant = AssistantDto().also { assistantDto ->
-        Assistant(members.squad.request, assistantDto).apply(block)
-      }
     }
   }
 
