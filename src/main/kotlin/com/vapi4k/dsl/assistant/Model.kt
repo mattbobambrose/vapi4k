@@ -35,12 +35,7 @@ interface ModelUnion {
 data class Model internal constructor(
   internal val assistant: Assistant,
   internal val modelDto: ModelDto,
-) : AbstractModel(), ModelUnion by modelDto {
-  override val messages get() = modelDto.messages
-  override val toolDtos get() = modelDto.tools
-  override val functions get() = modelDto.functions
-  override val messageCallId get() = assistant.request.messageCallId
-
+) : AbstractModel(modelDto, assistant.request.messageCallId), ModelUnion by modelDto {
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
   var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)
   var functionMessage by ModelMessageDelegate(MessageRoleType.FUNCTION)

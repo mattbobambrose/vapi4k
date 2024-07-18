@@ -23,17 +23,16 @@ import com.vapi4k.dsl.assistant.ToolCache.addToolCallToCache
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.vapi4k.Endpoint
-import com.vapi4k.responses.assistant.FunctionDto
-import com.vapi4k.responses.assistant.RoleMessage
+import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.utils.Utils.isUnitReturnType
 import com.vapi4k.utils.Utils.toolFunction
 
-abstract class AbstractModel {
-  internal abstract val toolDtos: MutableList<ToolDto>
-  internal abstract val messageCallId: String
-  internal abstract val functions: MutableList<FunctionDto>
-  internal abstract val messages: MutableList<RoleMessage>
+abstract class AbstractModel(modelDto: ModelDto, internal val messageCallId: String) {
+  private val dto = modelDto
+  internal val messages get() = dto.messages
+  internal val toolDtos get() = dto.tools
+  internal val functions get() = dto.functions
   internal abstract fun message(role: MessageRoleType, content: String)
 }
 
