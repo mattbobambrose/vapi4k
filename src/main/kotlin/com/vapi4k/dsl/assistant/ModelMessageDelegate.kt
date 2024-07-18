@@ -16,23 +16,21 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
-import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.MemberDto
+import com.vapi4k.dsl.assistant.enums.MessageRoleType
+import kotlin.reflect.KProperty
 
-@AssistantDslMarker
-data class Members internal constructor(internal val squad: Squad) {
-  val members = mutableListOf<Member>()
-  var membersOverrides: List<AssistantOverridesDto> = mutableListOf()
-
-  fun member(block: Member.() -> Unit) {
-    with(squad.requestMessageResponse.messageResponse.squad!!) {
-      if (members == null) {
-        members = mutableListOf()
-      }
-      members?.add(MemberDto().also { memberDto ->
-        Member(this@Members, memberDto).apply(block)
-      })
-    }
+internal class ModelMessageDelegate(val messageRoleType: MessageRoleType) {
+  operator fun getValue(
+    model: AbstractModel,
+    property: KProperty<*>,
+  ): String {
+    val msgs = model.messages.filter { it.role == messageRoleType.desc }
+    return if (msgs.isEmpty()) "" else (msgs.joinToString("") { it.content })
   }
+
+  operator fun setValue(
+    model: AbstractModel,
+    property: KProperty<*>,
+    newVal: String,
+  ) = model.message(messageRoleType, newVal)
 }

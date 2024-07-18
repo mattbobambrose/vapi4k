@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
 import com.vapi4k.responses.assistant.SquadDto
 import kotlinx.serialization.json.JsonElement
@@ -31,12 +30,12 @@ object AssistantDsl {
     block: Assistant.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      Assistant(request, messageResponse.assistant).apply(block)
+      Assistant(request, this).apply(block)
     }.messageResponse
 
-  fun assistantId(block: AssistantId.() -> Unit) =
+  fun assistantId(request: JsonElement, block: AssistantId.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      AssistantId(messageResponse).apply(block)
+      AssistantId(request, this).apply(block)
     }.messageResponse
 
   fun squad(
@@ -47,7 +46,7 @@ object AssistantDsl {
       if (messageResponse.squad == null) {
         messageResponse.squad = SquadDto()
       }
-      Squad(request, messageResponse.squad!!).apply(block)
+      Squad(request, this).apply(block)
     }.messageResponse
 
   fun squadId(id: String) =
@@ -55,12 +54,20 @@ object AssistantDsl {
       messageResponse.squadId = id
     }.messageResponse
 
-  data class AssistantId internal constructor(val messageResponse: AssistantRequestResponse) {
+  data class AssistantId internal constructor(
+    val request: JsonElement,
+    val requestMessageResponse: AssistantRequestMessageResponse
+  ) {
+    private val messageResponse get() = requestMessageResponse.messageResponse
     var id
       get() = messageResponse.assistantId
       set(value) {
         messageResponse.assistantId = value
       }
+
+    fun overrides(block: AssistantOverrides.() -> Unit) {
+      AssistantOverrides(request, messageResponse.assistantOverrides).apply(block)
+    }
   }
 }
 

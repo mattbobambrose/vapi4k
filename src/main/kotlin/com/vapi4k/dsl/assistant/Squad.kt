@@ -18,7 +18,7 @@ package com.vapi4k.dsl.assistant
 
 
 import com.vapi4k.AssistantDslMarker
-import com.vapi4k.responses.assistant.SquadDto
+import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
 import kotlinx.serialization.json.JsonElement
 
 interface SquadUnion {
@@ -26,8 +26,11 @@ interface SquadUnion {
 }
 
 @AssistantDslMarker
-data class Squad internal constructor(val request: JsonElement, internal val squadDto: SquadDto) :
-  SquadUnion by squadDto {
+data class Squad internal constructor(
+  val request: JsonElement,
+  internal val requestMessageResponse: AssistantRequestMessageResponse
+) :
+  SquadUnion by requestMessageResponse.messageResponse.squad!! {
   fun members(block: Members.() -> Unit) {
     Members(this).apply(block)
 //      squadDto.membersOverrides = members.membersOverrides

@@ -34,3 +34,4 @@ interface VoiceUnion {
 
 data class Voice internal constructor(val voiceDto: VoiceDto) : VoiceUnion by voiceDto
 
+data class VoiceOverrides internal constructor(val voiceDto: VoiceDto) : VoiceUnion by voiceDto
