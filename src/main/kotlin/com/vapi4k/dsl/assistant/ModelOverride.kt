@@ -27,11 +27,11 @@ import com.vapi4k.utils.Utils.trimLeadingSpaces
 data class ModelOverride internal constructor(
   internal val assistant: AssistantOverrides,
   internal val modelDto: ModelDto,
-) : AbstractModel, AbstractModelDelegate, ModelUnion by modelDto {
-  override val messages get() = modelDto.messages
-  override val toolDtos get() = modelDto.tools
-  override val functions get() = modelDto.functions
-  override val messageCallId get() = assistant.request.messageCallId
+) : AbstractModel(), ModelUnion by modelDto {
+  internal override val messages get() = modelDto.messages
+  internal override val toolDtos get() = modelDto.tools
+  internal override val functions get() = modelDto.functions
+  internal override val messageCallId get() = assistant.request.messageCallId
 
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
   var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)

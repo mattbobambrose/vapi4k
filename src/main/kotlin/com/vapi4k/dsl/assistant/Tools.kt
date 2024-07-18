@@ -20,17 +20,21 @@ import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.ToolCache.addToolCallToCache
+import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.utils.Utils.isUnitReturnType
 import com.vapi4k.utils.Utils.toolFunction
 
-internal interface AbstractModel {
-  val toolDtos: MutableList<ToolDto>
-  val messageCallId: String
-  val functions: MutableList<FunctionDto>
+abstract class AbstractModel {
+  internal abstract val toolDtos: MutableList<ToolDto>
+  internal abstract val messageCallId: String
+  internal abstract val functions: MutableList<FunctionDto>
+  internal abstract val messages: MutableList<RoleMessage>
+  internal abstract fun message(role: MessageRoleType, content: String)
 }
 
 @AssistantDslMarker
