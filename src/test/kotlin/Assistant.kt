@@ -29,6 +29,14 @@ fun myAssistantRequest(
   (when (ibc.phoneNumber) {
     "+14156721042" -> assistantId {
       id = "44792a91-d7f9-4915-9445-0991aeef97bc"
+
+      overrides {
+        firstMessage = "This is the first message override"
+        model {
+          provider = "openai"
+          model = "gpt-4-turbo"
+        }
+      }
     }
 
     else -> getAssistant(ibc, "")
@@ -64,6 +72,9 @@ fun getAssistant(
   callerName: String = "Bill",
 ) =
   assistant(request) {
+    overrides {
+      firstMessage = "This is the first message override"
+    }
     firstMessage =
       """
             Hi there. My name is Ellen. I'd like to collect some information from you

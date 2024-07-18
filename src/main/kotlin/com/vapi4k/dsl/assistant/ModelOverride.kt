@@ -22,17 +22,9 @@ import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.utils.Utils.trimLeadingSpaces
 
-interface ModelUnion {
-  var provider: String
-  var model: String
-  var temperature: Int
-  var maxTokens: Int
-  var emotionRecognitionEnabled: Boolean
-}
-
 @AssistantDslMarker
-data class Model internal constructor(
-  internal val assistant: Assistant,
+data class ModelOverride internal constructor(
+  internal val assistant: AssistantOverrides,
   internal val modelDto: ModelDto,
 ) : ModelDelegate, ModelUnion by modelDto {
   override val messages get() = modelDto.messages

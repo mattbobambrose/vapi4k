@@ -21,8 +21,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MemberDto(
-  var assistantId: String = "",
-  var assistant: AssistantDto = AssistantDto(),
-  var assistantOverrides: AssistantOverrides = AssistantOverrides(),
-  var assistantDestinations: MutableList<AssistantDestinationDto> = mutableListOf(),
+    var assistantId: String = "",
+    var assistant: AssistantDto = AssistantDto(),
+    var assistantOverrides: AssistantOverridesDto = AssistantOverridesDto(),
+    var assistantDestinations: MutableList<AssistantDestinationDto> = mutableListOf(),
 )

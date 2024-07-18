@@ -31,7 +31,7 @@ object AssistantDsl {
     block: Assistant.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      Assistant(request, messageResponse.assistant).apply(block)
+      Assistant(request, this).apply(block)
     }.messageResponse
 
   fun assistantId(block: AssistantId.() -> Unit) =
@@ -61,6 +61,10 @@ object AssistantDsl {
       set(value) {
         messageResponse.assistantId = value
       }
+
+    fun overrides(block: AssistantOverrides.() -> Unit) {
+      AssistantOverrides(messageResponse.assistantOverrides).apply(block)
+    }
   }
 }
 

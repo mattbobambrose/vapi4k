@@ -22,13 +22,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SquadDto(
-  override var name: String = "",
+    override var name: String = "",
 
   // This cannot be initialized to a mutable list
-  var members: MutableList<MemberDto>? = null,
-  var membersOverrides: AssistantOverrides = AssistantOverrides(),
-  val id: String = "",
-  val orgId: String = "",
-  val createdAt: String = "",
-  val updatedAt: String = ""
+    var members: MutableList<MemberDto>? = null,
+    var membersOverrides: AssistantOverridesDto = AssistantOverridesDto(),
+    val id: String = "",
+    val orgId: String = "",
+    val createdAt: String = "",
+    val updatedAt: String = ""
 ) : SquadUnion

@@ -66,33 +66,35 @@ data class AssistantDto(
   var artifactPlan: ArtifactPlanDto? = null,
   var messagePlan: MessagePlanDto? = null,
 
-  override var clientMessages: MutableSet<AssistantClientMessageType> =
-    mutableSetOf(
-      AssistantClientMessageType.CONVERSATION_UPDATE,
-      AssistantClientMessageType.FUNCTION_CALL,
-      AssistantClientMessageType.HANG,
-      AssistantClientMessageType.MODEL_OUTPUT,
-      AssistantClientMessageType.SPEECH_UPDATE,
-      AssistantClientMessageType.STATUS_UPDATE,
-      AssistantClientMessageType.TRANSCRIPT,
-      AssistantClientMessageType.TOOL_CALLS,
-      AssistantClientMessageType.USER_INTERRUPTED,
-      AssistantClientMessageType.VOICE_INPUT,
-    ),
+  override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES,
 
-  override var serverMessages: MutableSet<AssistantServerMessageType> =
-    mutableSetOf(
-      AssistantServerMessageType.CONVERSATION_UPDATE,
-      AssistantServerMessageType.END_OF_CALL_REPORT,
-      AssistantServerMessageType.FUNCTION_CALL,
-      AssistantServerMessageType.HANG,
-      AssistantServerMessageType.SPEECH_UPDATE,
-      AssistantServerMessageType.STATUS_UPDATE,
-      AssistantServerMessageType.TOOL_CALLS,
-      AssistantServerMessageType.TRANSFER_DESTINATION_REQUEST,
-      AssistantServerMessageType.USER_INTERRUPTED,
-    ),
+  override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES,
 
   var endCallPhrases: MutableList<String> = mutableListOf(),
 
   ) : AssistantUnion
+
+val DEFAULT_CLIENT_MESSAGES = mutableSetOf(
+  AssistantClientMessageType.CONVERSATION_UPDATE,
+  AssistantClientMessageType.FUNCTION_CALL,
+  AssistantClientMessageType.HANG,
+  AssistantClientMessageType.MODEL_OUTPUT,
+  AssistantClientMessageType.SPEECH_UPDATE,
+  AssistantClientMessageType.STATUS_UPDATE,
+  AssistantClientMessageType.TRANSCRIPT,
+  AssistantClientMessageType.TOOL_CALLS,
+  AssistantClientMessageType.USER_INTERRUPTED,
+  AssistantClientMessageType.VOICE_INPUT,
+)
+
+val DEFAULT_SERVER_MESSAGES = mutableSetOf(
+  AssistantServerMessageType.CONVERSATION_UPDATE,
+  AssistantServerMessageType.END_OF_CALL_REPORT,
+  AssistantServerMessageType.FUNCTION_CALL,
+  AssistantServerMessageType.HANG,
+  AssistantServerMessageType.SPEECH_UPDATE,
+  AssistantServerMessageType.STATUS_UPDATE,
+  AssistantServerMessageType.TOOL_CALLS,
+  AssistantServerMessageType.TRANSFER_DESTINATION_REQUEST,
+  AssistantServerMessageType.USER_INTERRUPTED,
+)

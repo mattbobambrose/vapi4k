@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
-import com.vapi4k.responses.assistant.AssistantDto
+import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantUnion {
@@ -52,8 +52,12 @@ interface AssistantUnion {
 }
 
 @AssistantDslMarker
-data class Assistant internal constructor(internal val request: JsonElement, internal val assistantDto: AssistantDto) :
-  AssistantUnion by assistantDto {
+data class Assistant internal constructor(
+  internal val request: JsonElement,
+  internal val requestResponse: AssistantRequestMessageResponse
+) : AssistantUnion by requestResponse.messageResponse.assistant {
+  internal val assistantDto get() = requestResponse.messageResponse.assistant
+
   fun model(block: Model.() -> Unit) {
     Model(this, assistantDto.model).apply(block)
   }
@@ -62,7 +66,9 @@ data class Assistant internal constructor(internal val request: JsonElement, int
     Voice(assistantDto.voice).apply(block)
   }
 
-
+  fun overrides(block: AssistantOverrides.() -> Unit) {
+    AssistantOverrides(requestResponse.messageResponse.assistantOverrides).apply(block)
+  }
 
   companion object {
     internal lateinit var config: Vapi4kConfig

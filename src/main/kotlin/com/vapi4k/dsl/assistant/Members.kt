@@ -17,13 +17,13 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.AssistantDslMarker
-import com.vapi4k.responses.assistant.AssistantOverrides
+import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
 data class Members internal constructor(internal val squad: Squad) {
   val members = mutableListOf<Member>()
-  var membersOverrides: List<AssistantOverrides> = mutableListOf()
+  var membersOverrides: List<AssistantOverridesDto> = mutableListOf()
 
   fun member(block: Member.() -> Unit) {
     with(squad.squadDto) {
