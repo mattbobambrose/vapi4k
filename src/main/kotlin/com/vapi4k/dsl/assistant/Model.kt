@@ -22,6 +22,7 @@ import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.Utils.trimLeadingSpaces
+import kotlinx.serialization.json.JsonElement
 
 interface ModelUnion {
   var provider: String
@@ -32,10 +33,12 @@ interface ModelUnion {
 }
 
 @AssistantDslMarker
-data class Model internal constructor(
-  internal val assistant: Assistant,
-  internal val modelDto: ModelDto,
-) : AbstractModel(modelDto, assistant.request.messageCallId), ModelUnion by modelDto {
+class Model(internal val request: JsonElement, internal val modelDto: ModelDto) {
+  internal val messages get() = modelDto.messages
+  internal val toolDtos get() = modelDto.tools
+  internal val functions get() = modelDto.functions
+  internal val messageCallId get() = request.messageCallId
+
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
   var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)
   var functionMessage by ModelMessageDelegate(MessageRoleType.FUNCTION)
@@ -50,7 +53,7 @@ data class Model internal constructor(
     Functions(this).apply(block)
   }
 
-  override fun message(role: MessageRoleType, content: String) {
+  fun message(role: MessageRoleType, content: String) {
     // Remove any existing messages with the same role
     messages.removeAll { it.role == role.desc }
     // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator

@@ -59,7 +59,7 @@ data class Assistant internal constructor(
   private val assistantDto get() = requestResponse.messageResponse.assistant
 
   fun model(block: Model.() -> Unit) {
-    Model(this, assistantDto.model).apply(block)
+    Model(request, assistantDto.model).apply(block)
   }
 
   fun voice(block: Voice.() -> Unit) {

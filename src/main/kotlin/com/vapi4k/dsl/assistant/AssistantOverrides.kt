@@ -50,8 +50,8 @@ data class AssistantOverrides internal constructor(
   internal val overridesDto: AssistantOverridesDto
 ) : AssistantOverridesUnion by overridesDto {
 
-  fun model(block: ModelOverride.() -> Unit) {
-    ModelOverride(this, overridesDto.model).apply(block)
+  fun model(block: Model.() -> Unit) {
+    Model(request, overridesDto.model).apply(block)
   }
 
   fun voice(block: VoiceOverrides.() -> Unit) {

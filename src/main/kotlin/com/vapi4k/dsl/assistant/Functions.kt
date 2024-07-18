@@ -23,7 +23,7 @@ import com.vapi4k.dsl.assistant.ToolCache.addFunctionToCache
 import com.vapi4k.responses.assistant.FunctionDto
 
 @AssistantDslMarker
-data class Functions internal constructor(internal val model: AbstractModel) {
+data class Functions internal constructor(internal val model: Model) {
   fun function(obj: Any) {
     model.functions += FunctionDto().also { functionDto ->
       verifyObject(true, obj)
