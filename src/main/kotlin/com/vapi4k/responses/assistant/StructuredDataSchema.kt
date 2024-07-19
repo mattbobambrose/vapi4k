@@ -22,9 +22,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StructuredDataSchema(
   var type: String = "",
-  var items: Items = Items(),
-  // TODO: What is this?
-  var properties: Properties = Properties(),
   var description: String = "",
-  var required: List<String> = listOf(),
+  val items: MutableMap<String, String> = mutableMapOf(),
+  val properties: MutableMap<String, String> = mutableMapOf(),
+  val required: MutableList<String> = mutableListOf(),
 )

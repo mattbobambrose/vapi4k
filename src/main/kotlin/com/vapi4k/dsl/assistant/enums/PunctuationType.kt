@@ -14,10 +14,27 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.enums
 
-
+import com.vapi4k.common.Serializers.PunctuationTypeSerializer
 import kotlinx.serialization.Serializable
 
-@Serializable
-class Metadata
+@Serializable(with = PunctuationTypeSerializer::class)
+enum class PunctuationType(val desc: String) {
+  FULL_STOP('\u3002'.toString()),
+  FULL_WIDTH_COMMA('\uff0c'.toString()),
+  PERIOD("."),
+  EXCLAMATION("!"),
+  QUESTION("?"),
+  SEMICOLON(";"),
+  RIGHT_PAREN(")"),
+  ARABIC_COMMA('\u060C'.toString()),
+  ARABIC_FULL_STOP('\u06D4'.toString()),
+  DEVANAGARI_DANDA('\u0964'.toString()),
+  DEVANAGARI_DOUBLE_DANDA('\u0965'.toString()),
+  VERTICAL_BAR("|"),
+  DOUBLE_VERTICAL_BAR("||"),
+  COMMA(","),
+  COLON(":"),
+}
+

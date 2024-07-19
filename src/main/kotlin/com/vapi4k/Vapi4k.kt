@@ -24,6 +24,7 @@ import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
 import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
 import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.plugin.CallContext
+import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
@@ -59,11 +60,11 @@ object Vapi4k {
                   when (callback.type) {
                     REQUEST ->
                       with(config) {
-                        allRequests.forEach { launch { it.invoke(request!!) } }
+                        allRequests.forEach { launch { it.invoke(request) } }
                         perRequests
                           .filter { it.first == requestType }
                           .forEach { (reqType, block) ->
-                            launch { block(request!!) }
+                            launch { block(request) }
                           }
                       }
 
@@ -72,7 +73,7 @@ object Vapi4k {
                         if (allResponses.isNotEmpty() || perResponses.isNotEmpty()) {
                           val resp =
                             runCatching {
-                              response!!.invoke()
+                              response.invoke()
                             }.onFailure { e ->
                               logger.error(e) { "Error creating response" }
                               error("Error creating response")
@@ -101,8 +102,8 @@ object Vapi4k {
   internal data class RequestResponseCallback(
     val type: RequestResponseType,
     val requestType: ServerRequestType,
-    val request: JsonElement? = null,
-    val response: (() -> JsonElement)? = null,
+    val request: JsonElement = emptyJsonElement(),
+    val response: (() -> JsonElement) = { emptyJsonElement() },
     val elapsed: Duration = Duration.ZERO,
   ) {
     companion object {

@@ -18,8 +18,8 @@ import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
 import com.vapi4k.dsl.assistant.AssistantDsl.squad
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.responses.AssistantRequestResponse
-import com.vapi4k.responses.assistant.eq
 import com.vapi4k.utils.JsonElementUtils.phoneNumber
 import kotlinx.serialization.json.JsonElement
 

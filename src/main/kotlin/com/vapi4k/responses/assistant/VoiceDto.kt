@@ -19,6 +19,7 @@ package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.VoiceUnion
 import com.vapi4k.dsl.assistant.enums.ProviderType
+import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceType
 import kotlinx.serialization.Serializable
 
@@ -31,5 +32,5 @@ data class VoiceDto(
   override var provider: ProviderType = ProviderType.UNKNOWN,
   override var voiceId: VoiceType = VoiceType.UNKNOWN,
   override var speed: Double = 0.0,
-  override var inputPunctuationBoundaries: List<PunctuationType> = listOf()
+  override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf()
 ) : VoiceUnion

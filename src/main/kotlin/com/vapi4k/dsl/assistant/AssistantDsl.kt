@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
-import com.vapi4k.responses.assistant.SquadDto
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
@@ -43,9 +42,6 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      if (messageResponse.squad == null) {
-        messageResponse.squad = SquadDto()
-      }
       Squad(request, this).apply(block)
     }.messageResponse
 
@@ -66,7 +62,7 @@ object AssistantDsl {
       }
 
     fun overrides(block: AssistantOverrides.() -> Unit) {
-      AssistantOverrides(request, messageResponse.assistantOverrides).apply(block)
+      AssistantOverrides(request, messageResponse.assistantOverridesDto).apply(block)
     }
   }
 }

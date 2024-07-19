@@ -22,5 +22,6 @@ import kotlinx.serialization.Serializable
 @Serializable(with = ToolCallRoleSerializer::class)
 enum class ToolCallRoleType(val desc: String) {
   ASSISTANT("assistant"),
-  SYSTEM("system");
+  SYSTEM("system"),
+  UNKNOWN("unknown");
 }

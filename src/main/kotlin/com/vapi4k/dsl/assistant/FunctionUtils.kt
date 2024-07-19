@@ -31,10 +31,7 @@ internal object FunctionUtils {
   private val legalTypes = setOf(String::class, Unit::class)
 
 
-  internal fun verifyObject(
-    isFunction: Boolean,
-    obj: Any,
-  ) {
+  internal fun verifyObject(isFunction: Boolean, obj: Any) {
     val cnt = obj.functions.count { it.hasTool }
 
     when {
@@ -54,42 +51,36 @@ internal object FunctionUtils {
     }
   }
 
-  internal fun populateFunctionDto(
-    obj: Any,
-    dto: FunctionDto = FunctionDto(),
-  ) =
-    dto.also { dto ->
-      val method = obj.toolMethod
-      val function = obj.toolFunction
-      ToolCallInfo(method).also { tci ->
+  internal fun populateFunctionDto(obj: Any, functionDto: FunctionDto) {
+    val method = obj.toolMethod
+    val function = obj.toolFunction
+    ToolCallInfo(method).also { tci ->
+      functionDto.name = tci.llmName
+      functionDto.description = tci.llmDescription
+      // TODO: This might be always object
+      functionDto.parameters.type = "object"  // llmReturnType
 
-        dto.name = tci.llmName
-        dto.description = tci.llmDescription
-        // TODO: This might be always object
-        dto.parameters.type = "object"  // llmReturnType
-        dto.parameters.properties = mutableMapOf()
+      // Reduce the size of kparams if the first parameter is the object itself
+      val jparams = method.parameters.toList()
+      val kparams =
+        if (jparams.size == function.parameters.size)
+          function.parameters
+        else
+          function.parameters.subList(1, function.parameters.size)
 
-        // Reduce the size of kparams if the first parameter is the object itself
-        val jparams = method.parameters.toList()
-        val kparams =
-          if (jparams.size == function.parameters.size)
-            function.parameters
-          else
-            function.parameters.subList(1, function.parameters.size)
-
-        jparams
-          .zip(kparams)
-          .forEach { (jParam, kParam) ->
-            val name = kParam.name ?: jParam.name
-            if (!kParam.isOptional)
-              dto.parameters.required += name
-            dto.parameters.properties!![name] = FunctionDto.FunctionParameters.FunctionPropertyDesc(
-              type = jParam.llmType,
-              description = jParam.param?.description ?: "The $name parameter"
-            )
-          }
-      }
+      jparams
+        .zip(kparams)
+        .forEach { (jParam, kParam) ->
+          val name = kParam.name ?: jParam.name
+          if (!kParam.isOptional)
+            functionDto.parameters.required += name
+          functionDto.parameters.properties[name] = FunctionDto.FunctionParameters.FunctionPropertyDesc(
+            type = jParam.llmType,
+            description = jParam.param?.description ?: "The $name parameter"
+          )
+        }
     }
+  }
 
   private val Parameter.llmType: String
     get() = when (type) {

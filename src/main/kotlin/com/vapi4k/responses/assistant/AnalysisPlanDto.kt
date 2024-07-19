@@ -28,6 +28,5 @@ data class AnalysisPlanDto(
   var successEvaluationRubric: String = "",
   var successEvaluationRequestTimeoutSeconds: Double = 0.0,
   var structuredDataPrompt: String = "",
-  // Do not initialize this to a StructuredDataSchema
-  var structuredDataSchema: StructuredDataSchema? = null,
+  val structuredDataSchema: StructuredDataSchema = StructuredDataSchema(),
 )

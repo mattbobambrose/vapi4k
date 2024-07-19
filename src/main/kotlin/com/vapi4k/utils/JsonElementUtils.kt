@@ -20,6 +20,7 @@ import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.jsonList
 import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.JsonUtils.toJsonElement
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 
@@ -71,4 +72,7 @@ object JsonElementUtils {
   val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
 
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
+
+  fun emptyJsonElement() = EMPTY_JSON_ELEMENT
+  private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
 }

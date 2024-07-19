@@ -14,9 +14,10 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant
 
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
+import com.vapi4k.responses.assistant.ToolMessage
 import com.vapi4k.responses.assistant.ToolMessageCondition.Companion.toolMessageCondition
 
 infix fun String.eq(value: String) =

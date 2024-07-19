@@ -91,14 +91,14 @@ data class ToolCallResult(
   var name: String = "",
   var result: String = "",
   // TODO: Ask Vapi if this should be messages (plural)
-  var message: MutableList<ToolCallMessage> = mutableListOf(),
   var error: String = "",
+  val message: MutableList<ToolCallMessage> = mutableListOf(),
 )
 
 @Serializable
 data class ToolCallMessage(
-  var type: ToolCallMessageType? = null,
-  var role: ToolCallRoleType? = null,
+  var type: ToolCallMessageType = ToolCallMessageType.UNKNOWN,
+  var role: ToolCallRoleType = ToolCallRoleType.UNKNOWN,
   var content: String = "",
-  var conditions: List<ToolMessageCondition> = emptyList(),
+  val conditions: MutableList<ToolMessageCondition> = mutableListOf(),
 )

@@ -40,8 +40,8 @@ interface AssistantOverridesUnion {
   var endCallMessage: String
   var serverUrl: String
   var serverUrlSecret: String
-  var clientMessages: MutableSet<String>
-  var serverMessages: MutableSet<String>
+  val clientMessages: MutableSet<String>
+  val serverMessages: MutableSet<String>
 }
 
 @AssistantDslMarker

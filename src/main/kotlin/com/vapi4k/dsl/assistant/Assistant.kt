@@ -55,8 +55,8 @@ interface AssistantUnion {
 data class Assistant internal constructor(
   internal val request: JsonElement,
   internal val requestResponse: AssistantRequestMessageResponse
-) : AssistantUnion by requestResponse.messageResponse.assistant {
-  private val assistantDto get() = requestResponse.messageResponse.assistant
+) : AssistantUnion by requestResponse.messageResponse.assistantDto {
+  private val assistantDto get() = requestResponse.messageResponse.assistantDto
 
   fun model(block: Model.() -> Unit) {
     Model(request, assistantDto.model).apply(block)
@@ -67,7 +67,7 @@ data class Assistant internal constructor(
   }
 
   fun overrides(block: AssistantOverrides.() -> Unit) {
-    AssistantOverrides(request, requestResponse.messageResponse.assistantOverrides).apply(block)
+    AssistantOverrides(request, requestResponse.messageResponse.assistantOverridesDto).apply(block)
   }
 
   companion object {

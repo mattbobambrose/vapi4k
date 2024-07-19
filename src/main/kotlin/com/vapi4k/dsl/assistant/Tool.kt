@@ -25,7 +25,6 @@ import com.vapi4k.dsl.assistant.enums.ToolMessageType.REQUEST_START
 import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.responses.assistant.ToolMessage
 import com.vapi4k.responses.assistant.ToolMessageCondition
-import com.vapi4k.responses.assistant.isMatching
 import kotlin.reflect.KProperty
 
 @AssistantDslMarker

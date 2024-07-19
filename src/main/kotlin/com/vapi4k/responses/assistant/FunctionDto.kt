@@ -22,12 +22,12 @@ import kotlinx.serialization.Serializable
 data class FunctionDto(
   var name: String = "",
   var description: String = "",
-  var parameters: FunctionParameters = FunctionParameters(),
+  val parameters: FunctionParameters = FunctionParameters(),
 ) {
   @Serializable
   data class FunctionParameters(
     var type: String = "",
-    var properties: MutableMap<String, FunctionPropertyDesc>? = null,
+    val properties: MutableMap<String, FunctionPropertyDesc> = mutableMapOf(),
     val required: MutableList<String> = mutableListOf(),
   ) {
     @Serializable

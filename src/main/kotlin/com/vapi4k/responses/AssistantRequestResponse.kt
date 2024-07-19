@@ -22,18 +22,25 @@ import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.SquadDto
 import com.vapi4k.responses.assistant.TransferDestinationDto
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class AssistantRequestResponse(
-  var assistantId: String = "",
-  var assistant: AssistantDto = AssistantDto(),
   var destination: TransferDestinationDto = TransferDestinationDto(),
-  var assistantOverrides: AssistantOverridesDto = AssistantOverridesDto(),
+
+  var assistantId: String = "",
+  @SerialName("assistant")
+  val assistantDto: AssistantDto = AssistantDto(),
+  @SerialName("assistantOverrides")
+  val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),
+
   var squadId: String = "",
   // Do not initialize this to a SquadDto
-  var squad: SquadDto? = null,
+  @SerialName("squad")
+  val squadDto: SquadDto = SquadDto(),
+
   var error: String = "",
 ) {
   companion object {

@@ -21,9 +21,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ToolDto(
-  var type: String? = null,
+  var type: String = "",
   var async: Boolean? = null,
-  var function: FunctionDto = FunctionDto(),
-  var messages: MutableList<ToolMessage> = mutableListOf(),
-  var server: Server = Server(),
+  val function: FunctionDto = FunctionDto(),
+  val messages: MutableList<ToolMessage> = mutableListOf(),
+  val server: ServerDto = ServerDto(),
 )

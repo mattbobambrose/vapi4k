@@ -25,5 +25,5 @@ data class TranscriberDto(
   var model: String = "",
   var language: String = "",
   var smartFormat: Boolean = false,
-  var keywords: List<String> = listOf()
+  val keywords: MutableList<String> = mutableListOf()
 )

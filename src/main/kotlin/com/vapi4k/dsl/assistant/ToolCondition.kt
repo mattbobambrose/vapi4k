@@ -69,7 +69,7 @@ class ToolCondition internal constructor(
               type = requestType.type
               content = newVal
               timingMilliseconds = -1
-              conditions = conditionSet
+              conditions.addAll(conditionSet)
             }
           }
         }

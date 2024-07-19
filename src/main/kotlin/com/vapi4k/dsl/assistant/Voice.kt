@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.dsl.assistant.enums.ProviderType
+import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceType
-import com.vapi4k.responses.assistant.PunctuationType
 import com.vapi4k.responses.assistant.VoiceDto
 
 interface VoiceUnion {
@@ -29,7 +29,7 @@ interface VoiceUnion {
   var provider: ProviderType
   var voiceId: VoiceType
   var speed: Double
-  var inputPunctuationBoundaries: List<PunctuationType>
+  val inputPunctuationBoundaries: MutableList<PunctuationType>
 }
 
 data class Voice internal constructor(val voiceDto: VoiceDto) : VoiceUnion by voiceDto

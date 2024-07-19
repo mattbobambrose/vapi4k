@@ -16,7 +16,6 @@
 
 package com.vapi4k.responses.assistant
 
-
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,13 +25,13 @@ data class ToolMessageCondition(
   var value: String = ""
 ) {
   companion object {
-    fun toolMessageCondition(param: String, operator: String, value: String) =
+    internal fun toolMessageCondition(param: String, operator: String, value: String) =
       ToolMessageCondition(param, operator, value)
 
-    fun toolMessageCondition(param: String, operator: String, value: Int) =
+    internal fun toolMessageCondition(param: String, operator: String, value: Int) =
       ToolMessageCondition(param, operator, value.toString())
 
-    fun toolMessageCondition(param: String, operator: String, value: Boolean) =
+    internal fun toolMessageCondition(param: String, operator: String, value: Boolean) =
       ToolMessageCondition(param, operator, value.toString())
   }
 }

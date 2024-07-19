@@ -20,8 +20,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TransportConfiguration(
-  val provider: String = "",
-  val timeout: Int = 0,
-  val record: Boolean = false,
-  val recordingChannels: String = ""
+  var provider: String = "",
+  var timeout: Int = 0,
+  var record: Boolean = false,
+  var recordingChannels: String = ""
 )

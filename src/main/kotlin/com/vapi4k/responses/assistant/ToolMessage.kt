@@ -24,5 +24,5 @@ data class ToolMessage(
   var type: String = "",
   var content: String = "",
   var timingMilliseconds: Int = -1,
-  var conditions: Set<ToolMessageCondition> = setOf(),
+  val conditions: MutableSet<ToolMessageCondition> = mutableSetOf(),
 )

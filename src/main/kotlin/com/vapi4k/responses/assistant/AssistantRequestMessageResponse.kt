@@ -21,5 +21,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssistantRequestMessageResponse(
-  var messageResponse: AssistantRequestResponse = AssistantRequestResponse()
+  val messageResponse: AssistantRequestResponse = AssistantRequestResponse()
 )

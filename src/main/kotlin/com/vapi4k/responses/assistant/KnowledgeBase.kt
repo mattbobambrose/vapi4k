@@ -23,5 +23,5 @@ import kotlinx.serialization.Serializable
 data class KnowledgeBase(
   var provider: String = "",
   var topK: Double = 0.0,
-  var fileIds: List<String> = listOf()
+  val fileIds: MutableList<String> = mutableListOf()
 )

@@ -53,24 +53,24 @@ data class AssistantDto(
   override var modelOutputInMessagesEnabled: Boolean = false,
   override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
 
-  var model: ModelDto = ModelDto(),
-  var voice: VoiceDto = VoiceDto(),
-  var transcriber: TranscriberDto = TranscriberDto(),
+  val model: ModelDto = ModelDto(),
+  val voice: VoiceDto = VoiceDto(),
+  val transcriber: TranscriberDto = TranscriberDto(),
 
   override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNKNOWN,
 
   // TODO: Add verbs and enums
-  var voicemailDetection: VoicemailDetectionDto? = null,
-  var metadata: Metadata? = null,
-  var analysisPlan: AnalysisPlanDto? = null,
-  var artifactPlan: ArtifactPlanDto? = null,
-  var messagePlan: MessagePlanDto? = null,
+  val voicemailDetection: VoicemailDetectionDto = VoicemailDetectionDto(),
+  val metadata: MutableMap<String, String> = mutableMapOf(),
+  val analysisPlan: AnalysisPlanDto = AnalysisPlanDto(),
+  val artifactPlan: ArtifactPlanDto = ArtifactPlanDto(),
+  val messagePlan: MessagePlanDto = MessagePlanDto(),
 
-  override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES,
+  // copy DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES
+  override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
+  override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
 
-  override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES,
-
-  var endCallPhrases: MutableList<String> = mutableListOf(),
+  val endCallPhrases: MutableList<String> = mutableListOf(),
 
   ) : AssistantUnion
 

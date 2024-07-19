@@ -22,6 +22,7 @@ import kotlinx.serialization.Serializable
 @Serializable(with = ToolCallMessageTypeSerializer::class)
 enum class ToolCallMessageType(val desc: String) {
   REQUEST_COMPLETE("request-complete"),
-  REQUEST_FAILED("request-failed");
+  REQUEST_FAILED("request-failed"),
+  UNKNOWN("unknown");
 }
 

@@ -29,8 +29,7 @@ interface SquadUnion {
 data class Squad internal constructor(
   val request: JsonElement,
   internal val requestMessageResponse: AssistantRequestMessageResponse
-) :
-  SquadUnion by requestMessageResponse.messageResponse.squad!! {
+) : SquadUnion by requestMessageResponse.messageResponse.squadDto {
   fun members(block: Members.() -> Unit) {
     Members(this).apply(block)
 //      squadDto.membersOverrides = members.membersOverrides

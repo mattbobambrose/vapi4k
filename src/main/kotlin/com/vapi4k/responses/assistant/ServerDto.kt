@@ -20,4 +20,8 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Properties
+data class ServerDto(
+  var timeoutSeconds: Int = 0,
+  var url: String = "",
+  var secret: String = ""
+)

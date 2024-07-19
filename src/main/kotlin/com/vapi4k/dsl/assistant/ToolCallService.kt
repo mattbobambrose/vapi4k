@@ -61,7 +61,7 @@ abstract class AbstractRequest {
         this.type = type
         this.content = content
         if (conditions.isNotEmpty())
-          this.conditions = conditions.toList()
+          this.conditions.addAll(conditions)
       }
       .apply { messages += this }
 }
