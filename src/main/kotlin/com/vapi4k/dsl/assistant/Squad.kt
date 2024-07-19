@@ -34,4 +34,8 @@ data class Squad internal constructor(
     Members(this).apply(block)
 //      squadDto.membersOverrides = members.membersOverrides
   }
+
+  fun memberOverrides(block: AssistantOverrides.() -> Unit) {
+    AssistantOverrides(request, requestMessageResponse.messageResponse.squadDto.membersOverrides).apply(block)
+  }
 }

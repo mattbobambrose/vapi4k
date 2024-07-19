@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.ProviderType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceType
@@ -32,6 +33,8 @@ interface VoiceUnion {
   val inputPunctuationBoundaries: MutableList<PunctuationType>
 }
 
+@AssistantDslMarker
 data class Voice internal constructor(val voiceDto: VoiceDto) : VoiceUnion by voiceDto
 
+@AssistantDslMarker
 data class VoiceOverrides internal constructor(val voiceDto: VoiceDto) : VoiceUnion by voiceDto

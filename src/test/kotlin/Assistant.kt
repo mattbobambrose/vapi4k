@@ -30,7 +30,7 @@ fun myAssistantRequest(
     "+14156721042" -> assistantId(request) {
       id = "44792a91-d7f9-4915-9445-0991aeef97bc"
 
-      overrides {
+      assistantOverrides {
         firstMessage = "This is the first message override"
         model {
           provider = "openai"
@@ -72,7 +72,7 @@ fun getAssistant(
   callerName: String = "Bill",
 ) =
   assistant(request) {
-    overrides {
+    assistantOverrides {
       firstMessage = "This is the first message override"
     }
     firstMessage =

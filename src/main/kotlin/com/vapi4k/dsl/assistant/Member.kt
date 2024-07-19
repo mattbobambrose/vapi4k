@@ -37,7 +37,7 @@ data class Member(internal val members: Members, internal val memberDto: MemberD
       error(errorMsg)
     } else {
 //      memberDto.assistant = AssistantDto().also { assistantDto ->
-      Assistant(members.squad.request, members.squad.requestMessageResponse).apply(block)
+      Assistant(members.squad.request, memberDto.assistant, memberDto.assistantOverrides).apply(block)
 //      }
       // errorMsg is set to a value to prevent further assignment of assistantId
       errorMsg = "Member already has an assistant assigned"
@@ -48,6 +48,7 @@ data class Member(internal val members: Members, internal val memberDto: MemberD
     AssistantDestinations(this, memberDto).apply(block)
   }
 
+  @AssistantDslMarker
   data class AssistantId internal constructor(val memberDto: MemberDto) {
     var id
       get() = memberDto.assistantId

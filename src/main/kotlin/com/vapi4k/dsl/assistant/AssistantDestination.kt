@@ -36,6 +36,7 @@ interface AssistantDestinationUnion {
   var description: String
 }
 
+@AssistantDslMarker
 data class AssistantDestination internal constructor(
   val dto: AssistantDestinationDto
 ) : AssistantDestinationUnion by dto
