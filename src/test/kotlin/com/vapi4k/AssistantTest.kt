@@ -14,9 +14,8 @@
  *
  */
 
-package io.github.vapi4k
+package com.vapi4k
 
-import WeatherLookupService0
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.ToolCache.resetCaches
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType

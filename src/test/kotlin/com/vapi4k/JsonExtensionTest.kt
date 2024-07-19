@@ -14,7 +14,7 @@
  *
  */
 
-package io.github.vapi4k
+package com.vapi4k
 
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.jsonList

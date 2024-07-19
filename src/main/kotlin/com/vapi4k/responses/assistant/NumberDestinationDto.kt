@@ -16,12 +16,10 @@
 
 package com.vapi4k.responses.assistant
 
+import com.vapi4k.dsl.assistant.NumberDestinationUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TransferDestinationDto(
-  var type: String = "",
-  var number: String = "",
-  var message: String = "",
-  var description: String = ""
-)
+data class NumberDestinationDto(
+  override var number: String = "",
+) : NumberDestinationUnion, AbstractDestinationDto()

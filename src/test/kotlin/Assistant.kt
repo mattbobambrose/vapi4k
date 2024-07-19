@@ -14,6 +14,10 @@
  *
  */
 
+import com.vapi4k.WeatherLookupService0
+import com.vapi4k.WeatherLookupService1
+import com.vapi4k.WeatherLookupService2
+import com.vapi4k.WeatherLookupService3
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
 import com.vapi4k.dsl.assistant.AssistantDsl.squad

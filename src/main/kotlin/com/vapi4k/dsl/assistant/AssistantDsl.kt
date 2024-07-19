@@ -17,6 +17,8 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
+import com.vapi4k.responses.assistant.NumberDestinationDto
+import com.vapi4k.responses.assistant.SipDestinationDto
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
@@ -49,7 +51,43 @@ object AssistantDsl {
     AssistantRequestMessageResponse().apply {
       SquadId(request, this).apply(block)
     }.messageResponse
+
+  fun numberDestination(request: JsonElement, block: NumberDestination.() -> Unit) =
+    AssistantRequestMessageResponse().apply {
+      val numDto = NumberDestinationDto().also { it.type1 = "number" }
+      messageResponse.destination = numDto
+      NumberDestination(request, numDto).apply(block)
+    }.messageResponse
+
+  fun sipDestination(request: JsonElement, block: SipDestination.() -> Unit) =
+    AssistantRequestMessageResponse().apply {
+      val sipDto = SipDestinationDto().also { it.type1 = "sip" }
+      messageResponse.destination = sipDto
+      SipDestination(request, sipDto).apply(block)
+    }.messageResponse
 }
+
+interface NumberDestinationUnion {
+  var number: String
+  var message: String
+  var description: String
+}
+
+interface SipDestinationUnion {
+  var sipUri: String
+  var message: String
+  var description: String
+}
+
+class NumberDestination internal constructor(
+  val request: JsonElement,
+  val numberDto: NumberDestinationDto
+) : NumberDestinationUnion by numberDto
+
+class SipDestination internal constructor(
+  val request: JsonElement,
+  val sipDto: SipDestinationDto
+) : SipDestinationUnion by sipDto
 
 @Retention(RUNTIME)
 @Target(AnnotationTarget.FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER)
