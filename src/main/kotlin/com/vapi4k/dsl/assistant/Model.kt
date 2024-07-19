@@ -33,7 +33,7 @@ interface ModelUnion {
 }
 
 @AssistantDslMarker
-class Model(internal val request: JsonElement, internal val modelDto: ModelDto) {
+class Model(internal val request: JsonElement, internal val modelDto: ModelDto) : ModelUnion by modelDto {
   internal val messages get() = modelDto.messages
   internal val toolDtos get() = modelDto.tools
   internal val functions get() = modelDto.functions
