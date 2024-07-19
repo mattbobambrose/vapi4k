@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
@@ -46,27 +45,10 @@ object AssistantDsl {
       Squad(request, this).apply(block)
     }.messageResponse
 
-  fun squadId(id: String) =
+  fun squadId(request: JsonElement, block: SquadId.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      messageResponse.squadId = id
+      SquadId(request, this).apply(block)
     }.messageResponse
-
-  @AssistantDslMarker
-  data class AssistantId internal constructor(
-    val request: JsonElement,
-    val requestMessageResponse: AssistantRequestMessageResponse
-  ) {
-    private val messageResponse get() = requestMessageResponse.messageResponse
-    var id
-      get() = messageResponse.assistantId
-      set(value) {
-        messageResponse.assistantId = value
-      }
-
-    fun assistantOverrides(block: AssistantOverrides.() -> Unit) {
-      AssistantOverrides(request, messageResponse.assistantOverridesDto).apply(block)
-    }
-  }
 }
 
 @Retention(RUNTIME)

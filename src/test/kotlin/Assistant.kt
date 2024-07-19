@@ -42,8 +42,8 @@ fun myAssistantRequest(
     else -> getAssistant(request, "")
   })
 
-fun getSquad(request: JsonElement): AssistantRequestResponse {
-  return squad(request) {
+fun getSquad(request: JsonElement) =
+  squad(request) {
     name = "Squad Name"
     members {
       member {
@@ -65,7 +65,6 @@ fun getSquad(request: JsonElement): AssistantRequestResponse {
       }
     }
   }
-}
 
 fun getAssistant(
   request: JsonElement,
