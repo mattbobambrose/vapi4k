@@ -1,5 +1,7 @@
 import com.vapi4k.dsl.assistant.VapiApi.Companion.vapiApi
 import com.vapi4k.utils.HttpUtils.jsonElement
+import org.junit.Assert.assertThrows
+import org.junit.Test
 
 /*
  * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
@@ -33,42 +35,84 @@ import com.vapi4k.utils.HttpUtils.jsonElement
  *
  */
 
-object ApiCalls {
+class ApiCalls {
 
-  @JvmStatic
-  fun main(args: Array<String>) {
-
-//    val request = "{}".toJsonElement()
-//    val assistant = assistant(request) {
-//      firstMessage = "This is the first message"
-//    }
-//
-//
-
+  @Test
+  fun `multiple Assistant Decls`() {
     val api = vapiApi()
+    assertThrows(IllegalStateException::class.java) {
+      api.test {
+        call {
+          assistantId {
+            id = "123-445-666"
+          }
+          assistantId {
+            id = "345-445-666"
+          }
+        }
+      }
+    }
+  }
 
-    val callResp =
-      api.phone {
+  @Test
+  fun `multiple AssistantId Decls`() {
+    val api = vapiApi()
+    assertThrows(IllegalStateException::class.java) {
+      api.test {
         call {
           assistant {
             firstMessage = "Hi there. I am here to help."
-            model {
-              provider = "openai"
-              model = "gpt-4-turbo"
-              systemMessage = "Answer questions."
-            }
-
           }
-
-          customer {
-            number = "+14156721042"
+          assistant {
+            firstMessage = "Hi there. I am here to help."
           }
-
-          phoneNumberId = api.config.property("phoneNumberId").getString()
         }
       }
-    println("Call status: ${callResp.status}")
-    println("Call response:> ${callResp.jsonElement}")
+    }
+  }
+
+  @Test
+  fun `combination of Assistant and AssistantId Decls`() {
+    val api = vapiApi()
+    assertThrows(IllegalStateException::class.java) {
+      api.test {
+        call {
+          assistantId {
+            id = "123-445-666"
+          }
+          assistant {
+            firstMessage = "Hi there. I am here to help."
+          }
+        }
+      }
+    }
+  }
+
+  companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+      val api = vapiApi()
+      val callResp =
+        api.phone {
+          call {
+            assistant {
+              firstMessage = "Hi there. I am here to help."
+              model {
+                provider = "openai"
+                model = "gpt-4-turbo"
+                systemMessage = "Answer questions."
+              }
+            }
+
+            customer {
+              number = "+14156721042"
+            }
+
+            phoneNumberId = api.config.property("phoneNumberId").getString()
+          }
+        }
+      println("Call status: ${callResp.status}")
+      println("Call response:> ${callResp.jsonElement}")
 
 
 //    val listResp = api.list(ASSISTANTS)
@@ -98,6 +142,7 @@ object ApiCalls {
 ////    api.list(ASSISTANT)
 ////    api.delete(ASSISTANT, "123-445-666")
 ////
+    }
   }
 
 }

@@ -22,6 +22,7 @@ import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.CallRequest
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonUtils.toJsonString
+import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -50,17 +51,15 @@ class VapiApi private constructor(
 ) {
   fun phone(block: Phone.() -> CallRequest) =
     runBlocking {
-      val phone = Phone()
       val callRequest =
-        phone.runCatching(block)
+        Phone().runCatching(block)
           .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
           .onFailure { logger.error(it) { "Failed to create call request: ${it.message}" } }
           .getOrThrow()
 
       runCatching {
         httpClient.post("$VAPI_API_URL/call/phone") {
-          contentType(Application.Json)
-          bearerAuth(authString)
+          configCall(authString)
           setBody(callRequest)
         }
       }.onSuccess { logger.info { "Call made successfully" } }
@@ -68,19 +67,25 @@ class VapiApi private constructor(
         .getOrThrow()
     }
 
+  internal fun test(block: Phone.() -> CallRequest) =
+    runBlocking {
+      Phone().runCatching(block)
+        .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
+        .onFailure { logger.error(it) { "Failed to create call request: ${it.message}" } }
+        .getOrThrow()
+    }
+
   fun save(block: Save.() -> CallRequest) =
     runBlocking {
-      val save = Save()
       val callRequest =
-        save.runCatching(block)
+        Save().runCatching(block)
           .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
           .onFailure { logger.error(it) { "Failed to create call request: ${it.message}" } }
           .getOrThrow()
 
       runCatching {
         httpClient.post("$VAPI_API_URL/call") {
-          contentType(Application.Json)
-          bearerAuth(authString)
+          configCall(authString)
           setBody(callRequest)
         }
       }.onSuccess { logger.info { "Call saved successfully" } }
@@ -92,10 +97,7 @@ class VapiApi private constructor(
     runBlocking {
       runCatching {
         runCatching {
-          httpClient.get("$VAPI_API_URL/${objectType.endpoint}") {
-            contentType(Application.Json)
-            bearerAuth(authString)
-          }
+          httpClient.get("$VAPI_API_URL/${objectType.endpoint}") { configCall(authString) }
         }.onSuccess { logger.info { "${objectType} objects fetched successfully" } }
           .onFailure { logger.error(it) { "Failed to fetch ${objectType} objects: ${it.message}" } }
           .getOrThrow()
@@ -106,10 +108,7 @@ class VapiApi private constructor(
     runBlocking {
       runCatching {
         runCatching {
-          httpClient.get("$VAPI_API_URL/call/$callId") {
-            contentType(Application.Json)
-            bearerAuth(authString)
-          }
+          httpClient.get("$VAPI_API_URL/call/$callId") { configCall(authString) }
         }.onSuccess { logger.info { "Call deleted successfully" } }
           .onFailure { logger.error(it) { "Failed to delete call: ${it.message}" } }
           .getOrThrow()
@@ -118,6 +117,10 @@ class VapiApi private constructor(
 
 
   companion object {
+    internal fun HttpRequestBuilder.configCall(authString: String) {
+      contentType(Application.Json)
+      bearerAuth(authString)
+    }
 
     fun vapiApi(authString: String = ""): VapiApi {
       val config: HoconApplicationConfig = HoconApplicationConfig(ConfigFactory.load())

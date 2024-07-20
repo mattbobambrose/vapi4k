@@ -25,7 +25,7 @@ data class Members internal constructor(internal val squad: Squad) {
   var membersOverrides: List<AssistantOverridesDto> = mutableListOf()
 
   fun member(block: Member.() -> Unit) {
-    with(squad.requestMessageResponse.messageResponse.squadDto) {
+    with(squad.squadDto) {
       members.add(MemberDto().also { memberDto ->
         Member(this@Members, memberDto).apply(block)
       })

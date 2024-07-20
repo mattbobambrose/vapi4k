@@ -23,25 +23,19 @@ data class Member(
   internal val members: Members,
   internal val memberDto: MemberDto,
 ) {
+  // errorMsg prevents further assistant or assistantId assignments
   private var errorMsg = ""
+
+  private fun checkIfDeclared(newStr: String) = if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
+
   fun assistantId(block: AssistantId.() -> Unit) {
-    if (errorMsg.isNotEmpty()) {
-      error(errorMsg)
-    } else {
-      AssistantId(memberDto).apply(block)
-      // errorMsg is set to a value to prevent further assignment of assistantId
-      errorMsg = "Member already has an assistantId assigned"
-    }
+    checkIfDeclared("Member already has an assistantId assigned")
+    AssistantId(memberDto).apply(block)
   }
 
   fun assistant(block: Assistant.() -> Unit) {
-    if (errorMsg.isNotEmpty()) {
-      error(errorMsg)
-    } else {
-      Assistant(members.squad.request, memberDto.assistant, memberDto.assistantOverrides).apply(block)
-      // errorMsg is set to a value to prevent further assignment of assistantId
-      errorMsg = "Member already has an assistant assigned"
-    }
+    checkIfDeclared("Member already has an assistant assigned")
+    Assistant(members.squad.request, memberDto.assistant, memberDto.assistantOverrides).apply(block)
   }
 
   fun destinations(block: AssistantDestinations.() -> Unit) {

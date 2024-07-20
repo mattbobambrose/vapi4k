@@ -38,7 +38,10 @@ object AssistantDsl {
       Assistant(request, messageResponse.assistantDto, messageResponse.assistantOverridesDto).apply(block)
     }.messageResponse
 
-  fun assistantId(request: JsonElement, block: AssistantId.() -> Unit) =
+  fun assistantId(
+    request: JsonElement,
+    block: AssistantId.() -> Unit,
+  ) =
     AssistantRequestMessageResponse().apply {
       AssistantId(request, messageResponse).apply(block)
     }.messageResponse
@@ -48,22 +51,31 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      Squad(request, this).apply(block)
+      Squad(request, messageResponse.squadDto).apply(block)
     }.messageResponse
 
-  fun squadId(request: JsonElement, block: SquadId.() -> Unit) =
+  fun squadId(
+    request: JsonElement,
+    block: SquadId.() -> Unit,
+  ) =
     AssistantRequestMessageResponse().apply {
-      SquadId(request, this).apply(block)
+      SquadId(request, messageResponse).apply(block)
     }.messageResponse
 
-  fun numberDestination(request: JsonElement, block: NumberDestination.() -> Unit) =
+  fun numberDestination(
+    request: JsonElement,
+    block: NumberDestination.() -> Unit,
+  ) =
     AssistantRequestMessageResponse().apply {
       val numDto = NumberDestinationDto().also { it.type = "number" }
       messageResponse.destination = numDto
       NumberDestination(request, numDto).apply(block)
     }.messageResponse
 
-  fun sipDestination(request: JsonElement, block: SipDestination.() -> Unit) =
+  fun sipDestination(
+    request: JsonElement,
+    block: SipDestination.() -> Unit,
+  ) =
     AssistantRequestMessageResponse().apply {
       val sipDto = SipDestinationDto().also { it.type = "sip" }
       messageResponse.destination = sipDto
@@ -85,12 +97,12 @@ interface SipDestinationUnion {
 
 class NumberDestination internal constructor(
   val request: JsonElement,
-  val numberDto: NumberDestinationDto
+  val numberDto: NumberDestinationDto,
 ) : NumberDestinationUnion by numberDto
 
 class SipDestination internal constructor(
   val request: JsonElement,
-  val sipDto: SipDestinationDto
+  val sipDto: SipDestinationDto,
 ) : SipDestinationUnion by sipDto
 
 @Retention(RUNTIME)
