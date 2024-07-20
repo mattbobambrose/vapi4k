@@ -46,13 +46,13 @@ enum class ApiObjectType(val endpoint: String) {
 @AssistantDslMarker
 class VapiApi private constructor(
   val config: ApplicationConfig,
-  val authString: String,
+  private val authString: String,
 ) {
-  fun phone(block: Phone.(ApplicationConfig) -> CallRequest) =
+  fun phone(block: Phone.() -> CallRequest) =
     runBlocking {
       val phone = Phone()
       val callRequest =
-        phone.runCatching { block(this@VapiApi.config) }
+        phone.runCatching(block)
           .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
           .onFailure { logger.error(it) { "Failed to create call request: ${it.message}" } }
           .getOrThrow()

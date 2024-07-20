@@ -1,4 +1,5 @@
 import com.vapi4k.dsl.assistant.VapiApi.Companion.vapiApi
+import com.vapi4k.utils.HttpUtils.jsonElement
 
 /*
  * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
@@ -46,28 +47,28 @@ object ApiCalls {
 
     val api = vapiApi()
 
-//    val callResp =
-//      api.phone { config->
-//        call {
-//          assistant {
-//            firstMessage = "Hi there. I am here to help."
-//            model {
-//              provider = "openai"
-//              model = "gpt-4-turbo"
-//              systemMessage = "Answer questions."
-//            }
-//
-//          }
-//
-//          customer {
-//            number = "+14156721042"
-//          }
-//
-//          phoneNumberId = config.property("phoneNumberId").getString()
-//        }
-//      }
-//    println("Call status: ${callResp.status}")
-//    println("Call response:> ${callResp.jsonElement}")
+    val callResp =
+      api.phone {
+        call {
+          assistant {
+            firstMessage = "Hi there. I am here to help."
+            model {
+              provider = "openai"
+              model = "gpt-4-turbo"
+              systemMessage = "Answer questions."
+            }
+
+          }
+
+          customer {
+            number = "+14156721042"
+          }
+
+          phoneNumberId = api.config.property("phoneNumberId").getString()
+        }
+      }
+    println("Call status: ${callResp.status}")
+    println("Call response:> ${callResp.jsonElement}")
 
 
 //    val listResp = api.list(ASSISTANTS)
