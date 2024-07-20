@@ -20,6 +20,10 @@ import com.vapi4k.dsl.assistant.NumberDestinationUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NumberDestinationDto(
-  override var number: String = "",
-) : NumberDestinationUnion, AbstractDestinationDto()
+class NumberDestinationDto : NumberDestinationUnion, AbstractDestinationDto {
+  override var number: String = ""
+
+  override var type: String = ""
+  override var message: String = ""
+  override var description: String = ""
+}

@@ -46,10 +46,16 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("io.ktor:ktor-server-cio-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+//    implementation("io.ktor:ktor-client-compression-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation-jvm:$ktorVersion")
+
+    implementation("io.ktor:ktor-server-cio:$ktorVersion")
     implementation("io.ktor:ktor-server-compression-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
+
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")

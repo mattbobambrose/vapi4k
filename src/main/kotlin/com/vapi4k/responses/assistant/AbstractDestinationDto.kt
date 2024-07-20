@@ -16,11 +16,12 @@
 
 package com.vapi4k.responses.assistant
 
+import com.vapi4k.common.Serializers
 import kotlinx.serialization.Serializable
 
-@Serializable
-sealed class AbstractDestinationDto(
-  var type1: String = "",
-  var message: String = "",
-  var description: String = ""
-)
+@Serializable(with = Serializers.DestinationSerializer::class)
+interface AbstractDestinationDto {
+  var type: String
+  var message: String
+  var description: String
+}

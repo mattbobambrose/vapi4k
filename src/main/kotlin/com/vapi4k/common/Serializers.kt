@@ -24,10 +24,14 @@ import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceType
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
+import com.vapi4k.responses.assistant.AbstractDestinationDto
+import com.vapi4k.responses.assistant.NumberDestinationDto
+import com.vapi4k.responses.assistant.SipDestinationDto
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
@@ -146,5 +150,23 @@ object Serializers {
       PunctuationType.entries.first { it.desc == decoder.decodeString() }
   }
 
+
+  internal object DestinationSerializer : KSerializer<AbstractDestinationDto> {
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractDestinationDto")
+
+    override fun serialize(
+      encoder: Encoder,
+      value: AbstractDestinationDto,
+    ) {
+      when (value) {
+        is NumberDestinationDto -> encoder.encodeSerializableValue(NumberDestinationDto.serializer(), value)
+        is SipDestinationDto -> encoder.encodeSerializableValue(SipDestinationDto.serializer(), value)
+      }
+    }
+
+    override fun deserialize(decoder: Decoder): AbstractDestinationDto {
+      throw NotImplementedError("Deserialization is not supported")
+    }
+  }
 
 }

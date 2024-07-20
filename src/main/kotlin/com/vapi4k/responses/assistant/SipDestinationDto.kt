@@ -20,6 +20,10 @@ import com.vapi4k.dsl.assistant.SipDestinationUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SipDestinationDto(
-  override var sipUri: String = "",
-) : SipDestinationUnion, AbstractDestinationDto()
+class SipDestinationDto : SipDestinationUnion, AbstractDestinationDto {
+  override var sipUri: String = ""
+
+  override var type: String = ""
+  override var message: String = ""
+  override var description: String = ""
+}

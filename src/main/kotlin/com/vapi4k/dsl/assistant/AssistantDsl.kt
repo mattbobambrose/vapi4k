@@ -54,14 +54,14 @@ object AssistantDsl {
 
   fun numberDestination(request: JsonElement, block: NumberDestination.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      val numDto = NumberDestinationDto().also { it.type1 = "number" }
+      val numDto = NumberDestinationDto().also { it.type = "number" }
       messageResponse.destination = numDto
       NumberDestination(request, numDto).apply(block)
     }.messageResponse
 
   fun sipDestination(request: JsonElement, block: SipDestination.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      val sipDto = SipDestinationDto().also { it.type1 = "sip" }
+      val sipDto = SipDestinationDto().also { it.type = "sip" }
       messageResponse.destination = sipDto
       SipDestination(request, sipDto).apply(block)
     }.messageResponse
