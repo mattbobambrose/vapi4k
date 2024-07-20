@@ -41,7 +41,7 @@ class VapiApi private constructor(val authString: String) {
           .getOrThrow()
 
       runCatching {
-        val response = httpClient.post("$VAPI_API_URL/call/phone") {
+        httpClient.post("$VAPI_API_URL/call/phone") {
           contentType(Application.Json)
           bearerAuth(authString)
           setBody(callRequest)
@@ -61,17 +61,15 @@ class VapiApi private constructor(val authString: String) {
           .getOrThrow()
 
       runCatching {
-        runCatching {
-          httpClient.post("$VAPI_API_URL/call") {
-            contentType(Application.Json)
-            bearerAuth(authString)
-            setBody(callRequest)
-          }
-        }.onSuccess { logger.info { "Call saved successfully" } }
-          .onFailure { logger.error(it) { "Failed to save call: ${it.message}" } }
-          .getOrThrow()
-      }
-    }.getOrThrow()
+        httpClient.post("$VAPI_API_URL/call") {
+          contentType(Application.Json)
+          bearerAuth(authString)
+          setBody(callRequest)
+        }
+      }.onSuccess { logger.info { "Call saved successfully" } }
+        .onFailure { logger.error(it) { "Failed to save call: ${it.message}" } }
+        .getOrThrow()
+    }
 
   fun list() =
     runBlocking {

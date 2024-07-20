@@ -20,10 +20,18 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 
 object HttpUtils {
+
+  val HttpResponse.jsonElement: JsonElement
+    get() = runBlocking { Json.parseToJsonElement(this@jsonElement.bodyAsText()) }
+
   val httpClient by lazy {
     HttpClient(CIO) {
       install(ContentNegotiation) {

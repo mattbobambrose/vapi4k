@@ -1,4 +1,5 @@
 import com.vapi4k.dsl.assistant.VapiApi.Companion.vapiApi
+import com.vapi4k.utils.HttpUtils.jsonElement
 
 /*
  * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
@@ -52,12 +53,17 @@ object ApiCalls {
         }
       }
 
-    val saveRep =
+    val ce = callResp.status
+
+    val saveResp =
       api.save {
         call {}
       }
 
+    val je = saveResp.jsonElement
+
     val listResp = api.list()
+
 
     val delResp = api.delete("123-445-666")
 //
