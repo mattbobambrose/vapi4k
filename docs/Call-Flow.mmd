@@ -1,7 +1,13 @@
 sequenceDiagram
     title Voice Application Data Flow
+
     participant Bob
     participant Vapi Server
+    participant EO Care Server
+    participant DBMS Server
+    participant Transcriber Server
+    participant Voice Server
+    participant OpenAI Server
     Bob ->> Vapi Server: Calls number linked to Vapi
     Vapi Server ->> EO Care Server: Requests Bob's assistant definition
     EO Care Server ->> DBMS Server: Requests Bob's info
