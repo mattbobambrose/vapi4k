@@ -18,6 +18,7 @@ package com.vapi4k.responses
 
 
 import com.vapi4k.dsl.assistant.AssistantIdUnion
+import com.vapi4k.dsl.assistant.SquadIdUnion
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.SquadDto
@@ -52,7 +53,7 @@ data class CallRequest(
   @SerialName("assistantOverrides")
   override val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),
 
-  var squadId: String = "",
+  override var squadId: String = "",
 
   @SerialName("squad")
   val squadDto: SquadDto = SquadDto(),
@@ -63,4 +64,4 @@ data class CallRequest(
   val customerDto: CustomerDto = CustomerDto(),
 
   var error: String = "",
-) : CallUnion, AssistantIdUnion
+) : CallUnion, AssistantIdUnion, SquadIdUnion

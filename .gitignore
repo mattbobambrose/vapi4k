@@ -6,6 +6,8 @@ json
 secrets
 http-client.private.env.json
 
+src/test/resources/application.conf
+
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/

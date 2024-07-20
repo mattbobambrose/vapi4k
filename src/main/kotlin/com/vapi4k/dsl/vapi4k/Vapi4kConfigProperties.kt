@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.common.Constants.DEFAULT_SERVER_URL
-import com.vapi4k.utils.Utils.ensureStartsWith
+import com.vapi4k.utils.ReflectionUtils.ensureStartsWith
 import java.net.URI
 
 @Vapi4KDslMarker

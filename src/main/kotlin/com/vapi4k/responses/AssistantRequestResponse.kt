@@ -19,6 +19,7 @@ package com.vapi4k.responses
 
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantIdUnion
+import com.vapi4k.dsl.assistant.SquadIdUnion
 import com.vapi4k.responses.assistant.AbstractDestinationDto
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
@@ -38,13 +39,13 @@ data class AssistantRequestResponse(
   @SerialName("assistantOverrides")
   override val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),
 
-  var squadId: String = "",
+  override var squadId: String = "",
 
   @SerialName("squad")
   val squadDto: SquadDto = SquadDto(),
 
   var error: String = "",
-) : AssistantIdUnion {
+) : AssistantIdUnion, SquadIdUnion {
   companion object {
     internal suspend fun getAssistantResponse(
       request: JsonElement,

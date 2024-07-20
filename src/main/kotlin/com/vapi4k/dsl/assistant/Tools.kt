@@ -22,8 +22,8 @@ import com.vapi4k.dsl.assistant.ToolCache.addToolCallToCache
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.responses.assistant.ToolDto
-import com.vapi4k.utils.Utils.isUnitReturnType
-import com.vapi4k.utils.Utils.toolFunction
+import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
+import com.vapi4k.utils.ReflectionUtils.toolFunction
 
 @AssistantDslMarker
 data class Tools internal constructor(internal val model: Model) {

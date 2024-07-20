@@ -42,7 +42,7 @@ import com.vapi4k.utils.JsonElementUtils
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonUtils.toJsonElement
-import com.vapi4k.utils.Utils.lambda
+import com.vapi4k.utils.ReflectionUtils.lambda
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall

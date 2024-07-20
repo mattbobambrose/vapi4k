@@ -17,13 +17,13 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.assistant.FunctionDto
-import com.vapi4k.utils.Utils.asKClass
-import com.vapi4k.utils.Utils.functions
-import com.vapi4k.utils.Utils.hasTool
-import com.vapi4k.utils.Utils.param
-import com.vapi4k.utils.Utils.toolCall
-import com.vapi4k.utils.Utils.toolFunction
-import com.vapi4k.utils.Utils.toolMethod
+import com.vapi4k.utils.ReflectionUtils.asKClass
+import com.vapi4k.utils.ReflectionUtils.functions
+import com.vapi4k.utils.ReflectionUtils.hasTool
+import com.vapi4k.utils.ReflectionUtils.param
+import com.vapi4k.utils.ReflectionUtils.toolCall
+import com.vapi4k.utils.ReflectionUtils.toolFunction
+import com.vapi4k.utils.ReflectionUtils.toolMethod
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 
