@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.typesafe.config.ConfigFactory
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.CallRequest
@@ -27,15 +28,31 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
+import io.ktor.server.config.ApplicationConfig
+import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.coroutines.runBlocking
 
+
+enum class ApiObjectType(val endpoint: String) {
+  CALLS("call"),
+  ASSISTANTS("assistant"),
+  PHONE_NUMBERS("phone-number"),
+  FILES("file"),
+  SQUADS("squad"),
+  TOOLS("tool");
+
+}
+
 @AssistantDslMarker
-class VapiApi private constructor(val authString: String) {
-  fun phone(block: Phone.() -> CallRequest) =
+class VapiApi private constructor(
+  val config: ApplicationConfig,
+  val authString: String,
+) {
+  fun phone(block: Phone.(ApplicationConfig) -> CallRequest) =
     runBlocking {
       val phone = Phone()
       val callRequest =
-        phone.runCatching(block)
+        phone.runCatching { block(this@VapiApi.config) }
           .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
           .onFailure { logger.error(it) { "Failed to create call request: ${it.message}" } }
           .getOrThrow()
@@ -71,16 +88,16 @@ class VapiApi private constructor(val authString: String) {
         .getOrThrow()
     }
 
-  fun list() =
+  fun list(objectType: ApiObjectType) =
     runBlocking {
       runCatching {
         runCatching {
-          httpClient.get("$VAPI_API_URL/call") {
+          httpClient.get("$VAPI_API_URL/${objectType.endpoint}") {
             contentType(Application.Json)
             bearerAuth(authString)
           }
-        }.onSuccess { logger.info { "Calls listed successfully" } }
-          .onFailure { logger.error(it) { "Failed to list call: ${it.message}" } }
+        }.onSuccess { logger.info { "${objectType} objects fetched successfully" } }
+          .onFailure { logger.error(it) { "Failed to fetch ${objectType} objects: ${it.message}" } }
           .getOrThrow()
       }
     }.getOrThrow()
@@ -101,10 +118,19 @@ class VapiApi private constructor(val authString: String) {
 
 
   companion object {
+
     fun vapiApi(
-      authString: String,
+      authString: String = "",
       block: VapiApi.() -> Unit = {},
-    ) = VapiApi(authString).apply(block)
+    ): VapiApi {
+      val config: HoconApplicationConfig = HoconApplicationConfig(ConfigFactory.load())
+      val apiAuth = if (authString.isNotEmpty())
+        authString
+      else
+        config.propertyOrNull("vapi.api.privateKey")?.getString() ?: error("No API key found in application.conf")
+
+      return VapiApi(config, apiAuth).apply(block)
+    }
   }
 }
 

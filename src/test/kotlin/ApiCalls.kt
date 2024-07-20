@@ -1,5 +1,4 @@
 import com.vapi4k.dsl.assistant.VapiApi.Companion.vapiApi
-import com.vapi4k.utils.HttpUtils.jsonElement
 
 /*
  * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
@@ -44,41 +43,60 @@ object ApiCalls {
 //    }
 //
 //
-    val api = vapiApi(System.getenv("VAPI_API_KEY"))
 
-    val callResp =
-      api.phone {
-        call {
+    val api = vapiApi()
 
-        }
-      }
-
-    val ce = callResp.status
-
-    val saveResp =
-      api.save {
-        call {}
-      }
-
-    val je = saveResp.jsonElement
-
-    val listResp = api.list()
-
-
-    val delResp = api.delete("123-445-666")
+//    val callResp =
+//      api.phone { config->
+//        call {
+//          assistant {
+//            firstMessage = "Hi there. I am here to help."
+//            model {
+//              provider = "openai"
+//              model = "gpt-4-turbo"
+//              systemMessage = "Answer questions."
+//            }
 //
-//    api.create(assistant)
+//          }
 //
-//    api.create {
-//      assistant {
+//          customer {
+//            number = "+14156721042"
+//          }
 //
+//          phoneNumberId = config.property("phoneNumberId").getString()
+//        }
 //      }
-//    }
+//    println("Call status: ${callResp.status}")
+//    println("Call response:> ${callResp.jsonElement}")
+
+
+//    val listResp = api.list(ASSISTANTS)
+//    println("List response: ${listResp.jsonElement}")
+
+
 //
-//    api.list(ASSISTANT)
-//    api.delete(ASSISTANT, "123-445-666")
 //
+//    val saveResp =
+//      api.save {
+//        call {}
+//      }
 //
+//    val je = saveResp.jsonElement
+//
+//    val delResp = api.delete("123-445-666")
+//
+////
+////    api.create(assistant)
+////
+////    api.create {
+////      assistant {
+////
+////      }
+////    }
+////
+////    api.list(ASSISTANT)
+////    api.delete(ASSISTANT, "123-445-666")
+////
   }
 
 }
