@@ -14,9 +14,6 @@
  *
  */
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistant
-import com.vapi4k.utils.JsonUtils.toJsonElement
-
 /*
  * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
  *
@@ -38,26 +35,26 @@ object ApiCalls {
   @JvmStatic
   fun main(args: Array<String>) {
 
-    val request = "{}".toJsonElement()
-    val assistant = assistant(request) {
-      firstMessage = "This is the first message"
-    }
-
-
-    val api = VapiApi(System.getenv("VAPI_API_KEY"))
-
-    api.create(assistant)
-
-    api.create {
-      assistant {
-
-      }
-    }
-
-    api.list(ASSISTANT)
-    api.delete(ASSISTANT, "123-445-666")
-
-
+//    val request = "{}".toJsonElement()
+//    val assistant = assistant(request) {
+//      firstMessage = "This is the first message"
+//    }
+//
+//
+//    val api = VapiApi(System.getenv("VAPI_API_KEY"))
+//
+//    api.create(assistant)
+//
+//    api.create {
+//      assistant {
+//
+//      }
+//    }
+//
+//    api.list(ASSISTANT)
+//    api.delete(ASSISTANT, "123-445-666")
+//
+//
   }
 
 }

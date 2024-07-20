@@ -16,31 +16,34 @@
 
 package com.vapi4k.plugin
 
-import com.vapi4k.Vapi4k.RequestResponseCallback
-import com.vapi4k.Vapi4k.invokeRequestCallbacks
-import com.vapi4k.Vapi4k.invokeResponseCallbacks
-import com.vapi4k.Vapi4k.isValidSecret
-import com.vapi4k.Vapi4k.logger
-import com.vapi4k.Vapi4k.startCallbackThread
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.ToolCache.cacheIsActive
 import com.vapi4k.dsl.assistant.ToolCache.removeFunctionFromCache
 import com.vapi4k.dsl.assistant.ToolCache.removeToolCallFromCache
 import com.vapi4k.dsl.vapi4k.Endpoint
+import com.vapi4k.dsl.vapi4k.RequestResponseType
+import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
+import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
+import com.vapi4k.dsl.vapi4k.ServerRequestType
 import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.dsl.vapi4k.ServerRequestType.Companion.isToolCall
 import com.vapi4k.dsl.vapi4k.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.dsl.vapi4k.ServerRequestType.TOOL_CALL
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
+import com.vapi4k.plugin.RequestResponseCallback.Companion.requestCallback
+import com.vapi4k.plugin.RequestResponseCallback.Companion.responseCallback
+import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantResponse
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
+import com.vapi4k.utils.JsonElementUtils
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.Utils.lambda
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
@@ -58,7 +61,15 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.JsonElement
+import kotlin.concurrent.thread
+import kotlin.time.Duration
 import kotlin.time.measureTimedValue
+
+typealias KtorCallContext = PipelineContext<Unit, ApplicationCall>
 
 val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",
@@ -95,7 +106,24 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 }
 
-private suspend fun CallContext.handleServerPathPost(requestResponseCallbackChannel: Channel<RequestResponseCallback>) {
+object Vapi4kLogger {
+  val logger = KotlinLogging.logger {}
+}
+
+private suspend fun KtorCallContext.isValidSecret(
+  configPropertiesSecret: String,
+): Boolean {
+  val secret = call.request.headers["x-vapi-secret"]
+  return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
+    Vapi4kLogger.logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
+    call.respond(io.ktor.http.HttpStatusCode.Forbidden, "Invalid secret")
+    false
+  } else {
+    true
+  }
+}
+
+private suspend fun KtorCallContext.handleServerPathPost(requestResponseCallbackChannel: Channel<RequestResponseCallback>) {
   val config = Assistant.config
   if (isValidSecret(config.configProperties.serverUrlSecret)) {
     val json = call.receive<String>()
@@ -158,7 +186,7 @@ private suspend fun CallContext.handleServerPathPost(requestResponseCallbackChan
   }
 }
 
-private suspend fun CallContext.handleToolCallPathPost(
+private suspend fun KtorCallContext.handleToolCallPathPost(
   endpoint: Endpoint,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
@@ -182,4 +210,87 @@ private suspend fun CallContext.handleToolCallPathPost(
   }
 }
 
-typealias CallContext = PipelineContext<Unit, ApplicationCall>
+private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback>) {
+  thread {
+    val config = Assistant.config
+    while (true) {
+      runCatching {
+        runBlocking {
+          for (callback in callbackChannel) {
+            coroutineScope {
+              with(callback) {
+                when (callback.type) {
+                  REQUEST ->
+                    with(config) {
+                      allRequests.forEach { launch { it.invoke(request) } }
+                      perRequests
+                        .filter { it.first == requestType }
+                        .forEach { (reqType, block) ->
+                          launch { block(request) }
+                        }
+                    }
+
+                  RESPONSE ->
+                    with(config) {
+                      if (allResponses.isNotEmpty() || perResponses.isNotEmpty()) {
+                        val resp =
+                          runCatching {
+                            response.invoke()
+                          }.onFailure { e ->
+                            logger.error(e) { "Error creating response" }
+                            error("Error creating response")
+                          }.getOrThrow()
+
+                        allResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
+                        perResponses
+                          .filter { it.first == requestType }
+                          .forEach { (reqType, block) ->
+                            launch { block(reqType, resp, elapsed) }
+                          }
+                      }
+                    }
+                }
+              }
+            }
+          }
+        }
+      }.onFailure {
+        logger.error(it) { "Error processing request response callback: ${it.message}" }
+      }
+    }
+  }
+}
+
+private suspend fun invokeRequestCallbacks(
+  channel: Channel<RequestResponseCallback>,
+  requestType: ServerRequestType,
+  request: JsonElement,
+) = channel.send(requestCallback(requestType, request))
+
+private suspend fun invokeResponseCallbacks(
+  channel: Channel<RequestResponseCallback>,
+  requestType: ServerRequestType,
+  response: () -> JsonElement,
+  elapsed: Duration,
+) = channel.send(responseCallback(requestType, response, elapsed))
+
+private data class RequestResponseCallback(
+  val type: RequestResponseType,
+  val requestType: ServerRequestType,
+  val request: JsonElement = JsonElementUtils.emptyJsonElement(),
+  val response: (() -> JsonElement) = { JsonElementUtils.emptyJsonElement() },
+  val elapsed: Duration = Duration.ZERO,
+) {
+  companion object {
+    fun requestCallback(
+      requestType: ServerRequestType,
+      request: JsonElement,
+    ) = RequestResponseCallback(RequestResponseType.REQUEST, requestType, request)
+
+    fun responseCallback(
+      requestType: ServerRequestType,
+      response: () -> JsonElement,
+      elapsed: Duration,
+    ) = RequestResponseCallback(RequestResponseType.RESPONSE, requestType, response = response, elapsed = elapsed)
+  }
+}

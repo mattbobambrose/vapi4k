@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.assistant.enums.ToolMessageType.REQUEST_COMPLETE
 import com.vapi4k.dsl.assistant.enums.ToolMessageType.REQUEST_FAILED

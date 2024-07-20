@@ -19,6 +19,12 @@ sequenceDiagram
     loop Status Updates
         vapi -->> eocare: Sends STATUS_UPDATE messages
     end
+    loop Speech Updates
+        vapi -->> eocare: Sends SPEECH_UPDATE messages
+    end
+    loop Conversation Updates
+        vapi -->> eocare: Sends CONVERSATION_UPDATE messages
+    end
 
     Bob ->> vapi: Bob asks for his balance
     vapi ->> transcriber: Sends call audio for transcription

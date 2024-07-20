@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
@@ -33,7 +32,10 @@ interface ModelUnion {
 }
 
 @AssistantDslMarker
-class Model(internal val request: JsonElement, internal val modelDto: ModelDto) : ModelUnion by modelDto {
+class Model(
+  internal val request: JsonElement,
+  internal val modelDto: ModelDto,
+) : ModelUnion by modelDto {
   internal val messages get() = modelDto.messages
   internal val toolDtos get() = modelDto.tools
   internal val functions get() = modelDto.functions
@@ -53,7 +55,10 @@ class Model(internal val request: JsonElement, internal val modelDto: ModelDto) 
     Functions(this).apply(block)
   }
 
-  fun message(role: MessageRoleType, content: String) {
+  fun message(
+    role: MessageRoleType,
+    content: String,
+  ) {
     // Remove any existing messages with the same role
     messages.removeAll { it.role == role.desc }
     // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
