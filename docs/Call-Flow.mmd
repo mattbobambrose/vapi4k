@@ -7,14 +7,14 @@ sequenceDiagram
     participant transcriber as Transcriber Server
     participant voice as Voice Server
     participant openai as OpenAI Server
-    Bob ->> vapi: Calls number linked to Vapi
+    Bob ->> vapi: Bob calls number linked to Vapi
     vapi ->> eocare: Requests Bob's assistant definition
     eocare ->> dbms: Requests Bob's info
     dbms ->> eocare: Returns Bob's history
     eocare ->> vapi: Returns Bob-specific assistant definition
     vapi ->> voice: Sends text for speech synthesis
     voice ->> vapi: Returns audio
-    vapi ->> Bob: Greats Bob with audio from assistant
+    vapi ->> Bob: Greets Bob with audio from assistant
 
     loop Status Updates
         vapi -->> eocare: Sends STATUS_UPDATE messages
