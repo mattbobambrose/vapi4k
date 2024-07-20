@@ -1,41 +1,40 @@
 sequenceDiagram
     title Voice Application Data Flow
-
-    participant Bob
-    participant Vapi Server
-    participant EO Care Server
-    participant DBMS Server
-    participant Transcriber Server
-    participant Voice Server
-    participant OpenAI Server
-    Bob ->> Vapi Server: Calls number linked to Vapi
-    Vapi Server ->> EO Care Server: Requests Bob's assistant definition
-    EO Care Server ->> DBMS Server: Requests Bob's info
-    DBMS Server ->> EO Care Server: Returns Bob's history
-    EO Care Server ->> Vapi Server: Returns Bob-specific assistant definition
-    Vapi Server ->> Voice Server: Sends text for speech synthesis
-    Voice Server ->> Vapi Server: Returns audio
-    Vapi Server ->> Bob: Greats Bob with audio from assistant
+    actor Bob
+    participant vapi as Vapi Server
+    participant eocare as EO Care Server
+    participant dbms as DBMS Server
+    participant transcriber as Transcriber Server
+    participant voice as Voice Server
+    participant openai as OpenAI Server
+    Bob ->> vapi: Calls number linked to Vapi
+    vapi ->> eocare: Requests Bob's assistant definition
+    eocare ->> dbms: Requests Bob's info
+    dbms ->> eocare: Returns Bob's history
+    eocare ->> vapi: Returns Bob-specific assistant definition
+    vapi ->> voice: Sends text for speech synthesis
+    voice ->> vapi: Returns audio
+    vapi ->> Bob: Greats Bob with audio from assistant
 
     loop Status Updates
-        Vapi Server -->> EO Care Server: Sends STATUS_UPDATE messages
+        vapi -->> eocare: Sends STATUS_UPDATE messages
     end
 
-    Bob ->> Vapi Server: Bob asks for his balance
-    Vapi Server ->> Transcriber Server: Sends call audio for transcription
-    Transcriber Server ->> Vapi Server: Returns text of Bob's request
-    Vapi Server ->> OpenAI Server: Sends request for LLM evaluation
-    OpenAI Server ->> Vapi Server: Returns request for Tool evaluation
-    Vapi Server ->> EO Care Server: Sends request for Tool evaluation
-    EO Care Server ->> DBMS Server: Sends query to fulfill Tool request
-    DBMS Server ->> EO Care Server: Returns answer to query
-    EO Care Server ->> Vapi Server: Returns answer to query
-    Vapi Server ->> OpenAI Server: Returns Tool response
-    OpenAI Server ->> Vapi Server: Returns text for balance response
-    Vapi Server -->> EO Care Server: Sends TOOL_CALL message
-    Vapi Server ->> Voice Server: Sends text for speech synthesis
-    Voice Server ->> Vapi Server: Returns audio
-    Vapi Server ->> Bob: Answers Bob's question about his balance
+    Bob ->> vapi: Bob asks for his balance
+    vapi ->> transcriber: Sends call audio for transcription
+    transcriber ->> vapi: Returns text of Bob's request
+    vapi ->> openai: Sends request for LLM evaluation
+    openai ->> vapi: Returns request for Tool evaluation
+    vapi ->> eocare: Sends request for Tool evaluation
+    eocare ->> dbms: Sends query to fulfill Tool request
+    dbms ->> eocare: Returns answer to query
+    eocare ->> vapi: Returns answer to query
+    vapi ->> openai: Returns Tool response
+    openai ->> vapi: Returns text for balance response
+    vapi -->> eocare: Sends TOOL_CALL message
+    vapi ->> voice: Sends text for speech synthesis
+    voice ->> vapi: Returns audio
+    vapi ->> Bob: Answers Bob's question about his balance
     Note left of Bob: Bob hangs up
-    Vapi Server -->> EO Care Server: Sends END_OF_CALL_REPORT message
-    EO Care Server ->> DBMS Server: Saves call sentiment analysis, details, and summary
+    vapi -->> eocare: Sends END_OF_CALL_REPORT message
+    eocare ->> dbms: Saves call sentiment analysis, details, and summary
