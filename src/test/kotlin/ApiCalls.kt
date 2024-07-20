@@ -1,3 +1,5 @@
+import com.vapi4k.dsl.assistant.VapiApi.Companion.vapiApi
+
 /*
  * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
  *
@@ -41,7 +43,23 @@ object ApiCalls {
 //    }
 //
 //
-//    val api = VapiApi(System.getenv("VAPI_API_KEY"))
+    val api = vapiApi(System.getenv("VAPI_API_KEY"))
+
+    val callResp =
+      api.phone {
+        call {
+
+        }
+      }
+
+    val saveRep =
+      api.save {
+        call {}
+      }
+
+    val listResp = api.list()
+
+    val delResp = api.delete("123-445-666")
 //
 //    api.create(assistant)
 //
