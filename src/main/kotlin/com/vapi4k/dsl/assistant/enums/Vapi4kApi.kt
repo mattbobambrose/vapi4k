@@ -24,7 +24,6 @@ import com.vapi4k.responses.CallUnion
 import com.vapi4k.responses.CustomerDto
 import com.vapi4k.responses.CustomerUnion
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
-import com.vapi4k.utils.JsonUtils.toJsonString
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.compression.ContentEncoding
@@ -43,8 +42,6 @@ import kotlinx.serialization.json.Json
 class Vapi4kApi(val authString: String) {
   fun make(block: Vapi4kApi.() -> CallRequest) {
     val callRequest = block()
-    val json = callRequest.toJsonString(true)
-    println(json)
     runBlocking {
       val client = HttpClient(CIO) {
         install(ContentNegotiation) {
