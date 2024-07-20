@@ -16,9 +16,9 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.Vapi4k.logger
 import com.vapi4k.dsl.assistant.FunctionUtils.ToolCallInfo
 import com.vapi4k.dsl.assistant.ToolCache.FunctionDetails.Companion.toFunctionDetails
+import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.ToolCallMessage
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue

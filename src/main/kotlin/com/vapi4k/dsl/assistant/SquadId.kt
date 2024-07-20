@@ -16,14 +16,13 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.responses.assistant.AssistantRequestMessageResponse
 import kotlinx.serialization.json.JsonElement
 
 @AssistantDslMarker
 data class SquadId internal constructor(
   val request: JsonElement,
-  val requestMessageResponse: AssistantRequestMessageResponse
+  val requestMessageResponse: AssistantRequestMessageResponse,
 ) {
   private val messageResponse get() = requestMessageResponse.messageResponse
   var id

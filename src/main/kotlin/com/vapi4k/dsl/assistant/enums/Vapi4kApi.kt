@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.Assistant
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantId
 import com.vapi4k.responses.CallRequest
 import com.vapi4k.responses.CallUnion

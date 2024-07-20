@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dsl.assistant.Assistant
 
 @Vapi4KDslMarker

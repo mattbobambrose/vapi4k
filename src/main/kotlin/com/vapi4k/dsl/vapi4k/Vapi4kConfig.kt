@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.responses.AssistantRequestResponse
 import kotlinx.serialization.json.JsonElement
@@ -24,6 +23,10 @@ import kotlin.time.Duration
 
 typealias RequestArgs = suspend (JsonElement) -> Unit
 typealias ResponseArgs = suspend (requestType: ServerRequestType, JsonElement, Duration) -> Unit
+
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
+annotation class Vapi4KDslMarker
 
 @Vapi4KDslMarker
 class Vapi4kConfig internal constructor() {

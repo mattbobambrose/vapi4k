@@ -25,6 +25,10 @@ import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
 import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
 import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
+annotation class AssistantDslMarker
+
 object AssistantDsl {
   fun assistant(
     request: JsonElement,
@@ -36,7 +40,7 @@ object AssistantDsl {
 
   fun assistantId(request: JsonElement, block: AssistantId.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      AssistantId(request, this.messageResponse).apply(block)
+      AssistantId(request, messageResponse).apply(block)
     }.messageResponse
 
   fun squad(

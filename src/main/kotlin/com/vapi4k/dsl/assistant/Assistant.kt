@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
@@ -56,7 +55,7 @@ interface AssistantUnion {
 data class Assistant internal constructor(
   internal val request: JsonElement,
   internal val assistantDto: AssistantDto,
-  internal val assistantOverridesDto: AssistantOverridesDto
+  internal val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantUnion by assistantDto {
   fun model(block: Model.() -> Unit) {
     Model(request, assistantDto.model).apply(block)
