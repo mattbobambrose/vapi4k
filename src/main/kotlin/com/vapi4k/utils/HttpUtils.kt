@@ -14,16 +14,30 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package com.vapi4k.utils
 
-import com.vapi4k.utils.ReflectionUtils.ensureStartsWith
-import java.net.URI
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.compression.ContentEncoding
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
-@Vapi4KDslMarker
-class Endpoint internal constructor() {
-  internal val path get() = URI(url).toURL().path.ensureStartsWith("/")
-  var name = ""
-  var url = ""
-  var secret = ""
-  var timeoutSeconds = -1
+object HttpUtils {
+  val httpClient by lazy {
+    HttpClient(CIO) {
+      install(ContentNegotiation) {
+        json(
+          Json {
+            prettyPrint = true
+          },
+        )
+      }
+
+      install(ContentEncoding) {
+        deflate(1.0F)
+        gzip(0.9F)
+      }
+    }
+  }
 }

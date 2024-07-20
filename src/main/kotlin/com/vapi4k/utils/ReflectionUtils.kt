@@ -25,7 +25,7 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 import kotlin.reflect.full.declaredFunctions
 
-internal object Utils {
+internal object ReflectionUtils {
   fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
   fun String.ensureEndsWith(s: String) = if (endsWith(s)) this else this + s
   fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }

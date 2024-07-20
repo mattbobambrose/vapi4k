@@ -14,16 +14,10 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package com.vapi4k.dsl.assistant
 
-import com.vapi4k.utils.ReflectionUtils.ensureStartsWith
-import java.net.URI
+import com.vapi4k.responses.CustomerDto
+import com.vapi4k.responses.CustomerUnion
 
-@Vapi4KDslMarker
-class Endpoint internal constructor() {
-  internal val path get() = URI(url).toURL().path.ensureStartsWith("/")
-  var name = ""
-  var url = ""
-  var secret = ""
-  var timeoutSeconds = -1
-}
+@AssistantDslMarker
+class Customer(customerDto: CustomerDto) : CustomerUnion by customerDto

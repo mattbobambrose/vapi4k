@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.utils.JsonElementUtils.messageCallId
-import com.vapi4k.utils.Utils.trimLeadingSpaces
+import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
 interface ModelUnion {

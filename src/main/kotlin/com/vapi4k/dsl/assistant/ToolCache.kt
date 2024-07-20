@@ -22,10 +22,10 @@ import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.ToolCallMessage
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
-import com.vapi4k.utils.Utils.asKClass
-import com.vapi4k.utils.Utils.findFunction
-import com.vapi4k.utils.Utils.findMethod
-import com.vapi4k.utils.Utils.toolMethod
+import com.vapi4k.utils.ReflectionUtils.asKClass
+import com.vapi4k.utils.ReflectionUtils.findFunction
+import com.vapi4k.utils.ReflectionUtils.findMethod
+import com.vapi4k.utils.ReflectionUtils.toolMethod
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonElement

@@ -18,4 +18,5 @@ package com.vapi4k.common
 
 object Constants {
   const val DEFAULT_SERVER_URL = "vapi4k"
+  const val VAPI_API_URL = "https://api.vapi.ai"
 }
