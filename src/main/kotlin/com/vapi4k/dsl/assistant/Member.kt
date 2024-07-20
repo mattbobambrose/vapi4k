@@ -16,11 +16,13 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
-data class Member(internal val members: Members, internal val memberDto: MemberDto) {
+data class Member(
+  internal val members: Members,
+  internal val memberDto: MemberDto,
+) {
   private var errorMsg = ""
   fun assistantId(block: AssistantId.() -> Unit) {
     if (errorMsg.isNotEmpty()) {

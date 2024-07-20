@@ -1,0 +1,46 @@
+sequenceDiagram
+    title Voice Application Data Flow
+    actor Bob
+    participant vapi as Vapi Server
+    participant eocare as EO Care Server
+    participant dbms as DBMS Server
+    participant transcriber as Transcriber Server
+    participant voice as Voice Server
+    participant openai as OpenAI Server
+    Bob ->> vapi: Bob calls number linked to Vapi
+    vapi ->> eocare: Requests Bob's assistant definition
+    eocare ->> dbms: Requests Bob's info
+    dbms ->> eocare: Returns Bob's history
+    eocare ->> vapi: Returns Bob-specific assistant definition
+    vapi ->> voice: Sends text for speech synthesis
+    voice ->> vapi: Returns audio
+    vapi ->> Bob: Greets Bob with audio from assistant
+
+    loop Status Updates
+        vapi -->> eocare: Sends STATUS_UPDATE messages
+    end
+    loop Speech Updates
+        vapi -->> eocare: Sends SPEECH_UPDATE messages
+    end
+    loop Conversation Updates
+        vapi -->> eocare: Sends CONVERSATION_UPDATE messages
+    end
+
+    Bob ->> vapi: Bob asks for his balance
+    vapi ->> transcriber: Sends call audio for transcription
+    transcriber ->> vapi: Returns text of Bob's request
+    vapi ->> openai: Sends request for LLM evaluation
+    openai ->> vapi: Returns request for Tool evaluation
+    vapi ->> eocare: Sends request for Tool evaluation
+    eocare ->> dbms: Sends query to fulfill Tool request
+    dbms ->> eocare: Returns answer to query
+    eocare ->> vapi: Returns answer to query
+    vapi ->> openai: Returns Tool response
+    openai ->> vapi: Returns text for balance response
+    vapi -->> eocare: Sends TOOL_CALL message
+    vapi ->> voice: Sends text for speech synthesis
+    voice ->> vapi: Returns audio
+    vapi ->> Bob: Answers Bob's question about his balance
+    Note left of Bob: Bob hangs up
+    vapi -->> eocare: Sends END_OF_CALL_REPORT message
+    eocare ->> dbms: Saves call sentiment analysis, details, and summary

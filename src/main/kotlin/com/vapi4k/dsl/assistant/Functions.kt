@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.dsl.assistant.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.ToolCache.addFunctionToCache

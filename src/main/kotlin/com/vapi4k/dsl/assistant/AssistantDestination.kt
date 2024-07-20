@@ -16,12 +16,14 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.AssistantDslMarker
 import com.vapi4k.responses.assistant.AssistantDestinationDto
 import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
-data class AssistantDestinations internal constructor(val member: Member, val memberDto: MemberDto) {
+data class AssistantDestinations internal constructor(
+  val member: Member,
+  val memberDto: MemberDto,
+) {
   fun destination(block: AssistantDestination.() -> Unit) {
     memberDto.assistantDestinations +=
       AssistantDestination(AssistantDestinationDto().apply { type = "assistant" })
@@ -38,5 +40,5 @@ interface AssistantDestinationUnion {
 
 @AssistantDslMarker
 data class AssistantDestination internal constructor(
-  val dto: AssistantDestinationDto
+  val dto: AssistantDestinationDto,
 ) : AssistantDestinationUnion by dto
