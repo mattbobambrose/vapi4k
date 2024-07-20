@@ -21,6 +21,7 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class AssistantDto(
@@ -72,7 +73,10 @@ data class AssistantDto(
 
   val endCallPhrases: MutableList<String> = mutableListOf(),
 
-  ) : AssistantUnion
+  ) : AssistantUnion {
+  @Transient
+  var updated = false
+}
 
 val DEFAULT_CLIENT_MESSAGES = mutableSetOf(
   AssistantClientMessageType.CONVERSATION_UPDATE,

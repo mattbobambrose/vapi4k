@@ -88,6 +88,37 @@ class ApiCalls {
     }
   }
 
+  @Test
+  fun `multiple AssistantOverrides Decls`() {
+    val api = vapiApi()
+    assertThrows(IllegalStateException::class.java) {
+      api.test {
+        call {
+          assistantOverrides {
+            firstMessage = "Hi there. I am here to help."
+          }
+          assistantOverrides {
+            firstMessage = "Hi there. I am here to help."
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun `declare AssistantOverrides without an Assistant or AssistantId Decl`() {
+    val api = vapiApi()
+    assertThrows(IllegalStateException::class.java) {
+      api.test {
+        call {
+          assistantOverrides {
+            firstMessage = "Hi there. I am here to help."
+          }
+        }
+      }
+    }
+  }
+
   companion object {
     @JvmStatic
     fun main(args: Array<String>) {

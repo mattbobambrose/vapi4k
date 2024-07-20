@@ -22,30 +22,47 @@ import com.vapi4k.utils.JsonElementUtils
 
 @AssistantDslMarker
 class Call internal constructor(val callRequest: CallRequest) : CallUnion by callRequest {
-  private var errorMsg = ""
+  private var primaryErorMsg = ""
+  private var overridesErorMsg = ""
 
-  private fun checkIfDeclared(newStr: String) = if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
+  private fun checkIfPrimaryDeclared(newStr: String) =
+    if (primaryErorMsg.isNotEmpty()) error(primaryErorMsg) else primaryErorMsg = newStr
+
+  private fun checkIfOverridesDeclared(newStr: String) =
+    if (overridesErorMsg.isNotEmpty()) error(overridesErorMsg) else overridesErorMsg = newStr
 
   fun assistantId(block: AssistantId.() -> Unit) {
-    checkIfDeclared("assistantId{} already called")
+    checkIfPrimaryDeclared("assistantId{} already called")
     AssistantId(JsonElementUtils.emptyJsonElement(), callRequest).apply(block)
   }
 
   fun assistant(block: Assistant.() -> Unit) {
-    checkIfDeclared("assistant{} already called")
+    checkIfPrimaryDeclared("assistant{} already called")
     with(callRequest) {
-      Assistant(JsonElementUtils.emptyJsonElement(), assistantDto, assistantOverridesDto).apply(block)
+      Assistant(JsonElementUtils.emptyJsonElement(), assistantDto, assistantOverridesDto)
+        .apply(block)
+        .apply { assistantDto.updated = true }
     }
   }
 
+  fun assistantOverrides(block: AssistantOverrides.() -> Unit) {
+    checkIfOverridesDeclared("assistantOverrides{} already called")
+    if (callRequest.assistantDto.updated || callRequest.assistantId.isNotEmpty())
+      with(callRequest) {
+        AssistantOverrides(JsonElementUtils.emptyJsonElement(), assistantOverridesDto).apply(block)
+      }
+    else
+      error("assistant{} or assistantId{} must be called before assistantOverrides{}")
+  }
+
   fun squadId(block: SquadId.() -> Unit) {
-    checkIfDeclared("squadId{} already called")
+    checkIfPrimaryDeclared("squadId{} already called")
     SquadId(JsonElementUtils.emptyJsonElement(), callRequest).apply(block)
   }
 
 
   fun squad(block: Squad.() -> Unit) {
-    checkIfDeclared("squad{} already called")
+    checkIfPrimaryDeclared("squad{} already called")
     with(callRequest) {
       Squad(JsonElementUtils.emptyJsonElement(), squadDto).apply(block)
     }
