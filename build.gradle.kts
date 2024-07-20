@@ -46,9 +46,9 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
-//    implementation("io.ktor:ktor-client-compression-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-encoding:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation-jvm:$ktorVersion")
 
     implementation("io.ktor:ktor-server-cio:$ktorVersion")

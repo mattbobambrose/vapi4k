@@ -36,7 +36,7 @@ object AssistantDsl {
 
   fun assistantId(request: JsonElement, block: AssistantId.() -> Unit) =
     AssistantRequestMessageResponse().apply {
-      AssistantId(request, this).apply(block)
+      AssistantId(request, this.messageResponse).apply(block)
     }.messageResponse
 
   fun squad(
