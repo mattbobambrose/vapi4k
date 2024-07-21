@@ -14,14 +14,14 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant
 
+import com.vapi4k.responses.assistant.KnowledgeBaseDto
+import com.vapi4k.responses.assistant.KnowledgeBaseUnion
+import kotlinx.serialization.json.JsonElement
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class KnowledgeBase(
-  var provider: String = "",
-  var topK: Double = 0.0,
-  val fileIds: MutableList<String> = mutableListOf()
-)
+@AssistantDslMarker
+class KnowledgeBase internal constructor(
+  internal val request: JsonElement,
+  internal val knowledgeBaseDto: KnowledgeBaseDto
+) : KnowledgeBaseUnion by knowledgeBaseDto

@@ -5,6 +5,7 @@ TTD.txt
 json
 secrets
 http-client.private.env.json
+application.conf
 
 src/test/resources/application.conf
 

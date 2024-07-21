@@ -31,7 +31,7 @@ data class ModelDto(
   val tools: MutableList<ToolDto> = mutableListOf(),
   val toolIds: MutableList<String> = mutableListOf(),
   val functions: MutableList<FunctionDto> = mutableListOf(),
-  val knowledgeBase: KnowledgeBase = KnowledgeBase(),
+  val knowledgeBase: KnowledgeBaseDto = KnowledgeBaseDto(),
 ) : ModelUnion
 
 @Serializable

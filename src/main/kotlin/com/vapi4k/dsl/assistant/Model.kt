@@ -64,4 +64,8 @@ class Model(
     // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
     messages += RoleMessage(role.desc, content.trimLeadingSpaces())
   }
+
+  fun knowledgeBase(block: KnowledgeBase.() -> Unit) {
+    KnowledgeBase(request, modelDto.knowledgeBase).apply(block)
+  }
 }
