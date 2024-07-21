@@ -16,6 +16,8 @@
 
 package com.vapi4k.common
 
+import com.vapi4k.dsl.assistant.DeepgramLanguageType
+import com.vapi4k.dsl.assistant.DeepgramModelType
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
@@ -151,6 +153,35 @@ object Serializers {
   }
 
 
+  internal object DeepgramModelTypeSerializer : KSerializer<DeepgramModelType> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DeepgramModelType", STRING)
+
+    override fun serialize(
+      encoder: Encoder,
+      value: DeepgramModelType,
+    ) {
+      encoder.encodeString(value.desc)
+    }
+
+    override fun deserialize(decoder: Decoder) =
+      DeepgramModelType.entries.first { it.desc == decoder.decodeString() }
+  }
+
+  internal object DeepgramLanguageTypeSerializer : KSerializer<DeepgramLanguageType> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DeepgramLanguageType", STRING)
+
+    override fun serialize(
+      encoder: Encoder,
+      value: DeepgramLanguageType,
+    ) {
+      encoder.encodeString(value.desc)
+    }
+
+    override fun deserialize(decoder: Decoder) =
+      DeepgramLanguageType.entries.first { it.desc == decoder.decodeString() }
+  }
+
+
   internal object DestinationSerializer : KSerializer<AbstractDestinationDto> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractDestinationDto")
 
@@ -168,5 +199,4 @@ object Serializers {
       throw NotImplementedError("Deserialization is not supported")
     }
   }
-
 }

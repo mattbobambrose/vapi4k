@@ -88,6 +88,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
   application.routing {
     val config = Assistant.config
+    config.applicationConfig = environment?.config ?: error("No environment config found")
 
     get("/") { call.respondText("Hello World!") }
     get("/ping") { call.respondText("pong") }

@@ -58,11 +58,11 @@ data class Assistant internal constructor(
   internal val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantUnion by assistantDto {
   fun model(block: Model.() -> Unit) {
-    Model(request, assistantDto.model).apply(block)
+    Model(request, assistantDto.modelDto).apply(block)
   }
 
   fun voice(block: Voice.() -> Unit) {
-    Voice(assistantDto.voice).apply(block)
+    Voice(assistantDto.voiceDto).apply(block)
   }
 
   fun assistantOverrides(block: AssistantOverrides.() -> Unit) {

@@ -124,10 +124,11 @@ class VapiApi private constructor(
 
     fun vapiApi(authString: String = ""): VapiApi {
       val config: HoconApplicationConfig = HoconApplicationConfig(ConfigFactory.load())
-      val apiAuth = if (authString.isNotEmpty())
-        authString
-      else
-        config.propertyOrNull("vapi.api.privateKey")?.getString() ?: error("No API key found in application.conf")
+      val apiAuth =
+        if (authString.isNotEmpty())
+          authString
+        else
+          config.propertyOrNull("vapi.api.privateKey")?.getString() ?: error("No API key found in application.conf")
 
       return VapiApi(config, apiAuth)
     }

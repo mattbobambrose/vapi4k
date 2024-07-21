@@ -17,13 +17,19 @@
 package com.vapi4k.responses.assistant
 
 
+import com.vapi4k.dsl.assistant.DeepgramTranscriberUnion
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class TranscriberDto(
   var provider: String = "",
-  var model: String = "",
-  var language: String = "",
-  var smartFormat: Boolean = false,
-  val keywords: MutableList<String> = mutableListOf()
-)
+  @SerialName("model")
+  var transcriberModel: String = "",
+
+  @SerialName("language")
+  var transcriberLanguage: String = "",
+
+  override var smartFormat: Boolean = false,
+  override val keywords: MutableList<String> = mutableListOf(),
+) : DeepgramTranscriberUnion

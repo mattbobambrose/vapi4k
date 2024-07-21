@@ -83,28 +83,6 @@ object AssistantDsl {
     }.messageResponse
 }
 
-interface NumberDestinationUnion {
-  var number: String
-  var message: String
-  var description: String
-}
-
-interface SipDestinationUnion {
-  var sipUri: String
-  var message: String
-  var description: String
-}
-
-class NumberDestination internal constructor(
-  val request: JsonElement,
-  val numberDto: NumberDestinationDto,
-) : NumberDestinationUnion by numberDto
-
-class SipDestination internal constructor(
-  val request: JsonElement,
-  val sipDto: SipDestinationDto,
-) : SipDestinationUnion by sipDto
-
 @Retention(RUNTIME)
 @Target(AnnotationTarget.FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER)
 annotation class ToolCall(
