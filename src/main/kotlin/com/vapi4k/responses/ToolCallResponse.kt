@@ -97,8 +97,8 @@ data class ToolCallResult(
 
 @Serializable
 data class ToolCallMessage(
-  var type: ToolCallMessageType = ToolCallMessageType.UNKNOWN,
-  var role: ToolCallRoleType = ToolCallRoleType.UNKNOWN,
+  var type: ToolCallMessageType = ToolCallMessageType.UNSPECIFIED,
+  var role: ToolCallRoleType = ToolCallRoleType.UNSPECIFIED,
   var content: String = "",
   val conditions: MutableList<ToolMessageCondition> = mutableListOf(),
 )

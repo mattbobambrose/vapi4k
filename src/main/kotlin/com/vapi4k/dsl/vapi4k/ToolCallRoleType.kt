@@ -16,12 +16,31 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.common.Serializers.ToolCallRoleSerializer
+import com.vapi4k.dsl.assistant.enums.UNSPECIFIED_DEFAULT
+import com.vapi4k.dsl.vapi4k.ToolCallRoleType.entries
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ToolCallRoleSerializer::class)
-enum class ToolCallRoleType(val desc: String) {
+enum class ToolCallRoleType(internal val desc: String) {
   ASSISTANT("assistant"),
   SYSTEM("system"),
-  UNKNOWN("unknown");
+
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+}
+
+private object ToolCallRoleSerializer : KSerializer<ToolCallRoleType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallRole", PrimitiveKind.STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: ToolCallRoleType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
 }

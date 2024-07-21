@@ -16,11 +16,17 @@
 
 package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.common.Serializers.AssistantClientMessageTypeSerializer
+import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType.entries
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = AssistantClientMessageTypeSerializer::class)
-enum class AssistantClientMessageType(val desc: String) {
+enum class AssistantClientMessageType(internal val desc: String) {
   CONVERSATION_UPDATE("conversation-update"),
   FUNCTION_CALL("function-call"),
   FUNCTION_CALL_RESULT("function-call-result"),
@@ -36,3 +42,14 @@ enum class AssistantClientMessageType(val desc: String) {
   VOICE_INPUT("voice-input");
 }
 
+private object AssistantClientMessageTypeSerializer : KSerializer<AssistantClientMessageType> {
+  override val descriptor: SerialDescriptor =
+    PrimitiveSerialDescriptor("AssistantClientMessageType", PrimitiveKind.STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: AssistantClientMessageType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
+}

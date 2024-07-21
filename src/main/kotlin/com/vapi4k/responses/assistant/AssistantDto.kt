@@ -55,7 +55,7 @@ data class AssistantDto(
   override var modelOutputInMessagesEnabled: Boolean = false,
   override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
 
-  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNKNOWN,
+  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
 
   // Need a copy of DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES here, so call toMutableSet()
   override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
@@ -68,8 +68,9 @@ data class AssistantDto(
   val modelDto: ModelDto = ModelDto(),
   @SerialName("voice")
   val voiceDto: VoiceDto = VoiceDto(),
+
   @SerialName("transcriber")
-  val transcriberDto: TranscriberDto = TranscriberDto(),
+  var transcriberDto: AbstractTranscriberDto = DeepgramTranscriberDto(),
 
   // TODO: Add verbs and enums
   @SerialName("voicemailDetection")

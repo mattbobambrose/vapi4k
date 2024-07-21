@@ -22,6 +22,8 @@ import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
+import com.vapi4k.responses.assistant.DeepgramTranscriberDto
+import com.vapi4k.responses.assistant.GladiaTranscriberDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantUnion {
@@ -63,6 +65,14 @@ data class Assistant internal constructor(
 
   fun voice(block: Voice.() -> Unit) {
     Voice(assistantDto.voiceDto).apply(block)
+  }
+
+  fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
+    assistantDto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
+  }
+
+  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) {
+    assistantDto.transcriberDto = GladiaTranscriberDto().also { GladiaTranscriber(it).apply(block) }
   }
 
   fun assistantOverrides(block: AssistantOverrides.() -> Unit) {

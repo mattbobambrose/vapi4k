@@ -16,11 +16,17 @@
 
 package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.common.Serializers.PunctuationTypeSerializer
+import com.vapi4k.dsl.assistant.enums.PunctuationType.entries
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = PunctuationTypeSerializer::class)
-enum class PunctuationType(val desc: String) {
+enum class PunctuationType(internal val desc: String) {
   FULL_STOP('\u3002'.toString()),
   FULL_WIDTH_COMMA('\uff0c'.toString()),
   PERIOD("."),
@@ -38,3 +44,13 @@ enum class PunctuationType(val desc: String) {
   COLON(":"),
 }
 
+private object PunctuationTypeSerializer : KSerializer<PunctuationType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("PunctuationType", STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: PunctuationType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
+}

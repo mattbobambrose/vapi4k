@@ -51,8 +51,9 @@ data class AssistantOverridesDto(
   val modelDto: ModelDto = ModelDto(),
   @SerialName("voice")
   val voiceDto: VoiceDto = VoiceDto(),
+
   @SerialName("transcriber")
-  val transcriberDto: TranscriberDto = TranscriberDto(),
+  var transcriberDto: AbstractTranscriberDto = DeepgramTranscriberDto(),
 
   // TODO: Came from squad assistant
   val transportConfigurations: MutableList<TransportConfiguration> = mutableListOf(),

@@ -16,28 +16,32 @@
 
 package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.dsl.assistant.enums.ProviderType.entries
+import com.vapi4k.dsl.assistant.enums.GladiaModelType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = ProviderTypeSerializer::class)
-enum class ProviderType(internal val desc: String) {
-  AZURE("azure"),
+
+const val UNSPECIFIED_DEFAULT = "unspecified"
+
+@Serializable(with = GladiaModelTypeSerializer::class)
+enum class GladiaModelType(internal val desc: String) {
+  FAST("fast"),
+  ACCURATE("accurate"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 }
 
-private object ProviderTypeSerializer : KSerializer<ProviderType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ProviderType", STRING)
+private object GladiaModelTypeSerializer : KSerializer<GladiaModelType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("GladiaModelType", PrimitiveKind.STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: ProviderType,
+    value: GladiaModelType,
   ) = encoder.encodeString(value.desc)
 
   override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
