@@ -43,9 +43,7 @@ import kotlinx.serialization.json.JsonElement
 
 class WeatherLookupService0 {
   @ToolCall("Look up the favorite food in Chicago")
-  fun getFavFoodInChicago(): String {
-    return "Pizza"
-  }
+  fun getFavFoodInChicago() = "Pizza"
 }
 
 class WeatherLookupService1 : ToolCallService() {
@@ -82,16 +80,12 @@ class WeatherLookupService1 : ToolCallService() {
 
 class WeatherLookupService2 {
   @ToolCall
-  fun lookupWeatherByZipCode(zipCode: String): String {
-    return "The weather in zip code $zipCode is sunny"
-  }
+  fun lookupWeatherByZipCode(zipCode: String) = "The weather in zip code $zipCode is sunny"
 }
 
 class WeatherLookupService3 {
   @ToolCall("Look up the weather for an area code", "weatherByAreaCode")
-  fun lookupWeatherByAreaCode(areaCode: String): String {
-    return "The weather in area code $areaCode is windy"
-  }
+  fun lookupWeatherByAreaCode(areaCode: String) = "The weather in area code $areaCode is windy"
 }
 
 class IntBooleanStringService {
@@ -100,7 +94,5 @@ class IntBooleanStringService {
     int: Int,
     boolean: Boolean,
     string: String,
-  ): String {
-    return "Int: $int, Boolean: $boolean, String: $string"
-  }
+  ) = "Int: $int, Boolean: $boolean, String: $string"
 }

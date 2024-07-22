@@ -21,6 +21,8 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.DeepgramModelType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
+import com.vapi4k.dsl.assistant.enums.GladiaModelType
+import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.assistant.tools.ToolCache.resetCaches
@@ -548,7 +550,7 @@ class AssistantTest {
   """
 
   @Test
-  fun `multiple transcriber decls`() {
+  fun `multiple deepgram transcriber decls`() {
     val request = assistantRequest.toJsonElement()
     assertThrows(IllegalStateException::class.java) {
       val assistant = assistant(request) {
@@ -561,6 +563,53 @@ class AssistantTest {
         }
       }
     }
+  }
 
+  @Test
+  fun `multiple gladia transcriber decls`() {
+    val request = assistantRequest.toJsonElement()
+    assertThrows(IllegalStateException::class.java) {
+      val assistant = assistant(request) {
+        gladiaTranscriber {
+          transcriberModel = GladiaModelType.FAST
+        }
+
+        gladiaTranscriber {
+          transcriberModel = GladiaModelType.FAST
+        }
+      }
+    }
+  }
+
+  @Test
+  fun `multiple talkscriber transcriber decls`() {
+    val request = assistantRequest.toJsonElement()
+    assertThrows(IllegalStateException::class.java) {
+      val assistant = assistant(request) {
+        talkscriberTranscriber {
+          transcriberModel = TalkscriberModelType.WHISPER
+        }
+
+        talkscriberTranscriber {
+          transcriberModel = TalkscriberModelType.WHISPER
+        }
+      }
+    }
+  }
+
+  @Test
+  fun `multiple transcriber decls`() {
+    val request = assistantRequest.toJsonElement()
+    assertThrows(IllegalStateException::class.java) {
+      val assistant = assistant(request) {
+        talkscriberTranscriber {
+          transcriberModel = TalkscriberModelType.WHISPER
+        }
+
+        gladiaTranscriber {
+          transcriberModel = GladiaModelType.FAST
+        }
+      }
+    }
   }
 }

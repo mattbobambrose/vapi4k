@@ -22,6 +22,7 @@ import com.vapi4k.dsl.assistant.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.tools.ToolCache.addFunctionToCache
 import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.utils.JsonUtils.containsKey
 
 @AssistantDslMarker
 data class Functions internal constructor(internal val model: Model) {
@@ -29,7 +30,8 @@ data class Functions internal constructor(internal val model: Model) {
     model.functions += FunctionDto().also { functionDto ->
       verifyObject(true, obj)
       populateFunctionDto(obj, functionDto)
-      addFunctionToCache(model.messageCallId, obj)
+      if (model.request.containsKey("message"))
+        addFunctionToCache(model.messageCallId, obj)
     }.also { func ->
       if (model.functions.any { func.name == it.name }) {
         error("Duplicate function name declared: ${func.name}")
