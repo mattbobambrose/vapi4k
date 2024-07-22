@@ -146,7 +146,7 @@ internal object ToolCache {
       val vals = argNames.map { args[it].stringValue }
       // TODO Fix ordering
       logger.info { "Invoking method $fqName with args $args" }
-      logger.info { "Invoking method $fqName with args $vals" }
+      logger.info { "Invoking method $fqName with vals $vals" }
       val result = method.invoke(obj, *vals.toTypedArray<String>())
       return if (isVoid) "" else result.toString()
     }
