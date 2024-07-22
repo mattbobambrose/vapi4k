@@ -147,6 +147,7 @@ internal object ToolCache {
       // TODO Fix ordering
       logger.info { "Invoking method $fqName with args $args" }
       logger.info { "Invoking method $fqName with vals $vals" }
+      //val params = method.parameters.toList()
       val result = method.invoke(obj, *vals.toTypedArray<String>())
       return if (isVoid) "" else result.toString()
     }

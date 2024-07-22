@@ -129,7 +129,9 @@ class VapiApi private constructor(
         if (authString.isNotEmpty())
           authString
         else
-          config.propertyOrNull("vapi.api.privateKey")?.getString() ?: error("No API key found in application.conf")
+          config.propertyOrNull("vapi.api.privateKey")?.getString()
+            ?: System.getenv("VAPI_PRIVATE_KEY")
+            ?: error("No API key found in application.conf")
 
       return VapiApi(config, apiAuth)
     }
