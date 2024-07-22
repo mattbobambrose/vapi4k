@@ -120,15 +120,16 @@ internal object ToolCache {
       message: MutableList<ToolCallMessageDto> = mutableListOf(),
       errorAction: (String) -> Unit = {},
     ): String {
-      val results = runCatching {
-        invokeMethod(args)
-      }.getOrElse { e ->
-        val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
-        errorAction(errorMsg)
-        if (obj is ToolCallService)
-          message += obj.onRequestFailed(request, errorMsg).messages
-        error(errorMsg)
-      }
+      val results =
+        runCatching {
+          invokeMethod(args)
+        }.getOrElse { e ->
+          val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
+          errorAction(errorMsg)
+          if (obj is ToolCallService)
+            message += obj.onRequestFailed(request, errorMsg).messages
+          error(errorMsg)
+        }
 
       if (obj is ToolCallService)
         message += obj.onRequestComplete(request, results).messages
@@ -142,7 +143,11 @@ internal object ToolCache {
       val function = obj.findFunction(methodName)
       val isVoid = function.returnType.asKClass() == Unit::class
       val argNames = args.jsonObject.keys
-      val result = method.invoke(obj, *argNames.map { args[it].stringValue }.toTypedArray<String>())
+      val vals = argNames.map { args[it].stringValue }
+      // TODO Fix ordering
+      logger.info { "Invoking method $fqName with args $args" }
+      logger.info { "Invoking method $fqName with args $vals" }
+      val result = method.invoke(obj, *vals.toTypedArray<String>())
       return if (isVoid) "" else result.toString()
     }
 
