@@ -31,13 +31,13 @@ package com.vapi4k/*
  */
 
 import com.vapi4k.dsl.assistant.Param
-import com.vapi4k.dsl.assistant.RequestComplete
-import com.vapi4k.dsl.assistant.RequestComplete.Companion.requestComplete
-import com.vapi4k.dsl.assistant.RequestFailed
-import com.vapi4k.dsl.assistant.RequestFailed.Companion.requestFailed
 import com.vapi4k.dsl.assistant.ToolCall
-import com.vapi4k.dsl.assistant.ToolCallService
 import com.vapi4k.dsl.assistant.eq
+import com.vapi4k.dsl.assistant.tools.RequestComplete
+import com.vapi4k.dsl.assistant.tools.RequestComplete.Companion.requestComplete
+import com.vapi4k.dsl.assistant.tools.RequestFailed
+import com.vapi4k.dsl.assistant.tools.RequestFailed.Companion.requestFailed
+import com.vapi4k.dsl.assistant.tools.ToolCallService
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
 import kotlinx.serialization.json.JsonElement
 

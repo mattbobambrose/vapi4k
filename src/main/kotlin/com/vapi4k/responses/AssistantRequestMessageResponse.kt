@@ -14,16 +14,11 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.responses
 
-
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+data class AssistantRequestMessageResponse(
+  val messageResponse: AssistantRequestResponse = AssistantRequestResponse()
+)

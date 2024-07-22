@@ -14,16 +14,20 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.transcriber
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
+import com.vapi4k.dsl.assistant.enums.DeepgramModelType
+import com.vapi4k.responses.assistant.DeepgramTranscriberDto
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
-import kotlinx.serialization.Serializable
+interface DeepgramTranscriberUnion {
+  var transcriberModel: DeepgramModelType
+  var transcriberLanguage: DeepgramLanguageType
+  var smartFormat: Boolean
+  val keywords: MutableList<String>
+}
 
-@Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+@AssistantDslMarker
+class DeepgramTranscriber internal constructor(private val dto: DeepgramTranscriberDto) :
+  DeepgramTranscriberUnion by dto

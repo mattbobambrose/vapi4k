@@ -14,16 +14,15 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.model
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.responses.assistant.KnowledgeBaseDto
+import com.vapi4k.responses.assistant.KnowledgeBaseUnion
+import kotlinx.serialization.json.JsonElement
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+@AssistantDslMarker
+class KnowledgeBase internal constructor(
+  val request: JsonElement,
+  private val dto: KnowledgeBaseDto,
+) : KnowledgeBaseUnion by dto

@@ -16,21 +16,22 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.dsl.assistant.ToolCache.toolCallCache
+import com.vapi4k.dsl.assistant.tools.ToolCache.toolCallCache
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
 import com.vapi4k.plugin.Vapi4kLogger.logger
-import com.vapi4k.responses.assistant.ToolMessageCondition
+import com.vapi4k.responses.assistant.ToolMessageConditionDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallArguments
 import com.vapi4k.utils.JsonElementUtils.toolCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallList
 import com.vapi4k.utils.JsonElementUtils.toolCallName
+import com.vapi4k.utils.Utils.errorMsg
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-data class ToolCallResponse(var messageResponse: MessageResponse = MessageResponse()) {
+data class ToolCallResponse(private var messageResponse: MessageResponse = MessageResponse()) {
   companion object {
     fun getToolCallResponse(request: JsonElement): ToolCallResponse =
       runCatching {
@@ -72,9 +73,9 @@ data class ToolCallResponse(var messageResponse: MessageResponse = MessageRespon
               }
             }
           }
-      }.getOrElse {
-        logger.error(it) { "Error receiving tool call: ${it.message}" }
-        error("Error receiving tool call: ${it.message}")
+      }.getOrElse { e ->
+        logger.error(e) { "Error receiving tool call: ${e.errorMsg}" }
+        error("Error receiving tool call: ${e.errorMsg}")
       }
   }
 }
@@ -92,13 +93,13 @@ data class ToolCallResult(
   var result: String = "",
   // TODO: Ask Vapi if this should be messages (plural)
   var error: String = "",
-  val message: MutableList<ToolCallMessage> = mutableListOf(),
+  val message: MutableList<ToolCallMessageDto> = mutableListOf(),
 )
 
 @Serializable
-data class ToolCallMessage(
+data class ToolCallMessageDto(
   var type: ToolCallMessageType = ToolCallMessageType.UNSPECIFIED,
   var role: ToolCallRoleType = ToolCallRoleType.UNSPECIFIED,
   var content: String = "",
-  val conditions: MutableList<ToolMessageCondition> = mutableListOf(),
+  val conditions: MutableList<ToolMessageConditionDto> = mutableListOf(),
 )

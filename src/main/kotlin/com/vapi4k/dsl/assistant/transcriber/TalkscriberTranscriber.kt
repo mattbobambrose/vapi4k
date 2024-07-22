@@ -14,16 +14,18 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.transcriber
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.TalkscriberLanguageType
+import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
+import com.vapi4k.responses.assistant.TalkscriberTranscriberDto
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
-import kotlinx.serialization.Serializable
+interface TalkscriberTranscriberUnion {
+  var transcriberModel: TalkscriberModelType
+  var transcriberLanguage: TalkscriberLanguageType
+}
 
-@Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+@AssistantDslMarker
+class TalkscriberTranscriber internal constructor(private val dto: TalkscriberTranscriberDto) :
+  TalkscriberTranscriberUnion by dto

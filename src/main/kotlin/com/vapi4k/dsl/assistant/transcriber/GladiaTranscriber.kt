@@ -14,16 +14,19 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.transcriber
 
+import com.vapi4k.dsl.assistant.enums.GladiaLanguageType
+import com.vapi4k.dsl.assistant.enums.GladiaModelType
+import com.vapi4k.responses.assistant.GladiaTranscriberDto
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
-import kotlinx.serialization.Serializable
+interface GladiaTranscriberUnion {
+  var transcriberModel: GladiaModelType
+  var transcriberLanguage: GladiaLanguageType
+  var languageBehavior: String
+  var transcriptionHint: String
+  var prosody: Boolean
+  var audioEnhancer: Boolean
+}
 
-@Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+class GladiaTranscriber internal constructor(private val dto: GladiaTranscriberDto) : GladiaTranscriberUnion by dto

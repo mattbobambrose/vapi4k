@@ -16,6 +16,10 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.dsl.assistant.model.Model
+import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
+import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
+import com.vapi4k.dsl.assistant.voice.VoiceOverrides
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.DeepgramTranscriberDto
 import com.vapi4k.responses.assistant.GladiaTranscriberDto

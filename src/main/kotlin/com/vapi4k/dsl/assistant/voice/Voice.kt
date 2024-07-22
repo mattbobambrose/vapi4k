@@ -14,23 +14,27 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.voice
 
-
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.ProviderType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceType
-import com.vapi4k.dsl.assistant.voice.VoiceUnion
-import kotlinx.serialization.Serializable
+import com.vapi4k.responses.assistant.VoiceDto
 
-@Serializable
-data class VoiceDto(
-  override var inputPreprocessingEnabled: Boolean = false,
-  override var inputReformattingEnabled: Boolean = false,
-  override var inputMinCharacters: Int = 0,
-  override var fillerInjectionEnabled: Boolean = false,
-  override var provider: ProviderType = ProviderType.UNSPECIFIED,
-  override var voiceId: VoiceType = VoiceType.UNSPECIFIED,
-  override var speed: Double = 0.0,
-  override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
-) : VoiceUnion
+interface VoiceUnion {
+  var inputPreprocessingEnabled: Boolean
+  var inputReformattingEnabled: Boolean
+  var inputMinCharacters: Int
+  var fillerInjectionEnabled: Boolean
+  var provider: ProviderType
+  var voiceId: VoiceType
+  var speed: Double
+  val inputPunctuationBoundaries: MutableList<PunctuationType>
+}
+
+@AssistantDslMarker
+data class Voice internal constructor(private val dto: VoiceDto) : VoiceUnion by dto
+
+@AssistantDslMarker
+data class VoiceOverrides internal constructor(private val dto: VoiceDto) : VoiceUnion by dto

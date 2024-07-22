@@ -16,14 +16,22 @@
 
 package com.vapi4k.responses.assistant
 
-
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+data class ToolMessageConditionDto(
+  var param: String = "",
+  var operator: String = "",
+  var value: String = "",
+) {
+  companion object {
+    internal fun toolMessageCondition(param: String, operator: String, value: String) =
+      ToolMessageConditionDto(param, operator, value)
+
+    internal fun toolMessageCondition(param: String, operator: String, value: Int) =
+      ToolMessageConditionDto(param, operator, value.toString())
+
+    internal fun toolMessageCondition(param: String, operator: String, value: Boolean) =
+      ToolMessageConditionDto(param, operator, value.toString())
+  }
+}

@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses.assistant
 
-import com.vapi4k.dsl.assistant.ModelUnion
+import com.vapi4k.dsl.assistant.model.ModelUnion
 import kotlinx.serialization.Serializable
 
 @Serializable

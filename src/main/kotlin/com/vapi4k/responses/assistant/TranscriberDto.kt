@@ -17,9 +17,6 @@
 package com.vapi4k.responses.assistant
 
 
-import com.vapi4k.dsl.assistant.DeepgramTranscriberUnion
-import com.vapi4k.dsl.assistant.GladiaTranscriberUnion
-import com.vapi4k.dsl.assistant.TalkscriberTranscriberUnion
 import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.enums.DeepgramModelType
 import com.vapi4k.dsl.assistant.enums.GladiaLanguageType
@@ -27,6 +24,9 @@ import com.vapi4k.dsl.assistant.enums.GladiaModelType
 import com.vapi4k.dsl.assistant.enums.TalkscriberLanguageType
 import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
 import com.vapi4k.dsl.assistant.enums.TranscriberType
+import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriberUnion
+import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriberUnion
+import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriberUnion
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName

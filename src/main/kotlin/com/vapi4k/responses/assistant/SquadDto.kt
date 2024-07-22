@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant
 
 
-import com.vapi4k.dsl.assistant.SquadUnion
+import com.vapi4k.dsl.assistant.squad.SquadUnion
 import kotlinx.serialization.Serializable
 
 @Serializable

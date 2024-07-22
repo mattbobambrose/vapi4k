@@ -14,16 +14,14 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.api
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.responses.api.CustomerDto
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
-import kotlinx.serialization.Serializable
+interface CustomerUnion {
+  var number: String
+}
 
-@Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+@AssistantDslMarker
+class Customer(dto: CustomerDto) : CustomerUnion by dto

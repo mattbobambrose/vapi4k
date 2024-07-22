@@ -14,16 +14,22 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.squad
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.responses.assistant.AssistantOverridesDto
+import com.vapi4k.responses.assistant.MemberDto
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
-import kotlinx.serialization.Serializable
+@AssistantDslMarker
+data class Members internal constructor(internal val squad: Squad) {
+  val members = mutableListOf<Member>()
+  var membersOverrides: List<AssistantOverridesDto> = mutableListOf()
 
-@Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+  fun member(block: Member.() -> Unit) {
+    with(squad.squadDto) {
+      members.add(MemberDto().also { memberDto ->
+        Member(this@Members, memberDto).apply(block)
+      })
+    }
+  }
+}

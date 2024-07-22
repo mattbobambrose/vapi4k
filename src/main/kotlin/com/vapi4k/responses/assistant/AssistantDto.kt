@@ -27,7 +27,7 @@ import kotlinx.serialization.Transient
 @Serializable
 data class AssistantDto(
   // TODO: Came from squad assistant
-  val transportConfigurations: List<TransportConfiguration> = listOf(),
+  val transportConfigurations: List<TransportConfigurationDto> = listOf(),
 
   override var name: String = "",
   override var firstMessage: String = "",

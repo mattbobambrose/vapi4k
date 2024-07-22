@@ -17,13 +17,12 @@
 package com.vapi4k.responses.assistant
 
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssistantDestinationDto(
+data class ToolMessageDto(
   var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+  var content: String = "",
+  var timingMilliseconds: Int = -1,
+  val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf(),
+)

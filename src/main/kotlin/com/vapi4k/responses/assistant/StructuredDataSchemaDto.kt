@@ -17,13 +17,13 @@
 package com.vapi4k.responses.assistant
 
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssistantDestinationDto(
+data class StructuredDataSchemaDto(
   var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+  var description: String = "",
+  val items: MutableMap<String, String> = mutableMapOf(),
+  val properties: MutableMap<String, String> = mutableMapOf(),
+  val required: MutableList<String> = mutableListOf(),
+)

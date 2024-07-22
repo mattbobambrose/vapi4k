@@ -56,7 +56,7 @@ data class AssistantOverridesDto(
   var transcriberDto: AbstractTranscriberDto = DeepgramTranscriberDto(),
 
   // TODO: Came from squad assistant
-  val transportConfigurations: MutableList<TransportConfiguration> = mutableListOf(),
+  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
   val variableValues: MutableMap<String, String> = mutableMapOf(),
   val metadata: MutableMap<String, String> = mutableMapOf(),
 

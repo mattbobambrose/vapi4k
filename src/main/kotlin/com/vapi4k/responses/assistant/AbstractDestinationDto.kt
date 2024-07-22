@@ -16,6 +16,7 @@
 
 package com.vapi4k.responses.assistant
 
+import com.vapi4k.dsl.assistant.enums.DestinationType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -25,7 +26,7 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = DestinationSerializer::class)
 interface AbstractDestinationDto {
-  var type: String
+  var type: DestinationType
   var message: String
   var description: String
 }

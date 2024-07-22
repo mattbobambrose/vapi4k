@@ -14,16 +14,23 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.dsl.assistant.model
 
+import com.vapi4k.dsl.assistant.enums.MessageRoleType
+import kotlin.reflect.KProperty
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
-import kotlinx.serialization.Serializable
+internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType) {
+  operator fun getValue(
+    model: Model,
+    property: KProperty<*>,
+  ): String {
+    val msgs = model.messages.filter { it.role == messageRoleType.desc }
+    return if (msgs.isEmpty()) "" else (msgs.joinToString("") { it.content })
+  }
 
-@Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+  operator fun setValue(
+    model: Model,
+    property: KProperty<*>,
+    newVal: String,
+  ) = model.message(messageRoleType, newVal)
+}

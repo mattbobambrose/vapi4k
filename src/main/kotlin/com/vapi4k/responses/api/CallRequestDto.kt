@@ -14,25 +14,20 @@
  *
  */
 
-package com.vapi4k.responses
+package com.vapi4k.responses.api
 
 
-import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantIdUnion
+import com.vapi4k.dsl.assistant.api.CallUnion
 import com.vapi4k.dsl.assistant.squad.SquadIdUnion
-import com.vapi4k.responses.assistant.AbstractDestinationDto
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.NumberDestinationDto
 import com.vapi4k.responses.assistant.SquadDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 @Serializable
-data class AssistantRequestResponse(
-  var destination: AbstractDestinationDto = NumberDestinationDto(),
-
+data class CallRequestDto(
   override var assistantId: String = "",
 
   @SerialName("assistant")
@@ -46,12 +41,10 @@ data class AssistantRequestResponse(
   @SerialName("squad")
   val squadDto: SquadDto = SquadDto(),
 
+  override var phoneNumberId: String = "",
+
+  @SerialName("customer")
+  val customerDto: CustomerDto = CustomerDto(),
+
   var error: String = "",
-) : AssistantIdUnion, SquadIdUnion {
-  companion object {
-    internal suspend fun getAssistantResponse(
-      request: JsonElement,
-    ) =
-      Assistant.config.assistantRequest?.invoke(request) ?: error("onAssistantRequest{} not called")
-  }
-}
+) : CallUnion, AssistantIdUnion, SquadIdUnion

@@ -14,16 +14,17 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.responses.api
 
-
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
+import com.vapi4k.dsl.assistant.api.CustomerUnion
 import kotlinx.serialization.Serializable
 
+// TODO: Make polymorphic
 @Serializable
-data class AssistantDestinationDto(
-  var type: String = "",
-  override var assistantName: String = "",
-  override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+data class CustomerDto(
+  override var number: String = "",
+
+  var sipUri: String = "",
+  var name: String = "",
+  var extension: String = "",
+) : CustomerUnion
