@@ -35,8 +35,13 @@ internal object ReflectionUtils {
   val KFunction<*>.isUnitReturnType get() = returnType.asKClass() == Unit::class
   val Any.functions get() = this::class.declaredFunctions
   val Any.methods get() = this::class.java.declaredMethods
-  fun Any.findMethod(methodName: String) = methods.single { it.name == methodName }
-  fun Any.findFunction(methodName: String) = functions.single { it.name == methodName }
+
+  fun Any.findMethod(methodName: String) = methods.singleOrNull() { it.name == methodName }
+    ?: error("Method $methodName not found")
+
+  fun Any.findFunction(methodName: String) = functions.singleOrNull { it.name == methodName }
+    ?: error("Method $methodName not found")
+
   fun KType.asKClass() = classifier as KClass<*>
 
   val Parameter.param: Param? get() = annotations.firstOrNull { it is Param } as Param?

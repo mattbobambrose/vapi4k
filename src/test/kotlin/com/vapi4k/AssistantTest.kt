@@ -553,11 +553,11 @@ class AssistantTest {
     assertThrows(IllegalStateException::class.java) {
       val assistant = assistant(request) {
         deepGramTranscriber {
-          this.transcriberModel = DeepgramModelType.BASE
+          transcriberModel = DeepgramModelType.BASE
         }
 
         deepGramTranscriber {
-          this.transcriberModel = DeepgramModelType.BASE
+          transcriberModel = DeepgramModelType.BASE
         }
       }
     }
