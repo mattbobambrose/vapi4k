@@ -34,8 +34,10 @@ data class AssistantRequestResponse(
   var destination: AbstractDestinationDto = NumberDestinationDto(),
 
   override var assistantId: String = "",
+
   @SerialName("assistant")
   val assistantDto: AssistantDto = AssistantDto(),
+
   @SerialName("assistantOverrides")
   override val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),
 

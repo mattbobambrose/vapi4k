@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import com.vapi4k.dsl.assistant.enums.VoiceType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

@@ -18,7 +18,6 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.enums.DeepgramModelType
-import com.vapi4k.dsl.assistant.enums.TranscriberType
 import com.vapi4k.responses.assistant.DeepgramTranscriberDto
 
 interface DeepgramTranscriberUnion {
@@ -28,8 +27,6 @@ interface DeepgramTranscriberUnion {
   val keywords: MutableList<String>
 }
 
-class DeepgramTranscriber internal constructor(val dto: DeepgramTranscriberDto) : DeepgramTranscriberUnion by dto {
-  init {
-    dto.provider = TranscriberType.DEEPGRAM
-  }
-}
+@AssistantDslMarker
+class DeepgramTranscriber internal constructor(internal val dto: DeepgramTranscriberDto) :
+  DeepgramTranscriberUnion by dto

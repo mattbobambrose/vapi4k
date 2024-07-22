@@ -16,11 +16,15 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.responses.CustomerDto
+import com.vapi4k.dsl.assistant.enums.TalkscriberLanguageType
+import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
+import com.vapi4k.responses.assistant.TalkscriberTranscriberDto
 
-interface CustomerUnion {
-  var number: String
+interface TalkscriberTranscriberUnion {
+  var transcriberModel: TalkscriberModelType
+  var transcriberLanguage: TalkscriberLanguageType
 }
 
 @AssistantDslMarker
-class Customer(dto: CustomerDto) : CustomerUnion by dto
+class TalkscriberTranscriber internal constructor(internal val dto: TalkscriberTranscriberDto) :
+  TalkscriberTranscriberUnion by dto

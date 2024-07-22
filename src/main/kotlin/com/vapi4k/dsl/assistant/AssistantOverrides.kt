@@ -47,23 +47,23 @@ interface AssistantOverridesUnion {
 
 @AssistantDslMarker
 data class AssistantOverrides internal constructor(
-  internal val request: JsonElement,
-  internal val overridesDto: AssistantOverridesDto,
-) : AssistantOverridesUnion by overridesDto {
+  val request: JsonElement,
+  private val dto: AssistantOverridesDto,
+) : AssistantOverridesUnion by dto {
 
   fun model(block: Model.() -> Unit) {
-    Model(request, overridesDto.modelDto).apply(block)
+    Model(request, dto.modelDto).apply(block)
   }
 
   fun voice(block: VoiceOverrides.() -> Unit) {
-    VoiceOverrides(overridesDto.voiceDto).apply(block)
+    VoiceOverrides(dto.voiceDto).apply(block)
   }
 
   fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
-    overridesDto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
+    dto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
   }
 
   fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) {
-    overridesDto.transcriberDto = GladiaTranscriberDto().also { GladiaTranscriber(it).apply(block) }
+    dto.transcriberDto = GladiaTranscriberDto().also { GladiaTranscriber(it).apply(block) }
   }
 }

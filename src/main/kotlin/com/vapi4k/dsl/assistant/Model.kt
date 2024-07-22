@@ -33,12 +33,12 @@ interface ModelUnion {
 
 @AssistantDslMarker
 class Model(
-  internal val request: JsonElement,
-  internal val modelDto: ModelDto,
-) : ModelUnion by modelDto {
-  internal val messages get() = modelDto.messages
-  internal val toolDtos get() = modelDto.tools
-  internal val functions get() = modelDto.functions
+  val request: JsonElement,
+  private val dto: ModelDto,
+) : ModelUnion by dto {
+  internal val messages get() = dto.messages
+  internal val toolDtos get() = dto.tools
+  internal val functions get() = dto.functions
   internal val messageCallId get() = request.messageCallId
 
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
@@ -66,6 +66,6 @@ class Model(
   }
 
   fun knowledgeBase(block: KnowledgeBase.() -> Unit) {
-    KnowledgeBase(request, modelDto.knowledgeBase).apply(block)
+    KnowledgeBase(request, dto.knowledgeBase).apply(block)
   }
 }

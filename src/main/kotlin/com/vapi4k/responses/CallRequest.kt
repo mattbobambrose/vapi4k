@@ -18,30 +18,13 @@ package com.vapi4k.responses
 
 
 import com.vapi4k.dsl.assistant.AssistantIdUnion
+import com.vapi4k.dsl.assistant.CallUnion
 import com.vapi4k.dsl.assistant.SquadIdUnion
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.SquadDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-interface CustomerUnion {
-  var number: String
-}
-
-// TODO: Make polymorphic
-@Serializable
-data class CustomerDto(
-  override var number: String = "",
-
-  var sipUri: String = "",
-  var name: String = "",
-  var extension: String = "",
-) : CustomerUnion
-
-interface CallUnion {
-  var phoneNumberId: String
-}
 
 @Serializable
 data class CallRequest(

@@ -55,7 +55,7 @@ interface AssistantUnion {
 
 @AssistantDslMarker
 data class Assistant internal constructor(
-  internal val request: JsonElement,
+  val request: JsonElement,
   internal val assistantDto: AssistantDto,
   internal val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantUnion by assistantDto {

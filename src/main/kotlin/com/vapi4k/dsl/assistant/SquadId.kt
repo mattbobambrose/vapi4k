@@ -26,9 +26,8 @@ interface SquadIdUnion {
 @AssistantDslMarker
 data class SquadId internal constructor(
   val request: JsonElement,
-  val squadIdUnion: SquadIdUnion,
+  private val squadIdUnion: SquadIdUnion,
 ) {
-  //private val messageResponse get() =
   var id
     get() = squadIdUnion.squadId
     set(value) {

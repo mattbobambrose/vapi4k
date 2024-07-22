@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.assistant.enums.UNSPECIFIED_DEFAULT
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

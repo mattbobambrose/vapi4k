@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -58,7 +59,7 @@ enum class GladiaLanguageType(internal val desc: String) {
   GUJARATI("gu"),
   HAITIAN("ht"),
   HAUSA("ha"),
-  HAW("haw"),  // Unknown
+  HAWAIIAN("haw"),
   HEBREW("he"),
   HINDI("hi"),
   HUNGARIAN("hu"),
@@ -118,7 +119,7 @@ enum class GladiaLanguageType(internal val desc: String) {
   THAI("th"),
   TIBETAN("bo"),
   TURKISH("tr"),
-  Turkmen("tk"),
+  TURKMEN("tk"),
   UKRAINIAN("uk"),
   URDU("ur"),
   UZBEK("uz"),

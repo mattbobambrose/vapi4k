@@ -22,6 +22,6 @@ import kotlinx.serialization.json.JsonElement
 
 @AssistantDslMarker
 class KnowledgeBase internal constructor(
-  internal val request: JsonElement,
-  internal val knowledgeBaseDto: KnowledgeBaseDto
-) : KnowledgeBaseUnion by knowledgeBaseDto
+  val request: JsonElement,
+  private val dto: KnowledgeBaseDto,
+) : KnowledgeBaseUnion by dto

@@ -21,24 +21,21 @@ import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
 data class AssistantDestinations internal constructor(
-  val member: Member,
-  val memberDto: MemberDto,
+  internal val member: Member,
+  internal val memberDto: MemberDto,
 ) {
   fun destination(block: AssistantDestination.() -> Unit) {
     memberDto.assistantDestinations +=
-      AssistantDestination(AssistantDestinationDto().apply { type = "assistant" })
-        .apply(block).dto
+      AssistantDestination(AssistantDestinationDto().apply { type = "assistant" }).apply(block).dto
   }
 }
 
 interface AssistantDestinationUnion {
-  //    var type: String
   var assistantName: String
   var message: String
   var description: String
 }
 
 @AssistantDslMarker
-data class AssistantDestination internal constructor(
-  val dto: AssistantDestinationDto,
-) : AssistantDestinationUnion by dto
+data class AssistantDestination internal constructor(internal val dto: AssistantDestinationDto) :
+  AssistantDestinationUnion by dto

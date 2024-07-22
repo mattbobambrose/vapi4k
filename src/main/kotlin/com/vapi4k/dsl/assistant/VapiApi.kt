@@ -41,7 +41,6 @@ enum class ApiObjectType(val endpoint: String) {
   FILES("file"),
   SQUADS("squad"),
   TOOLS("tool");
-
 }
 
 @AssistantDslMarker

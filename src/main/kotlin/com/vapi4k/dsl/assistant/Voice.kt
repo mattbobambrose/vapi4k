@@ -33,7 +33,7 @@ interface VoiceUnion {
 }
 
 @AssistantDslMarker
-data class Voice internal constructor(val voiceDto: VoiceDto) : VoiceUnion by voiceDto
+data class Voice internal constructor(internal val dto: VoiceDto) : VoiceUnion by dto
 
 @AssistantDslMarker
-data class VoiceOverrides internal constructor(val voiceDto: VoiceDto) : VoiceUnion by voiceDto
+data class VoiceOverrides internal constructor(internal val dto: VoiceDto) : VoiceUnion by dto

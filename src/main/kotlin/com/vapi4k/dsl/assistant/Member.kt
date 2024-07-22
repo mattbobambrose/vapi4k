@@ -43,11 +43,11 @@ data class Member(
   }
 
   @AssistantDslMarker
-  data class AssistantId internal constructor(val memberDto: MemberDto) {
+  class AssistantId internal constructor(private val dto: MemberDto) {
     var id
-      get() = memberDto.assistantId
+      get() = dto.assistantId
       set(value) {
-        memberDto.assistantId = value
+        dto.assistantId = value
       }
   }
 }

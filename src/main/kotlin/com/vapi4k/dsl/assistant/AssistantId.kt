@@ -27,7 +27,7 @@ interface AssistantIdUnion {
 @AssistantDslMarker
 data class AssistantId internal constructor(
   val request: JsonElement,
-  val assistantIdUnion: AssistantIdUnion
+  internal val assistantIdUnion: AssistantIdUnion,
 ) : AssistantIdUnion by assistantIdUnion {
   var id
     get() = assistantIdUnion.assistantId

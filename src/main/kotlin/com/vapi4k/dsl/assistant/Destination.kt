@@ -32,12 +32,14 @@ internal interface SipDestinationUnion {
   var description: String
 }
 
+@AssistantDslMarker
 class NumberDestination internal constructor(
   val request: JsonElement,
-  val numberDto: NumberDestinationDto,
-) : NumberDestinationUnion by numberDto
+  private val dto: NumberDestinationDto,
+) : NumberDestinationUnion by dto
 
+@AssistantDslMarker
 class SipDestination internal constructor(
   val request: JsonElement,
-  val sipDto: SipDestinationDto,
-) : SipDestinationUnion by sipDto
+  private val dto: SipDestinationDto,
+) : SipDestinationUnion by dto

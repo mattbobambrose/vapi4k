@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import com.vapi4k.dsl.assistant.enums.GladiaModelType.entries
+import com.vapi4k.dsl.assistant.enums.TalkscriberModelType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -26,20 +26,20 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = GladiaModelTypeSerializer::class)
-enum class GladiaModelType(internal val desc: String) {
-  FAST("fast"),
-  ACCURATE("accurate"),
+
+@Serializable(with = TalkscriberModelTypeSerializer::class)
+enum class TalkscriberModelType(internal val desc: String) {
+  WHISPER("whisper"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 }
 
-private object GladiaModelTypeSerializer : KSerializer<GladiaModelType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("GladiaModelType", PrimitiveKind.STRING)
+private object TalkscriberModelTypeSerializer : KSerializer<TalkscriberModelType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("TalkscriberModelType", PrimitiveKind.STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: GladiaModelType,
+    value: TalkscriberModelType,
   ) = encoder.encodeString(value.desc)
 
   override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }

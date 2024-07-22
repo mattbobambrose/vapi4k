@@ -18,7 +18,6 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.dsl.assistant.enums.GladiaLanguageType
 import com.vapi4k.dsl.assistant.enums.GladiaModelType
-import com.vapi4k.dsl.assistant.enums.TranscriberType
 import com.vapi4k.responses.assistant.GladiaTranscriberDto
 
 interface GladiaTranscriberUnion {
@@ -30,9 +29,4 @@ interface GladiaTranscriberUnion {
   var audioEnhancer: Boolean
 }
 
-class GladiaTranscriber internal constructor(val transcriberDto: GladiaTranscriberDto) :
-  GladiaTranscriberUnion by transcriberDto {
-  init {
-    transcriberDto.provider = TranscriberType.GLADIA
-  }
-}
+class GladiaTranscriber internal constructor(internal val dto: GladiaTranscriberDto) : GladiaTranscriberUnion by dto

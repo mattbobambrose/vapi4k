@@ -17,11 +17,14 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.CallRequest
-import com.vapi4k.responses.CallUnion
 import com.vapi4k.utils.JsonElementUtils
 
+interface CallUnion {
+  var phoneNumberId: String
+}
+
 @AssistantDslMarker
-class Call internal constructor(val callRequest: CallRequest) : CallUnion by callRequest {
+class Call internal constructor(internal val callRequest: CallRequest) : CallUnion by callRequest {
   private var primaryErorMsg = ""
   private var overridesErorMsg = ""
 
