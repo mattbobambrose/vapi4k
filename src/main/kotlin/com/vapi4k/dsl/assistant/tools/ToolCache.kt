@@ -70,12 +70,24 @@ internal object ToolCache {
   fun removeToolCallFromCache(
     messageCallId: String,
     block: (FunctionInfo) -> Unit,
-  ): FunctionInfo? = toolCallCache.remove(messageCallId)?.also { block(it) }
+  ): FunctionInfo? =
+    toolCallCache.remove(messageCallId)
+      ?.also { block(it) }
+      .also {
+        if (it == null)
+          logger.error { "Tool not found in cache: $messageCallId" }
+      }
 
   fun removeFunctionFromCache(
     messageCallId: String,
     block: (FunctionInfo) -> Unit,
-  ): FunctionInfo? = functionCache.remove(messageCallId)?.also { block(it) }
+  ): FunctionInfo? =
+    functionCache.remove(messageCallId)
+      ?.also { block(it) }
+      .also { funcInfo ->
+        if (funcInfo == null)
+          logger.error { "Function not found in cache: $messageCallId" }
+      }
 
 
   private fun addToCache(
@@ -147,7 +159,8 @@ internal object ToolCache {
       // TODO Fix ordering
       logger.info { "Invoking method $fqName with args $args" }
       logger.info { "Invoking method $fqName with vals $vals" }
-      //val params = method.parameters.toList()
+      val params = method.parameters.toList()
+      val kparams = function.parameters
       val result = method.invoke(obj, *vals.toTypedArray<String>())
       return if (isVoid) "" else result.toString()
     }

@@ -38,6 +38,9 @@ object JsonUtils {
 
   inline fun <reified T> JsonElement.toObjectList() = jsonArray.map { Json.decodeFromJsonElement<T>(it) }
 
+  val JsonElement.isEmpty get() = jsonObject.isEmpty()
+  fun JsonElement.containsKey(key: String) = jsonObject.containsKey(key)
+
   val prettyFormat by lazy { Json { prettyPrint = true } }
   val rawFormat by lazy { Json { prettyPrint = false } }
 

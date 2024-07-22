@@ -70,6 +70,8 @@ data class DeepgramTranscriberDto(
 
   @SerialName("language")
   override var transcriberLanguage: DeepgramLanguageType = DeepgramLanguageType.UNSPECIFIED,
+  @Transient
+  var customLanguage: String = "",
 
   override var smartFormat: Boolean = false,
   override val keywords: MutableList<String> = mutableListOf(),

@@ -20,7 +20,7 @@ import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -96,7 +96,7 @@ enum class DeepgramLanguageType(internal val desc: String) {
 }
 
 private object DeepgramLanguageTypeSerializer : KSerializer<DeepgramLanguageType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DeepgramLanguageType", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DeepgramLanguageType", STRING)
 
   override fun serialize(
     encoder: Encoder,
