@@ -16,13 +16,32 @@
 
 package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.common.Serializers.VoiceTypeSerializer
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import com.vapi4k.dsl.assistant.enums.VoiceType.entries
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = VoiceTypeSerializer::class)
-enum class VoiceType(val desc: String) {
+enum class VoiceType(internal val desc: String) {
   ANDREW("Andrew"),
   BRIAN("Brian"),
   EMMA("Emma"),
-  UNKNOWN("Unknown")
+
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+}
+
+private object VoiceTypeSerializer : KSerializer<VoiceType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("VoiceType", STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: VoiceType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
 }

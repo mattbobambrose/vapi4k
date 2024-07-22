@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesUnion
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -44,17 +45,27 @@ data class AssistantOverridesDto(
   override val clientMessages: MutableSet<String> = mutableSetOf(),
   override val serverMessages: MutableSet<String> = mutableSetOf(),
 
-  val model: ModelDto = ModelDto(),
-  val voice: VoiceDto = VoiceDto(),
   val endCallPhrases: MutableList<String> = mutableListOf(),
 
+  @SerialName("model")
+  val modelDto: ModelDto = ModelDto(),
+  @SerialName("voice")
+  val voiceDto: VoiceDto = VoiceDto(),
+
+  @SerialName("transcriber")
+  var transcriberDto: AbstractTranscriberDto = DeepgramTranscriberDto(),
+
   // TODO: Came from squad assistant
-  val transportConfigurations: MutableList<TransportConfiguration> = mutableListOf(),
+  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
   val variableValues: MutableMap<String, String> = mutableMapOf(),
-  val voicemailDetection: VoicemailDetectionDto = VoicemailDetectionDto(),
-  val transcriber: TranscriberDto = TranscriberDto(),
   val metadata: MutableMap<String, String> = mutableMapOf(),
-  val analysisPlan: AnalysisPlanDto = AnalysisPlanDto(),
-  val artifactPlan: ArtifactPlanDto = ArtifactPlanDto(),
-  val messagePlan: MessagePlanDto = MessagePlanDto(),
+
+  @SerialName("voicemailDetection")
+  val voicemailDetectionDto: VoicemailDetectionDto = VoicemailDetectionDto(),
+  @SerialName("analysisPlan")
+  val analysisPlanDto: AnalysisPlanDto = AnalysisPlanDto(),
+  @SerialName("artifactPlan")
+  val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
+  @SerialName("messagePlan")
+  val messagePlanDto: MessagePlanDto = MessagePlanDto(),
 ) : AssistantOverridesUnion

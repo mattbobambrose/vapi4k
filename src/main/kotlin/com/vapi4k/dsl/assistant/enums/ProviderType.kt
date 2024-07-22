@@ -16,12 +16,30 @@
 
 package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.common.Serializers.ProviderTypeSerializer
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import com.vapi4k.dsl.assistant.enums.ProviderType.entries
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ProviderTypeSerializer::class)
-enum class ProviderType(val desc: String) {
+enum class ProviderType(internal val desc: String) {
   AZURE("azure"),
-  UNKNOWN("unknown")
+
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
 }
 
+private object ProviderTypeSerializer : KSerializer<ProviderType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ProviderType", STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: ProviderType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
+}

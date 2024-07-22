@@ -19,7 +19,7 @@ package com.vapi4k.responses
 
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantIdUnion
-import com.vapi4k.dsl.assistant.SquadIdUnion
+import com.vapi4k.dsl.assistant.squad.SquadIdUnion
 import com.vapi4k.responses.assistant.AbstractDestinationDto
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
@@ -34,8 +34,10 @@ data class AssistantRequestResponse(
   var destination: AbstractDestinationDto = NumberDestinationDto(),
 
   override var assistantId: String = "",
+
   @SerialName("assistant")
   val assistantDto: AssistantDto = AssistantDto(),
+
   @SerialName("assistantOverrides")
   override val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),
 

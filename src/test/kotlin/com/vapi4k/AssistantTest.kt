@@ -17,12 +17,13 @@
 package com.vapi4k
 
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
-import com.vapi4k.dsl.assistant.ToolCache.resetCaches
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.enums.DeepgramModelType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.assistant.eq
+import com.vapi4k.dsl.assistant.tools.ToolCache.resetCaches
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
@@ -82,7 +83,7 @@ class AssistantTest {
         }
       }
     }
-    assert(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type }.content == "This is the test request start message")
+    assert(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type }.content == "This is the test request start message")
   }
 
   @Test
@@ -107,7 +108,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
       assert(content == delayedMessage)
       assert(timingMilliseconds == 2000)
     }
@@ -134,7 +135,7 @@ class AssistantTest {
         }
       }
     }
-    assert(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }.timingMilliseconds == -1)
+    assert(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }.timingMilliseconds == -1)
   }
 
   @Test
@@ -187,7 +188,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
       assertEquals(content, secondDelayedMessage)
     }
   }
@@ -215,7 +216,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
       assertEquals(content, secondDelayedMessage)
     }
   }
@@ -243,7 +244,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
       assertEquals(timingMilliseconds, 1000)
     }
   }
@@ -272,7 +273,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
       assertEquals(content, secondDelayedMessage)
       assertEquals(timingMilliseconds, 1000)
     }
@@ -307,7 +308,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.model) {
+    with(assistant.assistantDto.modelDto) {
       val msgs = tools.first().messages
       with(msgs.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isEmpty() }) {
         assertEquals(startMessage, content)
@@ -374,7 +375,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.model) {
+    with(assistant.assistantDto.modelDto) {
       val msgs = tools.first().messages
       with(msgs.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isEmpty() }) {
         assertEquals(startMessage, content)
@@ -442,29 +443,29 @@ class AssistantTest {
       }
     }
 
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isEmpty() }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isEmpty() }) {
       assertEquals(startMessage, content)
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isEmpty() }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isEmpty() }) {
       assertEquals(completeMessage, content)
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isEmpty() }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isEmpty() }) {
       assertEquals(failedMessage, content)
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isEmpty() }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isEmpty() }) {
       assertEquals(delayedMessage, content)
       assertEquals(1000, timingMilliseconds)
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isNotEmpty() }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isNotEmpty() }) {
       assertEquals(chicagoIllinoisStartMessage + "2", content)
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isNotEmpty() }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isNotEmpty() }) {
       assertEquals(chicagoIllinoisCompleteMessage + "2", content)
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isNotEmpty() }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isNotEmpty() }) {
       assertEquals(chicagoIllinoisFailedMessage + "2", content)
     }
-    with(assistant.assistantDto.model.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isNotEmpty() }) {
+    with(assistant.assistantDto.modelDto.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isNotEmpty() }) {
       assertEquals(chicagoIllinoisDelayedMessage + "2", content)
       assertEquals(3000, timingMilliseconds)
     }
@@ -545,4 +546,21 @@ class AssistantTest {
     }
 }
   """
+
+  @Test
+  fun `multiple transcriber decls`() {
+    val request = assistantRequest.toJsonElement()
+    assertThrows(IllegalStateException::class.java) {
+      val assistant = assistant(request) {
+        deepGramTranscriber {
+          this.transcriberModel = DeepgramModelType.BASE
+        }
+
+        deepGramTranscriber {
+          this.transcriberModel = DeepgramModelType.BASE
+        }
+      }
+    }
+
+  }
 }

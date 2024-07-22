@@ -18,6 +18,7 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.responses.AssistantRequestResponse
+import io.ktor.server.config.ApplicationConfig
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
@@ -34,6 +35,8 @@ class Vapi4kConfig internal constructor() {
   init {
     Assistant.config = this
   }
+
+  internal lateinit var applicationConfig: ApplicationConfig
 
   internal var assistantRequest: (suspend (request: JsonElement) -> AssistantRequestResponse)? = null
   internal var allRequests = mutableListOf<(RequestArgs)>()

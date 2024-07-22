@@ -20,13 +20,14 @@ import com.vapi4k.dsl.assistant.AssistantUnion
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
 data class AssistantDto(
   // TODO: Came from squad assistant
-  val transportConfigurations: List<TransportConfiguration> = listOf(),
+  val transportConfigurations: List<TransportConfigurationDto> = listOf(),
 
   override var name: String = "",
   override var firstMessage: String = "",
@@ -54,31 +55,39 @@ data class AssistantDto(
   override var modelOutputInMessagesEnabled: Boolean = false,
   override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
 
-  val model: ModelDto = ModelDto(),
-  val voice: VoiceDto = VoiceDto(),
-  val transcriber: TranscriberDto = TranscriberDto(),
+  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
 
-  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNKNOWN,
-
-  // TODO: Add verbs and enums
-  val voicemailDetection: VoicemailDetectionDto = VoicemailDetectionDto(),
-  val metadata: MutableMap<String, String> = mutableMapOf(),
-  val analysisPlan: AnalysisPlanDto = AnalysisPlanDto(),
-  val artifactPlan: ArtifactPlanDto = ArtifactPlanDto(),
-  val messagePlan: MessagePlanDto = MessagePlanDto(),
-
-  // copy DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES
+  // Need a copy of DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES here, so call toMutableSet()
   override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
   override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
 
+  val metadata: MutableMap<String, String> = mutableMapOf(),
   val endCallPhrases: MutableList<String> = mutableListOf(),
+
+  @SerialName("model")
+  val modelDto: ModelDto = ModelDto(),
+  @SerialName("voice")
+  val voiceDto: VoiceDto = VoiceDto(),
+
+  @SerialName("transcriber")
+  var transcriberDto: AbstractTranscriberDto = DeepgramTranscriberDto(),
+
+  // TODO: Add verbs and enums
+  @SerialName("voicemailDetection")
+  val voicemailDetectionDto: VoicemailDetectionDto = VoicemailDetectionDto(),
+  @SerialName("analysisPlan")
+  val analysisPlanDto: AnalysisPlanDto = AnalysisPlanDto(),
+  @SerialName("artifactPlan")
+  val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
+  @SerialName("messagePlan")
+  val messagePlanDto: MessagePlanDto = MessagePlanDto(),
 
   ) : AssistantUnion {
   @Transient
   var updated = false
 }
 
-val DEFAULT_CLIENT_MESSAGES = mutableSetOf(
+private val DEFAULT_CLIENT_MESSAGES = mutableSetOf(
   AssistantClientMessageType.CONVERSATION_UPDATE,
   AssistantClientMessageType.FUNCTION_CALL,
   AssistantClientMessageType.HANG,
@@ -91,7 +100,7 @@ val DEFAULT_CLIENT_MESSAGES = mutableSetOf(
   AssistantClientMessageType.VOICE_INPUT,
 )
 
-val DEFAULT_SERVER_MESSAGES = mutableSetOf(
+private val DEFAULT_SERVER_MESSAGES = mutableSetOf(
   AssistantServerMessageType.CONVERSATION_UPDATE,
   AssistantServerMessageType.END_OF_CALL_REPORT,
   AssistantServerMessageType.FUNCTION_CALL,

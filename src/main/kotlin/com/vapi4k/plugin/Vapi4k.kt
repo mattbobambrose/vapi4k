@@ -17,9 +17,9 @@
 package com.vapi4k.plugin
 
 import com.vapi4k.dsl.assistant.Assistant
-import com.vapi4k.dsl.assistant.ToolCache.cacheIsActive
-import com.vapi4k.dsl.assistant.ToolCache.removeFunctionFromCache
-import com.vapi4k.dsl.assistant.ToolCache.removeToolCallFromCache
+import com.vapi4k.dsl.assistant.tools.ToolCache.cacheIsActive
+import com.vapi4k.dsl.assistant.tools.ToolCache.removeFunctionFromCache
+import com.vapi4k.dsl.assistant.tools.ToolCache.removeToolCallFromCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dsl.vapi4k.RequestResponseType
 import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
@@ -43,6 +43,7 @@ import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.ReflectionUtils.lambda
+import com.vapi4k.utils.Utils.errorMsg
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
@@ -88,6 +89,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
   application.routing {
     val config = Assistant.config
+    config.applicationConfig = environment?.config ?: error("No environment config found")
 
     get("/") { call.respondText("Hello World!") }
     get("/ping") { call.respondText("pong") }
@@ -110,13 +112,11 @@ object Vapi4kLogger {
   val logger = KotlinLogging.logger {}
 }
 
-private suspend fun KtorCallContext.isValidSecret(
-  configPropertiesSecret: String,
-): Boolean {
+private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
   val secret = call.request.headers["x-vapi-secret"]
   return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
-    Vapi4kLogger.logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
-    call.respond(io.ktor.http.HttpStatusCode.Forbidden, "Invalid secret")
+    logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
+    call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     false
   } else {
     true
@@ -254,8 +254,8 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
             }
           }
         }
-      }.onFailure {
-        logger.error(it) { "Error processing request response callback: ${it.message}" }
+      }.onFailure { e ->
+        logger.error(e) { "Error processing request response callback: ${e.errorMsg}" }
       }
     }
   }
@@ -285,12 +285,12 @@ private data class RequestResponseCallback(
     fun requestCallback(
       requestType: ServerRequestType,
       request: JsonElement,
-    ) = RequestResponseCallback(RequestResponseType.REQUEST, requestType, request)
+    ) = RequestResponseCallback(REQUEST, requestType, request)
 
     fun responseCallback(
       requestType: ServerRequestType,
       response: () -> JsonElement,
       elapsed: Duration,
-    ) = RequestResponseCallback(RequestResponseType.RESPONSE, requestType, response = response, elapsed = elapsed)
+    ) = RequestResponseCallback(RESPONSE, requestType, response = response, elapsed = elapsed)
   }
 }

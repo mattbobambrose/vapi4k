@@ -18,7 +18,7 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.plugin.Vapi4kLogger.logger
 
-enum class ServerRequestType(val desc: String) {
+enum class ServerRequestType(internal val desc: String) {
   ASSISTANT_REQUEST("assistant-request"),
   CONVERSATION_UPDATE("conversation-update"),
   END_OF_CALL_REPORT("end-of-call-report"),

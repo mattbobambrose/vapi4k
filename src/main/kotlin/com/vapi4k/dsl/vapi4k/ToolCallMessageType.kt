@@ -16,13 +16,31 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.common.Serializers.ToolCallMessageTypeSerializer
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import com.vapi4k.dsl.vapi4k.ToolCallMessageType.entries
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ToolCallMessageTypeSerializer::class)
-enum class ToolCallMessageType(val desc: String) {
+enum class ToolCallMessageType(internal val desc: String) {
   REQUEST_COMPLETE("request-complete"),
   REQUEST_FAILED("request-failed"),
-  UNKNOWN("unknown");
+
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
 }
 
+private object ToolCallMessageTypeSerializer : KSerializer<ToolCallMessageType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: ToolCallMessageType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
+}

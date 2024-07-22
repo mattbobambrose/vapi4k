@@ -17,13 +17,91 @@
 package com.vapi4k.responses.assistant
 
 
+import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
+import com.vapi4k.dsl.assistant.enums.DeepgramModelType
+import com.vapi4k.dsl.assistant.enums.GladiaLanguageType
+import com.vapi4k.dsl.assistant.enums.GladiaModelType
+import com.vapi4k.dsl.assistant.enums.TalkscriberLanguageType
+import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
+import com.vapi4k.dsl.assistant.enums.TranscriberType
+import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriberUnion
+import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriberUnion
+import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriberUnion
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+
+@Serializable(with = TranscriberSerializer::class)
+interface AbstractTranscriberDto {
+  val provider: TranscriberType
+}
+
+private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
+  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractTranscriberDto")
+
+  override fun serialize(
+    encoder: Encoder,
+    value: AbstractTranscriberDto,
+  ) {
+    when (value) {
+      is DeepgramTranscriberDto -> encoder.encodeSerializableValue(DeepgramTranscriberDto.serializer(), value)
+      is GladiaTranscriberDto -> encoder.encodeSerializableValue(GladiaTranscriberDto.serializer(), value)
+      is TalkscriberTranscriberDto -> encoder.encodeSerializableValue(TalkscriberTranscriberDto.serializer(), value)
+    }
+  }
+
+  override fun deserialize(decoder: Decoder): AbstractTranscriberDto {
+    throw NotImplementedError("Deserialization is not supported")
+  }
+}
 
 @Serializable
-data class TranscriberDto(
-  var provider: String = "",
-  var model: String = "",
-  var language: String = "",
-  var smartFormat: Boolean = false,
-  val keywords: MutableList<String> = mutableListOf()
-)
+data class DeepgramTranscriberDto(
+  @EncodeDefault
+  override var provider: TranscriberType = TranscriberType.DEEPGRAM,
+
+  @SerialName("model")
+  override var transcriberModel: DeepgramModelType = DeepgramModelType.UNSPECIFIED,
+
+  @SerialName("language")
+  override var transcriberLanguage: DeepgramLanguageType = DeepgramLanguageType.UNSPECIFIED,
+
+  override var smartFormat: Boolean = false,
+  override val keywords: MutableList<String> = mutableListOf(),
+) : DeepgramTranscriberUnion, AbstractTranscriberDto
+
+
+@Serializable
+data class GladiaTranscriberDto(
+  @EncodeDefault
+  override val provider: TranscriberType = TranscriberType.GLADIA,
+
+  @SerialName("model")
+  override var transcriberModel: GladiaModelType = GladiaModelType.UNSPECIFIED,
+
+  @SerialName("language")
+  override var transcriberLanguage: GladiaLanguageType = GladiaLanguageType.UNSPECIFIED,
+
+  override var languageBehavior: String = "",
+  override var transcriptionHint: String = "",
+  override var prosody: Boolean = false,
+  override var audioEnhancer: Boolean = false,
+) : GladiaTranscriberUnion, AbstractTranscriberDto
+
+@Serializable
+data class TalkscriberTranscriberDto(
+  @EncodeDefault
+  override var provider: TranscriberType = TranscriberType.GLADIA,
+
+  @SerialName("model")
+  override var transcriberModel: TalkscriberModelType = TalkscriberModelType.UNSPECIFIED,
+
+  @SerialName("language")
+  override var transcriberLanguage: TalkscriberLanguageType = TalkscriberLanguageType.UNSPECIFIED,
+
+  ) : TalkscriberTranscriberUnion, AbstractTranscriberDto

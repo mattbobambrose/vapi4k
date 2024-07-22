@@ -16,7 +16,13 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.dsl.assistant.model.Model
+import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
+import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
+import com.vapi4k.dsl.assistant.voice.VoiceOverrides
 import com.vapi4k.responses.assistant.AssistantOverridesDto
+import com.vapi4k.responses.assistant.DeepgramTranscriberDto
+import com.vapi4k.responses.assistant.GladiaTranscriberDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesUnion {
@@ -45,15 +51,23 @@ interface AssistantOverridesUnion {
 
 @AssistantDslMarker
 data class AssistantOverrides internal constructor(
-  internal val request: JsonElement,
-  internal val overridesDto: AssistantOverridesDto,
-) : AssistantOverridesUnion by overridesDto {
+  val request: JsonElement,
+  private val dto: AssistantOverridesDto,
+) : AssistantOverridesUnion by dto {
 
   fun model(block: Model.() -> Unit) {
-    Model(request, overridesDto.model).apply(block)
+    Model(request, dto.modelDto).apply(block)
   }
 
   fun voice(block: VoiceOverrides.() -> Unit) {
-    VoiceOverrides(overridesDto.voice).apply(block)
+    VoiceOverrides(dto.voiceDto).apply(block)
+  }
+
+  fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
+    dto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
+  }
+
+  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) {
+    dto.transcriberDto = GladiaTranscriberDto().also { GladiaTranscriber(it).apply(block) }
   }
 }

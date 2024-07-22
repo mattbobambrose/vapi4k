@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
-import com.vapi4k.responses.assistant.ToolMessage
-import com.vapi4k.responses.assistant.ToolMessageCondition.Companion.toolMessageCondition
+import com.vapi4k.responses.assistant.ToolMessageConditionDto.Companion.toolMessageCondition
+import com.vapi4k.responses.assistant.ToolMessageDto
 
 infix fun String.eq(value: String) =
   toolMessageCondition(this, "eq", value)
@@ -74,5 +74,5 @@ infix fun String.lt(value: Boolean) =
 infix fun String.lte(value: Boolean) =
   toolMessageCondition(this, "lte", value)
 
-internal val ToolMessageType.isMatching: (ToolMessage) -> Boolean
+internal val ToolMessageType.isMatching: (ToolMessageDto) -> Boolean
   get() = { it.type == type && it.conditions.isEmpty() }
