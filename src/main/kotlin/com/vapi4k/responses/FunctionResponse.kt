@@ -16,11 +16,13 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.dsl.assistant.tools.ToolCache.functionCache
+import com.vapi4k.dsl.assistant.tools.ToolCache.getFunctionFromCache
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.utils.JsonElementUtils.functionName
 import com.vapi4k.utils.JsonElementUtils.functionParameters
+import com.vapi4k.utils.JsonElementUtils.id
 import com.vapi4k.utils.JsonElementUtils.messageCallId
+import com.vapi4k.utils.JsonUtils.containsKey
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -30,17 +32,19 @@ class FunctionResponse(var result: String = "") {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
-          val messageCallId = request.messageCallId
+          val cacheKey = if (request.containsKey("message")) request.messageCallId else request.id
           val funcName = request.functionName
           val args = request.functionParameters
-          response.result = runCatching {
-            val functionInfo = functionCache[messageCallId] ?: error("Session not found: $messageCallId")
-            functionInfo.getFunction(funcName).invokeToolMethod(args, request)
-          }.getOrElse { e ->
-            val errorMsg = e.message ?: "Error invoking function"
-            logger.error(e) { errorMsg }
-            errorMsg
-          }
+          response.result =
+            runCatching {
+              getFunctionFromCache(cacheKey)
+                .getFunction(funcName)
+                .invokeToolMethod(args, request)
+            }.getOrElse { e ->
+              val errorMsg = e.message ?: "Error invoking function"
+              logger.error(e) { errorMsg }
+              errorMsg
+            }
         }
   }
 }

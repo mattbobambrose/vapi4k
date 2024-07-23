@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.dsl.assistant.model.Model
+import com.vapi4k.dsl.assistant.model.TopLevelObject
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.voice.VoiceOverrides
@@ -52,11 +53,12 @@ interface AssistantOverridesUnion {
 @AssistantDslMarker
 data class AssistantOverrides internal constructor(
   val request: JsonElement,
+  val topLevelObject: TopLevelObject,
   private val dto: AssistantOverridesDto,
 ) : AssistantOverridesUnion by dto {
 
   fun model(block: Model.() -> Unit) {
-    Model(request, dto.modelDto).apply(block)
+    Model(request, topLevelObject, dto.modelDto).apply(block)
   }
 
   fun voice(block: VoiceOverrides.() -> Unit) {

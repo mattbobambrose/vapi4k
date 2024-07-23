@@ -37,7 +37,7 @@ object AssistantDsl {
     block: Assistant.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      Assistant(request, messageResponse.assistantDto, messageResponse.assistantOverridesDto).apply(block)
+      with(messageResponse) { Assistant(request, "", assistantDto, assistantOverridesDto).apply(block) }
     }.messageResponse
 
   fun assistantId(
@@ -45,7 +45,7 @@ object AssistantDsl {
     block: AssistantId.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      AssistantId(request, messageResponse).apply(block)
+      AssistantId(request, "", messageResponse).apply(block)
     }.messageResponse
 
   fun squad(
@@ -53,7 +53,7 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      Squad(request, messageResponse.squadDto).apply(block)
+      Squad(request, "", messageResponse.squadDto).apply(block)
     }.messageResponse
 
   fun squadId(

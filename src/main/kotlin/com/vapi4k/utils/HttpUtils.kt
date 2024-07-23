@@ -29,8 +29,8 @@ import kotlinx.serialization.json.JsonElement
 
 object HttpUtils {
 
-  val HttpResponse.jsonElement: JsonElement
-    get() = runBlocking { Json.parseToJsonElement(this@jsonElement.bodyAsText()) }
+  fun HttpResponse.bodyAsJsonElement(): JsonElement =
+    runBlocking { Json.parseToJsonElement(this@bodyAsJsonElement.bodyAsText()) }
 
   val httpClient by lazy {
     HttpClient(CIO) {

@@ -37,7 +37,12 @@ data class Member(
 
   fun assistant(block: Assistant.() -> Unit) {
     checkIfDeclared("Member already has an assistant assigned")
-    Assistant(members.squad.request, memberDto.assistant, memberDto.assistantOverrides).apply(block)
+    Assistant(
+      members.squad.request,
+      members.squad.cacheId,
+      memberDto.assistant,
+      memberDto.assistantOverrides
+    ).apply(block)
   }
 
   fun destinations(block: AssistantDestinations.() -> Unit) {

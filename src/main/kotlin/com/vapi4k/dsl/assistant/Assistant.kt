@@ -21,6 +21,7 @@ import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.enums.VoiceType
 import com.vapi4k.dsl.assistant.model.Model
+import com.vapi4k.dsl.assistant.model.TopLevelObject
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
@@ -63,16 +64,17 @@ interface AssistantUnion {
 @AssistantDslMarker
 data class Assistant internal constructor(
   val request: JsonElement,
+  override val cacheId: String,
   internal val assistantDto: AssistantDto,
   internal val assistantOverridesDto: AssistantOverridesDto,
-) : AssistantUnion by assistantDto {
+) : AssistantUnion by assistantDto, TopLevelObject {
   // errorMsg prevents further assistant or assistantId assignments
   private var errorMsg = ""
 
   private fun checkIfDeclared(newStr: String) = if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
 
   fun model(block: Model.() -> Unit) {
-    Model(request, assistantDto.modelDto).apply(block)
+    Model(request, this, assistantDto.modelDto).apply(block)
   }
 
   fun voice(block: Voice.() -> Unit) {
@@ -97,7 +99,7 @@ data class Assistant internal constructor(
   }
 
   fun assistantOverrides(block: AssistantOverrides.() -> Unit) {
-    AssistantOverrides(request, assistantOverridesDto).apply(block)
+    AssistantOverrides(request, this, assistantOverridesDto).apply(block)
   }
 
   companion object {

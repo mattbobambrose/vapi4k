@@ -19,21 +19,28 @@ package com.vapi4k.dsl.assistant.api
 import com.typesafe.config.ConfigFactory
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.tools.ToolCache.swapCacheKeys
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.api.CallRequestDto
+import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.JsonUtils.get
+import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.JsonUtils.toJsonString
 import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.Utils.nextCacheId
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.jsonObject
 
 
 enum class ApiObjectType(val endpoint: String) {
@@ -50,23 +57,36 @@ class VapiApi private constructor(
   val config: ApplicationConfig,
   private val authString: String,
 ) {
-  fun phone(block: Phone.() -> CallRequestDto) =
-    runBlocking {
-      val callRequest =
-        Phone().runCatching(block)
-          .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
-          .onFailure { e -> logger.error(e) { "Failed to create call request: ${e.errorMsg}" } }
-          .getOrThrow()
+  fun phone(block: Phone.() -> CallRequestDto): HttpResponse {
+    val phone = Phone()
+    val httpResponse =
+      runBlocking {
 
-      runCatching {
-        httpClient.post("$VAPI_API_URL/call/phone") {
-          configCall(authString)
-          setBody(callRequest)
-        }
-      }.onSuccess { logger.info { "Call made successfully" } }
-        .onFailure { e -> logger.error(e) { "Failed to make call: ${e.errorMsg}" } }
-        .getOrThrow()
+        val callRequest =
+          phone.runCatching(block)
+            .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
+            .onFailure { e -> logger.error(e) { "Failed to create call request: ${e.errorMsg}" } }
+            .getOrThrow()
+
+        runCatching {
+          httpClient.post("$VAPI_API_URL/call/phone") {
+            configCall(authString)
+            setBody(callRequest)
+          }
+        }.onSuccess { logger.info { "Call made successfully" } }
+          .onFailure { e -> logger.error(e) { "Failed to make call: ${e.errorMsg}" } }
+          .getOrThrow()
+      }
+
+    val jsonElement = httpResponse.bodyAsJsonElement()
+    val hasId = jsonElement.jsonObject.containsKey("id")
+    if (hasId) {
+      logger.info { "Call ID: ${jsonElement["id"]}" }
+      swapCacheKeys(phone.cacheId, jsonElement["id"].stringValue)
     }
+
+    return httpResponse
+  }
 
   internal fun test(block: Phone.() -> CallRequestDto) =
     runBlocking {
@@ -140,10 +160,11 @@ class VapiApi private constructor(
 
 @AssistantDslMarker
 class Phone {
-  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto().also { Call(it).apply(block) }
+  internal val cacheId = nextCacheId()
+  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto().also { Call(it, cacheId).apply(block) }
 }
 
 @AssistantDslMarker
 class Save {
-  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto().also { Call(it).apply(block) }
+  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto().also { Call(it, "").apply(block) }
 }

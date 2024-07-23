@@ -36,13 +36,19 @@ import kotlin.time.DurationUnit.MILLISECONDS
 import kotlin.time.DurationUnit.SECONDS
 
 internal object ToolCache {
-  val toolCallCache = ConcurrentHashMap<String, FunctionInfo>()
-  val functionCache = ConcurrentHashMap<String, FunctionInfo>()
+  private val toolCallCache = ConcurrentHashMap<String, FunctionInfo>()
+  private val functionCache = ConcurrentHashMap<String, FunctionInfo>()
 
   private var toolCallCacheIsActive = false
   private var functionCacheIsActive = false
 
   val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
+
+  fun getToolCallFromCache(cacheId: String): FunctionInfo =
+    toolCallCache[cacheId] ?: error("Tool cache key not found: $cacheId")
+
+  fun getFunctionFromCache(cacheId: String): FunctionInfo =
+    functionCache[cacheId] ?: error("Function cache key not found: $cacheId")
 
   fun resetCaches() {
     toolCallCache.clear()
@@ -89,6 +95,14 @@ internal object ToolCache {
           logger.error { "Function not found in cache: $messageCallId" }
       }
 
+  fun swapCacheKeys(
+    oldKey: String,
+    newKey: String,
+  ) {
+    logger.info { "Swapping cache keys: $oldKey -> $newKey" }
+    toolCallCache[newKey] = toolCallCache.remove(oldKey) ?: error("Tool not found in cache: $oldKey")
+    functionCache[newKey] = functionCache.remove(oldKey) ?: error("Function not found in cache: $oldKey")
+  }
 
   private fun addToCache(
     cache: ConcurrentHashMap<String, FunctionInfo>,

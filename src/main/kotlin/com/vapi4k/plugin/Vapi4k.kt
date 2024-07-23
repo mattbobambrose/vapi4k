@@ -38,7 +38,7 @@ import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantRespo
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
-import com.vapi4k.utils.JsonElementUtils
+import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonUtils.toJsonElement
@@ -277,8 +277,8 @@ private suspend fun invokeResponseCallbacks(
 private data class RequestResponseCallback(
   val type: RequestResponseType,
   val requestType: ServerRequestType,
-  val request: JsonElement = JsonElementUtils.emptyJsonElement(),
-  val response: (() -> JsonElement) = { JsonElementUtils.emptyJsonElement() },
+  val request: JsonElement = emptyJsonElement(),
+  val response: (() -> JsonElement) = { emptyJsonElement() },
   val elapsed: Duration = Duration.ZERO,
 ) {
   companion object {

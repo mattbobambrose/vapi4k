@@ -25,7 +25,6 @@ import com.vapi4k.dsl.assistant.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.tools.ToolCache.addToolCallToCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.responses.assistant.ToolDto
-import com.vapi4k.utils.JsonUtils.containsKey
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolFunction
 
@@ -39,8 +38,12 @@ data class Tools internal constructor(internal val model: Model) {
     model.toolDtos += ToolDto().also { toolDto ->
       verifyObject(false, obj)
       populateFunctionDto(obj, toolDto.function)
-      if (model.request.containsKey("message"))
-        addToolCallToCache(model.messageCallId, obj)
+      val cacheId =
+        if (model.topLevelObject.cacheId.isNotEmpty())
+          model.topLevelObject.cacheId
+        else
+          model.messageCallId
+      addToolCallToCache(cacheId, obj)
 
       with(toolDto) {
         type = "function"

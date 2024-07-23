@@ -20,17 +20,21 @@ import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantId
 import com.vapi4k.dsl.assistant.AssistantOverrides
+import com.vapi4k.dsl.assistant.model.TopLevelObject
 import com.vapi4k.dsl.assistant.squad.Squad
 import com.vapi4k.dsl.assistant.squad.SquadId
 import com.vapi4k.responses.api.CallRequestDto
-import com.vapi4k.utils.JsonElementUtils
+import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 
 interface CallUnion {
   var phoneNumberId: String
 }
 
 @AssistantDslMarker
-class Call internal constructor(internal val callRequest: CallRequestDto) : CallUnion by callRequest {
+class Call internal constructor(
+  internal val callRequest: CallRequestDto,
+  override val cacheId: String,
+) : CallUnion by callRequest, TopLevelObject {
   private var primaryErorMsg = ""
   private var overridesErorMsg = ""
 
@@ -42,13 +46,13 @@ class Call internal constructor(internal val callRequest: CallRequestDto) : Call
 
   fun assistantId(block: AssistantId.() -> Unit) {
     checkIfPrimaryDeclared("assistantId{} already called")
-    AssistantId(JsonElementUtils.emptyJsonElement(), callRequest).apply(block)
+    AssistantId(emptyJsonElement(), cacheId, callRequest).apply(block)
   }
 
   fun assistant(block: Assistant.() -> Unit) {
     checkIfPrimaryDeclared("assistant{} already called")
     with(callRequest) {
-      Assistant(JsonElementUtils.emptyJsonElement(), assistantDto, assistantOverridesDto)
+      Assistant(emptyJsonElement(), cacheId, assistantDto, assistantOverridesDto)
         .apply(block)
         .apply { assistantDto.updated = true }
     }
@@ -58,7 +62,7 @@ class Call internal constructor(internal val callRequest: CallRequestDto) : Call
     checkIfOverridesDeclared("assistantOverrides{} already called")
     if (callRequest.assistantDto.updated || callRequest.assistantId.isNotEmpty())
       with(callRequest) {
-        AssistantOverrides(JsonElementUtils.emptyJsonElement(), assistantOverridesDto).apply(block)
+        AssistantOverrides(emptyJsonElement(), this@Call, assistantOverridesDto).apply(block)
       }
     else
       error("assistant{} or assistantId{} must be called before assistantOverrides{}")
@@ -66,14 +70,14 @@ class Call internal constructor(internal val callRequest: CallRequestDto) : Call
 
   fun squadId(block: SquadId.() -> Unit) {
     checkIfPrimaryDeclared("squadId{} already called")
-    SquadId(JsonElementUtils.emptyJsonElement(), callRequest).apply(block)
+    SquadId(emptyJsonElement(), callRequest).apply(block)
   }
 
 
   fun squad(block: Squad.() -> Unit) {
     checkIfPrimaryDeclared("squad{} already called")
     with(callRequest) {
-      Squad(JsonElementUtils.emptyJsonElement(), squadDto).apply(block)
+      Squad(emptyJsonElement(), cacheId, squadDto).apply(block)
     }
   }
 
