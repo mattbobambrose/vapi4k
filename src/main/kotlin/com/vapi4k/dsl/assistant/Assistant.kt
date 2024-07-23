@@ -20,6 +20,7 @@ import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
+import com.vapi4k.dsl.assistant.enums.TranscriberType
 import com.vapi4k.dsl.assistant.enums.VoiceType
 import com.vapi4k.dsl.assistant.model.Model
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
@@ -85,17 +86,26 @@ data class Assistant internal constructor(
 
   fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
     checkIfDeclared("Member already has an deepGramTranscriber assigned")
-    assistantDto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
+    assistantDto.transcriberDto = DeepgramTranscriberDto().also {
+      it.provider = TranscriberType.DEEPGRAM
+      DeepgramTranscriber(it).apply(block)
+    }
   }
 
   fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) {
     checkIfDeclared("Member already has an gladiaTranscriber assigned")
-    assistantDto.transcriberDto = GladiaTranscriberDto().also { GladiaTranscriber(it).apply(block) }
+    assistantDto.transcriberDto = GladiaTranscriberDto().also {
+      it.provider = TranscriberType.GLADIA
+      GladiaTranscriber(it).apply(block)
+    }
   }
 
   fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit) {
     checkIfDeclared("Member already has an talkscriberTranscriber assigned")
-    assistantDto.transcriberDto = TalkscriberTranscriberDto().also { TalkscriberTranscriber(it).apply(block) }
+    assistantDto.transcriberDto = TalkscriberTranscriberDto().also {
+      it.provider = TranscriberType.TALKSCRIBER
+      TalkscriberTranscriber(it).apply(block)
+    }
   }
 
   fun assistantOverrides(block: AssistantOverrides.() -> Unit) {

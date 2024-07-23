@@ -29,7 +29,8 @@ import kotlinx.serialization.encoding.Encoder
 enum class TranscriberType(internal val desc: String) {
   DEEPGRAM("deepgram"),
   GLADIA("gladia"),
-  TALKSCRIBER("talkscriber");
+  TALKSCRIBER("talkscriber"),
+  UNSPECIFIED("unspecified");
 }
 
 private object TranscriberTypeSerializer : KSerializer<TranscriberType> {

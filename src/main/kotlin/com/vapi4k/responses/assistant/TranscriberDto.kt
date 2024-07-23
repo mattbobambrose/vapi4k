@@ -27,7 +27,6 @@ import com.vapi4k.dsl.assistant.enums.TranscriberType
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriberUnion
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriberUnion
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriberUnion
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -50,9 +49,18 @@ private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
     value: AbstractTranscriberDto,
   ) {
     when (value) {
-      is DeepgramTranscriberDto -> encoder.encodeSerializableValue(DeepgramTranscriberDto.serializer(), value)
-      is GladiaTranscriberDto -> encoder.encodeSerializableValue(GladiaTranscriberDto.serializer(), value)
-      is TalkscriberTranscriberDto -> encoder.encodeSerializableValue(TalkscriberTranscriberDto.serializer(), value)
+      is DeepgramTranscriberDto -> {
+        value.language = if (value.customLanguage.isNotEmpty()) value.customLanguage else value.transcriberLanguage.desc
+        encoder.encodeSerializableValue(DeepgramTranscriberDto.serializer(), value)
+      }
+
+      is GladiaTranscriberDto -> {
+        encoder.encodeSerializableValue(GladiaTranscriberDto.serializer(), value)
+      }
+
+      is TalkscriberTranscriberDto -> {
+        encoder.encodeSerializableValue(TalkscriberTranscriberDto.serializer(), value)
+      }
     }
   }
 
@@ -63,13 +71,13 @@ private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
 
 @Serializable
 data class DeepgramTranscriberDto(
-  @EncodeDefault
-  override var provider: TranscriberType = TranscriberType.DEEPGRAM,
+  override var provider: TranscriberType = TranscriberType.UNSPECIFIED,
 
   @SerialName("model")
   override var transcriberModel: DeepgramModelType = DeepgramModelType.UNSPECIFIED,
 
-  @SerialName("language")
+  var language: String = "",
+  @Transient
   override var transcriberLanguage: DeepgramLanguageType = DeepgramLanguageType.UNSPECIFIED,
   @Transient
   var customLanguage: String = "",
@@ -81,8 +89,7 @@ data class DeepgramTranscriberDto(
 
 @Serializable
 data class GladiaTranscriberDto(
-  @EncodeDefault
-  override val provider: TranscriberType = TranscriberType.GLADIA,
+  override var provider: TranscriberType = TranscriberType.UNSPECIFIED,
 
   @SerialName("model")
   override var transcriberModel: GladiaModelType = GladiaModelType.UNSPECIFIED,
@@ -98,8 +105,7 @@ data class GladiaTranscriberDto(
 
 @Serializable
 data class TalkscriberTranscriberDto(
-  @EncodeDefault
-  override var provider: TranscriberType = TranscriberType.GLADIA,
+  override var provider: TranscriberType = TranscriberType.UNSPECIFIED,
 
   @SerialName("model")
   override var transcriberModel: TalkscriberModelType = TalkscriberModelType.UNSPECIFIED,

@@ -19,6 +19,7 @@ package com.vapi4k
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.enums.DeepgramModelType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.dsl.assistant.enums.GladiaModelType
@@ -32,6 +33,7 @@ import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.JsonUtils.toJsonElement
+import com.vapi4k.utils.JsonUtils.toJsonString
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
@@ -612,4 +614,22 @@ class AssistantTest {
       }
     }
   }
+
+  @Test
+  fun `deepgram transcriber custom value`() {
+    val request = assistantRequest.toJsonElement()
+    val assistant = assistant(request) {
+      deepGramTranscriber {
+        transcriberModel = DeepgramModelType.BASE
+        transcriberLanguage = DeepgramLanguageType.GERMAN
+      }
+    }
+    val je = assistant.toJsonElement()
+    println(assistant.toJsonString(true))
+    assertEquals(
+      DeepgramLanguageType.GERMAN.desc,
+      je["assistant.transcriber.language"].stringValue
+    )
+  }
+
 }

@@ -53,6 +53,7 @@ data class AssistantOverridesDto(
   val voiceDto: VoiceDto = VoiceDto(),
 
   @SerialName("transcriber")
+  // DeepgramTranscriberDto is assigned as the default, but is later overwritten
   var transcriberDto: AbstractTranscriberDto = DeepgramTranscriberDto(),
 
   // TODO: Came from squad assistant
