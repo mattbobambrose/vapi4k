@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.CacheId
-import com.vapi4k.dsl.assistant.enums.TranscriberType
 import com.vapi4k.dsl.assistant.model.Model
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
@@ -69,23 +68,14 @@ data class AssistantOverrides internal constructor(
   }
 
   fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
-    dto.transcriberDto = DeepgramTranscriberDto().also {
-      it.provider = TranscriberType.DEEPGRAM
-      DeepgramTranscriber(it).apply(block)
-    }
+    dto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
   }
 
   fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) {
-    dto.transcriberDto = GladiaTranscriberDto().also {
-      it.provider = TranscriberType.GLADIA
-      GladiaTranscriber(it).apply(block)
-    }
+    dto.transcriberDto = GladiaTranscriberDto().also { GladiaTranscriber(it).apply(block) }
   }
 
   fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit) {
-    dto.transcriberDto = TalkscriberTranscriberDto().also {
-      it.provider = TranscriberType.TALKSCRIBER
-      TalkscriberTranscriber(it).apply(block)
-    }
+    dto.transcriberDto = TalkscriberTranscriberDto().also { TalkscriberTranscriber(it).apply(block) }
   }
 }

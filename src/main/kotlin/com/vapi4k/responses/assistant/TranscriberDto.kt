@@ -27,6 +27,7 @@ import com.vapi4k.dsl.assistant.enums.TranscriberType
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriberUnion
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriberUnion
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriberUnion
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -78,7 +79,8 @@ private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
 
 @Serializable
 data class DeepgramTranscriberDto(
-  override var provider: TranscriberType = TranscriberType.UNSPECIFIED,
+  @EncodeDefault
+  override val provider: TranscriberType = TranscriberType.DEEPGRAM,
 
   @SerialName("model")
   override var transcriberModel: DeepgramModelType = DeepgramModelType.UNSPECIFIED,
@@ -96,7 +98,8 @@ data class DeepgramTranscriberDto(
 
 @Serializable
 data class GladiaTranscriberDto(
-  override var provider: TranscriberType = TranscriberType.UNSPECIFIED,
+  @EncodeDefault
+  override val provider: TranscriberType = TranscriberType.GLADIA,
 
   @SerialName("model")
   override var transcriberModel: GladiaModelType = GladiaModelType.UNSPECIFIED,
@@ -112,7 +115,8 @@ data class GladiaTranscriberDto(
 
 @Serializable
 data class TalkscriberTranscriberDto(
-  override var provider: TranscriberType = TranscriberType.UNSPECIFIED,
+  @EncodeDefault
+  override val provider: TranscriberType = TranscriberType.TALKSCRIBER,
 
   @SerialName("model")
   override var transcriberModel: TalkscriberModelType = TalkscriberModelType.UNSPECIFIED,

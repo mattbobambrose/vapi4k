@@ -129,7 +129,7 @@ enum class TalkscriberLanguageType(internal val desc: String) {
   SUNDANESE("su"),
   YUE_CHINESE("yue"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object TalkscriberLanguageTypeSerializer : KSerializer<TalkscriberLanguageType> {

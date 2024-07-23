@@ -128,7 +128,7 @@ enum class GladiaLanguageType(internal val desc: String) {
   YIDDISH("yi"),
   YORUBA("yo"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object GladiaLanguageTypeSerializer : KSerializer<GladiaLanguageType> {

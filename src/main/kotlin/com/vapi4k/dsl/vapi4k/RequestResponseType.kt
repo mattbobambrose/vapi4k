@@ -18,5 +18,5 @@ package com.vapi4k.dsl.vapi4k
 
 enum class RequestResponseType {
   REQUEST,
-  RESPONSE
+  RESPONSE,
 }

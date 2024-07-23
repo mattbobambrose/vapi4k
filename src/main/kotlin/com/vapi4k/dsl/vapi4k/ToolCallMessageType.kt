@@ -31,7 +31,7 @@ enum class ToolCallMessageType(internal val desc: String) {
   REQUEST_COMPLETE("request-complete"),
   REQUEST_FAILED("request-failed"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object ToolCallMessageTypeSerializer : KSerializer<ToolCallMessageType> {

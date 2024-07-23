@@ -50,7 +50,7 @@ enum class ApiObjectType(val endpoint: String) {
   PHONE_NUMBERS("phone-number"),
   FILES("file"),
   SQUADS("squad"),
-  TOOLS("tool");
+  TOOLS("tool"),
 }
 
 @AssistantDslMarker

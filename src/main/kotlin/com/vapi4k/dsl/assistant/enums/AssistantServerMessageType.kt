@@ -39,7 +39,7 @@ enum class AssistantServerMessageType(internal val desc: String) {
   TOOL_CALLS("tool-calls"),
   TRANSFER_DESTINATION_REQUEST("transfer-destination-request"),
   USER_INTERRUPTED("user-interrupted"),
-  VOICE_INPUT("voice-input");
+  VOICE_INPUT("voice-input"),
 }
 
 private object AssistantServerMessageTypeSerializer : KSerializer<AssistantServerMessageType> {

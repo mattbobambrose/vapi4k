@@ -21,5 +21,5 @@ enum class MessageRoleType(internal val desc: String) {
   USER("user"),
   ASSISTANT("assistant"),
   TOOL("tool"),
-  FUNCTION("function");
+  FUNCTION("function"),
 }

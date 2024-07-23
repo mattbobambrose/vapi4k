@@ -30,7 +30,6 @@ enum class TranscriberType(internal val desc: String) {
   DEEPGRAM("deepgram"),
   GLADIA("gladia"),
   TALKSCRIBER("talkscriber"),
-  UNSPECIFIED("unspecified");
 }
 
 private object TranscriberTypeSerializer : KSerializer<TranscriberType> {

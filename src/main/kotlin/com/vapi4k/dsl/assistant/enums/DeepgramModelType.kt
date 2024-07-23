@@ -61,7 +61,7 @@ enum class DeepgramModelType(internal val desc: String) {
   BASE_VOICEMAIL("base-voicemail"),
   BASE_VIDEO("base-video"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object DeepgramModelTypeSerializer : KSerializer<DeepgramModelType> {

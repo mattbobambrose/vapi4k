@@ -31,7 +31,7 @@ enum class GladiaModelType(internal val desc: String) {
   FAST("fast"),
   ACCURATE("accurate"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object GladiaModelTypeSerializer : KSerializer<GladiaModelType> {

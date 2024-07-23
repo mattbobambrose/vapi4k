@@ -30,7 +30,8 @@ import kotlinx.serialization.encoding.Encoder
 enum class VoiceProviderType(internal val desc: String) {
   AZURE("azure"),
   OPENAI("openai"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object VoiceProviderTypeSerializer : KSerializer<VoiceProviderType> {

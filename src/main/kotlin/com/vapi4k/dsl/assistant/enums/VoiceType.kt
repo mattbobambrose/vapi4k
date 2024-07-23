@@ -41,7 +41,7 @@ enum class VoiceType(internal val desc: String) {
   NOVA("nova"),
   SHIMMER("shimmer"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object VoiceTypeSerializer : KSerializer<VoiceType> {
