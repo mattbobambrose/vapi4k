@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.dsl.assistant.model.CacheIdHolder
+import com.vapi4k.common.CacheId
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import kotlinx.serialization.json.JsonElement
 
@@ -28,9 +28,9 @@ interface AssistantIdUnion {
 @AssistantDslMarker
 data class AssistantId internal constructor(
   val request: JsonElement,
-  override val cacheId: String,
+  private val cacheId: CacheId,
   internal val assistantIdUnion: AssistantIdUnion,
-) : AssistantIdUnion by assistantIdUnion, CacheIdHolder {
+) : AssistantIdUnion by assistantIdUnion {
   var id
     get() = assistantIdUnion.assistantId
     set(value) {
@@ -38,6 +38,6 @@ data class AssistantId internal constructor(
     }
 
   fun assistantOverrides(block: AssistantOverrides.() -> Unit) {
-    AssistantOverrides(request, this, assistantIdUnion.assistantOverridesDto).apply(block)
+    AssistantOverrides(request, cacheId, assistantIdUnion.assistantOverridesDto).apply(block)
   }
 }

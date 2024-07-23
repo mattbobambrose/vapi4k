@@ -16,11 +16,11 @@
 
 package com.vapi4k.dsl.assistant.api
 
+import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantId
 import com.vapi4k.dsl.assistant.AssistantOverrides
-import com.vapi4k.dsl.assistant.model.CacheIdHolder
 import com.vapi4k.dsl.assistant.squad.Squad
 import com.vapi4k.dsl.assistant.squad.SquadId
 import com.vapi4k.responses.api.CallRequestDto
@@ -32,9 +32,9 @@ interface CallUnion {
 
 @AssistantDslMarker
 class Call internal constructor(
+  private val cacheId: CacheId,
   internal val callRequest: CallRequestDto,
-  override val cacheId: String,
-) : CallUnion by callRequest, CacheIdHolder {
+) : CallUnion by callRequest {
   private var primaryErorMsg = ""
   private var overridesErorMsg = ""
 
@@ -62,7 +62,7 @@ class Call internal constructor(
     checkIfOverridesDeclared("assistantOverrides{} already called")
     if (callRequest.assistantDto.updated || callRequest.assistantId.isNotEmpty())
       with(callRequest) {
-        AssistantOverrides(emptyJsonElement(), this@Call, assistantOverridesDto).apply(block)
+        AssistantOverrides(emptyJsonElement(), cacheId, assistantOverridesDto).apply(block)
       }
     else
       error("assistant{} or assistantId{} must be called before assistantOverrides{}")

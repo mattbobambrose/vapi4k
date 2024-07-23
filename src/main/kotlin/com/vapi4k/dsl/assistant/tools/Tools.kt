@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant.tools
 
+import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
@@ -39,10 +40,10 @@ data class Tools internal constructor(internal val model: Model) {
       verifyObject(false, obj)
       populateFunctionDto(obj, toolDto.function)
       val cacheId =
-        if (model.cacheIdHolder.cacheId.isNotEmpty())
-          model.cacheIdHolder.cacheId
+        if (model.cacheId.isNotValid())
+          model.cacheId
         else
-          model.messageCallId
+          model.messageCallId.toCacheId()
       addToolCallToCache(cacheId, obj)
 
       with(toolDto) {

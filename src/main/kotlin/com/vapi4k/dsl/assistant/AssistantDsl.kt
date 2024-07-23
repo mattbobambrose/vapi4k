@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.common.CacheId.Companion.EMPTY_CACHE_ID
 import com.vapi4k.dsl.assistant.squad.Squad
 import com.vapi4k.dsl.assistant.squad.SquadId
 import com.vapi4k.responses.AssistantRequestMessageResponse
@@ -37,7 +38,7 @@ object AssistantDsl {
     block: Assistant.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      with(messageResponse) { Assistant(request, "", assistantDto, assistantOverridesDto).apply(block) }
+      with(messageResponse) { Assistant(request, EMPTY_CACHE_ID, assistantDto, assistantOverridesDto).apply(block) }
     }.messageResponse
 
   fun assistantId(
@@ -45,7 +46,7 @@ object AssistantDsl {
     block: AssistantId.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      AssistantId(request, "", messageResponse).apply(block)
+      AssistantId(request, EMPTY_CACHE_ID, messageResponse).apply(block)
     }.messageResponse
 
   fun squad(
@@ -53,7 +54,7 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      Squad(request, "", messageResponse.squadDto).apply(block)
+      Squad(request, EMPTY_CACHE_ID, messageResponse.squadDto).apply(block)
     }.messageResponse
 
   fun squadId(

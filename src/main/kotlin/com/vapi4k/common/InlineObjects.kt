@@ -14,12 +14,20 @@
  *
  */
 
-package com.vapi4k.utils
+package com.vapi4k.common
 
-import com.vapi4k.common.CacheId.Companion.toCacheId
 
-object Utils {
-  val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
+@JvmInline
+value class CacheId private constructor(val value: String) {
 
-  fun nextCacheId() = "Outbound-${System.currentTimeMillis()}".toCacheId()
+  fun isValid() = value.isNotEmpty()
+  fun isNotValid() = value.isEmpty()
+
+  override fun toString() = value
+
+  companion object {
+    val EMPTY_CACHE_ID = CacheId("")
+
+    fun String.toCacheId(): CacheId = CacheId(this)
+  }
 }

@@ -16,6 +16,7 @@
 
 package com.vapi4k.responses
 
+import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.dsl.assistant.tools.ToolCache.getFunctionFromCache
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.utils.JsonElementUtils.functionName
@@ -30,7 +31,7 @@ class FunctionResponse(var result: String = "") {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
-          val cacheKey = request.messageCallId
+          val cacheKey = request.messageCallId.toCacheId()
           val funcName = request.functionName
           val args = request.functionParameters
           response.result =

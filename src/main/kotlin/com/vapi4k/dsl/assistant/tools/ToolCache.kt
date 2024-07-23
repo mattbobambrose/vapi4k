@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant.tools
 
+import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.ToolCallInfo
 import com.vapi4k.dsl.assistant.tools.ToolCache.FunctionDetails.Companion.toFunctionDetails
 import com.vapi4k.plugin.Vapi4kLogger.logger
@@ -36,18 +37,18 @@ import kotlin.time.DurationUnit.MILLISECONDS
 import kotlin.time.DurationUnit.SECONDS
 
 internal object ToolCache {
-  private val toolCallCache = ConcurrentHashMap<String, FunctionInfo>()
-  private val functionCache = ConcurrentHashMap<String, FunctionInfo>()
+  private val toolCallCache = ConcurrentHashMap<CacheId, FunctionInfo>()
+  private val functionCache = ConcurrentHashMap<CacheId, FunctionInfo>()
 
   private var toolCallCacheIsActive = false
   private var functionCacheIsActive = false
 
   val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
 
-  fun getToolCallFromCache(cacheId: String): FunctionInfo =
+  fun getToolCallFromCache(cacheId: CacheId): FunctionInfo =
     toolCallCache[cacheId] ?: error("Tool cache key not found: $cacheId")
 
-  fun getFunctionFromCache(cacheId: String): FunctionInfo =
+  fun getFunctionFromCache(cacheId: CacheId): FunctionInfo =
     functionCache[cacheId] ?: error("Function cache key not found: $cacheId")
 
   fun resetCaches() {
@@ -58,7 +59,7 @@ internal object ToolCache {
   }
 
   fun addToolCallToCache(
-    messageCallId: String,
+    messageCallId: CacheId,
     obj: Any,
   ) {
     toolCallCacheIsActive = true
@@ -66,7 +67,7 @@ internal object ToolCache {
   }
 
   fun addFunctionToCache(
-    messageCallId: String,
+    messageCallId: CacheId,
     obj: Any,
   ) {
     functionCacheIsActive = true
@@ -74,7 +75,7 @@ internal object ToolCache {
   }
 
   fun removeToolCallFromCache(
-    messageCallId: String,
+    messageCallId: CacheId,
     block: (FunctionInfo) -> Unit,
   ): FunctionInfo? =
     toolCallCache.remove(messageCallId)
@@ -85,7 +86,7 @@ internal object ToolCache {
       }
 
   fun removeFunctionFromCache(
-    messageCallId: String,
+    messageCallId: CacheId,
     block: (FunctionInfo) -> Unit,
   ): FunctionInfo? =
     functionCache.remove(messageCallId)
@@ -96,8 +97,8 @@ internal object ToolCache {
       }
 
   fun swapCacheKeys(
-    oldKey: String,
-    newKey: String,
+    oldKey: CacheId,
+    newKey: CacheId,
   ) {
     logger.info { "Swapping cache keys: $oldKey -> $newKey" }
     toolCallCache.remove(oldKey)?.also { toolCallCache[newKey] = it }
@@ -105,9 +106,9 @@ internal object ToolCache {
   }
 
   private fun addToCache(
-    cache: ConcurrentHashMap<String, FunctionInfo>,
+    cache: ConcurrentHashMap<CacheId, FunctionInfo>,
     prefix: String,
-    messageCallId: String,
+    messageCallId: CacheId,
     obj: Any,
   ) {
     val method = obj.toolMethod

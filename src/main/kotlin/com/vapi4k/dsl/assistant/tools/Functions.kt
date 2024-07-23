@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant.tools
 
+import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.model.Model
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.populateFunctionDto
@@ -30,10 +31,10 @@ data class Functions internal constructor(internal val model: Model) {
       verifyObject(true, obj)
       populateFunctionDto(obj, functionDto)
       val cacheId =
-        if (model.cacheIdHolder.cacheId.isNotEmpty())
-          model.cacheIdHolder.cacheId
+        if (model.cacheId.isNotValid())
+          model.cacheId
         else
-          model.messageCallId
+          model.messageCallId.toCacheId()
       addFunctionToCache(cacheId, obj)
     }.also { func ->
       if (model.functions.any { func.name == it.name }) {

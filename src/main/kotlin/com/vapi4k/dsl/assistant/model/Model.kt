@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant.model
 
+import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
@@ -34,14 +35,10 @@ interface ModelUnion {
   var emotionRecognitionEnabled: Boolean
 }
 
-interface CacheIdHolder {
-  val cacheId: String
-}
-
 @AssistantDslMarker
 class Model(
   val request: JsonElement,
-  val cacheIdHolder: CacheIdHolder,
+  internal val cacheId: CacheId,
   private val dto: ModelDto,
 ) : ModelUnion by dto {
   internal val messages get() = dto.messages
