@@ -41,7 +41,6 @@ object JsonElementUtils {
   val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
 
   val JsonElement.messageCallId get() = this["message.call.id"].stringValue
-  val JsonElement.id get() = this["id"].stringValue
 
   val JsonElement.phoneNumber get() = this["message.call.customer.number"].stringValue
 

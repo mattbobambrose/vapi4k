@@ -20,9 +20,7 @@ import com.vapi4k.dsl.assistant.tools.ToolCache.getFunctionFromCache
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.utils.JsonElementUtils.functionName
 import com.vapi4k.utils.JsonElementUtils.functionParameters
-import com.vapi4k.utils.JsonElementUtils.id
 import com.vapi4k.utils.JsonElementUtils.messageCallId
-import com.vapi4k.utils.JsonUtils.containsKey
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -32,7 +30,7 @@ class FunctionResponse(var result: String = "") {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
-          val cacheKey = if (request.containsKey("message")) request.messageCallId else request.id
+          val cacheKey = request.messageCallId
           val funcName = request.functionName
           val args = request.functionParameters
           response.result =

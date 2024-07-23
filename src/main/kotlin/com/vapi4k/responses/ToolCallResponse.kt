@@ -21,13 +21,11 @@ import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.assistant.ToolMessageConditionDto
-import com.vapi4k.utils.JsonElementUtils.id
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallArguments
 import com.vapi4k.utils.JsonElementUtils.toolCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallList
 import com.vapi4k.utils.JsonElementUtils.toolCallName
-import com.vapi4k.utils.JsonUtils.containsKey
 import com.vapi4k.utils.Utils.errorMsg
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -46,7 +44,7 @@ data class ToolCallResponse(private var messageResponse: MessageResponse = Messa
               response.also { toolCallResponse ->
                 toolCallResponse.messageResponse.also { messageResponse ->
                   messageResponse.results += ToolCallResult().also { toolCallResult ->
-                    val cacheKey = if (request.containsKey("message")) request.messageCallId else request.id
+                    val cacheKey = request.messageCallId
                     val funcName = toolCall.toolCallName
                     val args = toolCall.toolCallArguments
                     toolCallResult.toolCallId = toolCall.toolCallId
