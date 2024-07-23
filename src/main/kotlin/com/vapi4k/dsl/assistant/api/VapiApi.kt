@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.assistant.api
 
 import com.typesafe.config.ConfigFactory
-import com.vapi4k.common.CacheId.Companion.EMPTY_CACHE_ID
+import com.vapi4k.common.CacheId.Companion.UNSPECIFIED_CACHE_ID
 import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.dsl.assistant.AssistantDslMarker
@@ -169,5 +169,6 @@ class Phone {
 
 @AssistantDslMarker
 class Save {
-  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto().also { Call(EMPTY_CACHE_ID, it).apply(block) }
+  fun call(block: Call.() -> Unit): CallRequestDto =
+    CallRequestDto().also { Call(UNSPECIFIED_CACHE_ID, it).apply(block) }
 }

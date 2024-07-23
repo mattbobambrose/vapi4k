@@ -20,13 +20,13 @@ package com.vapi4k.common
 @JvmInline
 value class CacheId private constructor(val value: String) {
 
-  fun isValid() = value.isNotEmpty()
-  fun isNotValid() = value.isEmpty()
+  fun isNotSpecified() = value == UNSPECIFIED_VALUE
 
   override fun toString() = value
 
   companion object {
-    val EMPTY_CACHE_ID = CacheId("")
+    private const val UNSPECIFIED_VALUE = "_Unspecified_"
+    val UNSPECIFIED_CACHE_ID = CacheId(UNSPECIFIED_VALUE)
 
     fun String.toCacheId(): CacheId = CacheId(this)
   }
