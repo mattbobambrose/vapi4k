@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantId
 import com.vapi4k.dsl.assistant.AssistantOverrides
-import com.vapi4k.dsl.assistant.model.TopLevelObject
+import com.vapi4k.dsl.assistant.model.CacheIdHolder
 import com.vapi4k.dsl.assistant.squad.Squad
 import com.vapi4k.dsl.assistant.squad.SquadId
 import com.vapi4k.responses.api.CallRequestDto
@@ -34,7 +34,7 @@ interface CallUnion {
 class Call internal constructor(
   internal val callRequest: CallRequestDto,
   override val cacheId: String,
-) : CallUnion by callRequest, TopLevelObject {
+) : CallUnion by callRequest, CacheIdHolder {
   private var primaryErorMsg = ""
   private var overridesErorMsg = ""
 

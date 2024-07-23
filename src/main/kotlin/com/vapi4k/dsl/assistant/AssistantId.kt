@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.dsl.assistant.model.TopLevelObject
+import com.vapi4k.dsl.assistant.model.CacheIdHolder
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import kotlinx.serialization.json.JsonElement
 
@@ -30,7 +30,7 @@ data class AssistantId internal constructor(
   val request: JsonElement,
   override val cacheId: String,
   internal val assistantIdUnion: AssistantIdUnion,
-) : AssistantIdUnion by assistantIdUnion, TopLevelObject {
+) : AssistantIdUnion by assistantIdUnion, CacheIdHolder {
   var id
     get() = assistantIdUnion.assistantId
     set(value) {

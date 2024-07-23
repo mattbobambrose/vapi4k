@@ -17,8 +17,7 @@
 package com.vapi4k.utils
 
 object Utils {
-
   val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
 
-  fun nextCacheId() = System.currentTimeMillis().toString()
+  fun nextCacheId() = "Outbound-${System.currentTimeMillis()}"
 }

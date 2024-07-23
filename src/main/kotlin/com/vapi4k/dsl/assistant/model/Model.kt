@@ -34,14 +34,14 @@ interface ModelUnion {
   var emotionRecognitionEnabled: Boolean
 }
 
-interface TopLevelObject {
+interface CacheIdHolder {
   val cacheId: String
 }
 
 @AssistantDslMarker
 class Model(
   val request: JsonElement,
-  val topLevelObject: TopLevelObject,
+  val cacheIdHolder: CacheIdHolder,
   private val dto: ModelDto,
 ) : ModelUnion by dto {
   internal val messages get() = dto.messages

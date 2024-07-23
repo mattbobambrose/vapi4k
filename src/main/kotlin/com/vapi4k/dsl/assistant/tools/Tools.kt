@@ -39,8 +39,8 @@ data class Tools internal constructor(internal val model: Model) {
       verifyObject(false, obj)
       populateFunctionDto(obj, toolDto.function)
       val cacheId =
-        if (model.topLevelObject.cacheId.isNotEmpty())
-          model.topLevelObject.cacheId
+        if (model.cacheIdHolder.cacheId.isNotEmpty())
+          model.cacheIdHolder.cacheId
         else
           model.messageCallId
       addToolCallToCache(cacheId, obj)

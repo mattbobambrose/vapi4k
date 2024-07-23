@@ -20,8 +20,8 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.enums.VoiceType
+import com.vapi4k.dsl.assistant.model.CacheIdHolder
 import com.vapi4k.dsl.assistant.model.Model
-import com.vapi4k.dsl.assistant.model.TopLevelObject
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
@@ -67,7 +67,7 @@ data class Assistant internal constructor(
   override val cacheId: String,
   internal val assistantDto: AssistantDto,
   internal val assistantOverridesDto: AssistantOverridesDto,
-) : AssistantUnion by assistantDto, TopLevelObject {
+) : AssistantUnion by assistantDto, CacheIdHolder {
   // errorMsg prevents further assistant or assistantId assignments
   private var errorMsg = ""
 

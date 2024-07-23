@@ -30,8 +30,8 @@ data class Functions internal constructor(internal val model: Model) {
       verifyObject(true, obj)
       populateFunctionDto(obj, functionDto)
       val cacheId =
-        if (model.topLevelObject.cacheId.isNotEmpty())
-          model.topLevelObject.cacheId
+        if (model.cacheIdHolder.cacheId.isNotEmpty())
+          model.cacheIdHolder.cacheId
         else
           model.messageCallId
       addFunctionToCache(cacheId, obj)

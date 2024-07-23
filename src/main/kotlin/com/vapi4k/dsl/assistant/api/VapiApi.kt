@@ -24,8 +24,7 @@ import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.api.CallRequestDto
 import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.stringValue
+import com.vapi4k.utils.JsonElementUtils.id
 import com.vapi4k.utils.JsonUtils.toJsonString
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.nextCacheId
@@ -81,8 +80,10 @@ class VapiApi private constructor(
     val jsonElement = httpResponse.bodyAsJsonElement()
     val hasId = jsonElement.jsonObject.containsKey("id")
     if (hasId) {
-      logger.info { "Call ID: ${jsonElement["id"]}" }
-      swapCacheKeys(phone.cacheId, jsonElement["id"].stringValue)
+      logger.info { "Call ID: ${jsonElement.id}" }
+      swapCacheKeys(phone.cacheId, jsonElement.id)
+    } else {
+      logger.warn { "No call ID found in response" }
     }
 
     return httpResponse
