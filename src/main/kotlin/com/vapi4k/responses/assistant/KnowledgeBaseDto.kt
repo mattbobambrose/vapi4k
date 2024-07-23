@@ -32,3 +32,5 @@ data class KnowledgeBaseDto(
   override var topK: Double = 0.0,
   override val fileIds: MutableList<String> = mutableListOf()
 ) : KnowledgeBaseUnion
+
+

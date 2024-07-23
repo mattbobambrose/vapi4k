@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.model.ModelUnion
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,12 +27,14 @@ data class ModelDto(
   override var temperature: Int = 0,
   override var maxTokens: Int = 0,
   override var emotionRecognitionEnabled: Boolean = false,
+  override val toolIds: MutableList<String> = mutableListOf(),
 
   val messages: MutableList<RoleMessage> = mutableListOf(),
   val tools: MutableList<ToolDto> = mutableListOf(),
-  val toolIds: MutableList<String> = mutableListOf(),
   val functions: MutableList<FunctionDto> = mutableListOf(),
-  val knowledgeBase: KnowledgeBaseDto = KnowledgeBaseDto(),
+
+  @SerialName("knowledgeBase")
+  var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : ModelUnion
 
 @Serializable

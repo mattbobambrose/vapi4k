@@ -21,6 +21,7 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.enums.VoiceType
+import com.vapi4k.dsl.assistant.model.AnyscaleModel
 import com.vapi4k.dsl.assistant.model.Model
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
@@ -73,16 +74,7 @@ data class Assistant internal constructor(
 
   private fun checkIfDeclared(newStr: String) = if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
 
-  fun model(block: Model.() -> Unit) {
-    Model(request, cacheId, assistantDto.modelDto).apply(block)
-  }
-
-  fun voice(block: Voice.() -> Unit) {
-    val dto = assistantDto.voiceDto
-    Voice(dto).apply(block)
-    if (dto.voiceId == VoiceType.UNSPECIFIED) error("VoiceId must be set")
-  }
-
+  // Transcribers
   fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
     checkIfDeclared("Member already has an deepGramTranscriber assigned")
     assistantDto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
@@ -98,6 +90,32 @@ data class Assistant internal constructor(
     assistantDto.transcriberDto = TalkscriberTranscriberDto().also { TalkscriberTranscriber(it).apply(block) }
   }
 
+  // Models
+  fun model(block: Model.() -> Unit): Model =
+    Model(request, cacheId, assistantDto.modelDto)
+      .apply(block)
+      .apply {
+        if (provider.isEmpty()) error("Model provider must be assigned")
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+
+  fun anyscaleModel(block: AnyscaleModel.() -> Unit) =
+    AnyscaleModel(request, cacheId, assistantDto.modelDto)
+      .apply(block)
+      .apply {
+        if (provider.isEmpty()) error("Model provider must be assigned")
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+
+
+  // Voices
+  fun voice(block: Voice.() -> Unit) {
+    val dto = assistantDto.voiceDto
+    Voice(dto).apply(block)
+    if (dto.voiceId == VoiceType.UNSPECIFIED) error("VoiceId must be set")
+  }
+
+  // AssistantOverrides
   fun assistantOverrides(block: AssistantOverrides.() -> Unit) {
     AssistantOverrides(request, cacheId, assistantOverridesDto).apply(block)
   }

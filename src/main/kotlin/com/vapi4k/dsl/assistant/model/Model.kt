@@ -21,6 +21,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
+import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.utils.JsonElementUtils.messageCallId
@@ -30,13 +31,14 @@ import kotlinx.serialization.json.JsonElement
 interface ModelUnion {
   var provider: String
   var model: String
+  val toolIds: MutableList<String>
   var temperature: Int
   var maxTokens: Int
   var emotionRecognitionEnabled: Boolean
 }
 
 @AssistantDslMarker
-class Model(
+open class Model(
   val request: JsonElement,
   internal val cacheId: CacheId,
   private val dto: ModelDto,
@@ -70,7 +72,20 @@ class Model(
     messages += RoleMessage(role.desc, content.trimLeadingSpaces())
   }
 
-  fun knowledgeBase(block: KnowledgeBase.() -> Unit) {
-    KnowledgeBase(request, dto.knowledgeBase).apply(block)
+  fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {
+    val kbDto = KnowledgeBaseDto()
+    dto.knowledgeBaseDto = kbDto
+    return KnowledgeBase(request, kbDto)
+      .apply(block)
+      .apply {
+        if (kbDto.fileIds.isEmpty())
+          error("Knowledge base must have at least one file")
+      }
   }
 }
+
+class AnyscaleModel(
+  request: JsonElement,
+  cacheId: CacheId,
+  dto: ModelDto,
+) : Model(request, cacheId, dto)
