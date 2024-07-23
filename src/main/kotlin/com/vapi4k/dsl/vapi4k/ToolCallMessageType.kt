@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import com.vapi4k.dsl.vapi4k.ToolCallMessageType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -42,5 +41,5 @@ private object ToolCallMessageTypeSerializer : KSerializer<ToolCallMessageType> 
     value: ToolCallMessageType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = ToolCallMessageType.entries.first { it.desc == decoder.decodeString() }
 }

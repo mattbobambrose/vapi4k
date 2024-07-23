@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import com.vapi4k.dsl.vapi4k.ToolCallRoleType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -43,5 +42,5 @@ private object ToolCallRoleSerializer : KSerializer<ToolCallRoleType> {
     value: ToolCallRoleType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = ToolCallRoleType.entries.first { it.desc == decoder.decodeString() }
 }

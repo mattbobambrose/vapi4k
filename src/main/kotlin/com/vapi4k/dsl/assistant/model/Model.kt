@@ -54,13 +54,9 @@ open class Model(
   var toolMessage by ModelMessageDelegate(MessageRoleType.TOOL)
   var userMessage by ModelMessageDelegate(MessageRoleType.USER)
 
-  fun tools(block: Tools.() -> Unit) {
-    Tools(this).apply(block)
-  }
+  fun tools(block: Tools.() -> Unit) = Tools(this).apply(block)
 
-  fun functions(block: Functions.() -> Unit) {
-    Functions(this).apply(block)
-  }
+  fun functions(block: Functions.() -> Unit) = Functions(this).apply(block)
 
   fun message(
     role: MessageRoleType,
@@ -83,6 +79,7 @@ open class Model(
       }
   }
 }
+
 
 class AnyscaleModel(
   request: JsonElement,

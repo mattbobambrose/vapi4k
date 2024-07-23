@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.dsl.assistant.enums.PunctuationType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -52,5 +51,5 @@ private object PunctuationTypeSerializer : KSerializer<PunctuationType> {
     value: PunctuationType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = PunctuationType.entries.first { it.desc == decoder.decodeString() }
 }
