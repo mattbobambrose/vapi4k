@@ -17,16 +17,9 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import com.vapi4k.dsl.assistant.enums.TalkscriberLanguageType.entries
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = TalkscriberLanguageTypeSerializer::class)
+@Serializable
 enum class TalkscriberLanguageType(internal val desc: String) {
   ENGLISH("en"),
   CHINESE("zh"),
@@ -132,15 +125,4 @@ enum class TalkscriberLanguageType(internal val desc: String) {
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
   fun isSpecified() = this != UNSPECIFIED
-}
-
-private object TalkscriberLanguageTypeSerializer : KSerializer<TalkscriberLanguageType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("TalkscriberLanguageType", STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: TalkscriberLanguageType,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
 }

@@ -17,17 +17,10 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import com.vapi4k.dsl.assistant.enums.DeepgramModelType.entries
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 // See: https://developers.deepgram.com/docs/models-languages-overview
-@Serializable(with = DeepgramModelTypeSerializer::class)
+@Serializable
 enum class DeepgramModelType(internal val desc: String) {
   NOVA_2("nova-2"),
   NOVA_2_GENERAL("nova-2-general"),
@@ -64,15 +57,4 @@ enum class DeepgramModelType(internal val desc: String) {
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
   fun isSpecified() = this != UNSPECIFIED
-}
-
-private object DeepgramModelTypeSerializer : KSerializer<DeepgramModelType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DeepgramModelType", PrimitiveKind.STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: DeepgramModelType,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
 }

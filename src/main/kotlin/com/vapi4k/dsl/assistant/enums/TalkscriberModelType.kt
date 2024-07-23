@@ -17,32 +17,14 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import com.vapi4k.dsl.assistant.enums.TalkscriberModelType.entries
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 
-@Serializable(with = TalkscriberModelTypeSerializer::class)
+@Serializable
 enum class TalkscriberModelType(internal val desc: String) {
   WHISPER("whisper"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
   fun isSpecified() = this != UNSPECIFIED
-}
-
-private object TalkscriberModelTypeSerializer : KSerializer<TalkscriberModelType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("TalkscriberModelType", PrimitiveKind.STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: TalkscriberModelType,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
 }

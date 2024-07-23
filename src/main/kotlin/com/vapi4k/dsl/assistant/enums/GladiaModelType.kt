@@ -17,16 +17,9 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import com.vapi4k.dsl.assistant.enums.GladiaModelType.entries
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = GladiaModelTypeSerializer::class)
+@Serializable
 enum class GladiaModelType(internal val desc: String) {
   FAST("fast"),
   ACCURATE("accurate"),
@@ -34,15 +27,4 @@ enum class GladiaModelType(internal val desc: String) {
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
   fun isSpecified() = this != UNSPECIFIED
-}
-
-private object GladiaModelTypeSerializer : KSerializer<GladiaModelType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("GladiaModelType", PrimitiveKind.STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: GladiaModelType,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
 }

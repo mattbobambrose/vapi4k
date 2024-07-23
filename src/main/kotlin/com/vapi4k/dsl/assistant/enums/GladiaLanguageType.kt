@@ -17,15 +17,9 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = GladiaLanguageTypeSerializer::class)
+@Serializable
 enum class GladiaLanguageType(internal val desc: String) {
   AFRIKAANS("af"),
   ALBANIAN("sq"),
@@ -131,16 +125,4 @@ enum class GladiaLanguageType(internal val desc: String) {
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
   fun isSpecified() = this != UNSPECIFIED
-}
-
-private object GladiaLanguageTypeSerializer : KSerializer<GladiaLanguageType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("GladiaLanguageType", PrimitiveKind.STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: GladiaLanguageType,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) =
-    GladiaLanguageType.entries.first { it.desc == decoder.decodeString() }
 }
