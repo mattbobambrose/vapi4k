@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.CacheId.Companion.UNSPECIFIED_CACHE_ID
-import com.vapi4k.dsl.assistant.enums.DestinationType
 import com.vapi4k.dsl.assistant.squad.Squad
 import com.vapi4k.dsl.assistant.squad.SquadId
 import com.vapi4k.responses.AssistantRequestMessageResponse
@@ -78,7 +77,7 @@ object AssistantDsl {
     block: NumberDestination.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      val numDto = NumberDestinationDto().also { it.type = DestinationType.NUMBER }
+      val numDto = NumberDestinationDto()
       messageResponse.destination = numDto
       NumberDestination(request, numDto).apply(block)
     }.messageResponse
@@ -88,7 +87,7 @@ object AssistantDsl {
     block: SipDestination.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      val sipDto = SipDestinationDto().also { it.type = DestinationType.SIP }
+      val sipDto = SipDestinationDto()
       messageResponse.destination = sipDto
       SipDestination(request, sipDto).apply(block)
     }.messageResponse

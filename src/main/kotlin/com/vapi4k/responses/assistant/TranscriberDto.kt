@@ -50,7 +50,14 @@ private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
   ) {
     when (value) {
       is DeepgramTranscriberDto -> {
-        value.language = if (value.customLanguage.isNotEmpty()) value.customLanguage else value.transcriberLanguage.desc
+        value.language =
+          if (value.customLanguage.isNotEmpty()) {
+            if (value.transcriberLanguage.isSpecified())
+              error("Cannot have both custom language and transcriber language in deepgramTranscriber{}")
+            value.customLanguage
+          } else {
+            value.transcriberLanguage.desc
+          }
         encoder.encodeSerializableValue(DeepgramTranscriberDto.serializer(), value)
       }
 
@@ -80,7 +87,7 @@ data class DeepgramTranscriberDto(
   @Transient
   override var transcriberLanguage: DeepgramLanguageType = DeepgramLanguageType.UNSPECIFIED,
   @Transient
-  var customLanguage: String = "",
+  override var customLanguage: String = "",
 
   override var smartFormat: Boolean = false,
   override val keywords: MutableList<String> = mutableListOf(),

@@ -93,6 +93,8 @@ enum class DeepgramLanguageType(internal val desc: String) {
   SPANISH_LATAM("es-LATAM"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
 }
 
 private object DeepgramLanguageTypeSerializer : KSerializer<DeepgramLanguageType> {

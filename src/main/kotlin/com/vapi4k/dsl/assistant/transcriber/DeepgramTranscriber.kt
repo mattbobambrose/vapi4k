@@ -24,6 +24,7 @@ import com.vapi4k.responses.assistant.DeepgramTranscriberDto
 interface DeepgramTranscriberUnion {
   var transcriberModel: DeepgramModelType
   var transcriberLanguage: DeepgramLanguageType
+  var customLanguage: String
   var smartFormat: Boolean
   val keywords: MutableList<String>
 }

@@ -23,7 +23,6 @@ import com.vapi4k.dsl.assistant.squad.SquadIdUnion
 import com.vapi4k.responses.assistant.AbstractDestinationDto
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.NumberDestinationDto
 import com.vapi4k.responses.assistant.SquadDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -31,7 +30,7 @@ import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class AssistantRequestResponse(
-  var destination: AbstractDestinationDto = NumberDestinationDto(),
+  var destination: AbstractDestinationDto? = null,
 
   override var assistantId: String = "",
 

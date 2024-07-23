@@ -67,8 +67,8 @@ class AssistantTest {
 
   @Test
   fun testRegular() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -92,8 +92,8 @@ class AssistantTest {
 
   @Test
   fun `test reverse delay order`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -120,8 +120,8 @@ class AssistantTest {
 
   @Test
   fun `test message with no millis`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -144,8 +144,8 @@ class AssistantTest {
 
   @Test
   fun `test defective with no delayed message`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val exception =
       assertThrows(IllegalStateException::class.java) {
         assistant(request) {
@@ -171,8 +171,8 @@ class AssistantTest {
 
   @Test
   fun `multiple message`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -199,8 +199,8 @@ class AssistantTest {
 
   @Test
   fun `multiple message unordered`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -227,8 +227,8 @@ class AssistantTest {
 
   @Test
   fun `multiple delay time`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -255,8 +255,8 @@ class AssistantTest {
 
   @Test
   fun `multiple message multiple delay time`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -285,8 +285,8 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessage = messageOne
       model {
@@ -477,8 +477,8 @@ class AssistantTest {
 
   @Test
   fun `check non-default FirstMessageModeType values`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
     }
@@ -492,8 +492,8 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 1`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       clientMessages -= AssistantClientMessageType.HANG
     }
@@ -504,8 +504,8 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 2`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
     }
@@ -516,8 +516,8 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 1`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       serverMessages -= AssistantServerMessageType.HANG
     }
@@ -528,8 +528,8 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 2`() {
-    val request = assistantRequest.toJsonElement()
     resetCaches()
+    val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
     }
@@ -553,8 +553,8 @@ class AssistantTest {
 
   @Test
   fun `multiple deepgram transcriber decls`() {
-    val request = assistantRequest.toJsonElement()
     assertThrows(IllegalStateException::class.java) {
+      val request = assistantRequest.toJsonElement()
       val assistant = assistant(request) {
         deepGramTranscriber {
           transcriberModel = DeepgramModelType.BASE
@@ -569,8 +569,8 @@ class AssistantTest {
 
   @Test
   fun `multiple gladia transcriber decls`() {
-    val request = assistantRequest.toJsonElement()
     assertThrows(IllegalStateException::class.java) {
+      val request = assistantRequest.toJsonElement()
       val assistant = assistant(request) {
         gladiaTranscriber {
           transcriberModel = GladiaModelType.FAST
@@ -585,9 +585,9 @@ class AssistantTest {
 
   @Test
   fun `multiple talkscriber transcriber decls`() {
-    val request = assistantRequest.toJsonElement()
     assertThrows(IllegalStateException::class.java) {
-      val assistant = assistant(request) {
+      val request = assistantRequest.toJsonElement()
+      assistant(request) {
         talkscriberTranscriber {
           transcriberModel = TalkscriberModelType.WHISPER
         }
@@ -601,8 +601,8 @@ class AssistantTest {
 
   @Test
   fun `multiple transcriber decls`() {
-    val request = assistantRequest.toJsonElement()
     assertThrows(IllegalStateException::class.java) {
+      val request = assistantRequest.toJsonElement()
       val assistant = assistant(request) {
         talkscriberTranscriber {
           transcriberModel = TalkscriberModelType.WHISPER
@@ -616,7 +616,7 @@ class AssistantTest {
   }
 
   @Test
-  fun `deepgram transcriber custom value`() {
+  fun `deepgram transcriber enum value`() {
     val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       deepGramTranscriber {
@@ -632,4 +632,40 @@ class AssistantTest {
     )
   }
 
+  @Test
+  fun `deepgram transcriber custom value`() {
+    val request = assistantRequest.toJsonElement()
+    val assistant = assistant(request) {
+      deepGramTranscriber {
+        transcriberModel = DeepgramModelType.BASE
+        customLanguage = "zzz"
+      }
+    }
+    val je = assistant.toJsonElement()
+    println(assistant.toJsonString(true))
+    assertEquals(
+      "zzz",
+      je["assistant.transcriber.language"].stringValue
+    )
+  }
+
+  @Test
+  fun `deepgram transcriber conflicting values`() {
+    assertThrows(IllegalStateException::class.java) {
+      val request = assistantRequest.toJsonElement()
+      val assistant = assistant(request) {
+        deepGramTranscriber {
+          transcriberModel = DeepgramModelType.BASE
+          transcriberLanguage = DeepgramLanguageType.GERMAN
+          customLanguage = "zzz"
+        }
+      }
+      val je = assistant.toJsonElement()
+      println(assistant.toJsonString(true))
+      assertEquals(
+        "zzz",
+        je["assistant.transcriber.language"].stringValue
+      )
+    }
+  }
 }

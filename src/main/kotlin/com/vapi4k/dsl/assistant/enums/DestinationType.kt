@@ -28,8 +28,7 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(with = DestinationTypeSerializer::class)
 enum class DestinationType(internal val desc: String) {
   SIP("sip"),
-  NUMBER("number"),
-  UNSPECIFIED("unspecified");
+  NUMBER("number");
 }
 
 private object DestinationTypeSerializer : KSerializer<DestinationType> {
