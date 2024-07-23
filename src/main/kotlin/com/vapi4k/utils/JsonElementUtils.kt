@@ -41,6 +41,7 @@ object JsonElementUtils {
   val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
 
   val JsonElement.messageCallId get() = this["message.call.id"].stringValue
+  val JsonElement.id get() = this["id"].stringValue
 
   val JsonElement.phoneNumber get() = this["message.call.customer.number"].stringValue
 
@@ -73,6 +74,6 @@ object JsonElementUtils {
 
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 
-  fun emptyJsonElement() = EMPTY_JSON_ELEMENT
   private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
+  fun emptyJsonElement() = EMPTY_JSON_ELEMENT
 }

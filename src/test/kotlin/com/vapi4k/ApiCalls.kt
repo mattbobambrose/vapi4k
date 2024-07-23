@@ -17,7 +17,7 @@
 package com.vapi4k
 
 import com.vapi4k.dsl.assistant.api.VapiApi.Companion.vapiApi
-import com.vapi4k.utils.HttpUtils.jsonElement
+import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import org.junit.Assert.assertThrows
 import org.junit.Test
 
@@ -129,7 +129,7 @@ class ApiCalls {
           }
         }
       println("Call status: ${callResp.status}")
-      println("Call response:> ${callResp.jsonElement}")
+      println("Call response:> ${callResp.bodyAsJsonElement()}")
 
 
 //    val listResp = api.list(ASSISTANTS)

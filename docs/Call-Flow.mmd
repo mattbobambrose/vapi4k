@@ -37,7 +37,7 @@ sequenceDiagram
     eocare ->> vapi: Returns answer to query
     vapi ->> openai: Returns Tool response
     openai ->> vapi: Returns text for balance response
-    vapi -->> eocare: Sends TOOL_CALL message
+%%    vapi -->> eocare: Sends TOOL_CALL message
     vapi ->> voice: Sends text for speech synthesis
     voice ->> vapi: Returns audio
     vapi ->> Bob: Answers Bob's question about his balance
