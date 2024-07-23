@@ -100,8 +100,8 @@ internal object ToolCache {
     newKey: String,
   ) {
     logger.info { "Swapping cache keys: $oldKey -> $newKey" }
-    toolCallCache[newKey] = toolCallCache.remove(oldKey) ?: error("Tool not found in cache: $oldKey")
-    functionCache[newKey] = functionCache.remove(oldKey) ?: error("Function not found in cache: $oldKey")
+    toolCallCache.remove(oldKey)?.also { toolCallCache[newKey] = it }
+    functionCache.remove(oldKey)?.also { functionCache[newKey] = it }
   }
 
   private fun addToCache(
