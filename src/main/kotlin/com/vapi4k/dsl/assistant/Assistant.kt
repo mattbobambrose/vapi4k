@@ -21,7 +21,6 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.enums.VoiceType
-import com.vapi4k.dsl.assistant.model.AnyscaleModel
 import com.vapi4k.dsl.assistant.model.Model
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
@@ -99,13 +98,13 @@ data class Assistant internal constructor(
         if (model.isEmpty()) error("Model model must be assigned")
       }
 
-  fun anyscaleModel(block: AnyscaleModel.() -> Unit) =
-    AnyscaleModel(request, cacheId, assistantDto.modelDto)
-      .apply(block)
-      .apply {
-        if (provider.isEmpty()) error("Model provider must be assigned")
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+//  fun anyscaleModel(block: AnyscaleModel.() -> Unit) =
+//    AnyscaleModel(request, cacheId, assistantDto.modelDto)
+//      .apply(block)
+//      .apply {
+//        if (provider.isEmpty()) error("Model provider must be assigned")
+//        if (model.isEmpty()) error("Model model must be assigned")
+//      }
 
 
   // Voices

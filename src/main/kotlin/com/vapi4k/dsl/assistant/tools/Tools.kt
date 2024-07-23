@@ -20,7 +20,7 @@ import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
-import com.vapi4k.dsl.assistant.model.Model
+import com.vapi4k.dsl.assistant.model.ModelMessageUnion
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.tools.ToolCache.addToolCallToCache
@@ -30,7 +30,7 @@ import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolFunction
 
 @AssistantDslMarker
-data class Tools internal constructor(internal val model: Model) {
+data class Tools internal constructor(internal val model: ModelMessageUnion) {
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,

@@ -18,14 +18,14 @@ package com.vapi4k.dsl.assistant.tools
 
 import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.model.Model
+import com.vapi4k.dsl.assistant.model.ModelMessageUnion
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.tools.ToolCache.addFunctionToCache
 import com.vapi4k.responses.assistant.FunctionDto
 
 @AssistantDslMarker
-data class Functions internal constructor(internal val model: Model) {
+data class Functions internal constructor(internal val model: ModelMessageUnion) {
   fun function(obj: Any) {
     model.functions += FunctionDto().also { functionDto ->
       verifyObject(true, obj)

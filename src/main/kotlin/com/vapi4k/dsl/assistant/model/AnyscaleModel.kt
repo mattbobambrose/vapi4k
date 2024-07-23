@@ -21,16 +21,14 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.AnyscaleModelDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
-interface ModelUnion {
+interface AnyscaleModelUnion {
   var provider: String
   var model: String
   val toolIds: MutableList<String>
@@ -39,24 +37,12 @@ interface ModelUnion {
   var emotionRecognitionEnabled: Boolean
 }
 
-interface ModelMessageUnion {
-  val cacheId: CacheId
-  val messageCallId: String
-  val toolDtos: MutableList<ToolDto>
-  val functions: MutableList<FunctionDto>
-  val messages: MutableList<RoleMessage>
-  fun message(
-    role: MessageRoleType,
-    content: String,
-  )
-}
-
 @AssistantDslMarker
-class Model(
+class AnyscaleModel(
   val request: JsonElement,
   override val cacheId: CacheId,
-  private val dto: ModelDto,
-) : ModelUnion by dto, ModelMessageUnion {
+  private val dto: AnyscaleModelDto,
+) : AnyscaleModelUnion by dto, ModelMessageUnion {
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
   override val functions get() = dto.functions

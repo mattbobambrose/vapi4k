@@ -16,21 +16,35 @@
 
 package com.vapi4k.dsl.assistant.model
 
+/*
+ * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ */
+
 import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.AnthropicModelDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.ModelDto
 import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
-interface ModelUnion {
+interface AnthropicModelUnion {
   var provider: String
   var model: String
   val toolIds: MutableList<String>
@@ -39,24 +53,12 @@ interface ModelUnion {
   var emotionRecognitionEnabled: Boolean
 }
 
-interface ModelMessageUnion {
-  val cacheId: CacheId
-  val messageCallId: String
-  val toolDtos: MutableList<ToolDto>
-  val functions: MutableList<FunctionDto>
-  val messages: MutableList<RoleMessage>
-  fun message(
-    role: MessageRoleType,
-    content: String,
-  )
-}
-
 @AssistantDslMarker
-class Model(
+class AnthropicModel(
   val request: JsonElement,
   override val cacheId: CacheId,
-  private val dto: ModelDto,
-) : ModelUnion by dto, ModelMessageUnion {
+  private val dto: AnthropicModelDto,
+) : AnthropicModelUnion by dto, ModelMessageUnion {
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
   override val functions get() = dto.functions
