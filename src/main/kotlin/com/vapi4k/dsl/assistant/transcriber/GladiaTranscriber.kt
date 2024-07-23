@@ -22,7 +22,9 @@ import com.vapi4k.responses.assistant.GladiaTranscriberDto
 
 interface GladiaTranscriberUnion {
   var transcriberModel: GladiaModelType
+  var customModel: String
   var transcriberLanguage: GladiaLanguageType
+  var customLanguage: String
   var languageBehavior: String
   var transcriptionHint: String
   var prosody: Boolean

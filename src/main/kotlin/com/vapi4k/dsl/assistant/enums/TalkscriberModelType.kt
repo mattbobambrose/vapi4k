@@ -31,7 +31,9 @@ import kotlinx.serialization.encoding.Encoder
 enum class TalkscriberModelType(internal val desc: String) {
   WHISPER("whisper"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
 }
 
 private object TalkscriberModelTypeSerializer : KSerializer<TalkscriberModelType> {

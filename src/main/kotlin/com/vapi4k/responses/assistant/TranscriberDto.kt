@@ -29,7 +29,6 @@ import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriberUnion
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriberUnion
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -51,6 +50,15 @@ private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
   ) {
     when (value) {
       is DeepgramTranscriberDto -> {
+        value.model =
+          if (value.customModel.isNotEmpty()) {
+            if (value.transcriberModel.isSpecified())
+              error("Cannot have both customModel and transcriberModel in deepgramTranscriber{}")
+            value.customModel
+          } else {
+            value.transcriberLanguage.desc
+          }
+
         value.language =
           if (value.customLanguage.isNotEmpty()) {
             if (value.transcriberLanguage.isSpecified())
@@ -59,14 +67,51 @@ private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
           } else {
             value.transcriberLanguage.desc
           }
+
         encoder.encodeSerializableValue(DeepgramTranscriberDto.serializer(), value)
       }
 
       is GladiaTranscriberDto -> {
+        value.model =
+          if (value.customModel.isNotEmpty()) {
+            if (value.transcriberModel.isSpecified())
+              error("Cannot have both customModel and transcriberModel in deepgramTranscriber{}")
+            value.customModel
+          } else {
+            value.transcriberLanguage.desc
+          }
+
+        value.language =
+          if (value.customLanguage.isNotEmpty()) {
+            if (value.transcriberLanguage.isSpecified())
+              error("Cannot have both custom language and transcriber language in deepgramTranscriber{}")
+            value.customLanguage
+          } else {
+            value.transcriberLanguage.desc
+          }
+
         encoder.encodeSerializableValue(GladiaTranscriberDto.serializer(), value)
       }
 
       is TalkscriberTranscriberDto -> {
+        value.model =
+          if (value.customModel.isNotEmpty()) {
+            if (value.transcriberModel.isSpecified())
+              error("Cannot have both customModel and transcriberModel in deepgramTranscriber{}")
+            value.customModel
+          } else {
+            value.transcriberLanguage.desc
+          }
+
+        value.language =
+          if (value.customLanguage.isNotEmpty()) {
+            if (value.transcriberLanguage.isSpecified())
+              error("Cannot have both custom language and transcriber language in deepgramTranscriber{}")
+            value.customLanguage
+          } else {
+            value.transcriberLanguage.desc
+          }
+
         encoder.encodeSerializableValue(TalkscriberTranscriberDto.serializer(), value)
       }
     }
@@ -82,8 +127,11 @@ data class DeepgramTranscriberDto(
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.DEEPGRAM,
 
-  @SerialName("model")
+  var model: String = "",
+  @Transient
   override var transcriberModel: DeepgramModelType = DeepgramModelType.UNSPECIFIED,
+  @Transient
+  override var customModel: String = "",
 
   var language: String = "",
   @Transient
@@ -101,11 +149,17 @@ data class GladiaTranscriberDto(
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.GLADIA,
 
-  @SerialName("model")
+  var model: String = "",
+  @Transient
   override var transcriberModel: GladiaModelType = GladiaModelType.UNSPECIFIED,
+  @Transient
+  override var customModel: String = "",
 
-  @SerialName("language")
+  var language: String = "",
+  @Transient
   override var transcriberLanguage: GladiaLanguageType = GladiaLanguageType.UNSPECIFIED,
+  @Transient
+  override var customLanguage: String = "",
 
   override var languageBehavior: String = "",
   override var transcriptionHint: String = "",
@@ -118,10 +172,15 @@ data class TalkscriberTranscriberDto(
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.TALKSCRIBER,
 
-  @SerialName("model")
+  var model: String = "",
+  @Transient
   override var transcriberModel: TalkscriberModelType = TalkscriberModelType.UNSPECIFIED,
+  @Transient
+  override var customModel: String = "",
 
-  @SerialName("language")
+  var language: String = "",
+  @Transient
   override var transcriberLanguage: TalkscriberLanguageType = TalkscriberLanguageType.UNSPECIFIED,
-
-  ) : TalkscriberTranscriberUnion, AbstractTranscriberDto
+  @Transient
+  override var customLanguage: String = "",
+) : TalkscriberTranscriberUnion, AbstractTranscriberDto

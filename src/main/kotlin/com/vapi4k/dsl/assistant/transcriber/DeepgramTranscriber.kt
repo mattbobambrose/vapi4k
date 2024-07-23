@@ -23,6 +23,7 @@ import com.vapi4k.responses.assistant.DeepgramTranscriberDto
 
 interface DeepgramTranscriberUnion {
   var transcriberModel: DeepgramModelType
+  var customModel: String
   var transcriberLanguage: DeepgramLanguageType
   var customLanguage: String
   var smartFormat: Boolean

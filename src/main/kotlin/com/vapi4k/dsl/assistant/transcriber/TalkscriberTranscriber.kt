@@ -23,7 +23,9 @@ import com.vapi4k.responses.assistant.TalkscriberTranscriberDto
 
 interface TalkscriberTranscriberUnion {
   var transcriberModel: TalkscriberModelType
+  var customModel: String
   var transcriberLanguage: TalkscriberLanguageType
+  var customLanguage: String
 }
 
 @AssistantDslMarker
