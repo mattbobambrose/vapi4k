@@ -1,0 +1,17 @@
+inputPreprocessingEnabled
+inputReformattingEnabled
+inputMinCharacters
+inputPunctuationBoundaries
+fillerInjectionEnabled
+provider
+voiceId
+speed
+
+Cartesia:
+model = sonic-english, sonic-multilingual
+language = de, en, es, fr, ja, pt, zh
+
+Deepgram:
+No speed
+
+ElevenLabs:

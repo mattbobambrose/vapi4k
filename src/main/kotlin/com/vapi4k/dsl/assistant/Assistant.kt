@@ -19,6 +19,7 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
+import com.vapi4k.dsl.assistant.enums.VoiceType
 import com.vapi4k.dsl.assistant.model.Model
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
@@ -75,7 +76,9 @@ data class Assistant internal constructor(
   }
 
   fun voice(block: Voice.() -> Unit) {
-    Voice(assistantDto.voiceDto).apply(block)
+    val dto = assistantDto.voiceDto
+    Voice(dto).apply(block)
+    if (dto.voiceId == VoiceType.UNSPECIFIED) error("VoiceId must be set")
   }
 
   fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {

@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.enums.ProviderType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
+import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.enums.VoiceType
 import com.vapi4k.responses.assistant.VoiceDto
 
@@ -27,7 +27,7 @@ interface VoiceUnion {
   var inputReformattingEnabled: Boolean
   var inputMinCharacters: Int
   var fillerInjectionEnabled: Boolean
-  var provider: ProviderType
+  var provider: VoiceProviderType
   var voiceId: VoiceType
   var speed: Double
   val inputPunctuationBoundaries: MutableList<PunctuationType>

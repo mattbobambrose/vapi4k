@@ -28,9 +28,18 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = VoiceTypeSerializer::class)
 enum class VoiceType(internal val desc: String) {
-  ANDREW("Andrew"),
-  BRIAN("Brian"),
-  EMMA("Emma"),
+  //  Azure voice types
+  ANDREW("andrew"),
+  BRIAN("brian"),
+  EMMA("emma"),
+
+  //  OpenAI voice types
+  ALLOY("alloy"),
+  ECHO("echo"),
+  FABLE("fable"),
+  ONYX("onyx"),
+  NOVA("nova"),
+  SHIMMER("shimmer"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 }

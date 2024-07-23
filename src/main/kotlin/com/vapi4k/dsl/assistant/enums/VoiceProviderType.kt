@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import com.vapi4k.dsl.assistant.enums.ProviderType.entries
+import com.vapi4k.dsl.assistant.enums.VoiceProviderType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -26,19 +26,19 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = ProviderTypeSerializer::class)
-enum class ProviderType(internal val desc: String) {
+@Serializable(with = VoiceProviderTypeSerializer::class)
+enum class VoiceProviderType(internal val desc: String) {
   AZURE("azure"),
-
+  OPENAI("openai"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 }
 
-private object ProviderTypeSerializer : KSerializer<ProviderType> {
+private object VoiceProviderTypeSerializer : KSerializer<VoiceProviderType> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ProviderType", STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: ProviderType,
+    value: VoiceProviderType,
   ) = encoder.encodeString(value.desc)
 
   override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
