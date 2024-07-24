@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.CacheId
+import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.model.AnthropicModel
 import com.vapi4k.dsl.assistant.model.AnyscaleModel
 import com.vapi4k.dsl.assistant.model.CustomLLMModel
@@ -24,6 +25,7 @@ import com.vapi4k.dsl.assistant.model.DeepInfraModel
 import com.vapi4k.dsl.assistant.model.GroqModel
 import com.vapi4k.dsl.assistant.model.OpenAIModel
 import com.vapi4k.dsl.assistant.model.OpenRouterModel
+import com.vapi4k.dsl.assistant.model.PerplexityAIModel
 import com.vapi4k.dsl.assistant.model.TogetherAIModel
 import com.vapi4k.dsl.assistant.model.VapiModel
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
@@ -38,6 +40,7 @@ import com.vapi4k.responses.assistant.model.DeepInfraModelDto
 import com.vapi4k.responses.assistant.model.GroqModelDto
 import com.vapi4k.responses.assistant.model.OpenAIModelDto
 import com.vapi4k.responses.assistant.model.OpenRouterModelDto
+import com.vapi4k.responses.assistant.model.PerplexityAIModelDto
 import com.vapi4k.responses.assistant.model.TogetherAIModelDto
 import com.vapi4k.responses.assistant.model.VapiModelDto
 import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
@@ -75,119 +78,91 @@ data class AssistantOverrides internal constructor(
   private val cacheId: CacheId,
   private val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantOverridesUnion by assistantOverridesDto {
+  private val transcriberChecker = DuplicateChecker()
+  private val modelChecker = DuplicateChecker()
+  private val voiceChecker = DuplicateChecker()
+
+  // Transcribers
+  fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {
+    transcriberChecker.check("deepGramTranscriber{} already called")
+    val transcriberDto = DeepgramTranscriberDto().also { assistantOverridesDto.transcriberDto = it }
+    return DeepgramTranscriber(transcriberDto).apply(block)
+  }
+
+  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber {
+    transcriberChecker.check("gladiaTranscriber{} already called")
+    val transcriberDto = GladiaTranscriberDto().also { assistantOverridesDto.transcriberDto = it }
+    return GladiaTranscriber(transcriberDto).apply(block)
+  }
+
+  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber {
+    transcriberChecker.check("talkscriberTranscriber{} already called")
+    val transcriberDto = TalkscriberTranscriberDto().also { assistantOverridesDto.transcriberDto = it }
+    return TalkscriberTranscriber(transcriberDto).apply(block)
+  }
+
+  // Models
   fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel {
-    val modelDto = AnyscaleModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return AnyscaleModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("anyscaleModel{} already called")
+    val modelDto = AnyscaleModelDto().also { assistantOverridesDto.modelDto = it }
+    return AnyscaleModel(request, cacheId, modelDto).apply(block)
   }
 
   fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel {
-    val modelDto = AnthropicModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return AnthropicModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("anthropicModel{} already called")
+    val modelDto = AnthropicModelDto().also { assistantOverridesDto.modelDto = it }
+    return AnthropicModel(request, cacheId, modelDto).apply(block)
   }
 
   fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
-    val modelDto = CustomLLMModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return CustomLLMModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("customLLMModel{} already called")
+    val modelDto = CustomLLMModelDto().also { assistantOverridesDto.modelDto = it }
+    return CustomLLMModel(request, cacheId, modelDto).apply(block)
   }
 
   fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel {
-    val modelDto = DeepInfraModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return DeepInfraModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("deepInfraModel{} already called")
+    val modelDto = DeepInfraModelDto().also { assistantOverridesDto.modelDto = it }
+    return DeepInfraModel(request, cacheId, modelDto).apply(block)
   }
 
   fun groqModel(block: GroqModel.() -> Unit): GroqModel {
-    val modelDto = GroqModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return GroqModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("groqModel{} already called")
+    val modelDto = GroqModelDto().also { assistantOverridesDto.modelDto = it }
+    return GroqModel(request, cacheId, modelDto).apply(block)
   }
 
   fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
-    val modelDto = OpenAIModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return OpenAIModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("openAIModel{} already called")
+    val modelDto = OpenAIModelDto().also { assistantOverridesDto.modelDto = it }
+    return OpenAIModel(request, cacheId, modelDto).apply(block)
   }
 
   fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel {
-    val modelDto = OpenRouterModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return OpenRouterModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("openRouterModel{} already called")
+    val modelDto = OpenRouterModelDto().also { assistantOverridesDto.modelDto = it }
+    return OpenRouterModel(request, cacheId, modelDto).apply(block)
   }
 
-  fun perplexityAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
-    val modelDto = OpenAIModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return OpenAIModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+  fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel {
+    modelChecker.check("perplexityAIModel{} already called")
+    val modelDto = PerplexityAIModelDto().also { assistantOverridesDto.modelDto = it }
+    return PerplexityAIModel(request, cacheId, modelDto).apply(block)
   }
 
   fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel {
-    val modelDto = TogetherAIModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return TogetherAIModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("togetherAIModel{} already called")
+    val modelDto = TogetherAIModelDto().also { assistantOverridesDto.modelDto = it }
+    return TogetherAIModel(request, cacheId, modelDto).apply(block)
   }
 
   fun vapiModel(block: VapiModel.() -> Unit): VapiModel {
-    val modelDto = VapiModelDto()
-    assistantOverridesDto.modelDto = modelDto
-    return VapiModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    modelChecker.check("vapiModel{} already called")
+    val modelDto = VapiModelDto().also { assistantOverridesDto.modelDto = it }
+    return VapiModel(request, cacheId, modelDto).apply(block)
   }
 
   fun voice(block: Voice.() -> Unit) {
     Voice(assistantOverridesDto.voiceDto).apply(block)
-  }
-
-  fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
-    assistantOverridesDto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
-  }
-
-  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) {
-    assistantOverridesDto.transcriberDto = GladiaTranscriberDto().also { GladiaTranscriber(it).apply(block) }
-  }
-
-  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit) {
-    assistantOverridesDto.transcriberDto = TalkscriberTranscriberDto().also { TalkscriberTranscriber(it).apply(block) }
   }
 }

@@ -19,7 +19,6 @@ package com.vapi4k.responses.assistant
 import com.vapi4k.dsl.assistant.AssistantOverridesUnion
 import com.vapi4k.responses.assistant.model.AbstractModelDto
 import com.vapi4k.responses.assistant.transcriber.AbstractTranscriberDto
-import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -50,14 +49,14 @@ data class AssistantOverridesDto(
 
   val endCallPhrases: MutableList<String> = mutableListOf(),
 
+  @SerialName("transcriber")
+  var transcriberDto: AbstractTranscriberDto? = null,
+
   @SerialName("model")
   var modelDto: AbstractModelDto? = null,
+
   @SerialName("voice")
   val voiceDto: VoiceDto = VoiceDto(),
-
-  @SerialName("transcriber")
-  // DeepgramTranscriberDto is assigned as the default, but is later overwritten
-  var transcriberDto: AbstractTranscriberDto = DeepgramTranscriberDto(),
 
   // TODO: Came from squad assistant
   val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
