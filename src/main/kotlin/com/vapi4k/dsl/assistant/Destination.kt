@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.responses.assistant.NumberDestinationDto
-import com.vapi4k.responses.assistant.SipDestinationDto
+import com.vapi4k.responses.assistant.destination.NumberDestinationDto
+import com.vapi4k.responses.assistant.destination.SipDestinationDto
 import kotlinx.serialization.json.JsonElement
 
 internal interface NumberDestinationUnion {

@@ -20,8 +20,8 @@ import com.vapi4k.common.CacheId.Companion.UNSPECIFIED_CACHE_ID
 import com.vapi4k.dsl.assistant.squad.Squad
 import com.vapi4k.dsl.assistant.squad.SquadId
 import com.vapi4k.responses.AssistantRequestMessageResponse
-import com.vapi4k.responses.assistant.NumberDestinationDto
-import com.vapi4k.responses.assistant.SipDestinationDto
+import com.vapi4k.responses.assistant.destination.NumberDestinationDto
+import com.vapi4k.responses.assistant.destination.SipDestinationDto
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER

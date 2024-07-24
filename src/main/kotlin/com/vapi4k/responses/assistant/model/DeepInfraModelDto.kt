@@ -20,6 +20,7 @@ import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.dsl.assistant.model.DeepInfraModelUnion
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
+import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.responses.assistant.ToolDto
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
@@ -39,7 +40,7 @@ data class DeepInfraModelDto(
   val messages: MutableList<RoleMessage> = mutableListOf(),
   override val tools: MutableList<ToolDto> = mutableListOf(),
   override val toolIds: MutableList<String> = mutableListOf(),
-  val functions: MutableList<FunctionDto> = mutableListOf(),
+  override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,

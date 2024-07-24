@@ -27,7 +27,7 @@ import com.vapi4k.responses.assistant.FunctionDto
 @AssistantDslMarker
 data class Functions internal constructor(internal val model: ModelMessageUnion) {
   fun function(obj: Any) {
-    model.functions += FunctionDto().also { functionDto ->
+    model.functionDtos += FunctionDto().also { functionDto ->
       verifyObject(true, obj)
       populateFunctionDto(obj, functionDto)
       val cacheId =
@@ -37,7 +37,7 @@ data class Functions internal constructor(internal val model: ModelMessageUnion)
           model.messageCallId.toCacheId()
       addFunctionToCache(cacheId, obj)
     }.also { func ->
-      if (model.functions.any { func.name == it.name }) {
+      if (model.functionDtos.any { func.name == it.name }) {
         error("Duplicate function name declared: ${func.name}")
       }
     }

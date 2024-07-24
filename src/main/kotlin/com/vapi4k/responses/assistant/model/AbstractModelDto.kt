@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.ModelType
+import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.ToolDto
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -31,6 +32,7 @@ interface AbstractModelDto {
 
   //fun assignEnumOverrides()
   val tools: MutableList<ToolDto>
+  val functions: MutableList<FunctionDto>
 }
 
 private object ModelSerializer : KSerializer<AbstractModelDto> {

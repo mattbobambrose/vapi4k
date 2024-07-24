@@ -19,14 +19,14 @@ package com.vapi4k.dsl.assistant.model
 import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.responses.assistant.ToolDto
-import com.vapi4k.responses.assistant.model.RoleMessage
 
 interface ModelMessageUnion {
   val cacheId: CacheId
   val messageCallId: String
   val toolDtos: MutableList<ToolDto>
-  val functions: MutableList<FunctionDto>
+  val functionDtos: MutableList<FunctionDto>
   val messages: MutableList<RoleMessage>
   fun message(
     role: MessageRoleType,

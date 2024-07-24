@@ -20,10 +20,10 @@ package com.vapi4k.responses
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantIdUnion
 import com.vapi4k.dsl.assistant.squad.SquadIdUnion
-import com.vapi4k.responses.assistant.AbstractDestinationDto
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.SquadDto
+import com.vapi4k.responses.assistant.destination.AbstractDestinationDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement

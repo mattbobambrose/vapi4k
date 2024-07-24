@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.responses.assistant.destination
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

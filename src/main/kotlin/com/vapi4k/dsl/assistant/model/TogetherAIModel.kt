@@ -24,7 +24,7 @@ import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.model.RoleMessage
+import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.responses.assistant.model.TogetherAIModelDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
@@ -47,7 +47,7 @@ class TogetherAIModel(
 ) : TogetherAIModelUnion by dto, ModelMessageUnion {
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
-  override val functions get() = dto.functions
+  override val functionDtos get() = dto.functions
   override val messageCallId get() = request.messageCallId
 
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)

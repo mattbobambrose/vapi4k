@@ -14,19 +14,19 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.responses.assistant.destination
 
-import com.vapi4k.dsl.assistant.SipDestinationUnion
+import com.vapi4k.dsl.assistant.NumberDestinationUnion
 import com.vapi4k.dsl.assistant.enums.DestinationType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SipDestinationDto : SipDestinationUnion, AbstractDestinationDto {
+class NumberDestinationDto : NumberDestinationUnion, AbstractDestinationDto {
   @EncodeDefault
-  val type: DestinationType = DestinationType.SIP
+  val type: DestinationType = DestinationType.NUMBER
 
-  override var sipUri: String = ""
+  override var number: String = ""
   override var message: String = ""
   override var description: String = ""
 }
