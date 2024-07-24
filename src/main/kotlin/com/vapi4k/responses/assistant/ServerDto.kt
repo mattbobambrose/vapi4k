@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ServerDto(
-  var timeoutSeconds: Int = 0,
+  var timeoutSeconds: Int = -1,
   var url: String = "",
-  var secret: String = ""
+  var secret: String = "",
 )

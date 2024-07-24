@@ -29,8 +29,8 @@ interface KnowledgeBaseUnion {
 data class KnowledgeBaseDto(
   @EncodeDefault
   val provider: String = "canonical",
-  override var topK: Double = 0.0,
-  override val fileIds: MutableList<String> = mutableListOf()
+  override var topK: Double = -1.0,
+  override val fileIds: MutableList<String> = mutableListOf(),
 ) : KnowledgeBaseUnion
 
 

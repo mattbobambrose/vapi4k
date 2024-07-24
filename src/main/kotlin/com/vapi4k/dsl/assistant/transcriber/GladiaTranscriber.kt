@@ -27,8 +27,8 @@ interface GladiaTranscriberUnion {
   var customLanguage: String
   var languageBehavior: String
   var transcriptionHint: String
-  var prosody: Boolean
-  var audioEnhancer: Boolean
+  var prosody: Boolean?
+  var audioEnhancer: Boolean?
 }
 
 class GladiaTranscriber internal constructor(private val dto: GladiaTranscriberDto) : GladiaTranscriberUnion by dto

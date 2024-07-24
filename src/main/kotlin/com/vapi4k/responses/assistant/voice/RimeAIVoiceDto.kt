@@ -36,7 +36,7 @@ data class RimeAIVoiceDto(
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: RimeAIVoiceIdType = RimeAIVoiceIdType.UNSPECIFIED,
   override var model: RimeAIVoiceModelType = RimeAIVoiceModelType.UNSPECIFIED,
-  override var speed: Double = 0.0,
+  override var speed: Double = -1.0,
 ) : RimeAIVoiceUnion, AbstractVoiceDto()
 
 

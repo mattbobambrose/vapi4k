@@ -22,11 +22,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AnalysisPlanDto(
   var summaryPrompt: String = "",
-  var summaryRequestTimeoutSeconds: Double = 0.0,
-  var structuredDataRequestTimeoutSeconds: Double = 0.0,
+  var summaryRequestTimeoutSeconds: Double = -1.0,
+  var structuredDataRequestTimeoutSeconds: Double = -1.0,
   var successEvaluationPrompt: String = "",
   var successEvaluationRubric: String = "",
-  var successEvaluationRequestTimeoutSeconds: Double = 0.0,
+  var successEvaluationRequestTimeoutSeconds: Double = -1.0,
   var structuredDataPrompt: String = "",
   val structuredDataSchema: StructuredDataSchemaDto = StructuredDataSchemaDto(),
 )

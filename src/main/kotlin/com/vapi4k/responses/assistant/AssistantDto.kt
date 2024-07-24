@@ -48,8 +48,8 @@ data class AssistantDto(
 
   // TODO: Not in docs or squad
   override var dialKeypadFunctionEnabled: Boolean? = null,
-  override var responseDelaySeconds: Double = 0.0,
-  override var llmRequestDelaySeconds: Double = 0.0,
+  override var responseDelaySeconds: Double = -1.0,
+  override var llmRequestDelaySeconds: Double = -1.0,
   override var silenceTimeoutSeconds: Int = -1,
   override var maxDurationSeconds: Int = -1,
   override var backgroundSound: String = "",
@@ -59,7 +59,7 @@ data class AssistantDto(
   override var backchannelingEnabled: Boolean? = null,
   override var backgroundDenoisingEnabled: Boolean? = null,
   override var modelOutputInMessagesEnabled: Boolean? = null,
-  override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
+  override var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
 
   override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
 

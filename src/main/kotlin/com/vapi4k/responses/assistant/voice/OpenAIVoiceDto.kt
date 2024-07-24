@@ -34,5 +34,5 @@ data class OpenAIVoiceDto(
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,
-  override var speed: Double = 0.0,
+  override var speed: Double = -1.0,
 ) : OpenAIVoiceUnion, AbstractVoiceDto()

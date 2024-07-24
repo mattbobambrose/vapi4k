@@ -50,8 +50,8 @@ import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesUnion {
   var firstMessageMode: String
-  var recordingEnabled: Boolean
-  var hipaaEnabled: Boolean
+  var recordingEnabled: Boolean?
+  var hipaaEnabled: Boolean?
   var silenceTimeoutSeconds: Int
   var responseDelaySeconds: Double
   var llmRequestDelaySeconds: Double
@@ -59,9 +59,9 @@ interface AssistantOverridesUnion {
   var numWordsToInterruptAssistant: Int
   var maxDurationSeconds: Int
   var backgroundSound: String
-  var backchannelingEnabled: Boolean
-  var backgroundDenoisingEnabled: Boolean
-  var modelOutputInMessagesEnabled: Boolean
+  var backchannelingEnabled: Boolean?
+  var backgroundDenoisingEnabled: Boolean?
+  var modelOutputInMessagesEnabled: Boolean?
   var name: String
   var firstMessage: String
   var voicemailMessage: String

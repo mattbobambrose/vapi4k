@@ -45,7 +45,7 @@ data class DeepgramTranscriberDto(
   @Transient
   override var customLanguage: String = "",
 
-  override var smartFormat: Boolean = false,
+  override var smartFormat: Boolean? = null,
   override val keywords: MutableSet<String> = mutableSetOf(),
 ) : DeepgramTranscriberUnion, AbstractTranscriberDto {
 

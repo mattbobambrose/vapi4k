@@ -47,8 +47,8 @@ data class GladiaTranscriberDto(
 
   override var languageBehavior: String = "",
   override var transcriptionHint: String = "",
-  override var prosody: Boolean = false,
-  override var audioEnhancer: Boolean = false,
+  override var prosody: Boolean? = null,
+  override var audioEnhancer: Boolean? = null,
 ) : GladiaTranscriberUnion, AbstractTranscriberDto {
   override fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc

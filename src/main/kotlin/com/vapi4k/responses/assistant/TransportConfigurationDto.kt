@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TransportConfigurationDto(
   var provider: String = "",
-  var timeout: Int = 0,
-  var record: Boolean = false,
+  var timeout: Int = -1,
+  var record: Boolean? = null,
   var recordingChannels: String = "",
 )

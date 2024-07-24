@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MessagePlanDto(
-  var idleMessageMaxSpokenCount: Double = 0.0,
-  var idleTimeoutSeconds: Double = 0.0,
+  var idleMessageMaxSpokenCount: Double = -1.0,
+  var idleTimeoutSeconds: Double = -1.0,
   val idleMessages: MutableList<String> = mutableListOf(),
 )

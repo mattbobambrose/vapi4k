@@ -35,12 +35,12 @@ data class PlayHTVoiceDto(
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: PlayHTVoiceIdType = PlayHTVoiceIdType.UNSPECIFIED,
-  override var speed: Double = 0.0,
-  override var temperature: Double = 0.0,
+  override var speed: Double = -1.0,
+  override var temperature: Double = -1.0,
   override var emotion: PlayHTVoiceEmotionType = PlayHTVoiceEmotionType.UNSPECIFIED,
-  override var voiceGuidance: Double = 0.0,
-  override var styleGuidance: Double = 0.0,
-  override var textGuidance: Double = 0.0,
+  override var voiceGuidance: Double = -1.0,
+  override var styleGuidance: Double = -1.0,
+  override var textGuidance: Double = -1.0,
 ) : PlayHTVoiceUnion, AbstractVoiceDto()
 
 

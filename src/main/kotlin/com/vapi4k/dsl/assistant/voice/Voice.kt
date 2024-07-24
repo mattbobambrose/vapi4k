@@ -23,10 +23,10 @@ import com.vapi4k.dsl.assistant.enums.VoiceType
 import com.vapi4k.responses.assistant.VoiceDto
 
 interface VoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var provider: VoiceProviderType
   var voiceId: VoiceType
   var speed: Double

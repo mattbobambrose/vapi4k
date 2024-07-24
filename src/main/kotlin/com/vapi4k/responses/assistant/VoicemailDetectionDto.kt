@@ -22,10 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VoicemailDetectionDto(
   var provider: String = "",
-  var enabled: Boolean = false,
-  var machineDetectionTimeout: Int = 0,
-  var machineDetectionSpeechThreshold: Int = 0,
-  var machineDetectionSpeechEndThreshold: Int = 0,
-  var machineDetectionSilenceTimeout: Int = 0,
-  val voicemailDetectionTypes: MutableList<String> = mutableListOf(),
+  var enabled: Boolean? = null,
+  var machineDetectionTimeout: Int = -1,
+  var machineDetectionSpeechThreshold: Int = -1,
+  var machineDetectionSpeechEndThreshold: Int = -1,
+  var machineDetectionSilenceTimeout: Int = -1,
+  val voicemailDetectionTypes: MutableSet<String> = mutableSetOf(),
 )

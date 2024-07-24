@@ -25,12 +25,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VoiceDto(
-  override var inputPreprocessingEnabled: Boolean = false,
-  override var inputReformattingEnabled: Boolean = false,
-  override var inputMinCharacters: Int = 0,
-  override var fillerInjectionEnabled: Boolean = false,
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
+  override var fillerInjectionEnabled: Boolean? = null,
   override var provider: VoiceProviderType = VoiceProviderType.UNSPECIFIED,
   override var voiceId: VoiceType = VoiceType.UNSPECIFIED,
-  override var speed: Double = 0.0,
+  override var speed: Double = -1.0,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
 ) : VoiceUnion

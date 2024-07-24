@@ -26,7 +26,7 @@ interface DeepgramTranscriberUnion {
   var customModel: String
   var transcriberLanguage: DeepgramLanguageType
   var customLanguage: String
-  var smartFormat: Boolean
+  var smartFormat: Boolean?
   val keywords: MutableSet<String>
 }
 

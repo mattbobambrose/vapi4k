@@ -21,5 +21,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ArtifactPlanDto(
-  var videoRecordingEnabled: Boolean = false,
+  var videoRecordingEnabled: Boolean? = null,
 )
