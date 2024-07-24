@@ -89,6 +89,7 @@ data class Assistant internal constructor(
 ) : AssistantUnion by assistantDto {
   private val transcriberChecker = DuplicateChecker()
   private val modelChecker = DuplicateChecker()
+  private val voiceChecker = DuplicateChecker()
 
   // Transcribers
   fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {
