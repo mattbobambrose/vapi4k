@@ -30,9 +30,6 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class OpenAIModelDto(
-  @EncodeDefault
-  override val provider: ModelType = ModelType.OPEN_AI,
-
   var model: String = "",
 
   @Transient
@@ -63,6 +60,9 @@ data class OpenAIModelDto(
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : OpenAIModelUnion, AbstractModelDto {
+  @EncodeDefault
+  override val provider: ModelType = ModelType.OPEN_AI,
+
   fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else modelType.desc
     fallbackModels.addAll(fallbackModelTypes.map { it.desc } + customFallbackModels)

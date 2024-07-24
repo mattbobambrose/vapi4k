@@ -29,9 +29,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CustomLLMModelDto(
-  @EncodeDefault
-  override val provider: ModelType = ModelType.CUSTOM_LLM,
-
   override var model: String = "",
   override var temperature: Int = -1,
   override var maxTokens: Int = -1,
@@ -49,6 +46,9 @@ data class CustomLLMModelDto(
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : CustomLLMModelUnion, AbstractModelDto {
+  @EncodeDefault
+  override val provider: ModelType = ModelType.CUSTOM_LLM,
+
   override fun verifyValues() {
     if (model.isEmpty())
       error("customLLMModel{} requires a model value")

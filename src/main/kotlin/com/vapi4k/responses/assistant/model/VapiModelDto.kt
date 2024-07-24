@@ -28,9 +28,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VapiModelDto(
-  @EncodeDefault
-  override val provider: ModelType = ModelType.VAPI,
-
   override var model: String = "",
   override var temperature: Int = -1,
   override var maxTokens: Int = -1,
@@ -45,6 +42,9 @@ data class VapiModelDto(
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : VapiModelUnion, AbstractModelDto {
+  @EncodeDefault
+  override val provider: ModelType = ModelType.VAPI,
+
   override fun verifyValues() {
     if (model.isEmpty())
       error("vapiModel{} requires a model value")

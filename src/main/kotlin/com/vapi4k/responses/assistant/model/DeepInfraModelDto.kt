@@ -28,9 +28,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DeepInfraModelDto(
-  @EncodeDefault
-  override val provider: ModelType = ModelType.DEEP_INFRA,
-
   override var model: String = "",
   override var temperature: Int = -1,
   override var maxTokens: Int = -1,
@@ -45,6 +42,9 @@ data class DeepInfraModelDto(
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : DeepInfraModelUnion, AbstractModelDto {
+  @EncodeDefault
+  override val provider: ModelType = ModelType.DEEP_INFRA,
+
   override fun verifyValues() {
     if (model.isEmpty())
       error("deepInfraModel{} requires a model value")

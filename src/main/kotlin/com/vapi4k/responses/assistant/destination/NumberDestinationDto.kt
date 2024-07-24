@@ -22,11 +22,11 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-class NumberDestinationDto : NumberDestinationUnion, AbstractDestinationDto {
+class NumberDestinationDto(
+  override var number: String = "",
+  override var message: String = "",
+  override var description: String = "",
+) : NumberDestinationUnion, AbstractDestinationDto {
   @EncodeDefault
   val type: DestinationType = DestinationType.NUMBER
-
-  override var number: String = ""
-  override var message: String = ""
-  override var description: String = ""
 }

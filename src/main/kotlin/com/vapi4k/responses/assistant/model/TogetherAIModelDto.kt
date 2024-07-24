@@ -28,9 +28,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TogetherAIModelDto(
-  @EncodeDefault
-  override val provider: ModelType = ModelType.TOGETHER_AI,
-
   override var model: String = "",
   override var temperature: Int = -1,
   override var maxTokens: Int = -1,
@@ -45,6 +42,9 @@ data class TogetherAIModelDto(
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : TogetherAIModelUnion, AbstractModelDto {
+  @EncodeDefault
+  override val provider: ModelType = ModelType.TOGETHER_AI,
+
   override fun verifyValues() {
     if (model.isEmpty())
       error("togetherAIModel{} requires a model value")

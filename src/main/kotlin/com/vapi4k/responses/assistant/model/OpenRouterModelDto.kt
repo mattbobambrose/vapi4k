@@ -28,9 +28,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OpenRouterModelDto(
-  @EncodeDefault
-  override val provider: ModelType = ModelType.OPEN_AI,
-
   override var model: String = "",
   override var temperature: Int = -1,
   override var maxTokens: Int = -1,
@@ -45,6 +42,9 @@ data class OpenRouterModelDto(
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : OpenRouterModelUnion, AbstractModelDto {
+  @EncodeDefault
+  override val provider: ModelType = ModelType.OPEN_AI,
+
   override fun verifyValues() {
     if (model.isEmpty())
       error("openRouterModel{} requires a model value")

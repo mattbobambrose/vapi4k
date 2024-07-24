@@ -26,9 +26,6 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class DeepgramTranscriberDto(
-  @EncodeDefault
-  override val provider: TranscriberType = TranscriberType.DEEPGRAM,
-
   var model: String = "",
 
   @Transient
@@ -48,6 +45,8 @@ data class DeepgramTranscriberDto(
   override var smartFormat: Boolean? = null,
   override val keywords: MutableSet<String> = mutableSetOf(),
 ) : DeepgramTranscriberUnion, AbstractTranscriberDto {
+  @EncodeDefault
+  override val provider: TranscriberType = TranscriberType.DEEPGRAM,
 
   override fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc

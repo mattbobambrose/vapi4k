@@ -28,9 +28,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AnyscaleModelDto(
-  @EncodeDefault
-  override val provider: ModelType = ModelType.ANYSCALE,
-
   override var model: String = "",
   override var temperature: Int = -1,
   override var maxTokens: Int = -1,
@@ -45,6 +42,9 @@ data class AnyscaleModelDto(
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : AnyscaleModelUnion, AbstractModelDto {
+  @EncodeDefault
+  override val provider: ModelType = ModelType.ANYSCALE,
+
   override fun verifyValues() {
     if (model.isEmpty())
       error("anyscaleModel{} requires a model value")

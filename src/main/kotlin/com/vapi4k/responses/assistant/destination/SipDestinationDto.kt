@@ -22,11 +22,11 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SipDestinationDto : SipDestinationUnion, AbstractDestinationDto {
+class SipDestinationDto(
+  override var sipUri: String = "",
+  override var message: String = "",
+  override var description: String = "",
+) : SipDestinationUnion, AbstractDestinationDto {
   @EncodeDefault
   val type: DestinationType = DestinationType.SIP
-
-  override var sipUri: String = ""
-  override var message: String = ""
-  override var description: String = ""
 }

@@ -30,9 +30,6 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class AnthropicModelDto(
-  @EncodeDefault
-  override val provider: ModelType = ModelType.ANTHROPIC,
-
   var model: String = "",
 
   @Transient
@@ -54,6 +51,9 @@ data class AnthropicModelDto(
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : AnthropicModelUnion, AbstractModelDto {
+  @EncodeDefault
+  override val provider: ModelType = ModelType.ANTHROPIC,
+
   fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else modelType.desc
   }
