@@ -40,7 +40,7 @@ enum class ServerRequestType(internal val desc: String) {
       try {
         ServerRequestType.entries.first { it.desc == desc }
       } catch (e: Exception) {
-        logger.error(e) { "Invalid ServerMessageType: $desc" }
+        logger.error { "Invalid ServerMessageType: $desc" }
         UNKNOWN
       }
   }

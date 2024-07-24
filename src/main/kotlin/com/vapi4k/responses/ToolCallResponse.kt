@@ -60,7 +60,7 @@ data class ToolCallResponse(private var messageResponse: MessageResponse = Messa
                           }
                       }.getOrElse { e ->
                         val errorMsg = e.message ?: "Error invoking tool"
-                        logger.error(e) { errorMsg }
+                        logger.error { errorMsg }
                         errorMsg
                       }
                   }
@@ -73,7 +73,7 @@ data class ToolCallResponse(private var messageResponse: MessageResponse = Messa
             }
           }
       }.getOrElse { e ->
-        logger.error(e) { "Error receiving tool call: ${e.errorMsg}" }
+        logger.error { "Error receiving tool call: ${e.errorMsg}" }
         error("Error receiving tool call: ${e.errorMsg}")
       }
   }

@@ -27,10 +27,11 @@ interface KnowledgeBaseUnion {
 
 @Serializable
 data class KnowledgeBaseDto(
-  @EncodeDefault
-  val provider: String = "canonical",
   override var topK: Double = -1.0,
   override val fileIds: MutableList<String> = mutableListOf(),
-) : KnowledgeBaseUnion
+) : KnowledgeBaseUnion {
+  @EncodeDefault
+  val provider: String = "canonical"
+}
 
 

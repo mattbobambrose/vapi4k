@@ -357,8 +357,8 @@ class JsonExtensionTest {
 
     val jsonElement = str.toJsonElement()
     val servers = jsonElement["servers"].toObjectList<Server>()
-    for (server in servers) {
-      println(server.url)
-    }
+//    for (server in servers) {
+//      println(server.url)
+//    }
   }
 }

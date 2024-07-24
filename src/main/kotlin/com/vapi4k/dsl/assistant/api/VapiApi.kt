@@ -66,7 +66,7 @@ class VapiApi private constructor(
         val callRequest =
           phone.runCatching(block)
             .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
-            .onFailure { e -> logger.error(e) { "Failed to create call request: ${e.errorMsg}" } }
+            .onFailure { e -> logger.error { "Failed to create call request: ${e.errorMsg}" } }
             .getOrThrow()
 
         runCatching {
@@ -75,7 +75,7 @@ class VapiApi private constructor(
             setBody(callRequest)
           }
         }.onSuccess { logger.info { "Call made successfully" } }
-          .onFailure { e -> logger.error(e) { "Failed to make call: ${e.errorMsg}" } }
+          .onFailure { e -> logger.error { "Failed to make call: ${e.errorMsg}" } }
           .getOrThrow()
       }
 
@@ -95,7 +95,7 @@ class VapiApi private constructor(
     runBlocking {
       Phone().runCatching(block)
         .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
-        .onFailure { e -> logger.error(e) { "Failed to create call request: ${e.errorMsg}" } }
+        .onFailure { e -> logger.error { "Failed to create call request: ${e.errorMsg}" } }
         .getOrThrow()
     }
 
@@ -104,7 +104,7 @@ class VapiApi private constructor(
       val callRequest =
         Save().runCatching(block)
           .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
-          .onFailure { e -> logger.error(e) { "Failed to create call request: ${e.errorMsg}" } }
+          .onFailure { e -> logger.error { "Failed to create call request: ${e.errorMsg}" } }
           .getOrThrow()
 
       runCatching {
@@ -113,7 +113,7 @@ class VapiApi private constructor(
           setBody(callRequest)
         }
       }.onSuccess { logger.info { "Call saved successfully" } }
-        .onFailure { e -> logger.error(e) { "Failed to save call: ${e.errorMsg}" } }
+        .onFailure { e -> logger.error { "Failed to save call: ${e.errorMsg}" } }
         .getOrThrow()
     }
 
@@ -123,7 +123,7 @@ class VapiApi private constructor(
         runCatching {
           httpClient.get("$VAPI_API_URL/${objectType.endpoint}") { configCall(authString) }
         }.onSuccess { logger.info { "${objectType} objects fetched successfully" } }
-          .onFailure { e -> logger.error(e) { "Failed to fetch ${objectType} objects: ${e.errorMsg}" } }
+          .onFailure { e -> logger.error { "Failed to fetch ${objectType} objects: ${e.errorMsg}" } }
           .getOrThrow()
       }
     }.getOrThrow()
@@ -134,7 +134,7 @@ class VapiApi private constructor(
         runCatching {
           httpClient.get("$VAPI_API_URL/call/$callId") { configCall(authString) }
         }.onSuccess { logger.info { "Call deleted successfully" } }
-          .onFailure { e -> logger.error(e) { "Failed to delete call: ${e.errorMsg}" } }
+          .onFailure { e -> logger.error { "Failed to delete call: ${e.errorMsg}" } }
           .getOrThrow()
       }
     }.getOrThrow()

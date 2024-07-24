@@ -238,7 +238,7 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
                           runCatching {
                             response.invoke()
                           }.onFailure { e ->
-                            logger.error(e) { "Error creating response" }
+                            logger.error { "Error creating response" }
                             error("Error creating response")
                           }.getOrThrow()
 

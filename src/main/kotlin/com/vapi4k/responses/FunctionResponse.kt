@@ -41,7 +41,7 @@ class FunctionResponse(var result: String = "") {
                 .invokeToolMethod(args, request)
             }.getOrElse { e ->
               val errorMsg = e.message ?: "Error invoking function"
-              logger.error(e) { errorMsg }
+              logger.error { errorMsg }
               errorMsg
             }
         }
