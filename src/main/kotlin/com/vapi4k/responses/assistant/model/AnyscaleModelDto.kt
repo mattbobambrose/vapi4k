@@ -44,4 +44,9 @@ data class AnyscaleModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null
+
+  override fun verifyValues() {
+    if (model.isEmpty())
+      error("anyscaleModel{} requires a model value")
+  }
 }

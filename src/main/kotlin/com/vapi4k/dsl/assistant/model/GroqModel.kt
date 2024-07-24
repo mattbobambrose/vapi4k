@@ -20,6 +20,7 @@ import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.ModelMessageDelegate
+import com.vapi4k.dsl.assistant.enums.GroqModelType
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
@@ -31,7 +32,8 @@ import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
 interface GroqModelUnion {
-  var model: String
+  var modelType: GroqModelType
+  var customModel: String
   val toolIds: MutableList<String>
   var temperature: Int
   var maxTokens: Int

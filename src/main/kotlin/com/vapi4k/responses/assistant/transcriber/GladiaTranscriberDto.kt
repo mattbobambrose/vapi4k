@@ -69,4 +69,8 @@ data class GladiaTranscriberDto(
         transcriberLanguage.desc
       }
   }
+
+  override fun verifyValues() {
+    TODO("Not yet implemented")
+  }
 }

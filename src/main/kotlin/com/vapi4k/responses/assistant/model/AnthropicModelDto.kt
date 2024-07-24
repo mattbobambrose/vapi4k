@@ -33,13 +33,13 @@ data class AnthropicModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.ANTHROPIC,
 ) : AnthropicModelUnion, AbstractModelDto {
-  override var model: String = ""
+  var model: String = ""
 
   @Transient
-  var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED
+  override var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED
 
   @Transient
-  var customModel: String = ""
+  override var customModel: String = ""
 
   override var temperature: Int = -1
   override var maxTokens: Int = -1
@@ -55,14 +55,14 @@ data class AnthropicModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null
 
   fun assignEnumOverrides() {
-    model =
-      if (customModel.isNotEmpty()) {
-        if (modelType.isSpecified())
-          error("Cannot assign both customModel and modelType values in anthropicModel{}")
-        customModel
-      } else {
-        modelType.desc
-      }
+    model = if (customModel.isNotEmpty()) customModel else modelType.desc
+  }
+
+  override fun verifyValues() {
+    if (modelType.isSpecified() && customModel.isNotEmpty())
+      error("anthropicModel{} cannot have both modelType and customModel values")
+
+    if (modelType.isNotSpecified() && customModel.isEmpty())
+      error("anthropicModel{} must have either a modelType or customModel value")
   }
 }
-

@@ -23,6 +23,7 @@ import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.enums.DeepgramModelType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.dsl.assistant.enums.GladiaModelType
+import com.vapi4k.dsl.assistant.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.assistant.eq
@@ -49,7 +50,7 @@ class AssistantTest {
   }
 
   val messageOne = "Hi there test"
-  val mod = "gpt-3.5-turbo"
+  val mod = OpenAIModelType.GPT_3_5_TURBO
   val sysMessage = "You are the test systemMessage voice"
   val startMessage = "This is the test request start message"
   val completeMessage = "This is the test request complete message"
@@ -71,7 +72,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
 
         systemMessage = sysMessage
         tools {
@@ -95,7 +96,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
 
         systemMessage = sysMessage
         tools {
@@ -122,7 +123,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
 
         systemMessage = sysMessage
         tools {
@@ -147,7 +148,7 @@ class AssistantTest {
         assistant(request) {
           firstMessage = messageOne
           openAIModel {
-            model = mod
+            modelType = mod
 
             systemMessage = sysMessage
             tools {
@@ -171,7 +172,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
 
         systemMessage = sysMessage
         tools {
@@ -198,7 +199,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
 
         systemMessage = sysMessage
         tools {
@@ -225,7 +226,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
 
         systemMessage = sysMessage
         tools {
@@ -252,7 +253,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
         systemMessage = sysMessage
         tools {
           tool(WeatherLookupService0()) {
@@ -280,7 +281,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
         systemMessage = sysMessage
         tools {
           tool(WeatherLookupService0()) {
@@ -338,7 +339,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
 
         systemMessage = sysMessage
         tools {
@@ -404,7 +405,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        model = mod
+        modelType = mod
 
         systemMessage = sysMessage
         tools {

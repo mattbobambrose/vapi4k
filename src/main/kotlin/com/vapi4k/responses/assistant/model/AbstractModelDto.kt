@@ -35,6 +35,7 @@ interface AbstractModelDto {
   val messages: MutableList<RoleMessage>
   val tools: MutableList<ToolDto>
   val functions: MutableList<FunctionDto>
+  fun verifyValues()
 }
 
 private object ModelSerializer : KSerializer<AbstractModelDto> {
@@ -46,7 +47,6 @@ private object ModelSerializer : KSerializer<AbstractModelDto> {
   ) {
     when (value) {
       is AnyscaleModelDto -> {
-        //value.assignEnumOverrides()
         encoder.encodeSerializableValue(AnyscaleModelDto.serializer(), value)
       }
 
@@ -61,17 +61,16 @@ private object ModelSerializer : KSerializer<AbstractModelDto> {
       }
 
       is DeepInfraModelDto -> {
-        //value.assignEnumOverrides()
         encoder.encodeSerializableValue(DeepInfraModelDto.serializer(), value)
       }
 
       is GroqModelDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(GroqModelDto.serializer(), value)
       }
 
       is OpenAIModelDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(OpenAIModelDto.serializer(), value)
       }
 

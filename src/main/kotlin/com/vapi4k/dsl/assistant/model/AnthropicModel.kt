@@ -36,6 +36,7 @@ import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.ModelMessageDelegate
+import com.vapi4k.dsl.assistant.enums.AnthropicModelType
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
@@ -47,7 +48,8 @@ import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
 interface AnthropicModelUnion {
-  var model: String
+  var modelType: AnthropicModelType
+  var customModel: String
   val toolIds: MutableList<String>
   var temperature: Int
   var maxTokens: Int

@@ -67,4 +67,14 @@ data class DeepgramTranscriberDto(
         transcriberLanguage.desc
       }
   }
+
+  override fun verifyValues() {
+    if (transcriberModel.isNotSpecified() && customModel.isEmpty()) {
+      error("Either customModel or transcriberModel must be assigned in deepgramTranscriber{}")
+    }
+
+    if (transcriberLanguage.isNotSpecified() && customLanguage.isEmpty()) {
+      error("Either customLanguage or transcriberLanguage must be assigned in deepgramTranscriber{}")
+    }
+  }
 }

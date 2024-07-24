@@ -29,6 +29,7 @@ interface AbstractTranscriberDto {
   val provider: TranscriberType
 
   fun assignEnumOverrides()
+  fun verifyValues()
 }
 
 private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {

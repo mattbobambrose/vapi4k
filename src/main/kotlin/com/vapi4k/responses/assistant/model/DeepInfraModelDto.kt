@@ -44,5 +44,10 @@ data class DeepInfraModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null
+
+  override fun verifyValues() {
+    if (model.isEmpty())
+      error("deepInfraModel{} requires a model value")
+  }
 }
 

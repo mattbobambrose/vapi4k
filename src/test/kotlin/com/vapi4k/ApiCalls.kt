@@ -17,6 +17,7 @@
 package com.vapi4k
 
 import com.vapi4k.dsl.assistant.api.VapiApi.Companion.vapiApi
+import com.vapi4k.dsl.assistant.enums.OpenAIModelType
 import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -115,7 +116,7 @@ class ApiCalls {
             assistant {
               firstMessage = "Hi there. I am here to help."
               openAIModel {
-                model = "gpt-4-turbo"
+                modelType = OpenAIModelType.GPT_4_TURBO
                 systemMessage = "Answer questions."
               }
             }

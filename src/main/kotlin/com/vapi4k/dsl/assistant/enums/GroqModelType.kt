@@ -18,11 +18,10 @@ package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 
-enum class AnthropicModelType(internal val desc: String) {
-  CLAUDE_3_OPUS("claude-3-opus-20240229"),
-  CLAUDE_3_SONNET("claude-3-sonnet-20240229"),
-  CLAUDE_3_HAIKU("claude-3-haiku-20240307"),
-  CLAUDE_3_5_SONNET("claude-3-5-sonnet-20240620"),
+enum class GroqModelType(internal val desc: String) {
+  MIXTRAL_8X7B("mixtral-8x7b-32768"),
+  LLAMA3_8B("llama3-8b-8192"),
+  LLAMA3_70B("llama3-70b-8192"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 

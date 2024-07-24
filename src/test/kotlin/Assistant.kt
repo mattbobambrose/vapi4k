@@ -22,6 +22,7 @@ import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
 import com.vapi4k.dsl.assistant.AssistantDsl.squad
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.JsonElementUtils.phoneNumber
@@ -38,7 +39,7 @@ fun myAssistantRequest(
         firstMessage = "This is the first message override"
 
         openAIModel {
-          model = "gpt-4-turbo"
+          modelType = OpenAIModelType.GPT_4_TURBO
         }
       }
     }
@@ -62,7 +63,7 @@ fun getSquad(request: JsonElement) =
         assistant {
           name = "Assistant Name"
           openAIModel {
-            model = "gpt-4-turbo"
+            modelType = OpenAIModelType.GPT_4_TURBO
           }
         }
       }
@@ -88,7 +89,7 @@ fun getAssistant(
     )
 
     openAIModel {
-      model = "gpt-4-turbo"
+      modelType = OpenAIModelType.GPT_4_TURBO
 
       systemMessage = """
             [Identity]

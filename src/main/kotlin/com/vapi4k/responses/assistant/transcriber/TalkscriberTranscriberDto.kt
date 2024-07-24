@@ -65,4 +65,8 @@ data class TalkscriberTranscriberDto(
         transcriberLanguage.desc
       }
   }
+
+  override fun verifyValues() {
+    TODO("Not yet implemented")
+  }
 }

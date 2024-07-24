@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.ModelType
+import com.vapi4k.dsl.assistant.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.model.OpenAIModelUnion
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
@@ -25,13 +26,30 @@ import com.vapi4k.responses.assistant.ToolDto
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class OpenAIModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI,
 ) : OpenAIModelUnion, AbstractModelDto {
-  override var model: String = ""
+  var model: String = ""
+
+  @Transient
+  override var modelType: OpenAIModelType = OpenAIModelType.UNSPECIFIED
+
+  @Transient
+  override var customModel: String = ""
+
+  var fallbackModels: MutableList<String> = mutableListOf()
+
+  @Transient
+  override val fallbackModelTypes: MutableList<OpenAIModelType> = mutableListOf()
+
+  @Transient
+  override val customFallbackModels: MutableList<String> = mutableListOf()
+
+  override var semanticCachingEnabled: Boolean? = null
   override var temperature: Int = -1
   override var maxTokens: Int = -1
   override var emotionRecognitionEnabled: Boolean? = null
@@ -44,4 +62,17 @@ data class OpenAIModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null
+
+  fun assignEnumOverrides() {
+    model = if (customModel.isNotEmpty()) customModel else modelType.desc
+    fallbackModels.addAll((fallbackModelTypes.map { it.desc } + customFallbackModels).toSet())
+  }
+
+  override fun verifyValues() {
+    if (modelType.isSpecified() && customModel.isNotEmpty())
+      error("openAIModel{} cannot have both modelType and customModel values")
+
+    if (modelType.isNotSpecified() && customModel.isEmpty())
+      error("openAIModel{} must have either a modelType or customModel value")
+  }
 }

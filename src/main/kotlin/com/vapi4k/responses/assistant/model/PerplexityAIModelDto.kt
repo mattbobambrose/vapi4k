@@ -44,4 +44,8 @@ data class PerplexityAIModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null
+
+  override fun verifyValues() {
+    TODO("Not yet implemented")
+  }
 }
