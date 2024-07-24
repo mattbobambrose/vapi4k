@@ -43,7 +43,7 @@ data class PlayHTVoiceDto(
   val provider: VoiceProviderType = VoiceProviderType.PLAYHT
 
   override fun verifyValues() {
-    if (voiceId == PlayHTVoiceIdType.UNSPECIFIED)
+    if (voiceId.isNotSpecified())
       error("playHTVoice{} requires a voiceId value")
   }
 }

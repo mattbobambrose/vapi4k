@@ -43,7 +43,10 @@ enum class ElevenLabsVoiceIdType(val desc: String) {
   MATILDA("matilda"),
   MARK("mark"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object ElevenLabsVoiceIdTypeSerializer : KSerializer<ElevenLabsVoiceIdType> {

@@ -30,7 +30,10 @@ enum class CartesiaVoiceModelType(val desc: String) {
   SONIC_ENGLISH("sonic-english"),
   SONIC_MULTILINGUAL("sonic-multilingual"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object CartesiaVoiceModelTypeSerializer : KSerializer<CartesiaVoiceModelType> {

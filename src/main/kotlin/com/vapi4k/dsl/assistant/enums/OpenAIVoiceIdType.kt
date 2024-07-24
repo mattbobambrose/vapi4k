@@ -34,7 +34,10 @@ enum class OpenAIVoiceIdType(val desc: String) {
   NOVA("nova"),
   SHIMMER("shimmer"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object OpenAIVoiceIdTypeSerializer : KSerializer<OpenAIVoiceIdType> {

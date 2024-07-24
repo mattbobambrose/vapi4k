@@ -36,7 +36,7 @@ data class NeetsVoiceDto(
   val provider: VoiceProviderType = VoiceProviderType.NEETS
 
   override fun verifyValues() {
-    if (voiceId == NeetsVoiceIdType.UNSPECIFIED)
+    if (voiceId.isNotSpecified())
       error("neetsVoice{} requires a voiceId value")
   }
 }

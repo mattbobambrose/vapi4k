@@ -40,7 +40,10 @@ enum class PlayHTVoiceEmotionType(val desc: String) {
   MALE_DISGUST("male_disgust"),
   MALE_SURPRISED("male_surprised"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object PlayHTVoiceEmotionTypeSerializer : KSerializer<PlayHTVoiceEmotionType> {

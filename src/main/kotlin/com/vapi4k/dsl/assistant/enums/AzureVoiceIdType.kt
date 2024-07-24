@@ -31,7 +31,10 @@ enum class AzureVoiceIdType(val desc: String) {
   BRIAN("brian"),
   EMMA("emma"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object AzureVoiceIdSerializer : KSerializer<AzureVoiceIdType> {

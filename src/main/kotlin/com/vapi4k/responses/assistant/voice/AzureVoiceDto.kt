@@ -31,13 +31,13 @@ data class AzureVoiceDto(
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: AzureVoiceIdType = AzureVoiceIdType.UNSPECIFIED,
-  override var speed: Double = 0.0,
+  override var speed: Double = -1.0,
 ) : AzureVoiceUnion, AbstractVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.LMNT
 
   override fun verifyValues() {
-    if (voiceId == AzureVoiceIdType.UNSPECIFIED)
+    if (voiceId.isNotSpecified())
       error("azureVoice{} requires a voiceId value")
   }
 }

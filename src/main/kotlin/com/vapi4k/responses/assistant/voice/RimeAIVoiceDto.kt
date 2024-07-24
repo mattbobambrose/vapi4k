@@ -39,7 +39,7 @@ data class RimeAIVoiceDto(
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 
   override fun verifyValues() {
-    if (voiceId == RimeAIVoiceIdType.UNSPECIFIED)
+    if (voiceId.isNotSpecified())
       error("rimeAIVoice{} requires a voiceId value")
   }
 }

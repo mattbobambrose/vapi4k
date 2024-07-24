@@ -109,7 +109,10 @@ enum class RimeAIVoiceIdType(val desc: String) {
   VIV("viv"),
   YADIRA("yadira"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object RimeAIVoiceIdTypeSerializer : KSerializer<RimeAIVoiceIdType> {

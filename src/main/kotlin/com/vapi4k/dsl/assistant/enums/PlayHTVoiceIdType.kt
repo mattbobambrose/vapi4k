@@ -38,7 +38,10 @@ enum class PlayHTVoiceIdType(val desc: String) {
   DONNA("donna"),
   MICHAEL("michael"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object PlayHTVoiceIdTypeSerializer : KSerializer<PlayHTVoiceIdType> {

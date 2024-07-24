@@ -29,7 +29,10 @@ import kotlinx.serialization.encoding.Encoder
 enum class NeetsVoiceIdType(val desc: String) {
   VITS("vits"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object NeetsVoiceIdTypeSerializer : KSerializer<NeetsVoiceIdType> {

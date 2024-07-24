@@ -44,7 +44,7 @@ data class ElevenLabsVoiceDto(
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 
   override fun verifyValues() {
-    if (voiceId == ElevenLabsVoiceIdType.UNSPECIFIED)
+    if (voiceId.isNotSpecified())
       error("elevenLabsVoice{} requires a voiceId value")
   }
 }

@@ -37,7 +37,7 @@ data class LMNTVoiceDto(
   val provider: VoiceProviderType = VoiceProviderType.LMNT
 
   override fun verifyValues() {
-    if (voiceId == LMNTVoiceIdType.UNSPECIFIED) {
+    if (voiceId.isNotSpecified()) {
       error("lmntVoice{} requires a voiceId value")
     }
   }

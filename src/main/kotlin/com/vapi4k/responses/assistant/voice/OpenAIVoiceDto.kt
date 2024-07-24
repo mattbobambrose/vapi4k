@@ -31,13 +31,13 @@ data class OpenAIVoiceDto(
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,
-  override var speed: Double = 0.0,
+  override var speed: Double = -1.0,
 ) : OpenAIVoiceUnion, AbstractVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.OPENAI
 
   override fun verifyValues() {
-    if (voiceId == OpenAIVoiceIdType.UNSPECIFIED)
+    if (voiceId.isNotSpecified())
       error("openAIVoice{} requires a voiceId value")
   }
 }
