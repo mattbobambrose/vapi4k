@@ -30,19 +30,19 @@ import kotlinx.serialization.Serializable
 data class GroqModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.GROQ,
+) : GroqModelUnion, AbstractModelDto {
+  override var model: String = ""
+  override var temperature: Int = -1
+  override var maxTokens: Int = -1
+  override var emotionRecognitionEnabled: Boolean? = null
+  override var numFastTurns: Int = -1
 
-  override var model: String = "",
-  override var temperature: Int = -1,
-  override var maxTokens: Int = -1,
-  override var emotionRecognitionEnabled: Boolean? = null,
-  override var numFastTurns: Int = -1,
-
-  val messages: MutableList<RoleMessage> = mutableListOf(),
-  override val tools: MutableList<ToolDto> = mutableListOf(),
-  override val toolIds: MutableList<String> = mutableListOf(),
-  override val functions: MutableList<FunctionDto> = mutableListOf(),
+  override val messages: MutableList<RoleMessage> = mutableListOf()
+  override val tools: MutableList<ToolDto> = mutableListOf()
+  override val toolIds: MutableList<String> = mutableListOf()
+  override val functions: MutableList<FunctionDto> = mutableListOf()
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : GroqModelUnion, AbstractModelDto
+  var knowledgeBaseDto: KnowledgeBaseDto? = null
+}
 

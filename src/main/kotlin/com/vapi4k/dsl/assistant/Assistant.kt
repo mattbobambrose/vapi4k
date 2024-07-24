@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.CacheId
+import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
@@ -37,9 +38,6 @@ import com.vapi4k.dsl.assistant.voice.Voice
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.DeepgramTranscriberDto
-import com.vapi4k.responses.assistant.GladiaTranscriberDto
-import com.vapi4k.responses.assistant.TalkscriberTranscriberDto
 import com.vapi4k.responses.assistant.VoiceDto
 import com.vapi4k.responses.assistant.model.AnthropicModelDto
 import com.vapi4k.responses.assistant.model.AnyscaleModelDto
@@ -50,18 +48,21 @@ import com.vapi4k.responses.assistant.model.OpenAIModelDto
 import com.vapi4k.responses.assistant.model.OpenRouterModelDto
 import com.vapi4k.responses.assistant.model.TogetherAIModelDto
 import com.vapi4k.responses.assistant.model.VapiModelDto
+import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
+import com.vapi4k.responses.assistant.transcriber.GladiaTranscriberDto
+import com.vapi4k.responses.assistant.transcriber.TalkscriberTranscriberDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantUnion {
   var name: String
   var firstMessage: String
-  var recordingEnabled: Boolean
-  var hipaaEnabled: Boolean
+  var recordingEnabled: Boolean?
+  var hipaaEnabled: Boolean?
   var serverUrl: String
   var serverUrlSecret: String
   var forwardingPhoneNumber: String
-  var endCallFunctionEnabled: Boolean
-  var dialKeypadFunctionEnabled: Boolean
+  var endCallFunctionEnabled: Boolean?
+  var dialKeypadFunctionEnabled: Boolean?
   var responseDelaySeconds: Double
   var llmRequestDelaySeconds: Double
   var silenceTimeoutSeconds: Int
@@ -70,9 +71,9 @@ interface AssistantUnion {
   var numWordsToInterruptAssistant: Int
   var voicemailMessage: String
   var endCallMessage: String
-  var backchannelingEnabled: Boolean
-  var backgroundDenoisingEnabled: Boolean
-  var modelOutputInMessagesEnabled: Boolean
+  var backchannelingEnabled: Boolean?
+  var backgroundDenoisingEnabled: Boolean?
+  var modelOutputInMessagesEnabled: Boolean?
   var llmRequestNonPunctuatedDelaySeconds: Double
   var firstMessageMode: FirstMessageModeType
   var clientMessages: MutableSet<AssistantClientMessageType>
@@ -86,126 +87,100 @@ data class Assistant internal constructor(
   internal val assistantDto: AssistantDto,
   internal val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantUnion by assistantDto {
-  // errorMsg prevents further assistant or assistantId assignments
-  private var errorMsg = ""
-
-  private fun checkIfDeclared(newStr: String) = if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
+  private val transcriberChecker = DuplicateChecker()
+  private val modelChecker = DuplicateChecker()
 
   // Transcribers
-  fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
-    checkIfDeclared("Member already has an deepGramTranscriber assigned")
-    assistantDto.transcriberDto = DeepgramTranscriberDto().also { DeepgramTranscriber(it).apply(block) }
+  fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {
+    transcriberChecker.check("deepGramTranscriber{} already called")
+    val transcriberDto = DeepgramTranscriberDto()
+    assistantDto.transcriberDto = transcriberDto
+    return DeepgramTranscriber(transcriberDto).apply(block)
   }
 
-  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) {
-    checkIfDeclared("Member already has an gladiaTranscriber assigned")
-    assistantDto.transcriberDto = GladiaTranscriberDto().also { GladiaTranscriber(it).apply(block) }
+  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber {
+    transcriberChecker.check("gladiaTranscriber{} already called")
+    val transcriberDto = GladiaTranscriberDto()
+    assistantDto.transcriberDto = transcriberDto
+    return GladiaTranscriber(transcriberDto).apply(block)
   }
 
-  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit) {
-    checkIfDeclared("Member already has an talkscriberTranscriber assigned")
-    assistantDto.transcriberDto = TalkscriberTranscriberDto().also { TalkscriberTranscriber(it).apply(block) }
+  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber {
+    transcriberChecker.check("talkscriberTranscriber{} already called")
+    val transcriberDto = TalkscriberTranscriberDto()
+    assistantDto.transcriberDto = transcriberDto
+    return TalkscriberTranscriber(transcriberDto).apply(block)
   }
 
   // Models
   fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel {
+    modelChecker.check("anyscaleModel{} already called")
     val modelDto = AnyscaleModelDto()
     assistantDto.modelDto = modelDto
-    return AnyscaleModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return AnyscaleModel(request, cacheId, modelDto).apply(block)
   }
 
   fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel {
+    modelChecker.check("anthropicModel{} already called")
     val modelDto = AnthropicModelDto()
     assistantDto.modelDto = modelDto
-    return AnthropicModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return AnthropicModel(request, cacheId, modelDto).apply(block)
   }
 
   fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
+    modelChecker.check("customLLMModel{} already called")
     val modelDto = CustomLLMModelDto()
     assistantDto.modelDto = modelDto
-    return CustomLLMModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return CustomLLMModel(request, cacheId, modelDto).apply(block)
   }
 
   fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel {
+    modelChecker.check("deepInfraModel{} already called")
     val modelDto = DeepInfraModelDto()
     assistantDto.modelDto = modelDto
-    return DeepInfraModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return DeepInfraModel(request, cacheId, modelDto).apply(block)
   }
 
   fun groqModel(block: GroqModel.() -> Unit): GroqModel {
+    modelChecker.check("groqModel{} already called")
     val modelDto = GroqModelDto()
     assistantDto.modelDto = modelDto
-    return GroqModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return GroqModel(request, cacheId, modelDto).apply(block)
   }
 
   fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
+    modelChecker.check("openAIModel{} already called")
     val modelDto = OpenAIModelDto()
     assistantDto.modelDto = modelDto
-    return OpenAIModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return OpenAIModel(request, cacheId, modelDto).apply(block)
   }
 
   fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel {
+    modelChecker.check("openRouterModel{} already called")
     val modelDto = OpenRouterModelDto()
     assistantDto.modelDto = modelDto
-    return OpenRouterModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return OpenRouterModel(request, cacheId, modelDto).apply(block)
   }
 
   fun perplexityAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
+    modelChecker.check("openAIModel{} already called")
     val modelDto = OpenAIModelDto()
     assistantDto.modelDto = modelDto
-    return OpenAIModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return OpenAIModel(request, cacheId, modelDto).apply(block)
   }
 
   fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel {
+    modelChecker.check("togetherAIModel{} already called")
     val modelDto = TogetherAIModelDto()
     assistantDto.modelDto = modelDto
-    return TogetherAIModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return TogetherAIModel(request, cacheId, modelDto).apply(block)
   }
 
   fun vapiModel(block: VapiModel.() -> Unit): VapiModel {
+    modelChecker.check("vapiModel{} already called")
     val modelDto = VapiModelDto()
     assistantDto.modelDto = modelDto
-    return VapiModel(request, cacheId, modelDto)
-      .apply(block)
-      .apply {
-        if (model.isEmpty()) error("Model model must be assigned")
-      }
+    return VapiModel(request, cacheId, modelDto).apply(block)
   }
 
 

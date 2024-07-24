@@ -54,7 +54,11 @@ class Call internal constructor(
     with(callRequest) {
       Assistant(emptyJsonElement(), cacheId, assistantDto, assistantOverridesDto)
         .apply(block)
-        .apply { assistantDto.updated = true }
+        .apply {
+          assistantDto.updated = true
+          assistantDto.verifyValues()
+        }
+
     }
   }
 

@@ -18,6 +18,8 @@ package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesUnion
 import com.vapi4k.responses.assistant.model.AbstractModelDto
+import com.vapi4k.responses.assistant.transcriber.AbstractTranscriberDto
+import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

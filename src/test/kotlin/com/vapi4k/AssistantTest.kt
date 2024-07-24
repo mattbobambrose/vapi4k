@@ -591,29 +591,30 @@ class AssistantTest {
   fun `multiple transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
       val request = assistantRequest.toJsonElement()
-      val assistant = assistant(request) {
-        talkscriberTranscriber {
-          transcriberModel = TalkscriberModelType.WHISPER
-        }
+      val assistant =
+        assistant(request) {
+          talkscriberTranscriber {
+            transcriberModel = TalkscriberModelType.WHISPER
+          }
 
-        gladiaTranscriber {
-          transcriberModel = GladiaModelType.FAST
+          gladiaTranscriber {
+            transcriberModel = GladiaModelType.FAST
+          }
         }
-      }
     }
   }
 
   @Test
   fun `deepgram transcriber enum value`() {
     val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      deepGramTranscriber {
-        transcriberModel = DeepgramModelType.BASE
-        transcriberLanguage = DeepgramLanguageType.GERMAN
+    val assistant =
+      assistant(request) {
+        deepGramTranscriber {
+          transcriberModel = DeepgramModelType.BASE
+          transcriberLanguage = DeepgramLanguageType.GERMAN
+        }
       }
-    }
     val je = assistant.toJsonElement()
-    println(assistant.toJsonString(true))
     assertEquals(
       DeepgramLanguageType.GERMAN.desc,
       je["assistant.transcriber.language"].stringValue
@@ -623,14 +624,14 @@ class AssistantTest {
   @Test
   fun `deepgram transcriber custom value`() {
     val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      deepGramTranscriber {
-        transcriberModel = DeepgramModelType.BASE
-        customLanguage = "zzz"
+    val assistant =
+      assistant(request) {
+        deepGramTranscriber {
+          transcriberModel = DeepgramModelType.BASE
+          customLanguage = "zzz"
+        }
       }
-    }
     val je = assistant.toJsonElement()
-    println(assistant.toJsonString(true))
     assertEquals(
       "zzz",
       je["assistant.transcriber.language"].stringValue
@@ -641,19 +642,30 @@ class AssistantTest {
   fun `deepgram transcriber conflicting values`() {
     assertThrows(IllegalStateException::class.java) {
       val request = assistantRequest.toJsonElement()
-      val assistant = assistant(request) {
-        deepGramTranscriber {
-          transcriberModel = DeepgramModelType.BASE
-          transcriberLanguage = DeepgramLanguageType.GERMAN
-          customLanguage = "zzz"
+      val assistant =
+        assistant(request) {
+          deepGramTranscriber {
+            transcriberModel = DeepgramModelType.BASE
+            transcriberLanguage = DeepgramLanguageType.GERMAN
+            customLanguage = "zzz"
+          }
         }
-      }
       val je = assistant.toJsonElement()
       println(assistant.toJsonString(true))
       assertEquals(
         "zzz",
         je["assistant.transcriber.language"].stringValue
       )
+    }
+  }
+
+  @Test
+  fun `missing model decl`() {
+    assertThrows(IllegalStateException::class.java) {
+      val request = assistantRequest.toJsonElement()
+      assistant(request) {
+        firstMessage = "Something"
+      }
     }
   }
 }

@@ -31,9 +31,6 @@ import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
 import com.vapi4k.dsl.assistant.voice.Voice
 import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.DeepgramTranscriberDto
-import com.vapi4k.responses.assistant.GladiaTranscriberDto
-import com.vapi4k.responses.assistant.TalkscriberTranscriberDto
 import com.vapi4k.responses.assistant.model.AnthropicModelDto
 import com.vapi4k.responses.assistant.model.AnyscaleModelDto
 import com.vapi4k.responses.assistant.model.CustomLLMModelDto
@@ -43,6 +40,9 @@ import com.vapi4k.responses.assistant.model.OpenAIModelDto
 import com.vapi4k.responses.assistant.model.OpenRouterModelDto
 import com.vapi4k.responses.assistant.model.TogetherAIModelDto
 import com.vapi4k.responses.assistant.model.VapiModelDto
+import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
+import com.vapi4k.responses.assistant.transcriber.GladiaTranscriberDto
+import com.vapi4k.responses.assistant.transcriber.TalkscriberTranscriberDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesUnion {

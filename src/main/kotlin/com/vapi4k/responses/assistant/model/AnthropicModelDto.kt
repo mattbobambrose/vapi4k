@@ -16,6 +16,7 @@
 
 package com.vapi4k.responses.assistant.model
 
+import com.vapi4k.dsl.assistant.enums.AnthropicModelType
 import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.dsl.assistant.model.AnthropicModelUnion
 import com.vapi4k.responses.assistant.FunctionDto
@@ -25,24 +26,43 @@ import com.vapi4k.responses.assistant.ToolDto
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class AnthropicModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.ANTHROPIC,
+) : AnthropicModelUnion, AbstractModelDto {
+  override var model: String = ""
 
-  override var model: String = "",
-  override var temperature: Int = -1,
-  override var maxTokens: Int = -1,
-  override var emotionRecognitionEnabled: Boolean? = null,
-  override var numFastTurns: Int = -1,
+  @Transient
+  var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED
 
-  val messages: MutableList<RoleMessage> = mutableListOf(),
-  override val tools: MutableList<ToolDto> = mutableListOf(),
-  override val toolIds: MutableList<String> = mutableListOf(),
-  override val functions: MutableList<FunctionDto> = mutableListOf(),
+  @Transient
+  var customModel: String = ""
+
+  override var temperature: Int = -1
+  override var maxTokens: Int = -1
+  override var emotionRecognitionEnabled: Boolean? = null
+  override var numFastTurns: Int = -1
+
+  override val messages: MutableList<RoleMessage> = mutableListOf()
+  override val tools: MutableList<ToolDto> = mutableListOf()
+  override val toolIds: MutableList<String> = mutableListOf()
+  override val functions: MutableList<FunctionDto> = mutableListOf()
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : AnthropicModelUnion, AbstractModelDto
+  var knowledgeBaseDto: KnowledgeBaseDto? = null
+
+  fun assignEnumOverrides() {
+    model =
+      if (customModel.isNotEmpty()) {
+        if (modelType.isSpecified())
+          error("Cannot assign both customModel and modelType values in anthropicModel{}")
+        customModel
+      } else {
+        modelType.desc
+      }
+  }
+}
 
