@@ -31,7 +31,7 @@ data class CallRequestDto(
   override var assistantId: String = "",
 
   @SerialName("assistant")
-  val assistantDto: AssistantDto = AssistantDto(),
+  override val assistantDto: AssistantDto = AssistantDto(),
 
   @SerialName("assistantOverrides")
   override val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),

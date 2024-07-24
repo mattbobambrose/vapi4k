@@ -35,7 +35,7 @@ data class AssistantDto(
   var updated = false
 
   // TODO: Came from squad assistant
-  val transportConfigurations: List<TransportConfigurationDto> = listOf()
+  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf()
 
   override var firstMessage: String = ""
   override var recordingEnabled: Boolean? = null
@@ -44,7 +44,6 @@ data class AssistantDto(
   override var serverUrlSecret: String = ""
 
   // TODO: This needs to be added to docs
-  // forwadingPhoneNumber might not have come in json
   override var forwardingPhoneNumber: String = ""
 
   // TODO: Not in docs or squad
@@ -54,10 +53,10 @@ data class AssistantDto(
   override var dialKeypadFunctionEnabled: Boolean? = null
   override var responseDelaySeconds: Double = 0.0
   override var llmRequestDelaySeconds: Double = 0.0
-  override var silenceTimeoutSeconds: Int = 30
-  override var maxDurationSeconds: Int = 0
+  override var silenceTimeoutSeconds: Int = -1
+  override var maxDurationSeconds: Int = -1
   override var backgroundSound: String = ""
-  override var numWordsToInterruptAssistant: Int = 0
+  override var numWordsToInterruptAssistant: Int = -1
   override var voicemailMessage: String = ""
   override var endCallMessage: String = ""
   override var backchannelingEnabled: Boolean? = null

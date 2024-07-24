@@ -41,7 +41,10 @@ object AssistantDsl {
       with(messageResponse) {
         Assistant(request, UNSPECIFIED_CACHE_ID, assistantDto, assistantOverridesDto)
           .apply(block)
-          .apply { assistantDto.verifyValues() }
+          .apply {
+            assistantDto.updated = true
+            assistantDto.verifyValues()
+          }
       }
     }.messageResponse
 

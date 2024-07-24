@@ -24,51 +24,55 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssistantOverridesDto(
-  override var firstMessageMode: String = "",
-  override var recordingEnabled: Boolean = false,
-  override var hipaaEnabled: Boolean = false,
-  override var silenceTimeoutSeconds: Int = 0,
-  override var responseDelaySeconds: Double = 0.0,
-  override var llmRequestDelaySeconds: Double = 0.0,
-  override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
-  override var numWordsToInterruptAssistant: Int = 0,
-  override var maxDurationSeconds: Int = 0,
-  override var backgroundSound: String = "",
-  override var backchannelingEnabled: Boolean = false,
-  override var backgroundDenoisingEnabled: Boolean = false,
-  override var modelOutputInMessagesEnabled: Boolean = false,
   override var name: String = "",
-  override var firstMessage: String = "",
-  override var voicemailMessage: String = "",
-  override var endCallMessage: String = "",
-  override var serverUrl: String = "",
-  override var serverUrlSecret: String = "",
+) : AssistantOverridesUnion {
+  override var firstMessageMode: String = ""
+  override var recordingEnabled: Boolean = false
+  override var hipaaEnabled: Boolean = false
+  override var silenceTimeoutSeconds: Int = 0
+  override var responseDelaySeconds: Double = 0.0
+  override var llmRequestDelaySeconds: Double = 0.0
+  override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0
+  override var numWordsToInterruptAssistant: Int = 0
+  override var maxDurationSeconds: Int = 0
+  override var backgroundSound: String = ""
+  override var backchannelingEnabled: Boolean = false
+  override var backgroundDenoisingEnabled: Boolean = false
+  override var modelOutputInMessagesEnabled: Boolean = false
+  override var firstMessage: String = ""
+  override var voicemailMessage: String = ""
+  override var endCallMessage: String = ""
+  override var serverUrl: String = ""
+  override var serverUrlSecret: String = ""
 
-  override val clientMessages: MutableSet<String> = mutableSetOf(),
-  override val serverMessages: MutableSet<String> = mutableSetOf(),
+  override val clientMessages: MutableSet<String> = mutableSetOf()
+  override val serverMessages: MutableSet<String> = mutableSetOf()
 
-  val endCallPhrases: MutableList<String> = mutableListOf(),
+  val endCallPhrases: MutableList<String> = mutableListOf()
 
   @SerialName("transcriber")
-  var transcriberDto: AbstractTranscriberDto? = null,
+  var transcriberDto: AbstractTranscriberDto? = null
 
   @SerialName("model")
-  var modelDto: AbstractModelDto? = null,
+  var modelDto: AbstractModelDto? = null
 
   @SerialName("voice")
-  val voiceDto: VoiceDto = VoiceDto(),
+  val voiceDto: VoiceDto = VoiceDto()
 
   // TODO: Came from squad assistant
-  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
-  val variableValues: MutableMap<String, String> = mutableMapOf(),
-  val metadata: MutableMap<String, String> = mutableMapOf(),
+  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf()
+  val variableValues: MutableMap<String, String> = mutableMapOf()
+  val metadata: MutableMap<String, String> = mutableMapOf()
 
   @SerialName("voicemailDetection")
-  val voicemailDetectionDto: VoicemailDetectionDto = VoicemailDetectionDto(),
+  val voicemailDetectionDto: VoicemailDetectionDto = VoicemailDetectionDto()
+
   @SerialName("analysisPlan")
-  val analysisPlanDto: AnalysisPlanDto = AnalysisPlanDto(),
+  val analysisPlanDto: AnalysisPlanDto = AnalysisPlanDto()
+
   @SerialName("artifactPlan")
-  val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
+  val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto()
+
   @SerialName("messagePlan")
-  val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantOverridesUnion
+  val messagePlanDto: MessagePlanDto = MessagePlanDto()
+}

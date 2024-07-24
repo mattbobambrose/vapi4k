@@ -41,13 +41,13 @@ data class OpenAIModelDto(
   @Transient
   override var customModel: String = ""
 
-  var fallbackModels: MutableList<String> = mutableListOf()
+  var fallbackModels: MutableSet<String> = mutableSetOf()
 
   @Transient
-  override val fallbackModelTypes: MutableList<OpenAIModelType> = mutableListOf()
+  override val fallbackModelTypes: MutableSet<OpenAIModelType> = mutableSetOf()
 
   @Transient
-  override val customFallbackModels: MutableList<String> = mutableListOf()
+  override val customFallbackModels: MutableSet<String> = mutableSetOf()
 
   override var semanticCachingEnabled: Boolean? = null
   override var temperature: Int = -1
@@ -57,7 +57,7 @@ data class OpenAIModelDto(
 
   override val messages: MutableList<RoleMessage> = mutableListOf()
   override val tools: MutableList<ToolDto> = mutableListOf()
-  override val toolIds: MutableList<String> = mutableListOf()
+  override val toolIds: MutableSet<String> = mutableSetOf()
   override val functions: MutableList<FunctionDto> = mutableListOf()
 
   @SerialName("knowledgeBase")
@@ -65,7 +65,7 @@ data class OpenAIModelDto(
 
   fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else modelType.desc
-    fallbackModels.addAll((fallbackModelTypes.map { it.desc } + customFallbackModels).toSet())
+    fallbackModels.addAll(fallbackModelTypes.map { it.desc } + customFallbackModels)
   }
 
   override fun verifyValues() {

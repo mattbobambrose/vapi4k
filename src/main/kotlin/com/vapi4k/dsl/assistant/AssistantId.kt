@@ -17,12 +17,14 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.CacheId
+import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantIdUnion {
   var assistantId: String
-  val assistantOverridesDto: AssistantOverridesDto;
+  val assistantDto: AssistantDto
+  val assistantOverridesDto: AssistantOverridesDto
 }
 
 @AssistantDslMarker

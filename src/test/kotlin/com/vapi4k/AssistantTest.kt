@@ -503,12 +503,13 @@ class AssistantTest {
   fun `check assistant client messages 2`() {
     resetCaches()
     val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
-      openAIModel {
-        modelType = OpenAIModelType.GPT_3_5_TURBO
+    val assistant =
+      assistant(request) {
+        clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+        }
       }
-    }
 
     val element = assistant.toJsonElement()
     assertEquals(8, element.assistantClientMessages.size)
@@ -520,14 +521,16 @@ class AssistantTest {
     val request = assistantRequest.toJsonElement()
     val assistant =
       assistant(request) {
+        firstMessage = "Something"
         serverMessages -= AssistantServerMessageType.HANG
         openAIModel {
           modelType = OpenAIModelType.GPT_3_5_TURBO
         }
       }
 
-    val element = assistant.toJsonElement()
     println(assistant.toJsonString(true))
+    val ll = assistant.squadDto.toJsonElement()
+    val element = assistant.toJsonElement()
     assertEquals(8, element.assistantServerMessages.size)
   }
 
@@ -564,7 +567,7 @@ class AssistantTest {
   fun `multiple deepgram transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
       val request = assistantRequest.toJsonElement()
-      val assistant = assistant(request) {
+      assistant(request) {
         deepGramTranscriber {
           transcriberModel = DeepgramModelType.BASE
         }
@@ -580,7 +583,7 @@ class AssistantTest {
   fun `multiple gladia transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
       val request = assistantRequest.toJsonElement()
-      val assistant = assistant(request) {
+      assistant(request) {
         gladiaTranscriber {
           transcriberModel = GladiaModelType.FAST
         }
@@ -612,16 +615,15 @@ class AssistantTest {
   fun `multiple transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
       val request = assistantRequest.toJsonElement()
-      val assistant =
-        assistant(request) {
-          talkscriberTranscriber {
-            transcriberModel = TalkscriberModelType.WHISPER
-          }
-
-          gladiaTranscriber {
-            transcriberModel = GladiaModelType.FAST
-          }
+      assistant(request) {
+        talkscriberTranscriber {
+          transcriberModel = TalkscriberModelType.WHISPER
         }
+
+        gladiaTranscriber {
+          transcriberModel = GladiaModelType.FAST
+        }
+      }
     }
   }
 

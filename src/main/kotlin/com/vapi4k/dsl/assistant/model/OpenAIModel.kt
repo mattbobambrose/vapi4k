@@ -34,9 +34,9 @@ import kotlinx.serialization.json.JsonElement
 interface OpenAIModelUnion {
   var modelType: OpenAIModelType
   var customModel: String
-  val fallbackModelTypes: MutableList<OpenAIModelType>
-  val customFallbackModels: MutableList<String>
-  val toolIds: MutableList<String>
+  val fallbackModelTypes: MutableSet<OpenAIModelType>
+  val customFallbackModels: MutableSet<String>
+  val toolIds: MutableSet<String>
   var semanticCachingEnabled: Boolean?
   var temperature: Int
   var maxTokens: Int

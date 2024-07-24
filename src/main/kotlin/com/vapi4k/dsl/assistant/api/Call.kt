@@ -58,7 +58,6 @@ class Call internal constructor(
           assistantDto.updated = true
           assistantDto.verifyValues()
         }
-
     }
   }
 
