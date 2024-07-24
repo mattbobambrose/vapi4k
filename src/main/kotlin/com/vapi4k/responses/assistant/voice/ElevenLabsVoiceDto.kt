@@ -19,6 +19,8 @@ package com.vapi4k.responses.assistant.voice
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
+import com.vapi4k.dsl.assistant.voice.ElevenLabsVoiceUnion
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -27,32 +29,16 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-// Required: provider, voiceId
-interface ElevenLabsVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
-  var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
-  var provider: VoiceProviderType
-  var voiceId: ElevenLabsVoiceId
-  var stability: Double
-  var similarityBoost: Double
-  var style: Double
-  var useSpeakerBoost: Boolean
-  var optimizeStreaming: Double
-  var enableSsmlParsing: Boolean
-  var model: ElevenLabsVoiceModel
-}
-
 @Serializable
 data class ElevenLabsVoiceDto(
+  @EncodeDefault
+  val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS,
+
   override var inputPreprocessingEnabled: Boolean = false,
   override var inputReformattingEnabled: Boolean = false,
   override var inputMinCharacters: Int = 0,
   override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
   override var fillerInjectionEnabled: Boolean = false,
-  override var provider: VoiceProviderType = VoiceProviderType.ELEVENLABS,
   override var voiceId: ElevenLabsVoiceId = ElevenLabsVoiceId.UNSPECIFIED,
   override var stability: Double = 0.0,
   override var similarityBoost: Double = 0.0,

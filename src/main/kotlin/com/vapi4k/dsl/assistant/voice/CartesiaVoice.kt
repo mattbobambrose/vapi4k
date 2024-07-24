@@ -18,18 +18,21 @@ package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.PunctuationType
-import com.vapi4k.responses.assistant.voice.AzureVoiceDto
-import com.vapi4k.responses.assistant.voice.AzureVoiceId
+import com.vapi4k.responses.assistant.voice.CartesiaVoiceDto
+import com.vapi4k.responses.assistant.voice.CartesiaVoiceLanguage
+import com.vapi4k.responses.assistant.voice.CartesiaVoiceModel
 
-interface AzureVoiceUnion {
+interface CartesiaVoiceUnion {
   var inputPreprocessingEnabled: Boolean
   var inputReformattingEnabled: Boolean
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
   var fillerInjectionEnabled: Boolean
-  var voiceId: AzureVoiceId
-  var speed: Double
+  var model: CartesiaVoiceModel
+  var language: CartesiaVoiceLanguage
+  var voiceId: String
 }
 
 @AssistantDslMarker
-data class AzureVoice internal constructor(private val dto: AzureVoiceDto) : AzureVoiceUnion by dto
+data class CartesiaVoice internal constructor(private val dto: CartesiaVoiceDto) :
+  CartesiaVoiceUnion by dto

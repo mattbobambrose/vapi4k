@@ -14,30 +14,23 @@
  *
  */
 
-package com.vapi4k.responses.assistant.voice
+package com.vapi4k.dsl.assistant.voice
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.PunctuationType
-import com.vapi4k.dsl.assistant.enums.VoiceProviderType
-import kotlinx.serialization.Serializable
+import com.vapi4k.responses.assistant.voice.OpenAIVoiceDto
+import com.vapi4k.responses.assistant.voice.OpenAIVoiceId
 
-// Required: provider, voiceId
-interface DeepgramVoiceUnion {
+interface OpenAIVoiceUnion {
   var inputPreprocessingEnabled: Boolean
   var inputReformattingEnabled: Boolean
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
   var fillerInjectionEnabled: Boolean
-  var provider: VoiceProviderType
-  var voiceId: String
+  var voiceId: OpenAIVoiceId
+  var speed: Double
 }
 
-@Serializable
-data class DeepgramVoiceDto(
-  override var inputPreprocessingEnabled: Boolean = false,
-  override var inputReformattingEnabled: Boolean = false,
-  override var inputMinCharacters: Int = 0,
-  override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
-  override var fillerInjectionEnabled: Boolean = false,
-  override var provider: VoiceProviderType = VoiceProviderType.DEEPGRAM,
-  override var voiceId: String = "",
-) : DeepgramVoiceUnion
+@AssistantDslMarker
+data class OpenAIVoice internal constructor(private val dto: OpenAIVoiceDto) :
+  OpenAIVoiceUnion by dto

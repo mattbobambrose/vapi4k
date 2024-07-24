@@ -16,45 +16,21 @@
 
 package com.vapi4k.responses.assistant.voice
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
-import com.vapi4k.dsl.assistant.voice.NeetsVoiceUnion
+import com.vapi4k.dsl.assistant.voice.DeepgramVoiceUnion
 import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 @Serializable
-data class NeetsVoiceDto(
+data class DeepgramVoiceDto(
   @EncodeDefault
-  var provider: VoiceProviderType = VoiceProviderType.NEETS,
+  val provider: VoiceProviderType = VoiceProviderType.DEEPGRAM,
 
   override var inputPreprocessingEnabled: Boolean = false,
   override var inputReformattingEnabled: Boolean = false,
   override var inputMinCharacters: Int = 0,
   override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
   override var fillerInjectionEnabled: Boolean = false,
-  override var voiceId: NeetsVoiceId = NeetsVoiceId.UNSPECIFIED,
-) : NeetsVoiceUnion
-
-@Serializable(with = NeetsVoiceIdSerializer::class)
-enum class NeetsVoiceId(val desc: String) {
-  VITS("vits"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
-}
-
-private object NeetsVoiceIdSerializer : KSerializer<NeetsVoiceId> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ProviderType", STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: NeetsVoiceId,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) = NeetsVoiceId.entries.first { it.desc == decoder.decodeString() }
-}
+  override var voiceId: String = "",
+) : DeepgramVoiceUnion

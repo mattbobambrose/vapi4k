@@ -18,18 +18,19 @@ package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.PunctuationType
-import com.vapi4k.responses.assistant.voice.AzureVoiceDto
-import com.vapi4k.responses.assistant.voice.AzureVoiceId
+import com.vapi4k.responses.assistant.voice.LMNTVoiceDto
+import com.vapi4k.responses.assistant.voice.LMNTVoiceId
 
-interface AzureVoiceUnion {
+interface LMNTVoiceUnion {
   var inputPreprocessingEnabled: Boolean
   var inputReformattingEnabled: Boolean
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
   var fillerInjectionEnabled: Boolean
-  var voiceId: AzureVoiceId
+  var voiceId: LMNTVoiceId
   var speed: Double
 }
 
 @AssistantDslMarker
-data class AzureVoice internal constructor(private val dto: AzureVoiceDto) : AzureVoiceUnion by dto
+data class LMNTVoice internal constructor(private val dto: LMNTVoiceDto) :
+  LMNTVoiceUnion by dto

@@ -16,20 +16,20 @@
 
 package com.vapi4k.dsl.assistant.voice
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.PunctuationType
-import com.vapi4k.responses.assistant.voice.AzureVoiceDto
-import com.vapi4k.responses.assistant.voice.AzureVoiceId
+import com.vapi4k.responses.assistant.voice.RimeAIVoiceDto
+import com.vapi4k.responses.assistant.voice.RimeAIVoiceId
+import com.vapi4k.responses.assistant.voice.RimeAIVoiceModel
 
-interface AzureVoiceUnion {
+interface RimeAIVoiceUnion {
   var inputPreprocessingEnabled: Boolean
   var inputReformattingEnabled: Boolean
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
   var fillerInjectionEnabled: Boolean
-  var voiceId: AzureVoiceId
+  var voiceId: RimeAIVoiceId
+  var model: RimeAIVoiceModel
   var speed: Double
 }
 
-@AssistantDslMarker
-data class AzureVoice internal constructor(private val dto: AzureVoiceDto) : AzureVoiceUnion by dto
+data class RimeAIVoice internal constructor(private val dto: RimeAIVoiceDto) : RimeAIVoiceUnion by dto
