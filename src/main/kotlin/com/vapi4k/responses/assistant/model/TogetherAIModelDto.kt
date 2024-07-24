@@ -46,6 +46,7 @@ data class TogetherAIModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null
 
   override fun verifyValues() {
-    TODO("Not yet implemented")
+    if (model.isEmpty())
+      error("togetherAIModel{} requires a model value")
   }
 }

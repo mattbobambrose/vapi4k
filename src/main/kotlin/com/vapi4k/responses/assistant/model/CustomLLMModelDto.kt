@@ -16,6 +16,7 @@
 
 package com.vapi4k.responses.assistant.model
 
+import com.vapi4k.dsl.assistant.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.dsl.assistant.model.CustomLLMModelUnion
 import com.vapi4k.responses.assistant.FunctionDto
@@ -37,6 +38,9 @@ data class CustomLLMModelDto(
   override var emotionRecognitionEnabled: Boolean? = null
   override var numFastTurns: Int = -1
 
+  override var url: String = ""
+  override var metadataSendMode: MetaDataSendModeType = MetaDataSendModeType.UNSPECIFIED
+
   override val messages: MutableList<RoleMessage> = mutableListOf()
   override val tools: MutableList<ToolDto> = mutableListOf()
   override val toolIds: MutableList<String> = mutableListOf()
@@ -46,7 +50,10 @@ data class CustomLLMModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null
 
   override fun verifyValues() {
-    TODO("Not yet implemented")
+    if (model.isEmpty())
+      error("customLLMModel{} requires a model value")
+    if (url.isEmpty())
+      error("customLLMModel{} requires an url value")
   }
 }
 

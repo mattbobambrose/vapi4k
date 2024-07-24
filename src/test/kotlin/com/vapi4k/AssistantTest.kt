@@ -468,9 +468,13 @@ class AssistantTest {
   fun `check non-default FirstMessageModeType values`() {
     resetCaches()
     val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
-    }
+    val assistant =
+      assistant(request) {
+        firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+        }
+      }
 
     val element = assistant.toJsonElement()
     assertEquals(
@@ -483,9 +487,13 @@ class AssistantTest {
   fun `check assistant client messages 1`() {
     resetCaches()
     val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      clientMessages -= AssistantClientMessageType.HANG
-    }
+    val assistant =
+      assistant(request) {
+        clientMessages -= AssistantClientMessageType.HANG
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+        }
+      }
 
     val element = assistant.toJsonElement()
     assertEquals(9, element.assistantClientMessages.size)
@@ -497,6 +505,9 @@ class AssistantTest {
     val request = assistantRequest.toJsonElement()
     val assistant = assistant(request) {
       clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
+      openAIModel {
+        modelType = OpenAIModelType.GPT_3_5_TURBO
+      }
     }
 
     val element = assistant.toJsonElement()
@@ -507,11 +518,16 @@ class AssistantTest {
   fun `check assistant server messages 1`() {
     resetCaches()
     val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      serverMessages -= AssistantServerMessageType.HANG
-    }
+    val assistant =
+      assistant(request) {
+        serverMessages -= AssistantServerMessageType.HANG
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+        }
+      }
 
     val element = assistant.toJsonElement()
+    println(assistant.toJsonString(true))
     assertEquals(8, element.assistantServerMessages.size)
   }
 
@@ -519,9 +535,13 @@ class AssistantTest {
   fun `check assistant server messages 2`() {
     resetCaches()
     val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
-    }
+    val assistant =
+      assistant(request) {
+        serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+        }
+      }
 
     val element = assistant.toJsonElement()
     assertEquals(7, element.assistantServerMessages.size)
@@ -610,6 +630,9 @@ class AssistantTest {
     val request = assistantRequest.toJsonElement()
     val assistant =
       assistant(request) {
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+        }
         deepGramTranscriber {
           transcriberModel = DeepgramModelType.BASE
           transcriberLanguage = DeepgramLanguageType.GERMAN
@@ -627,6 +650,10 @@ class AssistantTest {
     val request = assistantRequest.toJsonElement()
     val assistant =
       assistant(request) {
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+        }
+
         deepGramTranscriber {
           transcriberModel = DeepgramModelType.BASE
           customLanguage = "zzz"
@@ -645,6 +672,10 @@ class AssistantTest {
       val request = assistantRequest.toJsonElement()
       val assistant =
         assistant(request) {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
+
           deepGramTranscriber {
             transcriberModel = DeepgramModelType.BASE
             transcriberLanguage = DeepgramLanguageType.GERMAN

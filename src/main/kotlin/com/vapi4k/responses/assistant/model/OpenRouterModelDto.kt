@@ -46,7 +46,8 @@ data class OpenRouterModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null
 
   override fun verifyValues() {
-    TODO("Not yet implemented")
+    if (model.isEmpty())
+      error("openRouterModel{} requires a model value")
   }
 }
 

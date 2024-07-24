@@ -46,6 +46,7 @@ data class VapiModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null
 
   override fun verifyValues() {
-    TODO("Not yet implemented")
+    if (model.isEmpty())
+      error("vapiModel{} requires a model value")
   }
 }

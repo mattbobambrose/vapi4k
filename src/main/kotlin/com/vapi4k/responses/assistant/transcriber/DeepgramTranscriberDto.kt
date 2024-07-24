@@ -49,32 +49,21 @@ data class DeepgramTranscriberDto(
   override val keywords: MutableList<String> = mutableListOf()
 
   override fun assignEnumOverrides() {
-    model =
-      if (customModel.isNotEmpty()) {
-        if (transcriberModel.isSpecified())
-          error("Cannot assign both customModel and transcriberModel values in deepgramTranscriber{}")
-        customModel
-      } else {
-        transcriberLanguage.desc
-      }
-
-    language =
-      if (customLanguage.isNotEmpty()) {
-        if (transcriberLanguage.isSpecified())
-          error("Cannot assign both customLanguage and transcriberLanguage values in deepgramTranscriber{}")
-        customLanguage
-      } else {
-        transcriberLanguage.desc
-      }
+    model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc
+    language = if (customLanguage.isNotEmpty()) customLanguage else transcriberLanguage.desc
   }
 
   override fun verifyValues() {
-    if (transcriberModel.isNotSpecified() && customModel.isEmpty()) {
-      error("Either customModel or transcriberModel must be assigned in deepgramTranscriber{}")
-    }
+    if (transcriberModel.isSpecified() && customModel.isNotEmpty())
+      error("deepgramTranscriber{} cannot have both transcriberModel and customModel values")
 
-    if (transcriberLanguage.isNotSpecified() && customLanguage.isEmpty()) {
-      error("Either customLanguage or transcriberLanguage must be assigned in deepgramTranscriber{}")
-    }
+    if (transcriberModel.isNotSpecified() && customModel.isEmpty())
+      error("deepgramTranscriber{} requires transcriberModel or customModel value")
+
+    if (transcriberLanguage.isSpecified() && customLanguage.isNotEmpty())
+      error("deepgramTranscriber{} cannot have both transcriberLanguage and customLanguage values")
+
+    if (transcriberLanguage.isNotSpecified() && customLanguage.isEmpty())
+      error("deepgramTranscriber{} requires a transcriberLanguage or customLanguagevalue")
   }
 }

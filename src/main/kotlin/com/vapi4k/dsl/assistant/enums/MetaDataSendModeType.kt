@@ -17,12 +17,11 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import kotlinx.serialization.Serializable
 
-@Serializable
-enum class GladiaModelType(internal val desc: String) {
-  FAST("fast"),
-  ACCURATE("accurate"),
+enum class MetaDataSendModeType(internal val desc: String) {
+  OFF("off"),
+  VARIABLE("variable"),
+  DESTRUCTURED("destructured"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 

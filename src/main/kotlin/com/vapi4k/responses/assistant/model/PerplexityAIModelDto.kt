@@ -46,6 +46,7 @@ data class PerplexityAIModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null
 
   override fun verifyValues() {
-    TODO("Not yet implemented")
+    if (model.isEmpty())
+      error("perplexityAIModel{} requires a model value")
   }
 }

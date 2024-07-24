@@ -51,26 +51,21 @@ data class GladiaTranscriberDto(
   override var audioEnhancer: Boolean = false
 
   override fun assignEnumOverrides() {
-    model =
-      if (customModel.isNotEmpty()) {
-        if (transcriberModel.isSpecified())
-          error("Cannot assign both customModel and transcriberModel values in gladiaTranscriber{}")
-        customModel
-      } else {
-        transcriberLanguage.desc
-      }
-
-    language =
-      if (customLanguage.isNotEmpty()) {
-        if (transcriberLanguage.isSpecified())
-          error("Cannot assign both customLanguage and transcriberLanguage values in gladiaTranscriber{}")
-        customLanguage
-      } else {
-        transcriberLanguage.desc
-      }
+    model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc
+    language = if (customLanguage.isNotEmpty()) customLanguage else transcriberLanguage.desc
   }
 
   override fun verifyValues() {
-    TODO("Not yet implemented")
+    if (transcriberModel.isSpecified() && customModel.isNotEmpty())
+      error("gladiaTranscriber{} cannot have both transcriberModel and customModel values")
+
+    if (transcriberModel.isNotSpecified() && customModel.isEmpty())
+      error("gladiaTranscriber{} requires a transcriberModel or customModel value")
+
+    if (transcriberLanguage.isSpecified() && customLanguage.isNotEmpty())
+      error("gladiaTranscriber{} cannot have both transcriberLanguage and customLanguage values")
+
+    if (transcriberLanguage.isNotSpecified() && customLanguage.isEmpty())
+      error("gladiaTranscriber{} requires a transcriberLanguage or customLanguage value")
   }
 }

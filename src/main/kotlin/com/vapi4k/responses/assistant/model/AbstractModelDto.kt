@@ -56,7 +56,6 @@ private object ModelSerializer : KSerializer<AbstractModelDto> {
       }
 
       is CustomLLMModelDto -> {
-        //value.assignEnumOverrides()
         encoder.encodeSerializableValue(CustomLLMModelDto.serializer(), value)
       }
 
@@ -75,22 +74,18 @@ private object ModelSerializer : KSerializer<AbstractModelDto> {
       }
 
       is OpenRouterModelDto -> {
-        //value.assignEnumOverrides()
         encoder.encodeSerializableValue(OpenRouterModelDto.serializer(), value)
       }
 
       is PerplexityAIModelDto -> {
-        //value.assignEnumOverrides()
         encoder.encodeSerializableValue(PerplexityAIModelDto.serializer(), value)
       }
 
       is TogetherAIModelDto -> {
-        //value.assignEnumOverrides()
         encoder.encodeSerializableValue(TogetherAIModelDto.serializer(), value)
       }
 
       is VapiModelDto -> {
-        //value.assignEnumOverrides()
         encoder.encodeSerializableValue(VapiModelDto.serializer(), value)
       }
     }

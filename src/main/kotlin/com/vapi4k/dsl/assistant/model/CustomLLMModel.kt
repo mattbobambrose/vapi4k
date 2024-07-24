@@ -21,6 +21,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.ModelMessageDelegate
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
+import com.vapi4k.dsl.assistant.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
@@ -37,6 +38,8 @@ interface CustomLLMModelUnion {
   var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?
   var numFastTurns: Int
+  var url: String
+  var metadataSendMode: MetaDataSendModeType
 }
 
 @AssistantDslMarker

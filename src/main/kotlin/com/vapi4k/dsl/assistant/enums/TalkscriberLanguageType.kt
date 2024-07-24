@@ -125,4 +125,5 @@ enum class TalkscriberLanguageType(internal val desc: String) {
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
   fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
