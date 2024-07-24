@@ -32,5 +32,4 @@ interface OpenAIVoiceUnion {
 }
 
 @AssistantDslMarker
-data class OpenAIVoice internal constructor(private val dto: OpenAIVoiceDto) :
-  OpenAIVoiceUnion by dto
+data class OpenAIVoice internal constructor(private val dto: OpenAIVoiceDto) : OpenAIVoiceUnion by dto

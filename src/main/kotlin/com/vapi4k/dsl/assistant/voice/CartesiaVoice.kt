@@ -34,5 +34,4 @@ interface CartesiaVoiceUnion {
 }
 
 @AssistantDslMarker
-data class CartesiaVoice internal constructor(private val dto: CartesiaVoiceDto) :
-  CartesiaVoiceUnion by dto
+data class CartesiaVoice internal constructor(private val dto: CartesiaVoiceDto) : CartesiaVoiceUnion by dto

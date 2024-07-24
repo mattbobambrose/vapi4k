@@ -30,5 +30,4 @@ interface DeepgramVoiceUnion {
 }
 
 @AssistantDslMarker
-data class DeepgramVoice internal constructor(private val dto: DeepgramVoiceDto) :
-  DeepgramVoiceUnion by dto
+data class DeepgramVoice internal constructor(private val dto: DeepgramVoiceDto) : DeepgramVoiceUnion by dto

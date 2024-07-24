@@ -36,5 +36,4 @@ interface PlayHTVoiceUnion {
   var textGuidance: Double
 }
 
-data class PlayHTVoice internal constructor(private val dto: PlayHTVoiceDto) :
-  PlayHTVoiceUnion by dto
+data class PlayHTVoice internal constructor(private val dto: PlayHTVoiceDto) : PlayHTVoiceUnion by dto

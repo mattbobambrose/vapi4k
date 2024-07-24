@@ -48,19 +48,19 @@ interface Call : CallProperties {
 
 data class CallImpl internal constructor(
   private val cacheId: CacheId,
-  internal val callRequest: CallRequestDto,
-) : CallProperties by callRequest, Call {
+  internal val dto: CallRequestDto,
+) : CallProperties by dto, Call {
   private val assistantChecker = DuplicateChecker()
   private val overridesChecker = DuplicateChecker()
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     assistantChecker.check("assistantId{} already called")
-    return AssistantIdImpl(emptyJsonElement(), cacheId, callRequest).apply(block)
+    return AssistantIdImpl(emptyJsonElement(), cacheId, dto).apply(block)
   }
 
   override fun assistant(block: Assistant.() -> Unit): Assistant {
     assistantChecker.check("assistant{} already called")
-    return with(callRequest) {
+    return with(dto) {
       AssistantImpl(emptyJsonElement(), cacheId, assistantDto, assistantOverridesDto)
         .apply(block)
         .apply {
@@ -72,26 +72,26 @@ data class CallImpl internal constructor(
 
   override fun squadId(block: SquadId.() -> Unit): SquadId {
     assistantChecker.check("squadId{} already called")
-    return SquadIdImpl(emptyJsonElement(), callRequest).apply(block)
+    return SquadIdImpl(emptyJsonElement(), dto).apply(block)
   }
 
 
   override fun squad(block: Squad.() -> Unit): Squad {
     assistantChecker.check("squad{} already called")
-    return with(callRequest) {
+    return with(dto) {
       SquadImpl(emptyJsonElement(), cacheId, squadDto).apply(block)
     }
   }
 
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides {
     overridesChecker.check("assistantOverrides{} already called")
-    return if (callRequest.assistantDto.updated || callRequest.assistantId.isNotEmpty())
-      with(callRequest) {
+    return if (dto.assistantDto.updated || dto.assistantId.isNotEmpty())
+      with(dto) {
         AssistantOverridesImpl(emptyJsonElement(), cacheId, assistantOverridesDto).apply(block)
       }
     else
       error("assistant{} or assistantId{} must be called before assistantOverrides{}")
   }
 
-  override fun customer(block: Customer.() -> Unit): Customer = Customer(callRequest.customerDto).apply(block)
+  override fun customer(block: Customer.() -> Unit): Customer = Customer(dto.customerDto).apply(block)
 }

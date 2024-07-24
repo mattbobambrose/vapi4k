@@ -39,5 +39,4 @@ interface ElevenLabsVoiceUnion {
 }
 
 @AssistantDslMarker
-data class ElevenLabsVoice internal constructor(private val dto: ElevenLabsVoiceDto) :
-  ElevenLabsVoiceUnion by dto
+data class ElevenLabsVoice internal constructor(private val dto: ElevenLabsVoiceDto) : ElevenLabsVoiceUnion by dto

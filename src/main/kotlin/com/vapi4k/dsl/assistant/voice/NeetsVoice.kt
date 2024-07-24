@@ -31,5 +31,4 @@ interface NeetsVoiceUnion {
 }
 
 @AssistantDslMarker
-data class NeetsVoice internal constructor(private val dto: NeetsVoiceDto) :
-  NeetsVoiceUnion by dto
+data class NeetsVoice internal constructor(private val dto: NeetsVoiceDto) : NeetsVoiceUnion by dto

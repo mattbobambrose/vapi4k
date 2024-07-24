@@ -17,8 +17,12 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.KnowledgeBaseProperties
 import kotlinx.serialization.json.JsonElement
+
+interface KnowledgeBaseProperties {
+  var topK: Double
+  val fileIds: MutableSet<String>
+}
 
 @AssistantDslMarker
 class KnowledgeBase internal constructor(
