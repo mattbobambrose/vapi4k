@@ -21,7 +21,6 @@ import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
-import com.vapi4k.dsl.assistant.enums.VoiceType
 import com.vapi4k.dsl.assistant.model.AnthropicModel
 import com.vapi4k.dsl.assistant.model.AnyscaleModel
 import com.vapi4k.dsl.assistant.model.CustomLLMModel
@@ -186,11 +185,10 @@ data class Assistant internal constructor(
 
 
   // Voices
-  fun voice(block: Voice.() -> Unit) {
+  fun voice(block: Voice.() -> Unit): Voice {
     val voiceDto = VoiceDto()
     assistantDto.voiceDto = voiceDto
-    Voice(voiceDto).apply(block)
-    if (voiceDto.voiceId == VoiceType.UNSPECIFIED) error("VoiceId must be set")
+    return Voice(voiceDto).apply(block)
   }
 
   // AssistantOverrides
