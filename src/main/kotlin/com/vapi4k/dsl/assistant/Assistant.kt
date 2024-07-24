@@ -216,72 +216,58 @@ data class Assistant internal constructor(
 
 
   // Voices
-//  fun voice(block: Voice.() -> Unit): Voice {
-//    val voiceDto = VoiceDto()
-//    assistantDto.voiceDto = voiceDto
-//    return Voice(voiceDto).apply(block)
-//  }
 
   fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice {
     voiceChecker.check("azureVoice{} already called")
-    val voiceDto = AzureVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = AzureVoiceDto().also { assistantDto.voiceDto = it }
     return AzureVoice(voiceDto).apply(block)
   }
 
   fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice {
     voiceChecker.check("cartesiaVoice{} already called")
-    val voiceDto = CartesiaVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = CartesiaVoiceDto().also { assistantDto.voiceDto = it }
     return CartesiaVoice(voiceDto).apply(block)
   }
 
   fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice {
     voiceChecker.check("deepgramVoice{} already called")
-    val voiceDto = DeepgramVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = DeepgramVoiceDto().also { assistantDto.voiceDto = it }
     return DeepgramVoice(voiceDto).apply(block)
   }
 
   fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice {
     voiceChecker.check("elevenLabsVoice{} already called")
-    val voiceDto = ElevenLabsVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = ElevenLabsVoiceDto().also { assistantDto.voiceDto = it }
     return ElevenLabsVoice(voiceDto).apply(block)
   }
 
   fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice {
     voiceChecker.check("lmntVoice{} already called")
-    val voiceDto = LMNTVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = LMNTVoiceDto().also { assistantDto.voiceDto = it }
     return LMNTVoice(voiceDto).apply(block)
   }
 
   fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice {
     voiceChecker.check("neetsVoice{} already called")
-    val voiceDto = NeetsVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = NeetsVoiceDto().also { assistantDto.voiceDto = it }
     return NeetsVoice(voiceDto).apply(block)
   }
 
   fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice {
     voiceChecker.check("openAIVoice{} already called")
-    val voiceDto = OpenAIVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = OpenAIVoiceDto().also { assistantDto.voiceDto = it }
     return OpenAIVoice(voiceDto).apply(block)
   }
 
   fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice {
     voiceChecker.check("playHTVoice{} already called")
-    val voiceDto = PlayHTVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = PlayHTVoiceDto().also { assistantDto.voiceDto = it }
     return PlayHTVoice(voiceDto).apply(block)
   }
 
   fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice {
     voiceChecker.check("rimeAIVoice{} already called")
-    val voiceDto = RimeAIVoiceDto()
-    assistantDto.voiceDto = voiceDto
+    val voiceDto = RimeAIVoiceDto().also { assistantDto.voiceDto = it }
     return RimeAIVoice(voiceDto).apply(block)
   }
 

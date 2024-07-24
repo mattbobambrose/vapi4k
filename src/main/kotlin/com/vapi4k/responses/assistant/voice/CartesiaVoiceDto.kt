@@ -36,6 +36,9 @@ data class CartesiaVoiceDto(
   override var model: CartesiaVoiceModelType = CartesiaVoiceModelType.UNSPECIFIED,
   override var language: CartesiaVoiceLanguageType = CartesiaVoiceLanguageType.UNSPECIFIED,
   override var voiceId: String = "",
-) : CartesiaVoiceUnion, AbstractVoiceDto()
-
-
+) : CartesiaVoiceUnion, AbstractVoiceDto {
+  override fun verifyValues() {
+    if (voiceId.isEmpty())
+      error("cartesiaVoice{} requires a voiceId value")
+  }
+}

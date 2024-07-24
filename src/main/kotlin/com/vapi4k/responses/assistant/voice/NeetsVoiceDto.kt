@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.NeetsVoiceIdType
+import com.vapi4k.dsl.assistant.enums.NeetsVoiceIdType.UNSPECIFIED
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.NeetsVoiceUnion
@@ -33,6 +34,10 @@ data class NeetsVoiceDto(
   override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: NeetsVoiceIdType = NeetsVoiceIdType.UNSPECIFIED,
-) : NeetsVoiceUnion, AbstractVoiceDto()
-
+  override var voiceId: NeetsVoiceIdType = UNSPECIFIED,
+) : NeetsVoiceUnion, AbstractVoiceDto {
+  override fun verifyValues() {
+    if (voiceId == UNSPECIFIED)
+      error("neetsVoice{} requires a voiceId value")
+  }
+}

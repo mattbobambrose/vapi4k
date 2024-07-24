@@ -33,4 +33,9 @@ data class DeepgramVoiceDto(
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: String = "",
-) : DeepgramVoiceUnion, AbstractVoiceDto()
+) : DeepgramVoiceUnion, AbstractVoiceDto {
+  override fun verifyValues() {
+    if (voiceId.isEmpty())
+      error("deepgramVoice{} requires a voiceId value")
+  }
+}

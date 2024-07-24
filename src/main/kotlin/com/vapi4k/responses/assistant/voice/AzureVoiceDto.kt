@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.AzureVoiceIdType
+import com.vapi4k.dsl.assistant.enums.AzureVoiceIdType.UNSPECIFIED
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.AzureVoiceUnion
@@ -33,6 +34,11 @@ data class AzureVoiceDto(
   override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: AzureVoiceIdType = AzureVoiceIdType.UNSPECIFIED,
-  override var speed: Double = -1.0,
-) : AzureVoiceUnion, AbstractVoiceDto()
+  override var voiceId: AzureVoiceIdType = UNSPECIFIED,
+  override var speed: Double = 0.0,
+) : AzureVoiceUnion, AbstractVoiceDto {
+  override fun verifyValues() {
+    if (voiceId == UNSPECIFIED)
+      error("azureVoice{} requires a voiceId value")
+  }
+}

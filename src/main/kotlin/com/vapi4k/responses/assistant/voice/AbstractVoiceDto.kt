@@ -24,7 +24,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = VoiceSerializer::class)
-abstract class AbstractVoiceDto
+interface AbstractVoiceDto {
+  fun verifyValues()
+}
 
 private object VoiceSerializer : KSerializer<AbstractVoiceDto> {
   override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractVoiceDto")

@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceIdType
+import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceIdType.UNSPECIFIED
 import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceModelType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
@@ -34,7 +35,7 @@ data class ElevenLabsVoiceDto(
   override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: ElevenLabsVoiceIdType = ElevenLabsVoiceIdType.UNSPECIFIED,
+  override var voiceId: ElevenLabsVoiceIdType = UNSPECIFIED,
   override var stability: Double = -1.0,
   override var similarityBoost: Double = -1.0,
   override var style: Double = -1.0,
@@ -42,4 +43,9 @@ data class ElevenLabsVoiceDto(
   override var optimizeStreaming: Double = -1.0,
   override var enableSsmlParsing: Boolean? = null,
   override var model: ElevenLabsVoiceModelType = ElevenLabsVoiceModelType.UNSPECIFIED,
-) : ElevenLabsVoiceUnion, AbstractVoiceDto()
+) : ElevenLabsVoiceUnion, AbstractVoiceDto {
+  override fun verifyValues() {
+    if (voiceId == UNSPECIFIED)
+      error("elevenLabsVoice{} requires a voiceId value")
+  }
+}

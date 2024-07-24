@@ -37,7 +37,9 @@ data class RimeAIVoiceDto(
   override var voiceId: RimeAIVoiceIdType = RimeAIVoiceIdType.UNSPECIFIED,
   override var model: RimeAIVoiceModelType = RimeAIVoiceModelType.UNSPECIFIED,
   override var speed: Double = -1.0,
-) : RimeAIVoiceUnion, AbstractVoiceDto()
-
-
-
+) : RimeAIVoiceUnion, AbstractVoiceDto {
+  override fun verifyValues() {
+    if (voiceId == RimeAIVoiceIdType.UNSPECIFIED)
+      error("rimeAIVoice{} requires a voiceId value")
+  }
+}

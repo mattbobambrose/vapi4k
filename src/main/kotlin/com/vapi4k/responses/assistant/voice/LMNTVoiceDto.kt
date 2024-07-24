@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.LMNTVoiceIdType
+import com.vapi4k.dsl.assistant.enums.LMNTVoiceIdType.UNSPECIFIED
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.LMNTVoiceUnion
@@ -33,6 +34,12 @@ data class LMNTVoiceDto(
   override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: LMNTVoiceIdType = LMNTVoiceIdType.UNSPECIFIED,
+  override var voiceId: LMNTVoiceIdType = UNSPECIFIED,
   override var speed: Double = -1.0,
-) : LMNTVoiceUnion, AbstractVoiceDto()
+) : LMNTVoiceUnion, AbstractVoiceDto {
+  override fun verifyValues() {
+    if (voiceId == UNSPECIFIED) {
+      error("lmntVoice{} requires a voiceId value")
+    }
+  }
+}
