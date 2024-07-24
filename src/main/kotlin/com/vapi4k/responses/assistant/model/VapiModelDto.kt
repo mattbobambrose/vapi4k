@@ -43,7 +43,7 @@ data class VapiModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : VapiModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.VAPI,
+  override val provider: ModelType = ModelType.VAPI
 
   override fun verifyValues() {
     if (model.isEmpty())

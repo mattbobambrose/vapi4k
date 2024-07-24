@@ -24,9 +24,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DeepgramVoiceDto(
-  @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.DEEPGRAM,
-
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
@@ -34,6 +31,9 @@ data class DeepgramVoiceDto(
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: String = "",
 ) : DeepgramVoiceUnion, AbstractVoiceDto {
+  @EncodeDefault
+  val provider: VoiceProviderType = VoiceProviderType.DEEPGRAM
+
   override fun verifyValues() {
     if (voiceId.isEmpty())
       error("deepgramVoice{} requires a voiceId value")

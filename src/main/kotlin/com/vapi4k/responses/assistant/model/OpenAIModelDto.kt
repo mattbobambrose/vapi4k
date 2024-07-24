@@ -61,7 +61,7 @@ data class OpenAIModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : OpenAIModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.OPEN_AI,
+  override val provider: ModelType = ModelType.OPEN_AI
 
   fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else modelType.desc

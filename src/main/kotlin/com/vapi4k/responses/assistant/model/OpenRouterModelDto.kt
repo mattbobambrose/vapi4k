@@ -43,7 +43,7 @@ data class OpenRouterModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : OpenRouterModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.OPEN_AI,
+  override val provider: ModelType = ModelType.OPEN_AI
 
   override fun verifyValues() {
     if (model.isEmpty())

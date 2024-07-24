@@ -43,7 +43,7 @@ data class AnyscaleModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : AnyscaleModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.ANYSCALE,
+  override val provider: ModelType = ModelType.ANYSCALE
 
   override fun verifyValues() {
     if (model.isEmpty())

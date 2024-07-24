@@ -43,7 +43,7 @@ data class DeepInfraModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : DeepInfraModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.DEEP_INFRA,
+  override val provider: ModelType = ModelType.DEEP_INFRA
 
   override fun verifyValues() {
     if (model.isEmpty())

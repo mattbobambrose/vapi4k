@@ -48,7 +48,7 @@ data class GladiaTranscriberDto(
   override var audioEnhancer: Boolean? = null,
 ) : GladiaTranscriberUnion, AbstractTranscriberDto {
   @EncodeDefault
-  override val provider: TranscriberType = TranscriberType.GLADIA,
+  override val provider: TranscriberType = TranscriberType.GLADIA
 
   override fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc

@@ -43,7 +43,7 @@ data class TogetherAIModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : TogetherAIModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.TOGETHER_AI,
+  override val provider: ModelType = ModelType.TOGETHER_AI
 
   override fun verifyValues() {
     if (model.isEmpty())

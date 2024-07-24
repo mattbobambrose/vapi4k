@@ -26,9 +26,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RimeAIVoiceDto(
-  @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.RIMEAI,
-
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
@@ -38,6 +35,9 @@ data class RimeAIVoiceDto(
   override var model: RimeAIVoiceModelType = RimeAIVoiceModelType.UNSPECIFIED,
   override var speed: Double = -1.0,
 ) : RimeAIVoiceUnion, AbstractVoiceDto {
+  @EncodeDefault
+  val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
+
   override fun verifyValues() {
     if (voiceId == RimeAIVoiceIdType.UNSPECIFIED)
       error("rimeAIVoice{} requires a voiceId value")

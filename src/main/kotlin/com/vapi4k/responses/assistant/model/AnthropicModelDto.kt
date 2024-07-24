@@ -52,7 +52,7 @@ data class AnthropicModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : AnthropicModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.ANTHROPIC,
+  override val provider: ModelType = ModelType.ANTHROPIC
 
   fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else modelType.desc

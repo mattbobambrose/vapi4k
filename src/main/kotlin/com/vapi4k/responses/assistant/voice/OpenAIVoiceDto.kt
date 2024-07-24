@@ -25,19 +25,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OpenAIVoiceDto(
-  @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.OPENAI,
-
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: OpenAIVoiceIdType = UNSPECIFIED,
+  override var voiceId: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,
   override var speed: Double = 0.0,
 ) : OpenAIVoiceUnion, AbstractVoiceDto {
+  @EncodeDefault
+  val provider: VoiceProviderType = VoiceProviderType.OPENAI
+
   override fun verifyValues() {
-    if (voiceId == UNSPECIFIED)
+    if (voiceId == OpenAIVoiceIdType.UNSPECIFIED)
       error("openAIVoice{} requires a voiceId value")
   }
 }

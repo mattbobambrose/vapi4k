@@ -18,7 +18,6 @@ package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.PlayHTVoiceEmotionType
 import com.vapi4k.dsl.assistant.enums.PlayHTVoiceIdType
-import com.vapi4k.dsl.assistant.enums.PlayHTVoiceIdType.UNSPECIFIED
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.PlayHTVoiceUnion
@@ -27,15 +26,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlayHTVoiceDto(
-  @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.PLAYHT,
-
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: PlayHTVoiceIdType = UNSPECIFIED,
+  override var voiceId: PlayHTVoiceIdType = PlayHTVoiceIdType.UNSPECIFIED,
   override var speed: Double = -1.0,
   override var temperature: Double = -1.0,
   override var emotion: PlayHTVoiceEmotionType = PlayHTVoiceEmotionType.UNSPECIFIED,
@@ -43,8 +39,11 @@ data class PlayHTVoiceDto(
   override var styleGuidance: Double = -1.0,
   override var textGuidance: Double = -1.0,
 ) : PlayHTVoiceUnion, AbstractVoiceDto {
+  @EncodeDefault
+  val provider: VoiceProviderType = VoiceProviderType.PLAYHT
+
   override fun verifyValues() {
-    if (voiceId == UNSPECIFIED)
+    if (voiceId == PlayHTVoiceIdType.UNSPECIFIED)
       error("playHTVoice{} requires a voiceId value")
   }
 }

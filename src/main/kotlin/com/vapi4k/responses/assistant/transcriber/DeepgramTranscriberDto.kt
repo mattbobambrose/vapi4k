@@ -46,7 +46,7 @@ data class DeepgramTranscriberDto(
   override val keywords: MutableSet<String> = mutableSetOf(),
 ) : DeepgramTranscriberUnion, AbstractTranscriberDto {
   @EncodeDefault
-  override val provider: TranscriberType = TranscriberType.DEEPGRAM,
+  override val provider: TranscriberType = TranscriberType.DEEPGRAM
 
   override fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc

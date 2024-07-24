@@ -17,7 +17,6 @@
 package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceIdType
-import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceIdType.UNSPECIFIED
 import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceModelType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
@@ -27,15 +26,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ElevenLabsVoiceDto(
-  @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS,
-
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: ElevenLabsVoiceIdType = UNSPECIFIED,
+  override var voiceId: ElevenLabsVoiceIdType = ElevenLabsVoiceIdType.UNSPECIFIED,
   override var stability: Double = -1.0,
   override var similarityBoost: Double = -1.0,
   override var style: Double = -1.0,
@@ -44,8 +40,11 @@ data class ElevenLabsVoiceDto(
   override var enableSsmlParsing: Boolean? = null,
   override var model: ElevenLabsVoiceModelType = ElevenLabsVoiceModelType.UNSPECIFIED,
 ) : ElevenLabsVoiceUnion, AbstractVoiceDto {
+  @EncodeDefault
+  val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
+
   override fun verifyValues() {
-    if (voiceId == UNSPECIFIED)
+    if (voiceId == ElevenLabsVoiceIdType.UNSPECIFIED)
       error("elevenLabsVoice{} requires a voiceId value")
   }
 }

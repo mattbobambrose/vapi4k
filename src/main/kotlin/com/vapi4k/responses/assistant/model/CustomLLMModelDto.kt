@@ -47,7 +47,7 @@ data class CustomLLMModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : CustomLLMModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.CUSTOM_LLM,
+  override val provider: ModelType = ModelType.CUSTOM_LLM
 
   override fun verifyValues() {
     if (model.isEmpty())

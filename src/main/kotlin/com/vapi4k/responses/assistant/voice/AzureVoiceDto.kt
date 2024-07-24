@@ -17,7 +17,6 @@
 package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.AzureVoiceIdType
-import com.vapi4k.dsl.assistant.enums.AzureVoiceIdType.UNSPECIFIED
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.AzureVoiceUnion
@@ -26,19 +25,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AzureVoiceDto(
-  @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.AZURE,
-
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: AzureVoiceIdType = UNSPECIFIED,
+  override var voiceId: AzureVoiceIdType = AzureVoiceIdType.UNSPECIFIED,
   override var speed: Double = 0.0,
 ) : AzureVoiceUnion, AbstractVoiceDto {
+  @EncodeDefault
+  val provider: VoiceProviderType = VoiceProviderType.LMNT
+
   override fun verifyValues() {
-    if (voiceId == UNSPECIFIED)
+    if (voiceId == AzureVoiceIdType.UNSPECIFIED)
       error("azureVoice{} requires a voiceId value")
   }
 }

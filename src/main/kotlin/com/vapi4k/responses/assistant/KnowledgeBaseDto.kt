@@ -34,4 +34,3 @@ data class KnowledgeBaseDto(
   val provider: String = "canonical"
 }
 
-

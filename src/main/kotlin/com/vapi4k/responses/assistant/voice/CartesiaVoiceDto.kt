@@ -26,8 +26,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CartesiaVoiceDto(
-  @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.CARTESIA,
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
@@ -37,6 +35,9 @@ data class CartesiaVoiceDto(
   override var language: CartesiaVoiceLanguageType = CartesiaVoiceLanguageType.UNSPECIFIED,
   override var voiceId: String = "",
 ) : CartesiaVoiceUnion, AbstractVoiceDto {
+  @EncodeDefault
+  val provider: VoiceProviderType = VoiceProviderType.CARTESIA
+
   override fun verifyValues() {
     if (voiceId.isEmpty())
       error("cartesiaVoice{} requires a voiceId value")

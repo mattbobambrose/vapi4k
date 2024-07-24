@@ -44,7 +44,7 @@ data class TalkscriberTranscriberDto(
   override var customLanguage: String = "",
 ) : TalkscriberTranscriberUnion, AbstractTranscriberDto {
   @EncodeDefault
-  override val provider: TranscriberType = TranscriberType.TALKSCRIBER,
+  override val provider: TranscriberType = TranscriberType.TALKSCRIBER
 
   override fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc

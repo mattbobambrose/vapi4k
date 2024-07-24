@@ -43,7 +43,7 @@ data class PerplexityAIModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : PerplexityAIModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.OPEN_AI,
+  override val provider: ModelType = ModelType.OPEN_AI
 
   override fun verifyValues() {
     if (model.isEmpty())

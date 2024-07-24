@@ -52,7 +52,7 @@ data class GroqModelDto(
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : GroqModelUnion, AbstractModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.GROQ,
+  override val provider: ModelType = ModelType.GROQ
 
   fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else modelType.desc
