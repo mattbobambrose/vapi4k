@@ -36,8 +36,8 @@ fun myAssistantRequest(
 
       assistantOverrides {
         firstMessage = "This is the first message override"
-        model {
-          provider = "openai"
+
+        openAIModel {
           model = "gpt-4-turbo"
         }
       }

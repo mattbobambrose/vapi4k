@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesUnion
-import com.vapi4k.responses.assistant.model.ModelDto
+import com.vapi4k.responses.assistant.model.AbstractModelDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -49,7 +49,7 @@ data class AssistantOverridesDto(
   val endCallPhrases: MutableList<String> = mutableListOf(),
 
   @SerialName("model")
-  val modelDto: ModelDto = ModelDto(),
+  var modelDto: AbstractModelDto? = null,
   @SerialName("voice")
   val voiceDto: VoiceDto = VoiceDto(),
 
