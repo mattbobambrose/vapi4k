@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.model.Model
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
-import com.vapi4k.dsl.assistant.voice.VoiceOverrides
+import com.vapi4k.dsl.assistant.voice.Voice
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.DeepgramTranscriberDto
 import com.vapi4k.responses.assistant.GladiaTranscriberDto
@@ -63,8 +63,8 @@ data class AssistantOverrides internal constructor(
     Model(request, cacheId, dto.modelDto).apply(block)
   }
 
-  fun voice(block: VoiceOverrides.() -> Unit) {
-    VoiceOverrides(dto.voiceDto).apply(block)
+  fun voice(block: Voice.() -> Unit) {
+    Voice(dto.voiceDto).apply(block)
   }
 
   fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit) {
