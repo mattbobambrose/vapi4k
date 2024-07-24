@@ -39,6 +39,8 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(with = TranscriberSerializer::class)
 interface AbstractTranscriberDto {
   val provider: TranscriberType
+
+  fun assignEnumOverrides()
 }
 
 private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
@@ -95,7 +97,7 @@ data class DeepgramTranscriberDto(
   override var smartFormat: Boolean = false
   override val keywords: MutableList<String> = mutableListOf()
 
-  internal fun assignEnumOverrides() {
+  override fun assignEnumOverrides() {
     model =
       if (customModel.isNotEmpty()) {
         if (transcriberModel.isSpecified())
@@ -143,7 +145,7 @@ data class GladiaTranscriberDto(
   override var prosody: Boolean = false
   override var audioEnhancer: Boolean = false
 
-  internal fun assignEnumOverrides() {
+  override fun assignEnumOverrides() {
     model =
       if (customModel.isNotEmpty()) {
         if (transcriberModel.isSpecified())
@@ -185,7 +187,7 @@ data class TalkscriberTranscriberDto(
   @Transient
   override var customLanguage: String = ""
 
-  internal fun assignEnumOverrides() {
+  override fun assignEnumOverrides() {
     model =
       if (customModel.isNotEmpty()) {
         if (transcriberModel.isSpecified())

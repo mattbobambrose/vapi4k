@@ -14,26 +14,34 @@
  *
  */
 
-package com.vapi4k.responses.assistant
+package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.dsl.assistant.model.AnyscaleModelUnion
+import com.vapi4k.dsl.assistant.enums.ModelType
+import com.vapi4k.dsl.assistant.model.PerplexityAIModelUnion
+import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.KnowledgeBaseDto
+import com.vapi4k.responses.assistant.ToolDto
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AnyscaleModelDto(
-  override var provider: String = "",
+data class PerplexityAIModelDto(
+  @EncodeDefault
+  override val provider: ModelType = ModelType.OPEN_AI,
+
   override var model: String = "",
-  override var temperature: Int = 0,
-  override var maxTokens: Int = 0,
-  override var emotionRecognitionEnabled: Boolean = false,
-  override val toolIds: MutableList<String> = mutableListOf(),
+  override var temperature: Int = -1,
+  override var maxTokens: Int = -1,
+  override var emotionRecognitionEnabled: Boolean? = null,
+  override var numFastTurns: Int = -1,
 
   val messages: MutableList<RoleMessage> = mutableListOf(),
-  val tools: MutableList<ToolDto> = mutableListOf(),
+  override val tools: MutableList<ToolDto> = mutableListOf(),
+  override val toolIds: MutableList<String> = mutableListOf(),
   val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : AnyscaleModelUnion
+) : PerplexityAIModelUnion, AbstractModelDto
 

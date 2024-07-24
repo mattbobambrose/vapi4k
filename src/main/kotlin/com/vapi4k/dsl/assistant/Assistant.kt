@@ -21,7 +21,15 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.enums.VoiceType
-import com.vapi4k.dsl.assistant.model.Model
+import com.vapi4k.dsl.assistant.model.AnthropicModel
+import com.vapi4k.dsl.assistant.model.AnyscaleModel
+import com.vapi4k.dsl.assistant.model.CustomLLMModel
+import com.vapi4k.dsl.assistant.model.DeepInfraModel
+import com.vapi4k.dsl.assistant.model.GroqModel
+import com.vapi4k.dsl.assistant.model.OpenAIModel
+import com.vapi4k.dsl.assistant.model.OpenRouterModel
+import com.vapi4k.dsl.assistant.model.TogetherAIModel
+import com.vapi4k.dsl.assistant.model.VapiModel
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
@@ -32,6 +40,16 @@ import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.DeepgramTranscriberDto
 import com.vapi4k.responses.assistant.GladiaTranscriberDto
 import com.vapi4k.responses.assistant.TalkscriberTranscriberDto
+import com.vapi4k.responses.assistant.VoiceDto
+import com.vapi4k.responses.assistant.model.AnthropicModelDto
+import com.vapi4k.responses.assistant.model.AnyscaleModelDto
+import com.vapi4k.responses.assistant.model.CustomLLMModelDto
+import com.vapi4k.responses.assistant.model.DeepInfraModelDto
+import com.vapi4k.responses.assistant.model.GroqModelDto
+import com.vapi4k.responses.assistant.model.OpenAIModelDto
+import com.vapi4k.responses.assistant.model.OpenRouterModelDto
+import com.vapi4k.responses.assistant.model.TogetherAIModelDto
+import com.vapi4k.responses.assistant.model.VapiModelDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantUnion {
@@ -90,28 +108,113 @@ data class Assistant internal constructor(
   }
 
   // Models
-  fun model(block: Model.() -> Unit): Model =
-    Model(request, cacheId, assistantDto.modelDto)
+  fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel {
+    val modelDto = AnyscaleModelDto()
+    assistantDto.modelDto = modelDto
+    return AnyscaleModel(request, cacheId, modelDto)
       .apply(block)
       .apply {
-        if (provider.isEmpty()) error("Model provider must be assigned")
         if (model.isEmpty()) error("Model model must be assigned")
       }
+  }
 
-//  fun anyscaleModel(block: AnyscaleModel.() -> Unit) =
-//    AnyscaleModel(request, cacheId, assistantDto.modelDto)
-//      .apply(block)
-//      .apply {
-//        if (provider.isEmpty()) error("Model provider must be assigned")
-//        if (model.isEmpty()) error("Model model must be assigned")
-//      }
+  fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel {
+    val modelDto = AnthropicModelDto()
+    assistantDto.modelDto = modelDto
+    return AnthropicModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
+
+  fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
+    val modelDto = CustomLLMModelDto()
+    assistantDto.modelDto = modelDto
+    return CustomLLMModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
+
+  fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel {
+    val modelDto = DeepInfraModelDto()
+    assistantDto.modelDto = modelDto
+    return DeepInfraModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
+
+  fun groqModel(block: GroqModel.() -> Unit): GroqModel {
+    val modelDto = GroqModelDto()
+    assistantDto.modelDto = modelDto
+    return GroqModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
+
+  fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
+    val modelDto = OpenAIModelDto()
+    assistantDto.modelDto = modelDto
+    return OpenAIModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
+
+  fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel {
+    val modelDto = OpenRouterModelDto()
+    assistantDto.modelDto = modelDto
+    return OpenRouterModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
+
+  fun perplexityAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
+    val modelDto = OpenAIModelDto()
+    assistantDto.modelDto = modelDto
+    return OpenAIModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
+
+  fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel {
+    val modelDto = TogetherAIModelDto()
+    assistantDto.modelDto = modelDto
+    return TogetherAIModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
+
+  fun vapiModel(block: VapiModel.() -> Unit): VapiModel {
+    val modelDto = VapiModelDto()
+    assistantDto.modelDto = modelDto
+    return VapiModel(request, cacheId, modelDto)
+      .apply(block)
+      .apply {
+        if (model.isEmpty()) error("Model model must be assigned")
+      }
+  }
 
 
   // Voices
   fun voice(block: Voice.() -> Unit) {
-    val dto = assistantDto.voiceDto
-    Voice(dto).apply(block)
-    if (dto.voiceId == VoiceType.UNSPECIFIED) error("VoiceId must be set")
+    val voiceDto = VoiceDto()
+    assistantDto.voiceDto = voiceDto
+    Voice(voiceDto).apply(block)
+    if (voiceDto.voiceId == VoiceType.UNSPECIFIED) error("VoiceId must be set")
   }
 
   // AssistantOverrides

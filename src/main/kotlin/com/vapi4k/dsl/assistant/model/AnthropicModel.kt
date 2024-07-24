@@ -34,23 +34,25 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.KnowledgeBase
+import com.vapi4k.dsl.assistant.ModelMessageDelegate
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.AnthropicModelDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.RoleMessage
+import com.vapi4k.responses.assistant.model.AnthropicModelDto
+import com.vapi4k.responses.assistant.model.RoleMessage
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
 interface AnthropicModelUnion {
-  var provider: String
   var model: String
   val toolIds: MutableList<String>
   var temperature: Int
   var maxTokens: Int
-  var emotionRecognitionEnabled: Boolean
+  var emotionRecognitionEnabled: Boolean?
+  var numFastTurns: Int
 }
 
 @AssistantDslMarker
@@ -63,6 +65,7 @@ class AnthropicModel(
   override val toolDtos get() = dto.tools
   override val functions get() = dto.functions
   override val messageCallId get() = request.messageCallId
+  override var numFastTurns: Int = -1
 
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
   var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)

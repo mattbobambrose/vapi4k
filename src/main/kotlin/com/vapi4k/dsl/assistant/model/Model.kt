@@ -18,14 +18,14 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.KnowledgeBase
+import com.vapi4k.dsl.assistant.ModelMessageDelegate
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.ModelDto
-import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
+import com.vapi4k.responses.assistant.model.ModelDto
+import com.vapi4k.responses.assistant.model.RoleMessage
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
@@ -36,19 +36,8 @@ interface ModelUnion {
   val toolIds: MutableList<String>
   var temperature: Int
   var maxTokens: Int
-  var emotionRecognitionEnabled: Boolean
-}
-
-interface ModelMessageUnion {
-  val cacheId: CacheId
-  val messageCallId: String
-  val toolDtos: MutableList<ToolDto>
-  val functions: MutableList<FunctionDto>
-  val messages: MutableList<RoleMessage>
-  fun message(
-    role: MessageRoleType,
-    content: String,
-  )
+  var emotionRecognitionEnabled: Boolean?
+  var numFastTurns: Int
 }
 
 @AssistantDslMarker

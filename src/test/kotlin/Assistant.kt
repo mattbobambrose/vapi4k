@@ -61,8 +61,7 @@ fun getSquad(request: JsonElement) =
       member {
         assistant {
           name = "Assistant Name"
-          model {
-            provider = "openai"
+          openAIModel {
             model = "gpt-4-turbo"
           }
         }
@@ -88,8 +87,7 @@ fun getAssistant(
       AssistantServerMessageType.SPEECH_UPDATE
     )
 
-    model {
-      provider = "openai"
+    openAIModel {
       model = "gpt-4-turbo"
 
       systemMessage = """

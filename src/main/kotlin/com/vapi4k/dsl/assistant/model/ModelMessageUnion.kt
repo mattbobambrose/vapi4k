@@ -16,21 +16,20 @@
 
 package com.vapi4k.dsl.assistant.model
 
+import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
-import kotlin.reflect.KProperty
+import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.ToolDto
+import com.vapi4k.responses.assistant.model.RoleMessage
 
-internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType) {
-  operator fun getValue(
-    model: ModelMessageUnion,
-    property: KProperty<*>,
-  ): String {
-    val msgs = model.messages.filter { it.role == messageRoleType.desc }
-    return if (msgs.isEmpty()) "" else (msgs.joinToString("") { it.content })
-  }
-
-  operator fun setValue(
-    model: ModelMessageUnion,
-    property: KProperty<*>,
-    newVal: String,
-  ) = model.message(messageRoleType, newVal)
+interface ModelMessageUnion {
+  val cacheId: CacheId
+  val messageCallId: String
+  val toolDtos: MutableList<ToolDto>
+  val functions: MutableList<FunctionDto>
+  val messages: MutableList<RoleMessage>
+  fun message(
+    role: MessageRoleType,
+    content: String,
+  )
 }

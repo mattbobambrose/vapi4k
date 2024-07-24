@@ -14,15 +14,13 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.model
+package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.KnowledgeBaseUnion
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.Serializable
 
-@AssistantDslMarker
-class KnowledgeBase internal constructor(
-  val request: JsonElement,
-  private val dto: KnowledgeBaseDto,
-) : KnowledgeBaseUnion by dto
+@Serializable
+data class RoleMessage(
+  var role: String = "",
+  var content: String = "",
+  var delay: Int = -1,
+)

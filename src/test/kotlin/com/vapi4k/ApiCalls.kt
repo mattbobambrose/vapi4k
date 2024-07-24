@@ -114,8 +114,7 @@ class ApiCalls {
           call {
             assistant {
               firstMessage = "Hi there. I am here to help."
-              model {
-                provider = "openai"
+              openAIModel {
                 model = "gpt-4-turbo"
                 systemMessage = "Answer questions."
               }

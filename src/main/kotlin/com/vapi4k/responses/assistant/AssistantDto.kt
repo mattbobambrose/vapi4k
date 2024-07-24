@@ -20,6 +20,7 @@ import com.vapi4k.dsl.assistant.AssistantUnion
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
+import com.vapi4k.responses.assistant.model.AbstractModelDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -64,14 +65,14 @@ data class AssistantDto(
   val metadata: MutableMap<String, String> = mutableMapOf(),
   val endCallPhrases: MutableList<String> = mutableListOf(),
 
-  @SerialName("model")
-  val modelDto: ModelDto = ModelDto(),
-  @SerialName("voice")
-  val voiceDto: VoiceDto = VoiceDto(),
-
   @SerialName("transcriber")
-  // DeepgramTranscriberDto is assigned as the default, but is later overwritten
-  var transcriberDto: AbstractTranscriberDto = DeepgramTranscriberDto(),
+  var transcriberDto: AbstractTranscriberDto? = null,
+
+  @SerialName("model")
+  var modelDto: AbstractModelDto? = null,
+
+  @SerialName("voice")
+  var voiceDto: VoiceDto? = null,
 
   // TODO: Add verbs and enums
   @SerialName("voicemailDetection")

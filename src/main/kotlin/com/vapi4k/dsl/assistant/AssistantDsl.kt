@@ -39,12 +39,7 @@ object AssistantDsl {
   ) =
     AssistantRequestMessageResponse().apply {
       with(messageResponse) {
-        Assistant(
-          request,
-          UNSPECIFIED_CACHE_ID,
-          assistantDto,
-          assistantOverridesDto
-        ).apply(block)
+        Assistant(request, UNSPECIFIED_CACHE_ID, assistantDto, assistantOverridesDto).apply(block)
       }
     }.messageResponse
 

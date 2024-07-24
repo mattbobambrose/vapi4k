@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesUnion
+import com.vapi4k.responses.assistant.model.ModelDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
