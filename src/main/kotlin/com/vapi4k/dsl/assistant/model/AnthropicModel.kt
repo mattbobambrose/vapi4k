@@ -47,7 +47,7 @@ import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
-interface AnthropicModelUnion {
+interface AnthropicModelProperties {
   var modelType: AnthropicModelType
   var customModel: String
   val toolIds: MutableSet<String>
@@ -58,26 +58,36 @@ interface AnthropicModelUnion {
 }
 
 @AssistantDslMarker
-class AnthropicModel(
-  val request: JsonElement,
+interface AnthropicModel : AnthropicModelProperties {
+  var systemMessage: String
+  var assistantMessage: String
+  var functionMessage: String
+  var toolMessage: String
+  var userMessage: String
+  fun tools(block: Tools.() -> Unit): Tools
+  fun functions(block: Functions.() -> Unit): Functions
+  fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
+}
+
+class AnthropicModelImpl(
+  internal val request: JsonElement,
   override val cacheId: CacheId,
   private val dto: AnthropicModelDto,
-) : AnthropicModelUnion by dto, ModelMessageUnion {
+) : AnthropicModelProperties by dto, AnthropicModel, ModelMessageProperties {
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
   override val functionDtos get() = dto.functions
   override val messageCallId get() = request.messageCallId
-  override var numFastTurns: Int = -1
 
-  var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
-  var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)
-  var functionMessage by ModelMessageDelegate(MessageRoleType.FUNCTION)
-  var toolMessage by ModelMessageDelegate(MessageRoleType.TOOL)
-  var userMessage by ModelMessageDelegate(MessageRoleType.USER)
+  override var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
+  override var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)
+  override var functionMessage by ModelMessageDelegate(MessageRoleType.FUNCTION)
+  override var toolMessage by ModelMessageDelegate(MessageRoleType.TOOL)
+  override var userMessage by ModelMessageDelegate(MessageRoleType.USER)
 
-  fun tools(block: Tools.() -> Unit) = Tools(this).apply(block)
+  override fun tools(block: Tools.() -> Unit) = Tools(this).apply(block)
 
-  fun functions(block: Functions.() -> Unit) = Functions(this).apply(block)
+  override fun functions(block: Functions.() -> Unit) = Functions(this).apply(block)
 
   override fun message(
     role: MessageRoleType,
@@ -89,7 +99,7 @@ class AnthropicModel(
     messages += RoleMessage(role.desc, content.trimLeadingSpaces())
   }
 
-  fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {
+  override fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {
     val kbDto = KnowledgeBaseDto()
     dto.knowledgeBaseDto = kbDto
     return KnowledgeBase(request, kbDto)

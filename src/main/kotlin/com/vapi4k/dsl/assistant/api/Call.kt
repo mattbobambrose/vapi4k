@@ -17,42 +17,51 @@
 package com.vapi4k.dsl.assistant.api
 
 import com.vapi4k.common.CacheId
+import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantId
+import com.vapi4k.dsl.assistant.AssistantIdImpl
+import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.assistant.AssistantOverrides
+import com.vapi4k.dsl.assistant.AssistantOverridesImpl
 import com.vapi4k.dsl.assistant.squad.Squad
 import com.vapi4k.dsl.assistant.squad.SquadId
+import com.vapi4k.dsl.assistant.squad.SquadIdImpl
+import com.vapi4k.dsl.assistant.squad.SquadImpl
 import com.vapi4k.responses.api.CallRequestDto
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 
-interface CallUnion {
+interface CallProperties {
   var phoneNumberId: String
 }
 
 @AssistantDslMarker
-class Call internal constructor(
+interface Call : CallProperties {
+  fun assistantId(block: AssistantId.() -> Unit): AssistantId
+  fun assistant(block: Assistant.() -> Unit): Assistant
+  fun squadId(block: SquadId.() -> Unit): SquadId
+  fun squad(block: Squad.() -> Unit): Squad
+  fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
+  fun customer(block: Customer.() -> Unit): Customer
+}
+
+data class CallImpl internal constructor(
   private val cacheId: CacheId,
   internal val callRequest: CallRequestDto,
-) : CallUnion by callRequest {
-  private var primaryErorMsg = ""
-  private var overridesErorMsg = ""
+) : CallProperties by callRequest, Call {
+  private val assistantChecker = DuplicateChecker()
+  private val overridesChecker = DuplicateChecker()
 
-  private fun checkIfPrimaryDeclared(newStr: String) =
-    if (primaryErorMsg.isNotEmpty()) error(primaryErorMsg) else primaryErorMsg = newStr
-
-  private fun checkIfOverridesDeclared(newStr: String) =
-    if (overridesErorMsg.isNotEmpty()) error(overridesErorMsg) else overridesErorMsg = newStr
-
-  fun assistantId(block: AssistantId.() -> Unit) {
-    checkIfPrimaryDeclared("assistantId{} already called")
-    AssistantId(emptyJsonElement(), cacheId, callRequest).apply(block)
+  override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
+    assistantChecker.check("assistantId{} already called")
+    return AssistantIdImpl(emptyJsonElement(), cacheId, callRequest).apply(block)
   }
 
-  fun assistant(block: Assistant.() -> Unit) {
-    checkIfPrimaryDeclared("assistant{} already called")
-    with(callRequest) {
-      Assistant(emptyJsonElement(), cacheId, assistantDto, assistantOverridesDto)
+  override fun assistant(block: Assistant.() -> Unit): Assistant {
+    assistantChecker.check("assistant{} already called")
+    return with(callRequest) {
+      AssistantImpl(emptyJsonElement(), cacheId, assistantDto, assistantOverridesDto)
         .apply(block)
         .apply {
           assistantDto.updated = true
@@ -61,31 +70,28 @@ class Call internal constructor(
     }
   }
 
-  fun assistantOverrides(block: AssistantOverrides.() -> Unit) {
-    checkIfOverridesDeclared("assistantOverrides{} already called")
-    if (callRequest.assistantDto.updated || callRequest.assistantId.isNotEmpty())
+  override fun squadId(block: SquadId.() -> Unit): SquadId {
+    assistantChecker.check("squadId{} already called")
+    return SquadIdImpl(emptyJsonElement(), callRequest).apply(block)
+  }
+
+
+  override fun squad(block: Squad.() -> Unit): Squad {
+    assistantChecker.check("squad{} already called")
+    return with(callRequest) {
+      SquadImpl(emptyJsonElement(), cacheId, squadDto).apply(block)
+    }
+  }
+
+  override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides {
+    overridesChecker.check("assistantOverrides{} already called")
+    return if (callRequest.assistantDto.updated || callRequest.assistantId.isNotEmpty())
       with(callRequest) {
-        AssistantOverrides(emptyJsonElement(), cacheId, assistantOverridesDto).apply(block)
+        AssistantOverridesImpl(emptyJsonElement(), cacheId, assistantOverridesDto).apply(block)
       }
     else
       error("assistant{} or assistantId{} must be called before assistantOverrides{}")
   }
 
-  fun squadId(block: SquadId.() -> Unit) {
-    checkIfPrimaryDeclared("squadId{} already called")
-    SquadId(emptyJsonElement(), callRequest).apply(block)
-  }
-
-
-  fun squad(block: Squad.() -> Unit) {
-    checkIfPrimaryDeclared("squad{} already called")
-    with(callRequest) {
-      Squad(emptyJsonElement(), cacheId, squadDto).apply(block)
-    }
-  }
-
-
-  fun customer(block: Customer.() -> Unit) {
-    Customer(callRequest.customerDto).apply(block)
-  }
+  override fun customer(block: Customer.() -> Unit): Customer = Customer(callRequest.customerDto).apply(block)
 }

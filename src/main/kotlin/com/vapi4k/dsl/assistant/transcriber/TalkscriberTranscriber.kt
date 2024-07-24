@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.TalkscriberLanguageType
 import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
 import com.vapi4k.responses.assistant.transcriber.TalkscriberTranscriberDto
 
-interface TalkscriberTranscriberUnion {
+interface TalkscriberTranscriberProperties {
   var transcriberModel: TalkscriberModelType
   var customModel: String
   var transcriberLanguage: TalkscriberLanguageType
@@ -30,4 +30,4 @@ interface TalkscriberTranscriberUnion {
 
 @AssistantDslMarker
 class TalkscriberTranscriber internal constructor(private val dto: TalkscriberTranscriberDto) :
-  TalkscriberTranscriberUnion by dto
+  TalkscriberTranscriberProperties by dto

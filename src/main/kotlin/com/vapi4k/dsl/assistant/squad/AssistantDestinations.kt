@@ -14,14 +14,23 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.api
+package com.vapi4k.dsl.assistant.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.responses.api.CustomerDto
-
-interface CustomerProperties {
-  var number: String
-}
+import com.vapi4k.responses.assistant.AssistantDestinationDto
+import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
-data class Customer(private val dto: CustomerDto) : CustomerProperties by dto
+interface AssistantDestinations {
+  fun destination(block: AssistantDestination.() -> Unit)
+}
+
+data class AssistantDestinationsImpl internal constructor(
+  internal val member: MemberImpl,
+  internal val dto: MemberDto,
+) : AssistantDestinations {
+  override fun destination(block: AssistantDestination.() -> Unit) {
+    dto.assistantDestinations +=
+      AssistantDestination(AssistantDestinationDto().apply { type = "assistant" }).apply(block).dto
+  }
+}

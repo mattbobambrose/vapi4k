@@ -17,9 +17,9 @@
 package com.vapi4k.responses.api
 
 
-import com.vapi4k.dsl.assistant.AssistantIdUnion
-import com.vapi4k.dsl.assistant.api.CallUnion
-import com.vapi4k.dsl.assistant.squad.SquadIdUnion
+import com.vapi4k.dsl.assistant.AssistantIdProperties
+import com.vapi4k.dsl.assistant.api.CallProperties
+import com.vapi4k.dsl.assistant.squad.SquadIdSource
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.SquadDto
@@ -47,4 +47,4 @@ data class CallRequestDto(
   val customerDto: CustomerDto = CustomerDto(),
 
   var error: String = "",
-) : CallUnion, AssistantIdUnion, SquadIdUnion
+) : CallProperties, AssistantIdProperties, SquadIdSource

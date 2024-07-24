@@ -17,12 +17,12 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
-import com.vapi4k.dsl.assistant.model.ModelMessageUnion
+import com.vapi4k.dsl.assistant.model.ModelMessageProperties
 import kotlin.reflect.KProperty
 
 internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType) {
   operator fun getValue(
-    model: ModelMessageUnion,
+    model: ModelMessageProperties,
     property: KProperty<*>,
   ): String {
     val msgs = model.messages.filter { it.role == messageRoleType.desc }
@@ -30,7 +30,7 @@ internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType
   }
 
   operator fun setValue(
-    model: ModelMessageUnion,
+    model: ModelMessageProperties,
     property: KProperty<*>,
     newVal: String,
   ) = model.message(messageRoleType, newVal)

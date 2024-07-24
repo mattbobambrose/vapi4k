@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.ModelType
-import com.vapi4k.dsl.assistant.model.TogetherAIModelUnion
+import com.vapi4k.dsl.assistant.model.TogetherAIModelProperties
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
@@ -41,7 +41,7 @@ data class TogetherAIModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : TogetherAIModelUnion, AbstractModelDto {
+) : TogetherAIModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.TOGETHER_AI
 

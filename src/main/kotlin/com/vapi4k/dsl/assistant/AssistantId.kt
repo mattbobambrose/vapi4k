@@ -21,25 +21,30 @@ import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import kotlinx.serialization.json.JsonElement
 
-interface AssistantIdUnion {
+interface AssistantIdProperties {
   var assistantId: String
   val assistantDto: AssistantDto
   val assistantOverridesDto: AssistantOverridesDto
 }
 
 @AssistantDslMarker
-data class AssistantId internal constructor(
-  val request: JsonElement,
+interface AssistantId {
+  var id: String
+
+  fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
+}
+
+data class AssistantIdImpl internal constructor(
+  internal val request: JsonElement,
   private val cacheId: CacheId,
-  internal val assistantIdUnion: AssistantIdUnion,
-) : AssistantIdUnion by assistantIdUnion {
-  var id
-    get() = assistantIdUnion.assistantId
+  internal val assistantIdProperties: AssistantIdProperties,
+) : AssistantIdProperties by assistantIdProperties, AssistantId {
+  override var id
+    get() = assistantIdProperties.assistantId
     set(value) {
-      assistantIdUnion.assistantId = value
+      assistantIdProperties.assistantId = value
     }
 
-  fun assistantOverrides(block: AssistantOverrides.() -> Unit) {
-    AssistantOverrides(request, cacheId, assistantIdUnion.assistantOverridesDto).apply(block)
-  }
+  override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
+    AssistantOverridesImpl(request, cacheId, assistantIdProperties.assistantOverridesDto).apply(block)
 }

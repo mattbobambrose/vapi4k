@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant
 
 
-import com.vapi4k.dsl.assistant.squad.AssistantDestinationUnion
+import com.vapi4k.dsl.assistant.squad.AssistantDestinationProperties
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,5 +25,5 @@ data class AssistantDestinationDto(
   var type: String = "",
   override var assistantName: String = "",
   override var message: String = "",
-  override var description: String = ""
-) : AssistantDestinationUnion
+  override var description: String = "",
+) : AssistantDestinationProperties

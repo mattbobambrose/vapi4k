@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses.assistant
 
-import com.vapi4k.dsl.assistant.AssistantUnion
+import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
@@ -91,7 +91,7 @@ data class AssistantDto(
 
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantUnion {
+) : AssistantProperties {
   @Transient
   var updated = false
 

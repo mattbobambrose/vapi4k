@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.ModelType
-import com.vapi4k.dsl.assistant.model.PerplexityAIModelUnion
+import com.vapi4k.dsl.assistant.model.PerplexityAIModelProperties
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
@@ -41,7 +41,7 @@ data class PerplexityAIModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : PerplexityAIModelUnion, AbstractModelDto {
+) : PerplexityAIModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI
 

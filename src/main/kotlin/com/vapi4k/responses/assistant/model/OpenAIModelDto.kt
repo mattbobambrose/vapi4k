@@ -18,7 +18,7 @@ package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.dsl.assistant.enums.OpenAIModelType
-import com.vapi4k.dsl.assistant.model.OpenAIModelUnion
+import com.vapi4k.dsl.assistant.model.OpenAIModelProperties
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
@@ -59,7 +59,7 @@ data class OpenAIModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : OpenAIModelUnion, AbstractModelDto {
+) : OpenAIModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI
 

@@ -14,14 +14,16 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.api
+package com.vapi4k.dsl.assistant.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.responses.api.CustomerDto
-
-interface CustomerProperties {
-  var number: String
-}
+import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
-data class Customer(private val dto: CustomerDto) : CustomerProperties by dto
+class AssistantId internal constructor(private val dto: MemberDto) {
+  var id
+    get() = dto.assistantId
+    set(value) {
+      dto.assistantId = value
+    }
+}

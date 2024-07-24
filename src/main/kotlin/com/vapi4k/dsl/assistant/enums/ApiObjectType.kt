@@ -14,14 +14,13 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.api
+package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.responses.api.CustomerDto
-
-interface CustomerProperties {
-  var number: String
+enum class ApiObjectType(val endpoint: String) {
+  CALLS("call"),
+  ASSISTANTS("assistant"),
+  PHONE_NUMBERS("phone-number"),
+  FILES("file"),
+  SQUADS("squad"),
+  TOOLS("tool"),
 }
-
-@AssistantDslMarker
-data class Customer(private val dto: CustomerDto) : CustomerProperties by dto

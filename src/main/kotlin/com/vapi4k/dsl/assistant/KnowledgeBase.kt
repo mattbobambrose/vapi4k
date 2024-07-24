@@ -17,11 +17,11 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.KnowledgeBaseUnion
+import com.vapi4k.responses.assistant.KnowledgeBaseProperties
 import kotlinx.serialization.json.JsonElement
 
 @AssistantDslMarker
 class KnowledgeBase internal constructor(
-  val request: JsonElement,
+  internal val request: JsonElement,
   private val dto: KnowledgeBaseDto,
-) : KnowledgeBaseUnion by dto
+) : KnowledgeBaseProperties by dto

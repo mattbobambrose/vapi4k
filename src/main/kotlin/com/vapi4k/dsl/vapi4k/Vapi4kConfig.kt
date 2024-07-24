@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.assistant.Assistant
+import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.responses.AssistantRequestResponse
 import io.ktor.server.config.ApplicationConfig
 import kotlinx.serialization.json.JsonElement
@@ -33,7 +33,7 @@ annotation class Vapi4KDslMarker
 class Vapi4kConfig internal constructor() {
 
   init {
-    Assistant.config = this
+    AssistantImpl.config = this
   }
 
   internal lateinit var applicationConfig: ApplicationConfig

@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.ModelType
-import com.vapi4k.dsl.assistant.model.AnyscaleModelUnion
+import com.vapi4k.dsl.assistant.model.AnyscaleModelProperties
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
@@ -41,7 +41,7 @@ data class AnyscaleModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : AnyscaleModelUnion, AbstractModelDto {
+) : AnyscaleModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.ANYSCALE
 

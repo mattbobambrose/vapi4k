@@ -20,7 +20,7 @@ package com.vapi4k.responses.assistant
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
-interface KnowledgeBaseUnion {
+interface KnowledgeBaseProperties {
   var topK: Double
   val fileIds: MutableSet<String>
 }
@@ -29,7 +29,7 @@ interface KnowledgeBaseUnion {
 data class KnowledgeBaseDto(
   override var topK: Double = -1.0,
   override val fileIds: MutableSet<String> = mutableSetOf(),
-) : KnowledgeBaseUnion {
+) : KnowledgeBaseProperties {
   @EncodeDefault
   val provider: String = "canonical"
 }

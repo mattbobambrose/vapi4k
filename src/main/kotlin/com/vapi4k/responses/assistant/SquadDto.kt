@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant
 
 
-import com.vapi4k.dsl.assistant.squad.SquadUnion
+import com.vapi4k.dsl.assistant.squad.SquadProperties
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,4 +26,4 @@ data class SquadDto(
 
   val members: MutableList<MemberDto> = mutableListOf(),
   val membersOverrides: AssistantOverridesDto = AssistantOverridesDto(),
-) : SquadUnion
+) : SquadProperties

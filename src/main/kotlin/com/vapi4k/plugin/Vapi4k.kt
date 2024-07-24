@@ -17,7 +17,7 @@
 package com.vapi4k.plugin
 
 import com.vapi4k.common.CacheId.Companion.toCacheId
-import com.vapi4k.dsl.assistant.Assistant
+import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.assistant.tools.ToolCache.cacheIsActive
 import com.vapi4k.dsl.assistant.tools.ToolCache.removeFunctionFromCache
 import com.vapi4k.dsl.assistant.tools.ToolCache.removeToolCallFromCache
@@ -89,7 +89,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 
   application.routing {
-    val config = Assistant.config
+    val config = AssistantImpl.config
     config.applicationConfig = environment?.config ?: error("No environment config found")
 
     get("/") { call.respondText("Hello World!") }
@@ -125,7 +125,7 @@ private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String
 }
 
 private suspend fun KtorCallContext.handleServerPathPost(requestResponseCallbackChannel: Channel<RequestResponseCallback>) {
-  val config = Assistant.config
+  val config = AssistantImpl.config
   if (isValidSecret(config.configProperties.serverUrlSecret)) {
     val json = call.receive<String>()
     val request = json.toJsonElement()
@@ -213,7 +213,7 @@ private suspend fun KtorCallContext.handleToolCallPathPost(
 
 private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback>) {
   thread {
-    val config = Assistant.config
+    val config = AssistantImpl.config
     while (true) {
       runCatching {
         runBlocking {

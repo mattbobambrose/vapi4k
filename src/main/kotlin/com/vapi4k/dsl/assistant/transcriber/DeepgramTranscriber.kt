@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.enums.DeepgramModelType
 import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
 
-interface DeepgramTranscriberUnion {
+interface DeepgramTranscriberProperties {
   var transcriberModel: DeepgramModelType
   var customModel: String
   var transcriberLanguage: DeepgramLanguageType
@@ -32,4 +32,4 @@ interface DeepgramTranscriberUnion {
 
 @AssistantDslMarker
 class DeepgramTranscriber internal constructor(private val dto: DeepgramTranscriberDto) :
-  DeepgramTranscriberUnion by dto
+  DeepgramTranscriberProperties by dto

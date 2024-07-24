@@ -17,9 +17,9 @@
 package com.vapi4k.responses
 
 
-import com.vapi4k.dsl.assistant.Assistant
-import com.vapi4k.dsl.assistant.AssistantIdUnion
-import com.vapi4k.dsl.assistant.squad.SquadIdUnion
+import com.vapi4k.dsl.assistant.AssistantIdProperties
+import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.assistant.squad.SquadIdSource
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.SquadDto
@@ -46,11 +46,11 @@ data class AssistantRequestResponse(
   val squadDto: SquadDto = SquadDto(),
 
   var error: String = "",
-) : AssistantIdUnion, SquadIdUnion {
+) : AssistantIdProperties, SquadIdSource {
   companion object {
     internal suspend fun getAssistantResponse(
       request: JsonElement,
     ) =
-      Assistant.config.assistantRequest?.invoke(request) ?: error("onAssistantRequest{} not called")
+      AssistantImpl.config.assistantRequest?.invoke(request) ?: error("onAssistantRequest{} not called")
   }
 }

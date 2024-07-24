@@ -14,32 +14,21 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.destination
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.responses.assistant.destination.NumberDestinationDto
-import com.vapi4k.responses.assistant.destination.SipDestinationDto
 import kotlinx.serialization.json.JsonElement
 
-internal interface NumberDestinationUnion {
+@AssistantDslMarker
+interface NumberDestination {
   var number: String
   var message: String
   var description: String
 }
 
-internal interface SipDestinationUnion {
-  var sipUri: String
-  var message: String
-  var description: String
-}
-
-@AssistantDslMarker
-class NumberDestination internal constructor(
-  val request: JsonElement,
+class NumberDestinationImpl internal constructor(
+  internal val request: JsonElement,
   private val dto: NumberDestinationDto,
-) : NumberDestinationUnion by dto
+) : NumberDestination by dto
 
-@AssistantDslMarker
-class SipDestination internal constructor(
-  val request: JsonElement,
-  private val dto: SipDestinationDto,
-) : SipDestinationUnion by dto

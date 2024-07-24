@@ -17,8 +17,14 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.CacheId.Companion.UNSPECIFIED_CACHE_ID
+import com.vapi4k.dsl.assistant.destination.NumberDestination
+import com.vapi4k.dsl.assistant.destination.NumberDestinationImpl
+import com.vapi4k.dsl.assistant.destination.SipDestination
+import com.vapi4k.dsl.assistant.destination.SipDestinationImpl
 import com.vapi4k.dsl.assistant.squad.Squad
 import com.vapi4k.dsl.assistant.squad.SquadId
+import com.vapi4k.dsl.assistant.squad.SquadIdImpl
+import com.vapi4k.dsl.assistant.squad.SquadImpl
 import com.vapi4k.responses.AssistantRequestMessageResponse
 import com.vapi4k.responses.assistant.destination.NumberDestinationDto
 import com.vapi4k.responses.assistant.destination.SipDestinationDto
@@ -39,7 +45,7 @@ object AssistantDsl {
   ) =
     AssistantRequestMessageResponse().apply {
       with(messageResponse) {
-        Assistant(request, UNSPECIFIED_CACHE_ID, assistantDto, assistantOverridesDto)
+        AssistantImpl(request, UNSPECIFIED_CACHE_ID, assistantDto, assistantOverridesDto)
           .apply(block)
           .apply {
             assistantDto.updated = true
@@ -53,7 +59,7 @@ object AssistantDsl {
     block: AssistantId.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      AssistantId(request, UNSPECIFIED_CACHE_ID, messageResponse).apply(block)
+      AssistantIdImpl(request, UNSPECIFIED_CACHE_ID, messageResponse).apply(block)
     }.messageResponse
 
   fun squad(
@@ -61,7 +67,7 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      Squad(request, UNSPECIFIED_CACHE_ID, messageResponse.squadDto).apply(block)
+      SquadImpl(request, UNSPECIFIED_CACHE_ID, messageResponse.squadDto).apply(block)
     }.messageResponse
 
   fun squadId(
@@ -69,7 +75,7 @@ object AssistantDsl {
     block: SquadId.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      SquadId(request, messageResponse).apply(block)
+      SquadIdImpl(request, messageResponse).apply(block)
     }.messageResponse
 
   fun numberDestination(
@@ -79,7 +85,7 @@ object AssistantDsl {
     AssistantRequestMessageResponse().apply {
       val numDto = NumberDestinationDto()
       messageResponse.destination = numDto
-      NumberDestination(request, numDto).apply(block)
+      NumberDestinationImpl(request, numDto).apply(block)
     }.messageResponse
 
   fun sipDestination(
@@ -89,7 +95,7 @@ object AssistantDsl {
     AssistantRequestMessageResponse().apply {
       val sipDto = SipDestinationDto()
       messageResponse.destination = sipDto
-      SipDestination(request, sipDto).apply(block)
+      SipDestinationImpl(request, sipDto).apply(block)
     }.messageResponse
 }
 

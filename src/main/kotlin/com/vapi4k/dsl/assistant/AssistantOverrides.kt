@@ -19,15 +19,25 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.common.CacheId
 import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.model.AnthropicModel
+import com.vapi4k.dsl.assistant.model.AnthropicModelImpl
 import com.vapi4k.dsl.assistant.model.AnyscaleModel
+import com.vapi4k.dsl.assistant.model.AnyscaleModelImpl
 import com.vapi4k.dsl.assistant.model.CustomLLMModel
+import com.vapi4k.dsl.assistant.model.CustomLLMModelImpl
 import com.vapi4k.dsl.assistant.model.DeepInfraModel
+import com.vapi4k.dsl.assistant.model.DeepInfraModelImpl
 import com.vapi4k.dsl.assistant.model.GroqModel
+import com.vapi4k.dsl.assistant.model.GroqModelImpl
 import com.vapi4k.dsl.assistant.model.OpenAIModel
+import com.vapi4k.dsl.assistant.model.OpenAIModelImpl
 import com.vapi4k.dsl.assistant.model.OpenRouterModel
+import com.vapi4k.dsl.assistant.model.OpenRouterModelImpl
 import com.vapi4k.dsl.assistant.model.PerplexityAIModel
+import com.vapi4k.dsl.assistant.model.PerplexityAIModelImpl
 import com.vapi4k.dsl.assistant.model.TogetherAIModel
+import com.vapi4k.dsl.assistant.model.TogetherAIModelImpl
 import com.vapi4k.dsl.assistant.model.VapiModel
+import com.vapi4k.dsl.assistant.model.VapiModelImpl
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
@@ -48,7 +58,7 @@ import com.vapi4k.responses.assistant.transcriber.GladiaTranscriberDto
 import com.vapi4k.responses.assistant.transcriber.TalkscriberTranscriberDto
 import kotlinx.serialization.json.JsonElement
 
-interface AssistantOverridesUnion {
+interface AssistantOverridesProperties {
   var firstMessageMode: String
   var recordingEnabled: Boolean?
   var hipaaEnabled: Boolean?
@@ -73,122 +83,145 @@ interface AssistantOverridesUnion {
 }
 
 @AssistantDslMarker
-data class AssistantOverrides internal constructor(
-  val request: JsonElement,
+interface AssistantOverrides : AssistantOverridesProperties {
+  // Transcribers
+  fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber
+  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber
+  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber
+
+  // Models
+  fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel
+  fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel
+  fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel
+  fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel
+  fun groqModel(block: GroqModel.() -> Unit): GroqModel
+  fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel
+  fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel
+  fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel
+  fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel
+  fun vapiModel(block: VapiModel.() -> Unit): VapiModel
+
+  // Voices
+  fun voice(block: Voice.() -> Unit)
+}
+
+data class AssistantOverridesImpl internal constructor(
+  internal val request: JsonElement,
   private val cacheId: CacheId,
-  private val assistantOverridesDto: AssistantOverridesDto,
-) : AssistantOverridesUnion by assistantOverridesDto {
+  private val dto: AssistantOverridesDto,
+) : AssistantOverridesProperties by dto, AssistantOverrides {
   private val transcriberChecker = DuplicateChecker()
   private val modelChecker = DuplicateChecker()
   private val voiceChecker = DuplicateChecker()
 
   // Transcribers
-  fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {
+  override fun deepGramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {
     transcriberChecker.check("deepGramTranscriber{} already called")
-    val transcriberDto = DeepgramTranscriberDto().also { assistantOverridesDto.transcriberDto = it }
+    val transcriberDto = DeepgramTranscriberDto().also { dto.transcriberDto = it }
     return DeepgramTranscriber(transcriberDto)
       .apply(block)
       .apply { transcriberDto.verifyValues() }
   }
 
-  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber {
+  override fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber {
     transcriberChecker.check("gladiaTranscriber{} already called")
-    val transcriberDto = GladiaTranscriberDto().also { assistantOverridesDto.transcriberDto = it }
+    val transcriberDto = GladiaTranscriberDto().also { dto.transcriberDto = it }
     return GladiaTranscriber(transcriberDto)
       .apply(block)
       .apply { transcriberDto.verifyValues() }
   }
 
-  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber {
+  override fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber {
     transcriberChecker.check("talkscriberTranscriber{} already called")
-    val transcriberDto = TalkscriberTranscriberDto().also { assistantOverridesDto.transcriberDto = it }
+    val transcriberDto = TalkscriberTranscriberDto().also { dto.transcriberDto = it }
     return TalkscriberTranscriber(transcriberDto)
       .apply(block)
       .apply { transcriberDto.verifyValues() }
   }
 
   // Models
-  fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel {
+  override fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel {
     modelChecker.check("anyscaleModel{} already called")
-    val modelDto = AnyscaleModelDto().also { assistantOverridesDto.modelDto = it }
-    return AnyscaleModel(request, cacheId, modelDto)
+    val modelDto = AnyscaleModelDto().also { dto.modelDto = it }
+    return AnyscaleModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel {
+  override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel {
     modelChecker.check("anthropicModel{} already called")
-    val modelDto = AnthropicModelDto().also { assistantOverridesDto.modelDto = it }
-    return AnthropicModel(request, cacheId, modelDto)
+    val modelDto = AnthropicModelDto().also { dto.modelDto = it }
+    return AnthropicModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
+  override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
     modelChecker.check("customLLMModel{} already called")
-    val modelDto = CustomLLMModelDto().also { assistantOverridesDto.modelDto = it }
-    return CustomLLMModel(request, cacheId, modelDto)
+    val modelDto = CustomLLMModelDto().also { dto.modelDto = it }
+    return CustomLLMModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel {
+  override fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel {
     modelChecker.check("deepInfraModel{} already called")
-    val modelDto = DeepInfraModelDto().also { assistantOverridesDto.modelDto = it }
-    return DeepInfraModel(request, cacheId, modelDto)
+    val modelDto = DeepInfraModelDto().also { dto.modelDto = it }
+    return DeepInfraModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun groqModel(block: GroqModel.() -> Unit): GroqModel {
+  override fun groqModel(block: GroqModel.() -> Unit): GroqModel {
     modelChecker.check("groqModel{} already called")
-    val modelDto = GroqModelDto().also { assistantOverridesDto.modelDto = it }
-    return GroqModel(request, cacheId, modelDto)
+    val modelDto = GroqModelDto().also { dto.modelDto = it }
+    return GroqModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
+  override fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
     modelChecker.check("openAIModel{} already called")
-    val modelDto = OpenAIModelDto().also { assistantOverridesDto.modelDto = it }
-    return OpenAIModel(request, cacheId, modelDto)
+    val modelDto = OpenAIModelDto().also { dto.modelDto = it }
+    return OpenAIModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel {
+  override fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel {
     modelChecker.check("openRouterModel{} already called")
-    val modelDto = OpenRouterModelDto().also { assistantOverridesDto.modelDto = it }
-    return OpenRouterModel(request, cacheId, modelDto)
+    val modelDto = OpenRouterModelDto().also { dto.modelDto = it }
+    return OpenRouterModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel {
+  override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel {
     modelChecker.check("perplexityAIModel{} already called")
-    val modelDto = PerplexityAIModelDto().also { assistantOverridesDto.modelDto = it }
-    return PerplexityAIModel(request, cacheId, modelDto)
+    val modelDto = PerplexityAIModelDto().also { dto.modelDto = it }
+    return PerplexityAIModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel {
+  override fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel {
     modelChecker.check("togetherAIModel{} already called")
-    val modelDto = TogetherAIModelDto().also { assistantOverridesDto.modelDto = it }
-    return TogetherAIModel(request, cacheId, modelDto)
+    val modelDto = TogetherAIModelDto().also { dto.modelDto = it }
+    return TogetherAIModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun vapiModel(block: VapiModel.() -> Unit): VapiModel {
+  override fun vapiModel(block: VapiModel.() -> Unit): VapiModel {
     modelChecker.check("vapiModel{} already called")
-    val modelDto = VapiModelDto().also { assistantOverridesDto.modelDto = it }
-    return VapiModel(request, cacheId, modelDto)
+    val modelDto = VapiModelDto().also { dto.modelDto = it }
+    return VapiModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
 
-  fun voice(block: Voice.() -> Unit) {
-    Voice(assistantOverridesDto.voiceDto).apply(block)
+  // TODO: Matthew will fill this in
+  override fun voice(block: Voice.() -> Unit) {
+    Voice(dto.voiceDto).apply(block)
   }
 }

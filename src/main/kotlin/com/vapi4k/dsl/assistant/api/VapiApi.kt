@@ -21,6 +21,7 @@ import com.vapi4k.common.CacheId.Companion.UNSPECIFIED_CACHE_ID
 import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.ApiObjectType
 import com.vapi4k.dsl.assistant.tools.ToolCache.swapCacheKeys
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.api.CallRequestDto
@@ -43,15 +44,6 @@ import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.jsonObject
 
-
-enum class ApiObjectType(val endpoint: String) {
-  CALLS("call"),
-  ASSISTANTS("assistant"),
-  PHONE_NUMBERS("phone-number"),
-  FILES("file"),
-  SQUADS("squad"),
-  TOOLS("tool"),
-}
 
 @AssistantDslMarker
 class VapiApi private constructor(
@@ -164,11 +156,11 @@ class VapiApi private constructor(
 @AssistantDslMarker
 class Phone {
   internal val cacheId = nextCacheId()
-  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto().also { Call(cacheId, it).apply(block) }
+  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto().also { CallImpl(cacheId, it).apply(block) }
 }
 
 @AssistantDslMarker
 class Save {
   fun call(block: Call.() -> Unit): CallRequestDto =
-    CallRequestDto().also { Call(UNSPECIFIED_CACHE_ID, it).apply(block) }
+    CallRequestDto().also { CallImpl(UNSPECIFIED_CACHE_ID, it).apply(block) }
 }

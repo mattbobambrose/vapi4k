@@ -19,7 +19,7 @@ package com.vapi4k.responses.assistant.transcriber
 import com.vapi4k.dsl.assistant.enums.GladiaLanguageType
 import com.vapi4k.dsl.assistant.enums.GladiaModelType
 import com.vapi4k.dsl.assistant.enums.TranscriberType
-import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriberUnion
+import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriberProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -46,7 +46,7 @@ data class GladiaTranscriberDto(
   override var transcriptionHint: String = "",
   override var prosody: Boolean? = null,
   override var audioEnhancer: Boolean? = null,
-) : GladiaTranscriberUnion, AbstractTranscriberDto {
+) : GladiaTranscriberProperties, AbstractTranscriberDto {
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.GLADIA
 

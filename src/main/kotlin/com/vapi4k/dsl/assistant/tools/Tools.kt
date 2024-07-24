@@ -17,10 +17,10 @@
 package com.vapi4k.dsl.assistant.tools
 
 import com.vapi4k.common.CacheId.Companion.toCacheId
-import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
-import com.vapi4k.dsl.assistant.model.ModelMessageUnion
+import com.vapi4k.dsl.assistant.model.ModelMessageProperties
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.tools.ToolCache.addToolCallToCache
@@ -30,7 +30,7 @@ import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolFunction
 
 @AssistantDslMarker
-data class Tools internal constructor(internal val model: ModelMessageUnion) {
+data class Tools internal constructor(internal val model: ModelMessageProperties) {
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,
@@ -73,7 +73,7 @@ data class Tools internal constructor(internal val model: ModelMessageUnion) {
     obj: Any,
     block: Tool.() -> Unit = {},
   ) {
-    val endpoint = Assistant.config.getEndpoint(endpointName)
+    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
     addTool(endpoint, obj, block)
   }
 
@@ -81,7 +81,7 @@ data class Tools internal constructor(internal val model: ModelMessageUnion) {
     obj: Any,
     block: Tool.() -> Unit = {},
   ) {
-    val endpoint = with(Assistant.config) { getEmptyEndpoint() ?: defaultToolCallEndpoint }
+    val endpoint = with(AssistantImpl.config) { getEmptyEndpoint() ?: defaultToolCallEndpoint }
     addTool(endpoint, obj, block)
   }
 

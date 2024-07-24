@@ -16,18 +16,18 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.assistant.Assistant
+import com.vapi4k.dsl.assistant.AssistantImpl
 
 @Vapi4KDslMarker
 class ToolCallEndpoints internal constructor() {
   private fun hasName(endpoint: Endpoint) =
-    Assistant.config.toolCallEndpoints.any { it.name == endpoint.name }
+    AssistantImpl.config.toolCallEndpoints.any { it.name == endpoint.name }
 
   private fun hasUrl(endpoint: Endpoint) =
-    Assistant.config.toolCallEndpoints.any { it.url == endpoint.url }
+    AssistantImpl.config.toolCallEndpoints.any { it.url == endpoint.url }
 
   fun endpoint(block: Endpoint.() -> Unit) {
-    Assistant.config.toolCallEndpoints += Endpoint().apply(block).also { endpoint ->
+    AssistantImpl.config.toolCallEndpoints += Endpoint().apply(block).also { endpoint ->
       when {
         hasName(endpoint) && endpoint.name.isEmpty() -> error("Duplicate blank endpoint names")
         hasName(endpoint) -> error("Duplicate endpoint name: ${endpoint.name}")

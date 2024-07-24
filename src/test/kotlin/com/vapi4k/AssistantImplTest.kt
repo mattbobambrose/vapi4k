@@ -38,7 +38,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
 
-class AssistantTest {
+class AssistantImplTest {
   init {
     Vapi4kConfig().apply {
       configure {

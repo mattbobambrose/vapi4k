@@ -18,7 +18,7 @@ package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.GroqModelType
 import com.vapi4k.dsl.assistant.enums.ModelType
-import com.vapi4k.dsl.assistant.model.GroqModelUnion
+import com.vapi4k.dsl.assistant.model.GroqModelProperties
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
@@ -50,7 +50,7 @@ data class GroqModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : GroqModelUnion, AbstractModelDto {
+) : GroqModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.GROQ
 

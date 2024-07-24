@@ -46,22 +46,16 @@ private object ModelSerializer : KSerializer<AbstractModelDto> {
     value: AbstractModelDto,
   ) {
     when (value) {
-      is AnyscaleModelDto -> {
-        encoder.encodeSerializableValue(AnyscaleModelDto.serializer(), value)
-      }
+      is AnyscaleModelDto -> encoder.encodeSerializableValue(AnyscaleModelDto.serializer(), value)
 
       is AnthropicModelDto -> {
         value.assignEnumOverrides()
         encoder.encodeSerializableValue(AnthropicModelDto.serializer(), value)
       }
 
-      is CustomLLMModelDto -> {
-        encoder.encodeSerializableValue(CustomLLMModelDto.serializer(), value)
-      }
+      is CustomLLMModelDto -> encoder.encodeSerializableValue(CustomLLMModelDto.serializer(), value)
 
-      is DeepInfraModelDto -> {
-        encoder.encodeSerializableValue(DeepInfraModelDto.serializer(), value)
-      }
+      is DeepInfraModelDto -> encoder.encodeSerializableValue(DeepInfraModelDto.serializer(), value)
 
       is GroqModelDto -> {
         value.assignEnumOverrides()
@@ -73,21 +67,13 @@ private object ModelSerializer : KSerializer<AbstractModelDto> {
         encoder.encodeSerializableValue(OpenAIModelDto.serializer(), value)
       }
 
-      is OpenRouterModelDto -> {
-        encoder.encodeSerializableValue(OpenRouterModelDto.serializer(), value)
-      }
+      is OpenRouterModelDto -> encoder.encodeSerializableValue(OpenRouterModelDto.serializer(), value)
 
-      is PerplexityAIModelDto -> {
-        encoder.encodeSerializableValue(PerplexityAIModelDto.serializer(), value)
-      }
+      is PerplexityAIModelDto -> encoder.encodeSerializableValue(PerplexityAIModelDto.serializer(), value)
 
-      is TogetherAIModelDto -> {
-        encoder.encodeSerializableValue(TogetherAIModelDto.serializer(), value)
-      }
+      is TogetherAIModelDto -> encoder.encodeSerializableValue(TogetherAIModelDto.serializer(), value)
 
-      is VapiModelDto -> {
-        encoder.encodeSerializableValue(VapiModelDto.serializer(), value)
-      }
+      is VapiModelDto -> encoder.encodeSerializableValue(VapiModelDto.serializer(), value)
 
       else -> error("Invalid model provider: ${value::class.simpleName}")
     }

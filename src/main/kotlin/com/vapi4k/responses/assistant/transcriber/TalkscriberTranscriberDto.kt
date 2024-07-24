@@ -20,7 +20,7 @@ package com.vapi4k.responses.assistant.transcriber
 import com.vapi4k.dsl.assistant.enums.TalkscriberLanguageType
 import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
 import com.vapi4k.dsl.assistant.enums.TranscriberType
-import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriberUnion
+import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriberProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -42,7 +42,7 @@ data class TalkscriberTranscriberDto(
 
   @Transient
   override var customLanguage: String = "",
-) : TalkscriberTranscriberUnion, AbstractTranscriberDto {
+) : TalkscriberTranscriberProperties, AbstractTranscriberDto {
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.TALKSCRIBER
 

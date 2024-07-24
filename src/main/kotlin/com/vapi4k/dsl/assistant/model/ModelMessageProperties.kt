@@ -14,14 +14,23 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.api
+package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.responses.api.CustomerDto
+import com.vapi4k.common.CacheId
+import com.vapi4k.dsl.assistant.enums.MessageRoleType
+import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.RoleMessage
+import com.vapi4k.responses.assistant.ToolDto
 
-interface CustomerProperties {
-  var number: String
+interface ModelMessageProperties {
+  val cacheId: CacheId
+  val messageCallId: String
+  val toolDtos: MutableList<ToolDto>
+  val functionDtos: MutableList<FunctionDto>
+  val messages: MutableList<RoleMessage>
+
+  fun message(
+    role: MessageRoleType,
+    content: String,
+  )
 }
-
-@AssistantDslMarker
-data class Customer(private val dto: CustomerDto) : CustomerProperties by dto

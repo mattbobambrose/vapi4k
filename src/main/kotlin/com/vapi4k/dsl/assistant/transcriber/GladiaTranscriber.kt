@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.enums.GladiaLanguageType
 import com.vapi4k.dsl.assistant.enums.GladiaModelType
 import com.vapi4k.responses.assistant.transcriber.GladiaTranscriberDto
 
-interface GladiaTranscriberUnion {
+interface GladiaTranscriberProperties {
   var transcriberModel: GladiaModelType
   var customModel: String
   var transcriberLanguage: GladiaLanguageType
@@ -31,4 +31,4 @@ interface GladiaTranscriberUnion {
   var audioEnhancer: Boolean?
 }
 
-class GladiaTranscriber internal constructor(private val dto: GladiaTranscriberDto) : GladiaTranscriberUnion by dto
+class GladiaTranscriber internal constructor(private val dto: GladiaTranscriberDto) : GladiaTranscriberProperties by dto

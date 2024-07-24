@@ -19,7 +19,7 @@ package com.vapi4k.responses.assistant.transcriber
 import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.enums.DeepgramModelType
 import com.vapi4k.dsl.assistant.enums.TranscriberType
-import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriberUnion
+import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriberProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -44,7 +44,7 @@ data class DeepgramTranscriberDto(
 
   override var smartFormat: Boolean? = null,
   override val keywords: MutableSet<String> = mutableSetOf(),
-) : DeepgramTranscriberUnion, AbstractTranscriberDto {
+) : DeepgramTranscriberProperties, AbstractTranscriberDto {
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.DEEPGRAM
 

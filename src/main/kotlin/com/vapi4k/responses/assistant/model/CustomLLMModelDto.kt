@@ -18,7 +18,7 @@ package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.enums.ModelType
-import com.vapi4k.dsl.assistant.model.CustomLLMModelUnion
+import com.vapi4k.dsl.assistant.model.CustomLLMModelProperties
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
@@ -45,7 +45,7 @@ data class CustomLLMModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : CustomLLMModelUnion, AbstractModelDto {
+) : CustomLLMModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.CUSTOM_LLM
 

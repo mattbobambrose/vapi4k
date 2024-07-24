@@ -14,22 +14,20 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.model
+package com.vapi4k.dsl.assistant.destination
 
-import com.vapi4k.common.CacheId
-import com.vapi4k.dsl.assistant.enums.MessageRoleType
-import com.vapi4k.responses.assistant.FunctionDto
-import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.responses.assistant.destination.SipDestinationDto
+import kotlinx.serialization.json.JsonElement
 
-interface ModelMessageUnion {
-  val cacheId: CacheId
-  val messageCallId: String
-  val toolDtos: MutableList<ToolDto>
-  val functionDtos: MutableList<FunctionDto>
-  val messages: MutableList<RoleMessage>
-  fun message(
-    role: MessageRoleType,
-    content: String,
-  )
+@AssistantDslMarker
+interface SipDestination {
+  var sipUri: String
+  var message: String
+  var description: String
 }
+
+class SipDestinationImpl internal constructor(
+  internal val request: JsonElement,
+  private val dto: SipDestinationDto,
+) : SipDestination by dto

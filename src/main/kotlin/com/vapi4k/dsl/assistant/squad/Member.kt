@@ -16,45 +16,40 @@
 
 package com.vapi4k.dsl.assistant.squad
 
+import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
-data class Member(
-  internal val members: Members,
-  internal val memberDto: MemberDto,
-) {
-  // errorMsg prevents further assistant or assistantId assignments
-  private var errorMsg = ""
+interface Member {
+  fun assistantId(block: AssistantId.() -> Unit): AssistantId
+  fun assistant(block: Assistant.() -> Unit): Assistant
+  fun destinations(block: AssistantDestinations.() -> Unit): AssistantDestinations
+}
 
-  private fun checkIfDeclared(newStr: String) = if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
+data class MemberImpl(
+  internal val members: MembersImpl,
+  internal val dto: MemberDto,
+) : Member {
+  private val memberChecker = DuplicateChecker()
 
-  fun assistantId(block: AssistantId.() -> Unit) {
-    checkIfDeclared("Member already has an assistantId assigned")
-    AssistantId(memberDto).apply(block)
+  override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
+    memberChecker.check("Member already has an assistantId assigned")
+    return AssistantId(dto).apply(block)
   }
 
-  fun assistant(block: Assistant.() -> Unit) {
-    checkIfDeclared("Member already has an assistant assigned")
-    Assistant(
+  override fun assistant(block: Assistant.() -> Unit): Assistant {
+    memberChecker.check("Member already has an assistant assigned")
+    return AssistantImpl(
       members.squad.request,
       members.squad.cacheId,
-      memberDto.assistant,
-      memberDto.assistantOverrides
+      dto.assistant,
+      dto.assistantOverrides
     ).apply(block)
   }
 
-  fun destinations(block: AssistantDestinations.() -> Unit) {
-    AssistantDestinations(this, memberDto).apply(block)
-  }
-
-  @AssistantDslMarker
-  class AssistantId internal constructor(private val dto: MemberDto) {
-    var id
-      get() = dto.assistantId
-      set(value) {
-        dto.assistantId = value
-      }
-  }
+  override fun destinations(block: AssistantDestinations.() -> Unit): AssistantDestinations =
+    AssistantDestinationsImpl(this, dto).apply(block)
 }

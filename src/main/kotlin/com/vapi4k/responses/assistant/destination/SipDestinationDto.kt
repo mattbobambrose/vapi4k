@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses.assistant.destination
 
-import com.vapi4k.dsl.assistant.SipDestinationUnion
+import com.vapi4k.dsl.assistant.destination.SipDestination
 import com.vapi4k.dsl.assistant.enums.DestinationType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
@@ -26,7 +26,7 @@ class SipDestinationDto(
   override var sipUri: String = "",
   override var message: String = "",
   override var description: String = "",
-) : SipDestinationUnion, AbstractDestinationDto {
+) : SipDestination, AbstractDestinationDto {
   @EncodeDefault
   val type: DestinationType = DestinationType.SIP
 }

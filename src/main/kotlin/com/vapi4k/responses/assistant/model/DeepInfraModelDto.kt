@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant.model
 
 import com.vapi4k.dsl.assistant.enums.ModelType
-import com.vapi4k.dsl.assistant.model.DeepInfraModelUnion
+import com.vapi4k.dsl.assistant.model.DeepInfraModelProperties
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
@@ -41,7 +41,7 @@ data class DeepInfraModelDto(
 
   @SerialName("knowledgeBase")
   var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : DeepInfraModelUnion, AbstractModelDto {
+) : DeepInfraModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.DEEP_INFRA
 

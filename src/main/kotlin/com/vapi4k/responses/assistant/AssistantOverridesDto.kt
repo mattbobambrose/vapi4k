@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses.assistant
 
-import com.vapi4k.dsl.assistant.AssistantOverridesUnion
+import com.vapi4k.dsl.assistant.AssistantOverridesProperties
 import com.vapi4k.responses.assistant.model.AbstractModelDto
 import com.vapi4k.responses.assistant.transcriber.AbstractTranscriberDto
 import kotlinx.serialization.SerialName
@@ -73,4 +73,4 @@ data class AssistantOverridesDto(
   val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantOverridesUnion
+) : AssistantOverridesProperties

@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses.api
 
-import com.vapi4k.dsl.assistant.api.CustomerUnion
+import com.vapi4k.dsl.assistant.api.CustomerProperties
 import kotlinx.serialization.Serializable
 
 // TODO: Make polymorphic
@@ -27,4 +27,4 @@ data class CustomerDto(
   var sipUri: String = "",
   var name: String = "",
   var extension: String = "",
-) : CustomerUnion
+) : CustomerProperties

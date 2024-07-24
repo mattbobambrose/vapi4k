@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses.assistant.destination
 
-import com.vapi4k.dsl.assistant.NumberDestinationUnion
+import com.vapi4k.dsl.assistant.destination.NumberDestination
 import com.vapi4k.dsl.assistant.enums.DestinationType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
@@ -26,7 +26,7 @@ class NumberDestinationDto(
   override var number: String = "",
   override var message: String = "",
   override var description: String = "",
-) : NumberDestinationUnion, AbstractDestinationDto {
+) : NumberDestination, AbstractDestinationDto {
   @EncodeDefault
   val type: DestinationType = DestinationType.NUMBER
 }
