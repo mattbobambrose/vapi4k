@@ -29,17 +29,31 @@ import com.vapi4k.responses.assistant.ToolMessageDto
 import kotlin.reflect.KProperty
 
 @AssistantDslMarker
-class Tool internal constructor(internal val toolDto: ToolDto) {
+interface Tool {
+  var requestStartMessage: String
+  var requestCompleteMessage: String
+  var requestFailedMessage: String
+  var requestDelayedMessage: String
+  var delayedMillis: Int
+
+  fun condition(
+    requiredCondition: ToolMessageConditionDto,
+    vararg additional: ToolMessageConditionDto,
+    block: ToolCondition.() -> Unit,
+  )
+}
+
+class ToolImpl internal constructor(internal val toolDto: ToolDto) : Tool {
   internal val messages get() = toolDto.messages
 
-  var futureDelay = -1
+  internal var futureDelay = -1
 
-  var requestStartMessage by ToolMessageDelegate(REQUEST_START)
-  var requestCompleteMessage by ToolMessageDelegate(REQUEST_COMPLETE)
-  var requestFailedMessage by ToolMessageDelegate(REQUEST_FAILED)
-  var requestDelayedMessage by ToolMessageDelegate(REQUEST_RESPONSE_DELAYED)
+  override var requestStartMessage by ToolMessageDelegate(REQUEST_START)
+  override var requestCompleteMessage by ToolMessageDelegate(REQUEST_COMPLETE)
+  override var requestFailedMessage by ToolMessageDelegate(REQUEST_FAILED)
+  override var requestDelayedMessage by ToolMessageDelegate(REQUEST_RESPONSE_DELAYED)
 
-  var delayedMillis
+  override var delayedMillis
     get() = messages.singleOrNull(REQUEST_RESPONSE_DELAYED.isMatching)?.timingMilliseconds ?: -1
     set(delayedMillis) {
       require(delayedMillis >= 0) { "delayedMillis must be greater than or equal to 0" }
@@ -48,7 +62,7 @@ class Tool internal constructor(internal val toolDto: ToolDto) {
       } else futureDelay = delayedMillis
     }
 
-  fun condition(
+  override fun condition(
     requiredCondition: ToolMessageConditionDto,
     vararg additional: ToolMessageConditionDto,
     block: ToolCondition.() -> Unit,
@@ -60,13 +74,13 @@ class Tool internal constructor(internal val toolDto: ToolDto) {
   companion object {
     private class ToolMessageDelegate(val requestType: ToolMessageType) {
       operator fun getValue(
-        tool: Tool,
+        tool: ToolImpl,
         property: KProperty<*>,
       ) =
         tool.messages.singleOrNull(requestType.isMatching)?.content ?: ""
 
       operator fun setValue(
-        tool: Tool,
+        tool: ToolImpl,
         property: KProperty<*>,
         newVal: String,
       ) =

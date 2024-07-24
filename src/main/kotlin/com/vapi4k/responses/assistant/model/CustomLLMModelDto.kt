@@ -44,7 +44,7 @@ data class CustomLLMModelDto(
   override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : CustomLLMModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.CUSTOM_LLM

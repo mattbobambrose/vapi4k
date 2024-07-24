@@ -49,7 +49,7 @@ data class GroqModelDto(
   override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : GroqModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.GROQ

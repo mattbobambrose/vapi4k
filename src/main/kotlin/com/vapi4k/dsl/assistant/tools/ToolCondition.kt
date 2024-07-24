@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
 
 @AssistantDslMarker
 class ToolCondition internal constructor(
-  internal val tool: Tool,
+  internal val tool: ToolImpl,
   internal val conditionSet: Set<ToolMessageConditionDto>,
 ) {
   private val messages get() = tool.toolDto.messages

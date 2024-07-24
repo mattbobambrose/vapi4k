@@ -40,7 +40,7 @@ data class VapiModelDto(
   override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : VapiModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.VAPI

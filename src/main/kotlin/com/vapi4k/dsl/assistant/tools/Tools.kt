@@ -19,8 +19,8 @@ package com.vapi4k.dsl.assistant.tools
 import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.assistant.ModelMessageProperties
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
-import com.vapi4k.dsl.assistant.model.ModelMessageProperties
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.tools.ToolCache.addToolCallToCache
@@ -30,7 +30,20 @@ import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolFunction
 
 @AssistantDslMarker
-data class Tools internal constructor(internal val model: ModelMessageProperties) {
+interface Tools {
+  fun tool(
+    endpointName: String = "",
+    obj: Any,
+    block: Tool.() -> Unit = {},
+  )
+
+  fun tool(
+    obj: Any,
+    block: Tool.() -> Unit = {},
+  )
+}
+
+data class ToolsImpl internal constructor(internal val model: ModelMessageProperties) : Tools {
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,
@@ -52,7 +65,7 @@ data class Tools internal constructor(internal val model: ModelMessageProperties
       }
 
       // Apply block to tool
-      Tool(toolDto).apply(block).apply { verifyFutureDelay(toolDto) }
+      ToolImpl(toolDto).apply(block).apply { verifyFutureDelay(toolDto) }
 
       with(toolDto.server) {
         url = endpoint.url
@@ -68,25 +81,25 @@ data class Tools internal constructor(internal val model: ModelMessageProperties
     }
   }
 
-  fun tool(
-    endpointName: String = "",
+  override fun tool(
+    endpointName: String,
     obj: Any,
-    block: Tool.() -> Unit = {},
+    block: Tool.() -> Unit,
   ) {
     val endpoint = AssistantImpl.config.getEndpoint(endpointName)
     addTool(endpoint, obj, block)
   }
 
-  fun tool(
+  override fun tool(
     obj: Any,
-    block: Tool.() -> Unit = {},
+    block: Tool.() -> Unit,
   ) {
     val endpoint = with(AssistantImpl.config) { getEmptyEndpoint() ?: defaultToolCallEndpoint }
     addTool(endpoint, obj, block)
   }
 
   companion object {
-    private fun Tool.verifyFutureDelay(toolDto: ToolDto) {
+    private fun ToolImpl.verifyFutureDelay(toolDto: ToolDto) {
       if (toolDto.messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type } == null) {
         if (futureDelay != -1) {
           error("delayedMillis must be set when using requestDelayedMessage")

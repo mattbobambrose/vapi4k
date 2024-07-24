@@ -40,7 +40,7 @@ data class TogetherAIModelDto(
   override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : TogetherAIModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.TOGETHER_AI

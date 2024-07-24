@@ -19,16 +19,10 @@ package com.vapi4k.dsl.assistant.model
 import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.KnowledgeBase
-import com.vapi4k.dsl.assistant.ModelMessageDelegate
-import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.responses.assistant.model.OpenAIModelDto
-import com.vapi4k.utils.JsonElementUtils.messageCallId
-import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
 interface OpenAIModelProperties {
@@ -57,43 +51,7 @@ interface OpenAIModel : OpenAIModelProperties {
 }
 
 class OpenAIModelImpl(
-  internal val request: JsonElement,
-  override val cacheId: CacheId,
-  private val dto: OpenAIModelDto,
-) : OpenAIModelProperties by dto, OpenAIModel, ModelMessageProperties {
-  override val messages get() = dto.messages
-  override val toolDtos get() = dto.tools
-  override val functionDtos get() = dto.functions
-  override val messageCallId get() = request.messageCallId
-
-  override var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
-  override var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)
-  override var functionMessage by ModelMessageDelegate(MessageRoleType.FUNCTION)
-  override var toolMessage by ModelMessageDelegate(MessageRoleType.TOOL)
-  override var userMessage by ModelMessageDelegate(MessageRoleType.USER)
-
-  override fun tools(block: Tools.() -> Unit) = Tools(this).apply(block)
-
-  override fun functions(block: Functions.() -> Unit) = Functions(this).apply(block)
-
-  override fun message(
-    role: MessageRoleType,
-    content: String,
-  ) {
-    // Remove any existing messages with the same role
-    messages.removeAll { it.role == role.desc }
-    // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
-    messages += RoleMessage(role.desc, content.trimLeadingSpaces())
-  }
-
-  override fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {
-    val kbDto = KnowledgeBaseDto()
-    dto.knowledgeBaseDto = kbDto
-    return KnowledgeBase(request, kbDto)
-      .apply(block)
-      .apply {
-        if (kbDto.fileIds.isEmpty())
-          error("Knowledge base must have at least one file")
-      }
-  }
-}
+  request: JsonElement,
+  cacheId: CacheId,
+  dto: OpenAIModelDto,
+) : OpenAIModelProperties by dto, OpenAIModel, AbstractModelImpl(request, cacheId, dto)

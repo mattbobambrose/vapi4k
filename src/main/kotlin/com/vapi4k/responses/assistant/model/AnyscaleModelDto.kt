@@ -40,7 +40,7 @@ data class AnyscaleModelDto(
   override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : AnyscaleModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.ANYSCALE

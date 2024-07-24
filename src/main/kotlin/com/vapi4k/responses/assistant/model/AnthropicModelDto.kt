@@ -49,7 +49,7 @@ data class AnthropicModelDto(
   override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : AnthropicModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.ANTHROPIC

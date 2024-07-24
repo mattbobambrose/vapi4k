@@ -40,7 +40,7 @@ data class DeepInfraModelDto(
   override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
 ) : DeepInfraModelProperties, AbstractModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.DEEP_INFRA
