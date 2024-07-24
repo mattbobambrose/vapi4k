@@ -41,13 +41,13 @@ data class OpenAIModelDto(
   @Transient
   override var customModel: String = "",
 
-  var fallbackModels: MutableSet<String> = mutableSetOf(),
+  var fallbackModels: MutableList<String> = mutableListOf(),
 
   @Transient
-  override val fallbackModelTypes: MutableSet<OpenAIModelType> = mutableSetOf(),
+  override val fallbackModelTypes: MutableList<OpenAIModelType> = mutableListOf(),
 
   @Transient
-  override val customFallbackModels: MutableSet<String> = mutableSetOf(),
+  override val customFallbackModels: MutableList<String> = mutableListOf(),
 
   override var semanticCachingEnabled: Boolean? = null,
   override var temperature: Int = -1,
