@@ -34,15 +34,15 @@ data class RimeAIVoiceDto(
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.RIMEAI,
 
-  override var inputPreprocessingEnabled: Boolean = false,
-  override var inputReformattingEnabled: Boolean = false,
-  override var inputMinCharacters: Int = 0,
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
-  override var fillerInjectionEnabled: Boolean = false,
+  override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: RimeAIVoiceId = RimeAIVoiceId.UNSPECIFIED,
   override var model: RimeAIVoiceModel = RimeAIVoiceModel.UNSPECIFIED,
   override var speed: Double = 0.0,
-) : RimeAIVoiceUnion
+) : RimeAIVoiceUnion, AbstractVoiceDto()
 
 @Serializable(with = RimeAIVoiceIdSerializer::class)
 enum class RimeAIVoiceId(val desc: String) {

@@ -22,11 +22,11 @@ import com.vapi4k.responses.assistant.voice.RimeAIVoiceId
 import com.vapi4k.responses.assistant.voice.RimeAIVoiceModel
 
 interface RimeAIVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var voiceId: RimeAIVoiceId
   var model: RimeAIVoiceModel
   var speed: Double

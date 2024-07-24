@@ -34,20 +34,20 @@ data class ElevenLabsVoiceDto(
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS,
 
-  override var inputPreprocessingEnabled: Boolean = false,
-  override var inputReformattingEnabled: Boolean = false,
-  override var inputMinCharacters: Int = 0,
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
-  override var fillerInjectionEnabled: Boolean = false,
+  override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: ElevenLabsVoiceId = ElevenLabsVoiceId.UNSPECIFIED,
   override var stability: Double = 0.0,
   override var similarityBoost: Double = 0.0,
   override var style: Double = 0.0,
-  override var useSpeakerBoost: Boolean = false,
+  override var useSpeakerBoost: Boolean? = null,
   override var optimizeStreaming: Double = 0.0,
-  override var enableSsmlParsing: Boolean = false,
+  override var enableSsmlParsing: Boolean? = null,
   override var model: ElevenLabsVoiceModel = ElevenLabsVoiceModel.UNSPECIFIED,
-) : ElevenLabsVoiceUnion
+) : ElevenLabsVoiceUnion, AbstractVoiceDto()
 
 @Serializable(with = ElevenLabsVoiceIdSerializer::class)
 enum class ElevenLabsVoiceId(val desc: String) {

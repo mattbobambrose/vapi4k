@@ -22,6 +22,7 @@ import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.responses.assistant.model.AbstractModelDto
 import com.vapi4k.responses.assistant.transcriber.AbstractTranscriberDto
+import com.vapi4k.responses.assistant.voice.AbstractVoiceDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -80,7 +81,7 @@ data class AssistantDto(
   var modelDto: AbstractModelDto? = null
 
   @SerialName("voice")
-  var voiceDto: VoiceDto? = null
+  var voiceDto: AbstractVoiceDto? = null
 
   // TODO: Add verbs and enums
   @SerialName("voicemailDetection")

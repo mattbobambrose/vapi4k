@@ -34,14 +34,14 @@ data class AzureVoiceDto(
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.AZURE,
 
-  override var inputPreprocessingEnabled: Boolean = false,
-  override var inputReformattingEnabled: Boolean = false,
-  override var inputMinCharacters: Int = 0,
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
   override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
-  override var fillerInjectionEnabled: Boolean = false,
+  override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: AzureVoiceId = AzureVoiceId.UNSPECIFIED,
   override var speed: Double = 0.0,
-) : AzureVoiceUnion
+) : AzureVoiceUnion, AbstractVoiceDto()
 
 @Serializable(with = AzureVoiceIdSerializer::class)
 enum class AzureVoiceId(val desc: String) {

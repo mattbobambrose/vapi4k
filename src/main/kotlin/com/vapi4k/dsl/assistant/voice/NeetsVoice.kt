@@ -22,11 +22,11 @@ import com.vapi4k.responses.assistant.voice.NeetsVoiceDto
 import com.vapi4k.responses.assistant.voice.NeetsVoiceId
 
 interface NeetsVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var voiceId: NeetsVoiceId
 }
 

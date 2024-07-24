@@ -22,11 +22,11 @@ import com.vapi4k.responses.assistant.voice.PlayHTVoiceEmotion
 import com.vapi4k.responses.assistant.voice.PlayHTVoiceId
 
 interface PlayHTVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var voiceId: PlayHTVoiceId
   var speed: Double
   var temperature: Double

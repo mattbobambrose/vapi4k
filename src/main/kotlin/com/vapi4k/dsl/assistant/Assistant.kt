@@ -33,11 +33,10 @@ import com.vapi4k.dsl.assistant.model.VapiModel
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
-import com.vapi4k.dsl.assistant.voice.Voice
+import com.vapi4k.dsl.assistant.voice.AzureVoice
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.VoiceDto
 import com.vapi4k.responses.assistant.model.AnthropicModelDto
 import com.vapi4k.responses.assistant.model.AnyscaleModelDto
 import com.vapi4k.responses.assistant.model.CustomLLMModelDto
@@ -50,6 +49,7 @@ import com.vapi4k.responses.assistant.model.VapiModelDto
 import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
 import com.vapi4k.responses.assistant.transcriber.GladiaTranscriberDto
 import com.vapi4k.responses.assistant.transcriber.TalkscriberTranscriberDto
+import com.vapi4k.responses.assistant.voice.AzureVoiceDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantUnion {
@@ -185,10 +185,17 @@ data class Assistant internal constructor(
 
 
   // Voices
-  fun voice(block: Voice.() -> Unit): Voice {
-    val voiceDto = VoiceDto()
+//  fun voice(block: Voice.() -> Unit): Voice {
+//    val voiceDto = VoiceDto()
+//    assistantDto.voiceDto = voiceDto
+//    return Voice(voiceDto).apply(block)
+//  }
+
+  fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice {
+    voiceChecker.check("azureVoice{} already called")
+    val voiceDto = AzureVoiceDto()
     assistantDto.voiceDto = voiceDto
-    return Voice(voiceDto).apply(block)
+    return AzureVoice(voiceDto).apply(block)
   }
 
   // AssistantOverrides

@@ -22,11 +22,11 @@ import com.vapi4k.responses.assistant.voice.AzureVoiceDto
 import com.vapi4k.responses.assistant.voice.AzureVoiceId
 
 interface AzureVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var voiceId: AzureVoiceId
   var speed: Double
 }

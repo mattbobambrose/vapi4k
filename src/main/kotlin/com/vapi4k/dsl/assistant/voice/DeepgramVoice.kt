@@ -21,11 +21,11 @@ import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.DeepgramVoiceDto
 
 interface DeepgramVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var voiceId: String
 }
 

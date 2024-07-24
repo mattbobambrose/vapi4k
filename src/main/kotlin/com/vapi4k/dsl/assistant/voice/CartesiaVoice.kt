@@ -23,11 +23,11 @@ import com.vapi4k.responses.assistant.voice.CartesiaVoiceLanguage
 import com.vapi4k.responses.assistant.voice.CartesiaVoiceModel
 
 interface CartesiaVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var model: CartesiaVoiceModel
   var language: CartesiaVoiceLanguage
   var voiceId: String

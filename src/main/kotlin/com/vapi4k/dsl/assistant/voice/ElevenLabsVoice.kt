@@ -23,18 +23,18 @@ import com.vapi4k.responses.assistant.voice.ElevenLabsVoiceId
 import com.vapi4k.responses.assistant.voice.ElevenLabsVoiceModel
 
 interface ElevenLabsVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var voiceId: ElevenLabsVoiceId
   var stability: Double
   var similarityBoost: Double
   var style: Double
-  var useSpeakerBoost: Boolean
+  var useSpeakerBoost: Boolean?
   var optimizeStreaming: Double
-  var enableSsmlParsing: Boolean
+  var enableSsmlParsing: Boolean?
   var model: ElevenLabsVoiceModel
 }
 

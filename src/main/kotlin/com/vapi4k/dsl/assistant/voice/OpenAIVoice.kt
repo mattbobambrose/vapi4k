@@ -22,11 +22,11 @@ import com.vapi4k.responses.assistant.voice.OpenAIVoiceDto
 import com.vapi4k.responses.assistant.voice.OpenAIVoiceId
 
 interface OpenAIVoiceUnion {
-  var inputPreprocessingEnabled: Boolean
-  var inputReformattingEnabled: Boolean
+  var inputPreprocessingEnabled: Boolean?
+  var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableList<PunctuationType>
-  var fillerInjectionEnabled: Boolean
+  var fillerInjectionEnabled: Boolean?
   var voiceId: OpenAIVoiceId
   var speed: Double
 }
