@@ -68,7 +68,7 @@ data class AssistantDto(
   override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
 
   val metadata: MutableMap<String, String> = mutableMapOf(),
-  val endCallPhrases: MutableList<String> = mutableListOf(),
+  val endCallPhrases: MutableSet<String> = mutableSetOf(),
 
   @SerialName("transcriber")
   var transcriberDto: AbstractTranscriberDto? = null,

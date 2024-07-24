@@ -47,7 +47,7 @@ data class AssistantOverridesDto(
   override val clientMessages: MutableSet<String> = mutableSetOf(),
   override val serverMessages: MutableSet<String> = mutableSetOf(),
 
-  val endCallPhrases: MutableList<String> = mutableListOf(),
+  val endCallPhrases: MutableSet<String> = mutableSetOf(),
 
   @SerialName("transcriber")
   var transcriberDto: AbstractTranscriberDto? = null,

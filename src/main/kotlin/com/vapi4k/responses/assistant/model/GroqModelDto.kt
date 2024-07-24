@@ -45,7 +45,7 @@ data class GroqModelDto(
 
   override val messages: MutableList<RoleMessage> = mutableListOf(),
   override val tools: MutableList<ToolDto> = mutableListOf(),
-  override val toolIds: MutableList<String> = mutableListOf(),
+  override val toolIds: MutableSet<String> = mutableSetOf(),
   override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")

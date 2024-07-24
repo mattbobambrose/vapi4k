@@ -50,7 +50,7 @@ import kotlinx.serialization.json.JsonElement
 interface AnthropicModelUnion {
   var modelType: AnthropicModelType
   var customModel: String
-  val toolIds: MutableList<String>
+  val toolIds: MutableSet<String>
   var temperature: Int
   var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?

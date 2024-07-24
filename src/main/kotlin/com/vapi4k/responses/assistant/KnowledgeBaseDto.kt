@@ -22,13 +22,13 @@ import kotlinx.serialization.Serializable
 
 interface KnowledgeBaseUnion {
   var topK: Double
-  val fileIds: MutableList<String>
+  val fileIds: MutableSet<String>
 }
 
 @Serializable
 data class KnowledgeBaseDto(
   override var topK: Double = -1.0,
-  override val fileIds: MutableList<String> = mutableListOf(),
+  override val fileIds: MutableSet<String> = mutableSetOf(),
 ) : KnowledgeBaseUnion {
   @EncodeDefault
   val provider: String = "canonical"

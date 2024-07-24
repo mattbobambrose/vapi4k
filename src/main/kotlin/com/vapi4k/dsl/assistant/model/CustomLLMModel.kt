@@ -33,7 +33,7 @@ import kotlinx.serialization.json.JsonElement
 
 interface CustomLLMModelUnion {
   var model: String
-  val toolIds: MutableList<String>
+  val toolIds: MutableSet<String>
   var temperature: Int
   var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?
