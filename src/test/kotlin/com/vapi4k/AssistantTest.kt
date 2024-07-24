@@ -529,7 +529,7 @@ class AssistantTest {
       }
 
     println(assistant.toJsonString(true))
-    val ll = assistant.squadDto.toJsonElement()
+    val ll = assistant.assistantDto.toJsonElement()
     val element = assistant.toJsonElement()
     assertEquals(8, element.assistantServerMessages.size)
   }
