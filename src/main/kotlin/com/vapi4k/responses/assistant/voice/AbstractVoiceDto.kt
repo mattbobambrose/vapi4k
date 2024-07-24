@@ -24,8 +24,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = VoiceSerializer::class)
-abstract class AbstractVoiceDto {
-}
+abstract class AbstractVoiceDto
 
 private object VoiceSerializer : KSerializer<AbstractVoiceDto> {
   override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractVoiceDto")
@@ -79,6 +78,8 @@ private object VoiceSerializer : KSerializer<AbstractVoiceDto> {
         //value.assignEnumOverrides()
         encoder.encodeSerializableValue(RimeAIVoiceDto.serializer(), value)
       }
+
+      else -> error("Invalid voice provider: ${value::class.simpleName}")
     }
   }
 

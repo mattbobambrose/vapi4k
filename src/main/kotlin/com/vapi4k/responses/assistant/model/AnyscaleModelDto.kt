@@ -30,21 +30,21 @@ import kotlinx.serialization.Serializable
 data class AnyscaleModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.ANYSCALE,
-) : AnyscaleModelUnion, AbstractModelDto {
-  override var model: String = ""
-  override var temperature: Int = -1
-  override var maxTokens: Int = -1
-  override var emotionRecognitionEnabled: Boolean? = null
-  override var numFastTurns: Int = -1
 
-  override val messages: MutableList<RoleMessage> = mutableListOf()
-  override val tools: MutableList<ToolDto> = mutableListOf()
-  override val toolIds: MutableList<String> = mutableListOf()
-  override val functions: MutableList<FunctionDto> = mutableListOf()
+  override var model: String = "",
+  override var temperature: Int = -1,
+  override var maxTokens: Int = -1,
+  override var emotionRecognitionEnabled: Boolean? = null,
+  override var numFastTurns: Int = -1,
+
+  override val messages: MutableList<RoleMessage> = mutableListOf(),
+  override val tools: MutableList<ToolDto> = mutableListOf(),
+  override val toolIds: MutableList<String> = mutableListOf(),
+  override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null
-
+  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+) : AnyscaleModelUnion, AbstractModelDto {
   override fun verifyValues() {
     if (model.isEmpty())
       error("anyscaleModel{} requires a model value")

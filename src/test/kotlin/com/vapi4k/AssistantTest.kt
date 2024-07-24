@@ -34,7 +34,6 @@ import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.JsonUtils.toJsonElement
-import com.vapi4k.utils.JsonUtils.toJsonString
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
@@ -528,8 +527,6 @@ class AssistantTest {
         }
       }
 
-    println(assistant.toJsonString(true))
-    val ll = assistant.assistantDto.toJsonElement()
     val element = assistant.toJsonElement()
     assertEquals(8, element.assistantServerMessages.size)
   }
@@ -685,7 +682,6 @@ class AssistantTest {
           }
         }
       val je = assistant.toJsonElement()
-      println(assistant.toJsonString(true))
       assertEquals(
         "zzz",
         je["assistant.transcriber.language"].stringValue

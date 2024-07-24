@@ -32,37 +32,37 @@ import kotlinx.serialization.Transient
 data class OpenAIModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI,
-) : OpenAIModelUnion, AbstractModelDto {
-  var model: String = ""
+
+  var model: String = "",
 
   @Transient
-  override var modelType: OpenAIModelType = OpenAIModelType.UNSPECIFIED
+  override var modelType: OpenAIModelType = OpenAIModelType.UNSPECIFIED,
 
   @Transient
-  override var customModel: String = ""
+  override var customModel: String = "",
 
-  var fallbackModels: MutableSet<String> = mutableSetOf()
-
-  @Transient
-  override val fallbackModelTypes: MutableSet<OpenAIModelType> = mutableSetOf()
+  var fallbackModels: MutableSet<String> = mutableSetOf(),
 
   @Transient
-  override val customFallbackModels: MutableSet<String> = mutableSetOf()
+  override val fallbackModelTypes: MutableSet<OpenAIModelType> = mutableSetOf(),
 
-  override var semanticCachingEnabled: Boolean? = null
-  override var temperature: Int = -1
-  override var maxTokens: Int = -1
-  override var emotionRecognitionEnabled: Boolean? = null
-  override var numFastTurns: Int = -1
+  @Transient
+  override val customFallbackModels: MutableSet<String> = mutableSetOf(),
 
-  override val messages: MutableList<RoleMessage> = mutableListOf()
-  override val tools: MutableList<ToolDto> = mutableListOf()
-  override val toolIds: MutableSet<String> = mutableSetOf()
-  override val functions: MutableList<FunctionDto> = mutableListOf()
+  override var semanticCachingEnabled: Boolean? = null,
+  override var temperature: Int = -1,
+  override var maxTokens: Int = -1,
+  override var emotionRecognitionEnabled: Boolean? = null,
+  override var numFastTurns: Int = -1,
+
+  override val messages: MutableList<RoleMessage> = mutableListOf(),
+  override val tools: MutableList<ToolDto> = mutableListOf(),
+  override val toolIds: MutableSet<String> = mutableSetOf(),
+  override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null
-
+  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+) : OpenAIModelUnion, AbstractModelDto {
   fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else modelType.desc
     fallbackModels.addAll(fallbackModelTypes.map { it.desc } + customFallbackModels)

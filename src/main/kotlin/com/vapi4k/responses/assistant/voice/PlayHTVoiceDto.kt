@@ -60,6 +60,7 @@ enum class PlayHTVoiceId(val desc: String) {
   DAVIS("davis"),
   DONNA("donna"),
   MICHAEL("michael"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
@@ -88,6 +89,7 @@ enum class PlayHTVoiceEmotion(val desc: String) {
   MALE_FEARFUL("male_fearful"),
   MALE_DISGUST("male_disgust"),
   MALE_SURPRISED("male_surprised"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

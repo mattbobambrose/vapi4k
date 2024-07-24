@@ -32,28 +32,28 @@ import kotlinx.serialization.Transient
 data class AnthropicModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.ANTHROPIC,
-) : AnthropicModelUnion, AbstractModelDto {
-  var model: String = ""
+
+  var model: String = "",
 
   @Transient
-  override var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED
+  override var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED,
 
   @Transient
-  override var customModel: String = ""
+  override var customModel: String = "",
 
-  override var temperature: Int = -1
-  override var maxTokens: Int = -1
-  override var emotionRecognitionEnabled: Boolean? = null
-  override var numFastTurns: Int = -1
+  override var temperature: Int = -1,
+  override var maxTokens: Int = -1,
+  override var emotionRecognitionEnabled: Boolean? = null,
+  override var numFastTurns: Int = -1,
 
-  override val messages: MutableList<RoleMessage> = mutableListOf()
-  override val tools: MutableList<ToolDto> = mutableListOf()
-  override val toolIds: MutableList<String> = mutableListOf()
-  override val functions: MutableList<FunctionDto> = mutableListOf()
+  override val messages: MutableList<RoleMessage> = mutableListOf(),
+  override val tools: MutableList<ToolDto> = mutableListOf(),
+  override val toolIds: MutableList<String> = mutableListOf(),
+  override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null
-
+  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+) : AnthropicModelUnion, AbstractModelDto {
   fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else modelType.desc
   }

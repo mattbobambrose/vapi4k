@@ -45,6 +45,7 @@ data class NeetsVoiceDto(
 @Serializable(with = NeetsVoiceIdSerializer::class)
 enum class NeetsVoiceId(val desc: String) {
   VITS("vits"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

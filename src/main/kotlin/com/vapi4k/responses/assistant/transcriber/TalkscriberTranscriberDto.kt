@@ -29,23 +29,22 @@ import kotlinx.serialization.Transient
 data class TalkscriberTranscriberDto(
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.TALKSCRIBER,
+  var model: String = "",
+
+  @Transient
+  override var transcriberModel: TalkscriberModelType = TalkscriberModelType.UNSPECIFIED,
+
+  @Transient
+  override var customModel: String = "",
+
+  var language: String = "",
+
+  @Transient
+  override var transcriberLanguage: TalkscriberLanguageType = TalkscriberLanguageType.UNSPECIFIED,
+
+  @Transient
+  override var customLanguage: String = "",
 ) : TalkscriberTranscriberUnion, AbstractTranscriberDto {
-  var model: String = ""
-
-  @Transient
-  override var transcriberModel: TalkscriberModelType = TalkscriberModelType.UNSPECIFIED
-
-  @Transient
-  override var customModel: String = ""
-
-  var language: String = ""
-
-  @Transient
-  override var transcriberLanguage: TalkscriberLanguageType = TalkscriberLanguageType.UNSPECIFIED
-
-  @Transient
-  override var customLanguage: String = ""
-
   override fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc
     language = if (customLanguage.isNotEmpty()) customLanguage else transcriberLanguage.desc

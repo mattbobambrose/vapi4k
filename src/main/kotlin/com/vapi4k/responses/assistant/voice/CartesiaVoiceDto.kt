@@ -47,6 +47,7 @@ data class CartesiaVoiceDto(
 enum class CartesiaVoiceModel(val desc: String) {
   SONIC_ENGLISH("sonic-english"),
   SONIC_MULTILINGUAL("sonic-multilingual"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
@@ -70,6 +71,7 @@ enum class CartesiaVoiceLanguage(val desc: String) {
   JAPANESE("ja"),
   PORTUGUESE("pt"),
   CHINESE("zh"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

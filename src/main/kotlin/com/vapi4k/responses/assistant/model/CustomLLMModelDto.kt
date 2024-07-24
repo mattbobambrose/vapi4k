@@ -31,24 +31,24 @@ import kotlinx.serialization.Serializable
 data class CustomLLMModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.CUSTOM_LLM,
-) : CustomLLMModelUnion, AbstractModelDto {
-  override var model: String = ""
-  override var temperature: Int = -1
-  override var maxTokens: Int = -1
-  override var emotionRecognitionEnabled: Boolean? = null
-  override var numFastTurns: Int = -1
 
-  override var url: String = ""
-  override var metadataSendMode: MetaDataSendModeType = MetaDataSendModeType.UNSPECIFIED
+  override var model: String = "",
+  override var temperature: Int = -1,
+  override var maxTokens: Int = -1,
+  override var emotionRecognitionEnabled: Boolean? = null,
+  override var numFastTurns: Int = -1,
 
-  override val messages: MutableList<RoleMessage> = mutableListOf()
-  override val tools: MutableList<ToolDto> = mutableListOf()
-  override val toolIds: MutableList<String> = mutableListOf()
-  override val functions: MutableList<FunctionDto> = mutableListOf()
+  override var url: String = "",
+  override var metadataSendMode: MetaDataSendModeType = MetaDataSendModeType.UNSPECIFIED,
+
+  override val messages: MutableList<RoleMessage> = mutableListOf(),
+  override val tools: MutableList<ToolDto> = mutableListOf(),
+  override val toolIds: MutableList<String> = mutableListOf(),
+  override val functions: MutableList<FunctionDto> = mutableListOf(),
 
   @SerialName("knowledgeBase")
-  var knowledgeBaseDto: KnowledgeBaseDto? = null
-
+  var knowledgeBaseDto: KnowledgeBaseDto? = null,
+) : CustomLLMModelUnion, AbstractModelDto {
   override fun verifyValues() {
     if (model.isEmpty())
       error("customLLMModel{} requires a model value")

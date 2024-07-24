@@ -27,7 +27,7 @@ interface DeepgramTranscriberUnion {
   var transcriberLanguage: DeepgramLanguageType
   var customLanguage: String
   var smartFormat: Boolean
-  val keywords: MutableList<String>
+  val keywords: MutableSet<String>
 }
 
 @AssistantDslMarker

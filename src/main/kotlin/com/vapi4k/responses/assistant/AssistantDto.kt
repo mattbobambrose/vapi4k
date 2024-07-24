@@ -30,70 +30,70 @@ import kotlinx.serialization.Transient
 @Serializable
 data class AssistantDto(
   override var name: String = "",
-) : AssistantUnion {
-  @Transient
-  var updated = false
 
   // TODO: Came from squad assistant
-  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf()
+  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
 
-  override var firstMessage: String = ""
-  override var recordingEnabled: Boolean? = null
-  override var hipaaEnabled: Boolean? = null
-  override var serverUrl: String = ""
-  override var serverUrlSecret: String = ""
+  override var firstMessage: String = "",
+  override var recordingEnabled: Boolean? = null,
+  override var hipaaEnabled: Boolean? = null,
+  override var serverUrl: String = "",
+  override var serverUrlSecret: String = "",
 
   // TODO: This needs to be added to docs
-  override var forwardingPhoneNumber: String = ""
+  override var forwardingPhoneNumber: String = "",
 
   // TODO: Not in docs or squad
-  override var endCallFunctionEnabled: Boolean? = null
+  override var endCallFunctionEnabled: Boolean? = null,
 
   // TODO: Not in docs or squad
-  override var dialKeypadFunctionEnabled: Boolean? = null
-  override var responseDelaySeconds: Double = 0.0
-  override var llmRequestDelaySeconds: Double = 0.0
-  override var silenceTimeoutSeconds: Int = -1
-  override var maxDurationSeconds: Int = -1
-  override var backgroundSound: String = ""
-  override var numWordsToInterruptAssistant: Int = -1
-  override var voicemailMessage: String = ""
-  override var endCallMessage: String = ""
-  override var backchannelingEnabled: Boolean? = null
-  override var backgroundDenoisingEnabled: Boolean? = null
-  override var modelOutputInMessagesEnabled: Boolean? = null
-  override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0
+  override var dialKeypadFunctionEnabled: Boolean? = null,
+  override var responseDelaySeconds: Double = 0.0,
+  override var llmRequestDelaySeconds: Double = 0.0,
+  override var silenceTimeoutSeconds: Int = -1,
+  override var maxDurationSeconds: Int = -1,
+  override var backgroundSound: String = "",
+  override var numWordsToInterruptAssistant: Int = -1,
+  override var voicemailMessage: String = "",
+  override var endCallMessage: String = "",
+  override var backchannelingEnabled: Boolean? = null,
+  override var backgroundDenoisingEnabled: Boolean? = null,
+  override var modelOutputInMessagesEnabled: Boolean? = null,
+  override var llmRequestNonPunctuatedDelaySeconds: Double = 0.0,
 
-  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED
+  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
 
   // Need a copy of DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES here, so call toMutableSet()
-  override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet()
-  override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet()
+  override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
+  override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
 
-  val metadata: MutableMap<String, String> = mutableMapOf()
-  val endCallPhrases: MutableList<String> = mutableListOf()
+  val metadata: MutableMap<String, String> = mutableMapOf(),
+  val endCallPhrases: MutableList<String> = mutableListOf(),
 
   @SerialName("transcriber")
-  var transcriberDto: AbstractTranscriberDto? = null
+  var transcriberDto: AbstractTranscriberDto? = null,
 
   @SerialName("model")
-  var modelDto: AbstractModelDto? = null
+  var modelDto: AbstractModelDto? = null,
 
   @SerialName("voice")
-  var voiceDto: AbstractVoiceDto? = null
+  var voiceDto: AbstractVoiceDto? = null,
 
   // TODO: Add verbs and enums
   @SerialName("voicemailDetection")
-  val voicemailDetectionDto: VoicemailDetectionDto = VoicemailDetectionDto()
+  val voicemailDetectionDto: VoicemailDetectionDto = VoicemailDetectionDto(),
 
   @SerialName("analysisPlan")
-  val analysisPlanDto: AnalysisPlanDto = AnalysisPlanDto()
+  val analysisPlanDto: AnalysisPlanDto = AnalysisPlanDto(),
 
   @SerialName("artifactPlan")
-  val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto()
+  val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
 
   @SerialName("messagePlan")
-  val messagePlanDto: MessagePlanDto = MessagePlanDto()
+  val messagePlanDto: MessagePlanDto = MessagePlanDto(),
+) : AssistantUnion {
+  @Transient
+  var updated = false
 
   internal fun verifyValues() {
     if (modelDto == null)

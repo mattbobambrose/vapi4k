@@ -51,6 +51,7 @@ enum class OpenAIVoiceId(val desc: String) {
   ONYX("onyx"),
   NOVA("nova"),
   SHIMMER("shimmer"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

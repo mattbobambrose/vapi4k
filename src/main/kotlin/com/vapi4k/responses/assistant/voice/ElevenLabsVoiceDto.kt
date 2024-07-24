@@ -66,6 +66,7 @@ enum class ElevenLabsVoiceId(val desc: String) {
   MRB("mrb"),
   MATILDA("matilda"),
   MARK("mark"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
@@ -86,6 +87,7 @@ enum class ElevenLabsVoiceModel(val desc: String) {
   ELEVEN_TURBO_V2("eleven_turbo_v2"),
   ELEVEN_TURBO_V2_5("eleven_turbo_v2_5"),
   ELEVEN_MONOLINGUAL_V1("eleven_monolingual_v1"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

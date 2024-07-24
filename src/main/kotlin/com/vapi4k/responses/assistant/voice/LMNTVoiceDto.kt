@@ -47,6 +47,7 @@ data class LMNTVoiceDto(
 enum class LMNTVoiceId(val desc: String) {
   LILY("lily"),
   DANIEL("daniel"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

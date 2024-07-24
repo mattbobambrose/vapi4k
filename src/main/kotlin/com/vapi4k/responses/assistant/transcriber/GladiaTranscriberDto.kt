@@ -28,28 +28,28 @@ import kotlinx.serialization.Transient
 data class GladiaTranscriberDto(
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.GLADIA,
+
+  var model: String = "",
+
+  @Transient
+  override var transcriberModel: GladiaModelType = GladiaModelType.UNSPECIFIED,
+
+  @Transient
+  override var customModel: String = "",
+
+  var language: String = "",
+
+  @Transient
+  override var transcriberLanguage: GladiaLanguageType = GladiaLanguageType.UNSPECIFIED,
+
+  @Transient
+  override var customLanguage: String = "",
+
+  override var languageBehavior: String = "",
+  override var transcriptionHint: String = "",
+  override var prosody: Boolean = false,
+  override var audioEnhancer: Boolean = false,
 ) : GladiaTranscriberUnion, AbstractTranscriberDto {
-  var model: String = ""
-
-  @Transient
-  override var transcriberModel: GladiaModelType = GladiaModelType.UNSPECIFIED
-
-  @Transient
-  override var customModel: String = ""
-
-  var language: String = ""
-
-  @Transient
-  override var transcriberLanguage: GladiaLanguageType = GladiaLanguageType.UNSPECIFIED
-
-  @Transient
-  override var customLanguage: String = ""
-
-  override var languageBehavior: String = ""
-  override var transcriptionHint: String = ""
-  override var prosody: Boolean = false
-  override var audioEnhancer: Boolean = false
-
   override fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc
     language = if (customLanguage.isNotEmpty()) customLanguage else transcriberLanguage.desc

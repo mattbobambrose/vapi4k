@@ -127,6 +127,7 @@ enum class RimeAIVoiceId(val desc: String) {
   TYLER("tyler"),
   VIV("viv"),
   YADIRA("yadira"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
@@ -145,6 +146,7 @@ private object RimeAIVoiceIdSerializer : KSerializer<RimeAIVoiceId> {
 enum class RimeAIVoiceModel(val desc: String) {
   V1("v1"),
   MIST("mist"),
+
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
