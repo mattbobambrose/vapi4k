@@ -28,8 +28,14 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(with = VoiceProviderTypeSerializer::class)
 enum class VoiceProviderType(internal val desc: String) {
   AZURE("azure"),
+  CARTESIA("cartesia"),
+  DEEPGRAM("deepgram"),
+  ELEVENLABS("elevenlabs"),
+  LMNT("lmnt"),
+  NEETS("neets"),
   OPENAI("openai"),
-
+  PLAYHT("playht"),
+  RIMEAI("rimeai"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
