@@ -24,7 +24,7 @@ interface DeepgramVoiceUnion {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableList<PunctuationType>
+  var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
   var voiceId: String
 }

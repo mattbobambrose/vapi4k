@@ -32,5 +32,5 @@ data class VoiceDto(
   override var provider: VoiceProviderType = VoiceProviderType.UNSPECIFIED,
   override var voiceId: VoiceType = VoiceType.UNSPECIFIED,
   override var speed: Double = 0.0,
-  override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
+  override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
 ) : VoiceUnion

@@ -30,7 +30,7 @@ interface VoiceUnion {
   var provider: VoiceProviderType
   var voiceId: VoiceType
   var speed: Double
-  val inputPunctuationBoundaries: MutableList<PunctuationType>
+  val inputPunctuationBoundaries: MutableSet<PunctuationType>
 }
 
 @AssistantDslMarker

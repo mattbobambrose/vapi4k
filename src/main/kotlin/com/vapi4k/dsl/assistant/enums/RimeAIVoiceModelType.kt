@@ -14,33 +14,32 @@
  *
  */
 
-package com.vapi4k.responses.assistant.destination
+package com.vapi4k.dsl.assistant.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = DestinationSerializer::class)
-interface AbstractDestinationDto
+@Serializable(with = RimeAIVoiceModelTypeSerializer::class)
+enum class RimeAIVoiceModelType(val desc: String) {
+  V1("v1"),
+  MIST("mist"),
 
-private object DestinationSerializer : KSerializer<AbstractDestinationDto> {
-  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractDestinationDto")
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+}
+
+private object RimeAIVoiceModelTypeSerializer : KSerializer<RimeAIVoiceModelType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("RimeAIVoiceModelType", STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: AbstractDestinationDto,
-  ) {
-    when (value) {
-      is NumberDestinationDto -> encoder.encodeSerializableValue(NumberDestinationDto.serializer(), value)
-      is SipDestinationDto -> encoder.encodeSerializableValue(SipDestinationDto.serializer(), value)
-      else -> error("Invalid destination provider: ${value::class.simpleName}")
-    }
-  }
+    value: RimeAIVoiceModelType,
+  ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder): AbstractDestinationDto {
-    throw NotImplementedError("Deserialization is not supported")
-  }
+  override fun deserialize(decoder: Decoder) = RimeAIVoiceModelType.entries.first { it.desc == decoder.decodeString() }
 }

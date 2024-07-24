@@ -17,19 +17,19 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.CartesiaVoiceLanguageType
+import com.vapi4k.dsl.assistant.enums.CartesiaVoiceModelType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.CartesiaVoiceDto
-import com.vapi4k.responses.assistant.voice.CartesiaVoiceLanguage
-import com.vapi4k.responses.assistant.voice.CartesiaVoiceModel
 
 interface CartesiaVoiceUnion {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableList<PunctuationType>
+  var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var model: CartesiaVoiceModel
-  var language: CartesiaVoiceLanguage
+  var model: CartesiaVoiceModelType
+  var language: CartesiaVoiceLanguageType
   var voiceId: String
 }
 

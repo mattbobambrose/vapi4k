@@ -17,25 +17,25 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceIdType
+import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceModelType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.ElevenLabsVoiceDto
-import com.vapi4k.responses.assistant.voice.ElevenLabsVoiceId
-import com.vapi4k.responses.assistant.voice.ElevenLabsVoiceModel
 
 interface ElevenLabsVoiceUnion {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableList<PunctuationType>
+  var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: ElevenLabsVoiceId
+  var voiceId: ElevenLabsVoiceIdType
   var stability: Double
   var similarityBoost: Double
   var style: Double
   var useSpeakerBoost: Boolean?
   var optimizeStreaming: Double
   var enableSsmlParsing: Boolean?
-  var model: ElevenLabsVoiceModel
+  var model: ElevenLabsVoiceModelType
 }
 
 @AssistantDslMarker

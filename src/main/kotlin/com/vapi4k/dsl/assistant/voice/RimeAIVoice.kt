@@ -17,18 +17,18 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.PunctuationType
+import com.vapi4k.dsl.assistant.enums.RimeAIVoiceIdType
+import com.vapi4k.dsl.assistant.enums.RimeAIVoiceModelType
 import com.vapi4k.responses.assistant.voice.RimeAIVoiceDto
-import com.vapi4k.responses.assistant.voice.RimeAIVoiceId
-import com.vapi4k.responses.assistant.voice.RimeAIVoiceModel
 
 interface RimeAIVoiceUnion {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableList<PunctuationType>
+  var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: RimeAIVoiceId
-  var model: RimeAIVoiceModel
+  var voiceId: RimeAIVoiceIdType
+  var model: RimeAIVoiceModelType
   var speed: Double
 }
 

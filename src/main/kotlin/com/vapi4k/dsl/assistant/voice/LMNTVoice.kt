@@ -17,20 +17,19 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.LMNTVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.LMNTVoiceDto
-import com.vapi4k.responses.assistant.voice.LMNTVoiceId
 
 interface LMNTVoiceUnion {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableList<PunctuationType>
+  var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: LMNTVoiceId
+  var voiceId: LMNTVoiceIdType
   var speed: Double
 }
 
 @AssistantDslMarker
-data class LMNTVoice internal constructor(private val dto: LMNTVoiceDto) :
-  LMNTVoiceUnion by dto
+data class LMNTVoice internal constructor(private val dto: LMNTVoiceDto) : LMNTVoiceUnion by dto

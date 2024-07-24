@@ -30,7 +30,7 @@ data class DeepgramVoiceDto(
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
-  override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
+  override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: String = "",
 ) : DeepgramVoiceUnion, AbstractVoiceDto()

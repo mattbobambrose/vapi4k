@@ -54,6 +54,8 @@ private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
         value.assignEnumOverrides()
         encoder.encodeSerializableValue(TalkscriberTranscriberDto.serializer(), value)
       }
+
+      else -> error("Invalid transcriber provider: ${value::class.simpleName}")
     }
   }
 

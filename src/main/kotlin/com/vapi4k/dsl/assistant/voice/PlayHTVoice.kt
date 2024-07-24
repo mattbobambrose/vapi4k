@@ -16,21 +16,21 @@
 
 package com.vapi4k.dsl.assistant.voice
 
+import com.vapi4k.dsl.assistant.enums.PlayHTVoiceEmotionType
+import com.vapi4k.dsl.assistant.enums.PlayHTVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.PlayHTVoiceDto
-import com.vapi4k.responses.assistant.voice.PlayHTVoiceEmotion
-import com.vapi4k.responses.assistant.voice.PlayHTVoiceId
 
 interface PlayHTVoiceUnion {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableList<PunctuationType>
+  var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: PlayHTVoiceId
+  var voiceId: PlayHTVoiceIdType
   var speed: Double
   var temperature: Double
-  var emotion: PlayHTVoiceEmotion
+  var emotion: PlayHTVoiceEmotionType
   var voiceGuidance: Double
   var styleGuidance: Double
   var textGuidance: Double

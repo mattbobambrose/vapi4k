@@ -17,17 +17,17 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.enums.NeetsVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.NeetsVoiceDto
-import com.vapi4k.responses.assistant.voice.NeetsVoiceId
 
 interface NeetsVoiceUnion {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableList<PunctuationType>
+  var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: NeetsVoiceId
+  var voiceId: NeetsVoiceIdType
 }
 
 @AssistantDslMarker

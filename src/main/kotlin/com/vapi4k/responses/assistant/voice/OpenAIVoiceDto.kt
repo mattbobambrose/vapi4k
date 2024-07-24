@@ -16,18 +16,12 @@
 
 package com.vapi4k.responses.assistant.voice
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import com.vapi4k.dsl.assistant.enums.OpenAIVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.OpenAIVoiceUnion
 import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 data class OpenAIVoiceDto(
@@ -37,31 +31,8 @@ data class OpenAIVoiceDto(
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
-  override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
+  override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: OpenAIVoiceId = OpenAIVoiceId.UNSPECIFIED,
+  override var voiceId: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,
   override var speed: Double = 0.0,
 ) : OpenAIVoiceUnion, AbstractVoiceDto()
-
-@Serializable(with = OpenAIVoiceIdSerializer::class)
-enum class OpenAIVoiceId(val desc: String) {
-  ALLOY("alloy"),
-  ECHO("echo"),
-  FABLE("fable"),
-  ONYX("onyx"),
-  NOVA("nova"),
-  SHIMMER("shimmer"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
-}
-
-private object OpenAIVoiceIdSerializer : KSerializer<OpenAIVoiceId> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ProviderType", STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: OpenAIVoiceId,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) = OpenAIVoiceId.entries.first { it.desc == decoder.decodeString() }
-}

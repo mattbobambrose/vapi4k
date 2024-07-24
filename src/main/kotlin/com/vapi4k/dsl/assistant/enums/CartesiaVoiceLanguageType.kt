@@ -14,33 +14,38 @@
  *
  */
 
-package com.vapi4k.responses.assistant.destination
+package com.vapi4k.dsl.assistant.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = DestinationSerializer::class)
-interface AbstractDestinationDto
+@Serializable(with = CartesiaVoiceLanguageSerializer::class)
+enum class CartesiaVoiceLanguageType(val desc: String) {
+  GERMAN("de"),
+  ENGLISH("en"),
+  SPANISH("es"),
+  FRENCH("fr"),
+  JAPANESE("ja"),
+  PORTUGUESE("pt"),
+  CHINESE("zh"),
 
-private object DestinationSerializer : KSerializer<AbstractDestinationDto> {
-  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractDestinationDto")
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+}
+
+private object CartesiaVoiceLanguageSerializer : KSerializer<CartesiaVoiceLanguageType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("CartesiaVoiceLanguageType", STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: AbstractDestinationDto,
-  ) {
-    when (value) {
-      is NumberDestinationDto -> encoder.encodeSerializableValue(NumberDestinationDto.serializer(), value)
-      is SipDestinationDto -> encoder.encodeSerializableValue(SipDestinationDto.serializer(), value)
-      else -> error("Invalid destination provider: ${value::class.simpleName}")
-    }
-  }
+    value: CartesiaVoiceLanguageType,
+  ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder): AbstractDestinationDto {
-    throw NotImplementedError("Deserialization is not supported")
-  }
+  override fun deserialize(decoder: Decoder) =
+    CartesiaVoiceLanguageType.entries.first { it.desc == decoder.decodeString() }
 }

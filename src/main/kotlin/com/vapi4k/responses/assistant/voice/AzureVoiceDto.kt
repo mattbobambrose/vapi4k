@@ -16,18 +16,12 @@
 
 package com.vapi4k.responses.assistant.voice
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import com.vapi4k.dsl.assistant.enums.AzureVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.AzureVoiceUnion
 import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 data class AzureVoiceDto(
@@ -37,28 +31,8 @@ data class AzureVoiceDto(
   override var inputPreprocessingEnabled: Boolean? = null,
   override var inputReformattingEnabled: Boolean? = null,
   override var inputMinCharacters: Int = -1,
-  override var inputPunctuationBoundaries: MutableList<PunctuationType> = mutableListOf(),
+  override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
-  override var voiceId: AzureVoiceId = AzureVoiceId.UNSPECIFIED,
+  override var voiceId: AzureVoiceIdType = AzureVoiceIdType.UNSPECIFIED,
   override var speed: Double = 0.0,
 ) : AzureVoiceUnion, AbstractVoiceDto()
-
-@Serializable(with = AzureVoiceIdSerializer::class)
-enum class AzureVoiceId(val desc: String) {
-  ANDREW("andrew"),
-  BRIAN("brian"),
-  EMMA("emma"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
-}
-
-private object AzureVoiceIdSerializer : KSerializer<AzureVoiceId> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ProviderType", STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: AzureVoiceId,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) = AzureVoiceId.entries.first { it.desc == decoder.decodeString() }
-}

@@ -88,6 +88,8 @@ private object ModelSerializer : KSerializer<AbstractModelDto> {
       is VapiModelDto -> {
         encoder.encodeSerializableValue(VapiModelDto.serializer(), value)
       }
+
+      else -> error("Invalid model provider: ${value::class.simpleName}")
     }
   }
 
