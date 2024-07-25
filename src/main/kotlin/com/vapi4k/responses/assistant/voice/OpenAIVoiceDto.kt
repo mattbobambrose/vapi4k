@@ -17,7 +17,6 @@
 package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.OpenAIVoiceIdType
-import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.OpenAIVoiceProperties
 import kotlinx.serialization.EncodeDefault
@@ -25,14 +24,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OpenAIVoiceDto(
-  override var inputPreprocessingEnabled: Boolean? = null,
-  override var inputReformattingEnabled: Boolean? = null,
-  override var inputMinCharacters: Int = -1,
-  override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
-  override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,
   override var speed: Double = -1.0,
-) : OpenAIVoiceProperties, AbstractVoiceDto {
+) : OpenAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.OPENAI
 

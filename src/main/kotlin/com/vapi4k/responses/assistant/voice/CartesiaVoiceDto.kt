@@ -18,7 +18,6 @@ package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.CartesiaVoiceLanguageType
 import com.vapi4k.dsl.assistant.enums.CartesiaVoiceModelType
-import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.CartesiaVoiceProperties
 import kotlinx.serialization.EncodeDefault
@@ -26,15 +25,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CartesiaVoiceDto(
-  override var inputPreprocessingEnabled: Boolean? = null,
-  override var inputReformattingEnabled: Boolean? = null,
-  override var inputMinCharacters: Int = -1,
-  override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
-  override var fillerInjectionEnabled: Boolean? = null,
   override var model: CartesiaVoiceModelType = CartesiaVoiceModelType.UNSPECIFIED,
   override var language: CartesiaVoiceLanguageType = CartesiaVoiceLanguageType.UNSPECIFIED,
   override var voiceId: String = "",
-) : CartesiaVoiceProperties, AbstractVoiceDto {
+) : CartesiaVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.CARTESIA
 

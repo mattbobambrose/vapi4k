@@ -19,7 +19,7 @@ package com.vapi4k.responses.assistant
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
 import com.vapi4k.responses.assistant.model.CommonModelDto
 import com.vapi4k.responses.assistant.transcriber.AbstractTranscriberDto
-import com.vapi4k.responses.assistant.voice.AbstractVoiceDto
+import com.vapi4k.responses.assistant.voice.CommonVoiceDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -57,7 +57,7 @@ data class AssistantOverridesDto(
   var modelDto: CommonModelDto? = null,
 
   @SerialName("voice")
-  var voiceDto: AbstractVoiceDto? = null,
+  var voiceDto: CommonVoiceDto? = null,
 
   // TODO: Came from squad assistant,
   val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),

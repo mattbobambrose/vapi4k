@@ -16,7 +16,6 @@
 
 package com.vapi4k.responses.assistant.voice
 
-import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.RimeAIVoiceIdType
 import com.vapi4k.dsl.assistant.enums.RimeAIVoiceModelType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
@@ -26,15 +25,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RimeAIVoiceDto(
-  override var inputPreprocessingEnabled: Boolean? = null,
-  override var inputReformattingEnabled: Boolean? = null,
-  override var inputMinCharacters: Int = -1,
-  override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
-  override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: RimeAIVoiceIdType = RimeAIVoiceIdType.UNSPECIFIED,
   override var model: RimeAIVoiceModelType = RimeAIVoiceModelType.UNSPECIFIED,
   override var speed: Double = -1.0,
-) : RimeAIVoiceProperties, AbstractVoiceDto {
+) : RimeAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 
