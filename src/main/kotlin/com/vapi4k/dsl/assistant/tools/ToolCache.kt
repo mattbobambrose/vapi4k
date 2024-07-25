@@ -122,7 +122,7 @@ internal object ToolCache {
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added $prefix \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$messageCallId]" }
     } else {
-      error("$prefix \"$toolFuncName\" has already been declared in ${funcDetails.fqName}")
+      error("$prefix \"$toolFuncName\" has already been declared in ${funcDetails.fqName} [$messageCallId]")
     }
   }
 
