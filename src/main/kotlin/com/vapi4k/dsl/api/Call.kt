@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.api
 
-import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
@@ -29,6 +28,7 @@ import com.vapi4k.dsl.squad.Squad
 import com.vapi4k.dsl.squad.SquadId
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
+import com.vapi4k.utils.DuplicateChecker
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 
 interface CallProperties {

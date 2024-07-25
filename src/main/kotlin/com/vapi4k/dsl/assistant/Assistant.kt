@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
@@ -59,6 +58,7 @@ import com.vapi4k.dtos.assistant.rimeAIVoice
 import com.vapi4k.dtos.assistant.talkscriberTranscriber
 import com.vapi4k.dtos.assistant.togetherAIModel
 import com.vapi4k.dtos.assistant.vapiModel
+import com.vapi4k.utils.DuplicateChecker
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {

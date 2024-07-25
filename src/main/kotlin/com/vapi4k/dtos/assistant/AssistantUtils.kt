@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos.assistant
 
-import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnthropicModelImpl
@@ -66,6 +65,7 @@ import com.vapi4k.dtos.voice.NeetsVoiceDto
 import com.vapi4k.dtos.voice.OpenAIVoiceDto
 import com.vapi4k.dtos.voice.PlayHTVoiceDto
 import com.vapi4k.dtos.voice.RimeAIVoiceDto
+import com.vapi4k.utils.DuplicateChecker
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantBridge {

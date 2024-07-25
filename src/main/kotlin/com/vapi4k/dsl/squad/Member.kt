@@ -16,11 +16,11 @@
 
 package com.vapi4k.dsl.squad
 
-import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dtos.squad.MemberDto
+import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
 interface Member {
