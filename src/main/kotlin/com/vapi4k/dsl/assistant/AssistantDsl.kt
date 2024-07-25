@@ -27,7 +27,7 @@ import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
-import com.vapi4k.responses.AssistantRequestMessageResponse
+import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
@@ -44,60 +44,58 @@ object AssistantDsl {
     request: JsonElement,
     block: Assistant.() -> Unit,
   ) =
-    AssistantRequestMessageResponse().apply {
-      with(messageResponse) {
-        AssistantImpl(request, request.messageCallId.toSessionId(), assistantDto, assistantOverridesDto)
-          .apply(block)
-          .apply {
-            assistantDto.updated = true
-            assistantDto.verifyValues()
-          }
-      }
-    }.messageResponse
+    AssistantRequestResponse().apply {
+      AssistantImpl(request, request.messageCallId.toSessionId(), assistantDto, assistantOverridesDto)
+        .apply(block)
+        .apply {
+          assistantDto.updated = true
+          assistantDto.verifyValues()
+        }
+    }
 
   fun assistantId(
     request: JsonElement,
     block: AssistantId.() -> Unit,
   ) =
-    AssistantRequestMessageResponse().apply {
-      AssistantIdImpl(request, request.messageCallId.toSessionId(), messageResponse).apply(block)
-    }.messageResponse
+    AssistantRequestResponse().apply {
+      AssistantIdImpl(request, request.messageCallId.toSessionId(), this).apply(block)
+    }
 
   fun squad(
     request: JsonElement,
     block: Squad.() -> Unit,
   ) =
-    AssistantRequestMessageResponse().apply {
-      SquadImpl(request, request.messageCallId.toSessionId(), messageResponse.squadDto).apply(block)
-    }.messageResponse
+    AssistantRequestResponse().apply {
+      SquadImpl(request, request.messageCallId.toSessionId(), squadDto).apply(block)
+    }
 
   fun squadId(
     request: JsonElement,
     block: SquadId.() -> Unit,
   ) =
-    AssistantRequestMessageResponse().apply {
-      SquadIdImpl(request, messageResponse).apply(block)
-    }.messageResponse
+    AssistantRequestResponse().apply {
+      SquadIdImpl(request, this).apply(block)
+    }
 
   fun numberDestination(
     request: JsonElement,
     block: NumberDestination.() -> Unit,
   ) =
-    AssistantRequestMessageResponse().apply {
+    AssistantRequestResponse().apply {
       val numDto = NumberDestinationDto()
-      messageResponse.destination = numDto
+      destination = numDto
       NumberDestinationImpl(request, numDto).apply(block)
-    }.messageResponse
+    }
 
   fun sipDestination(
     request: JsonElement,
     block: SipDestination.() -> Unit,
   ) =
-    AssistantRequestMessageResponse().apply {
+    AssistantRequestResponse().apply {
       val sipDto = SipDestinationDto()
-      messageResponse.destination = sipDto
+      destination = sipDto
       SipDestinationImpl(request, sipDto).apply(block)
-    }.messageResponse
+    }
 }
 
 @Retention(RUNTIME)
