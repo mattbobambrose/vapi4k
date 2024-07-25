@@ -27,8 +27,10 @@ interface RimeAIVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: RimeAIVoiceIdType
-  var model: RimeAIVoiceModelType
+  var voiceIdType: RimeAIVoiceIdType
+  var customVoiceId: String
+  var modelType: RimeAIVoiceModelType
+  var customModel: String
   var speed: Double
 }
 

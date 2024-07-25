@@ -28,8 +28,10 @@ interface CartesiaVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var model: CartesiaVoiceModelType
-  var language: CartesiaVoiceLanguageType
+  var modelType: CartesiaVoiceModelType
+  var customModel: String
+  var languageType: CartesiaVoiceLanguageType
+  var customLanguage: String
   var voiceId: String
 }
 

@@ -22,18 +22,40 @@ import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.RimeAIVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class RimeAIVoiceDto(
-  override var voiceId: RimeAIVoiceIdType = RimeAIVoiceIdType.UNSPECIFIED,
-  override var model: RimeAIVoiceModelType = RimeAIVoiceModelType.UNSPECIFIED,
+  var voiceId: String = "",
+  @Transient
+  override var voiceIdType: RimeAIVoiceIdType = RimeAIVoiceIdType.UNSPECIFIED,
+  @Transient
+  override var customVoiceId: String = "",
+
+  var model: String = "",
+  @Transient
+  override var modelType: RimeAIVoiceModelType = RimeAIVoiceModelType.UNSPECIFIED,
+  @Transient
+  override var customModel: String = "",
+
   override var speed: Double = -1.0,
 ) : RimeAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 
+  fun assignEnumOverrides() {
+    voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
+    model = customModel.ifEmpty { modelType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isNotSpecified())
-      error("rimeAIVoice{} requires a voiceId value")
+    if (voiceIdType.isNotSpecified() && customVoiceId.isEmpty())
+      error("rimeAIVoice{} requires a voiceIdType or customVoiceId value")
+    if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
+      error("rimeAIVoice{} cannot have both voiceIdType and customVoiceId values")
+    if (modelType.isNotSpecified() && customModel.isEmpty())
+      error("rimeAIVoice{} requires a modelType or customModel value")
+    if (modelType.isSpecified() && customModel.isNotEmpty())
+      error("rimeAIVoice{} cannot have both modelType and customModel values")
   }
 }

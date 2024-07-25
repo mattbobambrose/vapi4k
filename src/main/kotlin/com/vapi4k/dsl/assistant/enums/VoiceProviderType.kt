@@ -36,7 +36,10 @@ enum class VoiceProviderType(internal val desc: String) {
   OPENAI("openai"),
   PLAYHT("playht"),
   RIMEAI("rimeai"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object VoiceProviderTypeSerializer : KSerializer<VoiceProviderType> {

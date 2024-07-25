@@ -27,7 +27,8 @@ interface NeetsVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: NeetsVoiceIdType
+  var customVoiceId: String
+  var voiceIdType: NeetsVoiceIdType
 }
 
 @AssistantDslMarker

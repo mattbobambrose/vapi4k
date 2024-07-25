@@ -27,7 +27,8 @@ interface LMNTVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: LMNTVoiceIdType
+  var voiceIdType: LMNTVoiceIdType
+  var customVoiceId: String
   var speed: Double
 }
 

@@ -21,17 +21,29 @@ import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.OpenAIVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class OpenAIVoiceDto(
-  override var voiceId: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,
+  var voiceId: String = "",
+  @Transient
+  override var voiceIdType: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,
+  @Transient
+  override var customVoiceId: String = "",
+
   override var speed: Double = -1.0,
 ) : OpenAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.OPENAI
 
+  fun assignEnumOverrides() {
+    voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isNotSpecified())
-      error("openAIVoice{} requires a voiceId value")
+    if (voiceIdType.isNotSpecified() && customVoiceId.isEmpty())
+      error("openAIVoice{} requires a voiceIdType or customVoiceId value")
+    if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
+      error("openAIVoice{} cannot have both voiceIdType and customVoiceId values")
   }
 }

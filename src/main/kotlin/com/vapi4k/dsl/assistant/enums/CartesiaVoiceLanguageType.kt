@@ -35,7 +35,10 @@ enum class CartesiaVoiceLanguageType(val desc: String) {
   PORTUGUESE("pt"),
   CHINESE("zh"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object CartesiaVoiceLanguageSerializer : KSerializer<CartesiaVoiceLanguageType> {

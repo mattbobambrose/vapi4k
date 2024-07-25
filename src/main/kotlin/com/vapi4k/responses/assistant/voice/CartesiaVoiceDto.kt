@@ -22,18 +22,40 @@ import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.CartesiaVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class CartesiaVoiceDto(
-  override var model: CartesiaVoiceModelType = CartesiaVoiceModelType.UNSPECIFIED,
-  override var language: CartesiaVoiceLanguageType = CartesiaVoiceLanguageType.UNSPECIFIED,
+  var model: String = "",
+  @Transient
+  override var modelType: CartesiaVoiceModelType = CartesiaVoiceModelType.UNSPECIFIED,
+  @Transient
+  override var customModel: String = "",
+
+  var language: String = "",
+  @Transient
+  override var languageType: CartesiaVoiceLanguageType = CartesiaVoiceLanguageType.UNSPECIFIED,
+  @Transient
+  override var customLanguage: String = "",
+
   override var voiceId: String = "",
 ) : CartesiaVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.CARTESIA
 
+  fun assignEnumOverrides() {
+    model = customModel.ifEmpty { modelType.desc }
+    language = customLanguage.ifEmpty { languageType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isEmpty())
-      error("cartesiaVoice{} requires a voiceId value")
+    if (modelType.isNotSpecified() && customModel.isEmpty())
+      error("cartesiaVoice{} requires a modelType or customModel value")
+    if (modelType.isSpecified() && customModel.isNotEmpty())
+      error("cartesiaVoice{} cannot have both modelType and customModel values")
+    if (languageType.isNotSpecified() && customLanguage.isEmpty())
+      error("cartesiaVoice{} requires a languageType or customLanguage value")
+    if (languageType.isSpecified() && customLanguage.isNotEmpty())
+      error("cartesiaVoice{} cannot have both languageType and customLanguage values")
   }
 }

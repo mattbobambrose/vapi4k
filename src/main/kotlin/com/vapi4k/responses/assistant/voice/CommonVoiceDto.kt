@@ -37,47 +37,46 @@ private object VoiceSerializer : KSerializer<CommonVoiceDto> {
   ) {
     when (value) {
       is AzureVoiceDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(AzureVoiceDto.serializer(), value)
       }
 
       is CartesiaVoiceDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(CartesiaVoiceDto.serializer(), value)
       }
 
       is DeepgramVoiceDto -> {
-        //value.assignEnumOverrides()
         encoder.encodeSerializableValue(DeepgramVoiceDto.serializer(), value)
       }
 
       is ElevenLabsVoiceDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(ElevenLabsVoiceDto.serializer(), value)
       }
 
       is LMNTVoiceDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(LMNTVoiceDto.serializer(), value)
       }
 
       is NeetsVoiceDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(NeetsVoiceDto.serializer(), value)
       }
 
       is OpenAIVoiceDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(OpenAIVoiceDto.serializer(), value)
       }
 
       is PlayHTVoiceDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(PlayHTVoiceDto.serializer(), value)
       }
 
       is RimeAIVoiceDto -> {
-        //value.assignEnumOverrides()
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(RimeAIVoiceDto.serializer(), value)
       }
 

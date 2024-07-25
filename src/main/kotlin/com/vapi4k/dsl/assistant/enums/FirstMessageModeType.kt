@@ -31,7 +31,10 @@ enum class FirstMessageModeType(internal val desc: String) {
   ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL("assistant-speaks-first-with-model-generated-message"),
   ASSISTANT_WAITS_FOR_USE("assistant-waits-for-user"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
 private object FirstMessageModeTypeSerializer : KSerializer<FirstMessageModeType> {

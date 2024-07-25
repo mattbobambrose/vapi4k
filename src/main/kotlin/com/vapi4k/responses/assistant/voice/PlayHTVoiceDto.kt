@@ -22,10 +22,16 @@ import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.PlayHTVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class PlayHTVoiceDto(
-  override var voiceId: PlayHTVoiceIdType = PlayHTVoiceIdType.UNSPECIFIED,
+  var voiceId: String = "",
+  @Transient
+  override var voiceIdType: PlayHTVoiceIdType = PlayHTVoiceIdType.UNSPECIFIED,
+  @Transient
+  override var customVoiceId: String = "",
+
   override var speed: Double = -1.0,
   override var temperature: Double = -1.0,
   override var emotion: PlayHTVoiceEmotionType = PlayHTVoiceEmotionType.UNSPECIFIED,
@@ -36,8 +42,14 @@ data class PlayHTVoiceDto(
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.PLAYHT
 
+  fun assignEnumOverrides() {
+    voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isNotSpecified())
-      error("playHTVoice{} requires a voiceId value")
+    if (voiceIdType.isNotSpecified() && customVoiceId.isEmpty())
+      error("playHTVoice{} requires a voiceIdType or customVoiceId value")
+    if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
+      error("playHTVoice{} cannot have both voiceIdType and customVoiceId values")
   }
 }

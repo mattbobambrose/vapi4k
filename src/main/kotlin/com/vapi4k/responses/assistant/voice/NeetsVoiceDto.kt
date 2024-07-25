@@ -21,16 +21,27 @@ import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.NeetsVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class NeetsVoiceDto(
-  override var voiceId: NeetsVoiceIdType = NeetsVoiceIdType.UNSPECIFIED,
+  var voiceId: String = "",
+  @Transient
+  override var voiceIdType: NeetsVoiceIdType = NeetsVoiceIdType.UNSPECIFIED,
+  @Transient
+  override var customVoiceId: String = "",
 ) : NeetsVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.NEETS
 
+  fun assignEnumOverrides() {
+    voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isNotSpecified())
-      error("neetsVoice{} requires a voiceId value")
+    if (voiceIdType.isNotSpecified() && customVoiceId.isEmpty())
+      error("neetsVoice{} requires a voiceIdType or customVoiceId value")
+    if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
+      error("neetsVoice{} cannot have both voiceIdType and customVoiceId values")
   }
 }

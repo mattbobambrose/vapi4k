@@ -17,15 +17,9 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = AzureVoiceIdSerializer::class)
+@Serializable
 enum class AzureVoiceIdType(val desc: String) {
   ANDREW("andrew"),
   BRIAN("brian"),
@@ -35,15 +29,4 @@ enum class AzureVoiceIdType(val desc: String) {
 
   fun isSpecified() = this != UNSPECIFIED
   fun isNotSpecified() = this == UNSPECIFIED
-}
-
-private object AzureVoiceIdSerializer : KSerializer<AzureVoiceIdType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("AzureVoiceIdType", STRING)
-
-  override fun serialize(
-    encoder: Encoder,
-    value: AzureVoiceIdType,
-  ) = encoder.encodeString(value.desc)
-
-  override fun deserialize(decoder: Decoder) = AzureVoiceIdType.entries.first { it.desc == decoder.decodeString() }
 }

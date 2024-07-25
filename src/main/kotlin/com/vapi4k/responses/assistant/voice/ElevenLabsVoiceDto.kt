@@ -22,23 +22,45 @@ import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.ElevenLabsVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class ElevenLabsVoiceDto(
-  override var voiceId: ElevenLabsVoiceIdType = ElevenLabsVoiceIdType.UNSPECIFIED,
+  var voiceId: String = "",
+  @Transient
+  override var voiceIdType: ElevenLabsVoiceIdType = ElevenLabsVoiceIdType.UNSPECIFIED,
+  @Transient
+  override var customVoiceId: String = "",
+
+  var model: String = "",
+  @Transient
+  override var modelType: ElevenLabsVoiceModelType = ElevenLabsVoiceModelType.UNSPECIFIED,
+  @Transient
+  override var customModel: String = "",
+
   override var stability: Double = -1.0,
   override var similarityBoost: Double = -1.0,
   override var style: Double = -1.0,
   override var useSpeakerBoost: Boolean? = null,
   override var optimizeStreaming: Double = -1.0,
   override var enableSsmlParsing: Boolean? = null,
-  override var model: ElevenLabsVoiceModelType = ElevenLabsVoiceModelType.UNSPECIFIED,
 ) : ElevenLabsVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 
+  fun assignEnumOverrides() {
+    voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
+    model = customModel.ifEmpty { modelType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isNotSpecified())
-      error("elevenLabsVoice{} requires a voiceId value")
+    if (voiceIdType.isNotSpecified() && customVoiceId.isEmpty())
+      error("elevenLabsVoice{} requires a voiceIdType or customVoiceId value")
+    if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
+      error("elevenLabsVoice{} cannot have both voiceIdType and customVoiceId values")
+    if (modelType.isNotSpecified() && customModel.isEmpty())
+      error("elevenLabsVoice{} requires a modelType or customModel value")
+    if (modelType.isSpecified() && customModel.isNotEmpty())
+      error("elevenLabsVoice{} cannot have both modelType and customModel values")
   }
 }

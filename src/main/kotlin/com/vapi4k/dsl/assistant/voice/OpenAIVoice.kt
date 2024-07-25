@@ -27,7 +27,8 @@ interface OpenAIVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: OpenAIVoiceIdType
+  var voiceIdType: OpenAIVoiceIdType
+  var customVoiceId: String
   var speed: Double
 }
 

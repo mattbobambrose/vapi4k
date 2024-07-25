@@ -21,17 +21,29 @@ import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.AzureVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class AzureVoiceDto(
-  override var voiceId: AzureVoiceIdType = AzureVoiceIdType.UNSPECIFIED,
+  var voiceId: String = "",
+  @Transient
+  override var voiceIdType: AzureVoiceIdType = AzureVoiceIdType.UNSPECIFIED,
+  @Transient
+  override var customVoiceId: String = "",
+
   override var speed: Double = -1.0,
 ) : AzureVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.LMNT
 
+  fun assignEnumOverrides() {
+    voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isNotSpecified())
-      error("azureVoice{} requires a voiceId value")
+    if (voiceIdType.isNotSpecified() && customVoiceId.isEmpty())
+      error("azureVoice{} requires a voiceIdType or customVoiceId value")
+    if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
+      error("azureVoice{} cannot have both voiceIdType and customVoiceId values")
   }
 }

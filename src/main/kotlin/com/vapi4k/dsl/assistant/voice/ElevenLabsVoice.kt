@@ -28,14 +28,16 @@ interface ElevenLabsVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: ElevenLabsVoiceIdType
+  var voiceIdType: ElevenLabsVoiceIdType
+  var customVoiceId: String
+  var modelType: ElevenLabsVoiceModelType
+  var customModel: String
   var stability: Double
   var similarityBoost: Double
   var style: Double
   var useSpeakerBoost: Boolean?
   var optimizeStreaming: Double
   var enableSsmlParsing: Boolean?
-  var model: ElevenLabsVoiceModelType
 }
 
 @AssistantDslMarker

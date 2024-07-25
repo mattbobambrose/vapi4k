@@ -27,7 +27,8 @@ interface AzureVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: AzureVoiceIdType
+  var voiceIdType: AzureVoiceIdType
+  var customVoiceId: String
   var speed: Double
 }
 

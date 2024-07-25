@@ -21,18 +21,29 @@ import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.LMNTVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class LMNTVoiceDto(
-  override var voiceId: LMNTVoiceIdType = LMNTVoiceIdType.UNSPECIFIED,
+  var voiceId: String = "",
+  @Transient
+  override var voiceIdType: LMNTVoiceIdType = LMNTVoiceIdType.UNSPECIFIED,
+  @Transient
+  override var customVoiceId: String = "",
+
   override var speed: Double = -1.0,
 ) : LMNTVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.LMNT
 
+  fun assignEnumOverrides() {
+    voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isNotSpecified()) {
-      error("lmntVoice{} requires a voiceId value")
-    }
+    if (voiceIdType.isNotSpecified() && customVoiceId.isEmpty())
+      error("lmntVoice{} requires a voiceIdType or customVoiceId value")
+    if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
+      error("lmntVoice{} cannot have both voiceIdType and customVoiceId values")
   }
 }

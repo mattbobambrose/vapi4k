@@ -27,7 +27,8 @@ interface PlayHTVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: PlayHTVoiceIdType
+  var voiceIdType: PlayHTVoiceIdType
+  var customVoiceId: String
   var speed: Double
   var temperature: Double
   var emotion: PlayHTVoiceEmotionType
