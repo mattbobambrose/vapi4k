@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.responses.assistant.model.CommonModelDto
-import com.vapi4k.responses.assistant.transcriber.AbstractTranscriberDto
+import com.vapi4k.responses.assistant.transcriber.CommonTranscriberDto
 import com.vapi4k.responses.assistant.voice.CommonVoiceDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -71,7 +71,7 @@ data class AssistantDto(
   val endCallPhrases: MutableSet<String> = mutableSetOf(),
 
   @SerialName("transcriber")
-  var transcriberDto: AbstractTranscriberDto? = null,
+  var transcriberDto: CommonTranscriberDto? = null,
 
   @SerialName("model")
   var modelDto: CommonModelDto? = null,

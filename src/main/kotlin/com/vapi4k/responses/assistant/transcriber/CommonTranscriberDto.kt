@@ -19,25 +19,39 @@ package com.vapi4k.responses.assistant.transcriber
 import com.vapi4k.dsl.assistant.enums.TranscriberType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+@Serializable
+abstract class AbstractTranscriberDto {
+  var model: String = ""
+
+  @Transient
+  var customModel: String = ""
+
+  var language: String = ""
+
+  @Transient
+  var customLanguage: String = ""
+}
+
 @Serializable(with = TranscriberSerializer::class)
-interface AbstractTranscriberDto {
+interface CommonTranscriberDto {
   val provider: TranscriberType
 
   fun assignEnumOverrides()
   fun verifyValues()
 }
 
-private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
-  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractTranscriberDto")
+private object TranscriberSerializer : KSerializer<CommonTranscriberDto> {
+  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("CommonTranscriberDto")
 
   override fun serialize(
     encoder: Encoder,
-    value: AbstractTranscriberDto,
+    value: CommonTranscriberDto,
   ) {
     when (value) {
       is DeepgramTranscriberDto -> {
@@ -59,7 +73,7 @@ private object TranscriberSerializer : KSerializer<AbstractTranscriberDto> {
     }
   }
 
-  override fun deserialize(decoder: Decoder): AbstractTranscriberDto {
+  override fun deserialize(decoder: Decoder): CommonTranscriberDto {
     throw NotImplementedError("Deserialization is not supported")
   }
 }

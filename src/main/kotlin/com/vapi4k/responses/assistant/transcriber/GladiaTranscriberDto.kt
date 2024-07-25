@@ -26,23 +26,15 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class GladiaTranscriberDto(
-  var model: String = "",
   @Transient
   override var transcriberModel: GladiaModelType = GladiaModelType.UNSPECIFIED,
   @Transient
-  override var customModel: String = "",
-
-  var language: String = "",
-  @Transient
   override var transcriberLanguage: GladiaLanguageType = GladiaLanguageType.UNSPECIFIED,
-  @Transient
-  override var customLanguage: String = "",
-
   override var languageBehavior: String = "",
   override var transcriptionHint: String = "",
   override var prosody: Boolean? = null,
   override var audioEnhancer: Boolean? = null,
-) : GladiaTranscriberProperties, AbstractTranscriberDto {
+) : AbstractTranscriberDto(), GladiaTranscriberProperties, CommonTranscriberDto {
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.GLADIA
 
