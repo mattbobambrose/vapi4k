@@ -44,7 +44,7 @@ data class MemberImpl(
     memberChecker.check("Member already has an assistant assigned")
     return AssistantImpl(
       members.squad.request,
-      members.squad.sessionId,
+      members.squad.sessionCacheId,
       dto.assistant,
       dto.assistantOverrides
     ).apply(block)

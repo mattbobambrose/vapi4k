@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.destination.NumberDestination
 import com.vapi4k.dsl.destination.NumberDestinationImpl
 import com.vapi4k.dsl.destination.SipDestination
@@ -45,7 +45,7 @@ object AssistantDsl {
     block: Assistant.() -> Unit,
   ) =
     AssistantRequestResponse().apply {
-      AssistantImpl(request, request.messageCallId.toSessionId(), assistantDto, assistantOverridesDto)
+      AssistantImpl(request, request.messageCallId.toSessionCacheId(), assistantDto, assistantOverridesDto)
         .apply(block)
         .apply {
           assistantDto.updated = true
@@ -58,7 +58,7 @@ object AssistantDsl {
     block: AssistantId.() -> Unit,
   ) =
     AssistantRequestResponse().apply {
-      AssistantIdImpl(request, request.messageCallId.toSessionId(), this).apply(block)
+      AssistantIdImpl(request, request.messageCallId.toSessionCacheId(), this).apply(block)
     }
 
   fun squad(
@@ -66,7 +66,7 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestResponse().apply {
-      SquadImpl(request, request.messageCallId.toSessionId(), squadDto).apply(block)
+      SquadImpl(request, request.messageCallId.toSessionCacheId(), squadDto).apply(block)
     }
 
   fun squadId(

@@ -18,18 +18,19 @@ package com.vapi4k.dsl.api
 
 import com.typesafe.config.ConfigFactory
 import com.vapi4k.common.Constants.VAPI_API_URL
-import com.vapi4k.common.SessionId.Companion.UNSPECIFIED_SESSION_ID
-import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.common.SessionCacheId.Companion.UNSPECIFIED_SESSION_CACHE_ID
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.api.enums.ApiObjectType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolCache.swapCacheKeys
+import com.vapi4k.dtos.api.CallRequestDto
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.id
 import com.vapi4k.utils.JsonUtils.toJsonString
 import com.vapi4k.utils.Utils.errorMsg
-import com.vapi4k.utils.Utils.nextCacheId
+import com.vapi4k.utils.Utils.nextSessionCacheId
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
@@ -49,7 +50,7 @@ class VapiApi private constructor(
   val config: ApplicationConfig,
   private val authString: String,
 ) {
-  fun phone(block: Phone.() -> com.vapi4k.dtos.api.CallRequestDto): HttpResponse {
+  fun phone(block: Phone.() -> CallRequestDto): HttpResponse {
     val phone = Phone()
     val httpResponse =
       runBlocking {
@@ -74,7 +75,7 @@ class VapiApi private constructor(
     val hasId = jsonElement.jsonObject.containsKey("id")
     if (hasId) {
       logger.info { "Call ID: ${jsonElement.id}" }
-      swapCacheKeys(phone.cacheId, jsonElement.id.toSessionId())
+      swapCacheKeys(phone.cacheId, jsonElement.id.toSessionCacheId())
     } else {
       logger.warn { "No call ID found in response" }
     }
@@ -82,7 +83,7 @@ class VapiApi private constructor(
     return httpResponse
   }
 
-  internal fun test(block: Phone.() -> com.vapi4k.dtos.api.CallRequestDto) =
+  internal fun test(block: Phone.() -> CallRequestDto) =
     runBlocking {
       Phone().runCatching(block)
         .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
@@ -90,7 +91,7 @@ class VapiApi private constructor(
         .getOrThrow()
     }
 
-  fun save(block: Save.() -> com.vapi4k.dtos.api.CallRequestDto) =
+  fun save(block: Save.() -> CallRequestDto) =
     runBlocking {
       val callRequest =
         Save().runCatching(block)
@@ -153,13 +154,13 @@ class VapiApi private constructor(
 
 @AssistantDslMarker
 class Phone {
-  internal val cacheId = nextCacheId()
-  fun call(block: Call.() -> Unit): com.vapi4k.dtos.api.CallRequestDto = com.vapi4k.dtos.api.CallRequestDto()
+  internal val cacheId = nextSessionCacheId()
+  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto()
     .also { CallImpl(cacheId, it).apply(block) }
 }
 
 @AssistantDslMarker
 class Save {
-  fun call(block: Call.() -> Unit): com.vapi4k.dtos.api.CallRequestDto =
-    com.vapi4k.dtos.api.CallRequestDto().also { CallImpl(UNSPECIFIED_SESSION_ID, it).apply(block) }
+  fun call(block: Call.() -> Unit): CallRequestDto =
+    CallRequestDto().also { CallImpl(UNSPECIFIED_SESSION_CACHE_ID, it).apply(block) }
 }

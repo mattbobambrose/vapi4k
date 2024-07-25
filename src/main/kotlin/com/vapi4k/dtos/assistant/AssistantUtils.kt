@@ -16,7 +16,7 @@
 
 package com.vapi4k.dtos.assistant
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnthropicModelImpl
 import com.vapi4k.dsl.model.AnyscaleModel
@@ -123,140 +123,140 @@ fun talkscriberTranscriber(
 // Models
 fun anyscaleModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: AnyscaleModel.() -> Unit,
 ): AnyscaleModel {
   modelChecker.check("anyscaleModel{} already called")
   val modelDto = AnyscaleModelDto().also { dto.modelDto = it }
-  return AnyscaleModelImpl(request, sessionId, modelDto)
+  return AnyscaleModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun anthropicModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: AnthropicModel.() -> Unit,
 ): AnthropicModel {
   modelChecker.check("anthropicModel{} already called")
   val modelDto = AnthropicModelDto().also { dto.modelDto = it }
-  return AnthropicModelImpl(request, sessionId, modelDto)
+  return AnthropicModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun customLLMModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: CustomLLMModel.() -> Unit,
 ): CustomLLMModel {
   modelChecker.check("customLLMModel{} already called")
   val modelDto = CustomLLMModelDto().also { dto.modelDto = it }
-  return CustomLLMModelImpl(request, sessionId, modelDto)
+  return CustomLLMModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun deepInfraModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: DeepInfraModel.() -> Unit,
 ): DeepInfraModel {
   modelChecker.check("deepInfraModel{} already called")
   val modelDto = DeepInfraModelDto().also { dto.modelDto = it }
-  return DeepInfraModelImpl(request, sessionId, modelDto)
+  return DeepInfraModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun groqModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: GroqModel.() -> Unit,
 ): GroqModel {
   modelChecker.check("groqModel{} already called")
   val modelDto = GroqModelDto().also { dto.modelDto = it }
-  return GroqModelImpl(request, sessionId, modelDto)
+  return GroqModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun openAIModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: OpenAIModel.() -> Unit,
 ): OpenAIModel {
   modelChecker.check("openAIModel{} already called")
   val modelDto = OpenAIModelDto().also { dto.modelDto = it }
-  return OpenAIModelImpl(request, sessionId, modelDto)
+  return OpenAIModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun openRouterModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: OpenRouterModel.() -> Unit,
 ): OpenRouterModel {
   modelChecker.check("openRouterModel{} already called")
   val modelDto = OpenRouterModelDto().also { dto.modelDto = it }
-  return OpenRouterModelImpl(request, sessionId, modelDto)
+  return OpenRouterModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun perplexityAIModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: PerplexityAIModel.() -> Unit,
 ): PerplexityAIModel {
   modelChecker.check("perplexityAIModel{} already called")
   val modelDto = PerplexityAIModelDto().also { dto.modelDto = it }
-  return PerplexityAIModelImpl(request, sessionId, modelDto)
+  return PerplexityAIModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun togetherAIModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: TogetherAIModel.() -> Unit,
 ): TogetherAIModel {
   modelChecker.check("togetherAIModel{} already called")
   val modelDto = TogetherAIModelDto().also { dto.modelDto = it }
-  return TogetherAIModelImpl(request, sessionId, modelDto)
+  return TogetherAIModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 fun vapiModel(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AssistantBridge,
   modelChecker: DuplicateChecker,
   block: VapiModel.() -> Unit,
 ): VapiModel {
   modelChecker.check("vapiModel{} already called")
   val modelDto = VapiModelDto().also { dto.modelDto = it }
-  return VapiModelImpl(request, sessionId, modelDto)
+  return VapiModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }

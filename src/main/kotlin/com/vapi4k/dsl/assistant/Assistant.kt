@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
@@ -68,6 +68,7 @@ import com.vapi4k.dtos.assistant.talkscriberTranscriber
 import com.vapi4k.dtos.assistant.togetherAIModel
 import com.vapi4k.dtos.assistant.vapiModel
 import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.Utils.nextAssistantCacheId
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {
@@ -133,13 +134,14 @@ interface Assistant : AssistantProperties {
 
 data class AssistantImpl internal constructor(
   internal val request: JsonElement,
-  private val sessionId: SessionId,
-  internal val assistantDto: AssistantDto,
-  internal val assistantOverridesDto: AssistantOverridesDto,
+  private val sessionCacheId: SessionCacheId,
+  private val assistantDto: AssistantDto,
+  private val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantProperties by assistantDto, Assistant {
   private val transcriberChecker = DuplicateChecker()
   private val modelChecker = DuplicateChecker()
   private val voiceChecker = DuplicateChecker()
+  private val assistantId = nextAssistantCacheId()
 
   // Transcribers
   override fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber =
@@ -154,34 +156,34 @@ data class AssistantImpl internal constructor(
 
   // Models
   override fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel =
-    anyscaleModel(request, sessionId, assistantDto, modelChecker, block)
+    anyscaleModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel =
-    anthropicModel(request, sessionId, assistantDto, modelChecker, block)
+    anthropicModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel =
-    customLLMModel(request, sessionId, assistantDto, modelChecker, block)
+    customLLMModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel =
-    deepInfraModel(request, sessionId, assistantDto, modelChecker, block)
+    deepInfraModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun groqModel(block: GroqModel.() -> Unit): GroqModel =
-    groqModel(request, sessionId, assistantDto, modelChecker, block)
+    groqModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel =
-    openAIModel(request, sessionId, assistantDto, modelChecker, block)
+    openAIModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel =
-    openRouterModel(request, sessionId, assistantDto, modelChecker, block)
+    openRouterModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel =
-    perplexityAIModel(request, sessionId, assistantDto, modelChecker, block)
+    perplexityAIModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel =
-    togetherAIModel(request, sessionId, assistantDto, modelChecker, block)
+    togetherAIModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
   override fun vapiModel(block: VapiModel.() -> Unit): VapiModel =
-    vapiModel(request, sessionId, assistantDto, modelChecker, block)
+    vapiModel(request, sessionCacheId, assistantDto, modelChecker, block)
 
 
   // Voices
@@ -215,7 +217,7 @@ data class AssistantImpl internal constructor(
 
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(request, sessionId, assistantOverridesDto).apply(block)
+    AssistantOverridesImpl(request, sessionCacheId, assistantOverridesDto).apply(block)
 
   companion object {
     internal lateinit var config: Vapi4kConfig

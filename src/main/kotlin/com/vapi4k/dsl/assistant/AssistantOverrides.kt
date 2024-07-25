@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnyscaleModel
 import com.vapi4k.dsl.model.CustomLLMModel
@@ -63,6 +63,7 @@ import com.vapi4k.dtos.assistant.talkscriberTranscriber
 import com.vapi4k.dtos.assistant.togetherAIModel
 import com.vapi4k.dtos.assistant.vapiModel
 import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.Utils.nextAssistantCacheId
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesProperties {
@@ -122,12 +123,13 @@ interface AssistantOverrides : AssistantOverridesProperties {
 
 data class AssistantOverridesImpl internal constructor(
   internal val request: JsonElement,
-  private val sessionId: SessionId,
+  private val sessionCacheId: SessionCacheId,
   private val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantOverridesProperties by assistantOverridesDto, AssistantOverrides {
-  internal val transcriberChecker = DuplicateChecker()
-  internal val modelChecker = DuplicateChecker()
-  internal val voiceChecker = DuplicateChecker()
+  private val transcriberChecker = DuplicateChecker()
+  private val modelChecker = DuplicateChecker()
+  private val voiceChecker = DuplicateChecker()
+  private val assistantId = nextAssistantCacheId()
 
   // Transcribers
   override fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber =
@@ -142,34 +144,34 @@ data class AssistantOverridesImpl internal constructor(
 
   // Models
   override fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel =
-    anyscaleModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    anyscaleModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel =
-    anthropicModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    anthropicModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel =
-    customLLMModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    customLLMModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel =
-    deepInfraModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    deepInfraModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun groqModel(block: GroqModel.() -> Unit): GroqModel =
-    groqModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    groqModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel =
-    openAIModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    openAIModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel =
-    openRouterModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    openRouterModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel =
-    perplexityAIModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    perplexityAIModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel =
-    togetherAIModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    togetherAIModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   override fun vapiModel(block: VapiModel.() -> Unit): VapiModel =
-    vapiModel(request, sessionId, assistantOverridesDto, modelChecker, block)
+    vapiModel(request, sessionCacheId, assistantOverridesDto, modelChecker, block)
 
   // Voices
   override fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice =

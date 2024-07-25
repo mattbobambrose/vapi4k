@@ -17,10 +17,11 @@
 package com.vapi4k.dsl.api
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dtos.api.CustomerDto
 
 interface CustomerProperties {
   var number: String
 }
 
 @AssistantDslMarker
-data class Customer(private val dto: com.vapi4k.dtos.api.CustomerDto) : CustomerProperties by dto
+data class Customer(private val dto: CustomerDto) : CustomerProperties by dto

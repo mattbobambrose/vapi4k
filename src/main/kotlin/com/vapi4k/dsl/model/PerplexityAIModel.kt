@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
@@ -46,6 +46,7 @@ interface PerplexityAIModel : PerplexityAIModelProperties {
 
 class PerplexityAIModelImpl(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: PerplexityAIModelDto,
-) : PerplexityAIModelProperties by dto, PerplexityAIModel, com.vapi4k.dsl.model.AbstractModel(request, sessionId, dto)
+) : PerplexityAIModelProperties by dto, PerplexityAIModel,
+  com.vapi4k.dsl.model.AbstractModel(request, sessionCacheId, dto)

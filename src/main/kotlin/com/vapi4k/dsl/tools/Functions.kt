@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.ModelMessageProperties
 import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
@@ -35,10 +35,10 @@ data class FunctionsImpl internal constructor(internal val model: ModelMessagePr
       verifyObject(true, obj)
       populateFunctionDto(obj, functionDto)
       val cacheId =
-        if (model.sessionId.isNotSpecified())
-          model.sessionId
+        if (model.sessionCacheId.isNotSpecified())
+          model.sessionCacheId
         else
-          model.messageCallId.toSessionId()
+          model.messageCallId.toSessionCacheId()
       addFunctionToCache(cacheId, obj)
     }.also { func ->
       if (model.functionDtos.any { func.name == it.name }) {

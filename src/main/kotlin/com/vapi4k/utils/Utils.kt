@@ -16,10 +16,14 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.common.AssistantCacheId.Companion.toAssistantCacheId
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 
 object Utils {
   val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
 
-  fun nextCacheId() = "Outbound-${System.currentTimeMillis()}".toSessionId()
+  fun nextSessionCacheId() = "Outbound-${System.currentTimeMillis()}".toSessionCacheId()
+  fun nextAssistantCacheId() = (assistantCounter++).toString().padStart(3, '0').toAssistantCacheId()
+
+  private var assistantCounter = 1
 }

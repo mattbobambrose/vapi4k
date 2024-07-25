@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.model.enums.MessageRoleType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.FunctionsImpl
@@ -31,26 +31,26 @@ import kotlinx.serialization.json.JsonElement
 
 abstract class AbstractModel(
   internal val request: JsonElement,
-  override val sessionId: SessionId,
+  override val sessionCacheId: SessionCacheId,
   private val dto: CommonModelDto,
-) : com.vapi4k.dsl.model.ModelMessageProperties {
+) : ModelMessageProperties {
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
   override val functionDtos get() = dto.functions
   override val messageCallId get() = request.messageCallId
 
-  var systemMessage by com.vapi4k.dsl.model.ModelMessageDelegate(MessageRoleType.SYSTEM)
-  var assistantMessage by com.vapi4k.dsl.model.ModelMessageDelegate(MessageRoleType.ASSISTANT)
-  var functionMessage by com.vapi4k.dsl.model.ModelMessageDelegate(MessageRoleType.FUNCTION)
-  var toolMessage by com.vapi4k.dsl.model.ModelMessageDelegate(MessageRoleType.TOOL)
-  var userMessage by com.vapi4k.dsl.model.ModelMessageDelegate(MessageRoleType.USER)
+  var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
+  var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)
+  var functionMessage by ModelMessageDelegate(MessageRoleType.FUNCTION)
+  var toolMessage by ModelMessageDelegate(MessageRoleType.TOOL)
+  var userMessage by ModelMessageDelegate(MessageRoleType.USER)
 
   fun tools(block: Tools.() -> Unit): Tools = ToolsImpl(this).apply(block)
   fun functions(block: Functions.() -> Unit): Functions = FunctionsImpl(this).apply(block)
 
-  fun knowledgeBase(block: com.vapi4k.dsl.model.KnowledgeBase.() -> Unit): com.vapi4k.dsl.model.KnowledgeBase {
+  fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {
     val kbDto = KnowledgeBaseDto().also { dto.knowledgeBaseDto = it }
-    return com.vapi4k.dsl.model.KnowledgeBase(request, kbDto)
+    return KnowledgeBase(request, kbDto)
       .apply(block)
       .apply {
         if (kbDto.fileIds.isEmpty())

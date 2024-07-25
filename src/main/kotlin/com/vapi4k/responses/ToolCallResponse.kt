@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.tools.ToolCache.getToolCallFromCache
 import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
@@ -45,7 +45,7 @@ data class ToolCallResponse(private var messageResponse: MessageResponse = Messa
               response.also { toolCallResponse ->
                 toolCallResponse.messageResponse.also { messageResponse ->
                   messageResponse.results += ToolCallResult().also { toolCallResult ->
-                    val cacheKey = request.messageCallId.toSessionId()
+                    val cacheKey = request.messageCallId.toSessionCacheId()
                     val funcName = toolCall.toolCallName
                     val args = toolCall.toolCallArguments
                     toolCallResult.toolCallId = toolCall.toolCallId

@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
 import com.vapi4k.dsl.tools.ToolCache.FunctionDetails.Companion.toFunctionDetails
 import com.vapi4k.plugin.Vapi4kLogger.logger
@@ -37,19 +37,19 @@ import kotlin.time.DurationUnit.MILLISECONDS
 import kotlin.time.DurationUnit.SECONDS
 
 internal object ToolCache {
-  private val toolCallCache = ConcurrentHashMap<SessionId, FunctionInfo>()
-  private val functionCache = ConcurrentHashMap<SessionId, FunctionInfo>()
+  private val toolCallCache = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
+  private val functionCache = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
 
   private var toolCallCacheIsActive = false
   private var functionCacheIsActive = false
 
   val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
 
-  fun getToolCallFromCache(sessionId: SessionId): FunctionInfo =
-    toolCallCache[sessionId] ?: error("Tool cache key not found: $sessionId")
+  fun getToolCallFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
+    toolCallCache[sessionCacheId] ?: error("Tool cache key not found: $sessionCacheId")
 
-  fun getFunctionFromCache(sessionId: SessionId): FunctionInfo =
-    functionCache[sessionId] ?: error("Function cache key not found: $sessionId")
+  fun getFunctionFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
+    functionCache[sessionCacheId] ?: error("Function cache key not found: $sessionCacheId")
 
   fun resetCaches() {
     toolCallCache.clear()
@@ -59,7 +59,7 @@ internal object ToolCache {
   }
 
   fun addToolCallToCache(
-    messageCallId: SessionId,
+    messageCallId: SessionCacheId,
     obj: Any,
   ) {
     toolCallCacheIsActive = true
@@ -67,7 +67,7 @@ internal object ToolCache {
   }
 
   fun addFunctionToCache(
-    messageCallId: SessionId,
+    messageCallId: SessionCacheId,
     obj: Any,
   ) {
     functionCacheIsActive = true
@@ -75,7 +75,7 @@ internal object ToolCache {
   }
 
   fun removeToolCallFromCache(
-    messageCallId: SessionId,
+    messageCallId: SessionCacheId,
     block: (FunctionInfo) -> Unit,
   ): FunctionInfo? =
     toolCallCache.remove(messageCallId)
@@ -86,7 +86,7 @@ internal object ToolCache {
       }
 
   fun removeFunctionFromCache(
-    messageCallId: SessionId,
+    messageCallId: SessionCacheId,
     block: (FunctionInfo) -> Unit,
   ): FunctionInfo? =
     functionCache.remove(messageCallId)
@@ -97,8 +97,8 @@ internal object ToolCache {
       }
 
   fun swapCacheKeys(
-    oldKey: SessionId,
-    newKey: SessionId,
+    oldKey: SessionCacheId,
+    newKey: SessionCacheId,
   ) {
     logger.info { "Swapping cache keys: $oldKey -> $newKey" }
     toolCallCache.remove(oldKey)?.also { toolCallCache[newKey] = it }
@@ -106,9 +106,9 @@ internal object ToolCache {
   }
 
   private fun addToCache(
-    cache: ConcurrentHashMap<SessionId, FunctionInfo>,
+    cache: ConcurrentHashMap<SessionCacheId, FunctionInfo>,
     prefix: String,
-    messageCallId: SessionId,
+    messageCallId: SessionCacheId,
     obj: Any,
   ) {
     val method = obj.toolMethod

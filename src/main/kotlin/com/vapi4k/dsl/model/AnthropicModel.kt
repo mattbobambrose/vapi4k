@@ -32,7 +32,7 @@ package com.vapi4k.dsl.model
  *
  */
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.enums.AnthropicModelType
 import com.vapi4k.dsl.tools.Functions
@@ -64,6 +64,6 @@ interface AnthropicModel : AnthropicModelProperties {
 
 class AnthropicModelImpl(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: AnthropicModelDto,
-) : AnthropicModelProperties by dto, AnthropicModel, com.vapi4k.dsl.model.AbstractModel(request, sessionId, dto)
+) : AnthropicModelProperties by dto, AnthropicModel, com.vapi4k.dsl.model.AbstractModel(request, sessionCacheId, dto)

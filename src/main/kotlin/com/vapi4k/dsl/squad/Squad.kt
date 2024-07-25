@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.squad
 
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantOverrides
 import com.vapi4k.dsl.assistant.AssistantOverridesImpl
@@ -36,11 +36,11 @@ interface Squad : SquadProperties {
 
 data class SquadImpl internal constructor(
   internal val request: JsonElement,
-  internal val sessionId: SessionId,
+  internal val sessionCacheId: SessionCacheId,
   internal val dto: SquadDto,
 ) : SquadProperties by dto, Squad {
   override fun members(block: Members.() -> Unit): Members = MembersImpl(this).apply(block)
 
   override fun memberOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(request, sessionId, dto.membersOverrides).apply(block)
+    AssistantOverridesImpl(request, sessionCacheId, dto.membersOverrides).apply(block)
 }

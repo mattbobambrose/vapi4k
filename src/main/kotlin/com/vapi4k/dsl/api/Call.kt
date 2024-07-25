@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.api
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantId
@@ -28,6 +28,7 @@ import com.vapi4k.dsl.squad.Squad
 import com.vapi4k.dsl.squad.SquadId
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
+import com.vapi4k.dtos.api.CallRequestDto
 import com.vapi4k.utils.DuplicateChecker
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 
@@ -46,21 +47,21 @@ interface Call : CallProperties {
 }
 
 data class CallImpl internal constructor(
-  private val sessionId: SessionId,
-  internal val dto: com.vapi4k.dtos.api.CallRequestDto,
+  private val sessionCacheId: SessionCacheId,
+  internal val dto: CallRequestDto,
 ) : CallProperties by dto, Call {
   private val assistantChecker = DuplicateChecker()
   private val overridesChecker = DuplicateChecker()
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     assistantChecker.check("assistantId{} already called")
-    return AssistantIdImpl(emptyJsonElement(), sessionId, dto).apply(block)
+    return AssistantIdImpl(emptyJsonElement(), sessionCacheId, dto).apply(block)
   }
 
   override fun assistant(block: Assistant.() -> Unit): Assistant {
     assistantChecker.check("assistant{} already called")
     return with(dto) {
-      AssistantImpl(emptyJsonElement(), sessionId, assistantDto, assistantOverridesDto)
+      AssistantImpl(emptyJsonElement(), sessionCacheId, assistantDto, assistantOverridesDto)
         .apply(block)
         .apply {
           assistantDto.updated = true
@@ -78,7 +79,7 @@ data class CallImpl internal constructor(
   override fun squad(block: Squad.() -> Unit): Squad {
     assistantChecker.check("squad{} already called")
     return with(dto) {
-      SquadImpl(emptyJsonElement(), sessionId, squadDto).apply(block)
+      SquadImpl(emptyJsonElement(), sessionCacheId, squadDto).apply(block)
     }
   }
 
@@ -86,7 +87,7 @@ data class CallImpl internal constructor(
     overridesChecker.check("assistantOverrides{} already called")
     return if (dto.assistantDto.updated || dto.assistantId.isNotEmpty())
       with(dto) {
-        AssistantOverridesImpl(emptyJsonElement(), sessionId, assistantOverridesDto).apply(block)
+        AssistantOverridesImpl(emptyJsonElement(), sessionCacheId, assistantOverridesDto).apply(block)
       }
     else
       error("assistant{} or assistantId{} must be called before assistantOverrides{}")

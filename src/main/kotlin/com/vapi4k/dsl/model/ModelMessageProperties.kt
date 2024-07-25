@@ -16,14 +16,14 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.model.enums.MessageRoleType
 import com.vapi4k.dtos.RoleMessage
 import com.vapi4k.dtos.model.FunctionDto
 import com.vapi4k.dtos.model.ToolDto
 
 interface ModelMessageProperties {
-  val sessionId: SessionId
+  val sessionCacheId: SessionCacheId
   val messageCallId: String
   val toolDtos: MutableList<ToolDto>
   val functionDtos: MutableList<FunctionDto>

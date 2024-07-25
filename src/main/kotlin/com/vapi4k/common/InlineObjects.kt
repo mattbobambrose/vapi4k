@@ -16,18 +16,34 @@
 
 package com.vapi4k.common
 
+import com.vapi4k.common.SessionCacheId.Companion.UNSPECIFIED_VALUE
+
 
 @JvmInline
-value class SessionId private constructor(val value: String) {
+value class SessionCacheId private constructor(val value: String) {
 
   fun isNotSpecified() = value == UNSPECIFIED_VALUE
 
   override fun toString() = value
 
   companion object {
-    private const val UNSPECIFIED_VALUE = "_unspecified_"
-    val UNSPECIFIED_SESSION_ID = SessionId(UNSPECIFIED_VALUE)
+    const val UNSPECIFIED_VALUE = "_unspecified_"
+    val UNSPECIFIED_SESSION_CACHE_ID = SessionCacheId(UNSPECIFIED_VALUE)
 
-    fun String.toSessionId(): SessionId = SessionId(this)
+    fun String.toSessionCacheId() = SessionCacheId(this)
+  }
+}
+
+@JvmInline
+value class AssistantCacheId private constructor(val value: String) {
+
+  fun isNotSpecified() = value == UNSPECIFIED_VALUE
+
+  override fun toString() = value
+
+  companion object {
+    val UNSPECIFIED_ASSISTANT_ID = AssistantCacheId(UNSPECIFIED_VALUE)
+
+    fun String.toAssistantCacheId() = AssistantCacheId(this)
   }
 }

@@ -44,7 +44,7 @@ data class CallRequestDto(
   override var phoneNumberId: String = "",
 
   @SerialName("customer")
-  val customerDto: com.vapi4k.dtos.api.CustomerDto = com.vapi4k.dtos.api.CustomerDto(),
+  val customerDto: CustomerDto = CustomerDto(),
 
   var error: String = "",
 ) : CallProperties, AssistantIdProperties, SquadIdSource

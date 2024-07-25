@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
@@ -46,6 +46,6 @@ interface DeepInfraModel : DeepInfraModelProperties {
 
 class DeepInfraModelImpl(
   request: JsonElement,
-  sessionId: SessionId,
+  sessionCacheId: SessionCacheId,
   dto: DeepInfraModelDto,
-) : DeepInfraModelProperties by dto, DeepInfraModel, com.vapi4k.dsl.model.AbstractModel(request, sessionId, dto)
+) : DeepInfraModelProperties by dto, DeepInfraModel, com.vapi4k.dsl.model.AbstractModel(request, sessionCacheId, dto)
