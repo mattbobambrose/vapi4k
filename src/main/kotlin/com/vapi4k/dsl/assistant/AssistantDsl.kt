@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.CacheId.Companion.UNSPECIFIED_CACHE_ID
+import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.dsl.assistant.destination.NumberDestination
 import com.vapi4k.dsl.assistant.destination.NumberDestinationImpl
 import com.vapi4k.dsl.assistant.destination.SipDestination
@@ -28,6 +28,7 @@ import com.vapi4k.dsl.assistant.squad.SquadImpl
 import com.vapi4k.responses.AssistantRequestMessageResponse
 import com.vapi4k.responses.assistant.destination.NumberDestinationDto
 import com.vapi4k.responses.assistant.destination.SipDestinationDto
+import com.vapi4k.utils.JsonElementUtils.messageCallId
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
@@ -45,7 +46,7 @@ object AssistantDsl {
   ) =
     AssistantRequestMessageResponse().apply {
       with(messageResponse) {
-        AssistantImpl(request, UNSPECIFIED_CACHE_ID, assistantDto, assistantOverridesDto)
+        AssistantImpl(request, request.messageCallId.toCacheId(), assistantDto, assistantOverridesDto)
           .apply(block)
           .apply {
             assistantDto.updated = true
@@ -59,7 +60,7 @@ object AssistantDsl {
     block: AssistantId.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      AssistantIdImpl(request, UNSPECIFIED_CACHE_ID, messageResponse).apply(block)
+      AssistantIdImpl(request, request.messageCallId.toCacheId(), messageResponse).apply(block)
     }.messageResponse
 
   fun squad(
@@ -67,7 +68,7 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      SquadImpl(request, UNSPECIFIED_CACHE_ID, messageResponse.squadDto).apply(block)
+      SquadImpl(request, request.messageCallId.toCacheId(), messageResponse.squadDto).apply(block)
     }.messageResponse
 
   fun squadId(
