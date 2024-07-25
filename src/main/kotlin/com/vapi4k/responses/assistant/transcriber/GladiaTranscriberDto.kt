@@ -38,12 +38,12 @@ data class GladiaTranscriberDto(
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.GLADIA
 
-  override fun assignEnumOverrides() {
+  fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberModel.desc
     language = if (customLanguage.isNotEmpty()) customLanguage else transcriberLanguage.desc
   }
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (transcriberModel.isSpecified() && customModel.isNotEmpty())
       error("gladiaTranscriber{} cannot have both transcriberModel and customModel values")
 

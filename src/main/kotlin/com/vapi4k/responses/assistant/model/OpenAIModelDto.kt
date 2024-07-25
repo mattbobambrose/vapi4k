@@ -47,7 +47,7 @@ data class OpenAIModelDto(
     fallbackModels.addAll(fallbackModelTypes.map { it.desc } + customFallbackModels)
   }
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (modelType.isSpecified() && customModel.isNotEmpty())
       error("openAIModel{} cannot have both modelType and customModel values")
 

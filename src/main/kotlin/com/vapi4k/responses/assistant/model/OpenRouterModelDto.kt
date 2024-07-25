@@ -28,7 +28,7 @@ data class OpenRouterModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (model.isEmpty())
       error("openRouterModel{} requires a model value")
   }

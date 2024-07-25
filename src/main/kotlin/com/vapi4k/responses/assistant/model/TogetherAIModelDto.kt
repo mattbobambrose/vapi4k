@@ -28,7 +28,7 @@ data class TogetherAIModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.TOGETHER_AI
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (model.isEmpty())
       error("togetherAIModel{} requires a model value")
   }

@@ -28,7 +28,7 @@ data class DeepInfraModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.DEEP_INFRA
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (model.isEmpty())
       error("deepInfraModel{} requires a model value")
   }

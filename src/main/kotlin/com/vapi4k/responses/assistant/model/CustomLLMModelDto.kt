@@ -31,7 +31,7 @@ data class CustomLLMModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.CUSTOM_LLM
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (model.isEmpty())
       error("customLLMModel{} requires a model value")
     if (url.isEmpty())

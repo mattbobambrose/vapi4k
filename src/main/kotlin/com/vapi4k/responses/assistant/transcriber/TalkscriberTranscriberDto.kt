@@ -35,12 +35,12 @@ data class TalkscriberTranscriberDto(
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.TALKSCRIBER
 
-  override fun assignEnumOverrides() {
+  fun assignEnumOverrides() {
     model = if (customModel.isNotEmpty()) customModel else transcriberModel.desc
     language = if (customLanguage.isNotEmpty()) customLanguage else transcriberLanguage.desc
   }
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (transcriberModel.isSpecified() && customModel.isNotEmpty())
       error("talkscriberTranscriber{} cannot have both transcriberModel and customModel values")
 

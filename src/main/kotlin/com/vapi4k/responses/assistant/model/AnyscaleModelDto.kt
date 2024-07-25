@@ -28,7 +28,7 @@ data class AnyscaleModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.ANYSCALE
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (model.isEmpty())
       error("anyscaleModel{} requires a model value")
   }

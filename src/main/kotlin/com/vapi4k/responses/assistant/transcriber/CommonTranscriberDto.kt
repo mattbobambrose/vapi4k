@@ -41,9 +41,6 @@ abstract class AbstractTranscriberDto {
 @Serializable(with = TranscriberSerializer::class)
 interface CommonTranscriberDto {
   val provider: TranscriberType
-
-  fun assignEnumOverrides()
-  fun verifyValues()
 }
 
 private object TranscriberSerializer : KSerializer<CommonTranscriberDto> {

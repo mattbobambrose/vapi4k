@@ -28,7 +28,7 @@ data class PerplexityAIModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (model.isEmpty())
       error("perplexityAIModel{} requires a model value")
   }

@@ -28,7 +28,7 @@ data class VapiModelDto(
   @EncodeDefault
   override val provider: ModelType = ModelType.VAPI
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (model.isEmpty())
       error("vapiModel{} requires a model value")
   }

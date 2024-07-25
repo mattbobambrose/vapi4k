@@ -38,7 +38,7 @@ data class AnthropicModelDto(
     model = if (customModel.isNotEmpty()) customModel else modelType.desc
   }
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (modelType.isSpecified() && customModel.isNotEmpty())
       error("anthropicModel{} cannot have both modelType and customModel values")
 

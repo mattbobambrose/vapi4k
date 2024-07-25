@@ -35,7 +35,6 @@ interface CommonModelDto {
   val functions: MutableList<FunctionDto>
   var knowledgeBaseDto: KnowledgeBaseDto?
   val messages: MutableList<RoleMessage>
-  fun verifyValues()
 }
 
 private object ModelSerializer : KSerializer<CommonModelDto> {

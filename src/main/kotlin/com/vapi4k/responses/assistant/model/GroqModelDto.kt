@@ -38,7 +38,7 @@ data class GroqModelDto(
     model = if (customModel.isNotEmpty()) customModel else modelType.desc
   }
 
-  override fun verifyValues() {
+  fun verifyValues() {
     if (modelType.isSpecified() && customModel.isNotEmpty())
       error("groqModel{} cannot have both modelType and customModel values")
 
