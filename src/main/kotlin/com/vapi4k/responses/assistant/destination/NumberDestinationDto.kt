@@ -24,9 +24,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 class NumberDestinationDto(
   override var number: String = "",
-  override var message: String = "",
-  override var description: String = "",
-) : NumberDestination, AbstractDestinationDto {
+) : AbstractDestinationDto(), CommonDestinationDto, NumberDestination {
   @EncodeDefault
   val type: DestinationType = DestinationType.NUMBER
 }

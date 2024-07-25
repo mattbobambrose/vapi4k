@@ -16,31 +16,10 @@
 
 package com.vapi4k.responses.assistant.destination
 
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = DestinationSerializer::class)
-interface AbstractDestinationDto
-
-private object DestinationSerializer : KSerializer<AbstractDestinationDto> {
-  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractDestinationDto")
-
-  override fun serialize(
-    encoder: Encoder,
-    value: AbstractDestinationDto,
-  ) {
-    when (value) {
-      is NumberDestinationDto -> encoder.encodeSerializableValue(NumberDestinationDto.serializer(), value)
-      is SipDestinationDto -> encoder.encodeSerializableValue(SipDestinationDto.serializer(), value)
-      else -> error("Invalid destination provider: ${value::class.simpleName}")
-    }
-  }
-
-  override fun deserialize(decoder: Decoder): AbstractDestinationDto {
-    throw NotImplementedError("Deserialization is not supported")
-  }
+@Serializable
+abstract class AbstractDestinationDto {
+  var message: String = ""
+  var description: String = ""
 }

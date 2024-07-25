@@ -31,7 +31,6 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(with = ModelSerializer::class)
 interface CommonModelDto {
   val provider: ModelType
-
   val tools: MutableList<ToolDto>
   val functions: MutableList<FunctionDto>
   var knowledgeBaseDto: KnowledgeBaseDto?
