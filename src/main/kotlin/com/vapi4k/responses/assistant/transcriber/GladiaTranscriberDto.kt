@@ -51,7 +51,7 @@ data class GladiaTranscriberDto(
   override val provider: TranscriberType = TranscriberType.GLADIA
 
   override fun assignEnumOverrides() {
-    model = if (customModel.isNotEmpty()) customModel else transcriberLanguage.desc
+    model = if (customModel.isNotEmpty()) customModel else transcriberModel.desc
     language = if (customLanguage.isNotEmpty()) customLanguage else transcriberLanguage.desc
   }
 

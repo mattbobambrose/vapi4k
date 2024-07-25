@@ -38,7 +38,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
 
-class AssistantImplTest {
+class AssistantTest {
   init {
     Vapi4kConfig().apply {
       configure {
@@ -547,19 +547,6 @@ class AssistantImplTest {
     assertEquals(7, element.assistantServerMessages.size)
   }
 
-  val assistantRequest = """
-    {
-    "message": {
-        "type": "assistant-request",
-        "call": {
-            "id": "00dbe917-37fd-4d3f-8cc0-ac6be0923f40",
-            "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b"
-        },
-        "timestamp": "2024-07-13T21:27:59.870Z"
-    }
-}
-  """
-
   @Test
   fun `multiple deepgram transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
@@ -658,10 +645,10 @@ class AssistantImplTest {
           customLanguage = "zzz"
         }
       }
-    val je = assistant.toJsonElement()
+    val jsonElement = assistant.toJsonElement()
     assertEquals(
       "zzz",
-      je["assistant.transcriber.language"].stringValue
+      jsonElement["assistant.transcriber.language"].stringValue
     )
   }
 
@@ -697,5 +684,21 @@ class AssistantImplTest {
         firstMessage = "Something"
       }
     }
+  }
+
+  companion object {
+    val assistantRequest = """
+    {
+    "message": {
+        "type": "assistant-request",
+        "call": {
+            "id": "00dbe917-37fd-4d3f-8cc0-ac6be0923f40",
+            "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b"
+        },
+        "timestamp": "2024-07-13T21:27:59.870Z"
+    }
+}
+  """
+
   }
 }

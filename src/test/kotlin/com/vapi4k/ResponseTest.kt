@@ -16,10 +16,30 @@
 
 package com.vapi4k
 
+import com.vapi4k.AssistantTest.Companion.assistantRequest
+import com.vapi4k.dsl.assistant.AssistantDsl.assistant
+import com.vapi4k.dsl.assistant.enums.DeepgramModelType
+import com.vapi4k.dsl.assistant.enums.OpenAIModelType
+import com.vapi4k.utils.JsonUtils.toJsonElement
+import com.vapi4k.utils.JsonUtils.toJsonString
 import org.junit.Test
 
 class ResponseTest {
   @Test
   fun testGetTwoSquadIds() {
+    val request = assistantRequest.toJsonElement()
+    val assistant =
+      assistant(request) {
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+        }
+
+        deepGramTranscriber {
+          transcriberModel = DeepgramModelType.BASE
+          customLanguage = "zzz"
+        }
+      }
+
+    println(assistant.toJsonString(true))
   }
 }
