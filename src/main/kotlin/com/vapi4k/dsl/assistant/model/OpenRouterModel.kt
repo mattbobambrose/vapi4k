@@ -18,19 +18,14 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.model.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.model.OpenAIModelDto
+import com.vapi4k.responses.assistant.model.OpenRouterModelDto
 import kotlinx.serialization.json.JsonElement
 
-interface OpenAIModelProperties {
-  var modelType: OpenAIModelType
-  var customModel: String
-  val fallbackModelTypes: MutableList<OpenAIModelType>
-  val customFallbackModels: MutableList<String>
+interface OpenRouterModelProperties {
+  var model: String
   val toolIds: MutableSet<String>
-  var semanticCachingEnabled: Boolean?
   var temperature: Int
   var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?
@@ -38,7 +33,7 @@ interface OpenAIModelProperties {
 }
 
 @AssistantDslMarker
-interface OpenAIModel : OpenAIModelProperties {
+interface OpenRouterModel : OpenRouterModelProperties {
   var systemMessage: String
   var assistantMessage: String
   var functionMessage: String
@@ -49,8 +44,8 @@ interface OpenAIModel : OpenAIModelProperties {
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
-class OpenAIModelImpl(
+class OpenRouterModelImpl(
   request: JsonElement,
   sessionId: SessionId,
-  dto: OpenAIModelDto,
-) : OpenAIModelProperties by dto, OpenAIModel, AbstractModelImpl(request, sessionId, dto)
+  dto: OpenRouterModelDto,
+) : OpenRouterModelProperties by dto, OpenRouterModel, AbstractModel(request, sessionId, dto)

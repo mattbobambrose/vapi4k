@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.assistant.transcriber
 
-import com.vapi4k.dsl.assistant.enums.GladiaLanguageType
 import com.vapi4k.dsl.assistant.model.enums.GladiaModelType
+import com.vapi4k.dsl.assistant.transcriber.enums.GladiaLanguageType
 import com.vapi4k.responses.assistant.transcriber.GladiaTranscriberDto
 
 interface GladiaTranscriberProperties {

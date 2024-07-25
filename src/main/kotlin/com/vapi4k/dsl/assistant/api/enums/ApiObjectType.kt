@@ -14,19 +14,13 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.api.enums
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
-import kotlinx.serialization.Serializable
-
-@Serializable
-enum class AzureVoiceIdType(val desc: String) {
-  ANDREW("andrew"),
-  BRIAN("brian"),
-  EMMA("emma"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
-
-  fun isSpecified() = this != UNSPECIFIED
-  fun isNotSpecified() = this == UNSPECIFIED
+enum class ApiObjectType(val endpoint: String) {
+  CALLS("call"),
+  ASSISTANTS("assistant"),
+  PHONE_NUMBERS("phone-number"),
+  FILES("file"),
+  SQUADS("squad"),
+  TOOLS("tool"),
 }

@@ -48,4 +48,4 @@ class VapiModelImpl(
   request: JsonElement,
   sessionId: SessionId,
   dto: VapiModelDto,
-) : VapiModelProperties by dto, VapiModel, AbstractModelImpl(request, sessionId, dto)
+) : VapiModelProperties by dto, VapiModel, AbstractModel(request, sessionId, dto)

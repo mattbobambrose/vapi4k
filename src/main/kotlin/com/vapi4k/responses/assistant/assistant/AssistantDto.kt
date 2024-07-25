@@ -17,9 +17,9 @@
 package com.vapi4k.responses.assistant.assistant
 
 import com.vapi4k.dsl.assistant.assistant.AssistantProperties
-import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
-import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
-import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
+import com.vapi4k.dsl.assistant.assistant.enums.AssistantClientMessageType
+import com.vapi4k.dsl.assistant.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.assistant.enums.FirstMessageModeType
 import com.vapi4k.responses.assistant.AnalysisPlanDto
 import com.vapi4k.responses.assistant.ArtifactPlanDto
 import com.vapi4k.responses.assistant.MessagePlanDto

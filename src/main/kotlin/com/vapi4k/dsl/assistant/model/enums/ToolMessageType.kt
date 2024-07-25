@@ -14,13 +14,11 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.model.enums
 
-enum class ApiObjectType(val endpoint: String) {
-  CALLS("call"),
-  ASSISTANTS("assistant"),
-  PHONE_NUMBERS("phone-number"),
-  FILES("file"),
-  SQUADS("squad"),
-  TOOLS("tool"),
+enum class ToolMessageType(val type: String) {
+  REQUEST_START("request-start"),
+  REQUEST_COMPLETE("request-complete"),
+  REQUEST_FAILED("request-failed"),
+  REQUEST_RESPONSE_DELAYED("request-response-delayed"),
 }

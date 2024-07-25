@@ -14,9 +14,8 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.voice.enums
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -25,25 +24,32 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = CartesiaVoiceModelTypeSerializer::class)
-enum class CartesiaVoiceModelType(val desc: String) {
-  SONIC_ENGLISH("sonic-english"),
-  SONIC_MULTILINGUAL("sonic-multilingual"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
-
-  fun isSpecified() = this != UNSPECIFIED
-  fun isNotSpecified() = this == UNSPECIFIED
+@Serializable(with = PunctuationTypeSerializer::class)
+enum class PunctuationType(internal val desc: String) {
+  FULL_STOP('\u3002'.toString()),
+  FULL_WIDTH_COMMA('\uff0c'.toString()),
+  PERIOD("."),
+  EXCLAMATION("!"),
+  QUESTION("?"),
+  SEMICOLON(";"),
+  RIGHT_PAREN(")"),
+  ARABIC_COMMA('\u060C'.toString()),
+  ARABIC_FULL_STOP('\u06D4'.toString()),
+  DEVANAGARI_DANDA('\u0964'.toString()),
+  DEVANAGARI_DOUBLE_DANDA('\u0965'.toString()),
+  VERTICAL_BAR("|"),
+  DOUBLE_VERTICAL_BAR("||"),
+  COMMA(","),
+  COLON(":"),
 }
 
-private object CartesiaVoiceModelTypeSerializer : KSerializer<CartesiaVoiceModelType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("CartesiaVoiceModelType", STRING)
+private object PunctuationTypeSerializer : KSerializer<PunctuationType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("PunctuationType", STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: CartesiaVoiceModelType,
+    value: PunctuationType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) =
-    CartesiaVoiceModelType.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = PunctuationType.entries.first { it.desc == decoder.decodeString() }
 }

@@ -14,22 +14,21 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.voice.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = FirstMessageModeTypeSerializer::class)
-enum class FirstMessageModeType(internal val desc: String) {
-  ASSISTANT_SPEAKS_FIRST("assistant-speaks-first"),
-  ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL("assistant-speaks-first-with-model-generated-message"),
-  ASSISTANT_WAITS_FOR_USE("assistant-waits-for-user"),
+@Serializable(with = CartesiaVoiceModelTypeSerializer::class)
+enum class CartesiaVoiceModelType(val desc: String) {
+  SONIC_ENGLISH("sonic-english"),
+  SONIC_MULTILINGUAL("sonic-multilingual"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
@@ -37,13 +36,14 @@ enum class FirstMessageModeType(internal val desc: String) {
   fun isNotSpecified() = this == UNSPECIFIED
 }
 
-private object FirstMessageModeTypeSerializer : KSerializer<FirstMessageModeType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", PrimitiveKind.STRING)
+private object CartesiaVoiceModelTypeSerializer : KSerializer<CartesiaVoiceModelType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("CartesiaVoiceModelType", STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: FirstMessageModeType,
+    value: CartesiaVoiceModelType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = FirstMessageModeType.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) =
+    CartesiaVoiceModelType.entries.first { it.desc == decoder.decodeString() }
 }

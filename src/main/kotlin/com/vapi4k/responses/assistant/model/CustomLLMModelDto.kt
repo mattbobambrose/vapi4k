@@ -16,8 +16,8 @@
 
 package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.dsl.assistant.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.model.CustomLLMModelProperties
+import com.vapi4k.dsl.assistant.model.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.model.enums.ModelType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable

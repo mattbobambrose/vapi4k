@@ -16,9 +16,9 @@
 
 package com.vapi4k.responses.assistant.transcriber
 
-import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.model.enums.DeepgramModelType
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriberProperties
+import com.vapi4k.dsl.assistant.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.transcriber.enums.TranscriberType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable

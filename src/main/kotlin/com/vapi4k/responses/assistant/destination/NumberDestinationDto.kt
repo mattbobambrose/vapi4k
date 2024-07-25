@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant.destination
 
 import com.vapi4k.dsl.assistant.destination.NumberDestination
-import com.vapi4k.dsl.assistant.enums.DestinationType
+import com.vapi4k.dsl.assistant.destination.enums.DestinationType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 

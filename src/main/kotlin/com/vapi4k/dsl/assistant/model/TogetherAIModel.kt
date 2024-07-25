@@ -20,10 +20,10 @@ import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.model.PerplexityAIModelDto
+import com.vapi4k.responses.assistant.model.TogetherAIModelDto
 import kotlinx.serialization.json.JsonElement
 
-interface PerplexityAIModelProperties {
+interface TogetherAIModelProperties {
   var model: String
   val toolIds: MutableSet<String>
   var temperature: Int
@@ -33,7 +33,7 @@ interface PerplexityAIModelProperties {
 }
 
 @AssistantDslMarker
-interface PerplexityAIModel : PerplexityAIModelProperties {
+interface TogetherAIModel : TogetherAIModelProperties {
   var systemMessage: String
   var assistantMessage: String
   var functionMessage: String
@@ -44,8 +44,8 @@ interface PerplexityAIModel : PerplexityAIModelProperties {
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
-class PerplexityAIModelImpl(
+class TogetherAIModelImpl(
   request: JsonElement,
   sessionId: SessionId,
-  dto: PerplexityAIModelDto,
-) : PerplexityAIModelProperties by dto, PerplexityAIModel, AbstractModelImpl(request, sessionId, dto)
+  dto: TogetherAIModelDto,
+) : TogetherAIModelProperties by dto, TogetherAIModel, AbstractModel(request, sessionId, dto)

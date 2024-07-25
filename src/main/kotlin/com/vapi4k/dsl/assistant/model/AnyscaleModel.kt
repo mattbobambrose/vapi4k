@@ -48,4 +48,4 @@ class AnyscaleModelImpl(
   request: JsonElement,
   sessionId: SessionId,
   dto: AnyscaleModelDto,
-) : AnyscaleModelProperties by dto, AnyscaleModel, AbstractModelImpl(request, sessionId, dto)
+) : AnyscaleModelProperties by dto, AnyscaleModel, AbstractModel(request, sessionId, dto)

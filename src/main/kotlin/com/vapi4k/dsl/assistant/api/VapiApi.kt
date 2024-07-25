@@ -21,7 +21,7 @@ import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionId.Companion.UNSPECIFIED_SESSION_ID
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.enums.ApiObjectType
+import com.vapi4k.dsl.assistant.api.enums.ApiObjectType
 import com.vapi4k.dsl.assistant.tools.ToolCache.swapCacheKeys
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.api.CallRequestDto

@@ -20,10 +20,10 @@ import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.model.TogetherAIModelDto
+import com.vapi4k.responses.assistant.model.DeepInfraModelDto
 import kotlinx.serialization.json.JsonElement
 
-interface TogetherAIModelProperties {
+interface DeepInfraModelProperties {
   var model: String
   val toolIds: MutableSet<String>
   var temperature: Int
@@ -33,7 +33,7 @@ interface TogetherAIModelProperties {
 }
 
 @AssistantDslMarker
-interface TogetherAIModel : TogetherAIModelProperties {
+interface DeepInfraModel : DeepInfraModelProperties {
   var systemMessage: String
   var assistantMessage: String
   var functionMessage: String
@@ -44,8 +44,8 @@ interface TogetherAIModel : TogetherAIModelProperties {
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
-class TogetherAIModelImpl(
+class DeepInfraModelImpl(
   request: JsonElement,
   sessionId: SessionId,
-  dto: TogetherAIModelDto,
-) : TogetherAIModelProperties by dto, TogetherAIModel, AbstractModelImpl(request, sessionId, dto)
+  dto: DeepInfraModelDto,
+) : DeepInfraModelProperties by dto, DeepInfraModel, AbstractModel(request, sessionId, dto)

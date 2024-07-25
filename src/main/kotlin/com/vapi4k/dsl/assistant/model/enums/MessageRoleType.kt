@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.model.enums
 
 enum class MessageRoleType(internal val desc: String) {
   SYSTEM("system"),

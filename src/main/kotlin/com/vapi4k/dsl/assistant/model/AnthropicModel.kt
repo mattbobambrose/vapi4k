@@ -66,4 +66,4 @@ class AnthropicModelImpl(
   request: JsonElement,
   sessionId: SessionId,
   dto: AnthropicModelDto,
-) : AnthropicModelProperties by dto, AnthropicModel, AbstractModelImpl(request, sessionId, dto)
+) : AnthropicModelProperties by dto, AnthropicModel, AbstractModel(request, sessionId, dto)

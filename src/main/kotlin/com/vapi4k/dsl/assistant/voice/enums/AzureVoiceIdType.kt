@@ -14,14 +14,16 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.voice.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import kotlinx.serialization.Serializable
 
-enum class MetaDataSendModeType(internal val desc: String) {
-  OFF("off"),
-  VARIABLE("variable"),
-  DESTRUCTURED("destructured"),
+@Serializable
+enum class AzureVoiceIdType(val desc: String) {
+  ANDREW("andrew"),
+  BRIAN("brian"),
+  EMMA("emma"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 

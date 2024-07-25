@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.SessionId
-import com.vapi4k.dsl.assistant.enums.MessageRoleType
+import com.vapi4k.dsl.assistant.model.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.FunctionsImpl
 import com.vapi4k.dsl.assistant.tools.Tools
@@ -29,7 +29,7 @@ import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
 
-abstract class AbstractModelImpl(
+abstract class AbstractModel(
   internal val request: JsonElement,
   override val sessionId: SessionId,
   private val dto: CommonModelDto,

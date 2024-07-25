@@ -18,16 +18,19 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.model.enums.GroqModelType
+import com.vapi4k.dsl.assistant.model.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.model.GroqModelDto
+import com.vapi4k.responses.assistant.model.OpenAIModelDto
 import kotlinx.serialization.json.JsonElement
 
-interface GroqModelProperties {
-  var modelType: GroqModelType
+interface OpenAIModelProperties {
+  var modelType: OpenAIModelType
   var customModel: String
+  val fallbackModelTypes: MutableList<OpenAIModelType>
+  val customFallbackModels: MutableList<String>
   val toolIds: MutableSet<String>
+  var semanticCachingEnabled: Boolean?
   var temperature: Int
   var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?
@@ -35,7 +38,7 @@ interface GroqModelProperties {
 }
 
 @AssistantDslMarker
-interface GroqModel : GroqModelProperties {
+interface OpenAIModel : OpenAIModelProperties {
   var systemMessage: String
   var assistantMessage: String
   var functionMessage: String
@@ -46,8 +49,8 @@ interface GroqModel : GroqModelProperties {
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
-class GroqModelImpl(
+class OpenAIModelImpl(
   request: JsonElement,
   sessionId: SessionId,
-  dto: GroqModelDto,
-) : GroqModelProperties by dto, GroqModel, AbstractModelImpl(request, sessionId, dto)
+  dto: OpenAIModelDto,
+) : OpenAIModelProperties by dto, OpenAIModel, AbstractModel(request, sessionId, dto)

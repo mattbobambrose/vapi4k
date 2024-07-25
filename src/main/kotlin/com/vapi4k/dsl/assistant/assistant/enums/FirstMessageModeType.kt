@@ -14,42 +14,36 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.assistant.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = PunctuationTypeSerializer::class)
-enum class PunctuationType(internal val desc: String) {
-  FULL_STOP('\u3002'.toString()),
-  FULL_WIDTH_COMMA('\uff0c'.toString()),
-  PERIOD("."),
-  EXCLAMATION("!"),
-  QUESTION("?"),
-  SEMICOLON(";"),
-  RIGHT_PAREN(")"),
-  ARABIC_COMMA('\u060C'.toString()),
-  ARABIC_FULL_STOP('\u06D4'.toString()),
-  DEVANAGARI_DANDA('\u0964'.toString()),
-  DEVANAGARI_DOUBLE_DANDA('\u0965'.toString()),
-  VERTICAL_BAR("|"),
-  DOUBLE_VERTICAL_BAR("||"),
-  COMMA(","),
-  COLON(":"),
+@Serializable(with = FirstMessageModeTypeSerializer::class)
+enum class FirstMessageModeType(internal val desc: String) {
+  ASSISTANT_SPEAKS_FIRST("assistant-speaks-first"),
+  ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL("assistant-speaks-first-with-model-generated-message"),
+  ASSISTANT_WAITS_FOR_USE("assistant-waits-for-user"),
+
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }
 
-private object PunctuationTypeSerializer : KSerializer<PunctuationType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("PunctuationType", STRING)
+private object FirstMessageModeTypeSerializer : KSerializer<FirstMessageModeType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", PrimitiveKind.STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: PunctuationType,
+    value: FirstMessageModeType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = PunctuationType.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = FirstMessageModeType.entries.first { it.desc == decoder.decodeString() }
 }

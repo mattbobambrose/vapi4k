@@ -18,25 +18,22 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.model.CustomLLMModelDto
+import com.vapi4k.responses.assistant.model.PerplexityAIModelDto
 import kotlinx.serialization.json.JsonElement
 
-interface CustomLLMModelProperties {
+interface PerplexityAIModelProperties {
   var model: String
   val toolIds: MutableSet<String>
   var temperature: Int
   var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?
   var numFastTurns: Int
-  var url: String
-  var metadataSendMode: MetaDataSendModeType
 }
 
 @AssistantDslMarker
-interface CustomLLMModel : CustomLLMModelProperties {
+interface PerplexityAIModel : PerplexityAIModelProperties {
   var systemMessage: String
   var assistantMessage: String
   var functionMessage: String
@@ -47,8 +44,8 @@ interface CustomLLMModel : CustomLLMModelProperties {
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
-class CustomLLMModelImpl(
+class PerplexityAIModelImpl(
   request: JsonElement,
   sessionId: SessionId,
-  dto: CustomLLMModelDto,
-) : CustomLLMModelProperties by dto, CustomLLMModel, AbstractModelImpl(request, sessionId, dto)
+  dto: PerplexityAIModelDto,
+) : PerplexityAIModelProperties by dto, PerplexityAIModel, AbstractModel(request, sessionId, dto)

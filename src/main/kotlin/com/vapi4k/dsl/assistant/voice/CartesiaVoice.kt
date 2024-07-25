@@ -17,9 +17,9 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.enums.CartesiaVoiceLanguageType
-import com.vapi4k.dsl.assistant.enums.CartesiaVoiceModelType
-import com.vapi4k.dsl.assistant.enums.PunctuationType
+import com.vapi4k.dsl.assistant.voice.enums.CartesiaVoiceLanguageType
+import com.vapi4k.dsl.assistant.voice.enums.CartesiaVoiceModelType
+import com.vapi4k.dsl.assistant.voice.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.CartesiaVoiceDto
 
 interface CartesiaVoiceProperties {

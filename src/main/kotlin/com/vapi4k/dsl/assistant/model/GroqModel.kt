@@ -18,13 +18,15 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.model.enums.GroqModelType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.model.OpenRouterModelDto
+import com.vapi4k.responses.assistant.model.GroqModelDto
 import kotlinx.serialization.json.JsonElement
 
-interface OpenRouterModelProperties {
-  var model: String
+interface GroqModelProperties {
+  var modelType: GroqModelType
+  var customModel: String
   val toolIds: MutableSet<String>
   var temperature: Int
   var maxTokens: Int
@@ -33,7 +35,7 @@ interface OpenRouterModelProperties {
 }
 
 @AssistantDslMarker
-interface OpenRouterModel : OpenRouterModelProperties {
+interface GroqModel : GroqModelProperties {
   var systemMessage: String
   var assistantMessage: String
   var functionMessage: String
@@ -44,8 +46,8 @@ interface OpenRouterModel : OpenRouterModelProperties {
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
-class OpenRouterModelImpl(
+class GroqModelImpl(
   request: JsonElement,
   sessionId: SessionId,
-  dto: OpenRouterModelDto,
-) : OpenRouterModelProperties by dto, OpenRouterModel, AbstractModelImpl(request, sessionId, dto)
+  dto: GroqModelDto,
+) : GroqModelProperties by dto, GroqModel, AbstractModel(request, sessionId, dto)

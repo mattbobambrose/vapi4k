@@ -14,11 +14,17 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.model.enums
 
-enum class ToolMessageType(val type: String) {
-  REQUEST_START("request-start"),
-  REQUEST_COMPLETE("request-complete"),
-  REQUEST_FAILED("request-failed"),
-  REQUEST_RESPONSE_DELAYED("request-response-delayed"),
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+
+enum class MetaDataSendModeType(internal val desc: String) {
+  OFF("off"),
+  VARIABLE("variable"),
+  DESTRUCTURED("destructured"),
+
+  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }

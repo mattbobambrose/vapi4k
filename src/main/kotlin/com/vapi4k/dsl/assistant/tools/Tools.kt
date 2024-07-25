@@ -19,8 +19,8 @@ package com.vapi4k.dsl.assistant.tools
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.assistant.AssistantImpl
-import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.assistant.model.ModelMessageProperties
+import com.vapi4k.dsl.assistant.model.enums.ToolMessageType
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.tools.ToolCache.addToolCallToCache

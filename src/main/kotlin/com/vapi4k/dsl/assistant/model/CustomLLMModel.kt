@@ -18,22 +18,25 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.model.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
-import com.vapi4k.responses.assistant.model.DeepInfraModelDto
+import com.vapi4k.responses.assistant.model.CustomLLMModelDto
 import kotlinx.serialization.json.JsonElement
 
-interface DeepInfraModelProperties {
+interface CustomLLMModelProperties {
   var model: String
   val toolIds: MutableSet<String>
   var temperature: Int
   var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?
   var numFastTurns: Int
+  var url: String
+  var metadataSendMode: MetaDataSendModeType
 }
 
 @AssistantDslMarker
-interface DeepInfraModel : DeepInfraModelProperties {
+interface CustomLLMModel : CustomLLMModelProperties {
   var systemMessage: String
   var assistantMessage: String
   var functionMessage: String
@@ -44,8 +47,8 @@ interface DeepInfraModel : DeepInfraModelProperties {
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
-class DeepInfraModelImpl(
+class CustomLLMModelImpl(
   request: JsonElement,
   sessionId: SessionId,
-  dto: DeepInfraModelDto,
-) : DeepInfraModelProperties by dto, DeepInfraModel, AbstractModelImpl(request, sessionId, dto)
+  dto: CustomLLMModelDto,
+) : CustomLLMModelProperties by dto, CustomLLMModel, AbstractModel(request, sessionId, dto)

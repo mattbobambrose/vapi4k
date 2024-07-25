@@ -14,9 +14,8 @@
  *
  */
 
-package com.vapi4k.dsl.assistant.enums
+package com.vapi4k.dsl.assistant.assistant.enums
 
-import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType.entries
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -25,31 +24,32 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = AssistantClientMessageTypeSerializer::class)
-enum class AssistantClientMessageType(internal val desc: String) {
+@Serializable(with = AssistantServerMessageTypeSerializer::class)
+enum class AssistantServerMessageType(internal val desc: String) {
   CONVERSATION_UPDATE("conversation-update"),
+  END_OF_CALL_REPORT("end-of-call-report"),
   FUNCTION_CALL("function-call"),
-  FUNCTION_CALL_RESULT("function-call-result"),
   HANG("hang"),
-  METADATA("metadata"),
   MODEL_OUTPUT("model-output"),
+  PHONE_CALL_CONTROL("phone-call-control"),
   SPEECH_UPDATE("speech-update"),
   STATUS_UPDATE("status-update"),
   TRANSCRIPT("transcript"),
   TOOL_CALLS("tool-calls"),
-  TOOL_CALLS_RESULTS("tool-calls-results"),
+  TRANSFER_DESTINATION_REQUEST("transfer-destination-request"),
   USER_INTERRUPTED("user-interrupted"),
   VOICE_INPUT("voice-input"),
 }
 
-private object AssistantClientMessageTypeSerializer : KSerializer<AssistantClientMessageType> {
+private object AssistantServerMessageTypeSerializer : KSerializer<AssistantServerMessageType> {
   override val descriptor: SerialDescriptor =
-    PrimitiveSerialDescriptor("AssistantClientMessageType", PrimitiveKind.STRING)
+    PrimitiveSerialDescriptor("AssistantServerMessageType", PrimitiveKind.STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: AssistantClientMessageType,
+    value: AssistantServerMessageType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) =
+    AssistantServerMessageType.entries.first { it.desc == decoder.decodeString() }
 }
