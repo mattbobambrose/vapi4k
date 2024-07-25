@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package com.vapi4k.dsl.vapi4k.enums
 
 enum class RequestResponseType {
   REQUEST,

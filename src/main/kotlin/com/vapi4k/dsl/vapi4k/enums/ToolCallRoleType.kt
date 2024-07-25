@@ -14,32 +14,33 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package com.vapi4k.dsl.vapi4k.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = ToolCallMessageTypeSerializer::class)
-enum class ToolCallMessageType(internal val desc: String) {
-  REQUEST_COMPLETE("request-complete"),
-  REQUEST_FAILED("request-failed"),
+
+@Serializable(with = ToolCallRoleSerializer::class)
+enum class ToolCallRoleType(internal val desc: String) {
+  ASSISTANT("assistant"),
+  SYSTEM("system"),
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
-private object ToolCallMessageTypeSerializer : KSerializer<ToolCallMessageType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", STRING)
+private object ToolCallRoleSerializer : KSerializer<ToolCallRoleType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallRole", PrimitiveKind.STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: ToolCallMessageType,
+    value: ToolCallRoleType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = ToolCallMessageType.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = ToolCallRoleType.entries.first { it.desc == decoder.decodeString() }
 }

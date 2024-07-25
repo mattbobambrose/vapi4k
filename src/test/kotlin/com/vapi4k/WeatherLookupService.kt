@@ -38,7 +38,7 @@ import com.vapi4k.dsl.assistant.tools.RequestComplete.Companion.requestComplete
 import com.vapi4k.dsl.assistant.tools.RequestFailed
 import com.vapi4k.dsl.assistant.tools.RequestFailed.Companion.requestFailed
 import com.vapi4k.dsl.assistant.tools.ToolCallService
-import com.vapi4k.dsl.vapi4k.ToolCallRoleType
+import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
 import kotlinx.serialization.json.JsonElement
 
 class WeatherLookupService0 {

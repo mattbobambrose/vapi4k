@@ -17,10 +17,10 @@
 package com.vapi4k.dsl.assistant.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.vapi4k.ToolCallMessageType
-import com.vapi4k.dsl.vapi4k.ToolCallMessageType.REQUEST_COMPLETE
-import com.vapi4k.dsl.vapi4k.ToolCallMessageType.REQUEST_FAILED
-import com.vapi4k.dsl.vapi4k.ToolCallRoleType
+import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType
+import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType.REQUEST_COMPLETE
+import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType.REQUEST_FAILED
+import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
 import com.vapi4k.responses.ToolCallMessageDto
 import com.vapi4k.responses.assistant.model.ToolMessageConditionDto
 import kotlinx.serialization.json.JsonElement

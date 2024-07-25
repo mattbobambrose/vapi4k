@@ -18,8 +18,8 @@ package com.vapi4k.responses
 
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.assistant.tools.ToolCache.getToolCallFromCache
-import com.vapi4k.dsl.vapi4k.ToolCallMessageType
-import com.vapi4k.dsl.vapi4k.ToolCallRoleType
+import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType
+import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.assistant.model.ToolMessageConditionDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId

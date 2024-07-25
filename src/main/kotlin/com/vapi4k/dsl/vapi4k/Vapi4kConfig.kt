@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.dsl.assistant.assistant.AssistantImpl
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import com.vapi4k.responses.AssistantRequestResponse
 import io.ktor.server.config.ApplicationConfig
 import kotlinx.serialization.json.JsonElement

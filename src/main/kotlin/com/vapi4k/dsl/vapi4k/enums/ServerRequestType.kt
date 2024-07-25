@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package com.vapi4k.dsl.vapi4k.enums
 
 import com.vapi4k.plugin.Vapi4kLogger.logger
 

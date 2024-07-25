@@ -16,11 +16,11 @@
 
 import com.vapi4k.dbms.Messages.insertRequest
 import com.vapi4k.dbms.Messages.insertResponse
-import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.dsl.vapi4k.ServerRequestType.STATUS_UPDATE
-import com.vapi4k.dsl.vapi4k.ServerRequestType.TOOL_CALL
 import com.vapi4k.dsl.vapi4k.configureKtor
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.STATUS_UPDATE
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.utils.DslUtils.logObject
