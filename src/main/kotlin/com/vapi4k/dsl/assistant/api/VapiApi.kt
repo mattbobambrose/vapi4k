@@ -114,8 +114,8 @@ class VapiApi private constructor(
       runCatching {
         runCatching {
           httpClient.get("$VAPI_API_URL/${objectType.endpoint}") { configCall(authString) }
-        }.onSuccess { logger.info { "${objectType} objects fetched successfully" } }
-          .onFailure { e -> logger.error { "Failed to fetch ${objectType} objects: ${e.errorMsg}" } }
+        }.onSuccess { logger.info { "$objectType objects fetched successfully" } }
+          .onFailure { e -> logger.error { "Failed to fetch $objectType objects: ${e.errorMsg}" } }
           .getOrThrow()
       }
     }.getOrThrow()
@@ -139,14 +139,13 @@ class VapiApi private constructor(
     }
 
     fun vapiApi(authString: String = ""): VapiApi {
-      val config: HoconApplicationConfig = HoconApplicationConfig(ConfigFactory.load())
+      val config = HoconApplicationConfig(ConfigFactory.load())
       val apiAuth =
-        if (authString.isNotEmpty())
-          authString
-        else
+        authString.ifEmpty {
           config.propertyOrNull("vapi.api.privateKey")?.getString()
             ?: System.getenv("VAPI_PRIVATE_KEY")
             ?: error("No API key found in application.conf")
+        }
 
       return VapiApi(config, apiAuth)
     }

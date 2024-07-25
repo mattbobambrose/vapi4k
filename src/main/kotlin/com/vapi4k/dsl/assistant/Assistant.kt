@@ -24,21 +24,13 @@ import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.model.AnthropicModel
 import com.vapi4k.dsl.assistant.model.AnyscaleModel
 import com.vapi4k.dsl.assistant.model.CustomLLMModel
-import com.vapi4k.dsl.assistant.model.CustomLLMModelImpl
 import com.vapi4k.dsl.assistant.model.DeepInfraModel
-import com.vapi4k.dsl.assistant.model.DeepInfraModelImpl
 import com.vapi4k.dsl.assistant.model.GroqModel
-import com.vapi4k.dsl.assistant.model.GroqModelImpl
 import com.vapi4k.dsl.assistant.model.OpenAIModel
-import com.vapi4k.dsl.assistant.model.OpenAIModelImpl
 import com.vapi4k.dsl.assistant.model.OpenRouterModel
-import com.vapi4k.dsl.assistant.model.OpenRouterModelImpl
 import com.vapi4k.dsl.assistant.model.PerplexityAIModel
-import com.vapi4k.dsl.assistant.model.PerplexityAIModelImpl
 import com.vapi4k.dsl.assistant.model.TogetherAIModel
-import com.vapi4k.dsl.assistant.model.TogetherAIModelImpl
 import com.vapi4k.dsl.assistant.model.VapiModel
-import com.vapi4k.dsl.assistant.model.VapiModelImpl
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
@@ -56,26 +48,26 @@ import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.anthropicModel
 import com.vapi4k.responses.assistant.anyscaleModel
+import com.vapi4k.responses.assistant.azureVoice
+import com.vapi4k.responses.assistant.cartesiaVoice
+import com.vapi4k.responses.assistant.customLLMModel
+import com.vapi4k.responses.assistant.deepInfraModel
 import com.vapi4k.responses.assistant.deepgramTranscriber
+import com.vapi4k.responses.assistant.deepgramVoice
+import com.vapi4k.responses.assistant.elevenLabsVoice
 import com.vapi4k.responses.assistant.gladiaTranscriber
-import com.vapi4k.responses.assistant.model.CustomLLMModelDto
-import com.vapi4k.responses.assistant.model.DeepInfraModelDto
-import com.vapi4k.responses.assistant.model.GroqModelDto
-import com.vapi4k.responses.assistant.model.OpenAIModelDto
-import com.vapi4k.responses.assistant.model.OpenRouterModelDto
-import com.vapi4k.responses.assistant.model.PerplexityAIModelDto
-import com.vapi4k.responses.assistant.model.TogetherAIModelDto
-import com.vapi4k.responses.assistant.model.VapiModelDto
+import com.vapi4k.responses.assistant.groqModel
+import com.vapi4k.responses.assistant.lmntVoice
+import com.vapi4k.responses.assistant.neetsVoice
+import com.vapi4k.responses.assistant.openAIModel
+import com.vapi4k.responses.assistant.openAIVoice
+import com.vapi4k.responses.assistant.openRouterModel
+import com.vapi4k.responses.assistant.perplexityAIModel
+import com.vapi4k.responses.assistant.playHTVoice
+import com.vapi4k.responses.assistant.rimeAIVoice
 import com.vapi4k.responses.assistant.talkscriberTranscriber
-import com.vapi4k.responses.assistant.voice.AzureVoiceDto
-import com.vapi4k.responses.assistant.voice.CartesiaVoiceDto
-import com.vapi4k.responses.assistant.voice.DeepgramVoiceDto
-import com.vapi4k.responses.assistant.voice.ElevenLabsVoiceDto
-import com.vapi4k.responses.assistant.voice.LMNTVoiceDto
-import com.vapi4k.responses.assistant.voice.NeetsVoiceDto
-import com.vapi4k.responses.assistant.voice.OpenAIVoiceDto
-import com.vapi4k.responses.assistant.voice.PlayHTVoiceDto
-import com.vapi4k.responses.assistant.voice.RimeAIVoiceDto
+import com.vapi4k.responses.assistant.togetherAIModel
+import com.vapi4k.responses.assistant.vapiModel
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {
@@ -167,142 +159,59 @@ data class AssistantImpl internal constructor(
   override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel =
     anthropicModel(request, cacheId, assistantDto, modelChecker, block)
 
-  override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
-    modelChecker.check("customLLMModel{} already called")
-    val modelDto = CustomLLMModelDto().also { assistantDto.modelDto = it }
-    return CustomLLMModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel =
+    customLLMModel(request, cacheId, assistantDto, modelChecker, block)
 
-  override fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel {
-    modelChecker.check("deepInfraModel{} already called")
-    val modelDto = DeepInfraModelDto().also { assistantDto.modelDto = it }
-    return DeepInfraModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel =
+    deepInfraModel(request, cacheId, assistantDto, modelChecker, block)
 
-  override fun groqModel(block: GroqModel.() -> Unit): GroqModel {
-    modelChecker.check("groqModel{} already called")
-    val modelDto = GroqModelDto().also { assistantDto.modelDto = it }
-    return GroqModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun groqModel(block: GroqModel.() -> Unit): GroqModel =
+    groqModel(request, cacheId, assistantDto, modelChecker, block)
 
-  override fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
-    modelChecker.check("openAIModel{} already called")
-    val modelDto = OpenAIModelDto().also { assistantDto.modelDto = it }
-    return OpenAIModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel =
+    openAIModel(request, cacheId, assistantDto, modelChecker, block)
 
-  override fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel {
-    modelChecker.check("openRouterModel{} already called")
-    val modelDto = OpenRouterModelDto().also { assistantDto.modelDto = it }
-    return OpenRouterModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel =
+    openRouterModel(request, cacheId, assistantDto, modelChecker, block)
 
-  override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel {
-    modelChecker.check("perplexityAIModel{} already called")
-    val modelDto = PerplexityAIModelDto().also { assistantDto.modelDto = it }
-    return PerplexityAIModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel =
+    perplexityAIModel(request, cacheId, assistantDto, modelChecker, block)
 
-  override fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel {
-    modelChecker.check("togetherAIModel{} already called")
-    val modelDto = TogetherAIModelDto().also { assistantDto.modelDto = it }
-    return TogetherAIModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel =
+    togetherAIModel(request, cacheId, assistantDto, modelChecker, block)
 
-  override fun vapiModel(block: VapiModel.() -> Unit): VapiModel {
-    modelChecker.check("vapiModel{} already called")
-    val modelDto = VapiModelDto().also { assistantDto.modelDto = it }
-    return VapiModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun vapiModel(block: VapiModel.() -> Unit): VapiModel =
+    vapiModel(request, cacheId, assistantDto, modelChecker, block)
+
 
   // Voices
-  override fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice {
-    voiceChecker.check("azureVoice{} already called")
-    val voiceDto = AzureVoiceDto().also { assistantDto.voiceDto = it }
-    return AzureVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice =
+    azureVoice(assistantDto, voiceChecker, block)
 
-  override fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice {
-    voiceChecker.check("cartesiaVoice{} already called")
-    val voiceDto = CartesiaVoiceDto().also { assistantDto.voiceDto = it }
-    return CartesiaVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice =
+    cartesiaVoice(assistantDto, voiceChecker, block)
 
-  override fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice {
-    voiceChecker.check("deepgramVoice{} already called")
-    val voiceDto = DeepgramVoiceDto().also { assistantDto.voiceDto = it }
-    return DeepgramVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice =
+    deepgramVoice(assistantDto, voiceChecker, block)
 
-  override fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice {
-    voiceChecker.check("elevenLabsVoice{} already called")
-    val voiceDto = ElevenLabsVoiceDto().also { assistantDto.voiceDto = it }
-    return ElevenLabsVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice =
+    elevenLabsVoice(assistantDto, voiceChecker, block)
 
-  override fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice {
-    voiceChecker.check("lmntVoice{} already called")
-    val voiceDto = LMNTVoiceDto().also { assistantDto.voiceDto = it }
-    return LMNTVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice =
+    lmntVoice(assistantDto, voiceChecker, block)
 
-  override fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice {
-    voiceChecker.check("neetsVoice{} already called")
-    val voiceDto = NeetsVoiceDto().also { assistantDto.voiceDto = it }
-    return NeetsVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice =
+    neetsVoice(assistantDto, voiceChecker, block)
 
-  override fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice {
-    voiceChecker.check("openAIVoice{} already called")
-    val voiceDto = OpenAIVoiceDto().also { assistantDto.voiceDto = it }
-    return OpenAIVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice =
+    openAIVoice(assistantDto, voiceChecker, block)
 
-  override fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice {
-    voiceChecker.check("playHTVoice{} already called")
-    val voiceDto = PlayHTVoiceDto().also { assistantDto.voiceDto = it }
-    return PlayHTVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice =
+    playHTVoice(assistantDto, voiceChecker, block)
 
-  override fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice {
-    voiceChecker.check("rimeAIVoice{} already called")
-    val voiceDto = RimeAIVoiceDto().also { assistantDto.voiceDto = it }
-    return RimeAIVoice(voiceDto)
-      .apply(block)
-      .apply { voiceDto.verifyValues() }
-  }
+  override fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice =
+    rimeAIVoice(assistantDto, voiceChecker, block)
+
 
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =

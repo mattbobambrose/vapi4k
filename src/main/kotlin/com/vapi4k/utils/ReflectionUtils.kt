@@ -36,7 +36,7 @@ internal object ReflectionUtils {
   val Any.functions get() = this::class.declaredFunctions
   val Any.methods get() = this::class.java.declaredMethods
 
-  fun Any.findMethod(methodName: String) = methods.singleOrNull() { it.name == methodName }
+  fun Any.findMethod(methodName: String) = methods.singleOrNull { it.name == methodName }
     ?: error("Method $methodName not found")
 
   fun Any.findFunction(methodName: String) = functions.singleOrNull { it.name == methodName }
