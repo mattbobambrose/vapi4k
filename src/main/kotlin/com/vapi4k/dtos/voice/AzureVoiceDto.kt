@@ -16,6 +16,8 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.dsl.voice.AzureVoiceProperties
+import com.vapi4k.dsl.voice.enums.AzureVoiceIdType
 import com.vapi4k.dsl.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
@@ -25,12 +27,12 @@ import kotlinx.serialization.Transient
 data class AzureVoiceDto(
   var voiceId: String = "",
   @Transient
-  override var voiceIdType: com.vapi4k.dsl.voice.enums.AzureVoiceIdType = com.vapi4k.dsl.voice.enums.AzureVoiceIdType.UNSPECIFIED,
+  override var voiceIdType: AzureVoiceIdType = com.vapi4k.dsl.voice.enums.AzureVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
 
   override var speed: Double = -1.0,
-) : com.vapi4k.dsl.voice.AzureVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AzureVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.LMNT
 

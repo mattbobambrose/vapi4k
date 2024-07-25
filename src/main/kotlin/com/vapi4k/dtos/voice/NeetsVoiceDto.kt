@@ -16,6 +16,7 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.dsl.voice.NeetsVoiceProperties
 import com.vapi4k.dsl.voice.enums.NeetsVoiceIdType
 import com.vapi4k.dsl.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
@@ -29,7 +30,7 @@ data class NeetsVoiceDto(
   override var voiceIdType: NeetsVoiceIdType = NeetsVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-) : com.vapi4k.dsl.voice.NeetsVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : NeetsVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.NEETS
 

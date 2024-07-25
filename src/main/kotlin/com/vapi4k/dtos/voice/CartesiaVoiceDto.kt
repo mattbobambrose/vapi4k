@@ -16,6 +16,8 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.dsl.voice.CartesiaVoiceProperties
+import com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.dsl.voice.enums.CartesiaVoiceModelType
 import com.vapi4k.dsl.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
@@ -32,12 +34,12 @@ data class CartesiaVoiceDto(
 
   var language: String = "",
   @Transient
-  override var languageType: com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType = com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType.UNSPECIFIED,
+  override var languageType: CartesiaVoiceLanguageType = com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType.UNSPECIFIED,
   @Transient
   override var customLanguage: String = "",
 
   override var voiceId: String = "",
-) : com.vapi4k.dsl.voice.CartesiaVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : CartesiaVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.CARTESIA
 

@@ -30,6 +30,15 @@ import com.vapi4k.dsl.model.VapiModel
 import com.vapi4k.dsl.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriber
+import com.vapi4k.dsl.voice.AzureVoice
+import com.vapi4k.dsl.voice.CartesiaVoice
+import com.vapi4k.dsl.voice.DeepgramVoice
+import com.vapi4k.dsl.voice.ElevenLabsVoice
+import com.vapi4k.dsl.voice.LMNTVoice
+import com.vapi4k.dsl.voice.NeetsVoice
+import com.vapi4k.dsl.voice.OpenAIVoice
+import com.vapi4k.dsl.voice.PlayHTVoice
+import com.vapi4k.dsl.voice.RimeAIVoice
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.dtos.assistant.anthropicModel
 import com.vapi4k.dtos.assistant.anyscaleModel
@@ -100,15 +109,15 @@ interface AssistantOverrides : AssistantOverridesProperties {
   fun vapiModel(block: VapiModel.() -> Unit): VapiModel
 
   // Voices
-  fun azureVoice(block: com.vapi4k.dsl.voice.AzureVoice.() -> Unit): com.vapi4k.dsl.voice.AzureVoice
-  fun cartesiaVoice(block: com.vapi4k.dsl.voice.CartesiaVoice.() -> Unit): com.vapi4k.dsl.voice.CartesiaVoice
-  fun deepgramVoice(block: com.vapi4k.dsl.voice.DeepgramVoice.() -> Unit): com.vapi4k.dsl.voice.DeepgramVoice
-  fun elevenLabsVoice(block: com.vapi4k.dsl.voice.ElevenLabsVoice.() -> Unit): com.vapi4k.dsl.voice.ElevenLabsVoice
-  fun lmntVoice(block: com.vapi4k.dsl.voice.LMNTVoice.() -> Unit): com.vapi4k.dsl.voice.LMNTVoice
-  fun neetsVoice(block: com.vapi4k.dsl.voice.NeetsVoice.() -> Unit): com.vapi4k.dsl.voice.NeetsVoice
-  fun openAIVoice(block: com.vapi4k.dsl.voice.OpenAIVoice.() -> Unit): com.vapi4k.dsl.voice.OpenAIVoice
-  fun playHTVoice(block: com.vapi4k.dsl.voice.PlayHTVoice.() -> Unit): com.vapi4k.dsl.voice.PlayHTVoice
-  fun rimeAIVoice(block: com.vapi4k.dsl.voice.RimeAIVoice.() -> Unit): com.vapi4k.dsl.voice.RimeAIVoice
+  fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice
+  fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice
+  fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice
+  fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice
+  fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice
+  fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice
+  fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice
+  fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice
+  fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice
 }
 
 data class AssistantOverridesImpl internal constructor(
@@ -163,30 +172,30 @@ data class AssistantOverridesImpl internal constructor(
     vapiModel(request, sessionId, assistantOverridesDto, modelChecker, block)
 
   // Voices
-  override fun azureVoice(block: com.vapi4k.dsl.voice.AzureVoice.() -> Unit): com.vapi4k.dsl.voice.AzureVoice =
+  override fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice =
     azureVoice(assistantOverridesDto, voiceChecker, block)
 
-  override fun cartesiaVoice(block: com.vapi4k.dsl.voice.CartesiaVoice.() -> Unit): com.vapi4k.dsl.voice.CartesiaVoice =
+  override fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice =
     cartesiaVoice(assistantOverridesDto, voiceChecker, block)
 
-  override fun deepgramVoice(block: com.vapi4k.dsl.voice.DeepgramVoice.() -> Unit): com.vapi4k.dsl.voice.DeepgramVoice =
+  override fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice =
     deepgramVoice(assistantOverridesDto, voiceChecker, block)
 
-  override fun elevenLabsVoice(block: com.vapi4k.dsl.voice.ElevenLabsVoice.() -> Unit): com.vapi4k.dsl.voice.ElevenLabsVoice =
+  override fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice =
     elevenLabsVoice(assistantOverridesDto, voiceChecker, block)
 
-  override fun lmntVoice(block: com.vapi4k.dsl.voice.LMNTVoice.() -> Unit): com.vapi4k.dsl.voice.LMNTVoice =
+  override fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice =
     lmntVoice(assistantOverridesDto, voiceChecker, block)
 
-  override fun neetsVoice(block: com.vapi4k.dsl.voice.NeetsVoice.() -> Unit): com.vapi4k.dsl.voice.NeetsVoice =
+  override fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice =
     neetsVoice(assistantOverridesDto, voiceChecker, block)
 
-  override fun openAIVoice(block: com.vapi4k.dsl.voice.OpenAIVoice.() -> Unit): com.vapi4k.dsl.voice.OpenAIVoice =
+  override fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice =
     openAIVoice(assistantOverridesDto, voiceChecker, block)
 
-  override fun playHTVoice(block: com.vapi4k.dsl.voice.PlayHTVoice.() -> Unit): com.vapi4k.dsl.voice.PlayHTVoice =
+  override fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice =
     playHTVoice(assistantOverridesDto, voiceChecker, block)
 
-  override fun rimeAIVoice(block: com.vapi4k.dsl.voice.RimeAIVoice.() -> Unit): com.vapi4k.dsl.voice.RimeAIVoice =
+  override fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice =
     rimeAIVoice(assistantOverridesDto, voiceChecker, block)
 }

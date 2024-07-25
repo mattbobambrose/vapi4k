@@ -16,6 +16,7 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.dsl.voice.PlayHTVoiceProperties
 import com.vapi4k.dsl.voice.enums.PlayHTVoiceEmotionType
 import com.vapi4k.dsl.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.dsl.voice.enums.VoiceProviderType
@@ -37,7 +38,7 @@ data class PlayHTVoiceDto(
   override var voiceGuidance: Double = -1.0,
   override var styleGuidance: Double = -1.0,
   override var textGuidance: Double = -1.0,
-) : com.vapi4k.dsl.voice.PlayHTVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : PlayHTVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.PLAYHT
 

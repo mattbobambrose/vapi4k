@@ -46,7 +46,7 @@ private object CartesiaVoiceLanguageSerializer : KSerializer<com.vapi4k.dsl.voic
 
   override fun serialize(
     encoder: Encoder,
-    value: com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType,
+    value: CartesiaVoiceLanguageType,
   ) = encoder.encodeString(value.desc)
 
   override fun deserialize(decoder: Decoder) =

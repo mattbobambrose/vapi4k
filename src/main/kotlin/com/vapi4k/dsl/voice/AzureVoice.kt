@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.enums.AzureVoiceIdType
 import com.vapi4k.dsl.voice.enums.PunctuationType
 import com.vapi4k.dtos.voice.AzureVoiceDto
 
@@ -26,7 +27,7 @@ interface AzureVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceIdType: com.vapi4k.dsl.voice.enums.AzureVoiceIdType
+  var voiceIdType: AzureVoiceIdType
   var customVoiceId: String
   var speed: Double
 }

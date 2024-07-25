@@ -16,6 +16,7 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.dsl.voice.LMNTVoiceProperties
 import com.vapi4k.dsl.voice.enums.LMNTVoiceIdType
 import com.vapi4k.dsl.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
@@ -31,7 +32,7 @@ data class LMNTVoiceDto(
   override var customVoiceId: String = "",
 
   override var speed: Double = -1.0,
-) : com.vapi4k.dsl.voice.LMNTVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : LMNTVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.LMNT
 

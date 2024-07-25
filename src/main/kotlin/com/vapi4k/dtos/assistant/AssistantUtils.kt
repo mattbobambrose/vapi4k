@@ -40,6 +40,15 @@ import com.vapi4k.dsl.model.VapiModelImpl
 import com.vapi4k.dsl.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriber
+import com.vapi4k.dsl.voice.AzureVoice
+import com.vapi4k.dsl.voice.CartesiaVoice
+import com.vapi4k.dsl.voice.DeepgramVoice
+import com.vapi4k.dsl.voice.ElevenLabsVoice
+import com.vapi4k.dsl.voice.LMNTVoice
+import com.vapi4k.dsl.voice.NeetsVoice
+import com.vapi4k.dsl.voice.OpenAIVoice
+import com.vapi4k.dsl.voice.PlayHTVoice
+import com.vapi4k.dsl.voice.RimeAIVoice
 import com.vapi4k.dtos.model.AnthropicModelDto
 import com.vapi4k.dtos.model.AnyscaleModelDto
 import com.vapi4k.dtos.model.CommonModelDto
@@ -256,8 +265,8 @@ fun vapiModel(
 fun azureVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.AzureVoice.() -> Unit,
-): com.vapi4k.dsl.voice.AzureVoice {
+  block: AzureVoice.() -> Unit,
+): AzureVoice {
   voiceChecker.check("azureVoice{} already called")
   val voiceDto = AzureVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.AzureVoice(voiceDto)
@@ -268,8 +277,8 @@ fun azureVoice(
 fun cartesiaVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.CartesiaVoice.() -> Unit,
-): com.vapi4k.dsl.voice.CartesiaVoice {
+  block: CartesiaVoice.() -> Unit,
+): CartesiaVoice {
   voiceChecker.check("cartesiaVoice{} already called")
   val voiceDto = CartesiaVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.CartesiaVoice(voiceDto)
@@ -280,8 +289,8 @@ fun cartesiaVoice(
 fun deepgramVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.DeepgramVoice.() -> Unit,
-): com.vapi4k.dsl.voice.DeepgramVoice {
+  block: DeepgramVoice.() -> Unit,
+): DeepgramVoice {
   voiceChecker.check("deepgramVoice{} already called")
   val voiceDto = DeepgramVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.DeepgramVoice(voiceDto)
@@ -292,8 +301,8 @@ fun deepgramVoice(
 fun elevenLabsVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.ElevenLabsVoice.() -> Unit,
-): com.vapi4k.dsl.voice.ElevenLabsVoice {
+  block: ElevenLabsVoice.() -> Unit,
+): ElevenLabsVoice {
   voiceChecker.check("elevenLabsVoice{} already called")
   val voiceDto = ElevenLabsVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.ElevenLabsVoice(voiceDto)
@@ -304,8 +313,8 @@ fun elevenLabsVoice(
 fun lmntVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.LMNTVoice.() -> Unit,
-): com.vapi4k.dsl.voice.LMNTVoice {
+  block: LMNTVoice.() -> Unit,
+): LMNTVoice {
   voiceChecker.check("lmntVoice{} already called")
   val voiceDto = LMNTVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.LMNTVoice(voiceDto)
@@ -315,8 +324,8 @@ fun lmntVoice(
 fun neetsVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.NeetsVoice.() -> Unit,
-): com.vapi4k.dsl.voice.NeetsVoice {
+  block: NeetsVoice.() -> Unit,
+): NeetsVoice {
   voiceChecker.check("neetsVoice{} already called")
   val voiceDto = NeetsVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.NeetsVoice(voiceDto)
@@ -327,8 +336,8 @@ fun neetsVoice(
 fun openAIVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.OpenAIVoice.() -> Unit,
-): com.vapi4k.dsl.voice.OpenAIVoice {
+  block: OpenAIVoice.() -> Unit,
+): OpenAIVoice {
   voiceChecker.check("openAIVoice{} already called")
   val voiceDto = OpenAIVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.OpenAIVoice(voiceDto)
@@ -339,8 +348,8 @@ fun openAIVoice(
 fun playHTVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.PlayHTVoice.() -> Unit,
-): com.vapi4k.dsl.voice.PlayHTVoice {
+  block: PlayHTVoice.() -> Unit,
+): PlayHTVoice {
   voiceChecker.check("playHTVoice{} already called")
   val voiceDto = PlayHTVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.PlayHTVoice(voiceDto)
@@ -351,8 +360,8 @@ fun playHTVoice(
 fun rimeAIVoice(
   dto: AssistantBridge,
   voiceChecker: DuplicateChecker,
-  block: com.vapi4k.dsl.voice.RimeAIVoice.() -> Unit,
-): com.vapi4k.dsl.voice.RimeAIVoice {
+  block: RimeAIVoice.() -> Unit,
+): RimeAIVoice {
   voiceChecker.check("rimeAIVoice{} already called")
   val voiceDto = RimeAIVoiceDto().also { dto.voiceDto = it }
   return com.vapi4k.dsl.voice.RimeAIVoice(voiceDto)

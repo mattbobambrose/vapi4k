@@ -16,6 +16,7 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.dsl.voice.RimeAIVoiceProperties
 import com.vapi4k.dsl.voice.enums.RimeAIVoiceIdType
 import com.vapi4k.dsl.voice.enums.RimeAIVoiceModelType
 import com.vapi4k.dsl.voice.enums.VoiceProviderType
@@ -38,7 +39,7 @@ data class RimeAIVoiceDto(
   override var customModel: String = "",
 
   override var speed: Double = -1.0,
-) : com.vapi4k.dsl.voice.RimeAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : RimeAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 

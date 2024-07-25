@@ -16,6 +16,7 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.dsl.voice.OpenAIVoiceProperties
 import com.vapi4k.dsl.voice.enums.OpenAIVoiceIdType
 import com.vapi4k.dsl.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
@@ -31,7 +32,7 @@ data class OpenAIVoiceDto(
   override var customVoiceId: String = "",
 
   override var speed: Double = -1.0,
-) : com.vapi4k.dsl.voice.OpenAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : OpenAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.OPENAI
 

@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.dsl.voice.enums.CartesiaVoiceModelType
 import com.vapi4k.dsl.voice.enums.PunctuationType
 import com.vapi4k.dtos.voice.CartesiaVoiceDto
@@ -29,7 +30,7 @@ interface CartesiaVoiceProperties {
   var fillerInjectionEnabled: Boolean?
   var modelType: CartesiaVoiceModelType
   var customModel: String
-  var languageType: com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
+  var languageType: CartesiaVoiceLanguageType
   var customLanguage: String
   var voiceId: String
 }

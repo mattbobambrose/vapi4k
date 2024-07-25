@@ -16,6 +16,7 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.dsl.voice.ElevenLabsVoiceProperties
 import com.vapi4k.dsl.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.dsl.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.dsl.voice.enums.VoiceProviderType
@@ -43,7 +44,7 @@ data class ElevenLabsVoiceDto(
   override var useSpeakerBoost: Boolean? = null,
   override var optimizeStreaming: Double = -1.0,
   override var enableSsmlParsing: Boolean? = null,
-) : com.vapi4k.dsl.voice.ElevenLabsVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : ElevenLabsVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 
