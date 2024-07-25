@@ -19,7 +19,7 @@ package com.vapi4k.dsl.voice
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.enums.NeetsVoiceIdType
 import com.vapi4k.dsl.voice.enums.PunctuationType
-import com.vapi4k.dtos.assistant.voice.NeetsVoiceDto
+import com.vapi4k.dtos.voice.NeetsVoiceDto
 
 interface NeetsVoiceProperties {
   var inputPreprocessingEnabled: Boolean?

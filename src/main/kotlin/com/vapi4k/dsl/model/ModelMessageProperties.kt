@@ -18,15 +18,16 @@ package com.vapi4k.dsl.model
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.model.enums.MessageRoleType
-import com.vapi4k.dtos.assistant.model.FunctionDto
-import com.vapi4k.dtos.assistant.model.ToolDto
+import com.vapi4k.dtos.RoleMessage
+import com.vapi4k.dtos.model.FunctionDto
+import com.vapi4k.dtos.model.ToolDto
 
 interface ModelMessageProperties {
   val sessionId: SessionId
   val messageCallId: String
   val toolDtos: MutableList<ToolDto>
   val functionDtos: MutableList<FunctionDto>
-  val messages: MutableList<com.vapi4k.dtos.assistant.RoleMessage>
+  val messages: MutableList<RoleMessage>
 
   fun message(
     role: MessageRoleType,

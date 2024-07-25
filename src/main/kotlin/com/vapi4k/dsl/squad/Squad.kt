@@ -21,7 +21,7 @@ import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantOverrides
 import com.vapi4k.dsl.assistant.AssistantOverridesImpl
-import com.vapi4k.dtos.assistant.squad.SquadDto
+import com.vapi4k.dtos.squad.SquadDto
 import kotlinx.serialization.json.JsonElement
 
 interface SquadProperties {

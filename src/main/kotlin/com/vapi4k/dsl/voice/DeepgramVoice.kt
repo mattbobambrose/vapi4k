@@ -18,7 +18,7 @@ package com.vapi4k.dsl.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.enums.PunctuationType
-import com.vapi4k.dtos.assistant.voice.DeepgramVoiceDto
+import com.vapi4k.dtos.voice.DeepgramVoiceDto
 
 interface DeepgramVoiceProperties {
   var inputPreprocessingEnabled: Boolean?

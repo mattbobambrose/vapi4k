@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.assistant.assistant.AssistantDestinationDto
-import com.vapi4k.dtos.assistant.squad.MemberDto
+import com.vapi4k.dtos.assistant.AssistantDestinationDto
+import com.vapi4k.dtos.squad.MemberDto
 
 @AssistantDslMarker
 interface AssistantDestinations {

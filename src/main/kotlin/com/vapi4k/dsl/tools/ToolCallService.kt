@@ -21,7 +21,7 @@ import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType.REQUEST_COMPLETE
 import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType.REQUEST_FAILED
 import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
-import com.vapi4k.dtos.assistant.model.ToolMessageConditionDto
+import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.responses.ToolCallMessageDto
 import kotlinx.serialization.json.JsonElement
 

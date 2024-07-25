@@ -19,9 +19,9 @@ package com.vapi4k.dsl.tools
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.isMatching
 import com.vapi4k.dsl.model.enums.ToolMessageType
-import com.vapi4k.dtos.assistant.model.ToolDto
-import com.vapi4k.dtos.assistant.model.ToolMessageConditionDto
-import com.vapi4k.dtos.assistant.model.ToolMessageDto
+import com.vapi4k.dtos.model.ToolDto
+import com.vapi4k.dtos.model.ToolMessageConditionDto
+import com.vapi4k.dtos.model.ToolMessageDto
 import kotlin.reflect.KProperty
 
 @AssistantDslMarker

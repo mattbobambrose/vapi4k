@@ -19,7 +19,7 @@ package com.vapi4k.dsl.voice
 import com.vapi4k.dsl.voice.enums.PlayHTVoiceEmotionType
 import com.vapi4k.dsl.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.dsl.voice.enums.PunctuationType
-import com.vapi4k.dtos.assistant.voice.PlayHTVoiceDto
+import com.vapi4k.dtos.voice.PlayHTVoiceDto
 
 interface PlayHTVoiceProperties {
   var inputPreprocessingEnabled: Boolean?

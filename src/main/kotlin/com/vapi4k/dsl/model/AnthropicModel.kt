@@ -37,7 +37,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.enums.AnthropicModelType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
-import com.vapi4k.dtos.assistant.model.AnthropicModelDto
+import com.vapi4k.dtos.model.AnthropicModelDto
 import kotlinx.serialization.json.JsonElement
 
 interface AnthropicModelProperties {

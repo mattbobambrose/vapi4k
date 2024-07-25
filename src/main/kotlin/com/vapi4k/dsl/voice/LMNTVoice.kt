@@ -19,7 +19,7 @@ package com.vapi4k.dsl.voice
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.enums.LMNTVoiceIdType
 import com.vapi4k.dsl.voice.enums.PunctuationType
-import com.vapi4k.dtos.assistant.voice.LMNTVoiceDto
+import com.vapi4k.dtos.voice.LMNTVoiceDto
 
 interface LMNTVoiceProperties {
   var inputPreprocessingEnabled: Boolean?

@@ -20,7 +20,7 @@ import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
-import com.vapi4k.dtos.assistant.model.OpenRouterModelDto
+import com.vapi4k.dtos.model.OpenRouterModelDto
 import kotlinx.serialization.json.JsonElement
 
 interface OpenRouterModelProperties {

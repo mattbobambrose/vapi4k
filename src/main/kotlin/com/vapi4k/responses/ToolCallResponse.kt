@@ -20,7 +20,7 @@ import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.tools.ToolCache.getToolCallFromCache
 import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
-import com.vapi4k.dtos.assistant.model.ToolMessageConditionDto
+import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallArguments

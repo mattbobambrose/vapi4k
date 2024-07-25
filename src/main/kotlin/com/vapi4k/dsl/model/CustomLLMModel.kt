@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.enums.MetaDataSendModeType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
-import com.vapi4k.dtos.assistant.model.CustomLLMModelDto
+import com.vapi4k.dtos.model.CustomLLMModelDto
 import kotlinx.serialization.json.JsonElement
 
 interface CustomLLMModelProperties {

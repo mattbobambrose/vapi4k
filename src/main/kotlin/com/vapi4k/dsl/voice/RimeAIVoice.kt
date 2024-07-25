@@ -19,7 +19,7 @@ package com.vapi4k.dsl.voice
 import com.vapi4k.dsl.voice.enums.PunctuationType
 import com.vapi4k.dsl.voice.enums.RimeAIVoiceIdType
 import com.vapi4k.dsl.voice.enums.RimeAIVoiceModelType
-import com.vapi4k.dtos.assistant.voice.RimeAIVoiceDto
+import com.vapi4k.dtos.voice.RimeAIVoiceDto
 
 interface RimeAIVoiceProperties {
   var inputPreprocessingEnabled: Boolean?

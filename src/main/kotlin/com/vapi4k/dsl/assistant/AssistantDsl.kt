@@ -25,8 +25,8 @@ import com.vapi4k.dsl.squad.Squad
 import com.vapi4k.dsl.squad.SquadId
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
-import com.vapi4k.dtos.assistant.destination.NumberDestinationDto
-import com.vapi4k.dtos.assistant.destination.SipDestinationDto
+import com.vapi4k.dtos.api.destination.NumberDestinationDto
+import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.responses.AssistantRequestMessageResponse
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import kotlinx.serialization.json.JsonElement

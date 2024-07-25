@@ -25,7 +25,7 @@ import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.tools.ToolCache.addToolCallToCache
 import com.vapi4k.dsl.vapi4k.Endpoint
-import com.vapi4k.dtos.assistant.model.ToolDto
+import com.vapi4k.dtos.model.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolFunction
 

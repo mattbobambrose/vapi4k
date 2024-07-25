@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.dsl.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.dsl.voice.enums.PunctuationType
-import com.vapi4k.dtos.assistant.voice.ElevenLabsVoiceDto
+import com.vapi4k.dtos.voice.ElevenLabsVoiceDto
 
 interface ElevenLabsVoiceProperties {
   var inputPreprocessingEnabled: Boolean?

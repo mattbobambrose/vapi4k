@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.destination
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.assistant.destination.SipDestinationDto
+import com.vapi4k.dtos.api.destination.SipDestinationDto
 import kotlinx.serialization.json.JsonElement
 
 @AssistantDslMarker

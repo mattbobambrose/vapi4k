@@ -19,7 +19,7 @@ package com.vapi4k.dsl.transcriber
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.transcriber.enums.TalkscriberLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
-import com.vapi4k.dtos.assistant.transcriber.TalkscriberTranscriberDto
+import com.vapi4k.dtos.transcriber.TalkscriberTranscriberDto
 
 interface TalkscriberTranscriberProperties {
   var transcriberModel: TalkscriberModelType

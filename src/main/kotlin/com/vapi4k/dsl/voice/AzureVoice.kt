@@ -18,7 +18,7 @@ package com.vapi4k.dsl.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.enums.PunctuationType
-import com.vapi4k.dtos.assistant.voice.AzureVoiceDto
+import com.vapi4k.dtos.voice.AzureVoiceDto
 
 interface AzureVoiceProperties {
   var inputPreprocessingEnabled: Boolean?

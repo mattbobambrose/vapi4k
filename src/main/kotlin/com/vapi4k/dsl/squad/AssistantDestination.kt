@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dtos.assistant.AssistantDestinationDto
 
 interface AssistantDestinationProperties {
   var assistantName: String
@@ -25,5 +26,5 @@ interface AssistantDestinationProperties {
 }
 
 @AssistantDslMarker
-data class AssistantDestination internal constructor(internal val dto: com.vapi4k.dtos.assistant.assistant.AssistantDestinationDto) :
+data class AssistantDestination internal constructor(internal val dto: AssistantDestinationDto) :
   AssistantDestinationProperties by dto

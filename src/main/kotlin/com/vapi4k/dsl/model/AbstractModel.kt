@@ -22,8 +22,9 @@ import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.FunctionsImpl
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dsl.tools.ToolsImpl
-import com.vapi4k.dtos.assistant.model.CommonModelDto
-import com.vapi4k.dtos.assistant.model.KnowledgeBaseDto
+import com.vapi4k.dtos.RoleMessage
+import com.vapi4k.dtos.model.CommonModelDto
+import com.vapi4k.dtos.model.KnowledgeBaseDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
@@ -64,6 +65,6 @@ abstract class AbstractModel(
     // Remove any existing messages with the same role
     messages.removeAll { it.role == role.desc }
     // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
-    messages += com.vapi4k.dtos.assistant.RoleMessage(role.desc, content.trimLeadingSpaces())
+    messages += RoleMessage(role.desc, content.trimLeadingSpaces())
   }
 }

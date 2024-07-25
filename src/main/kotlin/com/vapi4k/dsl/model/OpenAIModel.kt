@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
-import com.vapi4k.dtos.assistant.model.OpenAIModelDto
+import com.vapi4k.dtos.model.OpenAIModelDto
 import kotlinx.serialization.json.JsonElement
 
 interface OpenAIModelProperties {

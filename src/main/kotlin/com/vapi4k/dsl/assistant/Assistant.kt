@@ -35,29 +35,30 @@ import com.vapi4k.dsl.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriber
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
-import com.vapi4k.dtos.assistant.assistant.AssistantOverridesDto
-import com.vapi4k.dtos.assistant.assistant.anthropicModel
-import com.vapi4k.dtos.assistant.assistant.anyscaleModel
-import com.vapi4k.dtos.assistant.assistant.azureVoice
-import com.vapi4k.dtos.assistant.assistant.cartesiaVoice
-import com.vapi4k.dtos.assistant.assistant.customLLMModel
-import com.vapi4k.dtos.assistant.assistant.deepInfraModel
-import com.vapi4k.dtos.assistant.assistant.deepgramTranscriber
-import com.vapi4k.dtos.assistant.assistant.deepgramVoice
-import com.vapi4k.dtos.assistant.assistant.elevenLabsVoice
-import com.vapi4k.dtos.assistant.assistant.gladiaTranscriber
-import com.vapi4k.dtos.assistant.assistant.groqModel
-import com.vapi4k.dtos.assistant.assistant.lmntVoice
-import com.vapi4k.dtos.assistant.assistant.neetsVoice
-import com.vapi4k.dtos.assistant.assistant.openAIModel
-import com.vapi4k.dtos.assistant.assistant.openAIVoice
-import com.vapi4k.dtos.assistant.assistant.openRouterModel
-import com.vapi4k.dtos.assistant.assistant.perplexityAIModel
-import com.vapi4k.dtos.assistant.assistant.playHTVoice
-import com.vapi4k.dtos.assistant.assistant.rimeAIVoice
-import com.vapi4k.dtos.assistant.assistant.talkscriberTranscriber
-import com.vapi4k.dtos.assistant.assistant.togetherAIModel
-import com.vapi4k.dtos.assistant.assistant.vapiModel
+import com.vapi4k.dtos.assistant.AssistantDto
+import com.vapi4k.dtos.assistant.AssistantOverridesDto
+import com.vapi4k.dtos.assistant.anthropicModel
+import com.vapi4k.dtos.assistant.anyscaleModel
+import com.vapi4k.dtos.assistant.azureVoice
+import com.vapi4k.dtos.assistant.cartesiaVoice
+import com.vapi4k.dtos.assistant.customLLMModel
+import com.vapi4k.dtos.assistant.deepInfraModel
+import com.vapi4k.dtos.assistant.deepgramTranscriber
+import com.vapi4k.dtos.assistant.deepgramVoice
+import com.vapi4k.dtos.assistant.elevenLabsVoice
+import com.vapi4k.dtos.assistant.gladiaTranscriber
+import com.vapi4k.dtos.assistant.groqModel
+import com.vapi4k.dtos.assistant.lmntVoice
+import com.vapi4k.dtos.assistant.neetsVoice
+import com.vapi4k.dtos.assistant.openAIModel
+import com.vapi4k.dtos.assistant.openAIVoice
+import com.vapi4k.dtos.assistant.openRouterModel
+import com.vapi4k.dtos.assistant.perplexityAIModel
+import com.vapi4k.dtos.assistant.playHTVoice
+import com.vapi4k.dtos.assistant.rimeAIVoice
+import com.vapi4k.dtos.assistant.talkscriberTranscriber
+import com.vapi4k.dtos.assistant.togetherAIModel
+import com.vapi4k.dtos.assistant.vapiModel
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {
@@ -124,7 +125,7 @@ interface Assistant : AssistantProperties {
 data class AssistantImpl internal constructor(
   internal val request: JsonElement,
   private val sessionId: SessionId,
-  internal val assistantDto: com.vapi4k.dtos.assistant.assistant.AssistantDto,
+  internal val assistantDto: AssistantDto,
   internal val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantProperties by assistantDto, Assistant {
   private val transcriberChecker = DuplicateChecker()
