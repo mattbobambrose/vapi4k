@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.AzureVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.AzureVoiceDto
 
-interface AzureVoiceUnion {
+interface AzureVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -32,4 +32,4 @@ interface AzureVoiceUnion {
 }
 
 @AssistantDslMarker
-data class AzureVoice internal constructor(private val dto: AzureVoiceDto) : AzureVoiceUnion by dto
+data class AzureVoice internal constructor(private val dto: AzureVoiceDto) : AzureVoiceProperties by dto

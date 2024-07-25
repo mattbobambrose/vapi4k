@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.enums.PlayHTVoiceEmotionType
 import com.vapi4k.dsl.assistant.enums.PlayHTVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
-import com.vapi4k.dsl.assistant.voice.PlayHTVoiceUnion
+import com.vapi4k.dsl.assistant.voice.PlayHTVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
@@ -38,7 +38,7 @@ data class PlayHTVoiceDto(
   override var voiceGuidance: Double = -1.0,
   override var styleGuidance: Double = -1.0,
   override var textGuidance: Double = -1.0,
-) : PlayHTVoiceUnion, AbstractVoiceDto {
+) : PlayHTVoiceProperties, AbstractVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.PLAYHT
 

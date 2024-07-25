@@ -22,7 +22,7 @@ import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceModelType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.ElevenLabsVoiceDto
 
-interface ElevenLabsVoiceUnion {
+interface ElevenLabsVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -39,4 +39,4 @@ interface ElevenLabsVoiceUnion {
 }
 
 @AssistantDslMarker
-data class ElevenLabsVoice internal constructor(private val dto: ElevenLabsVoiceDto) : ElevenLabsVoiceUnion by dto
+data class ElevenLabsVoice internal constructor(private val dto: ElevenLabsVoiceDto) : ElevenLabsVoiceProperties by dto

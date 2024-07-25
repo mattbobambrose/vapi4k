@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.PlayHTVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.PlayHTVoiceDto
 
-interface PlayHTVoiceUnion {
+interface PlayHTVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -36,4 +36,4 @@ interface PlayHTVoiceUnion {
   var textGuidance: Double
 }
 
-data class PlayHTVoice internal constructor(private val dto: PlayHTVoiceDto) : PlayHTVoiceUnion by dto
+data class PlayHTVoice internal constructor(private val dto: PlayHTVoiceDto) : PlayHTVoiceProperties by dto

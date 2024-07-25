@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.LMNTVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.LMNTVoiceDto
 
-interface LMNTVoiceUnion {
+interface LMNTVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -32,4 +32,4 @@ interface LMNTVoiceUnion {
 }
 
 @AssistantDslMarker
-data class LMNTVoice internal constructor(private val dto: LMNTVoiceDto) : LMNTVoiceUnion by dto
+data class LMNTVoice internal constructor(private val dto: LMNTVoiceDto) : LMNTVoiceProperties by dto

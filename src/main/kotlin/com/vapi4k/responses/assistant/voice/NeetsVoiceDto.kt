@@ -19,7 +19,7 @@ package com.vapi4k.responses.assistant.voice
 import com.vapi4k.dsl.assistant.enums.NeetsVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
-import com.vapi4k.dsl.assistant.voice.NeetsVoiceUnion
+import com.vapi4k.dsl.assistant.voice.NeetsVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
@@ -31,7 +31,7 @@ data class NeetsVoiceDto(
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: NeetsVoiceIdType = NeetsVoiceIdType.UNSPECIFIED,
-) : NeetsVoiceUnion, AbstractVoiceDto {
+) : NeetsVoiceProperties, AbstractVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.NEETS
 

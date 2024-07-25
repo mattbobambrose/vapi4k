@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.DeepgramVoiceDto
 
-interface DeepgramVoiceUnion {
+interface DeepgramVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -30,4 +30,4 @@ interface DeepgramVoiceUnion {
 }
 
 @AssistantDslMarker
-data class DeepgramVoice internal constructor(private val dto: DeepgramVoiceDto) : DeepgramVoiceUnion by dto
+data class DeepgramVoice internal constructor(private val dto: DeepgramVoiceDto) : DeepgramVoiceProperties by dto

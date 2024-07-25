@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.RimeAIVoiceIdType
 import com.vapi4k.dsl.assistant.enums.RimeAIVoiceModelType
 import com.vapi4k.responses.assistant.voice.RimeAIVoiceDto
 
-interface RimeAIVoiceUnion {
+interface RimeAIVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -32,4 +32,4 @@ interface RimeAIVoiceUnion {
   var speed: Double
 }
 
-data class RimeAIVoice internal constructor(private val dto: RimeAIVoiceDto) : RimeAIVoiceUnion by dto
+data class RimeAIVoice internal constructor(private val dto: RimeAIVoiceDto) : RimeAIVoiceProperties by dto

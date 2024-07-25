@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.NeetsVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.NeetsVoiceDto
 
-interface NeetsVoiceUnion {
+interface NeetsVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -31,4 +31,4 @@ interface NeetsVoiceUnion {
 }
 
 @AssistantDslMarker
-data class NeetsVoice internal constructor(private val dto: NeetsVoiceDto) : NeetsVoiceUnion by dto
+data class NeetsVoice internal constructor(private val dto: NeetsVoiceDto) : NeetsVoiceProperties by dto

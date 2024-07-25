@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceIdType
 import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceModelType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
-import com.vapi4k.dsl.assistant.voice.ElevenLabsVoiceUnion
+import com.vapi4k.dsl.assistant.voice.ElevenLabsVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
@@ -39,7 +39,7 @@ data class ElevenLabsVoiceDto(
   override var optimizeStreaming: Double = -1.0,
   override var enableSsmlParsing: Boolean? = null,
   override var model: ElevenLabsVoiceModelType = ElevenLabsVoiceModelType.UNSPECIFIED,
-) : ElevenLabsVoiceUnion, AbstractVoiceDto {
+) : ElevenLabsVoiceProperties, AbstractVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 

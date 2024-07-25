@@ -19,7 +19,7 @@ package com.vapi4k.responses.assistant.voice
 import com.vapi4k.dsl.assistant.enums.LMNTVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
-import com.vapi4k.dsl.assistant.voice.LMNTVoiceUnion
+import com.vapi4k.dsl.assistant.voice.LMNTVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
@@ -32,7 +32,7 @@ data class LMNTVoiceDto(
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: LMNTVoiceIdType = LMNTVoiceIdType.UNSPECIFIED,
   override var speed: Double = -1.0,
-) : LMNTVoiceUnion, AbstractVoiceDto {
+) : LMNTVoiceProperties, AbstractVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.LMNT
 

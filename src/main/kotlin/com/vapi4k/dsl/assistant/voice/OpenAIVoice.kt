@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.enums.OpenAIVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.OpenAIVoiceDto
 
-interface OpenAIVoiceUnion {
+interface OpenAIVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -32,4 +32,4 @@ interface OpenAIVoiceUnion {
 }
 
 @AssistantDslMarker
-data class OpenAIVoice internal constructor(private val dto: OpenAIVoiceDto) : OpenAIVoiceUnion by dto
+data class OpenAIVoice internal constructor(private val dto: OpenAIVoiceDto) : OpenAIVoiceProperties by dto

@@ -22,7 +22,7 @@ import com.vapi4k.dsl.assistant.enums.CartesiaVoiceModelType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.responses.assistant.voice.CartesiaVoiceDto
 
-interface CartesiaVoiceUnion {
+interface CartesiaVoiceProperties {
   var inputPreprocessingEnabled: Boolean?
   var inputReformattingEnabled: Boolean?
   var inputMinCharacters: Int
@@ -34,4 +34,4 @@ interface CartesiaVoiceUnion {
 }
 
 @AssistantDslMarker
-data class CartesiaVoice internal constructor(private val dto: CartesiaVoiceDto) : CartesiaVoiceUnion by dto
+data class CartesiaVoice internal constructor(private val dto: CartesiaVoiceDto) : CartesiaVoiceProperties by dto

@@ -18,7 +18,7 @@ package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.PunctuationType
 import com.vapi4k.dsl.assistant.enums.VoiceProviderType
-import com.vapi4k.dsl.assistant.voice.DeepgramVoiceUnion
+import com.vapi4k.dsl.assistant.voice.DeepgramVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
@@ -30,7 +30,7 @@ data class DeepgramVoiceDto(
   override var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
   override var fillerInjectionEnabled: Boolean? = null,
   override var voiceId: String = "",
-) : DeepgramVoiceUnion, AbstractVoiceDto {
+) : DeepgramVoiceProperties, AbstractVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.DEEPGRAM
 
