@@ -18,11 +18,14 @@ package com.vapi4k.responses.assistant
 
 import com.vapi4k.common.CacheId
 import com.vapi4k.common.DuplicateChecker
+import com.vapi4k.dsl.assistant.model.AnthropicModel
+import com.vapi4k.dsl.assistant.model.AnthropicModelImpl
 import com.vapi4k.dsl.assistant.model.AnyscaleModel
 import com.vapi4k.dsl.assistant.model.AnyscaleModelImpl
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
+import com.vapi4k.responses.assistant.model.AnthropicModelDto
 import com.vapi4k.responses.assistant.model.AnyscaleModelDto
 import com.vapi4k.responses.assistant.model.CommonModelDto
 import com.vapi4k.responses.assistant.transcriber.CommonTranscriberDto
@@ -32,7 +35,6 @@ import com.vapi4k.responses.assistant.transcriber.TalkscriberTranscriberDto
 import com.vapi4k.responses.assistant.voice.CommonVoiceDto
 import kotlinx.serialization.json.JsonElement
 
-internal object AssistantUtils {
   interface AssistantBridge {
     var transcriberDto: CommonTranscriberDto?
     var modelDto: CommonModelDto?
@@ -83,11 +85,25 @@ internal object AssistantUtils {
     dto: AssistantBridge,
     modelChecker: DuplicateChecker,
     block: AnyscaleModel.() -> Unit,
-  ): AnyscaleModelImpl {
+  ): AnyscaleModel {
     modelChecker.check("anyscaleModel{} already called")
     val modelDto = AnyscaleModelDto().also { dto.modelDto = it }
     return AnyscaleModelImpl(request, cacheId, modelDto)
       .apply(block)
       .apply { modelDto.verifyValues() }
   }
+
+fun anthropicModel(
+  request: JsonElement,
+  cacheId: CacheId,
+  dto: AssistantBridge,
+  modelChecker: DuplicateChecker,
+  block: AnthropicModel.() -> Unit,
+): AnthropicModel {
+  modelChecker.check("anthropicModel{} already called")
+  val modelDto = AnthropicModelDto().also { dto.modelDto = it }
+  return AnthropicModelImpl(request, cacheId, modelDto)
+    .apply(block)
+    .apply { modelDto.verifyValues() }
 }
+

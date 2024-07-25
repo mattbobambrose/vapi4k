@@ -17,7 +17,6 @@
 package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
-import com.vapi4k.responses.assistant.AssistantUtils.AssistantBridge
 import com.vapi4k.responses.assistant.model.CommonModelDto
 import com.vapi4k.responses.assistant.transcriber.CommonTranscriberDto
 import com.vapi4k.responses.assistant.voice.CommonVoiceDto

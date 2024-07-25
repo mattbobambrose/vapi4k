@@ -22,7 +22,6 @@ import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.model.AnthropicModel
-import com.vapi4k.dsl.assistant.model.AnthropicModelImpl
 import com.vapi4k.dsl.assistant.model.AnyscaleModel
 import com.vapi4k.dsl.assistant.model.CustomLLMModel
 import com.vapi4k.dsl.assistant.model.CustomLLMModelImpl
@@ -55,11 +54,10 @@ import com.vapi4k.dsl.assistant.voice.RimeAIVoice
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.AssistantUtils.anyscaleModel
-import com.vapi4k.responses.assistant.AssistantUtils.deepgramTranscriber
-import com.vapi4k.responses.assistant.AssistantUtils.gladiaTranscriber
-import com.vapi4k.responses.assistant.AssistantUtils.talkscriberTranscriber
-import com.vapi4k.responses.assistant.model.AnthropicModelDto
+import com.vapi4k.responses.assistant.anthropicModel
+import com.vapi4k.responses.assistant.anyscaleModel
+import com.vapi4k.responses.assistant.deepgramTranscriber
+import com.vapi4k.responses.assistant.gladiaTranscriber
 import com.vapi4k.responses.assistant.model.CustomLLMModelDto
 import com.vapi4k.responses.assistant.model.DeepInfraModelDto
 import com.vapi4k.responses.assistant.model.GroqModelDto
@@ -68,6 +66,7 @@ import com.vapi4k.responses.assistant.model.OpenRouterModelDto
 import com.vapi4k.responses.assistant.model.PerplexityAIModelDto
 import com.vapi4k.responses.assistant.model.TogetherAIModelDto
 import com.vapi4k.responses.assistant.model.VapiModelDto
+import com.vapi4k.responses.assistant.talkscriberTranscriber
 import com.vapi4k.responses.assistant.voice.AzureVoiceDto
 import com.vapi4k.responses.assistant.voice.CartesiaVoiceDto
 import com.vapi4k.responses.assistant.voice.DeepgramVoiceDto
@@ -165,14 +164,8 @@ data class AssistantImpl internal constructor(
   override fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel =
     anyscaleModel(request, cacheId, assistantDto, modelChecker, block)
 
-
-  override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModelImpl {
-    modelChecker.check("anthropicModel{} already called")
-    val modelDto = AnthropicModelDto().also { assistantDto.modelDto = it }
-    return AnthropicModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel =
+    anthropicModel(request, cacheId, assistantDto, modelChecker, block)
 
   override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
     modelChecker.check("customLLMModel{} already called")

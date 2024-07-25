@@ -19,7 +19,6 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.common.CacheId
 import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.model.AnthropicModel
-import com.vapi4k.dsl.assistant.model.AnthropicModelImpl
 import com.vapi4k.dsl.assistant.model.AnyscaleModel
 import com.vapi4k.dsl.assistant.model.CustomLLMModel
 import com.vapi4k.dsl.assistant.model.CustomLLMModelImpl
@@ -50,11 +49,10 @@ import com.vapi4k.dsl.assistant.voice.OpenAIVoice
 import com.vapi4k.dsl.assistant.voice.PlayHTVoice
 import com.vapi4k.dsl.assistant.voice.RimeAIVoice
 import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.AssistantUtils
-import com.vapi4k.responses.assistant.AssistantUtils.deepgramTranscriber
-import com.vapi4k.responses.assistant.AssistantUtils.gladiaTranscriber
-import com.vapi4k.responses.assistant.AssistantUtils.talkscriberTranscriber
-import com.vapi4k.responses.assistant.model.AnthropicModelDto
+import com.vapi4k.responses.assistant.anthropicModel
+import com.vapi4k.responses.assistant.anyscaleModel
+import com.vapi4k.responses.assistant.deepgramTranscriber
+import com.vapi4k.responses.assistant.gladiaTranscriber
 import com.vapi4k.responses.assistant.model.CustomLLMModelDto
 import com.vapi4k.responses.assistant.model.DeepInfraModelDto
 import com.vapi4k.responses.assistant.model.GroqModelDto
@@ -63,6 +61,7 @@ import com.vapi4k.responses.assistant.model.OpenRouterModelDto
 import com.vapi4k.responses.assistant.model.PerplexityAIModelDto
 import com.vapi4k.responses.assistant.model.TogetherAIModelDto
 import com.vapi4k.responses.assistant.model.VapiModelDto
+import com.vapi4k.responses.assistant.talkscriberTranscriber
 import com.vapi4k.responses.assistant.voice.AzureVoiceDto
 import com.vapi4k.responses.assistant.voice.CartesiaVoiceDto
 import com.vapi4k.responses.assistant.voice.DeepgramVoiceDto
@@ -151,16 +150,12 @@ data class AssistantOverridesImpl internal constructor(
 
   // Models
   override fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel =
-    AssistantUtils.anyscaleModel(request, cacheId, assistantOverridesDto, modelChecker, block)
+    anyscaleModel(request, cacheId, assistantOverridesDto, modelChecker, block)
 
 
-  override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel {
-    modelChecker.check("anthropicModel{} already called")
-    val modelDto = AnthropicModelDto().also { assistantOverridesDto.modelDto = it }
-    return AnthropicModelImpl(request, cacheId, modelDto)
-      .apply(block)
-      .apply { modelDto.verifyValues() }
-  }
+  override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel =
+    anthropicModel(request, cacheId, assistantOverridesDto, modelChecker, block)
+
 
   override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
     modelChecker.check("customLLMModel{} already called")
