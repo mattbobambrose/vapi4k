@@ -41,7 +41,15 @@ import com.vapi4k.dsl.assistant.model.VapiModelImpl
 import com.vapi4k.dsl.assistant.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.assistant.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriber
-import com.vapi4k.dsl.assistant.voice.Voice
+import com.vapi4k.dsl.assistant.voice.AzureVoice
+import com.vapi4k.dsl.assistant.voice.CartesiaVoice
+import com.vapi4k.dsl.assistant.voice.DeepgramVoice
+import com.vapi4k.dsl.assistant.voice.ElevenLabsVoice
+import com.vapi4k.dsl.assistant.voice.LMNTVoice
+import com.vapi4k.dsl.assistant.voice.NeetsVoice
+import com.vapi4k.dsl.assistant.voice.OpenAIVoice
+import com.vapi4k.dsl.assistant.voice.PlayHTVoice
+import com.vapi4k.dsl.assistant.voice.RimeAIVoice
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import com.vapi4k.responses.assistant.model.AnthropicModelDto
 import com.vapi4k.responses.assistant.model.AnyscaleModelDto
@@ -56,6 +64,15 @@ import com.vapi4k.responses.assistant.model.VapiModelDto
 import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
 import com.vapi4k.responses.assistant.transcriber.GladiaTranscriberDto
 import com.vapi4k.responses.assistant.transcriber.TalkscriberTranscriberDto
+import com.vapi4k.responses.assistant.voice.AzureVoiceDto
+import com.vapi4k.responses.assistant.voice.CartesiaVoiceDto
+import com.vapi4k.responses.assistant.voice.DeepgramVoiceDto
+import com.vapi4k.responses.assistant.voice.ElevenLabsVoiceDto
+import com.vapi4k.responses.assistant.voice.LMNTVoiceDto
+import com.vapi4k.responses.assistant.voice.NeetsVoiceDto
+import com.vapi4k.responses.assistant.voice.OpenAIVoiceDto
+import com.vapi4k.responses.assistant.voice.PlayHTVoiceDto
+import com.vapi4k.responses.assistant.voice.RimeAIVoiceDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesProperties {
@@ -102,7 +119,15 @@ interface AssistantOverrides : AssistantOverridesProperties {
   fun vapiModel(block: VapiModel.() -> Unit): VapiModel
 
   // Voices
-  fun voice(block: Voice.() -> Unit)
+  fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice
+  fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice
+  fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice
+  fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice
+  fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice
+  fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice
+  fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice
+  fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice
+  fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice
 }
 
 data class AssistantOverridesImpl internal constructor(
@@ -221,7 +246,75 @@ data class AssistantOverridesImpl internal constructor(
   }
 
   // TODO: Matthew will fill this in
-  override fun voice(block: Voice.() -> Unit) {
-    Voice(dto.voiceDto).apply(block)
+  override fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice {
+    voiceChecker.check("azureVoice{} already called")
+    val voiceDto = AzureVoiceDto().also { dto.voiceDto = it }
+    return AzureVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
+
+  override fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice {
+    voiceChecker.check("cartesiaVoice{} already called")
+    val voiceDto = CartesiaVoiceDto().also { dto.voiceDto = it }
+    return CartesiaVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
+
+  override fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice {
+    voiceChecker.check("deepgramVoice{} already called")
+    val voiceDto = DeepgramVoiceDto().also { dto.voiceDto = it }
+    return DeepgramVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
+
+  override fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice {
+    voiceChecker.check("elevenLabsVoice{} already called")
+    val voiceDto = ElevenLabsVoiceDto().also { dto.voiceDto = it }
+    return ElevenLabsVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
+
+  override fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice {
+    voiceChecker.check("lmntVoice{} already called")
+    val voiceDto = LMNTVoiceDto().also { dto.voiceDto = it }
+    return LMNTVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
+
+  override fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice {
+    voiceChecker.check("neetsVoice{} already called")
+    val voiceDto = NeetsVoiceDto().also { dto.voiceDto = it }
+    return NeetsVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
+
+  override fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice {
+    voiceChecker.check("openAIVoice{} already called")
+    val voiceDto = OpenAIVoiceDto().also { dto.voiceDto = it }
+    return OpenAIVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
+
+  override fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice {
+    voiceChecker.check("playHTVoice{} already called")
+    val voiceDto = PlayHTVoiceDto().also { dto.voiceDto = it }
+    return PlayHTVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
+
+  override fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice {
+    voiceChecker.check("rimeAIVoice{} already called")
+    val voiceDto = RimeAIVoiceDto().also { dto.voiceDto = it }
+    return RimeAIVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
   }
 }
