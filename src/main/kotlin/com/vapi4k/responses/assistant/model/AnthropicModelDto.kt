@@ -35,7 +35,7 @@ data class AnthropicModelDto(
   override val provider: ModelType = ModelType.ANTHROPIC
 
   fun assignEnumOverrides() {
-    model = if (customModel.isNotEmpty()) customModel else modelType.desc
+    model = customModel.ifEmpty { modelType.desc }
   }
 
   fun verifyValues() {

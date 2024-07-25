@@ -43,7 +43,7 @@ data class OpenAIModelDto(
   override val provider: ModelType = ModelType.OPEN_AI
 
   fun assignEnumOverrides() {
-    model = if (customModel.isNotEmpty()) customModel else modelType.desc
+    model = customModel.ifEmpty { modelType.desc }
     fallbackModels.addAll(fallbackModelTypes.map { it.desc } + customFallbackModels)
   }
 

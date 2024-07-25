@@ -45,7 +45,7 @@ class ResponseTest {
           }
         }
 
-        deepGramTranscriber {
+        deepgramTranscriber {
           transcriberModel = DeepgramModelType.BASE
           customLanguage = "zzz"
         }

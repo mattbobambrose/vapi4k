@@ -17,6 +17,7 @@
 package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
+import com.vapi4k.responses.assistant.AssistantUtils.AssistantBridge
 import com.vapi4k.responses.assistant.model.CommonModelDto
 import com.vapi4k.responses.assistant.transcriber.CommonTranscriberDto
 import com.vapi4k.responses.assistant.voice.CommonVoiceDto
@@ -51,13 +52,13 @@ data class AssistantOverridesDto(
   val endCallPhrases: MutableSet<String> = mutableSetOf(),
 
   @SerialName("transcriber")
-  var transcriberDto: CommonTranscriberDto? = null,
+  override var transcriberDto: CommonTranscriberDto? = null,
 
   @SerialName("model")
-  var modelDto: CommonModelDto? = null,
+  override var modelDto: CommonModelDto? = null,
 
   @SerialName("voice")
-  var voiceDto: CommonVoiceDto? = null,
+  override var voiceDto: CommonVoiceDto? = null,
 
   // TODO: Came from squad assistant,
   val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
@@ -74,4 +75,4 @@ data class AssistantOverridesDto(
   val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantOverridesProperties
+) : AssistantOverridesProperties, AssistantBridge

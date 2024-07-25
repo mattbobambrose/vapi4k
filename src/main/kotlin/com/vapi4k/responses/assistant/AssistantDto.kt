@@ -20,6 +20,7 @@ import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
+import com.vapi4k.responses.assistant.AssistantUtils.AssistantBridge
 import com.vapi4k.responses.assistant.model.CommonModelDto
 import com.vapi4k.responses.assistant.transcriber.CommonTranscriberDto
 import com.vapi4k.responses.assistant.voice.CommonVoiceDto
@@ -71,13 +72,13 @@ data class AssistantDto(
   val endCallPhrases: MutableSet<String> = mutableSetOf(),
 
   @SerialName("transcriber")
-  var transcriberDto: CommonTranscriberDto? = null,
+  override var transcriberDto: CommonTranscriberDto? = null,
 
   @SerialName("model")
-  var modelDto: CommonModelDto? = null,
+  override var modelDto: CommonModelDto? = null,
 
   @SerialName("voice")
-  var voiceDto: CommonVoiceDto? = null,
+  override var voiceDto: CommonVoiceDto? = null,
 
   // TODO: Add verbs and enums
   @SerialName("voicemailDetection")
@@ -91,7 +92,7 @@ data class AssistantDto(
 
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantProperties {
+) : AssistantProperties, AssistantBridge {
   @Transient
   var updated = false
 

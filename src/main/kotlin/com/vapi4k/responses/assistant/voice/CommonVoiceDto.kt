@@ -29,7 +29,7 @@ interface CommonVoiceDto {
 }
 
 private object VoiceSerializer : KSerializer<CommonVoiceDto> {
-  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractVoiceDto")
+  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("CommonVoiceDto")
 
   override fun serialize(
     encoder: Encoder,

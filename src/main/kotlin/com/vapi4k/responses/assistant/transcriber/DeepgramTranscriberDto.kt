@@ -37,8 +37,8 @@ data class DeepgramTranscriberDto(
   override val provider: TranscriberType = TranscriberType.DEEPGRAM
 
   fun assignEnumOverrides() {
-    model = if (customModel.isNotEmpty()) customModel else transcriberModel.desc
-    language = if (customLanguage.isNotEmpty()) customLanguage else transcriberLanguage.desc
+    model = customModel.ifEmpty { transcriberModel.desc }
+    language = customLanguage.ifEmpty { transcriberLanguage.desc }
   }
 
   fun verifyValues() {

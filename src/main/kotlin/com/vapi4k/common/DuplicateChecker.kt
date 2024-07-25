@@ -16,7 +16,7 @@
 
 package com.vapi4k.common
 
-internal class DuplicateChecker {
+class DuplicateChecker {
   private var errorMsg = ""
 
   fun check(newStr: String) =

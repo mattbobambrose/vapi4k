@@ -552,11 +552,11 @@ class AssistantTest {
     assertThrows(IllegalStateException::class.java) {
       val request = assistantRequest.toJsonElement()
       assistant(request) {
-        deepGramTranscriber {
+        deepgramTranscriber {
           transcriberModel = DeepgramModelType.BASE
         }
 
-        deepGramTranscriber {
+        deepgramTranscriber {
           transcriberModel = DeepgramModelType.BASE
         }
       }
@@ -619,7 +619,7 @@ class AssistantTest {
         openAIModel {
           modelType = OpenAIModelType.GPT_3_5_TURBO
         }
-        deepGramTranscriber {
+        deepgramTranscriber {
           transcriberModel = DeepgramModelType.BASE
           transcriberLanguage = DeepgramLanguageType.GERMAN
         }
@@ -640,7 +640,7 @@ class AssistantTest {
           modelType = OpenAIModelType.GPT_3_5_TURBO
         }
 
-        deepGramTranscriber {
+        deepgramTranscriber {
           transcriberModel = DeepgramModelType.BASE
           customLanguage = "zzz"
         }
@@ -662,7 +662,7 @@ class AssistantTest {
             modelType = OpenAIModelType.GPT_3_5_TURBO
           }
 
-          deepGramTranscriber {
+          deepgramTranscriber {
             transcriberModel = DeepgramModelType.BASE
             transcriberLanguage = DeepgramLanguageType.GERMAN
             customLanguage = "zzz"
