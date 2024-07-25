@@ -18,8 +18,8 @@ package com.vapi4k.responses.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.CartesiaVoiceLanguageType
 import com.vapi4k.dsl.assistant.enums.CartesiaVoiceModelType
-import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.CartesiaVoiceProperties
+import com.vapi4k.dsl.assistant.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

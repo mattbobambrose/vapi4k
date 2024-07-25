@@ -16,11 +16,8 @@
 
 package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.dsl.assistant.enums.ModelType
-import com.vapi4k.responses.assistant.FunctionDto
-import com.vapi4k.responses.assistant.KnowledgeBaseDto
+import com.vapi4k.dsl.assistant.model.enums.ModelType
 import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor

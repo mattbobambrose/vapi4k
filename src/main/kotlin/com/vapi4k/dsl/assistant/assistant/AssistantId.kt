@@ -18,8 +18,8 @@ package com.vapi4k.dsl.assistant.assistant
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.responses.assistant.AssistantDto
-import com.vapi4k.responses.assistant.AssistantOverridesDto
+import com.vapi4k.responses.assistant.assistant.AssistantDto
+import com.vapi4k.responses.assistant.assistant.AssistantOverridesDto
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantIdProperties {

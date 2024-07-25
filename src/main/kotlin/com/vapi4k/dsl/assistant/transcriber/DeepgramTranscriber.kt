@@ -18,7 +18,7 @@ package com.vapi4k.dsl.assistant.transcriber
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.DeepgramLanguageType
-import com.vapi4k.dsl.assistant.enums.DeepgramModelType
+import com.vapi4k.dsl.assistant.model.enums.DeepgramModelType
 import com.vapi4k.responses.assistant.transcriber.DeepgramTranscriberDto
 
 interface DeepgramTranscriberProperties {

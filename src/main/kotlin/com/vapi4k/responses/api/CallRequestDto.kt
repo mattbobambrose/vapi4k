@@ -20,9 +20,9 @@ package com.vapi4k.responses.api
 import com.vapi4k.dsl.assistant.api.CallProperties
 import com.vapi4k.dsl.assistant.assistant.AssistantIdProperties
 import com.vapi4k.dsl.assistant.squad.SquadIdSource
-import com.vapi4k.responses.assistant.AssistantDto
-import com.vapi4k.responses.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.SquadDto
+import com.vapi4k.responses.assistant.assistant.AssistantDto
+import com.vapi4k.responses.assistant.assistant.AssistantOverridesDto
+import com.vapi4k.responses.assistant.squad.SquadDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

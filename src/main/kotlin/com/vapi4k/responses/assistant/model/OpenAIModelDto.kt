@@ -16,9 +16,9 @@
 
 package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.dsl.assistant.enums.ModelType
-import com.vapi4k.dsl.assistant.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.model.OpenAIModelProperties
+import com.vapi4k.dsl.assistant.model.enums.ModelType
+import com.vapi4k.dsl.assistant.model.enums.OpenAIModelType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

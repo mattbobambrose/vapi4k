@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.enums.LMNTVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
+import com.vapi4k.dsl.assistant.voice.enums.LMNTVoiceIdType
 import com.vapi4k.responses.assistant.voice.LMNTVoiceDto
 
 interface LMNTVoiceProperties {

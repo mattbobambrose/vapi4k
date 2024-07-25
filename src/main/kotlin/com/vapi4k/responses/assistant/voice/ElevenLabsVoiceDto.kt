@@ -16,10 +16,10 @@
 
 package com.vapi4k.responses.assistant.voice
 
-import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceIdType
-import com.vapi4k.dsl.assistant.enums.ElevenLabsVoiceModelType
-import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.ElevenLabsVoiceProperties
+import com.vapi4k.dsl.assistant.voice.enums.ElevenLabsVoiceIdType
+import com.vapi4k.dsl.assistant.voice.enums.ElevenLabsVoiceModelType
+import com.vapi4k.dsl.assistant.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.assistant.tools
 
 import com.vapi4k.dsl.assistant.ToolCall
-import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.model.FunctionDto
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasTool

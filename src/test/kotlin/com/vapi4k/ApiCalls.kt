@@ -17,7 +17,7 @@
 package com.vapi4k
 
 import com.vapi4k.dsl.assistant.api.VapiApi.Companion.vapiApi
-import com.vapi4k.dsl.assistant.enums.OpenAIModelType
+import com.vapi4k.dsl.assistant.model.enums.OpenAIModelType
 import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import org.junit.Assert.assertThrows
 import org.junit.Test

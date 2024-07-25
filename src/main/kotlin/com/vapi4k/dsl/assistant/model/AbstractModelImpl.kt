@@ -22,9 +22,9 @@ import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.FunctionsImpl
 import com.vapi4k.dsl.assistant.tools.Tools
 import com.vapi4k.dsl.assistant.tools.ToolsImpl
-import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.responses.assistant.model.CommonModelDto
+import com.vapi4k.responses.assistant.model.KnowledgeBaseDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement

@@ -20,7 +20,7 @@ import com.vapi4k.common.DuplicateChecker
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.assistant.Assistant
 import com.vapi4k.dsl.assistant.assistant.AssistantImpl
-import com.vapi4k.responses.assistant.MemberDto
+import com.vapi4k.responses.assistant.squad.MemberDto
 
 @AssistantDslMarker
 interface Member {

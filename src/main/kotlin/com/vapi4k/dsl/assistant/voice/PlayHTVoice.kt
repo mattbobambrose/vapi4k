@@ -16,9 +16,9 @@
 
 package com.vapi4k.dsl.assistant.voice
 
-import com.vapi4k.dsl.assistant.enums.PlayHTVoiceEmotionType
-import com.vapi4k.dsl.assistant.enums.PlayHTVoiceIdType
 import com.vapi4k.dsl.assistant.enums.PunctuationType
+import com.vapi4k.dsl.assistant.voice.enums.PlayHTVoiceEmotionType
+import com.vapi4k.dsl.assistant.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.responses.assistant.voice.PlayHTVoiceDto
 
 interface PlayHTVoiceProperties {

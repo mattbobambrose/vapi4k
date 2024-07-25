@@ -22,7 +22,7 @@ import com.vapi4k.dsl.assistant.model.ModelMessageProperties
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.assistant.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.assistant.tools.ToolCache.addFunctionToCache
-import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.model.FunctionDto
 
 @AssistantDslMarker
 interface Functions {

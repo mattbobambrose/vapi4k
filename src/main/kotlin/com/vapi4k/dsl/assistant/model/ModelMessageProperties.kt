@@ -18,9 +18,9 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
-import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
+import com.vapi4k.responses.assistant.model.FunctionDto
+import com.vapi4k.responses.assistant.model.ToolDto
 
 interface ModelMessageProperties {
   val sessionId: SessionId

@@ -16,9 +16,9 @@
 
 package com.vapi4k.responses.assistant.voice
 
-import com.vapi4k.dsl.assistant.enums.NeetsVoiceIdType
-import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.NeetsVoiceProperties
+import com.vapi4k.dsl.assistant.voice.enums.NeetsVoiceIdType
+import com.vapi4k.dsl.assistant.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

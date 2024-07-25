@@ -16,9 +16,9 @@
 
 package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.dsl.assistant.enums.AnthropicModelType
-import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.dsl.assistant.model.AnthropicModelProperties
+import com.vapi4k.dsl.assistant.model.enums.AnthropicModelType
+import com.vapi4k.dsl.assistant.model.enums.ModelType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

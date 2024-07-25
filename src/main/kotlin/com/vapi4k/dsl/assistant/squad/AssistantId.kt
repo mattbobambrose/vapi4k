@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.assistant.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.responses.assistant.MemberDto
+import com.vapi4k.responses.assistant.squad.MemberDto
 
 @AssistantDslMarker
 class AssistantId internal constructor(private val dto: MemberDto) {

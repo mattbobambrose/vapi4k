@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.assistant.voice
 
 import com.vapi4k.dsl.assistant.enums.PunctuationType
-import com.vapi4k.dsl.assistant.enums.RimeAIVoiceIdType
-import com.vapi4k.dsl.assistant.enums.RimeAIVoiceModelType
+import com.vapi4k.dsl.assistant.voice.enums.RimeAIVoiceIdType
+import com.vapi4k.dsl.assistant.voice.enums.RimeAIVoiceModelType
 import com.vapi4k.responses.assistant.voice.RimeAIVoiceDto
 
 interface RimeAIVoiceProperties {

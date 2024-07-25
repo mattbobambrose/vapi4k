@@ -16,9 +16,9 @@
 
 package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.dsl.assistant.enums.GroqModelType
-import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.dsl.assistant.model.GroqModelProperties
+import com.vapi4k.dsl.assistant.model.enums.GroqModelType
+import com.vapi4k.dsl.assistant.model.enums.ModelType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

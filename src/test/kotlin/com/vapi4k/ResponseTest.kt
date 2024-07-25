@@ -19,8 +19,8 @@ package com.vapi4k
 import com.vapi4k.AssistantTest.Companion.assistantRequest
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.sipDestination
-import com.vapi4k.dsl.assistant.enums.AnthropicModelType
-import com.vapi4k.dsl.assistant.enums.DeepgramModelType
+import com.vapi4k.dsl.assistant.model.enums.AnthropicModelType
+import com.vapi4k.dsl.assistant.model.enums.DeepgramModelType
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.JsonUtils.toJsonString
 import org.junit.Test

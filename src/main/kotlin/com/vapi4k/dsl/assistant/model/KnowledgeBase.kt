@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.responses.assistant.KnowledgeBaseDto
+import com.vapi4k.responses.assistant.model.KnowledgeBaseDto
 import kotlinx.serialization.json.JsonElement
 
 interface KnowledgeBaseProperties {

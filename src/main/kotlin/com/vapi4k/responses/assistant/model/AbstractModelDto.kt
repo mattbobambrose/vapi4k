@@ -16,10 +16,7 @@
 
 package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.responses.assistant.FunctionDto
-import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

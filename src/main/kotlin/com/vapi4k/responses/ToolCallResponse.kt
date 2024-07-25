@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.tools.ToolCache.getToolCallFromCache
 import com.vapi4k.dsl.vapi4k.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.ToolCallRoleType
 import com.vapi4k.plugin.Vapi4kLogger.logger
-import com.vapi4k.responses.assistant.ToolMessageConditionDto
+import com.vapi4k.responses.assistant.model.ToolMessageConditionDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallArguments
 import com.vapi4k.utils.JsonElementUtils.toolCallId

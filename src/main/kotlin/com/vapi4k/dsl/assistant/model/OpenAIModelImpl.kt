@@ -18,7 +18,7 @@ package com.vapi4k.dsl.assistant.model
 
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.enums.OpenAIModelType
+import com.vapi4k.dsl.assistant.model.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
 import com.vapi4k.responses.assistant.model.OpenAIModelDto

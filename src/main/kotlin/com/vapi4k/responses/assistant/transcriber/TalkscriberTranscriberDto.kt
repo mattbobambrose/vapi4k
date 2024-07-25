@@ -17,10 +17,10 @@
 package com.vapi4k.responses.assistant.transcriber
 
 
-import com.vapi4k.dsl.assistant.enums.TalkscriberLanguageType
-import com.vapi4k.dsl.assistant.enums.TalkscriberModelType
-import com.vapi4k.dsl.assistant.enums.TranscriberType
 import com.vapi4k.dsl.assistant.transcriber.TalkscriberTranscriberProperties
+import com.vapi4k.dsl.assistant.transcriber.enums.TalkscriberLanguageType
+import com.vapi4k.dsl.assistant.transcriber.enums.TalkscriberModelType
+import com.vapi4k.dsl.assistant.transcriber.enums.TranscriberType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

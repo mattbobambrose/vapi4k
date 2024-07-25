@@ -16,10 +16,10 @@
 
 package com.vapi4k.responses.assistant.voice
 
-import com.vapi4k.dsl.assistant.enums.RimeAIVoiceIdType
-import com.vapi4k.dsl.assistant.enums.RimeAIVoiceModelType
-import com.vapi4k.dsl.assistant.enums.VoiceProviderType
 import com.vapi4k.dsl.assistant.voice.RimeAIVoiceProperties
+import com.vapi4k.dsl.assistant.voice.enums.RimeAIVoiceIdType
+import com.vapi4k.dsl.assistant.voice.enums.RimeAIVoiceModelType
+import com.vapi4k.dsl.assistant.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
