@@ -18,8 +18,8 @@ package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.assistantRequest
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
+import com.vapi4k.dsl.assistant.enums.AnthropicModelType
 import com.vapi4k.dsl.assistant.enums.DeepgramModelType
-import com.vapi4k.dsl.assistant.enums.OpenAIModelType
 import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.JsonUtils.toJsonString
 import org.junit.Test
@@ -30,8 +30,18 @@ class ResponseTest {
     val request = assistantRequest.toJsonElement()
     val assistant =
       assistant(request) {
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+        anthropicModel {
+          modelType = AnthropicModelType.CLAUDE_3_OPUS
+//          maxTokens = 99
+          userMessage = "Hello"
+          userMessage += " Hello2"
+          systemMessage = "Hello4"
+          systemMessage += " Hello5"
+
+          knowledgeBase {
+            fileIds += listOf("eeeee", "ffff")
+            topK = 5.3
+          }
         }
 
         deepGramTranscriber {

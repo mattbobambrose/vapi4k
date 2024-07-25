@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
-import com.vapi4k.responses.assistant.model.AbstractModelDto
+import com.vapi4k.responses.assistant.model.CommonModelDto
 import com.vapi4k.responses.assistant.transcriber.AbstractTranscriberDto
 import com.vapi4k.responses.assistant.voice.AbstractVoiceDto
 import kotlinx.serialization.SerialName
@@ -74,7 +74,7 @@ data class AssistantDto(
   var transcriberDto: AbstractTranscriberDto? = null,
 
   @SerialName("model")
-  var modelDto: AbstractModelDto? = null,
+  var modelDto: CommonModelDto? = null,
 
   @SerialName("voice")
   var voiceDto: AbstractVoiceDto? = null,

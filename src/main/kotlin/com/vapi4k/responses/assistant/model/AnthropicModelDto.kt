@@ -19,38 +19,18 @@ package com.vapi4k.responses.assistant.model
 import com.vapi4k.dsl.assistant.enums.AnthropicModelType
 import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.dsl.assistant.model.AnthropicModelProperties
-import com.vapi4k.responses.assistant.FunctionDto
-import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
 import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
 data class AnthropicModelDto(
   var model: String = "",
-
   @Transient
   override var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED,
-
   @Transient
   override var customModel: String = "",
-
-  override var temperature: Int = -1,
-  override var maxTokens: Int = -1,
-  override var emotionRecognitionEnabled: Boolean? = null,
-  override var numFastTurns: Int = -1,
-
-  override val messages: MutableList<RoleMessage> = mutableListOf(),
-  override val tools: MutableList<ToolDto> = mutableListOf(),
-  override val toolIds: MutableSet<String> = mutableSetOf(),
-  override val functions: MutableList<FunctionDto> = mutableListOf(),
-
-  @SerialName("knowledgeBase")
-  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : AnthropicModelProperties, AbstractModelDto {
+) : AbstractModelDto(), AnthropicModelProperties, CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.ANTHROPIC
 

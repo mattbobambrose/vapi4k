@@ -16,71 +16,25 @@
 
 package com.vapi4k.responses.assistant.model
 
-import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.responses.assistant.FunctionDto
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
 import com.vapi4k.responses.assistant.ToolDto
-import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = ModelSerializer::class)
-interface AbstractModelDto {
-  val provider: ModelType
+@Serializable
+abstract class AbstractModelDto() {
+  var temperature: Int = -1
+  var maxTokens: Int = -1
+  var emotionRecognitionEnabled: Boolean? = null
+  var numFastTurns: Int = -1
 
-  val tools: MutableList<ToolDto>
-  val functions: MutableList<FunctionDto>
-  var knowledgeBaseDto: KnowledgeBaseDto?
-  val messages: MutableList<RoleMessage>
-  fun verifyValues()
-}
+  val messages: MutableList<RoleMessage> = mutableListOf()
+  val tools: MutableList<ToolDto> = mutableListOf()
+  val toolIds: MutableSet<String> = mutableSetOf()
+  val functions: MutableList<FunctionDto> = mutableListOf()
 
-private object ModelSerializer : KSerializer<AbstractModelDto> {
-  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AbstractModelDto")
-
-  override fun serialize(
-    encoder: Encoder,
-    value: AbstractModelDto,
-  ) {
-    when (value) {
-      is AnyscaleModelDto -> encoder.encodeSerializableValue(AnyscaleModelDto.serializer(), value)
-
-      is AnthropicModelDto -> {
-        value.assignEnumOverrides()
-        encoder.encodeSerializableValue(AnthropicModelDto.serializer(), value)
-      }
-
-      is CustomLLMModelDto -> encoder.encodeSerializableValue(CustomLLMModelDto.serializer(), value)
-
-      is DeepInfraModelDto -> encoder.encodeSerializableValue(DeepInfraModelDto.serializer(), value)
-
-      is GroqModelDto -> {
-        value.assignEnumOverrides()
-        encoder.encodeSerializableValue(GroqModelDto.serializer(), value)
-      }
-
-      is OpenAIModelDto -> {
-        value.assignEnumOverrides()
-        encoder.encodeSerializableValue(OpenAIModelDto.serializer(), value)
-      }
-
-      is OpenRouterModelDto -> encoder.encodeSerializableValue(OpenRouterModelDto.serializer(), value)
-
-      is PerplexityAIModelDto -> encoder.encodeSerializableValue(PerplexityAIModelDto.serializer(), value)
-
-      is TogetherAIModelDto -> encoder.encodeSerializableValue(TogetherAIModelDto.serializer(), value)
-
-      is VapiModelDto -> encoder.encodeSerializableValue(VapiModelDto.serializer(), value)
-
-      else -> error("Invalid model provider: ${value::class.simpleName}")
-    }
-  }
-
-  override fun deserialize(decoder: Decoder): AbstractModelDto {
-    throw NotImplementedError("Deserialization is not supported")
-  }
+  @SerialName("knowledgeBase")
+  var knowledgeBaseDto: KnowledgeBaseDto? = null
 }

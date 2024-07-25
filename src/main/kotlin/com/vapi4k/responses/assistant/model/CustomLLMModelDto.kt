@@ -19,33 +19,15 @@ package com.vapi4k.responses.assistant.model
 import com.vapi4k.dsl.assistant.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.enums.ModelType
 import com.vapi4k.dsl.assistant.model.CustomLLMModelProperties
-import com.vapi4k.responses.assistant.FunctionDto
-import com.vapi4k.responses.assistant.KnowledgeBaseDto
-import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
 import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CustomLLMModelDto(
   override var model: String = "",
-  override var temperature: Int = -1,
-  override var maxTokens: Int = -1,
-  override var emotionRecognitionEnabled: Boolean? = null,
-  override var numFastTurns: Int = -1,
-
   override var url: String = "",
   override var metadataSendMode: MetaDataSendModeType = MetaDataSendModeType.UNSPECIFIED,
-
-  override val messages: MutableList<RoleMessage> = mutableListOf(),
-  override val tools: MutableList<ToolDto> = mutableListOf(),
-  override val toolIds: MutableSet<String> = mutableSetOf(),
-  override val functions: MutableList<FunctionDto> = mutableListOf(),
-
-  @SerialName("knowledgeBase")
-  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
-) : CustomLLMModelProperties, AbstractModelDto {
+) : AbstractModelDto(), CustomLLMModelProperties, CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.CUSTOM_LLM
 

@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
-import com.vapi4k.responses.assistant.model.AbstractModelDto
+import com.vapi4k.responses.assistant.model.CommonModelDto
 import com.vapi4k.responses.assistant.transcriber.AbstractTranscriberDto
 import com.vapi4k.responses.assistant.voice.AbstractVoiceDto
 import kotlinx.serialization.SerialName
@@ -54,7 +54,7 @@ data class AssistantOverridesDto(
   var transcriberDto: AbstractTranscriberDto? = null,
 
   @SerialName("model")
-  var modelDto: AbstractModelDto? = null,
+  var modelDto: CommonModelDto? = null,
 
   @SerialName("voice")
   var voiceDto: AbstractVoiceDto? = null,

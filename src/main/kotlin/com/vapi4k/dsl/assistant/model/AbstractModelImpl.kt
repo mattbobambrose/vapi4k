@@ -27,7 +27,7 @@ import com.vapi4k.dsl.assistant.tools.Tools
 import com.vapi4k.dsl.assistant.tools.ToolsImpl
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.model.AbstractModelDto
+import com.vapi4k.responses.assistant.model.CommonModelDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 import kotlinx.serialization.json.JsonElement
@@ -35,7 +35,7 @@ import kotlinx.serialization.json.JsonElement
 abstract class AbstractModelImpl(
   internal val request: JsonElement,
   override val cacheId: CacheId,
-  private val dto: AbstractModelDto,
+  private val dto: CommonModelDto,
 ) : ModelMessageProperties {
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
