@@ -96,7 +96,7 @@ data class AssistantDto(
 
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantProperties, AssistantBridge {
+) : AssistantProperties, ModelDtoBridge {
   @Transient
   var updated = false
 

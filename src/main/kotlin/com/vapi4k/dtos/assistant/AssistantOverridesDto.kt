@@ -79,4 +79,4 @@ data class AssistantOverridesDto(
   val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantOverridesProperties, AssistantBridge
+) : AssistantOverridesProperties, ModelDtoBridge
