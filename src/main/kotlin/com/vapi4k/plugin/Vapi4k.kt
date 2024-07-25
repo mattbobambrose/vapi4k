@@ -17,10 +17,10 @@
 package com.vapi4k.plugin
 
 import com.vapi4k.common.SessionId.Companion.toSessionId
-import com.vapi4k.dsl.assistant.assistant.AssistantImpl
-import com.vapi4k.dsl.assistant.tools.ToolCache.cacheIsActive
-import com.vapi4k.dsl.assistant.tools.ToolCache.removeFunctionFromCache
-import com.vapi4k.dsl.assistant.tools.ToolCache.removeToolCallFromCache
+import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.tools.ToolCache.cacheIsActive
+import com.vapi4k.dsl.tools.ToolCache.removeFunctionFromCache
+import com.vapi4k.dsl.tools.ToolCache.removeToolCallFromCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.dsl.vapi4k.enums.RequestResponseType

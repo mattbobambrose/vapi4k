@@ -17,13 +17,12 @@
 package com.vapi4k.responses
 
 
-import com.vapi4k.dsl.assistant.assistant.AssistantIdProperties
-import com.vapi4k.dsl.assistant.assistant.AssistantImpl
-import com.vapi4k.dsl.assistant.squad.SquadIdSource
-import com.vapi4k.responses.assistant.assistant.AssistantDto
-import com.vapi4k.responses.assistant.assistant.AssistantOverridesDto
-import com.vapi4k.responses.assistant.destination.CommonDestinationDto
-import com.vapi4k.responses.assistant.squad.SquadDto
+import com.vapi4k.dsl.assistant.AssistantIdProperties
+import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.squad.SquadIdSource
+import com.vapi4k.dtos.assistant.assistant.AssistantOverridesDto
+import com.vapi4k.dtos.assistant.destination.CommonDestinationDto
+import com.vapi4k.dtos.assistant.squad.SquadDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -35,7 +34,7 @@ data class AssistantRequestResponse(
   override var assistantId: String = "",
 
   @SerialName("assistant")
-  override val assistantDto: AssistantDto = AssistantDto(),
+  override val assistantDto: com.vapi4k.dtos.assistant.assistant.AssistantDto = com.vapi4k.dtos.assistant.assistant.AssistantDto(),
 
   @SerialName("assistantOverrides")
   override val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),

@@ -17,7 +17,7 @@
 package com.vapi4k.responses
 
 import com.vapi4k.common.SessionId.Companion.toSessionId
-import com.vapi4k.dsl.assistant.tools.ToolCache.getFunctionFromCache
+import com.vapi4k.dsl.tools.ToolCache.getFunctionFromCache
 import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.utils.JsonElementUtils.functionName
 import com.vapi4k.utils.JsonElementUtils.functionParameters

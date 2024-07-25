@@ -32,12 +32,12 @@ package com.vapi4k/*
 
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
-import com.vapi4k.dsl.assistant.assistant.eq
-import com.vapi4k.dsl.assistant.tools.RequestComplete
-import com.vapi4k.dsl.assistant.tools.RequestComplete.Companion.requestComplete
-import com.vapi4k.dsl.assistant.tools.RequestFailed
-import com.vapi4k.dsl.assistant.tools.RequestFailed.Companion.requestFailed
-import com.vapi4k.dsl.assistant.tools.ToolCallService
+import com.vapi4k.dsl.assistant.eq
+import com.vapi4k.dsl.tools.RequestComplete
+import com.vapi4k.dsl.tools.RequestComplete.Companion.requestComplete
+import com.vapi4k.dsl.tools.RequestFailed
+import com.vapi4k.dsl.tools.RequestFailed.Companion.requestFailed
+import com.vapi4k.dsl.tools.ToolCallService
 import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
 import kotlinx.serialization.json.JsonElement
 
