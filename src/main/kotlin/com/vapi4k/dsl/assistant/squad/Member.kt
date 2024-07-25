@@ -17,9 +17,9 @@
 package com.vapi4k.dsl.assistant.squad
 
 import com.vapi4k.common.DuplicateChecker
-import com.vapi4k.dsl.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.assistant.assistant.Assistant
+import com.vapi4k.dsl.assistant.assistant.AssistantImpl
 import com.vapi4k.responses.assistant.MemberDto
 
 @AssistantDslMarker
@@ -44,7 +44,7 @@ data class MemberImpl(
     memberChecker.check("Member already has an assistant assigned")
     return AssistantImpl(
       members.squad.request,
-      members.squad.cacheId,
+      members.squad.sessionId,
       dto.assistant,
       dto.assistantOverrides
     ).apply(block)

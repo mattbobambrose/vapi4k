@@ -16,9 +16,8 @@
 
 package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.CacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
 import com.vapi4k.responses.assistant.model.DeepInfraModelDto
@@ -47,6 +46,6 @@ interface DeepInfraModel : DeepInfraModelProperties {
 
 class DeepInfraModelImpl(
   request: JsonElement,
-  cacheId: CacheId,
+  sessionId: SessionId,
   dto: DeepInfraModelDto,
-) : DeepInfraModelProperties by dto, DeepInfraModel, AbstractModelImpl(request, cacheId, dto)
+) : DeepInfraModelProperties by dto, DeepInfraModel, AbstractModelImpl(request, sessionId, dto)

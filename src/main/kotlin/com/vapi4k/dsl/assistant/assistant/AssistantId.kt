@@ -14,9 +14,10 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.assistant
 
-import com.vapi4k.common.CacheId
+import com.vapi4k.common.SessionId
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.responses.assistant.AssistantDto
 import com.vapi4k.responses.assistant.AssistantOverridesDto
 import kotlinx.serialization.json.JsonElement
@@ -36,7 +37,7 @@ interface AssistantId {
 
 data class AssistantIdImpl internal constructor(
   internal val request: JsonElement,
-  private val cacheId: CacheId,
+  private val sessionId: SessionId,
   internal val assistantIdProperties: AssistantIdProperties,
 ) : AssistantIdProperties by assistantIdProperties, AssistantId {
   override var id
@@ -46,5 +47,5 @@ data class AssistantIdImpl internal constructor(
     }
 
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(request, cacheId, assistantIdProperties.assistantOverridesDto).apply(block)
+    AssistantOverridesImpl(request, sessionId, assistantIdProperties.assistantOverridesDto).apply(block)
 }

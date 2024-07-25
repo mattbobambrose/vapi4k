@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.assistant
 
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.responses.assistant.ToolMessageConditionDto.Companion.toolMessageCondition

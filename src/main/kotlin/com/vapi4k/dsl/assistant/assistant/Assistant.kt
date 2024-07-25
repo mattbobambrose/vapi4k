@@ -14,10 +14,11 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.assistant
 
-import com.vapi4k.common.CacheId
 import com.vapi4k.common.DuplicateChecker
+import com.vapi4k.common.SessionId
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
@@ -133,7 +134,7 @@ interface Assistant : AssistantProperties {
 
 data class AssistantImpl internal constructor(
   internal val request: JsonElement,
-  private val cacheId: CacheId,
+  private val sessionId: SessionId,
   internal val assistantDto: AssistantDto,
   internal val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantProperties by assistantDto, Assistant {
@@ -154,34 +155,34 @@ data class AssistantImpl internal constructor(
 
   // Models
   override fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel =
-    anyscaleModel(request, cacheId, assistantDto, modelChecker, block)
+    anyscaleModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel =
-    anthropicModel(request, cacheId, assistantDto, modelChecker, block)
+    anthropicModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel =
-    customLLMModel(request, cacheId, assistantDto, modelChecker, block)
+    customLLMModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel =
-    deepInfraModel(request, cacheId, assistantDto, modelChecker, block)
+    deepInfraModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun groqModel(block: GroqModel.() -> Unit): GroqModel =
-    groqModel(request, cacheId, assistantDto, modelChecker, block)
+    groqModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel =
-    openAIModel(request, cacheId, assistantDto, modelChecker, block)
+    openAIModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel =
-    openRouterModel(request, cacheId, assistantDto, modelChecker, block)
+    openRouterModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel =
-    perplexityAIModel(request, cacheId, assistantDto, modelChecker, block)
+    perplexityAIModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel =
-    togetherAIModel(request, cacheId, assistantDto, modelChecker, block)
+    togetherAIModel(request, sessionId, assistantDto, modelChecker, block)
 
   override fun vapiModel(block: VapiModel.() -> Unit): VapiModel =
-    vapiModel(request, cacheId, assistantDto, modelChecker, block)
+    vapiModel(request, sessionId, assistantDto, modelChecker, block)
 
 
   // Voices
@@ -215,7 +216,7 @@ data class AssistantImpl internal constructor(
 
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(request, cacheId, assistantOverridesDto).apply(block)
+    AssistantOverridesImpl(request, sessionId, assistantOverridesDto).apply(block)
 
   companion object {
     internal lateinit var config: Vapi4kConfig

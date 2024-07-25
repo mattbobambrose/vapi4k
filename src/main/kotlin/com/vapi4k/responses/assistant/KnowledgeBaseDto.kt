@@ -17,7 +17,7 @@
 package com.vapi4k.responses.assistant
 
 
-import com.vapi4k.dsl.assistant.KnowledgeBaseProperties
+import com.vapi4k.dsl.assistant.model.KnowledgeBaseProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 

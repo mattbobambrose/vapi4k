@@ -16,9 +16,8 @@
 
 package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.CacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.enums.MetaDataSendModeType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
@@ -50,6 +49,6 @@ interface CustomLLMModel : CustomLLMModelProperties {
 
 class CustomLLMModelImpl(
   request: JsonElement,
-  cacheId: CacheId,
+  sessionId: SessionId,
   dto: CustomLLMModelDto,
-) : CustomLLMModelProperties by dto, CustomLLMModel, AbstractModelImpl(request, cacheId, dto)
+) : CustomLLMModelProperties by dto, CustomLLMModel, AbstractModelImpl(request, sessionId, dto)

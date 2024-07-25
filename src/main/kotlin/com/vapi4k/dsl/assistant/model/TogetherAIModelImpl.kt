@@ -16,9 +16,8 @@
 
 package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.CacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
 import com.vapi4k.responses.assistant.model.TogetherAIModelDto
@@ -47,6 +46,6 @@ interface TogetherAIModel : TogetherAIModelProperties {
 
 class TogetherAIModelImpl(
   request: JsonElement,
-  cacheId: CacheId,
+  sessionId: SessionId,
   dto: TogetherAIModelDto,
-) : TogetherAIModelProperties by dto, TogetherAIModel, AbstractModelImpl(request, cacheId, dto)
+) : TogetherAIModelProperties by dto, TogetherAIModel, AbstractModelImpl(request, sessionId, dto)

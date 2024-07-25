@@ -14,12 +14,23 @@
  *
  */
 
-package com.vapi4k.utils
+package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.common.SessionId
+import com.vapi4k.dsl.assistant.enums.MessageRoleType
+import com.vapi4k.responses.assistant.FunctionDto
+import com.vapi4k.responses.assistant.RoleMessage
+import com.vapi4k.responses.assistant.ToolDto
 
-object Utils {
-  val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
+interface ModelMessageProperties {
+  val sessionId: SessionId
+  val messageCallId: String
+  val toolDtos: MutableList<ToolDto>
+  val functionDtos: MutableList<FunctionDto>
+  val messages: MutableList<RoleMessage>
 
-  fun nextCacheId() = "Outbound-${System.currentTimeMillis()}".toSessionId()
+  fun message(
+    role: MessageRoleType,
+    content: String,
+  )
 }

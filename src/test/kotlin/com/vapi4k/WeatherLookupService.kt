@@ -32,7 +32,7 @@ package com.vapi4k/*
 
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
-import com.vapi4k.dsl.assistant.eq
+import com.vapi4k.dsl.assistant.assistant.eq
 import com.vapi4k.dsl.assistant.tools.RequestComplete
 import com.vapi4k.dsl.assistant.tools.RequestComplete.Companion.requestComplete
 import com.vapi4k.dsl.assistant.tools.RequestFailed

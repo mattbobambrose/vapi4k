@@ -16,9 +16,8 @@
 
 package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.CacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.enums.OpenAIModelType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
@@ -52,6 +51,6 @@ interface OpenAIModel : OpenAIModelProperties {
 
 class OpenAIModelImpl(
   request: JsonElement,
-  cacheId: CacheId,
+  sessionId: SessionId,
   dto: OpenAIModelDto,
-) : OpenAIModelProperties by dto, OpenAIModel, AbstractModelImpl(request, cacheId, dto)
+) : OpenAIModelProperties by dto, OpenAIModel, AbstractModelImpl(request, sessionId, dto)

@@ -17,10 +17,10 @@
 package com.vapi4k.dsl.assistant.squad
 
 
-import com.vapi4k.common.CacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.AssistantOverrides
-import com.vapi4k.dsl.assistant.AssistantOverridesImpl
+import com.vapi4k.dsl.assistant.assistant.AssistantOverrides
+import com.vapi4k.dsl.assistant.assistant.AssistantOverridesImpl
 import com.vapi4k.responses.assistant.SquadDto
 import kotlinx.serialization.json.JsonElement
 
@@ -36,11 +36,11 @@ interface Squad : SquadProperties {
 
 data class SquadImpl internal constructor(
   internal val request: JsonElement,
-  internal val cacheId: CacheId,
+  internal val sessionId: SessionId,
   internal val dto: SquadDto,
 ) : SquadProperties by dto, Squad {
   override fun members(block: Members.() -> Unit): Members = MembersImpl(this).apply(block)
 
   override fun memberOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(request, cacheId, dto.membersOverrides).apply(block)
+    AssistantOverridesImpl(request, sessionId, dto.membersOverrides).apply(block)
 }

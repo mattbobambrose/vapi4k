@@ -14,8 +14,9 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.model
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.responses.assistant.KnowledgeBaseDto
 import kotlinx.serialization.json.JsonElement
 

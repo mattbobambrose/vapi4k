@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.assistant.assistant.AssistantImpl
 
 @Vapi4KDslMarker
 class ToolCallEndpoints internal constructor() {

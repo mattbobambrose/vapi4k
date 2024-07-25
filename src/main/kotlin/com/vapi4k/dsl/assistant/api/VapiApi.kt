@@ -17,9 +17,9 @@
 package com.vapi4k.dsl.assistant.api
 
 import com.typesafe.config.ConfigFactory
-import com.vapi4k.common.CacheId.Companion.UNSPECIFIED_CACHE_ID
-import com.vapi4k.common.CacheId.Companion.toCacheId
 import com.vapi4k.common.Constants.VAPI_API_URL
+import com.vapi4k.common.SessionId.Companion.UNSPECIFIED_SESSION_ID
+import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.enums.ApiObjectType
 import com.vapi4k.dsl.assistant.tools.ToolCache.swapCacheKeys
@@ -75,7 +75,7 @@ class VapiApi private constructor(
     val hasId = jsonElement.jsonObject.containsKey("id")
     if (hasId) {
       logger.info { "Call ID: ${jsonElement.id}" }
-      swapCacheKeys(phone.cacheId, jsonElement.id.toCacheId())
+      swapCacheKeys(phone.cacheId, jsonElement.id.toSessionId())
     } else {
       logger.warn { "No call ID found in response" }
     }
@@ -161,5 +161,5 @@ class Phone {
 @AssistantDslMarker
 class Save {
   fun call(block: Call.() -> Unit): CallRequestDto =
-    CallRequestDto().also { CallImpl(UNSPECIFIED_CACHE_ID, it).apply(block) }
+    CallRequestDto().also { CallImpl(UNSPECIFIED_SESSION_ID, it).apply(block) }
 }

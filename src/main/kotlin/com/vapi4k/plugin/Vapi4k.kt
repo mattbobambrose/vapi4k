@@ -16,8 +16,8 @@
 
 package com.vapi4k.plugin
 
-import com.vapi4k.common.CacheId.Companion.toCacheId
-import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.dsl.assistant.assistant.AssistantImpl
 import com.vapi4k.dsl.assistant.tools.ToolCache.cacheIsActive
 import com.vapi4k.dsl.assistant.tools.ToolCache.removeFunctionFromCache
 import com.vapi4k.dsl.assistant.tools.ToolCache.removeToolCallFromCache
@@ -154,7 +154,7 @@ private suspend fun KtorCallContext.handleServerPathPost(requestResponseCallback
         }
 
         END_OF_CALL_REPORT -> {
-          val messageCallId = request.messageCallId.toCacheId()
+          val messageCallId = request.messageCallId.toSessionId()
           var notFound = true
 
           removeToolCallFromCache(messageCallId) { funcInfo ->

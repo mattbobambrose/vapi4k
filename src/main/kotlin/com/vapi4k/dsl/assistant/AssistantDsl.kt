@@ -16,7 +16,11 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.CacheId.Companion.toCacheId
+import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.dsl.assistant.assistant.Assistant
+import com.vapi4k.dsl.assistant.assistant.AssistantId
+import com.vapi4k.dsl.assistant.assistant.AssistantIdImpl
+import com.vapi4k.dsl.assistant.assistant.AssistantImpl
 import com.vapi4k.dsl.assistant.destination.NumberDestination
 import com.vapi4k.dsl.assistant.destination.NumberDestinationImpl
 import com.vapi4k.dsl.assistant.destination.SipDestination
@@ -46,7 +50,7 @@ object AssistantDsl {
   ) =
     AssistantRequestMessageResponse().apply {
       with(messageResponse) {
-        AssistantImpl(request, request.messageCallId.toCacheId(), assistantDto, assistantOverridesDto)
+        AssistantImpl(request, request.messageCallId.toSessionId(), assistantDto, assistantOverridesDto)
           .apply(block)
           .apply {
             assistantDto.updated = true
@@ -60,7 +64,7 @@ object AssistantDsl {
     block: AssistantId.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      AssistantIdImpl(request, request.messageCallId.toCacheId(), messageResponse).apply(block)
+      AssistantIdImpl(request, request.messageCallId.toSessionId(), messageResponse).apply(block)
     }.messageResponse
 
   fun squad(
@@ -68,7 +72,7 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestMessageResponse().apply {
-      SquadImpl(request, request.messageCallId.toCacheId(), messageResponse.squadDto).apply(block)
+      SquadImpl(request, request.messageCallId.toSessionId(), messageResponse.squadDto).apply(block)
     }.messageResponse
 
   fun squadId(

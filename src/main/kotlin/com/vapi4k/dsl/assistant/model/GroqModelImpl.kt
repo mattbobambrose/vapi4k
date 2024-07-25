@@ -16,9 +16,8 @@
 
 package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.CacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.enums.GroqModelType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
@@ -49,6 +48,6 @@ interface GroqModel : GroqModelProperties {
 
 class GroqModelImpl(
   request: JsonElement,
-  cacheId: CacheId,
+  sessionId: SessionId,
   dto: GroqModelDto,
-) : GroqModelProperties by dto, GroqModel, AbstractModelImpl(request, cacheId, dto)
+) : GroqModelProperties by dto, GroqModel, AbstractModelImpl(request, sessionId, dto)

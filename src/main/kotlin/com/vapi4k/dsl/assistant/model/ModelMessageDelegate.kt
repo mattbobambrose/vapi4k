@@ -14,13 +14,9 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.CacheId
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
-import com.vapi4k.responses.assistant.FunctionDto
-import com.vapi4k.responses.assistant.RoleMessage
-import com.vapi4k.responses.assistant.ToolDto
 import kotlin.reflect.KProperty
 
 internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType) {
@@ -39,15 +35,3 @@ internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType
   ) = model.message(messageRoleType, newVal)
 }
 
-interface ModelMessageProperties {
-  val cacheId: CacheId
-  val messageCallId: String
-  val toolDtos: MutableList<ToolDto>
-  val functionDtos: MutableList<FunctionDto>
-  val messages: MutableList<RoleMessage>
-
-  fun message(
-    role: MessageRoleType,
-    content: String,
-  )
-}

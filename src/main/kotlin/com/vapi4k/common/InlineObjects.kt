@@ -18,16 +18,16 @@ package com.vapi4k.common
 
 
 @JvmInline
-value class CacheId private constructor(val value: String) {
+value class SessionId private constructor(val value: String) {
 
   fun isNotSpecified() = value == UNSPECIFIED_VALUE
 
   override fun toString() = value
 
   companion object {
-    private const val UNSPECIFIED_VALUE = "_Unspecified_"
-    val UNSPECIFIED_CACHE_ID = CacheId(UNSPECIFIED_VALUE)
+    private const val UNSPECIFIED_VALUE = "_unspecified_"
+    val UNSPECIFIED_SESSION_ID = SessionId(UNSPECIFIED_VALUE)
 
-    fun String.toCacheId(): CacheId = CacheId(this)
+    fun String.toSessionId(): SessionId = SessionId(this)
   }
 }

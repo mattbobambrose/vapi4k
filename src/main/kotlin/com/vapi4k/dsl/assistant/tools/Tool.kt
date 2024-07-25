@@ -17,12 +17,12 @@
 package com.vapi4k.dsl.assistant.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.assistant.isMatching
 import com.vapi4k.dsl.assistant.enums.ToolMessageType
 import com.vapi4k.dsl.assistant.enums.ToolMessageType.REQUEST_COMPLETE
 import com.vapi4k.dsl.assistant.enums.ToolMessageType.REQUEST_FAILED
 import com.vapi4k.dsl.assistant.enums.ToolMessageType.REQUEST_RESPONSE_DELAYED
 import com.vapi4k.dsl.assistant.enums.ToolMessageType.REQUEST_START
-import com.vapi4k.dsl.assistant.isMatching
 import com.vapi4k.responses.assistant.ToolDto
 import com.vapi4k.responses.assistant.ToolMessageConditionDto
 import com.vapi4k.responses.assistant.ToolMessageDto

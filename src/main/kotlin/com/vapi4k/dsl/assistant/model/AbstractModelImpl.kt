@@ -16,10 +16,7 @@
 
 package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.CacheId
-import com.vapi4k.dsl.assistant.KnowledgeBase
-import com.vapi4k.dsl.assistant.ModelMessageDelegate
-import com.vapi4k.dsl.assistant.ModelMessageProperties
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.enums.MessageRoleType
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.FunctionsImpl
@@ -34,7 +31,7 @@ import kotlinx.serialization.json.JsonElement
 
 abstract class AbstractModelImpl(
   internal val request: JsonElement,
-  override val cacheId: CacheId,
+  override val sessionId: SessionId,
   private val dto: CommonModelDto,
 ) : ModelMessageProperties {
   override val messages get() = dto.messages

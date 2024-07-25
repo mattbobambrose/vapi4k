@@ -16,9 +16,8 @@
 
 package com.vapi4k.dsl.assistant.model
 
-import com.vapi4k.common.CacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.KnowledgeBase
 import com.vapi4k.dsl.assistant.tools.Functions
 import com.vapi4k.dsl.assistant.tools.Tools
 import com.vapi4k.responses.assistant.model.AnyscaleModelDto
@@ -47,6 +46,6 @@ interface AnyscaleModel : AnyscaleModelProperties {
 
 class AnyscaleModelImpl(
   request: JsonElement,
-  cacheId: CacheId,
+  sessionId: SessionId,
   dto: AnyscaleModelDto,
-) : AnyscaleModelProperties by dto, AnyscaleModel, AbstractModelImpl(request, cacheId, dto)
+) : AnyscaleModelProperties by dto, AnyscaleModel, AbstractModelImpl(request, sessionId, dto)
