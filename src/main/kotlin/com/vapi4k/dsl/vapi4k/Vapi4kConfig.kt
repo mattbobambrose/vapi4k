@@ -50,10 +50,10 @@ class Vapi4kConfig internal constructor() {
 
   internal val defaultToolCallEndpoint
     get() = Endpoint().apply {
-      url = this@Vapi4kConfig.configProperties.serverUrl.ifEmpty {
+      serverUrl = this@Vapi4kConfig.configProperties.serverUrl.ifEmpty {
         error("No default tool endpoint has been specified in the Vapi4k configuration")
       }
-      secret = this@Vapi4kConfig.configProperties.serverUrlSecret
+      serverUrlSecret = this@Vapi4kConfig.configProperties.serverUrlSecret
     }
 
   internal fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }

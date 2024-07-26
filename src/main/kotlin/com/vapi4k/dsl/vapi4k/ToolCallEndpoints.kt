@@ -24,14 +24,14 @@ class ToolCallEndpoints internal constructor() {
     AssistantImpl.config.toolCallEndpoints.any { it.name == endpoint.name }
 
   private fun hasUrl(endpoint: Endpoint) =
-    AssistantImpl.config.toolCallEndpoints.any { it.url == endpoint.url }
+    AssistantImpl.config.toolCallEndpoints.any { it.serverUrl == endpoint.serverUrl }
 
   fun endpoint(block: Endpoint.() -> Unit) {
     AssistantImpl.config.toolCallEndpoints += Endpoint().apply(block).also { endpoint ->
       when {
         hasName(endpoint) && endpoint.name.isEmpty() -> error("Duplicate blank endpoint names")
         hasName(endpoint) -> error("Duplicate endpoint name: ${endpoint.name}")
-        hasUrl(endpoint) -> error("Duplicate endpoint url: ${endpoint.url}")
+        hasUrl(endpoint) -> error("Duplicate endpoint url: ${endpoint.serverUrl}")
       }
     }
   }

@@ -191,7 +191,7 @@ private suspend fun KtorCallContext.handleToolCallPathPost(
   endpoint: Endpoint,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
-  if (isValidSecret(endpoint.secret)) {
+  if (isValidSecret(endpoint.serverUrlSecret)) {
     val json = call.receive<String>()
     val request = json.toJsonElement()
     val requestType = request.requestType

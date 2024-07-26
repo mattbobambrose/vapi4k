@@ -14,21 +14,26 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package com.vapi4k
 
-import com.vapi4k.utils.ReflectionUtils.ensureStartsWith
-import kotlinx.serialization.SerialName
-import java.net.URI
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.testApplication
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
-@Vapi4KDslMarker
-class Endpoint internal constructor() {
-  internal val path get() = URI(serverUrl).toURL().path.ensureStartsWith("/")
-  var name = ""
+class ServerTest {
 
-  @SerialName("url")
-  var serverUrl = ""
+  @Test
+  fun testServer() {
+    testApplication {
+      application {
 
-  @SerialName("secret")
-  var serverUrlSecret = ""
-  var timeoutSeconds = -1
+      }
+      val response = client.get("/")
+      assertEquals(HttpStatusCode.OK, response.status)
+      assertEquals("Hello, world!", response.bodyAsText())
+    }
+  }
 }

@@ -45,15 +45,15 @@ fun Application.module() {
     toolCallEndpoints {
       endpoint {
         name = "endpoint1"
-        url = "$BASE_URL/toolCall"
-        secret = "456"
+        serverUrl = "$BASE_URL/toolCall"
+        serverUrlSecret = "456"
         timeoutSeconds = 20
       }
 
       endpoint {
         name = "endpoint2"
-        url = "$BASE_URL/TC2"
-        secret = "456"
+        serverUrl = "$BASE_URL/TC2"
+        serverUrlSecret = "456"
         timeoutSeconds = 20
       }
     }

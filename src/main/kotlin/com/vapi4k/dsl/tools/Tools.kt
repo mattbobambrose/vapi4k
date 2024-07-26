@@ -68,8 +68,8 @@ data class ToolsImpl internal constructor(internal val model: ModelMessageProper
       ToolImpl(toolDto).apply(block).apply { verifyFutureDelay(toolDto) }
 
       with(toolDto.server) {
-        url = endpoint.url
-        secret = endpoint.secret
+        url = endpoint.serverUrl
+        secret = endpoint.serverUrlSecret
         if (endpoint.timeoutSeconds != -1) {
           timeoutSeconds = endpoint.timeoutSeconds
         }
