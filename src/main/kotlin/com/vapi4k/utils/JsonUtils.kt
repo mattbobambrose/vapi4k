@@ -54,3 +54,6 @@ fun String.toJsonElement() = Json.parseToJsonElement(this)
 inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)
 
 inline fun <reified T> String.toObject() = Json.decodeFromString<T>(this)
+
+fun JsonElement.stringValue(key: String) = get(key).stringValue
+fun JsonElement.intValue(key: String) = get(key).intValue

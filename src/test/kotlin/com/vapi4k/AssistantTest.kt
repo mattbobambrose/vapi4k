@@ -70,7 +70,7 @@ class AssistantTest {
   fun JsonElement.tools() = get("assistant.model.tools").jsonElementList
   fun JsonElement.firstMessage() = tools().first()["messages"].jsonElementList
   fun JsonElement.firstMessageOfType(type: ToolMessageType) =
-    firstMessage().single { it["type"].stringValue == type.desc }
+    firstMessage().single { it.stringValue("type") == type.desc }
 
   @Test
   fun testRegular() {
@@ -98,7 +98,7 @@ class AssistantTest {
 
     assertEquals(
       "This is the test request start message",
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START)["content"].stringValue
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START).stringValue("content")
     )
   }
 
@@ -127,8 +127,8 @@ class AssistantTest {
       }
 
     with(jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)) {
-      assertEquals(delayedMessage, get("content").stringValue)
-      assertEquals(2000, get("timingMilliseconds").intValue)
+      assertEquals(delayedMessage, stringValue("content"))
+      assertEquals(2000, intValue("timingMilliseconds"))
     }
   }
 
@@ -155,8 +155,7 @@ class AssistantTest {
         }
       }
     assertEquals(
-      99,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED).get("timingMilliseconds").intValue
+      99, jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED).intValue("timingMilliseconds")
     )
   }
 
@@ -212,8 +211,8 @@ class AssistantTest {
       }
 
     with(jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)) {
-      assertEquals(secondDelayedMessage, get("content").stringValue)
-      assertEquals(2000, get("timingMilliseconds").intValue)
+      assertEquals(secondDelayedMessage, stringValue("content"))
+      assertEquals(2000, intValue("timingMilliseconds"))
     }
   }
 
@@ -504,7 +503,7 @@ class AssistantTest {
     val element = assistant.toJsonElement()
     assertEquals(
       ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL.desc,
-      element["assistant.firstMessageMode"].stringValue
+      element.stringValue("assistant.firstMessageMode")
     )
   }
 
