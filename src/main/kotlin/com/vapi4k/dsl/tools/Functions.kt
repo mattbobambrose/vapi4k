@@ -34,12 +34,12 @@ data class FunctionsImpl internal constructor(internal val model: ModelMessagePr
     model.functionDtos += FunctionDto().also { functionDto ->
       verifyObject(true, obj)
       populateFunctionDto(obj, functionDto)
-      val cacheId =
+      val sessionCacheId =
         if (model.sessionCacheId.isNotSpecified())
           model.sessionCacheId
         else
           model.messageCallId.toSessionCacheId()
-      addFunctionToCache(cacheId, obj)
+      addFunctionToCache(sessionCacheId, obj)
     }.also { func ->
       if (model.functionDtos.any { func.name == it.name }) {
         error("Duplicate function name declared: ${func.name}")

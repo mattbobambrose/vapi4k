@@ -20,10 +20,10 @@ import com.vapi4k.common.Constants.DEFAULT_SERVER_PATH
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.server.Vapi4k
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.stringValue
-import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.Utils.resourceFile
+import com.vapi4k.utils.get
+import com.vapi4k.utils.stringValue
+import com.vapi4k.utils.toJsonElement
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.post

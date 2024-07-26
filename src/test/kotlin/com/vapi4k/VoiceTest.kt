@@ -23,9 +23,9 @@ import com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.dsl.voice.enums.CartesiaVoiceModelType
 import com.vapi4k.dsl.voice.enums.PlayHTVoiceEmotionType
 import com.vapi4k.dsl.voice.enums.PlayHTVoiceIdType
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.stringValue
-import com.vapi4k.utils.JsonUtils.toJsonElement
+import com.vapi4k.utils.get
+import com.vapi4k.utils.stringValue
+import com.vapi4k.utils.toJsonElement
 import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertThrows
 import org.junit.Test

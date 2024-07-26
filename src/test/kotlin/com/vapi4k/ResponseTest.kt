@@ -21,8 +21,8 @@ import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.sipDestination
 import com.vapi4k.dsl.model.enums.AnthropicModelType
 import com.vapi4k.dsl.model.enums.DeepgramModelType
-import com.vapi4k.utils.JsonUtils.toJsonElement
-import com.vapi4k.utils.JsonUtils.toJsonString
+import com.vapi4k.utils.toJsonElement
+import com.vapi4k.utils.toJsonString
 import org.junit.Test
 
 class ResponseTest {

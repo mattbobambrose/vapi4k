@@ -17,7 +17,6 @@
 package com.vapi4k.utils
 
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.JsonUtils.toJsonString
 
 object DslUtils {
   inline fun <reified T> logObject(

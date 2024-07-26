@@ -28,9 +28,9 @@ import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.id
-import com.vapi4k.utils.JsonUtils.toJsonString
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.nextSessionCacheId
+import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
@@ -75,7 +75,7 @@ class VapiApi private constructor(
     val hasId = jsonElement.jsonObject.containsKey("id")
     if (hasId) {
       logger.info { "Call ID: ${jsonElement.id}" }
-      swapCacheKeys(phone.cacheId, jsonElement.id.toSessionCacheId())
+      swapCacheKeys(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
     } else {
       logger.warn { "No call ID found in response" }
     }
@@ -154,9 +154,9 @@ class VapiApi private constructor(
 
 @AssistantDslMarker
 class Phone {
-  internal val cacheId = nextSessionCacheId()
+  internal val sessionCacheId = nextSessionCacheId()
   fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto()
-    .also { CallImpl(cacheId, it).apply(block) }
+    .also { CallImpl(sessionCacheId, it).apply(block) }
 }
 
 @AssistantDslMarker

@@ -20,7 +20,7 @@ import com.vapi4k.dsl.vapi4k.enums.RequestResponseType.REQUEST
 import com.vapi4k.dsl.vapi4k.enums.RequestResponseType.RESPONSE
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import com.vapi4k.utils.JsonElementUtils.requestType
-import com.vapi4k.utils.JsonUtils.toJsonString
+import com.vapi4k.utils.toJsonString
 import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction

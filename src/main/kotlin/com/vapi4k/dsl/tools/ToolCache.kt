@@ -17,24 +17,11 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.tools.FunctionDetails.Companion.toFunctionDetails
 import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
-import com.vapi4k.dsl.tools.ToolCache.FunctionDetails.Companion.toFunctionDetails
-import com.vapi4k.responses.ToolCallMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.stringValue
-import com.vapi4k.utils.ReflectionUtils.asKClass
-import com.vapi4k.utils.ReflectionUtils.findFunction
-import com.vapi4k.utils.ReflectionUtils.findMethod
 import com.vapi4k.utils.ReflectionUtils.toolMethod
-import com.vapi4k.utils.Utils.errorMsg
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.jsonObject
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.time.DurationUnit.MILLISECONDS
-import kotlin.time.DurationUnit.SECONDS
 
 internal object ToolCache {
   private val toolCallCache = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
@@ -126,62 +113,4 @@ internal object ToolCache {
     }
   }
 
-  internal class FunctionInfo {
-    val created: Instant = Clock.System.now()
-    val functions = mutableMapOf<String, FunctionDetails>()
-    val age get() = Clock.System.now() - created
-    val ageSecs get() = age.toString(unit = SECONDS)
-    val ageMillis get() = age.toString(unit = MILLISECONDS)
-
-    fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
-  }
-
-  internal class FunctionDetails(val obj: Any) {
-    val className = obj::class.java.name
-    val methodName = obj.toolMethod.name
-    val fqName get() = "$className.$methodName()"
-
-    fun invokeToolMethod(
-      args: JsonElement,
-      request: JsonElement,
-      message: MutableList<ToolCallMessageDto> = mutableListOf(),
-      errorAction: (String) -> Unit = {},
-    ): String {
-      val results =
-        runCatching {
-          invokeMethod(args)
-        }.getOrElse { e ->
-          val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
-          errorAction(errorMsg)
-          if (obj is ToolCallService)
-            message += obj.onRequestFailed(request, errorMsg).messages
-          error(errorMsg)
-        }
-
-      if (obj is ToolCallService)
-        message += obj.onRequestComplete(request, results).messages
-
-      return results
-    }
-
-    private fun invokeMethod(args: JsonElement): String {
-      logger.info { "Invoking method $fqName" }
-      val method = obj.findMethod(methodName)
-      val function = obj.findFunction(methodName)
-      val isVoid = function.returnType.asKClass() == Unit::class
-      val argNames = args.jsonObject.keys
-      val vals = argNames.map { args[it].stringValue }
-      // TODO Fix ordering
-      logger.info { "Invoking method $fqName with args $args" }
-      logger.info { "Invoking method $fqName with vals $vals" }
-      val params = method.parameters.toList()
-      val kparams = function.parameters
-      val result = method.invoke(obj, *vals.toTypedArray<String>())
-      return if (isVoid) "" else result.toString()
-    }
-
-    companion object {
-      fun Any.toFunctionDetails(): FunctionDetails = FunctionDetails(this)
-    }
-  }
 }

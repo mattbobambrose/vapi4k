@@ -52,12 +52,12 @@ data class ToolsImpl internal constructor(internal val model: ModelMessageProper
     model.toolDtos += ToolDto().also { toolDto ->
       verifyObject(false, obj)
       populateFunctionDto(obj, toolDto.function)
-      val cacheId =
+      val sessionCacheId =
         if (model.sessionCacheId.isNotSpecified())
           model.sessionCacheId
         else
           model.messageCallId.toSessionCacheId()
-      addToolCallToCache(cacheId, obj)
+      addToolCallToCache(sessionCacheId, obj)
 
       with(toolDto) {
         type = "function"

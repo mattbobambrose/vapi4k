@@ -47,9 +47,9 @@ import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
-import com.vapi4k.utils.JsonUtils.toJsonElement
 import com.vapi4k.utils.ReflectionUtils.lambda
 import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.toJsonElement
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
