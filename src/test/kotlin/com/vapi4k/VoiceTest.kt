@@ -49,7 +49,7 @@ import kotlin.test.assertEquals
 
 class VoiceTest {
   @Test
-  fun `basic test`() {
+  fun `playHt voice basic test`() {
     val request = assistantRequest.toJsonElement()
     val squad = squad(request) {
       members {
@@ -82,7 +82,7 @@ class VoiceTest {
   }
 
   @Test
-  fun `two or no voiceId test`() {
+  fun `playHt voice two or no voiceId test`() {
     assertThrows(IllegalStateException::class.java) {
       squad(assistantRequest.toJsonElement()) {
         members {
