@@ -1,0 +1,49 @@
+{
+  "message": {
+    "type": "assistant-request",
+    "call": {
+      "id": "b1223960-1b4d-4585-91b8-a69b0f57ec2f",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "createdAt": "2024-07-25T18:53:47.585Z",
+      "updatedAt": "2024-07-25T18:53:47.585Z",
+      "type": "inboundPhoneCall",
+      "status": "ringing",
+      "phoneCallProvider": "twilio",
+      "phoneCallProviderId": "CAc7a0c71f5d2d858e7538fbcff82ebefe",
+      "phoneCallTransport": "pstn",
+      "phoneNumberId": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "assistantId": null,
+      "squadId": null,
+      "customer": {
+        "number": "+19256836490"
+      }
+    },
+    "phoneNumber": {
+      "id": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "assistantId": null,
+      "number": "+19254207621",
+      "createdAt": "2024-06-29T03:03:00.576Z",
+      "updatedAt": "2024-07-20T04:24:05.533Z",
+      "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33cFxM9B7",
+      "twilioAccountSid": null,
+      "twilioAuthToken": null,
+      "stripeSubscriptionStatus": "active",
+      "stripeSubscriptionCurrentPeriodStart": "2024-06-29T03:02:56.000Z",
+      "name": null,
+      "credentialId": null,
+      "serverUrl": null,
+      "serverUrlSecret": null,
+      "twilioOutgoingCallerId": null,
+      "sipUri": null,
+      "provider": "twilio",
+      "fallbackForwardingPhoneNumber": null,
+      "fallbackDestination": null,
+      "squadId": null
+    },
+    "customer": {
+      "number": "+19256836490"
+    },
+    "timestamp": "2024-07-25T18:53:47.736Z"
+  }
+}
