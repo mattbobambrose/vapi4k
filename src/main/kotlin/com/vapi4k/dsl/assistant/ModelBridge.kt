@@ -91,246 +91,225 @@ interface ModelBridge {
   val transcriberChecker: DuplicateChecker
   val modelChecker: DuplicateChecker
   val voiceChecker: DuplicateChecker
+  val modelDtoBridge: ModelDtoBridge
 }
 
 // Transcribers
-fun ModelBridge.deepgramTranscriber(
-  dto: ModelDtoBridge,
+fun ModelBridge.deepgramTranscriberBridge(
   block: DeepgramTranscriber.() -> Unit,
 ): DeepgramTranscriber {
   transcriberChecker.check("deepGramTranscriber{} already called")
-  val transcriberDto = DeepgramTranscriberDto().also { dto.transcriberDto = it }
+  val transcriberDto = DeepgramTranscriberDto().also { modelDtoBridge.transcriberDto = it }
   return DeepgramTranscriber(transcriberDto)
     .apply(block)
     .apply { transcriberDto.verifyValues() }
 }
 
-fun ModelBridge.gladiaTranscriber(
-  dto: ModelDtoBridge,
+fun ModelBridge.gladiaTranscriberBridge(
   block: GladiaTranscriber.() -> Unit,
 ): GladiaTranscriber {
   transcriberChecker.check("gladiaTranscriber{} already called")
-  val transcriberDto = GladiaTranscriberDto().also { dto.transcriberDto = it }
+  val transcriberDto = GladiaTranscriberDto().also { modelDtoBridge.transcriberDto = it }
   return GladiaTranscriber(transcriberDto)
     .apply(block)
     .apply { transcriberDto.verifyValues() }
 }
 
-fun ModelBridge.talkscriberTranscriber(
-  dto: ModelDtoBridge,
+fun ModelBridge.talkscriberTranscriberBridge(
   block: TalkscriberTranscriber.() -> Unit,
 ): TalkscriberTranscriber {
   transcriberChecker.check("talkscriberTranscriber{} already called")
-  val transcriberDto = TalkscriberTranscriberDto().also { dto.transcriberDto = it }
+  val transcriberDto = TalkscriberTranscriberDto().also { modelDtoBridge.transcriberDto = it }
   return TalkscriberTranscriber(transcriberDto)
     .apply(block)
     .apply { transcriberDto.verifyValues() }
 }
 
 // Models
-fun ModelBridge.anyscaleModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.anyscaleModelBridge(
   block: AnyscaleModel.() -> Unit,
 ): AnyscaleModel {
   modelChecker.check("anyscaleModel{} already called")
-  val modelDto = AnyscaleModelDto().also { dto.modelDto = it }
+  val modelDto = AnyscaleModelDto().also { modelDtoBridge.modelDto = it }
   return AnyscaleModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.anthropicModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.anthropicModelBridge(
   block: AnthropicModel.() -> Unit,
 ): AnthropicModel {
-  val modelDto = AnthropicModelDto().also { dto.modelDto = it }
+  val modelDto = AnthropicModelDto().also { modelDtoBridge.modelDto = it }
   return AnthropicModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.customLLMModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.customLLMModelBridge(
   block: CustomLLMModel.() -> Unit,
 ): CustomLLMModel {
   modelChecker.check("customLLMModel{} already called")
-  val modelDto = CustomLLMModelDto().also { dto.modelDto = it }
+  val modelDto = CustomLLMModelDto().also { modelDtoBridge.modelDto = it }
   return CustomLLMModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.deepInfraModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.deepInfraModelBridge(
   block: DeepInfraModel.() -> Unit,
 ): DeepInfraModel {
   modelChecker.check("deepInfraModel{} already called")
-  val modelDto = DeepInfraModelDto().also { dto.modelDto = it }
+  val modelDto = DeepInfraModelDto().also { modelDtoBridge.modelDto = it }
   return DeepInfraModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.groqModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.groqModelBridge(
   block: GroqModel.() -> Unit,
 ): GroqModel {
   modelChecker.check("groqModel{} already called")
-  val modelDto = GroqModelDto().also { dto.modelDto = it }
+  val modelDto = GroqModelDto().also { modelDtoBridge.modelDto = it }
   return GroqModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.openAIModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.openAIModelBridge(
   block: OpenAIModel.() -> Unit,
 ): OpenAIModel {
   modelChecker.check("openAIModel{} already called")
-  val modelDto = OpenAIModelDto().also { dto.modelDto = it }
+  val modelDto = OpenAIModelDto().also { modelDtoBridge.modelDto = it }
   return OpenAIModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.openRouterModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.openRouterModelBridge(
   block: OpenRouterModel.() -> Unit,
 ): OpenRouterModel {
   modelChecker.check("openRouterModel{} already called")
-  val modelDto = OpenRouterModelDto().also { dto.modelDto = it }
+  val modelDto = OpenRouterModelDto().also { modelDtoBridge.modelDto = it }
   return OpenRouterModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.perplexityAIModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.perplexityAIModelBridge(
   block: PerplexityAIModel.() -> Unit,
 ): PerplexityAIModel {
   modelChecker.check("perplexityAIModel{} already called")
-  val modelDto = PerplexityAIModelDto().also { dto.modelDto = it }
+  val modelDto = PerplexityAIModelDto().also { modelDtoBridge.modelDto = it }
   return PerplexityAIModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.togetherAIModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.togetherAIModelBridge(
   block: TogetherAIModel.() -> Unit,
 ): TogetherAIModel {
   modelChecker.check("togetherAIModel{} already called")
-  val modelDto = TogetherAIModelDto().also { dto.modelDto = it }
+  val modelDto = TogetherAIModelDto().also { modelDtoBridge.modelDto = it }
   return TogetherAIModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelBridge.vapiModel(
-  dto: ModelDtoBridge,
+fun ModelBridge.vapiModelBridge(
   block: VapiModel.() -> Unit,
 ): VapiModel {
   modelChecker.check("vapiModel{} already called")
-  val modelDto = VapiModelDto().also { dto.modelDto = it }
+  val modelDto = VapiModelDto().also { modelDtoBridge.modelDto = it }
   return VapiModelImpl(request, sessionCacheId, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
 
 // Voices
-fun ModelBridge.azureVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.azureVoiceBridge(
   block: AzureVoice.() -> Unit,
 ): AzureVoice {
   voiceChecker.check("azureVoice{} already called")
-  val voiceDto = AzureVoiceDto().also { dto.voiceDto = it }
-  return com.vapi4k.dsl.voice.AzureVoice(voiceDto)
+  val voiceDto = AzureVoiceDto().also { modelDtoBridge.voiceDto = it }
+  return AzureVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelBridge.cartesiaVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.cartesiaVoiceBridge(
   block: CartesiaVoice.() -> Unit,
 ): CartesiaVoice {
   voiceChecker.check("cartesiaVoice{} already called")
-  val voiceDto = CartesiaVoiceDto().also { dto.voiceDto = it }
-  return com.vapi4k.dsl.voice.CartesiaVoice(voiceDto)
+  val voiceDto = CartesiaVoiceDto().also { modelDtoBridge.voiceDto = it }
+  return CartesiaVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelBridge.deepgramVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.deepgramVoiceBridge(
   block: DeepgramVoice.() -> Unit,
 ): DeepgramVoice {
   voiceChecker.check("deepgramVoice{} already called")
-  val voiceDto = DeepgramVoiceDto().also { dto.voiceDto = it }
-  return com.vapi4k.dsl.voice.DeepgramVoice(voiceDto)
+  val voiceDto = DeepgramVoiceDto().also { modelDtoBridge.voiceDto = it }
+  return DeepgramVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelBridge.elevenLabsVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.elevenLabsVoiceBridge(
   block: ElevenLabsVoice.() -> Unit,
 ): ElevenLabsVoice {
   voiceChecker.check("elevenLabsVoice{} already called")
-  val voiceDto = ElevenLabsVoiceDto().also { dto.voiceDto = it }
-  return com.vapi4k.dsl.voice.ElevenLabsVoice(voiceDto)
+  val voiceDto = ElevenLabsVoiceDto().also { modelDtoBridge.voiceDto = it }
+  return ElevenLabsVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelBridge.lmntVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.lmntVoiceBridge(
   block: LMNTVoice.() -> Unit,
 ): LMNTVoice {
   voiceChecker.check("lmntVoice{} already called")
-  val voiceDto = LMNTVoiceDto().also { dto.voiceDto = it }
-  return com.vapi4k.dsl.voice.LMNTVoice(voiceDto)
+  val voiceDto = LMNTVoiceDto().also { modelDtoBridge.voiceDto = it }
+  return LMNTVoice(voiceDto)
     .apply(block)
 }
 
-fun ModelBridge.neetsVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.neetsVoiceBridge(
   block: NeetsVoice.() -> Unit,
 ): NeetsVoice {
   voiceChecker.check("neetsVoice{} already called")
-  val voiceDto = NeetsVoiceDto().also { dto.voiceDto = it }
+  val voiceDto = NeetsVoiceDto().also { modelDtoBridge.voiceDto = it }
   return com.vapi4k.dsl.voice.NeetsVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelBridge.openAIVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.openAIVoiceBridge(
   block: OpenAIVoice.() -> Unit,
 ): OpenAIVoice {
   voiceChecker.check("openAIVoice{} already called")
-  val voiceDto = OpenAIVoiceDto().also { dto.voiceDto = it }
-  return com.vapi4k.dsl.voice.OpenAIVoice(voiceDto)
+  val voiceDto = OpenAIVoiceDto().also { modelDtoBridge.voiceDto = it }
+  return OpenAIVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelBridge.playHTVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.playHTVoiceBridge(
   block: PlayHTVoice.() -> Unit,
 ): PlayHTVoice {
   voiceChecker.check("playHTVoice{} already called")
-  val voiceDto = PlayHTVoiceDto().also { dto.voiceDto = it }
+  val voiceDto = PlayHTVoiceDto().also { modelDtoBridge.voiceDto = it }
   return com.vapi4k.dsl.voice.PlayHTVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelBridge.rimeAIVoice(
-  dto: ModelDtoBridge,
+fun ModelBridge.rimeAIVoiceBridge(
   block: RimeAIVoice.() -> Unit,
 ): RimeAIVoice {
   voiceChecker.check("rimeAIVoice{} already called")
-  val voiceDto = RimeAIVoiceDto().also { dto.voiceDto = it }
+  val voiceDto = RimeAIVoiceDto().also { modelDtoBridge.voiceDto = it }
   return com.vapi4k.dsl.voice.RimeAIVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }

@@ -108,35 +108,33 @@ data class AssistantOverridesImpl internal constructor(
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
   override val assistantCacheId = nextAssistantCacheId()
+  override val modelDtoBridge: ModelDtoBridge get() = assistantOverridesDto
 
   // Transcribers
-  override fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit) =
-    deepgramTranscriber(assistantOverridesDto, block)
-
-  override fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) = gladiaTranscriber(assistantOverridesDto, block)
-  override fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit) =
-    talkscriberTranscriber(assistantOverridesDto, block)
+  override fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit) = deepgramTranscriberBridge(block)
+  override fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) = gladiaTranscriberBridge(block)
+  override fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit) = talkscriberTranscriberBridge(block)
 
   // Models
-  override fun anyscaleModel(block: AnyscaleModel.() -> Unit) = anyscaleModel(assistantOverridesDto, block)
-  override fun anthropicModel(block: AnthropicModel.() -> Unit) = anthropicModel(assistantOverridesDto, block)
-  override fun customLLMModel(block: CustomLLMModel.() -> Unit) = customLLMModel(assistantOverridesDto, block)
-  override fun deepInfraModel(block: DeepInfraModel.() -> Unit) = deepInfraModel(assistantOverridesDto, block)
-  override fun groqModel(block: GroqModel.() -> Unit) = groqModel(assistantOverridesDto, block)
-  override fun openAIModel(block: OpenAIModel.() -> Unit) = openAIModel(assistantOverridesDto, block)
-  override fun openRouterModel(block: OpenRouterModel.() -> Unit) = openRouterModel(assistantOverridesDto, block)
-  override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit) = perplexityAIModel(assistantOverridesDto, block)
-  override fun togetherAIModel(block: TogetherAIModel.() -> Unit) = togetherAIModel(assistantOverridesDto, block)
-  override fun vapiModel(block: VapiModel.() -> Unit) = vapiModel(assistantOverridesDto, block)
+  override fun anyscaleModel(block: AnyscaleModel.() -> Unit) = anyscaleModelBridge(block)
+  override fun anthropicModel(block: AnthropicModel.() -> Unit) = anthropicModelBridge(block)
+  override fun customLLMModel(block: CustomLLMModel.() -> Unit) = customLLMModelBridge(block)
+  override fun deepInfraModel(block: DeepInfraModel.() -> Unit) = deepInfraModelBridge(block)
+  override fun groqModel(block: GroqModel.() -> Unit) = groqModelBridge(block)
+  override fun openAIModel(block: OpenAIModel.() -> Unit) = openAIModelBridge(block)
+  override fun openRouterModel(block: OpenRouterModel.() -> Unit) = openRouterModelBridge(block)
+  override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit) = perplexityAIModelBridge(block)
+  override fun togetherAIModel(block: TogetherAIModel.() -> Unit) = togetherAIModelBridge(block)
+  override fun vapiModel(block: VapiModel.() -> Unit) = vapiModelBridge(block)
 
   // Voices
-  override fun azureVoice(block: AzureVoice.() -> Unit) = azureVoice(assistantOverridesDto, block)
-  override fun cartesiaVoice(block: CartesiaVoice.() -> Unit) = cartesiaVoice(assistantOverridesDto, block)
-  override fun deepgramVoice(block: DeepgramVoice.() -> Unit) = deepgramVoice(assistantOverridesDto, block)
-  override fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit) = elevenLabsVoice(assistantOverridesDto, block)
-  override fun lmntVoice(block: LMNTVoice.() -> Unit) = lmntVoice(assistantOverridesDto, block)
-  override fun neetsVoice(block: NeetsVoice.() -> Unit) = neetsVoice(assistantOverridesDto, block)
-  override fun openAIVoice(block: OpenAIVoice.() -> Unit) = openAIVoice(assistantOverridesDto, block)
-  override fun playHTVoice(block: PlayHTVoice.() -> Unit) = playHTVoice(assistantOverridesDto, block)
-  override fun rimeAIVoice(block: RimeAIVoice.() -> Unit) = rimeAIVoice(assistantOverridesDto, block)
+  override fun azureVoice(block: AzureVoice.() -> Unit) = azureVoiceBridge(block)
+  override fun cartesiaVoice(block: CartesiaVoice.() -> Unit) = cartesiaVoiceBridge(block)
+  override fun deepgramVoice(block: DeepgramVoice.() -> Unit) = deepgramVoiceBridge(block)
+  override fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit) = elevenLabsVoiceBridge(block)
+  override fun lmntVoice(block: LMNTVoice.() -> Unit) = lmntVoiceBridge(block)
+  override fun neetsVoice(block: NeetsVoice.() -> Unit) = neetsVoiceBridge(block)
+  override fun openAIVoice(block: OpenAIVoice.() -> Unit) = openAIVoiceBridge(block)
+  override fun playHTVoice(block: PlayHTVoice.() -> Unit) = playHTVoiceBridge(block)
+  override fun rimeAIVoice(block: RimeAIVoice.() -> Unit) = rimeAIVoiceBridge(block)
 }
