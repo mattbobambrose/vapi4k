@@ -53,8 +53,6 @@ data class CartesiaVoiceDto(
       error("cartesiaVoice{} requires a modelType or customModel value")
     if (modelType.isSpecified() && customModel.isNotEmpty())
       error("cartesiaVoice{} cannot have both modelType and customModel values")
-    if (languageType.isNotSpecified() && customLanguage.isEmpty())
-      error("cartesiaVoice{} requires a languageType or customLanguage value")
     if (languageType.isSpecified() && customLanguage.isNotEmpty())
       error("cartesiaVoice{} cannot have both languageType and customLanguage values")
   }

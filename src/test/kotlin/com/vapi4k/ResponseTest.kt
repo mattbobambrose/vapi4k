@@ -57,7 +57,6 @@ class ResponseTest {
 
     }
 
-
     println(dest.toJsonString(true))
   }
 }
