@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.enums.DeepGramVoiceIdType
 import com.vapi4k.dsl.voice.enums.PunctuationType
 import com.vapi4k.dtos.voice.DeepgramVoiceDto
 
@@ -26,7 +27,8 @@ interface DeepgramVoiceProperties {
   var inputMinCharacters: Int
   var inputPunctuationBoundaries: MutableSet<PunctuationType>
   var fillerInjectionEnabled: Boolean?
-  var voiceId: String
+  var voiceIdType: DeepGramVoiceIdType
+  var customVoiceId: String
 }
 
 @AssistantDslMarker

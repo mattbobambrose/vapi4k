@@ -51,5 +51,13 @@ data class PlayHTVoiceDto(
       error("playHTVoice{} requires a voiceIdType or customVoiceId value")
     if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
       error("playHTVoice{} cannot have both voiceIdType and customVoiceId values")
+    if (voiceGuidance != -1.0 && (voiceGuidance < 1 || voiceGuidance > 6))
+      error("playHTVoice{} voiceGuidance must be between 1 and 6")
+    if (styleGuidance != -1.0 && (styleGuidance < 1 || styleGuidance > 30))
+      error("playHTVoice{} styleGuidance must be between 1 and 30")
+    if (textGuidance != -1.0 && (textGuidance < 1 || textGuidance > 2))
+      error("playHTVoice{} textGuidance must be between 1 and 2")
+//    if (speed != -1.0 && (speed < 0.1 || speed > 5))
+//      error("playHTVoice{} speed must be between 0.1 and 5")
   }
 }

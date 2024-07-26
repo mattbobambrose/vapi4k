@@ -281,6 +281,10 @@ class VoiceTest {
             playHTVoice {
               voiceIdType = PlayHTVoiceIdType.MATT
               voiceIdType = PlayHTVoiceIdType.JACK
+              emotion = PlayHTVoiceEmotionType.MALE_SAD
+              emotion = PlayHTVoiceEmotionType.MALE_ANGRY
+              temperature = 5.0
+              temperature = 10.0
             }
           }
         }
@@ -291,5 +295,7 @@ class VoiceTest {
     assertEquals("Hello!", members[0]["assistant.firstMessage"].stringValue)
     assertEquals("llama3-8b-8192", members[0]["assistant.model.model"].stringValue)
     assertEquals("jack", members[0]["assistant.voice.voiceId"].stringValue)
+    assertEquals("male_angry", members[0]["assistant.voice.emotion"].stringValue)
+    assertEquals("10.0", members[0]["assistant.voice.temperature"].get().stringValue)
   }
 }

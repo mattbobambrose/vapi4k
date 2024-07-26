@@ -45,5 +45,7 @@ data class OpenAIVoiceDto(
       error("openAIVoice{} requires a voiceIdType or customVoiceId value")
     if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
       error("openAIVoice{} cannot have both voiceIdType and customVoiceId values")
+//    if (speed != -1.0 && (speed < 0.25 || speed > 2))
+//      error("openAIVoice{} speed must be between 0.25 and 2")
   }
 }

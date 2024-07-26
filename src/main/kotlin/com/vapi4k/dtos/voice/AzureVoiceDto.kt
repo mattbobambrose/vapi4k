@@ -45,5 +45,7 @@ data class AzureVoiceDto(
       error("azureVoice{} requires a voiceIdType or customVoiceId value")
     if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
       error("azureVoice{} cannot have both voiceIdType and customVoiceId values")
+//    if (speed != -1.0 && (speed < 0.25 || speed > 2.0))
+//      error("azureVoice{} speed must be between 0.25 and 2.0")
   }
 }

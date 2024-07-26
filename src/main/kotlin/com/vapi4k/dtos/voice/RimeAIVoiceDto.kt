@@ -57,5 +57,8 @@ data class RimeAIVoiceDto(
       error("rimeAIVoice{} requires a modelType or customModel value")
     if (modelType.isSpecified() && customModel.isNotEmpty())
       error("rimeAIVoice{} cannot have both modelType and customModel values")
+    // TODO: Confirm values for speed limits
+//    if (speed != -1.0 && (speed < 0.25 || speed > 2))
+//      error("rimeAIVoice{} speed must be between 0.25 and 2")
   }
 }
