@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnyscaleModel
 import com.vapi4k.dsl.model.CustomLLMModel
@@ -54,7 +55,7 @@ interface AssistantOverridesProperties {
   var llmRequestNonPunctuatedDelaySeconds: Double
   var numWordsToInterruptAssistant: Int
   var maxDurationSeconds: Int
-  var backgroundSound: String
+  var backgroundSound: BackgroundSoundType
   var backchannelingEnabled: Boolean?
   var backgroundDenoisingEnabled: Boolean?
   var modelOutputInMessagesEnabled: Boolean?

@@ -19,6 +19,7 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnyscaleModel
@@ -63,7 +64,7 @@ interface AssistantProperties {
   var llmRequestDelaySeconds: Double
   var silenceTimeoutSeconds: Int
   var maxDurationSeconds: Int
-  var backgroundSound: String
+  var backgroundSound: BackgroundSoundType
   var numWordsToInterruptAssistant: Int
   var voicemailMessage: String
   var endCallMessage: String

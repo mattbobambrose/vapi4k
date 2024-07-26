@@ -18,6 +18,7 @@ package com.vapi4k.dtos.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
 import com.vapi4k.dsl.assistant.ModelDtoBridge
+import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
 import com.vapi4k.dtos.MessagePlanDto
@@ -41,7 +42,7 @@ data class AssistantOverridesDto(
   override var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
   override var numWordsToInterruptAssistant: Int = -1,
   override var maxDurationSeconds: Int = -1,
-  override var backgroundSound: String = "",
+  override var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
   override var backchannelingEnabled: Boolean? = null,
   override var backgroundDenoisingEnabled: Boolean? = null,
   override var modelOutputInMessagesEnabled: Boolean? = null,

@@ -20,6 +20,7 @@ import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.assistant.ModelDtoBridge
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
+import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
@@ -58,7 +59,7 @@ data class AssistantDto(
   override var llmRequestDelaySeconds: Double = -1.0,
   override var silenceTimeoutSeconds: Int = -1,
   override var maxDurationSeconds: Int = -1,
-  override var backgroundSound: String = "",
+  override var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
   override var numWordsToInterruptAssistant: Int = -1,
   override var voicemailMessage: String = "",
   override var endCallMessage: String = "",
