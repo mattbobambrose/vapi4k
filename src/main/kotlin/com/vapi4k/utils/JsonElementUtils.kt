@@ -58,7 +58,7 @@ object JsonElementUtils {
     get() = if (isFunctionCall) this["message.functionCall.parameters"] else error("JsonElement is not a function call")
 
   val JsonElement.toolCallList
-    get() = if (isToolCall) this["message.toolCallList"].jsonList else error("JsonElement is not a tool call")
+    get() = if (isToolCall) this["message.toolCallList"].jsonElementList else error("JsonElement is not a tool call")
 
   val JsonElement.toolCallId get() = this["id"].stringValue
 

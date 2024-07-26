@@ -29,7 +29,7 @@ class ToolCondition internal constructor(
 ) {
   private val messages get() = tool.toolDto.messages
   private val isMatchingRRD: (ToolMessageDto) -> Boolean
-    get() = { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions == conditionSet }
+    get() = { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc && it.conditions == conditionSet }
 
   var requestStartMessage by ConditionDelegate(ToolMessageType.REQUEST_START)
   var requestCompleteMessage by ConditionDelegate(ToolMessageType.REQUEST_COMPLETE)
@@ -62,7 +62,7 @@ class ToolCondition internal constructor(
             messages.single(requestType.isMatch(conditionSet)).content = newVal
           } else {
             messages += ToolMessageDto().apply {
-              type = requestType.type
+              type = requestType.desc
               content = newVal
               timingMilliseconds = -1
               conditions.addAll(conditionSet)
@@ -71,7 +71,7 @@ class ToolCondition internal constructor(
         }
 
       private fun ToolMessageType.isMatch(conditionSet: Set<ToolMessageConditionDto>): (ToolMessageDto) -> Boolean =
-        { it.type == type && it.conditions == conditionSet }
+        { it.type == desc && it.conditions == conditionSet }
     }
   }
 }

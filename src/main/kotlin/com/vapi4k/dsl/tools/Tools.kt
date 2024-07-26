@@ -100,7 +100,7 @@ data class ToolsImpl internal constructor(internal val model: AbstractModelPrope
 
   companion object {
     private fun ToolImpl.verifyFutureDelay(toolDto: ToolDto) {
-      if (toolDto.messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type } == null) {
+      if (toolDto.messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc } == null) {
         if (futureDelay != -1) {
           error("delayedMillis must be set when using requestDelayedMessage")
         }

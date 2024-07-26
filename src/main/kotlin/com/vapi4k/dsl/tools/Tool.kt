@@ -85,7 +85,7 @@ class ToolImpl internal constructor(internal val toolDto: ToolDto) : Tool {
             messages.single(requestType.isMatching).content = newVal
           } else {
             messages += ToolMessageDto().apply {
-              type = requestType.type
+              type = requestType.desc
               content = newVal
               timingMilliseconds = futureDelay
             }

@@ -26,7 +26,8 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 val JsonElement.stringValue get() = jsonPrimitive.content
-val JsonElement.jsonList get() = jsonArray.toList()
+val JsonElement.intValue get() = jsonPrimitive.content.toInt()
+val JsonElement.jsonElementList get() = jsonArray.toList()
 
 private fun JsonElement.element(key: String) =
   jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
@@ -43,7 +44,7 @@ fun JsonElement.containsKey(key: String) = jsonObject.containsKey(key)
 val prettyFormat by lazy { Json { prettyPrint = true } }
 val rawFormat by lazy { Json { prettyPrint = false } }
 
-inline fun <reified T> T.toJsonString(prettyPrint: Boolean = false) =
+inline fun <reified T> T.toJsonString(prettyPrint: Boolean = true) =
   (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)
 
 inline fun <reified T> T.toJsonElement() = Json.encodeToJsonElement(this)

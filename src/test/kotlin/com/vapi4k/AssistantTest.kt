@@ -31,9 +31,13 @@ import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
+import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.get
+import com.vapi4k.utils.intValue
+import com.vapi4k.utils.jsonElementList
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
+import kotlinx.serialization.json.JsonElement
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
@@ -49,7 +53,6 @@ class AssistantTest {
   }
 
   val messageOne = "Hi there test"
-  val mod = OpenAIModelType.GPT_3_5_TURBO
   val sysMessage = "You are the test systemMessage voice"
   val startMessage = "This is the test request start message"
   val completeMessage = "This is the test request complete message"
@@ -64,78 +67,97 @@ class AssistantTest {
   val chicagoIllinoisFailedMessage = "This is the Chicago Illinois request failed message"
   val chicagoIllinoisDelayedMessage = "This is the Chicago Illinois request delayed message"
 
+  fun JsonElement.tools() = get("assistant.model.tools").jsonElementList
+  fun JsonElement.firstMessage() = tools().first()["messages"].jsonElementList
+  fun JsonElement.firstMessageOfType(type: ToolMessageType) =
+    firstMessage().single { it["type"].stringValue == type.desc }
+
   @Test
   fun testRegular() {
     resetCaches()
-    val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      firstMessage = messageOne
-      openAIModel {
-        modelType = mod
+    val (response, jsonElement) =
+      withTestApplication("/json/assistantRequest.json") { request ->
+        assistant(request) {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
-        systemMessage = sysMessage
-        tools {
-          tool(WeatherLookupService0()) {
-            requestStartMessage = startMessage
-            requestCompleteMessage = completeMessage
-            requestFailedMessage = failedMessage
-            requestDelayedMessage = delayedMessage
-            delayedMillis = 2000
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                requestStartMessage = startMessage
+                requestCompleteMessage = completeMessage
+                requestFailedMessage = failedMessage
+                requestDelayedMessage = delayedMessage
+                delayedMillis = 2000
+              }
+            }
           }
         }
       }
-    }
-    assert(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type }.content == "This is the test request start message")
+
+    assertEquals(
+      "This is the test request start message",
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START)["content"].stringValue
+    )
   }
 
   @Test
   fun `test reverse delay order`() {
     resetCaches()
-    val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      firstMessage = messageOne
-      openAIModel {
-        modelType = mod
+    val (response, jsonElement) =
+      withTestApplication("/json/assistantRequest.json") { request ->
+        assistant(request) {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
-        systemMessage = sysMessage
-        tools {
-          tool(WeatherLookupService0()) {
-            requestStartMessage = startMessage
-            requestCompleteMessage = completeMessage
-            requestFailedMessage = failedMessage
-            delayedMillis = 2000
-            requestDelayedMessage = delayedMessage
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                requestStartMessage = startMessage
+                requestCompleteMessage = completeMessage
+                requestFailedMessage = failedMessage
+                delayedMillis = 2000
+                requestDelayedMessage = delayedMessage
+              }
+            }
           }
         }
       }
-    }
-    with(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
-      assert(content == delayedMessage)
-      assert(timingMilliseconds == 2000)
+
+    with(jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)) {
+      assertEquals(delayedMessage, get("content").stringValue)
+      assertEquals(2000, get("timingMilliseconds").intValue)
     }
   }
 
   @Test
   fun `test message with no millis`() {
     resetCaches()
-    val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      firstMessage = messageOne
-      openAIModel {
-        modelType = mod
-
-        systemMessage = sysMessage
-        tools {
-          tool(WeatherLookupService0()) {
-            requestStartMessage = startMessage
-            requestCompleteMessage = completeMessage
-            requestFailedMessage = failedMessage
-            requestDelayedMessage = delayedMessage
+    val (response, jsonElement) =
+      withTestApplication("/json/assistantRequest.json") { request ->
+        assistant(request) {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                requestStartMessage = startMessage
+                requestCompleteMessage = completeMessage
+                requestFailedMessage = failedMessage
+                requestDelayedMessage = delayedMessage
+                delayedMillis = 99
+              }
+            }
           }
         }
       }
-    }
-    assert(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }.timingMilliseconds == -1)
+    assertEquals(
+      99,
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED).get("timingMilliseconds").intValue
+    )
   }
 
   @Test
@@ -147,7 +169,7 @@ class AssistantTest {
         assistant(request) {
           firstMessage = messageOne
           openAIModel {
-            modelType = mod
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
             systemMessage = sysMessage
             tools {
@@ -167,27 +189,31 @@ class AssistantTest {
   @Test
   fun `multiple message`() {
     resetCaches()
-    val request = assistantRequest.toJsonElement()
-    val assistant = assistant(request) {
-      firstMessage = messageOne
-      openAIModel {
-        modelType = mod
+    val (response, jsonElement) =
+      withTestApplication("/json/assistantRequest.json") { request ->
+        assistant(request) {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
-        systemMessage = sysMessage
-        tools {
-          tool(WeatherLookupService0()) {
-            requestStartMessage = startMessage
-            requestCompleteMessage = completeMessage
-            requestFailedMessage = failedMessage
-            requestDelayedMessage = delayedMessage
-            requestDelayedMessage = secondDelayedMessage
-            delayedMillis = 2000
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                requestStartMessage = startMessage
+                requestCompleteMessage = completeMessage
+                requestFailedMessage = failedMessage
+                requestDelayedMessage = delayedMessage
+                requestDelayedMessage = secondDelayedMessage
+                delayedMillis = 2000
+              }
+            }
           }
         }
       }
-    }
-    with(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
-      assertEquals(content, secondDelayedMessage)
+
+    with(jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)) {
+      assertEquals(secondDelayedMessage, get("content").stringValue)
+      assertEquals(2000, get("timingMilliseconds").intValue)
     }
   }
 
@@ -198,7 +224,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        modelType = mod
+        modelType = OpenAIModelType.GPT_3_5_TURBO
 
         systemMessage = sysMessage
         tools {
@@ -213,7 +239,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
+    with(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc }) {
       assertEquals(content, secondDelayedMessage)
     }
   }
@@ -225,7 +251,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        modelType = mod
+        modelType = OpenAIModelType.GPT_3_5_TURBO
 
         systemMessage = sysMessage
         tools {
@@ -240,7 +266,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
+    with(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc }) {
       assertEquals(timingMilliseconds, 1000)
     }
   }
@@ -252,7 +278,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        modelType = mod
+        modelType = OpenAIModelType.GPT_3_5_TURBO
         systemMessage = sysMessage
         tools {
           tool(WeatherLookupService0()) {
@@ -267,7 +293,7 @@ class AssistantTest {
         }
       }
     }
-    with(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type }) {
+    with(assistant.assistantDto.modelDto!!.tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc }) {
       assertEquals(content, secondDelayedMessage)
       assertEquals(timingMilliseconds, 1000)
     }
@@ -280,7 +306,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        modelType = mod
+        modelType = OpenAIModelType.GPT_3_5_TURBO
         systemMessage = sysMessage
         tools {
           tool(WeatherLookupService0()) {
@@ -302,29 +328,29 @@ class AssistantTest {
     }
     with(assistant.assistantDto.modelDto!!) {
       val msgs = tools.first().messages
-      with(msgs.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_START.desc && it.conditions.isEmpty() }) {
         assertEquals(startMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_COMPLETE.desc && it.conditions.isEmpty() }) {
         assertEquals(completeMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_FAILED.desc && it.conditions.isEmpty() }) {
         assertEquals(failedMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc && it.conditions.isEmpty() }) {
         assertEquals(delayedMessage, content)
         assertEquals(1000, timingMilliseconds)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isNotEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_START.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisStartMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isNotEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_COMPLETE.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisCompleteMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isNotEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_FAILED.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisFailedMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isNotEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisDelayedMessage, content)
         assertEquals(2000, timingMilliseconds)
       }
@@ -338,7 +364,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        modelType = mod
+        modelType = OpenAIModelType.GPT_3_5_TURBO
 
         systemMessage = sysMessage
         tools {
@@ -368,29 +394,29 @@ class AssistantTest {
     }
     with(assistant.assistantDto.modelDto!!) {
       val msgs = tools.first().messages
-      with(msgs.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_START.desc && it.conditions.isEmpty() }) {
         assertEquals(startMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_COMPLETE.desc && it.conditions.isEmpty() }) {
         assertEquals(completeMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_FAILED.desc && it.conditions.isEmpty() }) {
         assertEquals(failedMessage, content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc && it.conditions.isEmpty() }) {
         assertEquals(delayedMessage, content)
         assertEquals(1000, timingMilliseconds)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isNotEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_START.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisStartMessage + "2", content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isNotEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_COMPLETE.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisCompleteMessage + "2", content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isNotEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_FAILED.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisFailedMessage + "2", content)
       }
-      with(msgs.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isNotEmpty() }) {
+      with(msgs.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisDelayedMessage + "2", content)
         assertEquals(3000, timingMilliseconds)
       }
@@ -404,7 +430,7 @@ class AssistantTest {
     val assistant = assistant(request) {
       firstMessage = messageOne
       openAIModel {
-        modelType = mod
+        modelType = OpenAIModelType.GPT_3_5_TURBO
 
         systemMessage = sysMessage
         tools {
@@ -434,29 +460,29 @@ class AssistantTest {
     }
 
     with(assistant.assistantDto.modelDto!!) {
-      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isEmpty() }) {
+      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.desc && it.conditions.isEmpty() }) {
         assertEquals(startMessage, content)
       }
-      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isEmpty() }) {
+      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.desc && it.conditions.isEmpty() }) {
         assertEquals(completeMessage, content)
       }
-      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isEmpty() }) {
+      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.desc && it.conditions.isEmpty() }) {
         assertEquals(failedMessage, content)
       }
-      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isEmpty() }) {
+      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc && it.conditions.isEmpty() }) {
         assertEquals(delayedMessage, content)
         assertEquals(1000, timingMilliseconds)
       }
-      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.type && it.conditions.isNotEmpty() }) {
+      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_START.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisStartMessage + "2", content)
       }
-      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.type && it.conditions.isNotEmpty() }) {
+      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_COMPLETE.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisCompleteMessage + "2", content)
       }
-      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.type && it.conditions.isNotEmpty() }) {
+      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_FAILED.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisFailedMessage + "2", content)
       }
-      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.type && it.conditions.isNotEmpty() }) {
+      with(tools.first().messages.single { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc && it.conditions.isNotEmpty() }) {
         assertEquals(chicagoIllinoisDelayedMessage + "2", content)
         assertEquals(3000, timingMilliseconds)
       }

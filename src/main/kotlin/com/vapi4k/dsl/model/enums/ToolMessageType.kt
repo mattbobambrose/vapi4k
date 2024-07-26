@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.model.enums
 
-enum class ToolMessageType(val type: String) {
+enum class ToolMessageType(val desc: String) {
   REQUEST_START("request-start"),
   REQUEST_COMPLETE("request-complete"),
   REQUEST_FAILED("request-failed"),

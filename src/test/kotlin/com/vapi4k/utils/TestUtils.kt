@@ -32,7 +32,7 @@ import kotlinx.serialization.json.JsonElement
 object TestUtils {
   fun withTestApplication(
     fileName: String,
-    block: (JsonElement) -> AssistantRequestResponse
+    block: (JsonElement) -> AssistantRequestResponse,
   ): Pair<HttpResponse, JsonElement> {
     var response: HttpResponse? = null
     var je: JsonElement? = null
@@ -41,6 +41,15 @@ object TestUtils {
         install(Vapi4k) {
           onAssistantRequest { request ->
             block(request)
+          }
+
+          toolCallEndpoints {
+            // Provide a default endpoint
+            endpoint {
+              serverUrl = "https://test/toolCall"
+              serverUrlSecret = "456"
+              timeoutSeconds = 20
+            }
           }
         }
       }

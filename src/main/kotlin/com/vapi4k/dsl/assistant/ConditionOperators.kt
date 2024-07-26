@@ -75,4 +75,4 @@ infix fun String.lte(value: Boolean) =
   toolMessageCondition(this, "lte", value)
 
 internal val ToolMessageType.isMatching: (ToolMessageDto) -> Boolean
-  get() = { it.type == type && it.conditions.isEmpty() }
+  get() = { it.type == desc && it.conditions.isEmpty() }
