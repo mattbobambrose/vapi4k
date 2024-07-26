@@ -41,7 +41,7 @@ data class RimeAIVoiceDto(
   override var speed: Double = -1.0,
 ) : RimeAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
+  val provider: VoiceProviderType = VoiceProviderType.RIMEAI
 
   fun assignEnumOverrides() {
     voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
@@ -53,12 +53,10 @@ data class RimeAIVoiceDto(
       error("rimeAIVoice{} requires a voiceIdType or customVoiceId value")
     if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
       error("rimeAIVoice{} cannot have both voiceIdType and customVoiceId values")
-    if (modelType.isNotSpecified() && customModel.isEmpty())
-      error("rimeAIVoice{} requires a modelType or customModel value")
     if (modelType.isSpecified() && customModel.isNotEmpty())
       error("rimeAIVoice{} cannot have both modelType and customModel values")
     // TODO: Confirm values for speed limits
-//    if (speed != -1.0 && (speed < 0.25 || speed > 2))
-//      error("rimeAIVoice{} speed must be between 0.25 and 2")
+//    if (speed != -1.0 && (speed < 0.1 || speed > 2))
+//      error("rimeAIVoice{} speed must be between 0.1 and 2")
   }
 }

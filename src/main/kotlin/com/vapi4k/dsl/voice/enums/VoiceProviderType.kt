@@ -35,7 +35,7 @@ enum class VoiceProviderType(internal val desc: String) {
   NEETS("neets"),
   OPENAI("openai"),
   PLAYHT("playht"),
-  RIMEAI("rimeai"),
+  RIMEAI("rime-ai"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
   fun isSpecified() = this != UNSPECIFIED

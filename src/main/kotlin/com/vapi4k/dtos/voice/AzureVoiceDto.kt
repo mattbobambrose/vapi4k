@@ -34,7 +34,7 @@ data class AzureVoiceDto(
   override var speed: Double = -1.0,
 ) : AzureVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
   @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.LMNT
+  val provider: VoiceProviderType = VoiceProviderType.AZURE
 
   fun assignEnumOverrides() {
     voiceId = customVoiceId.ifEmpty { voiceIdType.desc }

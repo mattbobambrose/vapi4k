@@ -16,18 +16,14 @@
 
 package com.vapi4k
 
-import com.vapi4k.common.Constants.DEFAULT_SERVER_PATH
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.server.Vapi4k
-import com.vapi4k.utils.Utils.resourceFile
+import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.get
 import com.vapi4k.utils.stringValue
-import com.vapi4k.utils.toJsonElement
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode
@@ -39,8 +35,10 @@ import org.junit.Test
 
 class ServerTest {
 
-  private fun HttpRequestBuilder.configPost() {
-    contentType(Application.Json)
+  companion object {
+    fun HttpRequestBuilder.configPost() {
+      contentType(Application.Json)
+    }
   }
 
   @Test
@@ -57,28 +55,16 @@ class ServerTest {
 
   @Test
   fun `simple assistant request`() {
-    testApplication {
-      application {
-        install(Vapi4k) {
-          onAssistantRequest { request ->
-            assistant(request) {
-              groqModel {
-                modelType = GroqModelType.LLAMA3_70B
-              }
-            }
+    val (response, jsonElement) =
+      withTestApplication("/json/assistantRequest.json") { request ->
+        assistant(request) {
+          groqModel {
+            modelType = GroqModelType.LLAMA3_70B
           }
         }
       }
 
-      val response =
-        client.post("/$DEFAULT_SERVER_PATH") {
-          configPost()
-          setBody(resourceFile("/json/assistantRequest.json"))
-        }
-
-      val je = response.bodyAsText().toJsonElement()
-      assertEquals(HttpStatusCode.OK, response.status)
-      assertEquals(GroqModelType.LLAMA3_70B.desc, je["assistant.model.model"].stringValue)
-    }
+    assertEquals(HttpStatusCode.OK, response.status)
+    assertEquals(GroqModelType.LLAMA3_70B.desc, jsonElement["assistant.model.model"].stringValue)
   }
 }
