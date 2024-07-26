@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.assistant.ModelBridge
 import com.vapi4k.dsl.model.enums.MessageRoleType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.FunctionsImpl
@@ -27,13 +27,14 @@ import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
-import kotlinx.serialization.json.JsonElement
 
 abstract class AbstractModel(
-  internal val request: JsonElement,
-  override val sessionCacheId: SessionCacheId,
+  private val bridge: ModelBridge,
   private val dto: CommonModelDto,
-) : ModelMessageProperties {
+) : AbstractModelProperties {
+  internal val request get() = bridge.request
+  override val sessionCacheId get() = bridge.sessionCacheId
+  override val assistantCacheId get() = bridge.assistantCacheId
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
   override val functionDtos get() = dto.functions

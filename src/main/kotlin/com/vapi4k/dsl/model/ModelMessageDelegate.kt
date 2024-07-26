@@ -21,7 +21,7 @@ import kotlin.reflect.KProperty
 
 internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType) {
   operator fun getValue(
-    model: ModelMessageProperties,
+    model: AbstractModelProperties,
     property: KProperty<*>,
   ): String {
     val msgs = model.messages.filter { it.role == messageRoleType.desc }
@@ -29,7 +29,7 @@ internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType
   }
 
   operator fun setValue(
-    model: ModelMessageProperties,
+    model: AbstractModelProperties,
     property: KProperty<*>,
     newVal: String,
   ) = model.message(messageRoleType, newVal)

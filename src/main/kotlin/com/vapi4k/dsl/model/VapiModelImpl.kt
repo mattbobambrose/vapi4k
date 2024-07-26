@@ -16,12 +16,11 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.ModelBridge
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.VapiModelDto
-import kotlinx.serialization.json.JsonElement
 
 interface VapiModelProperties {
   var model: String
@@ -45,7 +44,6 @@ interface VapiModel : VapiModelProperties {
 }
 
 class VapiModelImpl(
-  request: JsonElement,
-  sessionCacheId: SessionCacheId,
-  dto: VapiModelDto,
-) : VapiModelProperties by dto, VapiModel, com.vapi4k.dsl.model.AbstractModel(request, sessionCacheId, dto)
+  modelBridge: ModelBridge,
+  modelDto: VapiModelDto,
+) : VapiModelProperties by modelDto, VapiModel, AbstractModel(modelBridge, modelDto)

@@ -19,7 +19,7 @@ package com.vapi4k.dsl.tools
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.model.ModelMessageProperties
+import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dsl.model.enums.ToolMessageType
 import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.tools.FunctionUtils.verifyObject
@@ -43,7 +43,7 @@ interface Tools {
   )
 }
 
-data class ToolsImpl internal constructor(internal val model: ModelMessageProperties) : Tools {
+data class ToolsImpl internal constructor(internal val model: AbstractModelProperties) : Tools {
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,
@@ -51,13 +51,13 @@ data class ToolsImpl internal constructor(internal val model: ModelMessageProper
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
       verifyObject(false, obj)
-      populateFunctionDto(obj, toolDto.function)
+      populateFunctionDto(model, obj, toolDto.function)
       val sessionCacheId =
         if (model.sessionCacheId.isNotSpecified())
           model.sessionCacheId
         else
           model.messageCallId.toSessionCacheId()
-      addToolCallToCache(sessionCacheId, obj)
+      addToolCallToCache(sessionCacheId, model.assistantCacheId, obj)
 
       with(toolDto) {
         type = "function"

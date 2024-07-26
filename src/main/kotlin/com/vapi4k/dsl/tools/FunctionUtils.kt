@@ -16,7 +16,9 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.model.FunctionDto
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
@@ -32,7 +34,7 @@ internal object FunctionUtils {
   private val legalTypes = setOf(String::class, Unit::class)
 
 
-  internal fun verifyObject(
+  fun verifyObject(
     isFunction: Boolean,
     obj: Any,
   ) {
@@ -55,13 +57,15 @@ internal object FunctionUtils {
     }
   }
 
-  internal fun populateFunctionDto(
+  fun populateFunctionDto(
+    model: AbstractModelProperties,
     obj: Any,
     functionDto: FunctionDto,
   ) {
     val method = obj.toolMethod
     val function = obj.toolFunction
-    ToolCallInfo(method).also { tci ->
+
+    ToolCallInfo(model.assistantCacheId, method).also { tci ->
       functionDto.name = tci.llmName
       functionDto.description = tci.llmDescription
       // TODO: This might be always object
@@ -97,15 +101,17 @@ internal object FunctionUtils {
       else -> "object"
     }
 
-  internal class ToolCallInfo(private val method: Method) {
+  class ToolCallInfo(
+    val assistantCacheId: AssistantCacheId,
+    private val method: Method,
+  ) {
     private val toolCall get() = method.toolCall!!
-    private val toolHasName: Boolean get() = toolCall.name.isNotEmpty()
-    private val toolHasDescription: Boolean get() = toolCall.description.isNotEmpty()
+    private val toolHasName get() = toolCall.name.isNotEmpty()
+    private val toolHasDescription get() = toolCall.description.isNotEmpty()
 
-    val llmName: String
-      get() = if (toolHasName) toolCall.name else method.name
+    val llmName get() = "${(if (toolHasName) toolCall.name else method.name)}_$assistantCacheId"
 
-    val llmDescription: String
+    val llmDescription
       get() =
         when {
           toolHasDescription -> toolCall.description
@@ -113,7 +119,7 @@ internal object FunctionUtils {
           else -> method.name
         }
 
-    val llmReturnType: String
+    val llmReturnType
       get() = when (method.returnType) {
         String::class.java -> "string"
         Int::class.java -> "integer"

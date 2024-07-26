@@ -16,12 +16,11 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.ModelBridge
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.PerplexityAIModelDto
-import kotlinx.serialization.json.JsonElement
 
 interface PerplexityAIModelProperties {
   var model: String
@@ -45,8 +44,6 @@ interface PerplexityAIModel : PerplexityAIModelProperties {
 }
 
 class PerplexityAIModelImpl(
-  request: JsonElement,
-  sessionCacheId: SessionCacheId,
-  dto: PerplexityAIModelDto,
-) : PerplexityAIModelProperties by dto, PerplexityAIModel,
-  com.vapi4k.dsl.model.AbstractModel(request, sessionCacheId, dto)
+  modelBridge: ModelBridge,
+  modelDto: PerplexityAIModelDto,
+) : PerplexityAIModelProperties by modelDto, PerplexityAIModel, AbstractModel(modelBridge, modelDto)

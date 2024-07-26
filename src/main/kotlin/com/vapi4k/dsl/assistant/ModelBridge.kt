@@ -131,7 +131,7 @@ fun ModelBridge.anyscaleModelBridge(
 ): AnyscaleModel {
   modelChecker.check("anyscaleModel{} already called")
   val modelDto = AnyscaleModelDto().also { modelDtoBridge.modelDto = it }
-  return AnyscaleModelImpl(request, sessionCacheId, modelDto)
+  return AnyscaleModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -140,7 +140,7 @@ fun ModelBridge.anthropicModelBridge(
   block: AnthropicModel.() -> Unit,
 ): AnthropicModel {
   val modelDto = AnthropicModelDto().also { modelDtoBridge.modelDto = it }
-  return AnthropicModelImpl(request, sessionCacheId, modelDto)
+  return AnthropicModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -150,7 +150,7 @@ fun ModelBridge.customLLMModelBridge(
 ): CustomLLMModel {
   modelChecker.check("customLLMModel{} already called")
   val modelDto = CustomLLMModelDto().also { modelDtoBridge.modelDto = it }
-  return CustomLLMModelImpl(request, sessionCacheId, modelDto)
+  return CustomLLMModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -160,7 +160,7 @@ fun ModelBridge.deepInfraModelBridge(
 ): DeepInfraModel {
   modelChecker.check("deepInfraModel{} already called")
   val modelDto = DeepInfraModelDto().also { modelDtoBridge.modelDto = it }
-  return DeepInfraModelImpl(request, sessionCacheId, modelDto)
+  return DeepInfraModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -170,7 +170,7 @@ fun ModelBridge.groqModelBridge(
 ): GroqModel {
   modelChecker.check("groqModel{} already called")
   val modelDto = GroqModelDto().also { modelDtoBridge.modelDto = it }
-  return GroqModelImpl(request, sessionCacheId, modelDto)
+  return GroqModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -180,7 +180,7 @@ fun ModelBridge.openAIModelBridge(
 ): OpenAIModel {
   modelChecker.check("openAIModel{} already called")
   val modelDto = OpenAIModelDto().also { modelDtoBridge.modelDto = it }
-  return OpenAIModelImpl(request, sessionCacheId, modelDto)
+  return OpenAIModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -190,7 +190,7 @@ fun ModelBridge.openRouterModelBridge(
 ): OpenRouterModel {
   modelChecker.check("openRouterModel{} already called")
   val modelDto = OpenRouterModelDto().also { modelDtoBridge.modelDto = it }
-  return OpenRouterModelImpl(request, sessionCacheId, modelDto)
+  return OpenRouterModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -200,7 +200,7 @@ fun ModelBridge.perplexityAIModelBridge(
 ): PerplexityAIModel {
   modelChecker.check("perplexityAIModel{} already called")
   val modelDto = PerplexityAIModelDto().also { modelDtoBridge.modelDto = it }
-  return PerplexityAIModelImpl(request, sessionCacheId, modelDto)
+  return PerplexityAIModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -210,7 +210,7 @@ fun ModelBridge.togetherAIModelBridge(
 ): TogetherAIModel {
   modelChecker.check("togetherAIModel{} already called")
   val modelDto = TogetherAIModelDto().also { modelDtoBridge.modelDto = it }
-  return TogetherAIModelImpl(request, sessionCacheId, modelDto)
+  return TogetherAIModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }
@@ -220,7 +220,7 @@ fun ModelBridge.vapiModelBridge(
 ): VapiModel {
   modelChecker.check("vapiModel{} already called")
   val modelDto = VapiModelDto().also { modelDtoBridge.modelDto = it }
-  return VapiModelImpl(request, sessionCacheId, modelDto)
+  return VapiModelImpl(this, modelDto)
     .apply(block)
     .apply { modelDto.verifyValues() }
 }

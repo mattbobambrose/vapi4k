@@ -44,26 +44,32 @@ data class ToolCallResponse(private var messageResponse: MessageResponse = Messa
             for (toolCall in toolCallList) {
               response.also { toolCallResponse ->
                 toolCallResponse.messageResponse.also { messageResponse ->
-                  messageResponse.results += ToolCallResult().also { toolCallResult ->
-                    val cacheKey = request.messageCallId.toSessionCacheId()
-                    val funcName = toolCall.toolCallName
-                    val args = toolCall.toolCallArguments
-                    toolCallResult.toolCallId = toolCall.toolCallId
-                    toolCallResult.name = funcName
-                    toolCallResult.result =
-                      runCatching {
-                        getToolCallFromCache(cacheKey)
-                          .getFunction(funcName)
-                          .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->
-                            toolCallResult.error = errorMsg
-                            errorMessage = errorMsg
+                  messageResponse.results +=
+                    ToolCallResult()
+                      .also { toolCallResult ->
+                        val cacheKey = request.messageCallId.toSessionCacheId()
+                        val funcName = toolCall.toolCallName
+                        val args = toolCall.toolCallArguments
+
+                        toolCallResult.toolCallId = toolCall.toolCallId
+                        toolCallResult.name = funcName
+
+
+                        toolCallResult.result =
+                          runCatching {
+                            getToolCallFromCache(cacheKey)
+                              .getFunction(funcName)
+                              .also { logger.info { "Invoking $funcName on method ${it.fqName}" } }
+                              .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->
+                                toolCallResult.error = errorMsg
+                                errorMessage = errorMsg
+                              }
+                          }.getOrElse { e ->
+                            val errorMsg = e.message ?: "Error invoking tool"
+                            logger.error { errorMsg }
+                            errorMsg
                           }
-                      }.getOrElse { e ->
-                        val errorMsg = e.message ?: "Error invoking tool"
-                        logger.error { errorMsg }
-                        errorMsg
                       }
-                  }
 
                   if (errorMessage.isNotEmpty()) {
                     messageResponse.error = errorMessage

@@ -16,13 +16,12 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.ModelBridge
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.OpenAIModelDto
-import kotlinx.serialization.json.JsonElement
 
 interface OpenAIModelProperties {
   var modelType: OpenAIModelType
@@ -50,7 +49,6 @@ interface OpenAIModel : OpenAIModelProperties {
 }
 
 class OpenAIModelImpl(
-  request: JsonElement,
-  sessionCacheId: SessionCacheId,
-  dto: OpenAIModelDto,
-) : OpenAIModelProperties by dto, OpenAIModel, com.vapi4k.dsl.model.AbstractModel(request, sessionCacheId, dto)
+  modelBridge: ModelBridge,
+  modelDto: OpenAIModelDto,
+) : OpenAIModelProperties by modelDto, OpenAIModel, AbstractModel(modelBridge, modelDto)

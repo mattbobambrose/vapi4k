@@ -16,12 +16,11 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.ModelBridge
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.OpenRouterModelDto
-import kotlinx.serialization.json.JsonElement
 
 interface OpenRouterModelProperties {
   var model: String
@@ -45,7 +44,6 @@ interface OpenRouterModel : OpenRouterModelProperties {
 }
 
 class OpenRouterModelImpl(
-  request: JsonElement,
-  sessionCacheId: SessionCacheId,
-  dto: OpenRouterModelDto,
-) : OpenRouterModelProperties by dto, OpenRouterModel, com.vapi4k.dsl.model.AbstractModel(request, sessionCacheId, dto)
+  modelBridge: ModelBridge,
+  modelDto: OpenRouterModelDto,
+) : OpenRouterModelProperties by modelDto, OpenRouterModel, AbstractModel(modelBridge, modelDto)

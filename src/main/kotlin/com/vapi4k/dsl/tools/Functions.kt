@@ -18,7 +18,7 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.model.ModelMessageProperties
+import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.tools.ToolCache.addFunctionToCache
@@ -29,17 +29,17 @@ interface Functions {
   fun function(obj: Any)
 }
 
-data class FunctionsImpl internal constructor(internal val model: ModelMessageProperties) : Functions {
+data class FunctionsImpl internal constructor(internal val model: AbstractModelProperties) : Functions {
   override fun function(obj: Any) {
     model.functionDtos += FunctionDto().also { functionDto ->
       verifyObject(true, obj)
-      populateFunctionDto(obj, functionDto)
+      populateFunctionDto(model, obj, functionDto)
       val sessionCacheId =
         if (model.sessionCacheId.isNotSpecified())
           model.sessionCacheId
         else
           model.messageCallId.toSessionCacheId()
-      addFunctionToCache(sessionCacheId, obj)
+      addFunctionToCache(sessionCacheId, model.assistantCacheId, obj)
     }.also { func ->
       if (model.functionDtos.any { func.name == it.name }) {
         error("Duplicate function name declared: ${func.name}")
