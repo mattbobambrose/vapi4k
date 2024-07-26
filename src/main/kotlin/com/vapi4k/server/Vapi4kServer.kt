@@ -14,12 +14,10 @@
  *
  */
 
-package com.vapi4k
+package com.vapi4k.server
 
 import com.github.pambrose.common.util.getBanner
-import com.vapi4k.RequestResponseCallback.Companion.requestCallback
-import com.vapi4k.RequestResponseCallback.Companion.responseCallback
-import com.vapi4k.Vapi4kServer.logger
+import com.vapi4k.BuildConfig
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.common.Version
@@ -43,6 +41,9 @@ import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantRespo
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
+import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
+import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
+import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
@@ -51,7 +52,6 @@ import com.vapi4k.utils.ReflectionUtils.lambda
 import com.vapi4k.utils.Utils.errorMsg
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
@@ -60,12 +60,6 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
-import io.ktor.server.application.install
-import io.ktor.server.plugins.compression.Compression
-import io.ktor.server.plugins.compression.deflate
-import io.ktor.server.plugins.compression.gzip
-import io.ktor.server.plugins.compression.minimumSize
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
@@ -77,11 +71,19 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlin.concurrent.thread
 import kotlin.time.Duration
 import kotlin.time.measureTimedValue
+
+@Version(
+  version = BuildConfig.VERSION,
+  releaseDate = BuildConfig.RELEASE_DATE,
+  buildTime = BuildConfig.BUILD_TIME,
+)
+object Vapi4kServer {
+  val logger = KotlinLogging.logger {}
+}
 
 typealias KtorCallContext = PipelineContext<Unit, ApplicationCall>
 
@@ -108,27 +110,12 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 
   with(application) {
-    install(ContentNegotiation) {
-      json(Json {
-        ignoreUnknownKeys = true
-      })
-    }
-
-    install(Compression) {
-      gzip {
-        priority = 1.0
-      }
-      deflate {
-        priority = 10.0
-        minimumSize(1024) // condition
-      }
-    }
+    defaultKtorConfig()
 
     routing {
       val config = AssistantImpl.config
       config.applicationConfig = environment?.config ?: error("No environment config found")
 
-      get("/") { call.respondText("Hello World!") }
       get("/ping") { call.respondText("pong") }
 
       val serverPath = config.configProperties.serverUrlPath
@@ -143,26 +130,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
       }
     }
-  }
-}
-
-@Version(
-  version = BuildConfig.VERSION,
-  releaseDate = BuildConfig.RELEASE_DATE,
-  buildTime = BuildConfig.BUILD_TIME,
-)
-object Vapi4kServer {
-  val logger = KotlinLogging.logger {}
-}
-
-private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
-  val secret = call.request.headers["x-vapi-secret"]
-  return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
-    logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
-    call.respond(HttpStatusCode.Forbidden, "Invalid secret")
-    false
-  } else {
-    true
   }
 }
 
@@ -253,6 +220,17 @@ private suspend fun KtorCallContext.handleToolCallPathPost(
   }
 }
 
+private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
+  val secret = call.request.headers["x-vapi-secret"]
+  return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
+    logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
+    call.respond(HttpStatusCode.Forbidden, "Invalid secret")
+    false
+  } else {
+    true
+  }
+}
+
 private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback>) {
   thread {
     val config = AssistantImpl.config
@@ -337,3 +315,4 @@ private data class RequestResponseCallback(
     ) = RequestResponseCallback(RESPONSE, requestType, response = response, elapsed = elapsed)
   }
 }
+
