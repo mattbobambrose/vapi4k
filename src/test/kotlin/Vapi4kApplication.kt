@@ -58,8 +58,8 @@ fun Application.module() {
       }
     }
 
-    onAssistantRequest { assistantRequest ->
-      myAssistantRequest(assistantRequest)
+    onAssistantRequest { request ->
+      myAssistantRequest(request)
     }
 
     onAllRequests { request ->

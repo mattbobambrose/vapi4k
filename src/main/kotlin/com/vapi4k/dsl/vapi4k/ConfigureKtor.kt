@@ -16,36 +16,29 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.plugins.callloging.CallLogging
-import io.ktor.server.plugins.compression.Compression
-import io.ktor.server.plugins.compression.deflate
-import io.ktor.server.plugins.compression.gzip
-import io.ktor.server.plugins.compression.minimumSize
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.path
-import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
 
 fun Application.configureKtor() {
-  install(ContentNegotiation) {
-    json(Json {
-      ignoreUnknownKeys = true
-      isLenient = true
-    })
-  }
+//  install(ContentNegotiation) {
+//    json(Json {
+//      ignoreUnknownKeys = true
+//      //isLenient = true
+//    })
+//  }
 
-  install(Compression) {
-    gzip {
-      priority = 1.0
-    }
-    deflate {
-      priority = 10.0
-      minimumSize(1024) // condition
-    }
-  }
+//  install(Compression) {
+//    gzip {
+//      priority = 1.0
+//    }
+//    deflate {
+//      priority = 10.0
+//      minimumSize(1024) // condition
+//    }
+//  }
 
   install(CallLogging) {
     level = Level.INFO

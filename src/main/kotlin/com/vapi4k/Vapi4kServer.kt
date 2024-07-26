@@ -51,6 +51,7 @@ import com.vapi4k.utils.ReflectionUtils.lambda
 import com.vapi4k.utils.Utils.errorMsg
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
@@ -59,6 +60,12 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
+import io.ktor.server.application.install
+import io.ktor.server.plugins.compression.Compression
+import io.ktor.server.plugins.compression.deflate
+import io.ktor.server.plugins.compression.gzip
+import io.ktor.server.plugins.compression.minimumSize
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
@@ -70,6 +77,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlin.concurrent.thread
 import kotlin.time.Duration
@@ -99,22 +107,40 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     subscribe(ApplicationStopping) { it.environment.log.info("Vapi4kServer is stopping") }
   }
 
-  application.routing {
-    val config = AssistantImpl.config
-    config.applicationConfig = environment?.config ?: error("No environment config found")
+  with(application) {
+    install(ContentNegotiation) {
+      json(Json {
+        ignoreUnknownKeys = true
+      })
+    }
 
-    get("/") { call.respondText("Hello World!") }
-    get("/ping") { call.respondText("pong") }
+    install(Compression) {
+      gzip {
+        priority = 1.0
+      }
+      deflate {
+        priority = 10.0
+        minimumSize(1024) // condition
+      }
+    }
 
-    val serverPath = config.configProperties.serverUrlPath
-    logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
-    post(serverPath) { handleServerPathPost(callbackChannel) }
+    routing {
+      val config = AssistantImpl.config
+      config.applicationConfig = environment?.config ?: error("No environment config found")
 
-    config.toolCallEndpoints.forEach { endpoint ->
-      val toolCallPath = endpoint.path
-      logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
-      post(toolCallPath) {
-        handleToolCallPathPost(endpoint, callbackChannel)
+      get("/") { call.respondText("Hello World!") }
+      get("/ping") { call.respondText("pong") }
+
+      val serverPath = config.configProperties.serverUrlPath
+      logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
+      post(serverPath) { handleServerPathPost(callbackChannel) }
+
+      config.toolCallEndpoints.forEach { endpoint ->
+        val toolCallPath = endpoint.path
+        logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
+        post(toolCallPath) {
+          handleToolCallPathPost(endpoint, callbackChannel)
+        }
       }
     }
   }
