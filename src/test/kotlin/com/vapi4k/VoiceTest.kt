@@ -82,7 +82,7 @@ class VoiceTest {
   }
 
   @Test
-  fun `playHt voice two or no voiceId test`() {
+  fun `playHt voice two or no voiceId error test`() {
     assertThrows(IllegalStateException::class.java) {
       squad(assistantRequest.toJsonElement()) {
         members {
@@ -129,7 +129,7 @@ class VoiceTest {
   }
 
   @Test
-  fun `cartesia voice two or no models test`() {
+  fun `cartesia voice two or no models error test`() {
     assertThrows(IllegalStateException::class.java) {
       squad(assistantRequest.toJsonElement()) {
         members {
@@ -176,7 +176,7 @@ class VoiceTest {
   }
 
   @Test
-  fun `cartesia voice two languages test`() {
+  fun `cartesia voice two languages error test`() {
     assertThrows(IllegalStateException::class.java) {
       squad(assistantRequest.toJsonElement()) {
         members {
@@ -200,5 +200,96 @@ class VoiceTest {
         }
       }
     }
+  }
+
+  @Test
+  fun `cartesia voice double model error test`() {
+    assertThrows(IllegalStateException::class.java) {
+      squad(assistantRequest.toJsonElement()) {
+        members {
+          member {
+            assistant {
+              name = "Receptionist"
+              firstMessage = "Hi there!"
+
+              groqModel {
+                modelType = GroqModelType.MIXTRAL_8X7B
+              }
+
+              groqModel {
+                modelType = GroqModelType.MIXTRAL_8X7B
+              }
+
+              cartesiaVoice {
+                voiceId = "matt"
+                modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+                customModel = "specialModel"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun `cartesia voice double voice error test`() {
+    assertThrows(IllegalStateException::class.java) {
+      squad(assistantRequest.toJsonElement()) {
+        members {
+          member {
+            assistant {
+              name = "Receptionist"
+              firstMessage = "Hi there!"
+
+              groqModel {
+                modelType = GroqModelType.MIXTRAL_8X7B
+              }
+
+              cartesiaVoice {
+                voiceId = "matt"
+                modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+              }
+
+              cartesiaVoice {
+                voiceId = "matt"
+                modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun `double values test`() {
+    val squad = squad(assistantRequest.toJsonElement()) {
+      members {
+        member {
+          assistant {
+            name = "Receptionist 1"
+            name = "Receptionist"
+            firstMessage = "Hi there!"
+            firstMessage = "Hello!"
+
+            groqModel {
+              modelType = GroqModelType.MIXTRAL_8X7B
+              modelType = GroqModelType.LLAMA3_8B
+            }
+
+            playHTVoice {
+              voiceIdType = PlayHTVoiceIdType.MATT
+              voiceIdType = PlayHTVoiceIdType.JACK
+            }
+          }
+        }
+      }
+    }
+    val jsonElement = squad.toJsonElement()
+    val members = jsonElement["squad.members"].jsonArray.toList()
+    assertEquals("Hello!", members[0]["assistant.firstMessage"].stringValue)
+    assertEquals("llama3-8b-8192", members[0]["assistant.model.model"].stringValue)
+    assertEquals("jack", members[0]["assistant.voice.voiceId"].stringValue)
   }
 }
