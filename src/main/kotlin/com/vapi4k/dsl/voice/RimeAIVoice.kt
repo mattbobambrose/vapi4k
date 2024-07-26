@@ -35,4 +35,4 @@ interface RimeAIVoiceProperties {
 }
 
 data class RimeAIVoice internal constructor(private val dto: RimeAIVoiceDto) :
-  com.vapi4k.dsl.voice.RimeAIVoiceProperties by dto
+  RimeAIVoiceProperties by dto

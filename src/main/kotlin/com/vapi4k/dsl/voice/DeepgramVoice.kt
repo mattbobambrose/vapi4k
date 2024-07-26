@@ -31,4 +31,4 @@ interface DeepgramVoiceProperties {
 
 @AssistantDslMarker
 data class DeepgramVoice internal constructor(private val dto: DeepgramVoiceDto) :
-  com.vapi4k.dsl.voice.DeepgramVoiceProperties by dto
+  DeepgramVoiceProperties by dto

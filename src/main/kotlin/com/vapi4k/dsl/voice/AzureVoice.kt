@@ -34,4 +34,4 @@ interface AzureVoiceProperties {
 
 @AssistantDslMarker
 data class AzureVoice internal constructor(private val dto: AzureVoiceDto) :
-  com.vapi4k.dsl.voice.AzureVoiceProperties by dto
+  AzureVoiceProperties by dto

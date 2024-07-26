@@ -34,7 +34,7 @@ data class CartesiaVoiceDto(
 
   var language: String = "",
   @Transient
-  override var languageType: CartesiaVoiceLanguageType = com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType.UNSPECIFIED,
+  override var languageType: CartesiaVoiceLanguageType = CartesiaVoiceLanguageType.UNSPECIFIED,
   @Transient
   override var customLanguage: String = "",
 

@@ -37,4 +37,4 @@ interface CartesiaVoiceProperties {
 
 @AssistantDslMarker
 data class CartesiaVoice internal constructor(private val dto: CartesiaVoiceDto) :
-  com.vapi4k.dsl.voice.CartesiaVoiceProperties by dto
+  CartesiaVoiceProperties by dto

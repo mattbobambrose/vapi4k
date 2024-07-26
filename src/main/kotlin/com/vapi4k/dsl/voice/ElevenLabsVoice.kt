@@ -42,4 +42,4 @@ interface ElevenLabsVoiceProperties {
 
 @AssistantDslMarker
 data class ElevenLabsVoice internal constructor(private val dto: ElevenLabsVoiceDto) :
-  com.vapi4k.dsl.voice.ElevenLabsVoiceProperties by dto
+  ElevenLabsVoiceProperties by dto

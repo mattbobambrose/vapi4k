@@ -34,4 +34,4 @@ interface LMNTVoiceProperties {
 
 @AssistantDslMarker
 data class LMNTVoice internal constructor(private val dto: LMNTVoiceDto) :
-  com.vapi4k.dsl.voice.LMNTVoiceProperties by dto
+  LMNTVoiceProperties by dto

@@ -27,7 +27,7 @@ import kotlinx.serialization.Transient
 data class AzureVoiceDto(
   var voiceId: String = "",
   @Transient
-  override var voiceIdType: AzureVoiceIdType = com.vapi4k.dsl.voice.enums.AzureVoiceIdType.UNSPECIFIED,
+  override var voiceIdType: AzureVoiceIdType = AzureVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
 

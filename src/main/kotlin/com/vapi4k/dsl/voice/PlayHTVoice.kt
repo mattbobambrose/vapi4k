@@ -38,4 +38,4 @@ interface PlayHTVoiceProperties {
 }
 
 data class PlayHTVoice internal constructor(private val dto: PlayHTVoiceDto) :
-  com.vapi4k.dsl.voice.PlayHTVoiceProperties by dto
+  PlayHTVoiceProperties by dto

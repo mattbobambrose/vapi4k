@@ -27,6 +27,6 @@ enum class AzureVoiceIdType(val desc: String) {
 
   UNSPECIFIED(UNSPECIFIED_DEFAULT);
 
-  fun isSpecified() = this != com.vapi4k.dsl.voice.enums.AzureVoiceIdType.UNSPECIFIED
-  fun isNotSpecified() = this == com.vapi4k.dsl.voice.enums.AzureVoiceIdType.UNSPECIFIED
+  fun isSpecified() = this != UNSPECIFIED
+  fun isNotSpecified() = this == UNSPECIFIED
 }

@@ -34,4 +34,4 @@ interface OpenAIVoiceProperties {
 
 @AssistantDslMarker
 data class OpenAIVoice internal constructor(private val dto: OpenAIVoiceDto) :
-  com.vapi4k.dsl.voice.OpenAIVoiceProperties by dto
+  OpenAIVoiceProperties by dto
