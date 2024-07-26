@@ -55,6 +55,7 @@ application {
 repositories {
     google()
     mavenCentral()
+    mavenLocal()
     maven(url = "https://jitpack.io")
 //    mavenCentral()
 //    maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers") }

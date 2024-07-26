@@ -27,8 +27,8 @@ object Utils {
 
   private var assistantCounter = 1
 
-  fun resourceFile(fileName: String): String =
-    this::class.java.getResource(fileName)?.readText() ?: error("File not found: $fileName")
+  fun resourceFile(filename: String): String =
+    javaClass.classLoader.getResource(filename)?.readText() ?: error("File not found: $filename")
 
   internal fun Int.lpad(
     width: Int,
@@ -40,7 +40,7 @@ object Utils {
     padChar: Char = '0',
   ): String = toString().padEnd(width, padChar)
 
-  fun String.capitalizeFirstChar(): String =
+  internal fun String.capitalizeFirstChar(): String =
     replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
 }
