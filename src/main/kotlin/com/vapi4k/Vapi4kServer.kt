@@ -14,9 +14,16 @@
  *
  */
 
-package com.vapi4k.plugin
+package com.vapi4k
 
+import com.github.pambrose.common.util.getBanner
+import com.vapi4k.RequestResponseCallback.Companion.requestCallback
+import com.vapi4k.RequestResponseCallback.Companion.responseCallback
+import com.vapi4k.Vapi4kServer.logger
+import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.common.Version
+import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.tools.ToolCache.cacheIsActive
 import com.vapi4k.dsl.tools.ToolCache.removeFunctionFromCache
@@ -32,9 +39,6 @@ import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.TOOL_CALL
-import com.vapi4k.plugin.RequestResponseCallback.Companion.requestCallback
-import com.vapi4k.plugin.RequestResponseCallback.Companion.responseCallback
-import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantResponse
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
@@ -79,6 +83,13 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 ) {
   val callbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
 
+  with(logger) {
+    info { getBanner("banners/vapi4k-server.banner", logger) }
+    info { Vapi4kServer::class.versionDesc() }
+  }
+
+  logEnvVarValues()
+
   startCallbackThread(callbackChannel)
 
   environment?.monitor?.apply {
@@ -109,7 +120,12 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 }
 
-object Vapi4kLogger {
+@Version(
+  version = BuildConfig.VERSION,
+  releaseDate = BuildConfig.RELEASE_DATE,
+  buildTime = BuildConfig.BUILD_TIME,
+)
+object Vapi4kServer {
   val logger = KotlinLogging.logger {}
 }
 

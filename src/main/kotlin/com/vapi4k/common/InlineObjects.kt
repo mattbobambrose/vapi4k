@@ -17,6 +17,7 @@
 package com.vapi4k.common
 
 import com.vapi4k.common.SessionCacheId.Companion.UNSPECIFIED_VALUE
+import kotlinx.serialization.Serializable
 
 
 @JvmInline
@@ -45,5 +46,22 @@ value class AssistantCacheId private constructor(val value: String) {
     val UNSPECIFIED_ASSISTANT_ID = AssistantCacheId(UNSPECIFIED_VALUE)
 
     fun String.toAssistantCacheId() = AssistantCacheId(this)
+  }
+}
+
+@Serializable
+@JvmInline
+value class Email(val value: String) {
+  fun isNotBlank() = value.isNotBlank()
+
+  fun isBlank() = value.isBlank()
+
+  override fun toString() = value
+
+  companion object {
+    val EMPTY_EMAIL = "".toEmail()
+
+    // Force all emails to be lowercase
+    fun String.toEmail() = Email(this.lowercase().trim())
   }
 }

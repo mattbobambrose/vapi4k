@@ -20,4 +20,6 @@ object Constants {
   const val DEFAULT_SERVER_URL = "vapi4k"
   const val VAPI_API_URL = "https://api.vapi.ai"
   const val UNSPECIFIED_DEFAULT = "unspecified"
+
+  const val UNKNOWN = "unknown"
 }

@@ -20,10 +20,24 @@ import com.vapi4k.common.AssistantCacheId.Companion.toAssistantCacheId
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 
 object Utils {
-  val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
+  internal val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
 
-  fun nextSessionCacheId() = "Outbound-${System.currentTimeMillis()}".toSessionCacheId()
-  fun nextAssistantCacheId() = (assistantCounter++).toString().padStart(3, '0').toAssistantCacheId()
+  internal fun nextSessionCacheId() = "Outbound-${System.currentTimeMillis()}".toSessionCacheId()
+  internal fun nextAssistantCacheId() = (assistantCounter++).toString().padStart(3, '0').toAssistantCacheId()
 
   private var assistantCounter = 1
+
+  internal fun Int.lpad(
+    width: Int,
+    padChar: Char = '0',
+  ): String = toString().padStart(width, padChar)
+
+  internal fun Int.rpad(
+    width: Int,
+    padChar: Char = '0',
+  ): String = toString().padEnd(width, padChar)
+
+  fun String.capitalizeFirstChar(): String =
+    replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+
 }

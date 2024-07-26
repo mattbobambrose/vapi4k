@@ -16,10 +16,10 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.Vapi4kServer.logger
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
 import com.vapi4k.dsl.tools.ToolCache.FunctionDetails.Companion.toFunctionDetails
-import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.responses.ToolCallMessageDto
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue

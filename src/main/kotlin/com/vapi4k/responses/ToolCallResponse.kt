@@ -16,12 +16,12 @@
 
 package com.vapi4k.responses
 
+import com.vapi4k.Vapi4kServer.logger
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.tools.ToolCache.getToolCallFromCache
 import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
 import com.vapi4k.dtos.model.ToolMessageConditionDto
-import com.vapi4k.plugin.Vapi4kLogger.logger
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallArguments
 import com.vapi4k.utils.JsonElementUtils.toolCallId

@@ -19,6 +19,7 @@ package com.vapi4k
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -29,11 +30,12 @@ class ServerTest {
   fun testServer() {
     testApplication {
       application {
-
+        install(Vapi4k) {
+        }
       }
-      val response = client.get("/")
+      val response = client.get("/ping")
       assertEquals(HttpStatusCode.OK, response.status)
-      assertEquals("Hello, world!", response.bodyAsText())
+      assertEquals("pong", response.bodyAsText())
     }
   }
 }
