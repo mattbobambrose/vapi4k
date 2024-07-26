@@ -17,6 +17,7 @@
 package com.vapi4k.dtos.assistant
 
 import com.vapi4k.dsl.assistant.AssistantProperties
+import com.vapi4k.dsl.assistant.ModelDtoBridge
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType

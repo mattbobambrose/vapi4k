@@ -45,29 +45,6 @@ import com.vapi4k.dsl.voice.PlayHTVoice
 import com.vapi4k.dsl.voice.RimeAIVoice
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
-import com.vapi4k.dtos.assistant.ModelBridge
-import com.vapi4k.dtos.assistant.anthropicModel
-import com.vapi4k.dtos.assistant.anyscaleModel
-import com.vapi4k.dtos.assistant.azureVoice
-import com.vapi4k.dtos.assistant.cartesiaVoice
-import com.vapi4k.dtos.assistant.customLLMModel
-import com.vapi4k.dtos.assistant.deepInfraModel
-import com.vapi4k.dtos.assistant.deepgramTranscriber
-import com.vapi4k.dtos.assistant.deepgramVoice
-import com.vapi4k.dtos.assistant.elevenLabsVoice
-import com.vapi4k.dtos.assistant.gladiaTranscriber
-import com.vapi4k.dtos.assistant.groqModel
-import com.vapi4k.dtos.assistant.lmntVoice
-import com.vapi4k.dtos.assistant.neetsVoice
-import com.vapi4k.dtos.assistant.openAIModel
-import com.vapi4k.dtos.assistant.openAIVoice
-import com.vapi4k.dtos.assistant.openRouterModel
-import com.vapi4k.dtos.assistant.perplexityAIModel
-import com.vapi4k.dtos.assistant.playHTVoice
-import com.vapi4k.dtos.assistant.rimeAIVoice
-import com.vapi4k.dtos.assistant.talkscriberTranscriber
-import com.vapi4k.dtos.assistant.togetherAIModel
-import com.vapi4k.dtos.assistant.vapiModel
 import com.vapi4k.utils.DuplicateChecker
 import com.vapi4k.utils.Utils.nextAssistantCacheId
 import kotlinx.serialization.json.JsonElement
@@ -139,82 +116,39 @@ data class AssistantImpl internal constructor(
   private val assistantDto: AssistantDto,
   private val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantProperties by assistantDto, Assistant, ModelBridge {
-  private val transcriberChecker = DuplicateChecker()
+  override val transcriberChecker = DuplicateChecker()
   override val modelChecker = DuplicateChecker()
-  private val voiceChecker = DuplicateChecker()
+  override val voiceChecker = DuplicateChecker()
   override val assistantCacheId = nextAssistantCacheId()
 
   // Transcribers
-  override fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber =
-    deepgramTranscriber(assistantDto, transcriberChecker, block)
-
-  override fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber =
-    gladiaTranscriber(assistantDto, transcriberChecker, block)
-
-  override fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber =
-    talkscriberTranscriber(assistantDto, transcriberChecker, block)
-
+  override fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit) = deepgramTranscriber(assistantDto, block)
+  override fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) = gladiaTranscriber(assistantDto, block)
+  override fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit) =
+    talkscriberTranscriber(assistantDto, block)
 
   // Models
-  override fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel =
-    anyscaleModel(this, assistantDto, block)
-
-  override fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel =
-    anthropicModel(this, assistantDto, block)
-
-  override fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel =
-    customLLMModel(this, assistantDto, block)
-
-  override fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel =
-    deepInfraModel(this, assistantDto, block)
-
-  override fun groqModel(block: GroqModel.() -> Unit): GroqModel =
-    groqModel(this, assistantDto, block)
-
-  override fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel =
-    openAIModel(this, assistantDto, block)
-
-  override fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel =
-    openRouterModel(this, assistantDto, block)
-
-  override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel =
-    perplexityAIModel(this, assistantDto, block)
-
-  override fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel =
-    togetherAIModel(this, assistantDto, block)
-
-  override fun vapiModel(block: VapiModel.() -> Unit): VapiModel =
-    vapiModel(this, assistantDto, block)
-
+  override fun anyscaleModel(block: AnyscaleModel.() -> Unit) = anyscaleModel(assistantDto, block)
+  override fun anthropicModel(block: AnthropicModel.() -> Unit) = anthropicModel(assistantDto, block)
+  override fun customLLMModel(block: CustomLLMModel.() -> Unit) = customLLMModel(assistantDto, block)
+  override fun deepInfraModel(block: DeepInfraModel.() -> Unit) = deepInfraModel(assistantDto, block)
+  override fun groqModel(block: GroqModel.() -> Unit) = groqModel(assistantDto, block)
+  override fun openAIModel(block: OpenAIModel.() -> Unit) = openAIModel(assistantDto, block)
+  override fun openRouterModel(block: OpenRouterModel.() -> Unit) = openRouterModel(assistantDto, block)
+  override fun perplexityAIModel(block: PerplexityAIModel.() -> Unit) = perplexityAIModel(assistantDto, block)
+  override fun togetherAIModel(block: TogetherAIModel.() -> Unit) = togetherAIModel(assistantDto, block)
+  override fun vapiModel(block: VapiModel.() -> Unit) = vapiModel(assistantDto, block)
 
   // Voices
-  override fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice =
-    azureVoice(assistantDto, voiceChecker, block)
-
-  override fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice =
-    cartesiaVoice(assistantDto, voiceChecker, block)
-
-  override fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice =
-    deepgramVoice(assistantDto, voiceChecker, block)
-
-  override fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice =
-    elevenLabsVoice(assistantDto, voiceChecker, block)
-
-  override fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice =
-    lmntVoice(assistantDto, voiceChecker, block)
-
-  override fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice =
-    neetsVoice(assistantDto, voiceChecker, block)
-
-  override fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice =
-    openAIVoice(assistantDto, voiceChecker, block)
-
-  override fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice =
-    playHTVoice(assistantDto, voiceChecker, block)
-
-  override fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice =
-    rimeAIVoice(assistantDto, voiceChecker, block)
-
+  override fun azureVoice(block: AzureVoice.() -> Unit) = azureVoice(assistantDto, block)
+  override fun cartesiaVoice(block: CartesiaVoice.() -> Unit) = cartesiaVoice(assistantDto, block)
+  override fun deepgramVoice(block: DeepgramVoice.() -> Unit) = deepgramVoice(assistantDto, block)
+  override fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit) = elevenLabsVoice(assistantDto, block)
+  override fun lmntVoice(block: LMNTVoice.() -> Unit) = lmntVoice(assistantDto, block)
+  override fun neetsVoice(block: NeetsVoice.() -> Unit) = neetsVoice(assistantDto, block)
+  override fun openAIVoice(block: OpenAIVoice.() -> Unit) = openAIVoice(assistantDto, block)
+  override fun playHTVoice(block: PlayHTVoice.() -> Unit) = playHTVoice(assistantDto, block)
+  override fun rimeAIVoice(block: RimeAIVoice.() -> Unit) = rimeAIVoice(assistantDto, block)
 
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
