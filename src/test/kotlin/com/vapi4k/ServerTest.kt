@@ -22,6 +22,7 @@ import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.utils.JsonUtils.get
 import com.vapi4k.utils.JsonUtils.stringValue
 import com.vapi4k.utils.JsonUtils.toJsonElement
+import com.vapi4k.utils.Utils.resourceFile
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -53,10 +54,6 @@ class ServerTest {
     }
   }
 
-  fun readRequest(fileName: String): String {
-    return this::class.java.getResource(fileName)?.readText() ?: error("File not found: $fileName")
-  }
-
   @Test
   fun `simple assistant request`() {
     testApplication {
@@ -75,7 +72,7 @@ class ServerTest {
       val response =
         client.post("/$DEFAULT_SERVER_PATH") {
           configPost()
-          setBody(readRequest("/json/assistantRequest.json"))
+          setBody(resourceFile("/json/assistantRequest.json"))
         }
 
       val je = response.bodyAsText().toJsonElement()

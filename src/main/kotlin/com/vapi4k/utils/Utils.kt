@@ -27,6 +27,9 @@ object Utils {
 
   private var assistantCounter = 1
 
+  fun resourceFile(fileName: String): String =
+    this::class.java.getResource(fileName)?.readText() ?: error("File not found: $fileName")
+
   internal fun Int.lpad(
     width: Int,
     padChar: Char = '0',
