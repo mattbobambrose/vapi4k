@@ -71,6 +71,8 @@ interface AssistantOverridesProperties {
 
 @AssistantDslMarker
 interface AssistantOverrides : AssistantOverridesProperties {
+  fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection
+
   // Transcribers
   fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber
   fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber
@@ -109,7 +111,11 @@ data class AssistantOverridesImpl internal constructor(
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
   override val assistantCacheId = nextAssistantCacheId()
-  override val modelDtoBridge: ModelDtoBridge get() = assistantOverridesDto
+  override val modelDtoBridge get() = assistantOverridesDto
+  override val voicemailDetectionDto get() = assistantOverridesDto.voicemailDetectionDto
+
+  override fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =
+    voicemailDetectionBridge(block)
 
   // Transcribers
   override fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit) = deepgramTranscriberBridge(block)

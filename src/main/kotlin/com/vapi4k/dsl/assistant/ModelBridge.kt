@@ -50,6 +50,7 @@ import com.vapi4k.dsl.voice.NeetsVoice
 import com.vapi4k.dsl.voice.OpenAIVoice
 import com.vapi4k.dsl.voice.PlayHTVoice
 import com.vapi4k.dsl.voice.RimeAIVoice
+import com.vapi4k.dtos.VoicemailDetectionDto
 import com.vapi4k.dtos.model.AnthropicModelDto
 import com.vapi4k.dtos.model.AnyscaleModelDto
 import com.vapi4k.dtos.model.CommonModelDto
@@ -92,6 +93,13 @@ interface ModelBridge {
   val modelChecker: DuplicateChecker
   val voiceChecker: DuplicateChecker
   val modelDtoBridge: ModelDtoBridge
+  val voicemailDetectionDto: VoicemailDetectionDto
+}
+
+fun ModelBridge.voicemailDetectionBridge(
+  block: VoicemailDetection.() -> Unit,
+): VoicemailDetection {
+  return VoicemailDetection(voicemailDetectionDto).apply(block)
 }
 
 // Transcribers
