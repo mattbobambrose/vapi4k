@@ -100,14 +100,14 @@ interface ModelUnion {
   val artifactPlanDto: ArtifactPlanDto
 }
 
-fun ModelUnion.voicemailDetectionBridge(
+fun ModelUnion.voicemailDetectionUnion(
   block: VoicemailDetection.() -> Unit,
 ): VoicemailDetection {
   return VoicemailDetection(voicemailDetectionDto).apply(block)
 }
 
 // Transcribers
-fun ModelUnion.deepgramTranscriberBridge(
+fun ModelUnion.deepgramTranscriberUnion(
   block: DeepgramTranscriber.() -> Unit,
 ): DeepgramTranscriber {
   transcriberChecker.check("deepGramTranscriber{} already called")
@@ -117,7 +117,7 @@ fun ModelUnion.deepgramTranscriberBridge(
     .apply { transcriberDto.verifyValues() }
 }
 
-fun ModelUnion.gladiaTranscriberBridge(
+fun ModelUnion.gladiaTranscriberUnion(
   block: GladiaTranscriber.() -> Unit,
 ): GladiaTranscriber {
   transcriberChecker.check("gladiaTranscriber{} already called")
@@ -127,7 +127,7 @@ fun ModelUnion.gladiaTranscriberBridge(
     .apply { transcriberDto.verifyValues() }
 }
 
-fun ModelUnion.talkscriberTranscriberBridge(
+fun ModelUnion.talkscriberTranscriberUnion(
   block: TalkscriberTranscriber.() -> Unit,
 ): TalkscriberTranscriber {
   transcriberChecker.check("talkscriberTranscriber{} already called")
@@ -138,7 +138,7 @@ fun ModelUnion.talkscriberTranscriberBridge(
 }
 
 // Models
-fun ModelUnion.anyscaleModelBridge(
+fun ModelUnion.anyscaleModelUnion(
   block: AnyscaleModel.() -> Unit,
 ): AnyscaleModel {
   modelChecker.check("anyscaleModel{} already called")
@@ -148,7 +148,7 @@ fun ModelUnion.anyscaleModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.anthropicModelBridge(
+fun ModelUnion.anthropicModelUnion(
   block: AnthropicModel.() -> Unit,
 ): AnthropicModel {
   val modelDto = AnthropicModelDto().also { modelDtoUnion.modelDto = it }
@@ -157,7 +157,7 @@ fun ModelUnion.anthropicModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.customLLMModelBridge(
+fun ModelUnion.customLLMModelUnion(
   block: CustomLLMModel.() -> Unit,
 ): CustomLLMModel {
   modelChecker.check("customLLMModel{} already called")
@@ -167,7 +167,7 @@ fun ModelUnion.customLLMModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.deepInfraModelBridge(
+fun ModelUnion.deepInfraModelUnion(
   block: DeepInfraModel.() -> Unit,
 ): DeepInfraModel {
   modelChecker.check("deepInfraModel{} already called")
@@ -177,7 +177,7 @@ fun ModelUnion.deepInfraModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.groqModelBridge(
+fun ModelUnion.groqModelUnion(
   block: GroqModel.() -> Unit,
 ): GroqModel {
   modelChecker.check("groqModel{} already called")
@@ -187,7 +187,7 @@ fun ModelUnion.groqModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.openAIModelBridge(
+fun ModelUnion.openAIModelUnion(
   block: OpenAIModel.() -> Unit,
 ): OpenAIModel {
   modelChecker.check("openAIModel{} already called")
@@ -197,7 +197,7 @@ fun ModelUnion.openAIModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.openRouterModelBridge(
+fun ModelUnion.openRouterModelUnion(
   block: OpenRouterModel.() -> Unit,
 ): OpenRouterModel {
   modelChecker.check("openRouterModel{} already called")
@@ -207,7 +207,7 @@ fun ModelUnion.openRouterModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.perplexityAIModelBridge(
+fun ModelUnion.perplexityAIModelUnion(
   block: PerplexityAIModel.() -> Unit,
 ): PerplexityAIModel {
   modelChecker.check("perplexityAIModel{} already called")
@@ -217,7 +217,7 @@ fun ModelUnion.perplexityAIModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.togetherAIModelBridge(
+fun ModelUnion.togetherAIModelUnion(
   block: TogetherAIModel.() -> Unit,
 ): TogetherAIModel {
   modelChecker.check("togetherAIModel{} already called")
@@ -227,7 +227,7 @@ fun ModelUnion.togetherAIModelBridge(
     .apply { modelDto.verifyValues() }
 }
 
-fun ModelUnion.vapiModelBridge(
+fun ModelUnion.vapiModelUnion(
   block: VapiModel.() -> Unit,
 ): VapiModel {
   modelChecker.check("vapiModel{} already called")
@@ -238,7 +238,7 @@ fun ModelUnion.vapiModelBridge(
 }
 
 // Voices
-fun ModelUnion.azureVoiceBridge(
+fun ModelUnion.azureVoiceUnion(
   block: AzureVoice.() -> Unit,
 ): AzureVoice {
   voiceChecker.check("azureVoice{} already called")
@@ -248,7 +248,7 @@ fun ModelUnion.azureVoiceBridge(
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelUnion.cartesiaVoiceBridge(
+fun ModelUnion.cartesiaVoiceUnion(
   block: CartesiaVoice.() -> Unit,
 ): CartesiaVoice {
   voiceChecker.check("cartesiaVoice{} already called")
@@ -258,7 +258,7 @@ fun ModelUnion.cartesiaVoiceBridge(
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelUnion.deepgramVoiceBridge(
+fun ModelUnion.deepgramVoiceUnion(
   block: DeepgramVoice.() -> Unit,
 ): DeepgramVoice {
   voiceChecker.check("deepgramVoice{} already called")
@@ -268,7 +268,7 @@ fun ModelUnion.deepgramVoiceBridge(
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelUnion.elevenLabsVoiceBridge(
+fun ModelUnion.elevenLabsVoiceUnion(
   block: ElevenLabsVoice.() -> Unit,
 ): ElevenLabsVoice {
   voiceChecker.check("elevenLabsVoice{} already called")
@@ -278,7 +278,7 @@ fun ModelUnion.elevenLabsVoiceBridge(
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelUnion.lmntVoiceBridge(
+fun ModelUnion.lmntVoiceUnion(
   block: LMNTVoice.() -> Unit,
 ): LMNTVoice {
   voiceChecker.check("lmntVoice{} already called")
@@ -287,7 +287,7 @@ fun ModelUnion.lmntVoiceBridge(
     .apply(block)
 }
 
-fun ModelUnion.neetsVoiceBridge(
+fun ModelUnion.neetsVoiceUnion(
   block: NeetsVoice.() -> Unit,
 ): NeetsVoice {
   voiceChecker.check("neetsVoice{} already called")
@@ -297,7 +297,7 @@ fun ModelUnion.neetsVoiceBridge(
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelUnion.openAIVoiceBridge(
+fun ModelUnion.openAIVoiceUnion(
   block: OpenAIVoice.() -> Unit,
 ): OpenAIVoice {
   voiceChecker.check("openAIVoice{} already called")
@@ -307,7 +307,7 @@ fun ModelUnion.openAIVoiceBridge(
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelUnion.playHTVoiceBridge(
+fun ModelUnion.playHTVoiceUnion(
   block: PlayHTVoice.() -> Unit,
 ): PlayHTVoice {
   voiceChecker.check("playHTVoice{} already called")
@@ -317,7 +317,7 @@ fun ModelUnion.playHTVoiceBridge(
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelUnion.rimeAIVoiceBridge(
+fun ModelUnion.rimeAIVoiceUnion(
   block: RimeAIVoice.() -> Unit,
 ): RimeAIVoice {
   voiceChecker.check("rimeAIVoice{} already called")
@@ -327,6 +327,6 @@ fun ModelUnion.rimeAIVoiceBridge(
     .apply { voiceDto.verifyValues() }
 }
 
-fun ModelUnion.analysisPlanBridge(block: AnalysisPlan.() -> Unit) = AnalysisPlan(analysisPlanDto).apply(block)
+fun ModelUnion.analysisPlanUnion(block: AnalysisPlan.() -> Unit) = AnalysisPlan(analysisPlanDto).apply(block)
 
-fun ModelUnion.artifactPlanBridge(block: ArtifactPlan.() -> Unit) = ArtifactPlan(artifactPlanDto).apply(block)
+fun ModelUnion.artifactPlanUnion(block: ArtifactPlan.() -> Unit) = ArtifactPlan(artifactPlanDto).apply(block)
