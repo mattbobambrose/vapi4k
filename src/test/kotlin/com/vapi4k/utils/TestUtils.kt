@@ -65,4 +65,41 @@ object TestUtils {
     return response!! to je!!
   }
 
+  fun withTestApplication(
+    vararg fileNames: String,
+    block: (JsonElement) -> AssistantRequestResponse,
+  ): List<Pair<HttpResponse, JsonElement>> {
+    var responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
+    testApplication {
+      application {
+        install(Vapi4k) {
+          onAssistantRequest { request ->
+            block(request)
+          }
+
+          toolCallEndpoints {
+            // Provide a default endpoint
+            endpoint {
+              serverUrl = "https://test/toolCall"
+              serverUrlSecret = "456"
+              timeoutSeconds = 20
+            }
+          }
+        }
+      }
+
+      responses
+        .addAll(
+          fileNames.map { fileName ->
+            val response = client.post("/$DEFAULT_SERVER_PATH") {
+              configPost()
+              setBody(resourceFile(fileName))
+            }
+            response to response.bodyAsText().toJsonElement()
+          })
+
+    }
+    return responses
+  }
+
 }

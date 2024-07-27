@@ -16,6 +16,7 @@
 
 package com.vapi4k
 
+import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.server.Vapi4k
@@ -66,5 +67,25 @@ class ServerTest {
 
     assertEquals(HttpStatusCode.OK, response.status)
     assertEquals(GroqModelType.LLAMA3_70B.desc, jsonElement["assistant.model.model"].stringValue)
+  }
+
+  @Test
+  fun `tool request`() {
+    val responses =
+      withTestApplication(
+        "/json/assistantRequest.json",
+        "/json/toolRequest1.json"
+      ) { request ->
+        doubleToolAssistant(request)
+      }
+
+    responses.forEach { (response, jsonElement) ->
+      assertEquals(HttpStatusCode.OK, response.status)
+
+    }
+
+//    assertEquals(HttpStatusCode.OK, response.status)
+//    println(jsonElement)
+    //assertEquals(GroqModelType.LLAMA3_70B.desc, jsonElement["assistant.model.model"].stringValue)
   }
 }

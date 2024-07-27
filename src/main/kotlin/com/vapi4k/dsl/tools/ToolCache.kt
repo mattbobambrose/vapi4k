@@ -34,10 +34,10 @@ internal object ToolCache {
   val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
 
   fun getToolCallFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
-    toolCallCache[sessionCacheId] ?: error("Tool cache key not found: $sessionCacheId")
+    toolCallCache[sessionCacheId] ?: error("Tool session cache id not found: $sessionCacheId")
 
   fun getFunctionFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
-    functionCache[sessionCacheId] ?: error("Function cache key not found: $sessionCacheId")
+    functionCache[sessionCacheId] ?: error("Function session cache id key not found: $sessionCacheId")
 
   fun resetCaches() {
     toolCallCache.clear()

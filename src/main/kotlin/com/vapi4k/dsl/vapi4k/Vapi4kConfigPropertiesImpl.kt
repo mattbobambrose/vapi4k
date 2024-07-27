@@ -21,10 +21,15 @@ import com.vapi4k.utils.ReflectionUtils.ensureStartsWith
 import java.net.URI
 
 @Vapi4KDslMarker
-class Vapi4kConfigProperties internal constructor() {
+interface Vapi4kConfigProperties {
+  var serverUrl: String
+  var serverUrlSecret: String
+}
+
+class Vapi4kConfigPropertiesImpl internal constructor() : Vapi4kConfigProperties {
   internal val serverUrlPath
     get() = (if (serverUrl.isEmpty()) DEFAULT_SERVER_PATH else URI(serverUrl).toURL().path).ensureStartsWith("/")
 
-  var serverUrl = ""
-  var serverUrlSecret = ""
+  override var serverUrl = ""
+  override var serverUrlSecret = ""
 }
