@@ -32,9 +32,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-data class ToolCallResponse(private var messageResponse: MessageResponse = MessageResponse()) {
+data class ToolCallResponse(
+  var results: MutableList<ToolCallResult> = mutableListOf(),
+  var error: String = "",
+) {
   companion object {
-    fun getToolCallResponse(request: JsonElement): ToolCallResponse =
+    fun getToolCallResponse(request: JsonElement) =
       runCatching {
         ToolCallResponse()
           .also { response ->
@@ -43,37 +46,35 @@ data class ToolCallResponse(private var messageResponse: MessageResponse = Messa
 
             for (toolCall in toolCallList) {
               response.also { toolCallResponse ->
-                toolCallResponse.messageResponse.also { messageResponse ->
-                  messageResponse.results +=
-                    ToolCallResult()
-                      .also { toolCallResult ->
-                        val cacheKey = request.messageCallId.toSessionCacheId()
-                        val funcName = toolCall.toolCallName
-                        val args = toolCall.toolCallArguments
+                response.results +=
+                  ToolCallResult()
+                    .also { toolCallResult ->
+                      val cacheKey = request.messageCallId.toSessionCacheId()
+                      val funcName = toolCall.toolCallName
+                      val args = toolCall.toolCallArguments
 
-                        toolCallResult.toolCallId = toolCall.toolCallId
-                        toolCallResult.name = funcName
+                      toolCallResult.toolCallId = toolCall.toolCallId
+                      toolCallResult.name = funcName
 
 
-                        toolCallResult.result =
-                          runCatching {
-                            getToolCallFromCache(cacheKey)
-                              .getFunction(funcName)
-                              .also { logger.info { "Invoking $funcName on method ${it.fqName}" } }
-                              .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->
-                                toolCallResult.error = errorMsg
-                                errorMessage = errorMsg
-                              }
-                          }.getOrElse { e ->
-                            val errorMsg = e.message ?: "Error invoking tool"
-                            logger.error { errorMsg }
-                            errorMsg
-                          }
-                      }
+                      toolCallResult.result =
+                        runCatching {
+                          getToolCallFromCache(cacheKey)
+                            .getFunction(funcName)
+                            .also { logger.info { "Invoking $funcName on method ${it.fqName}" } }
+                            .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->
+                              toolCallResult.error = errorMsg
+                              errorMessage = errorMsg
+                            }
+                        }.getOrElse { e ->
+                          val errorMsg = e.message ?: "Error invoking tool"
+                          logger.error { errorMsg }
+                          errorMsg
+                        }
+                    }
 
-                  if (errorMessage.isNotEmpty()) {
-                    messageResponse.error = errorMessage
-                  }
+                if (errorMessage.isNotEmpty()) {
+                  response.error = errorMessage
                 }
               }
             }
@@ -85,11 +86,6 @@ data class ToolCallResponse(private var messageResponse: MessageResponse = Messa
   }
 }
 
-@Serializable
-data class MessageResponse(
-  var results: MutableList<ToolCallResult> = mutableListOf(),
-  var error: String = "",
-)
 
 @Serializable
 data class ToolCallResult(

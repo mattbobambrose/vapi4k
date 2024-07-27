@@ -23,6 +23,7 @@ import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.get
 import com.vapi4k.utils.stringValue
+import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -74,7 +75,8 @@ class ServerTest {
     val responses =
       withTestApplication(
         "/json/assistantRequest.json",
-        "/json/toolRequest1.json"
+        "/json/toolRequest1.json",
+        "/json/toolRequest2.json"
       ) { request ->
         doubleToolAssistant(request)
       }
@@ -82,6 +84,7 @@ class ServerTest {
     responses.forEach { (response, jsonElement) ->
       assertEquals(HttpStatusCode.OK, response.status)
 
+      println(jsonElement.toJsonString())
     }
 
 //    assertEquals(HttpStatusCode.OK, response.status)
