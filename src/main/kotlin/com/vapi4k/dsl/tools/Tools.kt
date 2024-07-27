@@ -33,7 +33,7 @@ import com.vapi4k.utils.ReflectionUtils.toolFunction
 @AssistantDslMarker
 interface Tools {
   fun tool(
-    endpointName: String = "",
+    endpointName: String,
     obj: Any,
     block: Tool.() -> Unit = {},
   )
