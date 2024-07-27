@@ -113,6 +113,11 @@ interface Assistant : AssistantProperties {
 
   // AssistantOverrides
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
+
+  fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan
+
+  fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan
+
 }
 
 data class AssistantImpl internal constructor(
@@ -127,6 +132,8 @@ data class AssistantImpl internal constructor(
   override val assistantCacheId = nextAssistantCacheId()
   override val modelDtoUnion get() = assistantDto
   override val voicemailDetectionDto get() = assistantDto.voicemailDetectionDto
+  override val analysisPlanDto get() = assistantDto.analysisPlanDto
+  override val artifactPlanDto get() = assistantDto.artifactPlanDto
 
   override var videoRecordingEnabled: Boolean?
     get() = assistantDto.artifactPlanDto.videoRecordingEnabled
@@ -168,6 +175,10 @@ data class AssistantImpl internal constructor(
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
     AssistantOverridesImpl(request, sessionCacheId, assistantOverridesDto).apply(block)
+
+  override fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan = analysisPlanBridge(block)
+
+  override fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan = artifactPlanBridge(block)
 
   companion object {
     internal lateinit var config: Vapi4kConfig

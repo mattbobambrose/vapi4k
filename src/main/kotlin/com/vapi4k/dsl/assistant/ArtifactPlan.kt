@@ -14,13 +14,13 @@
  *
  */
 
-package com.vapi4k.dtos
+package com.vapi4k.dsl.assistant
 
+import com.vapi4k.dtos.ArtifactPlanDto
 
-import com.vapi4k.dsl.assistant.ArtifactPlanProperties
-import kotlinx.serialization.Serializable
+interface ArtifactPlanProperties {
+  var videoRecordingEnabled: Boolean?
+}
 
-@Serializable
-data class ArtifactPlanDto(
-  override var videoRecordingEnabled: Boolean? = null,
-) : ArtifactPlanProperties
+@AssistantDslMarker
+data class ArtifactPlan internal constructor(internal val dto: ArtifactPlanDto) : ArtifactPlanProperties by dto

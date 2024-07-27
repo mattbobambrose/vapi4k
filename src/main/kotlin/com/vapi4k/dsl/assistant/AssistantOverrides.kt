@@ -102,6 +102,11 @@ interface AssistantOverrides : AssistantOverridesProperties {
   fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice
   fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice
   fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice
+
+  fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan
+
+  fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan
+
 }
 
 data class AssistantOverridesImpl internal constructor(
@@ -115,6 +120,8 @@ data class AssistantOverridesImpl internal constructor(
   override val assistantCacheId = nextAssistantCacheId()
   override val modelDtoUnion get() = assistantOverridesDto
   override val voicemailDetectionDto get() = assistantOverridesDto.voicemailDetectionDto
+  override val analysisPlanDto get() = assistantOverridesDto.analysisPlanDto
+  override val artifactPlanDto get() = assistantOverridesDto.artifactPlanDto
 
   override var videoRecordingEnabled: Boolean?
     get() = assistantOverridesDto.artifactPlanDto.videoRecordingEnabled
@@ -152,4 +159,8 @@ data class AssistantOverridesImpl internal constructor(
   override fun openAIVoice(block: OpenAIVoice.() -> Unit) = openAIVoiceBridge(block)
   override fun playHTVoice(block: PlayHTVoice.() -> Unit) = playHTVoiceBridge(block)
   override fun rimeAIVoice(block: RimeAIVoice.() -> Unit) = rimeAIVoiceBridge(block)
+
+  override fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan = analysisPlanBridge(block)
+
+  override fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan = artifactPlanBridge(block)
 }

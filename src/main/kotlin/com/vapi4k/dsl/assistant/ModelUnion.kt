@@ -50,6 +50,8 @@ import com.vapi4k.dsl.voice.NeetsVoice
 import com.vapi4k.dsl.voice.OpenAIVoice
 import com.vapi4k.dsl.voice.PlayHTVoice
 import com.vapi4k.dsl.voice.RimeAIVoice
+import com.vapi4k.dtos.AnalysisPlanDto
+import com.vapi4k.dtos.ArtifactPlanDto
 import com.vapi4k.dtos.VoicemailDetectionDto
 import com.vapi4k.dtos.model.AnthropicModelDto
 import com.vapi4k.dtos.model.AnyscaleModelDto
@@ -94,6 +96,8 @@ interface ModelUnion {
   val voiceChecker: DuplicateChecker
   val modelDtoUnion: ModelDtoUnion
   val voicemailDetectionDto: VoicemailDetectionDto
+  val analysisPlanDto: AnalysisPlanDto
+  val artifactPlanDto: ArtifactPlanDto
 }
 
 fun ModelUnion.voicemailDetectionBridge(
@@ -322,3 +326,7 @@ fun ModelUnion.rimeAIVoiceBridge(
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
+
+fun ModelUnion.analysisPlanBridge(block: AnalysisPlan.() -> Unit) = AnalysisPlan(analysisPlanDto).apply(block)
+
+fun ModelUnion.artifactPlanBridge(block: ArtifactPlan.() -> Unit) = ArtifactPlan(artifactPlanDto).apply(block)
