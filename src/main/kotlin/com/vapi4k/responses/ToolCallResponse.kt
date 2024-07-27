@@ -52,25 +52,22 @@ data class ToolCallResponse(
                       val cacheKey = request.messageCallId.toSessionCacheId()
                       val funcName = toolCall.toolCallName
                       val args = toolCall.toolCallArguments
-
                       toolCallResult.toolCallId = toolCall.toolCallId
                       toolCallResult.name = funcName
-
-
                       toolCallResult.result =
                         runCatching {
                           getToolCallFromCache(cacheKey)
                             .getFunction(funcName)
-                            .also { logger.info { "Invoking $funcName on method ${it.fqName}" } }
+                            .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
                             .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->
                               toolCallResult.error = errorMsg
                               errorMessage = errorMsg
                             }
                         }.getOrElse { e ->
-                          val errorMsg = e.message ?: "Error invoking tool"
+                          val errorMsg = e.message ?: "Error invoking tool $funcName"
                           logger.error { errorMsg }
                           errorMsg
-                        }
+                        }.also { logger.info { "Tool call result: $it" } }
                     }
 
                 if (errorMessage.isNotEmpty()) {

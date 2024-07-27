@@ -169,7 +169,7 @@
     "recordingUrl": "https://auth.vapi.ai/storage/v1/object/public/recordings/b2d2c06c-bca1-4804-8b68-cb1b6fd7debd-1722115443568-3b56a504-192d-4ec0-a034-a055c60e0277-mono.wav",
     "stereoRecordingUrl": "https://auth.vapi.ai/storage/v1/object/public/recordings/b2d2c06c-bca1-4804-8b68-cb1b6fd7debd-1722115443569-a5885c56-7ddb-4e5d-beee-665d41a2c00a-stereo.wav",
     "call": {
-      "id": "b2d2c06c-bca1-4804-8b68-cb1b6fd7debd",
+      "id": "b1223960-1b4d-4585-91b8-a69b0f57ec2f",
       "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
       "createdAt": "2024-07-27T21:23:24.677Z",
       "updatedAt": "2024-07-27T21:23:24.677Z",

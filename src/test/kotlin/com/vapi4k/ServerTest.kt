@@ -76,13 +76,15 @@ class ServerTest {
       withTestApplication(
         "/json/assistantRequest.json",
         "/json/toolRequest1.json",
-        "/json/toolRequest2.json"
+        "/json/toolRequest2.json",
+        "/json/endOfCallReportRequest.json"
       ) { request ->
         doubleToolAssistant(request)
       }
 
-    responses.forEach { (response, jsonElement) ->
+    responses.forEachIndexed { i, (response, jsonElement) ->
       assertEquals(HttpStatusCode.OK, response.status)
+
 
       println(jsonElement.toJsonString())
     }

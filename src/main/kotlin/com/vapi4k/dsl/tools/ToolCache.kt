@@ -94,7 +94,7 @@ internal object ToolCache {
       ?.also { block(it) }
       .also {
         if (it == null)
-          logger.error { "Tool not found in cache: $sessionCacheId" }
+          logger.debug { "Tool entry not found in cache: $sessionCacheId" }
       }
 
   fun removeFunctionFromCache(
@@ -105,7 +105,7 @@ internal object ToolCache {
       ?.also { block(it) }
       .also { funcInfo ->
         if (funcInfo == null)
-          logger.error { "Function not found in cache: $sessionCacheId" }
+          logger.debug { "Function entry not found in cache: $sessionCacheId" }
       }
 
   fun swapCacheKeys(

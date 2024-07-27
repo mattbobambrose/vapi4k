@@ -62,10 +62,9 @@ internal class FunctionDetails(val obj: Any) {
     val function = obj.findFunction(methodName)
     val isVoid = function.returnType.asKClass() == Unit::class
     val argNames = args.jsonObject.keys
-    val vals = argNames.map { args[it].stringValue }
+    val vals = argNames.map { argName -> args[argName].stringValue }
     // TODO Fix ordering
-    logger.info { "Invoking method $fqName with args $args" }
-    logger.info { "Invoking method $fqName with vals $vals" }
+    logger.info { "Invoking method $fqName with args $args and vals $vals" }
     val params = method.parameters.toList()
     val kparams = function.parameters
     val result = method.invoke(obj, *vals.toTypedArray<String>())
