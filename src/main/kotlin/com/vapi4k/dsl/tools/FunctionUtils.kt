@@ -33,7 +33,6 @@ import java.lang.reflect.Parameter
 internal object FunctionUtils {
   private val legalTypes = setOf(String::class, Unit::class)
 
-
   fun verifyObject(
     isFunction: Boolean,
     obj: Any,
@@ -102,7 +101,7 @@ internal object FunctionUtils {
     }
 
   class ToolCallInfo(
-    val assistantCacheId: AssistantCacheId,
+    private val assistantCacheId: AssistantCacheId,
     private val method: Method,
   ) {
     private val toolCall get() = method.toolCall!!

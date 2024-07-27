@@ -18,7 +18,6 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.tools.FunctionDetails.Companion.toFunctionDetails
 import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.toolMethod
@@ -74,11 +73,12 @@ internal object ToolCache {
     val method = obj.toolMethod
     val toolCallInfo = ToolCallInfo(assistantCacheId, method)
     val toolFuncName = toolCallInfo.llmName
+
     val funcInfo = cache.computeIfAbsent(sessionCacheId) { FunctionInfo() }
     val funcDetails = funcInfo.functions[toolFuncName]
 
     if (funcDetails == null) {
-      val newFuncDetails = obj.toFunctionDetails()
+      val newFuncDetails = FunctionDetails(toolCallInfo, obj)
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added $prefix \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {

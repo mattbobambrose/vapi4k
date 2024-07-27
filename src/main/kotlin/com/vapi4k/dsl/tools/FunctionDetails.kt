@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
 import com.vapi4k.responses.ToolCallMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -28,7 +29,10 @@ import com.vapi4k.utils.stringValue
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 
-internal class FunctionDetails(val obj: Any) {
+internal class FunctionDetails(
+  val toolCallInfo: ToolCallInfo,
+  val obj: Any,
+) {
   val className = obj::class.java.name
   val methodName = obj.toolMethod.name
   val fqName get() = "$className.$methodName()"
@@ -57,21 +61,23 @@ internal class FunctionDetails(val obj: Any) {
   }
 
   private fun invokeMethod(args: JsonElement): String {
-    logger.info { "Invoking method $fqName" }
+    // logger.info { "Invoking method $fqName" }
     val method = obj.findMethod(methodName)
     val function = obj.findFunction(methodName)
     val isVoid = function.returnType.asKClass() == Unit::class
     val argNames = args.jsonObject.keys
     val vals = argNames.map { argName -> args[argName].stringValue }
-    // TODO Fix ordering
     logger.info { "Invoking method $fqName with args $args and vals $vals" }
     val params = method.parameters.toList()
     val kparams = function.parameters
-    val result = method.invoke(obj, *vals.toTypedArray<String>())
-    return if (isVoid) "" else result.toString()
-  }
 
-  companion object {
-    fun Any.toFunctionDetails(): FunctionDetails = FunctionDetails(this)
+    val actualVals =
+      kparams
+        .mapNotNull { it.name }
+        .map { argName -> args.jsonObject.stringValue(argName) }
+
+    logger.debug { "Actual vals: $actualVals" }
+    val result = method.invoke(obj, *actualVals.toTypedArray<String>())
+    return if (isVoid) "" else result.toString()
   }
 }
