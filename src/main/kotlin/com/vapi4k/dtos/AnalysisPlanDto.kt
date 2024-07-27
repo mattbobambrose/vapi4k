@@ -17,6 +17,7 @@
 package com.vapi4k.dtos
 
 
+import com.vapi4k.dsl.assistant.enums.SuccessEvaluationRubricType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,7 +26,7 @@ data class AnalysisPlanDto(
   var summaryRequestTimeoutSeconds: Double = -1.0,
   var structuredDataRequestTimeoutSeconds: Double = -1.0,
   var successEvaluationPrompt: String = "",
-  var successEvaluationRubric: String = "",
+  var successEvaluationRubric: SuccessEvaluationRubricType = SuccessEvaluationRubricType.UNSPECIFIED,
   var successEvaluationRequestTimeoutSeconds: Double = -1.0,
   var structuredDataPrompt: String = "",
   val structuredDataSchema: StructuredDataSchemaDto = StructuredDataSchemaDto(),

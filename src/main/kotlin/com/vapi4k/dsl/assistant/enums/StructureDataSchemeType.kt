@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant.enums
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -25,24 +24,26 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = FirstMessageModeTypeSerializer::class)
-enum class FirstMessageModeType(internal val desc: String) {
-  ASSISTANT_SPEAKS_FIRST("assistant-speaks-first"),
-  ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL("assistant-speaks-first-with-model-generated-message"),
-  ASSISTANT_WAITS_FOR_USE("assistant-waits-for-user"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
-
-  fun isSpecified() = this != UNSPECIFIED
-  fun isNotSpecified() = this == UNSPECIFIED
+@Serializable(with = StructureDataSchemeTypeSerializer::class)
+enum class StructureDataSchemeType(val desc: String) {
+  STRING("string"),
+  NUMBER("number"),
+  INTEGER("integer"),
+  BOOLEAN("boolean"),
+  ARRAY("array"),
+  OBJECT("object"),
+  UNSPECIFIED("unspecified")
 }
 
-private object FirstMessageModeTypeSerializer : KSerializer<FirstMessageModeType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", PrimitiveKind.STRING)
+private object StructureDataSchemeTypeSerializer : KSerializer<StructureDataSchemeType> {
+  override val descriptor: SerialDescriptor =
+    PrimitiveSerialDescriptor("StructureDataSchemeType", PrimitiveKind.STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: FirstMessageModeType,
+    value: StructureDataSchemeType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = FirstMessageModeType.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) =
+    StructureDataSchemeType.entries.first { it.desc == decoder.decodeString() }
 }

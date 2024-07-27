@@ -25,24 +25,28 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = FirstMessageModeTypeSerializer::class)
-enum class FirstMessageModeType(internal val desc: String) {
-  ASSISTANT_SPEAKS_FIRST("assistant-speaks-first"),
-  ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL("assistant-speaks-first-with-model-generated-message"),
-  ASSISTANT_WAITS_FOR_USE("assistant-waits-for-user"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
-
-  fun isSpecified() = this != UNSPECIFIED
-  fun isNotSpecified() = this == UNSPECIFIED
+@Serializable(with = SuccessEvaluationRubricTypeSerializer::class)
+enum class SuccessEvaluationRubricType(val desc: String) {
+  NUMERICSCALE("numericScale"),
+  DESCRIPTIVESCALE("descriptiveScale"),
+  CHECKLIST("checklist"),
+  MATRIX("matrix"),
+  PERCENTAGESCALE("percentageScale"),
+  LIKERTSCALE("likertScale"),
+  AUTOMATICRUBRIC("automaticRubric"),
+  PASSFAIL("passFail"),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT)
 }
 
-private object FirstMessageModeTypeSerializer : KSerializer<FirstMessageModeType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ToolCallMessageType", PrimitiveKind.STRING)
+private object SuccessEvaluationRubricTypeSerializer : KSerializer<SuccessEvaluationRubricType> {
+  override val descriptor: SerialDescriptor =
+    PrimitiveSerialDescriptor("SuccessEvaluationRubricType", PrimitiveKind.STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: FirstMessageModeType,
+    value: SuccessEvaluationRubricType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = FirstMessageModeType.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) =
+    SuccessEvaluationRubricType.entries.first { it.desc == decoder.decodeString() }
 }

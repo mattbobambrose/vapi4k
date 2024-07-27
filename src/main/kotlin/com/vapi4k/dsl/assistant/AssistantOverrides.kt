@@ -71,6 +71,8 @@ interface AssistantOverridesProperties {
 
 @AssistantDslMarker
 interface AssistantOverrides : AssistantOverridesProperties {
+  var videoRecordingEnabled: Boolean?
+
   fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection
 
   // Transcribers
@@ -113,6 +115,12 @@ data class AssistantOverridesImpl internal constructor(
   override val assistantCacheId = nextAssistantCacheId()
   override val modelDtoUnion get() = assistantOverridesDto
   override val voicemailDetectionDto get() = assistantOverridesDto.voicemailDetectionDto
+
+  override var videoRecordingEnabled: Boolean?
+    get() = assistantOverridesDto.artifactPlanDto.videoRecordingEnabled
+    set(value) {
+      assistantOverridesDto.artifactPlanDto.videoRecordingEnabled = value
+    }
 
   override fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =
     voicemailDetectionBridge(block)

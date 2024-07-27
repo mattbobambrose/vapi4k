@@ -17,11 +17,12 @@
 package com.vapi4k.dtos
 
 
+import com.vapi4k.dsl.assistant.enums.StructureDataSchemeType
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class StructuredDataSchemaDto(
-  var type: String = "",
+  var type: StructureDataSchemeType = StructureDataSchemeType.UNSPECIFIED,
   var description: String = "",
   val items: MutableMap<String, String> = mutableMapOf(),
   val properties: MutableMap<String, String> = mutableMapOf(),
