@@ -106,12 +106,12 @@ data class AssistantOverridesImpl internal constructor(
   override val request: JsonElement,
   override val sessionCacheId: SessionCacheId,
   private val assistantOverridesDto: AssistantOverridesDto,
-) : AssistantOverridesProperties by assistantOverridesDto, AssistantOverrides, ModelBridge {
+) : AssistantOverridesProperties by assistantOverridesDto, AssistantOverrides, ModelUnion {
   override val transcriberChecker = DuplicateChecker()
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
   override val assistantCacheId = nextAssistantCacheId()
-  override val modelDtoBridge get() = assistantOverridesDto
+  override val modelDtoUnion get() = assistantOverridesDto
   override val voicemailDetectionDto get() = assistantOverridesDto.voicemailDetectionDto
 
   override fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =

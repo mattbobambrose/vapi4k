@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
@@ -49,6 +49,6 @@ interface OpenAIModel : OpenAIModelProperties {
 }
 
 class OpenAIModelImpl(
-  modelBridge: ModelBridge,
+  modelUnion: ModelUnion,
   modelDto: OpenAIModelDto,
-) : OpenAIModelProperties by modelDto, OpenAIModel, AbstractModel(modelBridge, modelDto)
+) : OpenAIModelProperties by modelDto, OpenAIModel, AbstractModel(modelUnion, modelDto)

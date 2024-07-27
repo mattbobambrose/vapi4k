@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
@@ -46,6 +46,6 @@ interface GroqModel : GroqModelProperties {
 }
 
 class GroqModelImpl(
-  modelBridge: ModelBridge,
+  modelUnion: ModelUnion,
   modelDto: GroqModelDto,
-) : GroqModelProperties by modelDto, GroqModel, AbstractModel(modelBridge, modelDto)
+) : GroqModelProperties by modelDto, GroqModel, AbstractModel(modelUnion, modelDto)

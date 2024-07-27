@@ -16,7 +16,8 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.common.MessageCallId.Companion.toMessageCallId
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.model.enums.MessageRoleType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.FunctionsImpl
@@ -29,16 +30,16 @@ import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
 
 abstract class AbstractModel(
-  private val bridge: ModelBridge,
+  private val modelUnion: ModelUnion,
   private val dto: CommonModelDto,
 ) : AbstractModelProperties {
-  internal val request get() = bridge.request
-  override val sessionCacheId get() = bridge.sessionCacheId
-  override val assistantCacheId get() = bridge.assistantCacheId
+  internal val request get() = modelUnion.request
+  override val sessionCacheId get() = modelUnion.sessionCacheId
+  override val assistantCacheId get() = modelUnion.assistantCacheId
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
   override val functionDtos get() = dto.functions
-  override val messageCallId get() = request.messageCallId
+  override val messageCallId get() = request.messageCallId.toMessageCallId()
 
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
   var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)

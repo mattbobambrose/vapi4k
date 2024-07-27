@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.PerplexityAIModelDto
@@ -44,6 +44,6 @@ interface PerplexityAIModel : PerplexityAIModelProperties {
 }
 
 class PerplexityAIModelImpl(
-  modelBridge: ModelBridge,
+  modelUnion: ModelUnion,
   modelDto: PerplexityAIModelDto,
-) : PerplexityAIModelProperties by modelDto, PerplexityAIModel, AbstractModel(modelBridge, modelDto)
+) : PerplexityAIModelProperties by modelDto, PerplexityAIModel, AbstractModel(modelUnion, modelDto)

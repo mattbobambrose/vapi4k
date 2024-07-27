@@ -17,7 +17,7 @@
 package com.vapi4k.dtos.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
-import com.vapi4k.dsl.assistant.ModelDtoBridge
+import com.vapi4k.dsl.assistant.ModelDtoUnion
 import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
@@ -81,4 +81,4 @@ data class AssistantOverridesDto(
   val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantOverridesProperties, ModelDtoBridge
+) : AssistantOverridesProperties, ModelDtoUnion

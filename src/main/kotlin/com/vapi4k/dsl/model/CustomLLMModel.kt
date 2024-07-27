@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.model.enums.MetaDataSendModeType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
@@ -47,6 +47,6 @@ interface CustomLLMModel : CustomLLMModelProperties {
 }
 
 class CustomLLMModelImpl(
-  modelBridge: ModelBridge,
+  modelUnion: ModelUnion,
   modelDto: CustomLLMModelDto,
-) : CustomLLMModelProperties by modelDto, CustomLLMModel, AbstractModel(modelBridge, modelDto)
+) : CustomLLMModelProperties by modelDto, CustomLLMModel, AbstractModel(modelUnion, modelDto)

@@ -17,7 +17,7 @@
 package com.vapi4k.dtos.assistant
 
 import com.vapi4k.dsl.assistant.AssistantProperties
-import com.vapi4k.dsl.assistant.ModelDtoBridge
+import com.vapi4k.dsl.assistant.ModelDtoUnion
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
@@ -98,7 +98,7 @@ data class AssistantDto(
 
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantProperties, ModelDtoBridge {
+) : AssistantProperties, ModelDtoUnion {
   @Transient
   var updated = false
 

@@ -33,7 +33,7 @@ package com.vapi4k.dsl.model
  */
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.model.enums.AnthropicModelType
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
@@ -62,6 +62,6 @@ interface AnthropicModel : AnthropicModelProperties {
 }
 
 class AnthropicModelImpl(
-  modelBridge: ModelBridge,
+  modelUnion: ModelUnion,
   modelDto: AnthropicModelDto,
-) : AnthropicModelProperties by modelDto, AnthropicModel, AbstractModel(modelBridge, modelDto)
+) : AnthropicModelProperties by modelDto, AnthropicModel, AbstractModel(modelUnion, modelDto)

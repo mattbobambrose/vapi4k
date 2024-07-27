@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.AnyscaleModelDto
@@ -44,6 +44,6 @@ interface AnyscaleModel : AnyscaleModelProperties {
 }
 
 class AnyscaleModelImpl(
-  modelBridge: ModelBridge,
+  modelUnion: ModelUnion,
   modelDto: AnyscaleModelDto,
-) : AnyscaleModelProperties by modelDto, AnyscaleModel, AbstractModel(modelBridge, modelDto)
+) : AnyscaleModelProperties by modelDto, AnyscaleModel, AbstractModel(modelUnion, modelDto)

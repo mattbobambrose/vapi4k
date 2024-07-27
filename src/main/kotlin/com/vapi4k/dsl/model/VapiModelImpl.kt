@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.VapiModelDto
@@ -44,6 +44,6 @@ interface VapiModel : VapiModelProperties {
 }
 
 class VapiModelImpl(
-  modelBridge: ModelBridge,
+  modelUnion: ModelUnion,
   modelDto: VapiModelDto,
-) : VapiModelProperties by modelDto, VapiModel, AbstractModel(modelBridge, modelDto)
+) : VapiModelProperties by modelDto, VapiModel, AbstractModel(modelUnion, modelDto)

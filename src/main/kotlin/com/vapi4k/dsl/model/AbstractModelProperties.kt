@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.common.AssistantCacheId
+import com.vapi4k.common.MessageCallId
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.model.enums.MessageRoleType
 import com.vapi4k.dtos.RoleMessage
@@ -26,7 +27,7 @@ import com.vapi4k.dtos.model.ToolDto
 interface AbstractModelProperties {
   val sessionCacheId: SessionCacheId
   val assistantCacheId: AssistantCacheId
-  val messageCallId: String
+  val messageCallId: MessageCallId
   val toolDtos: MutableList<ToolDto>
   val functionDtos: MutableList<FunctionDto>
   val messages: MutableList<RoleMessage>

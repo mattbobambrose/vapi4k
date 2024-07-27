@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.ModelBridge
+import com.vapi4k.dsl.assistant.ModelUnion
 import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.OpenRouterModelDto
@@ -44,6 +44,6 @@ interface OpenRouterModel : OpenRouterModelProperties {
 }
 
 class OpenRouterModelImpl(
-  modelBridge: ModelBridge,
+  modelUnion: ModelUnion,
   modelDto: OpenRouterModelDto,
-) : OpenRouterModelProperties by modelDto, OpenRouterModel, AbstractModel(modelBridge, modelDto)
+) : OpenRouterModelProperties by modelDto, OpenRouterModel, AbstractModel(modelUnion, modelDto)

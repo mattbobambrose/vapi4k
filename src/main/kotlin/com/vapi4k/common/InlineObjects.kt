@@ -16,7 +16,6 @@
 
 package com.vapi4k.common
 
-import com.vapi4k.common.SessionCacheId.Companion.UNSPECIFIED_VALUE
 import kotlinx.serialization.Serializable
 
 
@@ -32,20 +31,29 @@ value class SessionCacheId private constructor(val value: String) {
     val UNSPECIFIED_SESSION_CACHE_ID = SessionCacheId(UNSPECIFIED_VALUE)
 
     fun String.toSessionCacheId() = SessionCacheId(this)
+    fun MessageCallId.toSessionCacheId() = SessionCacheId(this.value)
   }
 }
 
 @JvmInline
 value class AssistantCacheId private constructor(val value: String) {
 
-  fun isNotSpecified() = value == UNSPECIFIED_VALUE
+  override fun toString() = value
+
+  companion object {
+
+    fun String.toAssistantCacheId() = AssistantCacheId(this)
+  }
+}
+
+@JvmInline
+value class MessageCallId private constructor(val value: String) {
 
   override fun toString() = value
 
   companion object {
-    val UNSPECIFIED_ASSISTANT_ID = AssistantCacheId(UNSPECIFIED_VALUE)
 
-    fun String.toAssistantCacheId() = AssistantCacheId(this)
+    fun String.toMessageCallId() = MessageCallId(this)
   }
 }
 

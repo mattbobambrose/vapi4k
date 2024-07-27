@@ -118,12 +118,12 @@ data class AssistantImpl internal constructor(
   override val sessionCacheId: SessionCacheId,
   private val assistantDto: AssistantDto,
   private val assistantOverridesDto: AssistantOverridesDto,
-) : AssistantProperties by assistantDto, Assistant, ModelBridge {
+) : AssistantProperties by assistantDto, Assistant, ModelUnion {
   override val transcriberChecker = DuplicateChecker()
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
   override val assistantCacheId = nextAssistantCacheId()
-  override val modelDtoBridge get() = assistantDto
+  override val modelDtoUnion get() = assistantDto
   override val voicemailDetectionDto get() = assistantDto.voicemailDetectionDto
 
   override fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =

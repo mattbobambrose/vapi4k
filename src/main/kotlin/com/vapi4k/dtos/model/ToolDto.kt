@@ -17,12 +17,13 @@
 package com.vapi4k.dtos.model
 
 
+import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dtos.ServerDto
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ToolDto(
-  var type: String = "",
+  var type: ToolType = ToolType.UNSPECIFIED,
   var async: Boolean? = null,
   val function: FunctionDto = FunctionDto(),
   val messages: MutableList<ToolMessageDto> = mutableListOf(),
