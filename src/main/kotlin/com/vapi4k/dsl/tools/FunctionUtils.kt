@@ -32,7 +32,7 @@ import java.lang.reflect.Method
 import kotlin.reflect.KParameter
 
 internal object FunctionUtils {
-  private val allowedParamTypes = setOf(String::class, Int::class, Boolean::class)
+  private val allowedParamTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
   private val allowedReturnTypes = setOf(String::class, Unit::class)
 
   fun verifyObject(
@@ -115,6 +115,7 @@ internal object FunctionUtils {
     get() = when (type.asKClass()) {
       String::class -> "string"
       Int::class -> "integer"
+      Double::class -> "double"
       Boolean::class -> "boolean"
       else -> "object"
     }
@@ -141,6 +142,7 @@ internal object FunctionUtils {
       get() = when (method.returnType) {
         String::class.java -> "string"
         Int::class.java -> "integer"
+        Double::class.java -> "double"
         Boolean::class.java -> "boolean"
         else -> "object"
       }
