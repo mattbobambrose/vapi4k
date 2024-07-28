@@ -69,7 +69,7 @@ object TestUtils {
     vararg fileNames: String,
     block: (JsonElement) -> AssistantRequestResponse,
   ): List<Pair<HttpResponse, JsonElement>> {
-    var responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
+    val responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
     testApplication {
       application {
         install(Vapi4k) {
