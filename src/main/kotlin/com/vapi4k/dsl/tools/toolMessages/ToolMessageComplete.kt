@@ -18,13 +18,11 @@ package com.vapi4k.dsl.tools.toolMessages
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
-import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dtos.model.ToolMessageCompleteDto
 import com.vapi4k.dtos.model.ToolMessageConditionDto
 
 
 interface ToolMessageCompleteProperties {
-  var type: ToolMessageType
   var role: ToolMessageRoleType
   var endCallAfterSpokenEnabled: Boolean?
   var content: String

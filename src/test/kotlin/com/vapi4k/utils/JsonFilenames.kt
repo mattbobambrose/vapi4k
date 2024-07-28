@@ -14,17 +14,8 @@
  *
  */
 
-package com.vapi4k.dsl.tools.toolMessages
+package com.vapi4k.utils
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.model.ToolMessageConditionDto
-import com.vapi4k.dtos.model.ToolMessageStartDto
-
-interface ToolMessageStartProperties {
-  var content: String
-  val conditions: MutableSet<ToolMessageConditionDto>
+object JsonFilenames {
+  const val ASSISTANT_REQUEST = "/json/assistantRequest.json"
 }
-
-@AssistantDslMarker
-data class ToolMessageStart internal constructor(internal val dto: ToolMessageStartDto) :
-  ToolMessageStartProperties by dto

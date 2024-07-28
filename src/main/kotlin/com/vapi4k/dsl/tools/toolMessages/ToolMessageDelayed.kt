@@ -17,12 +17,10 @@
 package com.vapi4k.dsl.tools.toolMessages
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.dtos.model.ToolMessageDelayedDto
 
 interface ToolMessageDelayedProperties {
-  var type: ToolMessageType
   var timingMilliseconds: Int
   var content: String
   val conditions: MutableSet<ToolMessageConditionDto>

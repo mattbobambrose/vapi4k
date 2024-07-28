@@ -26,6 +26,6 @@ data class ToolDto(
   var type: ToolType = ToolType.UNSPECIFIED,
   var async: Boolean? = null,
   val function: FunctionDto = FunctionDto(),
-  val messages: MutableList<ToolMessageDto> = mutableListOf(),
+  val messages: MutableList<AbstractToolMessageDto> = mutableListOf(),
   val server: ServerDto = ServerDto(),
 )

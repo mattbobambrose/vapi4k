@@ -20,6 +20,7 @@ import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.server.Vapi4k
+import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.firstInList
 import com.vapi4k.utils.get
@@ -74,7 +75,7 @@ class ServerTest {
   fun `Tool requests arg ordering`() {
     val responses =
       withTestApplication(
-        "/json/assistantRequest.json",
+        JsonFilenames.ASSISTANT_REQUEST,
         "/json/toolRequest1.json",
         "/json/toolRequest2.json",
         "/json/toolRequest3.json",

@@ -26,37 +26,34 @@ import com.vapi4k.dsl.tools.toolMessages.ToolMessageStartProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
-interface AbstractToolMessageDto
-
-// Content is required for all
-data class ToolMessageStartDto(
+@Serializable
+abstract class AbstractToolMessageDto(
   @EncodeDefault
-  override var type: ToolMessageType = ToolMessageType.REQUEST_START,
-  override var content: String = "",
-  override val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf(),
-) : AbstractToolMessageDto, ToolMessageStartProperties
+  val type: ToolMessageType,
+  var content: String = "",
+  val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf()
+) {
+  fun verifyValues() {
+    if (content.isEmpty()) error("Content is required for ToolMessage")
+  }
+}
 
+@Serializable
+class ToolMessageStartDto : AbstractToolMessageDto(ToolMessageType.REQUEST_START), ToolMessageStartProperties
+
+@Serializable
 data class ToolMessageCompleteDto(
-  override var type: ToolMessageType = ToolMessageType.REQUEST_COMPLETE,
   override var role: ToolMessageRoleType = ToolMessageRoleType.UNSPECIFIED,
   override var endCallAfterSpokenEnabled: Boolean? = null,
-  override var content: String = "",
-  override val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf(),
-) : AbstractToolMessageDto, ToolMessageCompleteProperties
+) : AbstractToolMessageDto(ToolMessageType.REQUEST_COMPLETE), ToolMessageCompleteProperties
 
-data class ToolMessageFailedDto(
-  override var type: ToolMessageType = ToolMessageType.REQUEST_FAILED,
-  override var endCallAfterSpokenEnabled: Boolean? = null,
-  override var content: String = "",
-  override val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf(),
-) : AbstractToolMessageDto, ToolMessageFailedProperties
+@Serializable
+data class ToolMessageFailedDto(override var endCallAfterSpokenEnabled: Boolean? = null) :
+  AbstractToolMessageDto(ToolMessageType.REQUEST_FAILED), ToolMessageFailedProperties
 
-data class ToolMessageDelayedDto(
-  override var type: ToolMessageType = ToolMessageType.REQUEST_RESPONSE_DELAYED,
-  override var timingMilliseconds: Int = -1,
-  override var content: String = "",
-  override val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf(),
-) : AbstractToolMessageDto, ToolMessageDelayedProperties
+@Serializable
+data class ToolMessageDelayedDto(override var timingMilliseconds: Int = -1) :
+  AbstractToolMessageDto(ToolMessageType.REQUEST_RESPONSE_DELAYED), ToolMessageDelayedProperties
 
 @Serializable
 data class ToolMessageDto(

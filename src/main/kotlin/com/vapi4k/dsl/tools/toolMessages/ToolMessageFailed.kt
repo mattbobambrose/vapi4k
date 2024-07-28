@@ -17,13 +17,11 @@
 package com.vapi4k.dsl.tools.toolMessages
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.dtos.model.ToolMessageFailedDto
 
 
 interface ToolMessageFailedProperties {
-  var type: ToolMessageType
   var endCallAfterSpokenEnabled: Boolean?
   var content: String
   val conditions: MutableSet<ToolMessageConditionDto>
