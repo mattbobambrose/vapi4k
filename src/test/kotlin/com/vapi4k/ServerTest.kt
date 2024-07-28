@@ -21,9 +21,9 @@ import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.TestUtils.withTestApplication
+import com.vapi4k.utils.firstInList
 import com.vapi4k.utils.get
 import com.vapi4k.utils.stringValue
-import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -71,12 +71,14 @@ class ServerTest {
   }
 
   @Test
-  fun `tool request`() {
+  fun `Tool requests arg ordering`() {
     val responses =
       withTestApplication(
         "/json/assistantRequest.json",
         "/json/toolRequest1.json",
         "/json/toolRequest2.json",
+        "/json/toolRequest3.json",
+        "/json/toolRequest4.json",
         "/json/endOfCallReportRequest.json"
       ) { request ->
         doubleToolAssistant(request)
@@ -85,12 +87,19 @@ class ServerTest {
     responses.forEachIndexed { i, (response, jsonElement) ->
       assertEquals(HttpStatusCode.OK, response.status)
 
+      if (i in listOf(1, 2))
+        assertEquals(
+          "The weather in Danville, California is windy",
+          jsonElement["results"].firstInList().stringValue("result")
+        )
 
-      println(jsonElement.toJsonString())
+      if (i in listOf(3, 4))
+        assertEquals(
+          "The weather in Boston, Massachusetts is rainy",
+          jsonElement["results"].firstInList().stringValue("result")
+        )
+
+      //println(jsonElement.toJsonString())
     }
-
-//    assertEquals(HttpStatusCode.OK, response.status)
-//    println(jsonElement)
-    //assertEquals(GroqModelType.LLAMA3_70B.desc, jsonElement["assistant.model.model"].stringValue)
   }
 }

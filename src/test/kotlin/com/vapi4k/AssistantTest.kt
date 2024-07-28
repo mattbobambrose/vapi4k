@@ -33,8 +33,8 @@ import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.get
+import com.vapi4k.utils.getToJsonElements
 import com.vapi4k.utils.intValue
-import com.vapi4k.utils.jsonElementList
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
 import kotlinx.serialization.json.JsonElement
@@ -67,8 +67,8 @@ class AssistantTest {
   val chicagoIllinoisFailedMessage = "This is the Chicago Illinois request failed message"
   val chicagoIllinoisDelayedMessage = "This is the Chicago Illinois request delayed message"
 
-  fun JsonElement.tools() = get("assistant.model.tools").jsonElementList
-  fun JsonElement.firstMessage() = tools().first()["messages"].jsonElementList
+  fun JsonElement.tools() = get("assistant.model.tools").getToJsonElements()
+  fun JsonElement.firstMessage() = tools().first()["messages"].getToJsonElements()
   fun JsonElement.firstMessageOfType(type: ToolMessageType) =
     firstMessage().single { it.stringValue("type") == type.desc }
 

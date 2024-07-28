@@ -3,26 +3,26 @@
     "type": "tool-calls",
     "toolCalls": [
       {
-        "id": "call_mrf9",
+        "id": "call_51kj",
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_002",
+          "name": "getWeatherByCity_001",
           "arguments": {
-            "city": "Boston",
-            "state": "Massachusetts"
+            "state": "California",
+            "city": "Danville"
           }
         }
       }
     ],
     "toolCallList": [
       {
-        "id": "call_mrf9",
+        "id": "call_51kj",
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_002",
+          "name": "getWeatherByCity_001",
           "arguments": {
-            "city": "Boston",
-            "state": "Massachusetts"
+            "state": "California",
+            "city": "Danville"
           }
         }
       }
@@ -31,7 +31,7 @@
       {
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_002",
+          "name": "getWeatherByCity_001",
           "description": "Look up the weather for a city",
           "parameters": {
             "type": "object",
@@ -58,13 +58,13 @@
         },
         "messages": [],
         "toolCall": {
-          "id": "call_mrf9",
+          "id": "call_51kj",
           "type": "function",
           "function": {
-            "name": "getWeatherByCity_002",
+            "name": "getWeatherByCity_001",
             "arguments": {
-              "city": "Boston",
-              "state": "Massachusetts"
+              "state": "California",
+              "city": "Danville"
             }
           }
         }
@@ -234,86 +234,6 @@
           "message": "",
           "time": 1722032457924,
           "secondsFromStart": 9.066
-        },
-        {
-          "role": "tool_call_result",
-          "time": 1722032458839,
-          "secondsFromStart": 9.981,
-          "name": "getWeatherByCity_001",
-          "result": "The weather in Danville, California is windy",
-          "toolCallId": "call_51kj"
-        },
-        {
-          "role": "bot",
-          "message": "1 moment. The weather in Danville, California is windy.",
-          "time": 1722032459110,
-          "endTime": 1.7220324632299995E12,
-          "secondsFromStart": 10.15,
-          "source": ""
-        },
-        {
-          "role": "user",
-          "message": "Transfer to assistant 2.",
-          "time": 1722032465740,
-          "endTime": 1.722032467520001E12,
-          "secondsFromStart": 16.78,
-          "duration": 4.659999
-        },
-        {
-          "toolCalls": [
-            {
-              "id": "call_ms9e",
-              "type": "function",
-              "function": {
-                "name": "transferCall",
-                "arguments": "{\"destination\": \"assistant2\"}"
-              }
-            }
-          ],
-          "role": "tool_calls",
-          "message": "",
-          "time": 1722032467269,
-          "secondsFromStart": 18.411
-        },
-        {
-          "role": "tool_call_result",
-          "time": 1722032468853,
-          "secondsFromStart": 19.995,
-          "name": "transferCall",
-          "result": "Success.",
-          "toolCallId": "call_ms9e"
-        },
-        {
-          "role": "bot",
-          "message": "Hi there. I'm assistant 2.",
-          "time": 1722032470119,
-          "endTime": 1722032471529,
-          "secondsFromStart": 1.12,
-          "source": ""
-        },
-        {
-          "role": "user",
-          "message": "What's the weather in Boston, Massachusetts?",
-          "time": 1722032473319,
-          "endTime": 1722032475419,
-          "secondsFromStart": 4.32,
-          "duration": 3.2399998
-        },
-        {
-          "toolCalls": [
-            {
-              "id": "call_mrf9",
-              "type": "function",
-              "function": {
-                "name": "getWeatherByCity_002",
-                "arguments": "{\"city\": \"Boston\", \"state\": \"Massachusetts\"}"
-              }
-            }
-          ],
-          "role": "tool_calls",
-          "message": "",
-          "time": 1722032475671,
-          "secondsFromStart": 6.769
         }
       ],
       "messagesOpenAIFormatted": [
@@ -338,63 +258,9 @@
               }
             }
           ]
-        },
-        {
-          "role": "tool",
-          "tool_call_id": "call_51kj",
-          "content": "The weather in Danville, California is windy"
-        },
-        {
-          "role": "assistant",
-          "content": "1 moment. The weather in Danville, California is windy."
-        },
-        {
-          "role": "user",
-          "content": "Transfer to assistant 2."
-        },
-        {
-          "role": "assistant",
-          "content": "",
-          "tool_calls": [
-            {
-              "type": "function",
-              "id": "call_ms9e",
-              "function": {
-                "name": "transferCall",
-                "arguments": "{\"destination\": \"assistant2\"}"
-              }
-            }
-          ]
-        },
-        {
-          "role": "tool",
-          "tool_call_id": "call_ms9e",
-          "content": "Success."
-        },
-        {
-          "role": "assistant",
-          "content": "Hi there. I'm assistant 2."
-        },
-        {
-          "role": "user",
-          "content": "What's the weather in Boston, Massachusetts?"
-        },
-        {
-          "role": "assistant",
-          "content": "",
-          "tool_calls": [
-            {
-              "type": "function",
-              "id": "call_mrf9",
-              "function": {
-                "name": "getWeatherByCity_002",
-                "arguments": "{\"city\": \"Boston\", \"state\": \"Massachusetts\"}"
-              }
-            }
-          ]
         }
       ]
     },
-    "timestamp": "2024-07-26T22:21:15.679Z"
+    "timestamp": "2024-07-26T22:20:57.931Z"
   }
 }

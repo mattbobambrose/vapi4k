@@ -28,7 +28,10 @@ import kotlinx.serialization.json.jsonPrimitive
 val JsonElement.stringValue get() = jsonPrimitive.content
 val JsonElement.intValue get() = jsonPrimitive.content.toInt()
 val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
-val JsonElement.jsonElementList get() = jsonArray.toList()
+
+fun JsonElement.getToJsonElements() = jsonArray.toList()
+
+fun JsonElement.firstInList() = getToJsonElements().first()
 
 private fun JsonElement.element(key: String) =
   jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
