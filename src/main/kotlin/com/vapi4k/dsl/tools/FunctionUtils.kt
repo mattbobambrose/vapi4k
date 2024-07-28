@@ -127,8 +127,9 @@ internal object FunctionUtils {
     private val toolCall get() = method.toolCall!!
     private val toolHasName get() = toolCall.name.isNotEmpty()
     private val toolHasDescription get() = toolCall.description.isNotEmpty()
+    private val cacheName get() = if (toolHasName) toolCall.name else method.name
 
-    val llmName get() = "${(if (toolHasName) toolCall.name else method.name)}_$assistantCacheId"
+    val llmName get() = "${cacheName}_$assistantCacheId"
 
     val llmDescription
       get() =
