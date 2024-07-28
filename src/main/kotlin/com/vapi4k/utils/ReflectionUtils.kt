@@ -18,6 +18,7 @@ package com.vapi4k.utils
 
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.utils.Utils.isNotNull
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 import kotlin.reflect.KClass
@@ -47,8 +48,8 @@ internal object ReflectionUtils {
   val Parameter.param: Param? get() = annotations.firstOrNull { it is Param } as Param?
   val Method.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
   val KFunction<*>.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
-  val Method.hasTool get() = toolCall != null
-  val KFunction<*>.hasTool get() = toolCall != null
+  val Method.hasTool get() = toolCall.isNotNull()
+  val KFunction<*>.hasTool get() = toolCall.isNotNull()
   val Any.toolFunction get() = functions.first { it.hasTool }
   val Any.toolMethod get() = methods.first { it.hasTool }
 }

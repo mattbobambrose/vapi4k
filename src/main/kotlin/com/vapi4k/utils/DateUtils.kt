@@ -17,6 +17,7 @@
 package com.vapi4k.utils
 
 import com.vapi4k.utils.Utils.capitalizeFirstChar
+import com.vapi4k.utils.Utils.isNotNull
 import com.vapi4k.utils.Utils.lpad
 import com.vapi4k.utils.Utils.rpad
 import kotlinx.datetime.Clock
@@ -92,9 +93,9 @@ object DateUtils {
   fun LocalDateTime.toMMDDYYYYHHMM(): String =
     "${monthNumber.lpad(2)}/${dayOfMonth.lpad(2)}/${year.lpad(4)} $hour:${minute.lpad(2)}"
 
-  val Instant?.age get() = if (this != null) instantNow() - this else Duration.ZERO
+  val Instant?.age get() = if (isNotNull()) instantNow() - this else Duration.ZERO
 
-  fun LocalDateTime?.age(timeZone: TimeZone): Duration = if (this != null) toInstant(timeZone).age else Duration.ZERO
+  fun LocalDateTime?.age(timeZone: TimeZone): Duration = if (isNotNull()) toInstant(timeZone).age else Duration.ZERO
 
   fun Duration.toAdjustedString(unit: DurationUnit = SECONDS): String =
     when (unit) {

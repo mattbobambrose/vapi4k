@@ -21,6 +21,7 @@ import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.toolMethod
+import com.vapi4k.utils.Utils.isNull
 import java.util.concurrent.ConcurrentHashMap
 
 internal object ToolCache {
@@ -77,7 +78,7 @@ internal object ToolCache {
     val funcInfo = cache.computeIfAbsent(sessionCacheId) { FunctionInfo() }
     val funcDetails = funcInfo.functions[toolFuncName]
 
-    if (funcDetails == null) {
+    if (funcDetails.isNull()) {
       val newFuncDetails = FunctionDetails(obj)
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added $prefix \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
@@ -93,7 +94,7 @@ internal object ToolCache {
     toolCallCache.remove(sessionCacheId)
       ?.also { block(it) }
       .also {
-        if (it == null)
+        if (it.isNull())
           logger.debug { "Tool entry not found in cache: $sessionCacheId" }
       }
 
@@ -104,7 +105,7 @@ internal object ToolCache {
     functionCache.remove(sessionCacheId)
       ?.also { block(it) }
       .also { funcInfo ->
-        if (funcInfo == null)
+        if (funcInfo.isNull())
           logger.debug { "Function entry not found in cache: $sessionCacheId" }
       }
 

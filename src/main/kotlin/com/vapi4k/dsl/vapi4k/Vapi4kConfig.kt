@@ -19,6 +19,7 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.utils.Utils.isNull
 import io.ktor.server.config.ApplicationConfig
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
@@ -74,7 +75,7 @@ class Vapi4kConfig internal constructor() {
   fun onAssistantRequest(
     block: suspend (request: JsonElement) -> AssistantRequestResponse,
   ) {
-    if (assistantRequest == null)
+    if (assistantRequest.isNull())
       assistantRequest = block
     else
       error("onAssistantRequest{} can be called only once")

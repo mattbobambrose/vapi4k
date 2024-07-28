@@ -17,6 +17,9 @@
 package com.vapi4k.utils
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import io.github.oshai.kotlinlogging.KLogger
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 object Utils {
   internal val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
@@ -39,4 +42,58 @@ object Utils {
 
   internal fun String.capitalizeFirstChar(): String =
     replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+
+  internal fun String.obfuscate(freq: Int = 2) = mapIndexed { i, v -> if (i % freq == 0) '*' else v }.joinToString("")
+
+  @OptIn(ExperimentalContracts::class)
+  internal fun Any?.isNotNull(): Boolean {
+    contract {
+      returns(true) implies (this@isNotNull != null)
+    }
+    return this != null
+  }
+
+  @OptIn(ExperimentalContracts::class)
+  fun Any?.isNull(): Boolean {
+    contract {
+      returns(false) implies (this@isNull != null)
+    }
+    return this == null
+  }
+
+  internal fun getBanner(
+    filename: String,
+    logger: KLogger,
+  ): String {
+    val banner = logger.javaClass.classLoader.getResource(filename)?.readText()
+      ?: throw IllegalArgumentException("Banner not found: \"$filename\"")
+
+    val lines = banner.lines()
+
+    // Trim initial and trailing blank lines, but preserve blank lines in middle;
+    var first = -1
+    var last = -1
+    var lineNum = 0
+    lines.forEach { arg1 ->
+      if (arg1.trim { arg2 -> arg2 <= ' ' }.isNotEmpty()) {
+        if (first == -1)
+          first = lineNum
+        last = lineNum
+      }
+      lineNum++
+    }
+
+    lineNum = 0
+
+    val vals =
+      lines
+        .filter {
+          val currLine = lineNum++
+          currLine in first..last
+        }
+        .map { arg -> "     $arg" }
+
+    return "\n\n${vals.joinToString("\n")}\n\n"
+  }
+
 }

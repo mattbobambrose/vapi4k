@@ -11,7 +11,6 @@ val pgjdbcVersion: String by project
 val postgresVersion: String by project
 val exposedVersion: String by project
 val serializationVersion: String by project
-val utilsVersion: String by project
 
 val mainClassName = "com.vapi4k.ApplicationKt"
 
@@ -86,8 +85,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
 
-    implementation("com.github.pambrose.common-utils:core-utils:$utilsVersion")
-
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("io.github.oshai:kotlin-logging-jvm:$loggingVersion")
 
@@ -127,7 +124,9 @@ tasks {
         from({
             configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
         })
-        manifest { attributes["Main-Class"] = "com.vapi4k.ApplicationKt" }
+        manifest {
+            attributes["Main-Class"] = "com.vapi4k.ApplicationKt"
+        }
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 

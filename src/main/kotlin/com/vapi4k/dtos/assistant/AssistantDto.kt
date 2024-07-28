@@ -30,6 +30,7 @@ import com.vapi4k.dtos.VoicemailDetectionDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.transcriber.CommonTranscriberDto
 import com.vapi4k.dtos.voice.CommonVoiceDto
+import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -127,7 +128,7 @@ data class AssistantDto(
   var updated = false
 
   internal fun verifyValues() {
-    if (modelDto == null)
+    if (modelDto.isNull())
       error("An assistant{} requires a model{} decl ")
   }
 }

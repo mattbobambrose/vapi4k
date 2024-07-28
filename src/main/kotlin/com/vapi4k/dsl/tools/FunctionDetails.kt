@@ -23,6 +23,7 @@ import com.vapi4k.utils.ReflectionUtils.findFunction
 import com.vapi4k.utils.ReflectionUtils.findMethod
 import com.vapi4k.utils.ReflectionUtils.toolMethod
 import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.Utils.isNotNull
 import com.vapi4k.utils.booleanValue
 import com.vapi4k.utils.get
 import com.vapi4k.utils.intValue
@@ -72,7 +73,7 @@ internal class FunctionDetails(val obj: Any) {
     val actualVals =
       kparams
         .map { it.name to it.type }
-        .filter { (name, _) -> name != null }
+        .filter { (name, _) -> name.isNotNull() }
         .map { (argName, argType) ->
           val kclass = argType.asKClass()
           when (kclass) {

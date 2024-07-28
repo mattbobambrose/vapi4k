@@ -16,7 +16,6 @@
 
 package com.vapi4k.server
 
-import com.github.pambrose.common.util.getBanner
 import com.vapi4k.BuildConfig
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
@@ -49,6 +48,7 @@ import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.ReflectionUtils.lambda
 import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.Utils.getBanner
 import com.vapi4k.utils.toJsonElement
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode

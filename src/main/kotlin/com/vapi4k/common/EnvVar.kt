@@ -16,9 +16,9 @@
 
 package com.vapi4k.common
 
-import com.github.pambrose.common.util.isNull
-import com.github.pambrose.common.util.obfuscate
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.Utils.isNull
+import com.vapi4k.utils.Utils.obfuscate
 
 enum class EnvVar(
   private val src: () -> Any,
