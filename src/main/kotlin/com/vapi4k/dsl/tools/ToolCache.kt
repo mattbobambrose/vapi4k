@@ -78,7 +78,7 @@ internal object ToolCache {
     val funcDetails = funcInfo.functions[toolFuncName]
 
     if (funcDetails == null) {
-      val newFuncDetails = FunctionDetails(toolCallInfo, obj)
+      val newFuncDetails = FunctionDetails(obj)
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added $prefix \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {

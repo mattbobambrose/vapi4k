@@ -27,6 +27,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 val JsonElement.stringValue get() = jsonPrimitive.content
 val JsonElement.intValue get() = jsonPrimitive.content.toInt()
+val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
 val JsonElement.jsonElementList get() = jsonArray.toList()
 
 private fun JsonElement.element(key: String) =
@@ -57,3 +58,4 @@ inline fun <reified T> String.toObject() = Json.decodeFromString<T>(this)
 
 fun JsonElement.stringValue(key: String) = get(key).stringValue
 fun JsonElement.intValue(key: String) = get(key).intValue
+fun JsonElement.booleanValue(key: String) = get(key).booleanValue

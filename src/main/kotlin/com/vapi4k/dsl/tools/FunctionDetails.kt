@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
 import com.vapi4k.responses.ToolCallMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -24,15 +23,14 @@ import com.vapi4k.utils.ReflectionUtils.findFunction
 import com.vapi4k.utils.ReflectionUtils.findMethod
 import com.vapi4k.utils.ReflectionUtils.toolMethod
 import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.booleanValue
 import com.vapi4k.utils.get
+import com.vapi4k.utils.intValue
 import com.vapi4k.utils.stringValue
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 
-internal class FunctionDetails(
-  val toolCallInfo: ToolCallInfo,
-  val obj: Any,
-) {
+internal class FunctionDetails(val obj: Any) {
   val className = obj::class.java.name
   val methodName = obj.toolMethod.name
   val fqName get() = "$className.$methodName()"
@@ -70,14 +68,24 @@ internal class FunctionDetails(
     logger.info { "Invoking method $fqName with args $args and vals $vals" }
     val params = method.parameters.toList()
     val kparams = function.parameters
-
+    //kparams.forEach { logger.info { "Param: ${it.type}" } }
     val actualVals =
       kparams
-        .mapNotNull { it.name }
-        .map { argName -> args.jsonObject.stringValue(argName) }
+        .map { it.name to it.type }
+        .filter { (name, _) -> name != null }
+        .map { (argName, argType) ->
+          val kclass = argType.asKClass()
+          when (kclass) {
+            String::class -> args.jsonObject.stringValue(argName!!)
+            Int::class -> args.jsonObject.intValue(argName!!)
+            Boolean::class -> args.jsonObject.booleanValue(argName!!)
+            else -> error("Unsupported parameter type: $argType")
+          }
+        }
+
 
     logger.debug { "Actual vals: $actualVals" }
-    val result = method.invoke(obj, *actualVals.toTypedArray<String>())
+    val result = method.invoke(obj, *actualVals.toTypedArray<Any>())
     return if (isVoid) "" else result.toString()
   }
 }

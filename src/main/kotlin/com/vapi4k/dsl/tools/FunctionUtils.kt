@@ -20,6 +20,7 @@ import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.model.FunctionDto
+import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasTool
@@ -28,10 +29,11 @@ import com.vapi4k.utils.ReflectionUtils.toolCall
 import com.vapi4k.utils.ReflectionUtils.toolFunction
 import com.vapi4k.utils.ReflectionUtils.toolMethod
 import java.lang.reflect.Method
-import java.lang.reflect.Parameter
+import kotlin.reflect.KParameter
 
 internal object FunctionUtils {
-  private val legalTypes = setOf(String::class, Unit::class)
+  private val allowedParamTypes = setOf(String::class, Int::class, Boolean::class)
+  private val allowedReturnTypes = setOf(String::class, Unit::class)
 
   fun verifyObject(
     isFunction: Boolean,
@@ -49,9 +51,9 @@ internal object FunctionUtils {
 
     return with(obj.functions.first { it.hasTool }) {
       val returnClass = returnType.asKClass()
-      if (returnClass !in legalTypes) {
+      if (returnClass !in allowedReturnTypes) {
         val str = if (isFunction) "Function" else "Tool"
-        error("$str $name must return a String or Unit, but instead returns ${returnClass.qualifiedName}")
+        error("$str $name returns a ${returnClass.qualifiedName}. Allowed return types are String or Unit")
       }
     }
   }
@@ -64,9 +66,9 @@ internal object FunctionUtils {
     val method = obj.toolMethod
     val function = obj.toolFunction
 
-    ToolCallInfo(model.assistantCacheId, method).also { tci ->
-      functionDto.name = tci.llmName
-      functionDto.description = tci.llmDescription
+    ToolCallInfo(model.assistantCacheId, method).also { toolCallInfo ->
+      functionDto.name = toolCallInfo.llmName
+      functionDto.description = toolCallInfo.llmDescription
       // TODO: This might be always object
       functionDto.parameters.type = "object"  // llmReturnType
 
@@ -78,25 +80,35 @@ internal object FunctionUtils {
         else
           function.parameters.subList(1, function.parameters.size)
 
+      kparams.forEach { param ->
+        val kclass = param.type.asKClass()
+        logger.info { "Param: ${param.type}" }
+
+        if (kclass !in allowedParamTypes) {
+          val fqName = FunctionDetails(obj).fqName
+          error("Parameter \"${param.name}\" in $fqName is a ${kclass.simpleName}. Allowed types are String, Int, or Boolean")
+        }
+      }
+
       jparams
         .zip(kparams)
-        .forEach { (jParam, kParam) ->
-          val name = kParam.name ?: jParam.name
-          if (!kParam.isOptional)
+        .forEach { (jParam, kparam) ->
+          val name = kparam.name ?: jParam.name
+          if (!kparam.isOptional)
             functionDto.parameters.required += name
           functionDto.parameters.properties[name] = FunctionDto.FunctionParameters.FunctionPropertyDesc(
-            type = jParam.llmType,
+            type = kparam.llmType,
             description = jParam.param?.description ?: "The $name parameter"
           )
         }
     }
   }
 
-  private val Parameter.llmType: String
-    get() = when (type) {
-      String::class.java -> "string"
-      Int::class.java -> "integer"
-      Boolean::class.java -> "boolean"
+  private val KParameter.llmType: String
+    get() = when (type.asKClass()) {
+      String::class -> "string"
+      Int::class -> "integer"
+      Boolean::class -> "boolean"
       else -> "object"
     }
 
