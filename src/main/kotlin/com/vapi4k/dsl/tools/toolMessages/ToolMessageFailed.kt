@@ -14,11 +14,21 @@
  *
  */
 
-package com.vapi4k.dsl.model.enums
+package com.vapi4k.dsl.tools.toolMessages
 
-enum class ToolMessageType(val desc: String) {
-  REQUEST_START("request-start"),
-  REQUEST_COMPLETE("request-complete"),
-  REQUEST_FAILED("request-failed"),
-  REQUEST_RESPONSE_DELAYED("request-response-delayed"),
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.enums.ToolMessageType
+import com.vapi4k.dtos.model.ToolMessageConditionDto
+import com.vapi4k.dtos.model.ToolMessageFailedDto
+
+
+interface ToolMessageFailedProperties {
+  var type: ToolMessageType
+  var endCallAfterSpokenEnabled: Boolean?
+  var content: String
+  val conditions: MutableSet<ToolMessageConditionDto>
 }
+
+@AssistantDslMarker
+data class ToolMessageFailed internal constructor(internal val dto: ToolMessageFailedDto) :
+  ToolMessageFailedProperties by dto

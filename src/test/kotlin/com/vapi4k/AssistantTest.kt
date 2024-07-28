@@ -24,8 +24,8 @@ import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.model.enums.DeepgramModelType
 import com.vapi4k.dsl.model.enums.GladiaModelType
 import com.vapi4k.dsl.model.enums.OpenAIModelType
-import com.vapi4k.dsl.model.enums.ToolMessageType
 import com.vapi4k.dsl.tools.ToolCache.resetCaches
+import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig

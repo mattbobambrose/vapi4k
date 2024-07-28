@@ -20,10 +20,10 @@ import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.model.AbstractModelProperties
-import com.vapi4k.dsl.model.enums.ToolMessageType
 import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.tools.ToolCache.addToolCallToCache
+import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dtos.model.ToolDto
