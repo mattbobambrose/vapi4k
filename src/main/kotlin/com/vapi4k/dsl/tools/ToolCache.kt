@@ -116,5 +116,4 @@ internal object ToolCache {
     toolCallCache.remove(oldSessionCacheId)?.also { toolCallCache[newSessionCacheKey] = it }
     functionCache.remove(oldSessionCacheId)?.also { functionCache[newSessionCacheKey] = it }
   }
-
 }

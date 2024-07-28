@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
+import com.vapi4k.common.AssistantCacheId.Companion.toAssistantCacheId
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
@@ -47,7 +48,6 @@ import com.vapi4k.dsl.voice.RimeAIVoice
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.DuplicateChecker
-import com.vapi4k.utils.Utils.nextAssistantCacheId
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {
@@ -182,5 +182,9 @@ data class AssistantImpl internal constructor(
 
   companion object {
     internal lateinit var config: Vapi4kConfig
+    internal fun nextAssistantCacheId() = (assistantCounter++).toString().padStart(3, '0').toAssistantCacheId()
+
+    internal var assistantCounter = 1
+
   }
 }

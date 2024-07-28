@@ -16,16 +16,12 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.common.AssistantCacheId.Companion.toAssistantCacheId
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 
 object Utils {
   internal val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
 
   internal fun nextSessionCacheId() = "Outbound-${System.currentTimeMillis()}".toSessionCacheId()
-  internal fun nextAssistantCacheId() = (assistantCounter++).toString().padStart(3, '0').toAssistantCacheId()
-
-  private var assistantCounter = 1
 
   fun resourceFile(filename: String): String =
     this::class.java.getResource(filename)?.readText() ?: error("File not found: $filename")
@@ -43,5 +39,4 @@ object Utils {
 
   internal fun String.capitalizeFirstChar(): String =
     replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-
 }

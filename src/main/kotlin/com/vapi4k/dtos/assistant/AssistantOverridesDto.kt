@@ -18,7 +18,6 @@ package com.vapi4k.dtos.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
 import com.vapi4k.dsl.assistant.ModelDtoUnion
-import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
 import com.vapi4k.dtos.MessagePlanDto
@@ -32,25 +31,28 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssistantOverridesDto(
-  override var name: String = "",
+//  override var name: String = "",
+
+//  override var firstMessage: String = "",
+//  override var recordingEnabled: Boolean? = null,
+//  override var hipaaEnabled: Boolean? = null,
+//  override var serverUrl: String = "",
+//  override var serverUrlSecret: String = "",
+
+//  override var silenceTimeoutSeconds: Int = -1,
+//  override var responseDelaySeconds: Double = -1.0,
+//  override var llmRequestDelaySeconds: Double = -1.0,
+//  override var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
+//  override var numWordsToInterruptAssistant: Int = -1,
+//  override var maxDurationSeconds: Int = -1,
+//  override var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
+//  override var backchannelingEnabled: Boolean? = null,
+//  override var backgroundDenoisingEnabled: Boolean? = null,
+//  override var modelOutputInMessagesEnabled: Boolean? = null,
+//  override var voicemailMessage: String = "",
+//  override var endCallMessage: String = "",
+
   override var firstMessageMode: String = "",
-  override var recordingEnabled: Boolean? = null,
-  override var hipaaEnabled: Boolean? = null,
-  override var silenceTimeoutSeconds: Int = -1,
-  override var responseDelaySeconds: Double = -1.0,
-  override var llmRequestDelaySeconds: Double = -1.0,
-  override var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
-  override var numWordsToInterruptAssistant: Int = -1,
-  override var maxDurationSeconds: Int = -1,
-  override var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
-  override var backchannelingEnabled: Boolean? = null,
-  override var backgroundDenoisingEnabled: Boolean? = null,
-  override var modelOutputInMessagesEnabled: Boolean? = null,
-  override var firstMessage: String = "",
-  override var voicemailMessage: String = "",
-  override var endCallMessage: String = "",
-  override var serverUrl: String = "",
-  override var serverUrlSecret: String = "",
 
   override val clientMessages: MutableSet<String> = mutableSetOf(),
   override val serverMessages: MutableSet<String> = mutableSetOf(),
@@ -81,4 +83,4 @@ data class AssistantOverridesDto(
   val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantOverridesProperties, ModelDtoUnion
+) : AbstractAssistantDto(), AssistantOverridesProperties, ModelDtoUnion

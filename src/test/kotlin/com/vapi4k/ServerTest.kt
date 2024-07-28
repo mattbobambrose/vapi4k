@@ -18,6 +18,7 @@ package com.vapi4k
 
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
+import com.vapi4k.dsl.assistant.AssistantImpl.Companion.assistantCounter
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
@@ -25,6 +26,7 @@ import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.firstInList
 import com.vapi4k.utils.get
 import com.vapi4k.utils.stringValue
+import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -58,6 +60,9 @@ class ServerTest {
 
   @Test
   fun `simple assistant request`() {
+    // Reset the assistant counter
+    assistantCounter = 0
+
     val (response, jsonElement) =
       withTestApplication("/json/assistantRequest.json") { request ->
         assistant(request) {
@@ -73,6 +78,7 @@ class ServerTest {
 
   @Test
   fun `Tool requests arg ordering`() {
+
     val responses =
       withTestApplication(
         JsonFilenames.ASSISTANT_REQUEST,
@@ -88,6 +94,8 @@ class ServerTest {
     responses.forEachIndexed { i, (response, jsonElement) ->
       assertEquals(HttpStatusCode.OK, response.status)
 
+      println(jsonElement.toJsonString())
+
       if (i in listOf(1, 2))
         assertEquals(
           "The weather in Danville, California is windy",
@@ -100,7 +108,9 @@ class ServerTest {
           jsonElement["results"].firstInList().stringValue("result")
         )
 
-      //println(jsonElement.toJsonString())
     }
+    // Make sure EOCR request cleans up cache
+    // TODO Add healthcheck to see if cache is empty
+    //assertEquals(true, )
   }
 }

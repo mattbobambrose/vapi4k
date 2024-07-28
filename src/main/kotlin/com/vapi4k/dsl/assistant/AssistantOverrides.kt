@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.assistant.AssistantImpl.Companion.nextAssistantCacheId
 import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnyscaleModel
@@ -42,7 +43,6 @@ import com.vapi4k.dsl.voice.PlayHTVoice
 import com.vapi4k.dsl.voice.RimeAIVoice
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.DuplicateChecker
-import com.vapi4k.utils.Utils.nextAssistantCacheId
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesProperties {

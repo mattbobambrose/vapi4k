@@ -41,7 +41,6 @@ value class AssistantCacheId private constructor(val value: String) {
   override fun toString() = value
 
   companion object {
-
     fun String.toAssistantCacheId() = AssistantCacheId(this)
   }
 }
@@ -52,7 +51,6 @@ value class MessageCallId private constructor(val value: String) {
   override fun toString() = value
 
   companion object {
-
     fun String.toMessageCallId() = MessageCallId(this)
   }
 }

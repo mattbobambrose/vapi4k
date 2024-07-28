@@ -35,17 +35,40 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
+abstract class AbstractAssistantDto(
+  var name: String = "",
+  var firstMessage: String = "",
+  var recordingEnabled: Boolean? = null,
+  var hipaaEnabled: Boolean? = null,
+  var serverUrl: String = "",
+  var serverUrlSecret: String = "",
+
+  var silenceTimeoutSeconds: Int = -1,
+  var responseDelaySeconds: Double = -1.0,
+  var llmRequestDelaySeconds: Double = -1.0,
+  var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
+  var numWordsToInterruptAssistant: Int = -1,
+  var maxDurationSeconds: Int = -1,
+  var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
+  var backchannelingEnabled: Boolean? = null,
+  var backgroundDenoisingEnabled: Boolean? = null,
+  var modelOutputInMessagesEnabled: Boolean? = null,
+  var voicemailMessage: String = "",
+  var endCallMessage: String = "",
+)
+
+@Serializable
 data class AssistantDto(
-  override var name: String = "",
+//  override var name: String = "",
 
   // TODO: Came from squad assistant
   val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
 
-  override var firstMessage: String = "",
-  override var recordingEnabled: Boolean? = null,
-  override var hipaaEnabled: Boolean? = null,
-  override var serverUrl: String = "",
-  override var serverUrlSecret: String = "",
+//  override var firstMessage: String = "",
+//  override var recordingEnabled: Boolean? = null,
+//  override var hipaaEnabled: Boolean? = null,
+//  override var serverUrl: String = "",
+//  override var serverUrlSecret: String = "",
 
   // TODO: This needs to be added to docs
   override var forwardingPhoneNumber: String = "",
@@ -55,18 +78,19 @@ data class AssistantDto(
 
   // TODO: Not in docs or squad
   override var dialKeypadFunctionEnabled: Boolean? = null,
-  override var responseDelaySeconds: Double = -1.0,
-  override var llmRequestDelaySeconds: Double = -1.0,
-  override var silenceTimeoutSeconds: Int = -1,
-  override var maxDurationSeconds: Int = -1,
-  override var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
-  override var numWordsToInterruptAssistant: Int = -1,
-  override var voicemailMessage: String = "",
-  override var endCallMessage: String = "",
-  override var backchannelingEnabled: Boolean? = null,
-  override var backgroundDenoisingEnabled: Boolean? = null,
-  override var modelOutputInMessagesEnabled: Boolean? = null,
-  override var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
+
+//  override var silenceTimeoutSeconds: Int = -1,
+//  override var responseDelaySeconds: Double = -1.0,
+//  override var llmRequestDelaySeconds: Double = -1.0,
+//  override var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
+//  override var numWordsToInterruptAssistant: Int = -1,
+//  override var maxDurationSeconds: Int = -1,
+//  override var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
+//  override var backchannelingEnabled: Boolean? = null,
+//  override var backgroundDenoisingEnabled: Boolean? = null,
+//  override var modelOutputInMessagesEnabled: Boolean? = null,
+//  override var voicemailMessage: String = "",
+//  override var endCallMessage: String = "",
 
   override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
 
@@ -98,7 +122,7 @@ data class AssistantDto(
 
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AssistantProperties, ModelDtoUnion {
+) : AbstractAssistantDto(), AssistantProperties, ModelDtoUnion {
   @Transient
   var updated = false
 
