@@ -20,6 +20,7 @@ import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.model.FunctionDto
+import com.vapi4k.dtos.model.FunctionPropertyDescDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
@@ -103,7 +104,7 @@ internal object FunctionUtils {
           val name = kparam.name ?: jParam.name
           if (!kparam.isOptional)
             functionDto.parameters.required += name
-          functionDto.parameters.properties[name] = FunctionDto.FunctionParameters.FunctionPropertyDesc(
+          functionDto.parameters.properties[name] = FunctionPropertyDescDto(
             type = kparam.llmType,
             description = jParam.param?.description ?: "The $name parameter",
           )

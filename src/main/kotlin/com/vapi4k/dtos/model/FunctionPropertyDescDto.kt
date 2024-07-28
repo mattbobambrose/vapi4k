@@ -19,9 +19,7 @@ package com.vapi4k.dtos.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FunctionDto(
-  var name: String = "",
+data class FunctionPropertyDescDto(
+  var type: String = "",
   var description: String = "",
-  val parameters: FunctionParametersDto = FunctionParametersDto(),
-) {
-}
+)
