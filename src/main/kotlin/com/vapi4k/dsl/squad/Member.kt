@@ -45,6 +45,7 @@ data class MemberImpl(
     return AssistantImpl(
       members.squad.request,
       members.squad.sessionCacheId,
+      members.squad.assistantCacheIdSource,
       dto.assistant,
       dto.assistantOverrides
     ).apply(block)

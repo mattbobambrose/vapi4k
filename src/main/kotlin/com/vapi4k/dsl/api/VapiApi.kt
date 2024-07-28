@@ -25,6 +25,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolCache.swapCacheKeys
 import com.vapi4k.dtos.api.CallRequestDto
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.id
@@ -155,12 +156,14 @@ class VapiApi private constructor(
 @AssistantDslMarker
 class Phone {
   internal val sessionCacheId = nextSessionCacheId()
+  private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
   fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto()
-    .also { CallImpl(sessionCacheId, it).apply(block) }
+    .also { CallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
 }
 
 @AssistantDslMarker
 class Save {
+  private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
   fun call(block: Call.() -> Unit): CallRequestDto =
-    CallRequestDto().also { CallImpl(UNSPECIFIED_SESSION_CACHE_ID, it).apply(block) }
+    CallRequestDto().also { CallImpl(UNSPECIFIED_SESSION_CACHE_ID, assistantCacheIdSource, it).apply(block) }
 }

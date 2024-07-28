@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.assistant.AssistantImpl.Companion.nextAssistantCacheId
 import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnyscaleModel
@@ -42,6 +41,7 @@ import com.vapi4k.dsl.voice.OpenAIVoice
 import com.vapi4k.dsl.voice.PlayHTVoice
 import com.vapi4k.dsl.voice.RimeAIVoice
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
+import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 import kotlinx.serialization.json.JsonElement
 
@@ -112,12 +112,13 @@ interface AssistantOverrides : AssistantOverridesProperties {
 data class AssistantOverridesImpl internal constructor(
   override val request: JsonElement,
   override val sessionCacheId: SessionCacheId,
+  internal val assistantCacheIdSource: AssistantCacheIdSource,
   private val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantOverridesProperties by assistantOverridesDto, AssistantOverrides, ModelUnion {
   override val transcriberChecker = DuplicateChecker()
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
-  override val assistantCacheId = nextAssistantCacheId()
+  override val assistantCacheId = assistantCacheIdSource.nextAssistantCacheId()
   override val modelDtoUnion get() = assistantOverridesDto
   override val voicemailDetectionDto get() = assistantOverridesDto.voicemailDetectionDto
   override val analysisPlanDto get() = assistantOverridesDto.analysisPlanDto

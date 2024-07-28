@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.AssistantCacheId.Companion.toAssistantCacheId
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
@@ -47,6 +46,7 @@ import com.vapi4k.dsl.voice.PlayHTVoice
 import com.vapi4k.dsl.voice.RimeAIVoice
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
+import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 import kotlinx.serialization.json.JsonElement
 
@@ -117,19 +117,19 @@ interface Assistant : AssistantProperties {
   fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan
 
   fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan
-
 }
 
 data class AssistantImpl internal constructor(
   override val request: JsonElement,
   override val sessionCacheId: SessionCacheId,
+  internal val assistantCacheIdSource: AssistantCacheIdSource,
   private val assistantDto: AssistantDto,
   private val assistantOverridesDto: AssistantOverridesDto,
 ) : AssistantProperties by assistantDto, Assistant, ModelUnion {
   override val transcriberChecker = DuplicateChecker()
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
-  override val assistantCacheId = nextAssistantCacheId()
+  override val assistantCacheId = assistantCacheIdSource.nextAssistantCacheId()
   override val modelDtoUnion get() = assistantDto
   override val voicemailDetectionDto get() = assistantDto.voicemailDetectionDto
   override val analysisPlanDto get() = assistantDto.analysisPlanDto
@@ -174,7 +174,7 @@ data class AssistantImpl internal constructor(
 
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(request, sessionCacheId, assistantOverridesDto).apply(block)
+    AssistantOverridesImpl(request, sessionCacheId, assistantCacheIdSource, assistantOverridesDto).apply(block)
 
   override fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan = analysisPlanUnion(block)
 
@@ -182,9 +182,5 @@ data class AssistantImpl internal constructor(
 
   companion object {
     internal lateinit var config: Vapi4kConfig
-    internal fun nextAssistantCacheId() = (assistantCounter++).toString().padStart(3, '0').toAssistantCacheId()
-
-    internal var assistantCounter = 1
-
   }
 }

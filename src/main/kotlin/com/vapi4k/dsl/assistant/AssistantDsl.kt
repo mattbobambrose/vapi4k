@@ -28,6 +28,7 @@ import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
@@ -45,7 +46,9 @@ object AssistantDsl {
     block: Assistant.() -> Unit,
   ) =
     AssistantRequestResponse().apply {
-      AssistantImpl(request, request.messageCallId.toSessionCacheId(), assistantDto, assistantOverridesDto)
+      val sessionCacheId = request.messageCallId.toSessionCacheId()
+      val assistantCacheIdSource = AssistantCacheIdSource()
+      AssistantImpl(request, sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
         .apply(block)
         .apply {
           assistantDto.updated = true
@@ -58,7 +61,9 @@ object AssistantDsl {
     block: AssistantId.() -> Unit,
   ) =
     AssistantRequestResponse().apply {
-      AssistantIdImpl(request, request.messageCallId.toSessionCacheId(), this).apply(block)
+      val sessionCacheId = request.messageCallId.toSessionCacheId()
+      val assistantCacheIdSource = AssistantCacheIdSource()
+      AssistantIdImpl(request, sessionCacheId, assistantCacheIdSource, this).apply(block)
     }
 
   fun squad(
@@ -66,7 +71,9 @@ object AssistantDsl {
     block: Squad.() -> Unit,
   ) =
     AssistantRequestResponse().apply {
-      SquadImpl(request, request.messageCallId.toSessionCacheId(), squadDto).apply(block)
+      val sessionCacheId = request.messageCallId.toSessionCacheId()
+      val assistantCacheIdSource = AssistantCacheIdSource()
+      SquadImpl(request, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
     }
 
   fun squadId(
