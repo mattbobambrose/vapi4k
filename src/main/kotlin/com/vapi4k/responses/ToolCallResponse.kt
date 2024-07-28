@@ -49,14 +49,14 @@ data class ToolCallResponse(
                 response.results +=
                   ToolCallResult()
                     .also { toolCallResult ->
-                      val cacheKey = request.messageCallId.toSessionCacheId()
+                      val sessionCacheId = request.messageCallId.toSessionCacheId()
                       val funcName = toolCall.toolCallName
                       val args = toolCall.toolCallArguments
                       toolCallResult.toolCallId = toolCall.toolCallId
                       toolCallResult.name = funcName
                       toolCallResult.result =
                         runCatching {
-                          getToolCallFromCache(cacheKey)
+                          getToolCallFromCache(sessionCacheId)
                             .getFunction(funcName)
                             .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
                             .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->

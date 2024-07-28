@@ -163,21 +163,21 @@ private suspend fun KtorCallContext.handleServerPathPost(requestResponseCallback
         }
 
         END_OF_CALL_REPORT -> {
-          val messageCallId = request.messageCallId.toSessionCacheId()
+          val sessionCacheId = request.messageCallId.toSessionCacheId()
           var notFound = true
 
-          removeToolCallFromCache(messageCallId) { funcInfo ->
+          removeToolCallFromCache(sessionCacheId) { funcInfo ->
             logger.info { "EOCR removed ${funcInfo.functions.size} toolCall objects [${funcInfo.ageSecs}] " }
             notFound = false
           }
 
-          removeFunctionFromCache(messageCallId) { funcInfo ->
+          removeFunctionFromCache(sessionCacheId) { funcInfo ->
             logger.info { "EOCR removed ${funcInfo.functions.size} function objects [${funcInfo.ageSecs}] " }
             notFound = false
           }
 
           if (notFound && cacheIsActive)
-            logger.warn { "EOCR unable to free toolCalls or functions for messageCallId: $messageCallId" }
+            logger.warn { "EOCR unable to free toolCalls or functions for messageCallId: $sessionCacheId" }
 
           val response = SimpleMessageResponse("End of call report received")
           call.respond(response)

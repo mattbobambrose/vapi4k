@@ -31,12 +31,12 @@ class FunctionResponse(var result: String = "") {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
-          val cacheKey = request.messageCallId.toSessionCacheId()
+          val sessionCacheId = request.messageCallId.toSessionCacheId()
           val funcName = request.functionName
           val args = request.functionParameters
           response.result =
             runCatching {
-              getFunctionFromCache(cacheKey)
+              getFunctionFromCache(sessionCacheId)
                 .getFunction(funcName)
                 .invokeToolMethod(args, request)
             }.getOrElse { e ->
