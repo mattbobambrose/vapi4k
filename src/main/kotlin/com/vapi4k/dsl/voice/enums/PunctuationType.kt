@@ -25,7 +25,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = PunctuationTypeSerializer::class)
-enum class PunctuationType(internal val desc: String) {
+enum class PunctuationType(
+  val desc: String,
+) {
   FULL_STOP('\u3002'.toString()),
   FULL_WIDTH_COMMA('\uff0c'.toString()),
   PERIOD("."),

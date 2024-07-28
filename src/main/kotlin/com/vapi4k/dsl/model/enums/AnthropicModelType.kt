@@ -18,14 +18,17 @@ package com.vapi4k.dsl.model.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 
-enum class AnthropicModelType(internal val desc: String) {
+enum class AnthropicModelType(
+  val desc: String,
+) {
   CLAUDE_3_OPUS("claude-3-opus-20240229"),
   CLAUDE_3_SONNET("claude-3-sonnet-20240229"),
   CLAUDE_3_HAIKU("claude-3-haiku-20240307"),
   CLAUDE_3_5_SONNET("claude-3-5-sonnet-20240620"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

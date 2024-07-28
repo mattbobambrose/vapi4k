@@ -38,12 +38,17 @@ interface PerplexityAIModel : PerplexityAIModelProperties {
   var functionMessage: String
   var toolMessage: String
   var userMessage: String
+
   fun tools(block: Tools.() -> Unit): Tools
+
   fun functions(block: Functions.() -> Unit): Functions
+
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
 class PerplexityAIModelImpl(
   modelUnion: ModelUnion,
   modelDto: PerplexityAIModelDto,
-) : PerplexityAIModelProperties by modelDto, PerplexityAIModel, AbstractModel(modelUnion, modelDto)
+) : AbstractModel(modelUnion, modelDto),
+  PerplexityAIModelProperties by modelDto,
+  PerplexityAIModel

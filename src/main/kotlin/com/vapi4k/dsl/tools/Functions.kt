@@ -29,7 +29,9 @@ interface Functions {
   fun function(obj: Any)
 }
 
-data class FunctionsImpl internal constructor(internal val model: AbstractModelProperties) : Functions {
+data class FunctionsImpl internal constructor(
+  internal val model: AbstractModelProperties,
+) : Functions {
   override fun function(obj: Any) {
     model.functionDtos += FunctionDto().also { functionDto ->
       verifyObject(true, obj)

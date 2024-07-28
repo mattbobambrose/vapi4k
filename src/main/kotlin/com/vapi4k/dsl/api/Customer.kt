@@ -24,4 +24,6 @@ interface CustomerProperties {
 }
 
 @AssistantDslMarker
-data class Customer(private val dto: CustomerDto) : CustomerProperties by dto
+data class Customer internal constructor(
+  private val dto: CustomerDto,
+) : CustomerProperties by dto

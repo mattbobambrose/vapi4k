@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = RimeAIVoiceIdTypeSerializer::class)
-enum class RimeAIVoiceIdType(val desc: String) {
+enum class RimeAIVoiceIdType(
+  val desc: String,
+) {
   MARSH("marsh"),
   BAYOU("bayou"),
   CREEK("creek"),
@@ -108,10 +110,11 @@ enum class RimeAIVoiceIdType(val desc: String) {
   TYLER("tyler"),
   VIV("viv"),
   YADIRA("yadira"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

@@ -24,7 +24,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TogetherAIModelDto(
   override var model: String = "",
-) : AbstractModelDto(), TogetherAIModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  TogetherAIModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.TOGETHER_AI
 

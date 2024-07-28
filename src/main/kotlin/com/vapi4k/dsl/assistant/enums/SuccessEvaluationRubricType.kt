@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = SuccessEvaluationRubricTypeSerializer::class)
-enum class SuccessEvaluationRubricType(val desc: String) {
+enum class SuccessEvaluationRubricType(
+  val desc: String,
+) {
   NUMERICSCALE("numericScale"),
   DESCRIPTIVESCALE("descriptiveScale"),
   CHECKLIST("checklist"),
@@ -35,7 +37,7 @@ enum class SuccessEvaluationRubricType(val desc: String) {
   LIKERTSCALE("likertScale"),
   AUTOMATICRUBRIC("automaticRubric"),
   PASSFAIL("passFail"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT)
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object SuccessEvaluationRubricTypeSerializer : KSerializer<SuccessEvaluationRubricType> {

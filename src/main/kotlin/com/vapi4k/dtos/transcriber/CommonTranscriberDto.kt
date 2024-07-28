@@ -70,7 +70,6 @@ private object TranscriberSerializer : KSerializer<CommonTranscriberDto> {
     }
   }
 
-  override fun deserialize(decoder: Decoder): CommonTranscriberDto {
+  override fun deserialize(decoder: Decoder): CommonTranscriberDto =
     throw NotImplementedError("Deserialization is not supported")
-  }
 }

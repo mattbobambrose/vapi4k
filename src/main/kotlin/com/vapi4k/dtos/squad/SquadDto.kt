@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos.squad
 
-
 import com.vapi4k.dsl.squad.SquadProperties
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import kotlinx.serialization.Serializable
@@ -24,7 +23,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SquadDto(
   override var name: String = "",
-
   val members: MutableList<MemberDto> = mutableListOf(),
   val membersOverrides: AssistantOverridesDto = AssistantOverridesDto(),
 ) : SquadProperties

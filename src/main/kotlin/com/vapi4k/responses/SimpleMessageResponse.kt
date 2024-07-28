@@ -19,4 +19,6 @@ package com.vapi4k.responses
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SimpleMessageResponse(val messageResponse: String)
+data class SimpleMessageResponse(
+  val messageResponse: String,
+)

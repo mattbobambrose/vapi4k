@@ -30,9 +30,10 @@ data class OpenAIVoiceDto(
   override var voiceIdType: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-
   override var speed: Double = -1.0,
-) : OpenAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  OpenAIVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.OPENAI
 

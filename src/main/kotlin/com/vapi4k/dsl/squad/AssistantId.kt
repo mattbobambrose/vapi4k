@@ -20,7 +20,9 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.squad.MemberDto
 
 @AssistantDslMarker
-class AssistantId internal constructor(private val dto: MemberDto) {
+class AssistantId internal constructor(
+  private val dto: MemberDto,
+) {
   var id
     get() = dto.assistantId
     set(value) {

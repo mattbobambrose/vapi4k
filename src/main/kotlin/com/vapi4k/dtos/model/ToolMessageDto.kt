@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos.model
 
-
 import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.tools.toolMessages.ToolMessageCompleteProperties
@@ -31,7 +30,7 @@ abstract class AbstractToolMessageDto(
   @EncodeDefault
   val type: ToolMessageType,
   var content: String = "",
-  val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf()
+  val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf(),
 ) {
   fun verifyValues() {
     if (content.isEmpty()) error("Content is required for ToolMessage")
@@ -39,21 +38,28 @@ abstract class AbstractToolMessageDto(
 }
 
 @Serializable
-class ToolMessageStartDto : AbstractToolMessageDto(ToolMessageType.REQUEST_START), ToolMessageStartProperties
+class ToolMessageStartDto :
+  AbstractToolMessageDto(ToolMessageType.REQUEST_START),
+  ToolMessageStartProperties
 
 @Serializable
 data class ToolMessageCompleteDto(
   override var role: ToolMessageRoleType = ToolMessageRoleType.UNSPECIFIED,
   override var endCallAfterSpokenEnabled: Boolean? = null,
-) : AbstractToolMessageDto(ToolMessageType.REQUEST_COMPLETE), ToolMessageCompleteProperties
+) : AbstractToolMessageDto(ToolMessageType.REQUEST_COMPLETE),
+  ToolMessageCompleteProperties
 
 @Serializable
-data class ToolMessageFailedDto(override var endCallAfterSpokenEnabled: Boolean? = null) :
-  AbstractToolMessageDto(ToolMessageType.REQUEST_FAILED), ToolMessageFailedProperties
+data class ToolMessageFailedDto(
+  override var endCallAfterSpokenEnabled: Boolean? = null,
+) : AbstractToolMessageDto(ToolMessageType.REQUEST_FAILED),
+  ToolMessageFailedProperties
 
 @Serializable
-data class ToolMessageDelayedDto(override var timingMilliseconds: Int = -1) :
-  AbstractToolMessageDto(ToolMessageType.REQUEST_RESPONSE_DELAYED), ToolMessageDelayedProperties
+data class ToolMessageDelayedDto(
+  override var timingMilliseconds: Int = -1,
+) : AbstractToolMessageDto(ToolMessageType.REQUEST_RESPONSE_DELAYED),
+  ToolMessageDelayedProperties
 
 @Serializable
 data class ToolMessageDto(

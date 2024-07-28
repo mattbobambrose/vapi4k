@@ -38,12 +38,17 @@ interface DeepInfraModel : DeepInfraModelProperties {
   var functionMessage: String
   var toolMessage: String
   var userMessage: String
+
   fun tools(block: Tools.() -> Unit): Tools
+
   fun functions(block: Functions.() -> Unit): Functions
+
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
 class DeepInfraModelImpl(
   modelUnion: ModelUnion,
   modelDto: DeepInfraModelDto,
-) : DeepInfraModelProperties by modelDto, DeepInfraModel, AbstractModel(modelUnion, modelDto)
+) : AbstractModel(modelUnion, modelDto),
+  DeepInfraModelProperties by modelDto,
+  DeepInfraModel

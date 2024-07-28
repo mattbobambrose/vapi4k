@@ -30,15 +30,15 @@ data class OpenAIModelDto(
   override var modelType: OpenAIModelType = OpenAIModelType.UNSPECIFIED,
   @Transient
   override var customModel: String = "",
-
   var fallbackModels: MutableList<String> = mutableListOf(),
   @Transient
   override val fallbackModelTypes: MutableList<OpenAIModelType> = mutableListOf(),
   @Transient
   override val customFallbackModels: MutableList<String> = mutableListOf(),
-
   override var semanticCachingEnabled: Boolean? = null,
-) : AbstractModelDto(), OpenAIModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  OpenAIModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI
 

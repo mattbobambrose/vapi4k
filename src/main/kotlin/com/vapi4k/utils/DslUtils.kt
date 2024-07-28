@@ -31,8 +31,13 @@ object DslUtils {
 
   val isLoggingEnabled: Boolean get() = System.getenv("LOGGING_ENABLED")?.toBoolean() ?: false
 
-  fun String.includeIf(condition: Boolean, otherWise: String = "") = if (condition) this else otherWise
+  fun String.includeIf(
+    condition: Boolean,
+    otherWise: String = "",
+  ) = if (condition) this else otherWise
 
-  fun getRandomSecret(length: Int = 10, charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')) =
-    (1..length).map { charPool.random() }.joinToString("")
+  fun getRandomSecret(
+    length: Int = 10,
+    charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9'),
+  ) = (1..length).map { charPool.random() }.joinToString("")
 }

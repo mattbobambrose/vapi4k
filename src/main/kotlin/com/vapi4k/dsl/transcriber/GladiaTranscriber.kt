@@ -31,4 +31,6 @@ interface GladiaTranscriberProperties {
   var audioEnhancer: Boolean?
 }
 
-class GladiaTranscriber internal constructor(private val dto: GladiaTranscriberDto) : GladiaTranscriberProperties by dto
+class GladiaTranscriber internal constructor(
+  private val dto: GladiaTranscriberDto,
+) : GladiaTranscriberProperties by dto

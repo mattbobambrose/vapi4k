@@ -35,9 +35,7 @@ fun Application.defaultKtorConfig() {
 
   if (!registry.contains(ContentNegotiation.key)) {
     install(ContentNegotiation) {
-      json(Json {
-        ignoreUnknownKeys = true
-      })
+      json(Json { ignoreUnknownKeys = true })
     }
   }
 

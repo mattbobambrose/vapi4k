@@ -30,7 +30,9 @@ data class GroqModelDto(
   override var modelType: GroqModelType = GroqModelType.UNSPECIFIED,
   @Transient
   override var customModel: String = "",
-) : AbstractModelDto(), GroqModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  GroqModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.GROQ
 

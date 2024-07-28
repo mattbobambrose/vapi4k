@@ -56,12 +56,17 @@ interface AnthropicModel : AnthropicModelProperties {
   var functionMessage: String
   var toolMessage: String
   var userMessage: String
+
   fun tools(block: Tools.() -> Unit): Tools
+
   fun functions(block: Functions.() -> Unit): Functions
+
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
 class AnthropicModelImpl(
   modelUnion: ModelUnion,
   modelDto: AnthropicModelDto,
-) : AnthropicModelProperties by modelDto, AnthropicModel, AbstractModel(modelUnion, modelDto)
+) : AbstractModel(modelUnion, modelDto),
+  AnthropicModelProperties by modelDto,
+  AnthropicModel

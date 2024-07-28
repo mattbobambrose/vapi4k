@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = PlayHTVoiceIdTypeSerializer::class)
-enum class PlayHTVoiceIdType(val desc: String) {
+enum class PlayHTVoiceIdType(
+  val desc: String,
+) {
   JENNIFER("jennifer"),
   MELISSA("melissa"),
   WILL("will"),
@@ -37,10 +39,11 @@ enum class PlayHTVoiceIdType(val desc: String) {
   DAVIS("davis"),
   DONNA("donna"),
   MICHAEL("michael"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

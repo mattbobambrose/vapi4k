@@ -28,7 +28,7 @@ object Utils {
 
   fun resourceFile(filename: String): String =
     this::class.java.getResource(filename)?.readText() ?: error("File not found: $filename")
-  //this.javaClass.classLoader.getResource(filename)?.readText() ?: error("File not found: $filename")
+  // this.javaClass.classLoader.getResource(filename)?.readText() ?: error("File not found: $filename")
 
   internal fun Int.lpad(
     width: Int,
@@ -95,5 +95,4 @@ object Utils {
 
     return "\n\n${vals.joinToString("\n")}\n\n"
   }
-
 }

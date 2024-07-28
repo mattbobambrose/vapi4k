@@ -43,7 +43,9 @@ interface Tools {
   )
 }
 
-data class ToolsImpl internal constructor(internal val model: AbstractModelProperties) : Tools {
+data class ToolsImpl internal constructor(
+  internal val model: AbstractModelProperties,
+) : Tools {
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,

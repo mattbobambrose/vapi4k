@@ -20,13 +20,16 @@ import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class AzureVoiceIdType(val desc: String) {
+enum class AzureVoiceIdType(
+  val desc: String,
+) {
   ANDREW("andrew"),
   BRIAN("brian"),
   EMMA("emma"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

@@ -31,4 +31,3 @@ class NumberDestinationImpl internal constructor(
   internal val request: JsonElement,
   private val dto: NumberDestinationDto,
 ) : NumberDestination by dto
-

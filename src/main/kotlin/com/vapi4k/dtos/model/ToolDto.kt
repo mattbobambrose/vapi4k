@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos.model
 
-
 import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dtos.ServerDto
 import kotlinx.serialization.Serializable

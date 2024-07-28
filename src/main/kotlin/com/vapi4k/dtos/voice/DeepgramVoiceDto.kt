@@ -30,7 +30,9 @@ data class DeepgramVoiceDto(
   override var voiceIdType: DeepGramVoiceIdType = DeepGramVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-) : DeepgramVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  DeepgramVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.DEEPGRAM
 

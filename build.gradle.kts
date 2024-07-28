@@ -19,12 +19,15 @@ plugins {
     val kotlinVersion: String by System.getProperties()
     val ktorVersion: String by System.getProperties()
     val versionsVersion: String by System.getProperties()
+    val ktlintVersion: String by System.getProperties()
     id("maven-publish")
     kotlin("jvm") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.serialization") version kotlinVersion
     id("io.ktor.plugin") version ktorVersion
     id("com.github.ben-manes.versions") version versionsVersion
     id("com.github.gmazzo.buildconfig") version configVersion
+    id("org.jmailen.kotlinter") version ktlintVersion
+
     //id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
@@ -135,6 +138,12 @@ tasks {
             listOf("BETA", "-RC").any { candidate.version.uppercase().contains(it) }
         }
     }
+}
+
+kotlinter {
+    failBuildWhenCannotAutoFormat = false
+    ignoreFailures = false
+    reporters = arrayOf("checkstyle", "plain")
 }
 
 //tasks.findByName("lintKotlinCommonMain")?.apply {

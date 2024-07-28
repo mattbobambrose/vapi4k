@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos.api
 
-
 import com.vapi4k.dsl.api.CallProperties
 import com.vapi4k.dsl.assistant.AssistantIdProperties
 import com.vapi4k.dsl.squad.SquadIdSource
@@ -29,22 +28,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CallRequestDto(
   override var assistantId: String = "",
-
   @SerialName("assistant")
   override val assistantDto: AssistantDto = AssistantDto(),
-
   @SerialName("assistantOverrides")
   override val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),
-
   override var squadId: String = "",
-
   @SerialName("squad")
   val squadDto: SquadDto = SquadDto(),
-
   override var phoneNumberId: String = "",
-
   @SerialName("customer")
   val customerDto: CustomerDto = CustomerDto(),
-
   var error: String = "",
-) : CallProperties, AssistantIdProperties, SquadIdSource
+) : CallProperties,
+  AssistantIdProperties,
+  SquadIdSource

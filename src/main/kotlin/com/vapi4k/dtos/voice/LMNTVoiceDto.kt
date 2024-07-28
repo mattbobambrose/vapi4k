@@ -30,9 +30,10 @@ data class LMNTVoiceDto(
   override var voiceIdType: LMNTVoiceIdType = LMNTVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-
   override var speed: Double = -1.0,
-) : LMNTVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  LMNTVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.LMNT
 

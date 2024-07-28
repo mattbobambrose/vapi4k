@@ -31,14 +31,15 @@ data class PlayHTVoiceDto(
   override var voiceIdType: PlayHTVoiceIdType = PlayHTVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-
   override var speed: Double = -1.0,
   override var temperature: Double = -1.0,
   override var emotion: PlayHTVoiceEmotionType = PlayHTVoiceEmotionType.UNSPECIFIED,
   override var voiceGuidance: Double = -1.0,
   override var styleGuidance: Double = -1.0,
   override var textGuidance: Double = -1.0,
-) : PlayHTVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  PlayHTVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.PLAYHT
 

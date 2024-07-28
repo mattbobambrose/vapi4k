@@ -26,10 +26,12 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = BackgroundSoundTypeSerializer::class)
-enum class BackgroundSoundType(val desc: String) {
+enum class BackgroundSoundType(
+  val desc: String,
+) {
   OFF("off"),
   OFFICE("office"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT)
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object BackgroundSoundTypeSerializer : KSerializer<BackgroundSoundType> {
@@ -40,6 +42,5 @@ private object BackgroundSoundTypeSerializer : KSerializer<BackgroundSoundType> 
     value: BackgroundSoundType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) =
-    BackgroundSoundType.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = BackgroundSoundType.entries.first { it.desc == decoder.decodeString() }
 }

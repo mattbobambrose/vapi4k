@@ -26,13 +26,17 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = FirstMessageModeTypeSerializer::class)
-enum class FirstMessageModeType(internal val desc: String) {
+enum class FirstMessageModeType(
+  val desc: String,
+) {
   ASSISTANT_SPEAKS_FIRST("assistant-speaks-first"),
   ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL("assistant-speaks-first-with-model-generated-message"),
   ASSISTANT_WAITS_FOR_USE("assistant-waits-for-user"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

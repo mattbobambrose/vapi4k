@@ -83,7 +83,6 @@ data class ToolCallResponse(
   }
 }
 
-
 @Serializable
 data class ToolCallResult(
   var toolCallId: String = "",

@@ -25,13 +25,22 @@ data class ToolMessageConditionDto(
   var value: String = "",
 ) {
   companion object {
-    internal fun toolMessageCondition(param: String, operator: String, value: String) =
-      ToolMessageConditionDto(param, operator, value)
+    internal fun toolMessageCondition(
+      param: String,
+      operator: String,
+      value: String,
+    ) = ToolMessageConditionDto(param, operator, value)
 
-    internal fun toolMessageCondition(param: String, operator: String, value: Int) =
-      ToolMessageConditionDto(param, operator, value.toString())
+    internal fun toolMessageCondition(
+      param: String,
+      operator: String,
+      value: Int,
+    ) = ToolMessageConditionDto(param, operator, value.toString())
 
-    internal fun toolMessageCondition(param: String, operator: String, value: Boolean) =
-      ToolMessageConditionDto(param, operator, value.toString())
+    internal fun toolMessageCondition(
+      param: String,
+      operator: String,
+      value: Boolean,
+    ) = ToolMessageConditionDto(param, operator, value.toString())
   }
 }

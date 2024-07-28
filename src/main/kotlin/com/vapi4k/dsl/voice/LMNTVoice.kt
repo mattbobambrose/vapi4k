@@ -33,5 +33,6 @@ interface LMNTVoiceProperties {
 }
 
 @AssistantDslMarker
-data class LMNTVoice internal constructor(private val dto: LMNTVoiceDto) :
-  LMNTVoiceProperties by dto
+data class LMNTVoice internal constructor(
+  private val dto: LMNTVoiceDto,
+) : LMNTVoiceProperties by dto

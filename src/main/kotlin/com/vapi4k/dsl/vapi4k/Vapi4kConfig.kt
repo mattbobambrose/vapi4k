@@ -33,7 +33,6 @@ annotation class Vapi4KDslMarker
 
 @Vapi4KDslMarker
 class Vapi4kConfig internal constructor() {
-
   init {
     AssistantImpl.config = this
   }
@@ -60,9 +59,9 @@ class Vapi4kConfig internal constructor() {
   internal fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }
 
   internal fun getEndpoint(endpointName: String) =
-    (toolCallEndpoints.firstOrNull {
+    toolCallEndpoints.firstOrNull {
       it.name == endpointName
-    } ?: error("Endpoint not found in vapi4k configuration: $endpointName"))
+    } ?: error("Endpoint not found in vapi4k configuration: $endpointName")
 
   fun configure(block: Vapi4kConfigProperties.() -> Unit) {
     configProperties.apply(block)
@@ -72,9 +71,7 @@ class Vapi4kConfig internal constructor() {
     ToolCallEndpoints().apply(block)
   }
 
-  fun onAssistantRequest(
-    block: suspend (request: JsonElement) -> AssistantRequestResponse,
-  ) {
+  fun onAssistantRequest(block: suspend (request: JsonElement) -> AssistantRequestResponse) {
     if (assistantRequest.isNull())
       assistantRequest = block
     else

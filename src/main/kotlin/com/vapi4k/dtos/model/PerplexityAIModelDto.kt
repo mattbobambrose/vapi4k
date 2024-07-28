@@ -24,7 +24,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PerplexityAIModelDto(
   override var model: String = "",
-) : AbstractModelDto(), PerplexityAIModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  PerplexityAIModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI
 

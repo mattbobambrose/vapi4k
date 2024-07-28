@@ -20,5 +20,6 @@ import com.vapi4k.common.AssistantCacheId.Companion.toAssistantCacheId
 
 class AssistantCacheIdSource {
   private var assistantCounter = 1
+
   internal fun nextAssistantCacheId() = (assistantCounter++).toString().padStart(3, '0').toAssistantCacheId()
 }

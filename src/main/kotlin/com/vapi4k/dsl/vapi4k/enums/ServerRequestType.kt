@@ -18,7 +18,9 @@ package com.vapi4k.dsl.vapi4k.enums
 
 import com.vapi4k.server.Vapi4kServer.logger
 
-enum class ServerRequestType(internal val desc: String) {
+enum class ServerRequestType(
+  val desc: String,
+) {
   ASSISTANT_REQUEST("assistant-request"),
   CONVERSATION_UPDATE("conversation-update"),
   END_OF_CALL_REPORT("end-of-call-report"),
@@ -31,7 +33,8 @@ enum class ServerRequestType(internal val desc: String) {
   TRANSCRIPT("transcript"),
   TRANSFER_DESTINATION_REQUEST("transfer-destination-request"),
   USER_INTERRUPTED("user-interrupted"),
-  UNKNOWN_REUEST_TYPE("unknown-request-type");
+  UNKNOWN_REUEST_TYPE("unknown-request-type"),
+  ;
 
   companion object {
     internal val ServerRequestType.isToolCall get() = this == TOOL_CALL

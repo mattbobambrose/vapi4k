@@ -43,10 +43,14 @@ internal object FunctionUtils {
 
     when {
       cnt == 0 ->
-        error("No method with ${ToolCall::class.simpleName} annotation found in class ${obj::class.qualifiedName}")
+        error(
+          "No method with ${ToolCall::class.simpleName} annotation found in class ${obj::class.qualifiedName}",
+        )
 
       cnt > 1 ->
-        error("Only one method with ${ToolCall::class.simpleName} annotation is allowed in class ${obj::class.qualifiedName}")
+        error(
+          "Only one method with ${ToolCall::class.simpleName} annotation is allowed in class ${obj::class.qualifiedName}",
+        )
     }
 
     return with(obj.functions.first { it.hasTool }) {
@@ -70,7 +74,7 @@ internal object FunctionUtils {
       functionDto.name = toolCallInfo.llmName
       functionDto.description = toolCallInfo.llmDescription
       // TODO: This might be always object
-      functionDto.parameters.type = "object"  // llmReturnType
+      functionDto.parameters.type = "object" // llmReturnType
 
       // Reduce the size of kparams if the first parameter is the object itself
       val jparams = method.parameters.toList()
@@ -86,7 +90,10 @@ internal object FunctionUtils {
 
         if (kclass !in allowedParamTypes) {
           val fqName = FunctionDetails(obj).fqName
-          error("Parameter \"${param.name}\" in $fqName is a ${kclass.simpleName}. Allowed types are String, Int, or Boolean")
+          val simpleName = kclass.simpleName
+          error(
+            "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, and Boolean",
+          )
         }
       }
 
@@ -98,7 +105,7 @@ internal object FunctionUtils {
             functionDto.parameters.required += name
           functionDto.parameters.properties[name] = FunctionDto.FunctionParameters.FunctionPropertyDesc(
             type = kparam.llmType,
-            description = jParam.param?.description ?: "The $name parameter"
+            description = jParam.param?.description ?: "The $name parameter",
           )
         }
     }

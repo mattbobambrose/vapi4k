@@ -18,10 +18,10 @@ package com.vapi4k.common
 
 import kotlinx.serialization.Serializable
 
-
 @JvmInline
-value class SessionCacheId private constructor(val value: String) {
-
+value class SessionCacheId private constructor(
+  val value: String,
+) {
   fun isNotSpecified() = value == UNSPECIFIED_VALUE
 
   override fun toString() = value
@@ -31,13 +31,15 @@ value class SessionCacheId private constructor(val value: String) {
     val UNSPECIFIED_SESSION_CACHE_ID = SessionCacheId(UNSPECIFIED_VALUE)
 
     fun String.toSessionCacheId() = SessionCacheId(this)
+
     fun MessageCallId.toSessionCacheId() = SessionCacheId(this.value)
   }
 }
 
 @JvmInline
-value class AssistantCacheId private constructor(val value: String) {
-
+value class AssistantCacheId private constructor(
+  val value: String,
+) {
   override fun toString() = value
 
   companion object {
@@ -46,8 +48,9 @@ value class AssistantCacheId private constructor(val value: String) {
 }
 
 @JvmInline
-value class MessageCallId private constructor(val value: String) {
-
+value class MessageCallId private constructor(
+  val value: String,
+) {
   override fun toString() = value
 
   companion object {
@@ -57,7 +60,9 @@ value class MessageCallId private constructor(val value: String) {
 
 @Serializable
 @JvmInline
-value class Email(val value: String) {
+value class Email private constructor(
+  val value: String,
+) {
   fun isNotBlank() = value.isNotBlank()
 
   fun isBlank() = value.isBlank()

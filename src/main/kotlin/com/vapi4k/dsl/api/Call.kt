@@ -40,10 +40,15 @@ interface CallProperties {
 @AssistantDslMarker
 interface Call : CallProperties {
   fun assistantId(block: AssistantId.() -> Unit): AssistantId
+
   fun assistant(block: Assistant.() -> Unit): Assistant
+
   fun squadId(block: SquadId.() -> Unit): SquadId
+
   fun squad(block: Squad.() -> Unit): Squad
+
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
+
   fun customer(block: Customer.() -> Unit): Customer
 }
 
@@ -51,7 +56,8 @@ data class CallImpl internal constructor(
   private val sessionCacheId: SessionCacheId,
   private val assistantCacheIdSource: AssistantCacheIdSource,
   internal val dto: CallRequestDto,
-) : CallProperties by dto, Call {
+) : CallProperties by dto,
+  Call {
   private val assistantChecker = DuplicateChecker()
   private val overridesChecker = DuplicateChecker()
 
@@ -77,7 +83,6 @@ data class CallImpl internal constructor(
     return SquadIdImpl(emptyJsonElement(), dto).apply(block)
   }
 
-
   override fun squad(block: Squad.() -> Unit): Squad {
     assistantChecker.check("squad{} already called")
     return with(dto) {
@@ -92,7 +97,7 @@ data class CallImpl internal constructor(
         emptyJsonElement(),
         sessionCacheId,
         assistantCacheIdSource,
-        dto.assistantOverridesDto
+        dto.assistantOverridesDto,
       ).apply(block)
     else
       error("assistant{} or assistantId{} must be called before assistantOverrides{}")

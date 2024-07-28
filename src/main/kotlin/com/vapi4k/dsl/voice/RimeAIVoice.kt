@@ -34,5 +34,6 @@ interface RimeAIVoiceProperties {
   var speed: Double
 }
 
-data class RimeAIVoice internal constructor(private val dto: RimeAIVoiceDto) :
-  RimeAIVoiceProperties by dto
+data class RimeAIVoice internal constructor(
+  private val dto: RimeAIVoiceDto,
+) : RimeAIVoiceProperties by dto

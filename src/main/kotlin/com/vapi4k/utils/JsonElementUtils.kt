@@ -21,7 +21,6 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 
 object JsonElementUtils {
-
   val JsonElement.requestType get() = ServerRequestType.fromString(this["message.type"].stringValue)
 
   val JsonElement.isAssistantRequest get() = requestType == ServerRequestType.ASSISTANT_REQUEST
@@ -52,13 +51,22 @@ object JsonElementUtils {
   val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
 
   val JsonElement.functionName
-    get() = if (isFunctionCall) this["message.functionCall.name"].stringValue else error("JsonElement is not a function call")
+    get() = if (isFunctionCall)
+      this["message.functionCall.name"].stringValue
+    else
+      error("JsonElement is not a function call")
 
   val JsonElement.functionParameters
-    get() = if (isFunctionCall) this["message.functionCall.parameters"] else error("JsonElement is not a function call")
+    get() = if (isFunctionCall)
+      this["message.functionCall.parameters"]
+    else
+      error("JsonElement is not a function call")
 
   val JsonElement.toolCallList
-    get() = if (isToolCall) this["message.toolCallList"].getToJsonElements() else error("JsonElement is not a tool call")
+    get() = if (isToolCall)
+      this["message.toolCallList"].getToJsonElements()
+    else
+      error("JsonElement is not a tool call")
 
   val JsonElement.toolCallId get() = this["id"].stringValue
 
@@ -71,5 +79,6 @@ object JsonElementUtils {
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 
   private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
+
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
 }

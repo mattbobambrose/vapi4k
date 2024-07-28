@@ -30,7 +30,9 @@ data class AnthropicModelDto(
   override var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED,
   @Transient
   override var customModel: String = "",
-) : AbstractModelDto(), AnthropicModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  AnthropicModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.ANTHROPIC
 

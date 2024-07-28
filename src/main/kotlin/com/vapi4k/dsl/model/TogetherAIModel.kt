@@ -38,12 +38,17 @@ interface TogetherAIModel : TogetherAIModelProperties {
   var functionMessage: String
   var toolMessage: String
   var userMessage: String
+
   fun tools(block: Tools.() -> Unit): Tools
+
   fun functions(block: Functions.() -> Unit): Functions
+
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
 class TogetherAIModelImpl(
   modelUnion: ModelUnion,
   modelDto: TogetherAIModelDto,
-) : TogetherAIModelProperties by modelDto, TogetherAIModel, AbstractModel(modelUnion, modelDto)
+) : AbstractModel(modelUnion, modelDto),
+  TogetherAIModelProperties by modelDto,
+  TogetherAIModel

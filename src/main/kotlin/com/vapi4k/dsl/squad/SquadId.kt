@@ -38,4 +38,3 @@ data class SquadIdImpl internal constructor(
 internal interface SquadIdSource {
   var squadId: String
 }
-

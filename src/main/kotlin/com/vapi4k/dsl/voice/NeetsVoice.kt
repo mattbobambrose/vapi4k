@@ -32,5 +32,6 @@ interface NeetsVoiceProperties {
 }
 
 @AssistantDslMarker
-data class NeetsVoice internal constructor(private val dto: NeetsVoiceDto) :
-  com.vapi4k.dsl.voice.NeetsVoiceProperties by dto
+data class NeetsVoice internal constructor(
+  private val dto: NeetsVoiceDto,
+) : NeetsVoiceProperties by dto

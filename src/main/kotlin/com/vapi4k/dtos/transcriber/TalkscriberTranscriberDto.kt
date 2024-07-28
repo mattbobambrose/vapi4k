@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos.transcriber
 
-
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriberProperties
 import com.vapi4k.dsl.transcriber.enums.TalkscriberLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
@@ -31,7 +30,9 @@ data class TalkscriberTranscriberDto(
   override var transcriberModel: TalkscriberModelType = TalkscriberModelType.UNSPECIFIED,
   @Transient
   override var transcriberLanguage: TalkscriberLanguageType = TalkscriberLanguageType.UNSPECIFIED,
-) : AbstractTranscriberDto(), TalkscriberTranscriberProperties, CommonTranscriberDto {
+) : AbstractTranscriberDto(),
+  TalkscriberTranscriberProperties,
+  CommonTranscriberDto {
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.TALKSCRIBER
 

@@ -32,13 +32,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AssistantOverridesDto(
 //  override var name: String = "",
-
 //  override var firstMessage: String = "",
 //  override var recordingEnabled: Boolean? = null,
 //  override var hipaaEnabled: Boolean? = null,
 //  override var serverUrl: String = "",
 //  override var serverUrlSecret: String = "",
-
 //  override var silenceTimeoutSeconds: Int = -1,
 //  override var responseDelaySeconds: Double = -1.0,
 //  override var llmRequestDelaySeconds: Double = -1.0,
@@ -51,36 +49,28 @@ data class AssistantOverridesDto(
 //  override var modelOutputInMessagesEnabled: Boolean? = null,
 //  override var voicemailMessage: String = "",
 //  override var endCallMessage: String = "",
-
   override var firstMessageMode: String = "",
-
   override val clientMessages: MutableSet<String> = mutableSetOf(),
   override val serverMessages: MutableSet<String> = mutableSetOf(),
-
   val endCallPhrases: MutableSet<String> = mutableSetOf(),
-
   @SerialName("transcriber")
   override var transcriberDto: CommonTranscriberDto? = null,
-
   @SerialName("model")
   override var modelDto: CommonModelDto? = null,
-
   @SerialName("voice")
   override var voiceDto: CommonVoiceDto? = null,
-
   // TODO: Came from squad assistant,
   val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
   val variableValues: MutableMap<String, String> = mutableMapOf(),
   val metadata: MutableMap<String, String> = mutableMapOf(),
-
   @SerialName("voicemailDetection")
   val voicemailDetectionDto: VoicemailDetectionDto = VoicemailDetectionDto(),
-
   @SerialName("analysisPlan")
   val analysisPlanDto: AnalysisPlanDto = AnalysisPlanDto(),
-
   @SerialName("artifactPlan")
   val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AbstractAssistantDto(), AssistantOverridesProperties, ModelDtoUnion
+) : AbstractAssistantDto(),
+  AssistantOverridesProperties,
+  ModelDtoUnion

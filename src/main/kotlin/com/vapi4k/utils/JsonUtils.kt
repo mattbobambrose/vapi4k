@@ -43,6 +43,7 @@ operator fun JsonElement.get(vararg keys: String): JsonElement =
 inline fun <reified T> JsonElement.toObjectList() = jsonArray.map { Json.decodeFromJsonElement<T>(it) }
 
 val JsonElement.isEmpty get() = jsonObject.isEmpty()
+
 fun JsonElement.containsKey(key: String) = jsonObject.containsKey(key)
 
 val prettyFormat by lazy { Json { prettyPrint = true } }
@@ -60,5 +61,7 @@ inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(th
 inline fun <reified T> String.toObject() = Json.decodeFromString<T>(this)
 
 fun JsonElement.stringValue(key: String) = get(key).stringValue
+
 fun JsonElement.intValue(key: String) = get(key).intValue
+
 fun JsonElement.booleanValue(key: String) = get(key).booleanValue

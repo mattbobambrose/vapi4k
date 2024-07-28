@@ -26,5 +26,6 @@ interface AssistantDestinationProperties {
 }
 
 @AssistantDslMarker
-data class AssistantDestination internal constructor(internal val dto: AssistantDestinationDto) :
-  AssistantDestinationProperties by dto
+data class AssistantDestination internal constructor(
+  internal val dto: AssistantDestinationDto,
+) : AssistantDestinationProperties by dto

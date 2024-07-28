@@ -75,7 +75,6 @@ private object ModelSerializer : KSerializer<CommonModelDto> {
     }
   }
 
-  override fun deserialize(decoder: Decoder): CommonModelDto {
+  override fun deserialize(decoder: Decoder): CommonModelDto =
     throw NotImplementedError("Deserialization is not supported")
-  }
 }

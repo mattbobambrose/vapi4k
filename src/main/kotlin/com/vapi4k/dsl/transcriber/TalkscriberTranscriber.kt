@@ -29,5 +29,6 @@ interface TalkscriberTranscriberProperties {
 }
 
 @AssistantDslMarker
-class TalkscriberTranscriber internal constructor(private val dto: TalkscriberTranscriberDto) :
-  TalkscriberTranscriberProperties by dto
+class TalkscriberTranscriber internal constructor(
+  private val dto: TalkscriberTranscriberDto,
+) : TalkscriberTranscriberProperties by dto

@@ -37,5 +37,6 @@ interface PlayHTVoiceProperties {
   var textGuidance: Double
 }
 
-data class PlayHTVoice internal constructor(private val dto: PlayHTVoiceDto) :
-  PlayHTVoiceProperties by dto
+data class PlayHTVoice internal constructor(
+  private val dto: PlayHTVoiceDto,
+) : PlayHTVoiceProperties by dto

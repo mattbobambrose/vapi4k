@@ -25,7 +25,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ToolMessageTypeSerializer::class)
-enum class ToolMessageType(val desc: String) {
+enum class ToolMessageType(
+  val desc: String,
+) {
   REQUEST_START("request-start"),
   REQUEST_COMPLETE("request-complete"),
   REQUEST_FAILED("request-failed"),

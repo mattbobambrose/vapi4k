@@ -19,7 +19,9 @@ package com.vapi4k.dsl.model
 import com.vapi4k.dsl.model.enums.MessageRoleType
 import kotlin.reflect.KProperty
 
-internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType) {
+internal class ModelMessageDelegate(
+  private val messageRoleType: MessageRoleType,
+) {
   operator fun getValue(
     model: AbstractModelProperties,
     property: KProperty<*>,
@@ -34,4 +36,3 @@ internal class ModelMessageDelegate(private val messageRoleType: MessageRoleType
     newVal: String,
   ) = model.message(messageRoleType, newVal)
 }
-

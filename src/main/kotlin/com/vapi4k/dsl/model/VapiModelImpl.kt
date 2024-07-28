@@ -38,12 +38,17 @@ interface VapiModel : VapiModelProperties {
   var functionMessage: String
   var toolMessage: String
   var userMessage: String
+
   fun tools(block: Tools.() -> Unit): Tools
+
   fun functions(block: Functions.() -> Unit): Functions
+
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
 class VapiModelImpl(
   modelUnion: ModelUnion,
   modelDto: VapiModelDto,
-) : VapiModelProperties by modelDto, VapiModel, AbstractModel(modelUnion, modelDto)
+) : AbstractModel(modelUnion, modelDto),
+  VapiModelProperties by modelDto,
+  VapiModel

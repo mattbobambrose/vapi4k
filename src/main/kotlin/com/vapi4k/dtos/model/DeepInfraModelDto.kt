@@ -24,7 +24,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DeepInfraModelDto(
   override var model: String = "",
-) : AbstractModelDto(), DeepInfraModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  DeepInfraModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.DEEP_INFRA
 
@@ -33,4 +35,3 @@ data class DeepInfraModelDto(
       error("deepInfraModel{} requires a model value")
   }
 }
-

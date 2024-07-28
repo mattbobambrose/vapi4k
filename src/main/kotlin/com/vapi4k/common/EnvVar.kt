@@ -79,6 +79,5 @@ enum class EnvVar(
 //    val envResendEmailSender: Email by lazy { RESEND_SENDER_EMAIL.value.toEmail() }
 
     fun logEnvVarValues() = entries.sortedBy { it.name }.forEach { logger.info { it.logReport } }
-
   }
 }

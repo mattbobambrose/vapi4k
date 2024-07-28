@@ -16,7 +16,9 @@
 
 package com.vapi4k.dsl.model.enums
 
-enum class MessageRoleType(internal val desc: String) {
+enum class MessageRoleType(
+  val desc: String,
+) {
   SYSTEM("system"),
   USER("user"),
   ASSISTANT("assistant"),

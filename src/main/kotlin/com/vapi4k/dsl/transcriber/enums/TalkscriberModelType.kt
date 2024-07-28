@@ -19,13 +19,15 @@ package com.vapi4k.dsl.transcriber.enums
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.Serializable
 
-
 @Serializable
-enum class TalkscriberModelType(internal val desc: String) {
+enum class TalkscriberModelType(
+  val desc: String,
+) {
   WHISPER("whisper"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

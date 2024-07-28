@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos.assistant
 
-
 import com.vapi4k.dsl.squad.AssistantDestinationProperties
 import kotlinx.serialization.Serializable
 

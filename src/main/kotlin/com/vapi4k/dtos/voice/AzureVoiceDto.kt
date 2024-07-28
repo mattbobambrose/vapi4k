@@ -30,9 +30,10 @@ data class AzureVoiceDto(
   override var voiceIdType: AzureVoiceIdType = AzureVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-
   override var speed: Double = -1.0,
-) : AzureVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  AzureVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.AZURE
 

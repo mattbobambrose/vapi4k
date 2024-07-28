@@ -38,8 +38,11 @@ interface Tool {
 //  var delayedMillis: Int
 
   fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart
+
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
+
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed
+
   fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed
 
   fun condition(
@@ -49,7 +52,9 @@ interface Tool {
   )
 }
 
-class ToolImpl internal constructor(internal val toolDto: ToolDto) : Tool {
+class ToolImpl internal constructor(
+  internal val toolDto: ToolDto,
+) : Tool {
   internal val messages get() = toolDto.messages
 
   val requestStartChecker = DuplicateChecker()

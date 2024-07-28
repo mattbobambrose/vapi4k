@@ -34,7 +34,9 @@ data class GladiaTranscriberDto(
   override var transcriptionHint: String = "",
   override var prosody: Boolean? = null,
   override var audioEnhancer: Boolean? = null,
-) : AbstractTranscriberDto(), GladiaTranscriberProperties, CommonTranscriberDto {
+) : AbstractTranscriberDto(),
+  GladiaTranscriberProperties,
+  CommonTranscriberDto {
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.GLADIA
 

@@ -26,13 +26,16 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = RimeAIVoiceModelTypeSerializer::class)
-enum class RimeAIVoiceModelType(val desc: String) {
+enum class RimeAIVoiceModelType(
+  val desc: String,
+) {
   V1("v1"),
   MIST("mist"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

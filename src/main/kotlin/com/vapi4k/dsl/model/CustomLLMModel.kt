@@ -41,12 +41,17 @@ interface CustomLLMModel : CustomLLMModelProperties {
   var functionMessage: String
   var toolMessage: String
   var userMessage: String
+
   fun tools(block: Tools.() -> Unit): Tools
+
   fun functions(block: Functions.() -> Unit): Functions
+
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
 class CustomLLMModelImpl(
   modelUnion: ModelUnion,
   modelDto: CustomLLMModelDto,
-) : CustomLLMModelProperties by modelDto, CustomLLMModel, AbstractModel(modelUnion, modelDto)
+) : AbstractModel(modelUnion, modelDto),
+  CustomLLMModelProperties by modelDto,
+  CustomLLMModel

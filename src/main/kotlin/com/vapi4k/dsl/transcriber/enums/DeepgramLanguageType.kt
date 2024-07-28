@@ -21,7 +21,9 @@ import kotlinx.serialization.Serializable
 
 // See: https://developers.deepgram.com/docs/models-languages-overview
 @Serializable
-enum class DeepgramLanguageType(internal val desc: String) {
+enum class DeepgramLanguageType(
+  val desc: String,
+) {
   BULGARIAN("bg"),
   CATALAN("ca"),
   CHINESE_MANDARIN_SIMPLIFIED("zh"),
@@ -85,8 +87,10 @@ enum class DeepgramLanguageType(internal val desc: String) {
   // Work with enhanced and base models
   SPANISH_LATAM("es-LATAM"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

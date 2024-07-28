@@ -33,8 +33,11 @@ import com.vapi4k.utils.DuplicateChecker
 @AssistantDslMarker
 interface ToolCondition {
   fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart
+
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
+
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed
+
   fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed
 }
 

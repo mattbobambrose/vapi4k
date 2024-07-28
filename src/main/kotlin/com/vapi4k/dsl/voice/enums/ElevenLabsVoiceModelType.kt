@@ -26,15 +26,18 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ElevenLabsVoiceModelSerializer::class)
-enum class ElevenLabsVoiceModelType(val desc: String) {
+enum class ElevenLabsVoiceModelType(
+  val desc: String,
+) {
   ELEVEN_MULTILINGUAL_V2("eleven-multilingual_v2"),
   ELEVEN_TURBO_V2("eleven_turbo_v2"),
   ELEVEN_TURBO_V2_5("eleven_turbo_v2_5"),
   ELEVEN_MONOLINGUAL_V1("eleven_monolingual_v1"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

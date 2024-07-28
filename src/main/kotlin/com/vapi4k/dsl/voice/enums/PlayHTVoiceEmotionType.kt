@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = PlayHTVoiceEmotionTypeSerializer::class)
-enum class PlayHTVoiceEmotionType(val desc: String) {
+enum class PlayHTVoiceEmotionType(
+  val desc: String,
+) {
   FEMALE_HAPPY("female_happy"),
   FEMALE_SAD("female_sad"),
   FEMALE_ANGRY("female_angry"),
@@ -39,10 +41,11 @@ enum class PlayHTVoiceEmotionType(val desc: String) {
   MALE_FEARFUL("male_fearful"),
   MALE_DISGUST("male_disgust"),
   MALE_SURPRISED("male_surprised"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

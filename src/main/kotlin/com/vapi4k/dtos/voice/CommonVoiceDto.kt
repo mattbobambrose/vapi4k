@@ -84,7 +84,6 @@ private object VoiceSerializer : KSerializer<CommonVoiceDto> {
     }
   }
 
-  override fun deserialize(decoder: Decoder): CommonVoiceDto {
+  override fun deserialize(decoder: Decoder): CommonVoiceDto =
     throw NotImplementedError("Deserialization is not supported")
-  }
 }

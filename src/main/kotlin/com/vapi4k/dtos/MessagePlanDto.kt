@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos
 
-
 import kotlinx.serialization.Serializable
 
 @Serializable

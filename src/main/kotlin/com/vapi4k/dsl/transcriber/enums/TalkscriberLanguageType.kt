@@ -20,7 +20,9 @@ import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class TalkscriberLanguageType(internal val desc: String) {
+enum class TalkscriberLanguageType(
+  val desc: String,
+) {
   ENGLISH("en"),
   CHINESE("zh"),
   GERMAN("de"),
@@ -118,12 +120,15 @@ enum class TalkscriberLanguageType(internal val desc: String) {
   LINGALA("ln"),
   HAUSA("ha"),
   BASHKIR("ba"),
-  JW("jw"),     // Unknown
+
+  // TODO: Unknown
+  JW("jw"),
   SUNDANESE("su"),
   YUE_CHINESE("yue"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

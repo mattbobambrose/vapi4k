@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageSerializer::class)
-enum class CartesiaVoiceLanguageType(val desc: String) {
+enum class CartesiaVoiceLanguageType(
+  val desc: String,
+) {
   GERMAN("de"),
   ENGLISH("en"),
   SPANISH("es"),
@@ -34,10 +36,11 @@ enum class CartesiaVoiceLanguageType(val desc: String) {
   JAPANESE("ja"),
   PORTUGUESE("pt"),
   CHINESE("zh"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType.UNSPECIFIED
+
   fun isNotSpecified() = this == com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType.UNSPECIFIED
 }
 

@@ -28,7 +28,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
 object HttpUtils {
-
   fun HttpResponse.bodyAsJsonElement(): JsonElement =
     runBlocking { Json.parseToJsonElement(this@bodyAsJsonElement.bodyAsText()) }
 

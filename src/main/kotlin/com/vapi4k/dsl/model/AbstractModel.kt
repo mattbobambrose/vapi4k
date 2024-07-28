@@ -48,6 +48,7 @@ abstract class AbstractModel(
   var userMessage by ModelMessageDelegate(MessageRoleType.USER)
 
   fun tools(block: Tools.() -> Unit): Tools = ToolsImpl(this).apply(block)
+
   fun functions(block: Functions.() -> Unit): Functions = FunctionsImpl(this).apply(block)
 
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {

@@ -24,7 +24,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class OpenRouterModelDto(
   override var model: String = "",
-) : AbstractModelDto(), OpenRouterModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  OpenRouterModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.OPEN_AI
 
@@ -33,4 +35,3 @@ data class OpenRouterModelDto(
       error("openRouterModel{} requires a model value")
   }
 }
-

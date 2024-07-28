@@ -24,7 +24,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 class SipDestinationDto(
   override var sipUri: String = "",
-) : AbstractDestinationDto(), CommonDestinationDto, SipDestination {
+) : AbstractDestinationDto(),
+  CommonDestinationDto,
+  SipDestination {
   @EncodeDefault
   val type: DestinationType = DestinationType.SIP
 }

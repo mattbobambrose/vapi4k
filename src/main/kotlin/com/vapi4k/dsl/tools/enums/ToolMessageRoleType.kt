@@ -26,10 +26,12 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ToolMessageRoleTypeSerializer::class)
-enum class ToolMessageRoleType(val desc: String) {
+enum class ToolMessageRoleType(
+  val desc: String,
+) {
   ASSISTANT("assistant"),
   SYSTEM("system"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT)
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object ToolMessageRoleTypeSerializer : KSerializer<ToolMessageRoleType> {

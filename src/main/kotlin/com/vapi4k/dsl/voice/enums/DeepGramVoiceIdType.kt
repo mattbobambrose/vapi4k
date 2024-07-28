@@ -20,7 +20,9 @@ import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class DeepGramVoiceIdType(val desc: String) {
+enum class DeepGramVoiceIdType(
+  val desc: String,
+) {
   ASTERIA("asteria"),
   LUNA("luna"),
   STELLA("stella"),
@@ -33,9 +35,10 @@ enum class DeepGramVoiceIdType(val desc: String) {
   ORPHEUS("orpheus"),
   HELIOS("helios"),
   ZEUS("zeus"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

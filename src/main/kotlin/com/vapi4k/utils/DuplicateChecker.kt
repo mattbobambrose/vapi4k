@@ -19,6 +19,5 @@ package com.vapi4k.utils
 class DuplicateChecker {
   private var errorMsg = ""
 
-  fun check(newStr: String) =
-    if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
+  fun check(newStr: String) = if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
 }

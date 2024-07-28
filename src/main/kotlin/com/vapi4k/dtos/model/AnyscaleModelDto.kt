@@ -24,7 +24,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AnyscaleModelDto(
   override var model: String = "",
-) : AbstractModelDto(), AnyscaleModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  AnyscaleModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.ANYSCALE
 

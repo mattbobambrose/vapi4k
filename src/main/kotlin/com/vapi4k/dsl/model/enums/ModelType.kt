@@ -25,7 +25,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ModelTypeSerializer::class)
-enum class ModelType(val desc: String) {
+enum class ModelType(
+  val desc: String,
+) {
   ANYSCALE("anyscale"),
   ANTHROPIC("anthropic"),
   CUSTOM_LLM("custom-llm"),
@@ -48,4 +50,3 @@ private object ModelTypeSerializer : KSerializer<ModelType> {
 
   override fun deserialize(decoder: Decoder) = ModelType.entries.first { it.desc == decoder.decodeString() }
 }
-

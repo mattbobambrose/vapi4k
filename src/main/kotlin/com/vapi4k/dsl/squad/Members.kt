@@ -24,12 +24,16 @@ interface Members {
   fun member(block: Member.() -> Unit)
 }
 
-data class MembersImpl internal constructor(internal val squad: SquadImpl) : Members {
+data class MembersImpl internal constructor(
+  internal val squad: SquadImpl,
+) : Members {
   override fun member(block: Member.() -> Unit) {
     with(squad.dto) {
-      members.add(MemberDto().also { memberDto ->
-        MemberImpl(this@MembersImpl, memberDto).apply(block)
-      })
+      members.add(
+        MemberDto().also { memberDto ->
+          MemberImpl(this@MembersImpl, memberDto).apply(block)
+        },
+      )
     }
   }
 }

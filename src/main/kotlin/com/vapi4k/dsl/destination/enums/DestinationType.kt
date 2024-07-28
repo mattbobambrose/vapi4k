@@ -25,7 +25,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = DestinationTypeSerializer::class)
-enum class DestinationType(internal val desc: String) {
+enum class DestinationType(
+  val desc: String,
+) {
   SIP("sip"),
   NUMBER("number"),
 }

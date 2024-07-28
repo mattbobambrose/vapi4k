@@ -20,7 +20,9 @@ import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class GladiaLanguageType(internal val desc: String) {
+enum class GladiaLanguageType(
+  val desc: String,
+) {
   AFRIKAANS("af"),
   ALBANIAN("sq"),
   AMHARIC("am"),
@@ -61,7 +63,9 @@ enum class GladiaLanguageType(internal val desc: String) {
   INDONESIAN("id"),
   ITALIAN("it"),
   JAPANESE("ja"),
-  JP("jp"),    // Unknown
+
+  // TODO: Unknown
+  JP("jp"),
   JAVANESE("jv"),
   KANNADA("kn"),
   KAZAKH("kk"),
@@ -81,7 +85,9 @@ enum class GladiaLanguageType(internal val desc: String) {
   MAORI("mi"),
   MARATHI("mr"),
   MONGOLIAN("mn"),
-  MYMR("mymr"),   // Unknown
+
+  // TODO: Unknown
+  MYMR("mymr"),
   NEPALI("ne"),
   NORWEGIAN("no"),
   NORWEGIAN_NYNORSK("nn"),
@@ -121,9 +127,10 @@ enum class GladiaLanguageType(internal val desc: String) {
   WELSH("cy"),
   YIDDISH("yi"),
   YORUBA("yo"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

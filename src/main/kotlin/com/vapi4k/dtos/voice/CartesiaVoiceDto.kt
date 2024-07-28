@@ -31,15 +31,15 @@ data class CartesiaVoiceDto(
   override var modelType: CartesiaVoiceModelType = CartesiaVoiceModelType.UNSPECIFIED,
   @Transient
   override var customModel: String = "",
-
   var language: String = "",
   @Transient
   override var languageType: CartesiaVoiceLanguageType = CartesiaVoiceLanguageType.UNSPECIFIED,
   @Transient
   override var customLanguage: String = "",
-
   override var voiceId: String = "",
-) : CartesiaVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  CartesiaVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.CARTESIA
 

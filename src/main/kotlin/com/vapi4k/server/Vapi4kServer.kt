@@ -133,7 +133,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 }
 
-private suspend fun KtorCallContext.handleServerPathPost(requestResponseCallbackChannel: Channel<RequestResponseCallback>) {
+private suspend fun KtorCallContext.handleServerPathPost(
+  requestResponseCallbackChannel: Channel<RequestResponseCallback>,
+) {
   val config = AssistantImpl.config
   if (isValidSecret(config.configProperties.serverUrlSecret)) {
     val json = call.receive<String>()
@@ -315,4 +317,3 @@ private data class RequestResponseCallback(
     ) = RequestResponseCallback(RESPONSE, requestType, response = response, elapsed = elapsed)
   }
 }
-

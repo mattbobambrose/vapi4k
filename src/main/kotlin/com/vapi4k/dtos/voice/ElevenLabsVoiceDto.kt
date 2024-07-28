@@ -31,20 +31,20 @@ data class ElevenLabsVoiceDto(
   override var voiceIdType: ElevenLabsVoiceIdType = ElevenLabsVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-
   var model: String = "",
   @Transient
   override var modelType: ElevenLabsVoiceModelType = ElevenLabsVoiceModelType.UNSPECIFIED,
   @Transient
   override var customModel: String = "",
-
   override var stability: Double = -1.0,
   override var similarityBoost: Double = -1.0,
   override var style: Double = -1.0,
   override var useSpeakerBoost: Boolean? = null,
   override var optimizeStreaming: Double = -1.0,
   override var enableSsmlParsing: Boolean? = null,
-) : ElevenLabsVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  ElevenLabsVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
 

@@ -33,5 +33,6 @@ interface OpenAIVoiceProperties {
 }
 
 @AssistantDslMarker
-data class OpenAIVoice internal constructor(private val dto: OpenAIVoiceDto) :
-  OpenAIVoiceProperties by dto
+data class OpenAIVoice internal constructor(
+  private val dto: OpenAIVoiceDto,
+) : OpenAIVoiceProperties by dto

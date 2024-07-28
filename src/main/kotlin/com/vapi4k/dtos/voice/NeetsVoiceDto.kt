@@ -30,7 +30,9 @@ data class NeetsVoiceDto(
   override var voiceIdType: NeetsVoiceIdType = NeetsVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-) : NeetsVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  NeetsVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.NEETS
 

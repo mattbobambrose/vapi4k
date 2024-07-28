@@ -20,12 +20,15 @@ import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class GladiaModelType(internal val desc: String) {
+enum class GladiaModelType(
+  val desc: String,
+) {
   FAST("fast"),
   ACCURATE("accurate"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

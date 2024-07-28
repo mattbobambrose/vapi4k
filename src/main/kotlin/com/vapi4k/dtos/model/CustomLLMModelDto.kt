@@ -27,7 +27,9 @@ data class CustomLLMModelDto(
   override var model: String = "",
   override var url: String = "",
   override var metadataSendMode: MetaDataSendModeType = MetaDataSendModeType.UNSPECIFIED,
-) : AbstractModelDto(), CustomLLMModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  CustomLLMModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.CUSTOM_LLM
 
@@ -38,4 +40,3 @@ data class CustomLLMModelDto(
       error("customLLMModel{} requires an url value")
   }
 }
-

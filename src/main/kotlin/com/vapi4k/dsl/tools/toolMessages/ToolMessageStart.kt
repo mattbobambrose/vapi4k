@@ -26,5 +26,6 @@ interface ToolMessageStartProperties {
 }
 
 @AssistantDslMarker
-data class ToolMessageStart internal constructor(internal val dto: ToolMessageStartDto) :
-  ToolMessageStartProperties by dto
+data class ToolMessageStart internal constructor(
+  internal val dto: ToolMessageStartDto,
+) : ToolMessageStartProperties by dto

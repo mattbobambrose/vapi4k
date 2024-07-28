@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = VoiceProviderTypeSerializer::class)
-enum class VoiceProviderType(internal val desc: String) {
+enum class VoiceProviderType(
+  val desc: String,
+) {
   AZURE("azure"),
   CARTESIA("cartesia"),
   DEEPGRAM("deepgram"),
@@ -36,9 +38,11 @@ enum class VoiceProviderType(internal val desc: String) {
   OPENAI("openai"),
   PLAYHT("playht"),
   RIMEAI("rime-ai"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

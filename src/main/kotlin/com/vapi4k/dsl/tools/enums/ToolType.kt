@@ -25,7 +25,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ToolTypeSerializer::class)
-enum class ToolType(val desc: String) {
+enum class ToolType(
+  val desc: String,
+) {
   DTMF("dtmf"),
   ENDCALL("endCall"),
   VOICEMAIL("voicemail"),

@@ -31,15 +31,15 @@ data class RimeAIVoiceDto(
   override var voiceIdType: RimeAIVoiceIdType = RimeAIVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-
   var model: String = "",
   @Transient
   override var modelType: RimeAIVoiceModelType = RimeAIVoiceModelType.UNSPECIFIED,
   @Transient
   override var customModel: String = "",
-
   override var speed: Double = -1.0,
-) : RimeAIVoiceProperties, AbstractVoiceDto(), CommonVoiceDto {
+) : AbstractVoiceDto(),
+  RimeAIVoiceProperties,
+  CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.RIMEAI
 

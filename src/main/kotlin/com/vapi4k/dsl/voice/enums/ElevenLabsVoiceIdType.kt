@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ElevenLabsVoiceIdTypeSerializer::class)
-enum class ElevenLabsVoiceIdType(val desc: String) {
+enum class ElevenLabsVoiceIdType(
+  val desc: String,
+) {
   BURT("burt"),
   MARISSA("marissa"),
   ANDREA("andrea"),
@@ -42,10 +44,11 @@ enum class ElevenLabsVoiceIdType(val desc: String) {
   MRB("mrb"),
   MATILDA("matilda"),
   MARK("mark"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

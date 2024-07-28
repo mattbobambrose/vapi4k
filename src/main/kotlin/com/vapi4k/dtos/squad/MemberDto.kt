@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos.squad
 
-
 import com.vapi4k.dtos.assistant.AssistantDestinationDto
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto

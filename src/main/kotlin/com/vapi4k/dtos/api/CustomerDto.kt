@@ -23,7 +23,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CustomerDto(
   override var number: String = "",
-
   var sipUri: String = "",
   var name: String = "",
   var extension: String = "",

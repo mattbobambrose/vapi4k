@@ -24,7 +24,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VapiModelDto(
   override var model: String = "",
-) : AbstractModelDto(), VapiModelProperties, CommonModelDto {
+) : AbstractModelDto(),
+  VapiModelProperties,
+  CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.VAPI
 

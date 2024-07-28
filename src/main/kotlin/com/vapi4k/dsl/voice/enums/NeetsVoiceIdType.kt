@@ -26,12 +26,15 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = NeetsVoiceIdTypeSerializer::class)
-enum class NeetsVoiceIdType(val desc: String) {
+enum class NeetsVoiceIdType(
+  val desc: String,
+) {
   VITS("vits"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

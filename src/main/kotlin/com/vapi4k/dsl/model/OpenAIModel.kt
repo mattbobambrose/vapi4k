@@ -43,12 +43,17 @@ interface OpenAIModel : OpenAIModelProperties {
   var functionMessage: String
   var toolMessage: String
   var userMessage: String
+
   fun tools(block: Tools.() -> Unit): Tools
+
   fun functions(block: Functions.() -> Unit): Functions
+
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
 class OpenAIModelImpl(
   modelUnion: ModelUnion,
   modelDto: OpenAIModelDto,
-) : OpenAIModelProperties by modelDto, OpenAIModel, AbstractModel(modelUnion, modelDto)
+) : AbstractModel(modelUnion, modelDto),
+  OpenAIModelProperties by modelDto,
+  OpenAIModel

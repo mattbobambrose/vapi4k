@@ -28,7 +28,9 @@ import kotlin.reflect.full.declaredFunctions
 
 internal object ReflectionUtils {
   fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
+
   fun String.ensureEndsWith(s: String) = if (endsWith(s)) this else this + s
+
   fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }
 
   fun <T> lambda(block: T) = block
@@ -37,11 +39,11 @@ internal object ReflectionUtils {
   val Any.functions get() = this::class.declaredFunctions
   val Any.methods get() = this::class.java.declaredMethods
 
-  fun Any.findMethod(methodName: String) = methods.singleOrNull { it.name == methodName }
-    ?: error("Method $methodName not found")
+  fun Any.findMethod(methodName: String) =
+    methods.singleOrNull { it.name == methodName } ?: error("Method $methodName not found")
 
-  fun Any.findFunction(methodName: String) = functions.singleOrNull { it.name == methodName }
-    ?: error("Method $methodName not found")
+  fun Any.findFunction(methodName: String) =
+    functions.singleOrNull { it.name == methodName } ?: error("Method $methodName not found")
 
   fun KType.asKClass() = classifier as KClass<*>
 

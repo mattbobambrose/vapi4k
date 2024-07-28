@@ -25,12 +25,12 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-
 @Serializable(with = ToolCallRoleSerializer::class)
-enum class ToolCallRoleType(internal val desc: String) {
+enum class ToolCallRoleType(
+  val desc: String,
+) {
   ASSISTANT("assistant"),
   SYSTEM("system"),
-
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

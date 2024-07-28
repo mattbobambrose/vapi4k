@@ -31,5 +31,6 @@ interface DeepgramTranscriberProperties {
 }
 
 @AssistantDslMarker
-class DeepgramTranscriber internal constructor(private val dto: DeepgramTranscriberDto) :
-  DeepgramTranscriberProperties by dto
+class DeepgramTranscriber internal constructor(
+  private val dto: DeepgramTranscriberDto,
+) : DeepgramTranscriberProperties by dto

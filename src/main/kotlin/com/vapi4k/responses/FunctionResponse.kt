@@ -26,7 +26,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-class FunctionResponse(var result: String = "") {
+class FunctionResponse(
+  var result: String = "",
+) {
   companion object {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()

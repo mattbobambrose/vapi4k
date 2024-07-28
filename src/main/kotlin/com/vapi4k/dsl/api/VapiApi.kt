@@ -45,7 +45,6 @@ import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.jsonObject
 
-
 @AssistantDslMarker
 class VapiApi private constructor(
   val config: ApplicationConfig,
@@ -55,7 +54,6 @@ class VapiApi private constructor(
     val phone = Phone()
     val httpResponse =
       runBlocking {
-
         val callRequest =
           phone.runCatching(block)
             .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
@@ -132,7 +130,6 @@ class VapiApi private constructor(
       }
     }.getOrThrow()
 
-
   companion object {
     internal fun HttpRequestBuilder.configCall(authString: String) {
       contentType(Application.Json)
@@ -157,13 +154,15 @@ class VapiApi private constructor(
 class Phone {
   internal val sessionCacheId = nextSessionCacheId()
   private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
-  fun call(block: Call.() -> Unit): CallRequestDto = CallRequestDto()
-    .also { CallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
+
+  fun call(block: Call.() -> Unit): CallRequestDto =
+    CallRequestDto().also { CallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
 }
 
 @AssistantDslMarker
 class Save {
   private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
+
   fun call(block: Call.() -> Unit): CallRequestDto =
     CallRequestDto().also { CallImpl(UNSPECIFIED_SESSION_CACHE_ID, assistantCacheIdSource, it).apply(block) }
 }

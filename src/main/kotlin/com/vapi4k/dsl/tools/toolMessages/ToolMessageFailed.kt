@@ -20,7 +20,6 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.dtos.model.ToolMessageFailedDto
 
-
 interface ToolMessageFailedProperties {
   var endCallAfterSpokenEnabled: Boolean?
   var content: String
@@ -28,5 +27,6 @@ interface ToolMessageFailedProperties {
 }
 
 @AssistantDslMarker
-data class ToolMessageFailed internal constructor(internal val dto: ToolMessageFailedDto) :
-  ToolMessageFailedProperties by dto
+data class ToolMessageFailed internal constructor(
+  internal val dto: ToolMessageFailedDto,
+) : ToolMessageFailedProperties by dto

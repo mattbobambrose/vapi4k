@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = AssistantClientMessageTypeSerializer::class)
-enum class AssistantClientMessageType(internal val desc: String) {
+enum class AssistantClientMessageType(
+  val desc: String,
+) {
   CONVERSATION_UPDATE("conversation-update"),
   FUNCTION_CALL("function-call"),
   FUNCTION_CALL_RESULT("function-call-result"),

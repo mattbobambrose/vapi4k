@@ -25,7 +25,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = TranscriberTypeSerializer::class)
-enum class TranscriberType(internal val desc: String) {
+enum class TranscriberType(
+  val desc: String,
+) {
   DEEPGRAM("deepgram"),
   GLADIA("gladia"),
   TALKSCRIBER("talkscriber"),

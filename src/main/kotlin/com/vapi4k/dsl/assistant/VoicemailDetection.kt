@@ -29,5 +29,6 @@ interface VoicemailDetectionProperties {
 }
 
 @AssistantDslMarker
-class VoicemailDetection internal constructor(internal val dto: VoicemailDetectionDto) :
-  VoicemailDetectionProperties by dto
+class VoicemailDetection internal constructor(
+  internal val dto: VoicemailDetectionDto,
+) : VoicemailDetectionProperties by dto

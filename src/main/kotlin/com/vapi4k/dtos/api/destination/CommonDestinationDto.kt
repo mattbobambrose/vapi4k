@@ -40,7 +40,6 @@ private object DestinationSerializer : KSerializer<CommonDestinationDto> {
     }
   }
 
-  override fun deserialize(decoder: Decoder): CommonDestinationDto {
+  override fun deserialize(decoder: Decoder): CommonDestinationDto =
     throw NotImplementedError("Deserialization is not supported")
-  }
 }

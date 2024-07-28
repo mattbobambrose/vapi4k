@@ -18,13 +18,16 @@ package com.vapi4k.dsl.model.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 
-enum class GroqModelType(internal val desc: String) {
+enum class GroqModelType(
+  val desc: String,
+) {
   MIXTRAL_8X7B("mixtral-8x7b-32768"),
   LLAMA3_8B("llama3-8b-8192"),
   LLAMA3_70B("llama3-70b-8192"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

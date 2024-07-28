@@ -32,7 +32,9 @@ data class DeepgramTranscriberDto(
   override var transcriberLanguage: DeepgramLanguageType = DeepgramLanguageType.UNSPECIFIED,
   override var smartFormat: Boolean? = null,
   override val keywords: MutableSet<String> = mutableSetOf(),
-) : AbstractTranscriberDto(), DeepgramTranscriberProperties, CommonTranscriberDto {
+) : AbstractTranscriberDto(),
+  DeepgramTranscriberProperties,
+  CommonTranscriberDto {
   @EncodeDefault
   override val provider: TranscriberType = TranscriberType.DEEPGRAM
 

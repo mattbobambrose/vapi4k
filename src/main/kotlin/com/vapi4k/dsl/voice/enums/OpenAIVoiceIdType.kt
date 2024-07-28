@@ -26,17 +26,20 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = OpenAIVoiceIdTypeSerializer::class)
-enum class OpenAIVoiceIdType(val desc: String) {
+enum class OpenAIVoiceIdType(
+  val desc: String,
+) {
   ALLOY("alloy"),
   ECHO("echo"),
   FABLE("fable"),
   ONYX("onyx"),
   NOVA("nova"),
   SHIMMER("shimmer"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }
 

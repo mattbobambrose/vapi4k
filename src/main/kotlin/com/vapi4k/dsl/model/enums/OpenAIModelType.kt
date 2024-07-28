@@ -18,7 +18,9 @@ package com.vapi4k.dsl.model.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 
-enum class OpenAIModelType(internal val desc: String) {
+enum class OpenAIModelType(
+  val desc: String,
+) {
   GPT_4O_MINI("gpt-4o-mini"),
   GPT_4O_MINI_2024_07_18("gpt-4o-mini-2024-07-18"),
   GPT_4O("gpt-4o"),
@@ -35,9 +37,10 @@ enum class OpenAIModelType(internal val desc: String) {
   GPT_3_5_TURBO_1106("gpt-3.5-turbo-1106"),
   GPT_3_5_TURBO_16K("gpt-3.5-turbo-16k"),
   GPT_3_5_TURBO_0613("gpt-3.5-turbo-0613"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

@@ -21,15 +21,14 @@ import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
 import com.vapi4k.dtos.model.ToolMessageCompleteDto
 import com.vapi4k.dtos.model.ToolMessageConditionDto
 
-
 interface ToolMessageCompleteProperties {
   var role: ToolMessageRoleType
   var endCallAfterSpokenEnabled: Boolean?
   var content: String
   val conditions: MutableSet<ToolMessageConditionDto>
-
 }
 
 @AssistantDslMarker
-data class ToolMessageComplete internal constructor(internal val dto: ToolMessageCompleteDto) :
-  ToolMessageCompleteProperties by dto
+data class ToolMessageComplete internal constructor(
+  internal val dto: ToolMessageCompleteDto,
+) : ToolMessageCompleteProperties by dto

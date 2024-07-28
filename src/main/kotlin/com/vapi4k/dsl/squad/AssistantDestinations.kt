@@ -32,6 +32,7 @@ data class AssistantDestinationsImpl internal constructor(
   override fun destination(block: AssistantDestination.() -> Unit) {
     dto.assistantDestinations +=
       AssistantDestination(
-        AssistantDestinationDto().apply { type = "assistant" }).apply(block).dto
+        AssistantDestinationDto().apply { type = "assistant" },
+      ).apply(block).dto
   }
 }

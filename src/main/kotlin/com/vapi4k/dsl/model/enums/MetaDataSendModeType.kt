@@ -18,13 +18,16 @@ package com.vapi4k.dsl.model.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 
-enum class MetaDataSendModeType(internal val desc: String) {
+enum class MetaDataSendModeType(
+  val desc: String,
+) {
   OFF("off"),
   VARIABLE("variable"),
   DESTRUCTURED("destructured"),
-
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

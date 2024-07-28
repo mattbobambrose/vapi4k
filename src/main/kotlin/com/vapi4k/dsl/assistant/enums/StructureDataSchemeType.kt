@@ -25,14 +25,16 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = StructureDataSchemeTypeSerializer::class)
-enum class StructureDataSchemeType(val desc: String) {
+enum class StructureDataSchemeType(
+  val desc: String,
+) {
   STRING("string"),
   NUMBER("number"),
   INTEGER("integer"),
   BOOLEAN("boolean"),
   ARRAY("array"),
   OBJECT("object"),
-  UNSPECIFIED("unspecified")
+  UNSPECIFIED("unspecified"),
 }
 
 private object StructureDataSchemeTypeSerializer : KSerializer<StructureDataSchemeType> {

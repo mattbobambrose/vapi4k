@@ -25,7 +25,9 @@ import com.vapi4k.utils.DuplicateChecker
 @AssistantDslMarker
 interface Member {
   fun assistantId(block: AssistantId.() -> Unit): AssistantId
+
   fun assistant(block: Assistant.() -> Unit): Assistant
+
   fun destinations(block: AssistantDestinations.() -> Unit): AssistantDestinations
 }
 
@@ -47,7 +49,7 @@ data class MemberImpl(
       members.squad.sessionCacheId,
       members.squad.assistantCacheIdSource,
       dto.assistant,
-      dto.assistantOverrides
+      dto.assistantOverrides,
     ).apply(block)
   }
 

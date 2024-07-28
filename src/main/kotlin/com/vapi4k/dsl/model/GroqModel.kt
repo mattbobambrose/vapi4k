@@ -40,12 +40,17 @@ interface GroqModel : GroqModelProperties {
   var functionMessage: String
   var toolMessage: String
   var userMessage: String
+
   fun tools(block: Tools.() -> Unit): Tools
+
   fun functions(block: Functions.() -> Unit): Functions
+
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
 }
 
 class GroqModelImpl(
   modelUnion: ModelUnion,
   modelDto: GroqModelDto,
-) : GroqModelProperties by modelDto, GroqModel, AbstractModel(modelUnion, modelDto)
+) : AbstractModel(modelUnion, modelDto),
+  GroqModelProperties by modelDto,
+  GroqModel

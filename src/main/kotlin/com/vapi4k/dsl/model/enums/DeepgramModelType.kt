@@ -21,7 +21,9 @@ import kotlinx.serialization.Serializable
 
 // See: https://developers.deepgram.com/docs/models-languages-overview
 @Serializable
-enum class DeepgramModelType(internal val desc: String) {
+enum class DeepgramModelType(
+  val desc: String,
+) {
   NOVA_2("nova-2"),
   NOVA_2_GENERAL("nova-2-general"),
   NOVA_2_MEETING("nova-2-meeting"),
@@ -54,8 +56,10 @@ enum class DeepgramModelType(internal val desc: String) {
   BASE_VOICEMAIL("base-voicemail"),
   BASE_VIDEO("base-video"),
 
-  UNSPECIFIED(UNSPECIFIED_DEFAULT);
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+  ;
 
   fun isSpecified() = this != UNSPECIFIED
+
   fun isNotSpecified() = this == UNSPECIFIED
 }

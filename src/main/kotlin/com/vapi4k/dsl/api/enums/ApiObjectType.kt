@@ -16,7 +16,9 @@
 
 package com.vapi4k.dsl.api.enums
 
-enum class ApiObjectType(val endpoint: String) {
+enum class ApiObjectType(
+  val endpoint: String,
+) {
   CALLS("call"),
   ASSISTANTS("assistant"),
   PHONE_NUMBERS("phone-number"),

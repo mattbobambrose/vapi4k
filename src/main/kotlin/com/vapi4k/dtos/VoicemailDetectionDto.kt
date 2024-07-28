@@ -16,7 +16,6 @@
 
 package com.vapi4k.dtos
 
-
 import com.vapi4k.dsl.assistant.VoicemailDetectionProperties
 import com.vapi4k.dsl.assistant.enums.VoicemailDetectionType
 import kotlinx.serialization.EncodeDefault
@@ -26,7 +25,6 @@ import kotlinx.serialization.Serializable
 data class VoicemailDetectionDto(
   @EncodeDefault
   var provider: String = "twilio",
-
   override var enabled: Boolean? = null,
   override var machineDetectionTimeout: Int = -1,
   override var machineDetectionSpeechThreshold: Int = -1,

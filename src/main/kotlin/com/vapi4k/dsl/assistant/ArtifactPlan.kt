@@ -23,4 +23,6 @@ interface ArtifactPlanProperties {
 }
 
 @AssistantDslMarker
-data class ArtifactPlan internal constructor(internal val dto: ArtifactPlanDto) : ArtifactPlanProperties by dto
+data class ArtifactPlan internal constructor(
+  internal val dto: ArtifactPlanDto,
+) : ArtifactPlanProperties by dto

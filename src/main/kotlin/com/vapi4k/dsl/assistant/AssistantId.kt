@@ -40,19 +40,19 @@ data class AssistantIdImpl internal constructor(
   private val sessionCacheId: SessionCacheId,
   private val assistantCacheIdSource: AssistantCacheIdSource,
   internal val assistantIdProperties: AssistantIdProperties,
-) : AssistantIdProperties by assistantIdProperties, AssistantId {
+) : AssistantIdProperties by assistantIdProperties,
+  AssistantId {
   override var id
     get() = assistantIdProperties.assistantId
     set(value) {
       assistantIdProperties.assistantId = value
     }
 
-  override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides {
-    return AssistantOverridesImpl(
+  override fun assistantOverrides(block: AssistantOverrides.() -> Unit) =
+    AssistantOverridesImpl(
       request,
       sessionCacheId,
       assistantCacheIdSource,
-      assistantIdProperties.assistantOverridesDto
+      assistantIdProperties.assistantOverridesDto,
     ).apply(block)
-  }
 }
