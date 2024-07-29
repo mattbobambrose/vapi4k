@@ -24,6 +24,7 @@ import java.net.URI
 interface Vapi4kConfigProperties {
   var serverUrl: String
   var serverUrlSecret: String
+  var isEOCRCacheRemovalEnabled: Boolean
 }
 
 class Vapi4kConfigPropertiesImpl internal constructor() : Vapi4kConfigProperties {
@@ -32,4 +33,5 @@ class Vapi4kConfigPropertiesImpl internal constructor() : Vapi4kConfigProperties
 
   override var serverUrl = ""
   override var serverUrlSecret = ""
+  override var isEOCRCacheRemovalEnabled = true
 }

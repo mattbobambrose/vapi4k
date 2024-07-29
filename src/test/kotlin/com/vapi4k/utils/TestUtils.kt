@@ -21,6 +21,7 @@ import com.vapi4k.common.Constants.DEFAULT_SERVER_PATH
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.Utils.resourceFile
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -66,17 +67,21 @@ object TestUtils {
   }
 
   fun withTestApplication(
-    vararg fileNames: String,
+    fileNames: List<String>,
+    getArg: String = "",
+    cacheRemovalEnabled: Boolean = true,
     block: (JsonElement) -> AssistantRequestResponse,
   ): List<Pair<HttpResponse, JsonElement>> {
     val responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
     testApplication {
       application {
         install(Vapi4k) {
+          configure {
+            isEOCRCacheRemovalEnabled = cacheRemovalEnabled
+          }
           onAssistantRequest { request ->
             block(request)
           }
-
           toolCallEndpoints {
             // Provide a default endpoint
             endpoint {
@@ -98,6 +103,12 @@ object TestUtils {
             response to response.bodyAsText().toJsonElement()
           },
         )
+
+      if (getArg.isNotEmpty()) {
+        responses.add(
+          client.get(getArg) { configPost() }.let { it to it.bodyAsText().toJsonElement() }
+        )
+      }
     }
     return responses
   }

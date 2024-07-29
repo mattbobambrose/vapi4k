@@ -185,23 +185,25 @@ private suspend fun KtorCallContext.handleServerPathPost(
         }
 
         END_OF_CALL_REPORT -> {
-          val sessionCacheId = request.messageCallId.toSessionCacheId()
-          var notFound = true
+          if (config.configProperties.isEOCRCacheRemovalEnabled) {
+            val sessionCacheId = request.messageCallId.toSessionCacheId()
+            var notFound = true
 
-          toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
-            val name = toolCallCache.cacheType
-            logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
-            notFound = false
+            toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
+              val name = toolCallCache.cacheType
+              logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
+              notFound = false
+            }
+
+            functionCache.removeFromCache(sessionCacheId) { funcInfo ->
+              val name = toolCallCache.cacheType
+              logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
+              notFound = false
+            }
+
+            if (notFound && cachesAreActive)
+              logger.warn { "EOCR unable to free Tools or Functions for messageCallId: $sessionCacheId" }
           }
-
-          functionCache.removeFromCache(sessionCacheId) { funcInfo ->
-            val name = toolCallCache.cacheType
-            logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
-            notFound = false
-          }
-
-          if (notFound && cachesAreActive)
-            logger.warn { "EOCR unable to free Tools or Functions for messageCallId: $sessionCacheId" }
 
           val response = SimpleMessageResponse("End of call report received")
           call.respond(response)

@@ -29,7 +29,8 @@ import kotlin.test.assertEquals
 class ToolMessageTest {
   @Test
   fun `toolMessageStart test`() {
-    val (response, jsonElement) = withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { request ->
+    val (response, jsonElement) =
+      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { request ->
       squad(request) {
         members {
           member {

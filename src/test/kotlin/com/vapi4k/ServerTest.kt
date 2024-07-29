@@ -19,13 +19,13 @@ package com.vapi4k
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
+import com.vapi4k.dsl.tools.ToolCache.Companion.resetCaches
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.firstInList
 import com.vapi4k.utils.get
 import com.vapi4k.utils.stringValue
-import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -34,6 +34,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
+import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -73,23 +74,25 @@ class ServerTest {
 
   @Test
   fun `Tool requests arg ordering`() {
+    resetCaches()
     val responses =
       withTestApplication(
-        JsonFilenames.JSON_ASSISTANT_REQUEST,
-        "/json/toolRequest1.json",
-        "/json/toolRequest2.json",
-        "/json/toolRequest3.json",
-        "/json/toolRequest4.json",
-        "/json/endOfCallReportRequest.json",
+        listOf(
+          JsonFilenames.JSON_ASSISTANT_REQUEST,
+          "/json/toolRequest1.json",
+          "/json/toolRequest2.json",
+          "/json/toolRequest3.json",
+          "/json/toolRequest4.json",
+          "/json/endOfCallReportRequest.json"
+        ),
+        "/caches",
+        true,
       ) { request ->
         doubleToolAssistant(request)
       }
 
     responses.forEachIndexed { i, (response, jsonElement) ->
       assertEquals(HttpStatusCode.OK, response.status)
-
-      println(jsonElement.toJsonString())
-
       if (i in listOf(1, 2))
         assertEquals(
           "The weather in Danville, California is windy",
@@ -101,9 +104,38 @@ class ServerTest {
           "The weather in Boston, Massachusetts is rainy",
           jsonElement["results"].firstInList().stringValue("result"),
         )
+
+      if (i == 6) {
+        assertEquals(
+          0,
+          jsonElement["toolCallCache"].jsonArray.size,
+        )
+      }
     }
-    // Make sure EOCR request cleans up cache
-    // TODO Add healthcheck to see if cache is empty
-    // assertEquals(true, )
+  }
+
+  @Test
+  fun `Check for EOCR cache removal`() {
+    resetCaches()
+    val responses =
+      withTestApplication(
+        listOf(
+          JsonFilenames.JSON_ASSISTANT_REQUEST,
+          "/json/endOfCallReportRequest.json"
+        ),
+        "/caches",
+        false,
+      ) { request ->
+        doubleToolAssistant(request)
+      }
+    responses.forEachIndexed { i, (response, jsonElement) ->
+      assertEquals(HttpStatusCode.OK, response.status)
+      if (i == 2) {
+        assertEquals(
+          1,
+          jsonElement["toolCallCache"].jsonArray.size,
+        )
+      }
+    }
   }
 }
