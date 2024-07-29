@@ -22,6 +22,7 @@ import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.tools.ToolCache.Companion.cacheAsJson
 import com.vapi4k.dsl.tools.ToolCache.Companion.cachesAreActive
 import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
@@ -51,6 +52,7 @@ import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.getBanner
 import com.vapi4k.utils.toJsonElement
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
@@ -121,8 +123,19 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       get("/ping") { call.respondText("pong") }
 
+      get("/version") {
+        call.respondText(ContentType.Application.Json) {
+          //call.versionPage()
+          Vapi4kServer::class.versionDesc(true)
+        }
+      }
+
       get("/metrics") {
         call.respond(appMicrometerRegistry.scrape())
+      }
+
+      get("/caches") {
+        call.respond(cacheAsJson())
       }
 
       val serverPath = config.configProperties.serverUrlPath
@@ -176,13 +189,13 @@ private suspend fun KtorCallContext.handleServerPathPost(
           var notFound = true
 
           toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
-            val name = toolCallCache.typeName
+            val name = toolCallCache.cacheType
             logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
             notFound = false
           }
 
           functionCache.removeFromCache(sessionCacheId) { funcInfo ->
-            val name = toolCallCache.typeName
+            val name = toolCallCache.cacheType
             logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
             notFound = false
           }

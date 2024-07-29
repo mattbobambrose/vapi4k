@@ -22,17 +22,49 @@ import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.toolMethod
 import com.vapi4k.utils.Utils.isNull
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
-internal class ToolCache(
-  val typeName: String,
-) {
-  private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
 
+//private object CacheMapSerializer : KSerializer<ConcurrentHashMap<SessionCacheId, FunctionInfo>> {
+//  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("CommonDestinationDto")
+//
+//  override fun serialize(
+//    encoder: Encoder,
+//    value: ConcurrentHashMap<SessionCacheId, FunctionInfo>,
+//  ) {
+//    encoder.encodeStructure(descriptor) {
+//      val composite = encoder.beginStructure(descriptor)
+//
+//      value.forEach { (key, value) ->
+//        encodeStringElement(descriptor, 1,
+//          encoder.encodeSerializableValue(FunctionInfo.serializer(), value))
+//      }
+//    }
+//    when (value) {
+//
+//      is NumberDestinationDto -> encoder.encodeSerializableValue(NumberDestinationDto.serializer(), value)
+//      is SipDestinationDto -> encoder.encodeSerializableValue(SipDestinationDto.serializer(), value)
+//      else -> error("Invalid destination provider: ${value::class.simpleName}")
+//    }
+//  }
+//
+//  override fun deserialize(decoder: Decoder): CommonDestinationDto =
+//    throw NotImplementedError("Deserialization is not supported")
+//}
+
+internal class ToolCache(
+  val cacheType: String,
+) {
+  //  @Serializable(with = CacheMapSerializer::class)
+  private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
   var cacheIsActive = false
 
+  val values get() = cacheMap.values
+
   fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
-    cacheMap[sessionCacheId] ?: error("$typeName session cache id not found: $sessionCacheId")
+    cacheMap[sessionCacheId] ?: error("$cacheType session cache id not found: $sessionCacheId")
 
   fun addToCache(
     sessionCacheId: SessionCacheId,
@@ -48,9 +80,9 @@ internal class ToolCache(
     if (funcDetails.isNull()) {
       val newFuncDetails = FunctionDetails(obj)
       funcInfo.functions[toolFuncName] = newFuncDetails
-      logger.info { "Added $typeName \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
+      logger.info { "Added $cacheType \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {
-      error("$typeName \"$toolFuncName\" has already been declared in ${funcDetails.fqName} [$sessionCacheId]")
+      error("$cacheType \"$toolFuncName\" has already been declared in ${funcDetails.fqName} [$sessionCacheId]")
     }
   }
 
@@ -62,7 +94,7 @@ internal class ToolCache(
       ?.also { block(it) }
       .also {
         if (it.isNull())
-          logger.debug { "$typeName entry not found in cache: $sessionCacheId" }
+          logger.debug { "$cacheType entry not found in cache: $sessionCacheId" }
       }
 
   private fun resetCache() {
@@ -74,7 +106,7 @@ internal class ToolCache(
     oldSessionCacheId: SessionCacheId,
     newSessionCacheKey: SessionCacheId,
   ) {
-    logger.info { "Swapping $typeName cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
+    logger.info { "Swapping $cacheType cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
     cacheMap.remove(oldSessionCacheId)?.also { cacheMap[newSessionCacheKey] = it }
   }
 
@@ -96,5 +128,15 @@ internal class ToolCache(
       toolCallCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
       functionCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
     }
+
+    fun cacheAsJson() = CacheInfoDto()
   }
 }
+
+@Serializable
+class CacheInfoDto(
+  @EncodeDefault
+  val toolCallCache: List<FunctionInfoDto> = ToolCache.toolCallCache.values.map { FunctionInfoDto(it) },
+  @EncodeDefault
+  val functionCache: List<FunctionInfoDto> = ToolCache.functionCache.values.map { FunctionInfoDto(it) },
+)

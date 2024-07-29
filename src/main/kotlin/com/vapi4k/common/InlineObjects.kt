@@ -18,6 +18,7 @@ package com.vapi4k.common
 
 import kotlinx.serialization.Serializable
 
+@Serializable
 @JvmInline
 value class SessionCacheId private constructor(
   val value: String,
@@ -36,6 +37,7 @@ value class SessionCacheId private constructor(
   }
 }
 
+@Serializable
 @JvmInline
 value class AssistantCacheId private constructor(
   val value: String,
@@ -47,6 +49,7 @@ value class AssistantCacheId private constructor(
   }
 }
 
+@Serializable
 @JvmInline
 value class MessageCallId private constructor(
   val value: String,

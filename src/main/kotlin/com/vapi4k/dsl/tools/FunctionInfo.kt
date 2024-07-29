@@ -16,11 +16,15 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.dsl.tools.FunctionDetails.FunctionDetailsDto
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlin.time.DurationUnit
 
-internal class FunctionInfo {
+class FunctionInfo {
   val created: Instant = Clock.System.now()
   val functions = mutableMapOf<String, FunctionDetails>()
   val age get() = Clock.System.now() - created
@@ -28,4 +32,19 @@ internal class FunctionInfo {
   val ageMillis get() = age.toString(unit = DurationUnit.MILLISECONDS)
 
   fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
+}
+
+@Serializable
+class FunctionInfoDto(
+  @Transient
+  val functionInfo: FunctionInfo? = null,
+) {
+  @EncodeDefault
+  val created = functionInfo!!.created.toString()
+
+  @EncodeDefault
+  val age = functionInfo!!.age.toString()
+
+  @EncodeDefault
+  val functions = functionInfo!!.functions.mapValues { FunctionDetailsDto(it.value) }
 }

@@ -21,22 +21,30 @@ import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.findFunction
 import com.vapi4k.utils.ReflectionUtils.findMethod
+import com.vapi4k.utils.ReflectionUtils.kParameters
+import com.vapi4k.utils.ReflectionUtils.parameterSignature
+import com.vapi4k.utils.ReflectionUtils.toolFunction
 import com.vapi4k.utils.ReflectionUtils.toolMethod
 import com.vapi4k.utils.Utils.errorMsg
-import com.vapi4k.utils.Utils.isNotNull
 import com.vapi4k.utils.booleanValue
 import com.vapi4k.utils.get
 import com.vapi4k.utils.intValue
 import com.vapi4k.utils.stringValue
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
+import java.util.concurrent.atomic.AtomicInteger
 
-internal class FunctionDetails(
+class FunctionDetails(
   val obj: Any,
 ) {
-  val className = obj::class.java.name
-  val methodName = obj.toolMethod.name
+  val className: String = obj::class.java.name
+  val methodName: String = obj.toolMethod.name
   val fqName get() = "$className.$methodName()"
+  val methodWithParams get() = "$methodName(${obj.toolFunction.parameterSignature})"
+  val invokeCount = AtomicInteger(0)
 
   fun invokeToolMethod(
     args: JsonElement,
@@ -46,6 +54,7 @@ internal class FunctionDetails(
   ): String {
     val results =
       runCatching {
+        invokeCount.incrementAndGet()
         invokeMethod(args)
       }.getOrElse { e ->
         val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
@@ -61,6 +70,24 @@ internal class FunctionDetails(
     return results
   }
 
+  @Serializable
+  data class FunctionDetailsDto(
+    @Transient
+    val functionDetails: FunctionDetails? = null,
+  ) {
+    @EncodeDefault
+    val fqName = functionDetails!!.fqName
+
+    @EncodeDefault
+    val className = functionDetails!!.className
+
+    @EncodeDefault
+    val method = functionDetails!!.methodWithParams
+
+    @EncodeDefault
+    val invokeCount = functionDetails!!.invokeCount.get()
+  }
+
   private fun invokeMethod(args: JsonElement): String {
     // logger.info { "Invoking method $fqName" }
     val method = obj.findMethod(methodName)
@@ -69,13 +96,9 @@ internal class FunctionDetails(
     val argNames = args.jsonObject.keys
     val vals = argNames.map { argName -> args[argName].stringValue }
     logger.info { "Invoking method $fqName with args $args and vals $vals" }
-    val params = method.parameters.toList()
-    val kparams = function.parameters
-    // kparams.forEach { logger.info { "Param: ${it.type}" } }
     val actualVals =
-      kparams
-        .map { it.name to it.type }
-        .filter { (name, _) -> name.isNotNull() }
+      function
+        .kParameters
         .map { (argName, argType) ->
           val kclass = argType.asKClass()
           when (kclass) {
