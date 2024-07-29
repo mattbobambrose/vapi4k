@@ -23,7 +23,36 @@ import com.vapi4k.dsl.tools.toolMessages.ToolMessageDelayedProperties
 import com.vapi4k.dsl.tools.toolMessages.ToolMessageFailedProperties
 import com.vapi4k.dsl.tools.toolMessages.ToolMessageStartProperties
 import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+
+@Serializable(with = ToolMessageSerializer::class)
+sealed interface CommonToolMessageDto {
+  val conditions: MutableSet<ToolMessageConditionDto>
+}
+
+private object ToolMessageSerializer : KSerializer<CommonToolMessageDto> {
+  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("CommonToolMessage")
+
+  override fun serialize(
+    encoder: Encoder,
+    value: CommonToolMessageDto,
+  ) {
+    when (value) {
+      is ToolMessageStartDto -> encoder.encodeSerializableValue(ToolMessageStartDto.serializer(), value)
+      is ToolMessageCompleteDto -> encoder.encodeSerializableValue(ToolMessageCompleteDto.serializer(), value)
+      is ToolMessageFailedDto -> encoder.encodeSerializableValue(ToolMessageFailedDto.serializer(), value)
+      is ToolMessageDelayedDto -> encoder.encodeSerializableValue(ToolMessageDelayedDto.serializer(), value)
+    }
+  }
+
+  override fun deserialize(decoder: Decoder): ToolMessageStartDto =
+    throw NotImplementedError("Deserialization is not supported")
+}
 
 @Serializable
 abstract class AbstractToolMessageDto(
@@ -40,26 +69,30 @@ abstract class AbstractToolMessageDto(
 @Serializable
 class ToolMessageStartDto :
   AbstractToolMessageDto(ToolMessageType.REQUEST_START),
-  ToolMessageStartProperties
+  ToolMessageStartProperties,
+  CommonToolMessageDto
 
 @Serializable
 data class ToolMessageCompleteDto(
   override var role: ToolMessageRoleType = ToolMessageRoleType.UNSPECIFIED,
   override var endCallAfterSpokenEnabled: Boolean? = null,
 ) : AbstractToolMessageDto(ToolMessageType.REQUEST_COMPLETE),
-  ToolMessageCompleteProperties
+  ToolMessageCompleteProperties,
+  CommonToolMessageDto
 
 @Serializable
 data class ToolMessageFailedDto(
   override var endCallAfterSpokenEnabled: Boolean? = null,
 ) : AbstractToolMessageDto(ToolMessageType.REQUEST_FAILED),
-  ToolMessageFailedProperties
+  ToolMessageFailedProperties,
+  CommonToolMessageDto
 
 @Serializable
 data class ToolMessageDelayedDto(
   override var timingMilliseconds: Int = -1,
 ) : AbstractToolMessageDto(ToolMessageType.REQUEST_RESPONSE_DELAYED),
-  ToolMessageDelayedProperties
+  ToolMessageDelayedProperties,
+  CommonToolMessageDto
 
 @Serializable
 data class ToolMessageDto(

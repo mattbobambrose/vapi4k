@@ -20,12 +20,16 @@ import com.vapi4k.dsl.assistant.AssistantDsl.squad
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.TestUtils.withTestApplication
+import com.vapi4k.utils.get
+import com.vapi4k.utils.stringValue
+import kotlinx.serialization.json.jsonArray
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class ToolMessageTest {
   @Test
   fun `toolMessageStart test`() {
-    val (response, je) = withTestApplication(JsonFilenames.ASSISTANT_REQUEST) { request ->
+    val (response, jsonElement) = withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { request ->
       squad(request) {
         members {
           member {
@@ -51,5 +55,12 @@ class ToolMessageTest {
         }
       }
     }
+
+    assertEquals(200, response.status.value)
+    val assistantTools = jsonElement["data"]["assistant"]["tools"].jsonArray.toList()
+    assertEquals(
+      "tool 1 start message",
+      assistantTools[0]["toolMessages"]["requestStartMessage"]["content"].stringValue
+    )
   }
 }

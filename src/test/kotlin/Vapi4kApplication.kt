@@ -31,7 +31,6 @@ import io.ktor.server.application.install
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 
-
 fun Application.module() {
   val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
   defaultKtorConfig(appMicrometerRegistry)

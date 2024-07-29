@@ -56,7 +56,11 @@ class ToolImpl internal constructor(
   internal val toolDto: ToolDto,
 ) : Tool {
   internal val messages get() = toolDto.messages
-
+  internal val conditionSetList
+    get() = messages
+      .filter { it.conditions.isNotEmpty() }
+      .map { it.conditions }
+      .toSet()
   val requestStartChecker = DuplicateChecker()
   val requestCompleteChecker = DuplicateChecker()
   val requestFailedChecker = DuplicateChecker()
@@ -116,7 +120,13 @@ class ToolImpl internal constructor(
     block: ToolCondition.() -> Unit,
   ) {
     val conditionsSet = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
+    if (conditionsSet in conditionSetList) {
+      error("tool{} already has a condition with the same set of conditions")
+    }
     ToolConditionImpl(this, conditionsSet).apply(block)
+    if (conditionsSet !in conditionSetList) {
+      error("condition($conditionsSet){} must have at least one message")
+    }
   }
 
   companion object {

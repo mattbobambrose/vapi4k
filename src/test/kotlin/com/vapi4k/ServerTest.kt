@@ -77,7 +77,7 @@ class ServerTest {
 
     val responses =
       withTestApplication(
-        JsonFilenames.ASSISTANT_REQUEST,
+        JsonFilenames.JSON_ASSISTANT_REQUEST,
         "/json/toolRequest1.json",
         "/json/toolRequest2.json",
         "/json/toolRequest3.json",

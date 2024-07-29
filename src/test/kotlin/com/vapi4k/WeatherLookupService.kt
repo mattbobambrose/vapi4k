@@ -33,11 +33,11 @@ package com.vapi4k/*
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.assistant.eq
-import com.vapi4k.dsl.tools.RequestComplete
-import com.vapi4k.dsl.tools.RequestComplete.Companion.requestComplete
-import com.vapi4k.dsl.tools.RequestFailed
-import com.vapi4k.dsl.tools.RequestFailed.Companion.requestFailed
-import com.vapi4k.dsl.tools.ToolCallService
+import com.vapi4k.dsl.tools.ToolCallRequestService
+import com.vapi4k.dsl.tools.ToolRequestComplete
+import com.vapi4k.dsl.tools.ToolRequestComplete.Companion.requestComplete
+import com.vapi4k.dsl.tools.ToolRequestFailed
+import com.vapi4k.dsl.tools.ToolRequestFailed.Companion.requestFailed
 import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
 import kotlinx.serialization.json.JsonElement
 
@@ -46,17 +46,17 @@ class WeatherLookupService0 {
   fun getFavFoodInChicago() = "Pizza"
 }
 
-class WeatherLookupService1 : ToolCallService() {
+class WeatherLookupService1 : ToolCallRequestService() {
   @ToolCall("Look up the weather for a city")
   fun getWeatherByCity(
     @Param(description = "The city name") city: String,
     state: String,
   ) = "The weather in city $city and state $state is windy"
 
-  override fun onRequestComplete(
+  override fun onToolRequestComplete(
     toolCallRequest: JsonElement,
     result: String,
-  ): RequestComplete =
+  ): ToolRequestComplete =
     requestComplete {
       condition("city" eq "Chicago", "state" eq "Illinois") {
         role = ToolCallRoleType.ASSISTANT
@@ -66,10 +66,10 @@ class WeatherLookupService1 : ToolCallService() {
       requestCompleteMessage = "Tool call request complete no condition"
     }
 
-  override fun onRequestFailed(
+  override fun onToolRequestFailed(
     toolCallRequest: JsonElement,
     errorMessage: String,
-  ): RequestFailed =
+  ): ToolRequestFailed =
     requestFailed {
       condition("city" eq "Houston", "state" eq "Texas") {
         requestFailedMessage = "The weather in Chicago is always sunny"

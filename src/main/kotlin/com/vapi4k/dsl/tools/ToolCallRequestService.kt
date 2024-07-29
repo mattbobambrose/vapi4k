@@ -25,16 +25,16 @@ import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.responses.ToolCallMessageDto
 import kotlinx.serialization.json.JsonElement
 
-abstract class ToolCallService {
-  open fun onRequestComplete(
+abstract class ToolCallRequestService {
+  open fun onToolRequestComplete(
     toolCallRequest: JsonElement,
     result: String,
-  ) = RequestComplete()
+  ) = ToolRequestComplete()
 
-  open fun onRequestFailed(
+  open fun onToolRequestFailed(
     toolCallRequest: JsonElement,
     errorMessage: String,
-  ) = RequestFailed()
+  ) = ToolRequestFailed()
 }
 
 @AssistantDslMarker
@@ -48,7 +48,7 @@ class RequestFailedCondition internal constructor() {
   var requestFailedMessage = ""
 }
 
-abstract class AbstractRequest {
+abstract class AbstractToolRequest {
   internal val messages = mutableListOf<ToolCallMessageDto>()
 
   protected fun addToolCallMessage(
@@ -66,28 +66,26 @@ abstract class AbstractRequest {
       .apply { messages += this }
 }
 
-class RequestComplete internal constructor() : AbstractRequest() {
+class ToolRequestComplete internal constructor() : AbstractToolRequest() {
   var role = ToolCallRoleType.ASSISTANT
   var requestCompleteMessage = ""
 
   fun condition(
-    requiredCondition: ToolMessageConditionDto,
+    requiredConditionDto: ToolMessageConditionDto,
     vararg additional: ToolMessageConditionDto,
     block: RequestCompleteCondition.() -> Unit,
-  ) {
-    RequestCompleteCondition()
-      .apply(block)
-      .also { rcc ->
-        if (requestCompleteMessage.isNotEmpty()) {
-          val cond = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
-          addToolCallMessage(REQUEST_COMPLETE, rcc.requestCompleteMessage, cond).apply { role = rcc.role }
-        }
+  ) = RequestCompleteCondition()
+    .apply(block)
+    .also { rcc ->
+      if (requestCompleteMessage.isNotEmpty()) {
+        val cond = mutableSetOf(requiredConditionDto).apply { addAll(additional.toSet()) }
+        addToolCallMessage(REQUEST_COMPLETE, rcc.requestCompleteMessage, cond).apply { role = rcc.role }
       }
-  }
+    }
 
   companion object {
-    fun requestComplete(block: RequestComplete.() -> Unit) =
-      RequestComplete()
+    fun requestComplete(block: ToolRequestComplete.() -> Unit) =
+      ToolRequestComplete()
         .apply(block)
         .also { rc ->
           if (rc.requestCompleteMessage.isNotEmpty())
@@ -96,7 +94,7 @@ class RequestComplete internal constructor() : AbstractRequest() {
   }
 }
 
-class RequestFailed internal constructor() : AbstractRequest() {
+class ToolRequestFailed internal constructor() : AbstractToolRequest() {
   var requestFailedMessage = ""
 
   fun condition(
@@ -115,8 +113,8 @@ class RequestFailed internal constructor() : AbstractRequest() {
   }
 
   companion object {
-    fun requestFailed(block: RequestFailed.() -> Unit) =
-      RequestFailed()
+    fun requestFailed(block: ToolRequestFailed.() -> Unit) =
+      ToolRequestFailed()
         .apply(block)
         .also { rf ->
           if (rf.requestFailedMessage.isNotEmpty())

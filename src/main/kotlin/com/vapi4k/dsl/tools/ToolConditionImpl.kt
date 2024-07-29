@@ -55,32 +55,36 @@ class ToolConditionImpl internal constructor(
   val requestDelayedChecker = DuplicateChecker()
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
-    requestStartChecker.check("tool{} already has a request start message")
+    requestStartChecker.check("condition{} already has a request start message")
     return ToolMessageStartDto().let { dto ->
+      dto.conditions.addAll(conditionSet)
       tool.toolDto.messages.add(dto)
       ToolMessageStart(dto).apply(block)
     }
   }
 
   override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    requestCompleteChecker.check("tool{} already has a request complete message")
+    requestCompleteChecker.check("condition{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
+      dto.conditions.addAll(conditionSet)
       tool.toolDto.messages.add(dto)
       ToolMessageComplete(dto).apply(block)
     }
   }
 
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    requestFailedChecker.check("tool{} already has a request failed message")
+    requestFailedChecker.check("condition{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
+      dto.conditions.addAll(conditionSet)
       tool.toolDto.messages.add(dto)
       ToolMessageFailed(dto).apply(block)
     }
   }
 
   override fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed {
-    requestDelayedChecker.check("tool{} already has a request delayed message")
+    requestDelayedChecker.check("condition{} already has a request delayed message")
     return ToolMessageDelayedDto().let { dto ->
+      dto.conditions.addAll(conditionSet)
       tool.toolDto.messages.add(dto)
       ToolMessageDelayed(dto).apply(block)
     }

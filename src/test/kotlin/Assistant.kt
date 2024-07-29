@@ -129,37 +129,68 @@ fun getAssistant(
       tools {
         tool(WeatherLookupService1()) {
           condition("city" eq "Chicago", "state" eq "Illinois") {
-            requestStartMessage = "This is the Chicago Illinois start message"
-            requestCompleteMessage = "This is the Chicago Illinois complete message"
-            requestFailedMessage = "This is the Chicago Illinois failed message"
-            requestDelayedMessage = "This is the Chicago Illinois delayed message"
-            delayedMillis = 2000
+            requestStartMessage {
+              content = "This is the Chicago Illinois start message"
+            }
+            requestCompleteMessage {
+              content = "This is the Chicago Illinois complete message"
+            }
+            requestFailedMessage {
+              content = "This is the Chicago Illinois failed message"
+            }
+
+            requestDelayedMessage {
+              content = "This is the Chicago Illinois delayed message"
+              timingMilliseconds = 2000
+            }
           }
-          requestStartMessage = "This is the default start message"
-          requestCompleteMessage = "This is the default complete message"
-          requestFailedMessage = "This is the default failed message"
-          requestDelayedMessage = "This is the default delayed message"
-          delayedMillis = 1000
+          requestStartMessage {
+            content = "This is the default start message"
+          }
+          requestCompleteMessage {
+            content = "This is the default complete message"
+          }
+          requestFailedMessage {
+            content = "This is the default failed message"
+          }
+          requestDelayedMessage {
+            content = "This is the default delayed message"
+            timingMilliseconds = 1000
+          }
 
           condition("city" eq "Chicago") {
-            requestStartMessage = "This is the Chicago start message"
+            requestStartMessage {
+              content = "This is the Chicago start message"
+            }
           }
           condition("city" eq "Houston") {
-            requestStartMessage = "This is the Houston start message"
+            requestStartMessage {
+              content = "This is the Houston start message"
+            }
           }
         }
 
         tool(WeatherLookupService2()) {
           condition("city" eq "Chicago") {
-            requestStartMessage = "This is the Chicago start message"
+            requestStartMessage {
+              content = "This is the Chicago start message"
+            }
           }
           condition("city" eq "Houston") {
-            requestStartMessage = "This is the Houston start message"
+            requestStartMessage {
+              content = "This is the Houston start message"
+            }
           }
-          requestCompleteMessage = "This is the default complete message"
-          requestFailedMessage = "This is the default failed message"
-          requestDelayedMessage = "This is the default delayed message"
-          delayedMillis = 1000
+          requestCompleteMessage {
+            content = "This is the default complete message"
+          }
+          requestFailedMessage {
+            content = "This is the default failed message"
+          }
+          requestDelayedMessage {
+            content = "This is the default delayed message"
+            timingMilliseconds = 1000
+          }
         }
       }
     }
