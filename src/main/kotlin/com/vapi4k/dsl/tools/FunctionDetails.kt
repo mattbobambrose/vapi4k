@@ -50,12 +50,12 @@ internal class FunctionDetails(
       }.getOrElse { e ->
         val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
         errorAction(errorMsg)
-        if (obj is ToolCallRequestService)
+        if (obj is ToolRequestService)
           message += obj.onToolRequestFailed(request, errorMsg).messages
         error(errorMsg)
       }
 
-    if (obj is ToolCallRequestService)
+    if (obj is ToolRequestService)
       message += obj.onToolRequestComplete(request, results).messages
 
     return results

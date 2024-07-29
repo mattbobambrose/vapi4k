@@ -25,7 +25,7 @@ import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.responses.ToolCallMessageDto
 import kotlinx.serialization.json.JsonElement
 
-abstract class ToolCallRequestService {
+abstract class ToolRequestService {
   open fun onToolRequestComplete(
     toolCallRequest: JsonElement,
     result: String,
@@ -84,7 +84,7 @@ class ToolRequestComplete internal constructor() : AbstractToolRequest() {
     }
 
   companion object {
-    fun requestComplete(block: ToolRequestComplete.() -> Unit) =
+    fun toolRequestComplete(block: ToolRequestComplete.() -> Unit) =
       ToolRequestComplete()
         .apply(block)
         .also { rc ->
@@ -113,7 +113,7 @@ class ToolRequestFailed internal constructor() : AbstractToolRequest() {
   }
 
   companion object {
-    fun requestFailed(block: ToolRequestFailed.() -> Unit) =
+    fun toolRequestFailed(block: ToolRequestFailed.() -> Unit) =
       ToolRequestFailed()
         .apply(block)
         .also { rf ->
