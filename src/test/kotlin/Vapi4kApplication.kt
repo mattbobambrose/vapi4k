@@ -36,24 +36,24 @@ fun Application.module() {
   defaultKtorConfig(appMicrometerRegistry)
 
   install(Vapi4k) {
-    val BASE_URL = "https://eocare-app-fiqm5.ondigitalocean.app"
+    val baseUrl = "https://eocare-app-fiqm5.ondigitalocean.app"
 
     configure {
-      serverUrl = "$BASE_URL/inboundRequest"
+      serverUrl = "$baseUrl/inboundRequest"
       serverUrlSecret = "12345"
     }
 
     toolCallEndpoints {
       endpoint {
         name = "endpoint1"
-        serverUrl = "$BASE_URL/toolCall"
+        serverUrl = "$baseUrl/toolCall"
         serverUrlSecret = "456"
         timeoutSeconds = 20
       }
 
       endpoint {
         name = "endpoint2"
-        serverUrl = "$BASE_URL/TC2"
+        serverUrl = "$baseUrl/TC2"
         serverUrlSecret = "456"
         timeoutSeconds = 20
       }

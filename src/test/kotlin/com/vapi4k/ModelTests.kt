@@ -20,11 +20,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ModelTests {
-
   @Test
   fun `model details`() {
     val p = 1
     assertEquals(1, p)
   }
-
 }

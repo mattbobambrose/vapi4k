@@ -23,7 +23,6 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class ApiCalls {
-
   @Test
   fun `multiple Assistant Decls`() {
     val api = vapiApi("123-445-666")
@@ -131,11 +130,8 @@ class ApiCalls {
       println("Call status: ${callResp.status}")
       println("Call response:> ${callResp.bodyAsJsonElement()}")
 
-
 //    val listResp = api.list(ASSISTANTS)
 //    println("List response: ${listResp.jsonElement}")
-
-
 //
 //
 //    val saveResp =
@@ -147,19 +143,18 @@ class ApiCalls {
 //
 //    val delResp = api.delete("123-445-666")
 //
-////
-////    api.create(assistant)
-////
-////    api.create {
-////      assistant {
-////
-////      }
-////    }
-////
-////    api.list(ASSISTANT)
-////    api.delete(ASSISTANT, "123-445-666")
-////
+//
+//    api.create(assistant)
+//
+//    api.create {
+//      assistant {
+//
+//      }
+//    }
+//
+//    api.list(ASSISTANT)
+//    api.delete(ASSISTANT, "123-445-666")
+//
     }
   }
-
 }

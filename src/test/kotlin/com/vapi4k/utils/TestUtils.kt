@@ -96,8 +96,8 @@ object TestUtils {
               setBody(resourceFile(fileName))
             }
             response to response.bodyAsText().toJsonElement()
-          })
-
+          },
+        )
     }
     return responses
   }

@@ -60,7 +60,7 @@ class ToolMessageTest {
     val assistantTools = jsonElement["data"]["assistant"]["tools"].jsonArray.toList()
     assertEquals(
       "tool 1 start message",
-      assistantTools[0]["toolMessages"]["requestStartMessage"]["content"].stringValue
+      assistantTools[0]["toolMessages"]["requestStartMessage"]["content"].stringValue,
     )
   }
 }

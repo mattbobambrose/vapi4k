@@ -38,7 +38,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class ServerTest {
-
   companion object {
     fun HttpRequestBuilder.configPost() {
       contentType(Application.Json)
@@ -74,7 +73,6 @@ class ServerTest {
 
   @Test
   fun `Tool requests arg ordering`() {
-
     val responses =
       withTestApplication(
         JsonFilenames.JSON_ASSISTANT_REQUEST,
@@ -82,7 +80,7 @@ class ServerTest {
         "/json/toolRequest2.json",
         "/json/toolRequest3.json",
         "/json/toolRequest4.json",
-        "/json/endOfCallReportRequest.json"
+        "/json/endOfCallReportRequest.json",
       ) { request ->
         doubleToolAssistant(request)
       }
@@ -95,18 +93,17 @@ class ServerTest {
       if (i in listOf(1, 2))
         assertEquals(
           "The weather in Danville, California is windy",
-          jsonElement["results"].firstInList().stringValue("result")
+          jsonElement["results"].firstInList().stringValue("result"),
         )
 
       if (i in listOf(3, 4))
         assertEquals(
           "The weather in Boston, Massachusetts is rainy",
-          jsonElement["results"].firstInList().stringValue("result")
+          jsonElement["results"].firstInList().stringValue("result"),
         )
-
     }
     // Make sure EOCR request cleans up cache
     // TODO Add healthcheck to see if cache is empty
-    //assertEquals(true, )
+    // assertEquals(true, )
   }
 }

@@ -16,7 +16,7 @@
 
 package com.vapi4k
 
-import com.vapi4k.AssistantTest.Companion.assistantRequest
+import com.vapi4k.AssistantTest.Companion.ASSISTANT_REQUEST
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.sipDestination
 import com.vapi4k.dsl.model.enums.AnthropicModelType
@@ -28,7 +28,7 @@ import org.junit.Test
 class ResponseTest {
   @Test
   fun testGetTwoSquadIds() {
-    val request = assistantRequest.toJsonElement()
+    val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
         anthropicModel {
@@ -54,7 +54,6 @@ class ResponseTest {
     val dest = sipDestination(request) {
       sipUri = "sip:wedwedwed"
       message = "Hello"
-
     }
 
     println(dest.toJsonString(true))

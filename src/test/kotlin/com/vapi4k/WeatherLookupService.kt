@@ -14,7 +14,8 @@
  *
  */
 
-package com.vapi4k/*
+package com.vapi4k
+/*
  * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

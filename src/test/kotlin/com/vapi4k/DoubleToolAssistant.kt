@@ -71,7 +71,9 @@ object DoubleToolAssistant {
     }
 }
 
-class TestWeatherLookupService(val weather: String) {
+class TestWeatherLookupService(
+  val weather: String,
+) {
   @ToolCall("Look up the weather for a city")
   fun getWeatherByCity(
     city: String,
