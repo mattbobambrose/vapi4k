@@ -62,8 +62,7 @@ internal class ToolCache(
   var cacheIsActive = false
 
   val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
-    get() = cacheMap//.map { (k, v) -> k to v }.toMap()
-      .map { (k, v) -> k to FunctionInfoDto(v) }.toMap()
+    get() = cacheMap.map { (k, v) -> k to FunctionInfoDto(v) }.toMap()
 
   fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
     cacheMap[sessionCacheId] ?: error("$cacheType session cache id not found: $sessionCacheId")
