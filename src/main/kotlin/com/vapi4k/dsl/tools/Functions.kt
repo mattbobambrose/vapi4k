@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.tools.FunctionUtils.verifyObject
-import com.vapi4k.dsl.tools.ToolCache.addFunctionToCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
 import com.vapi4k.dtos.model.FunctionDto
 
 @AssistantDslMarker
@@ -41,7 +41,7 @@ data class FunctionsImpl internal constructor(
           model.sessionCacheId
         else
           model.messageCallId.toSessionCacheId()
-      addFunctionToCache(sessionCacheId, model.assistantCacheId, obj)
+      functionCache.addToCache(sessionCacheId, model.assistantCacheId, obj)
     }.also { func ->
       if (model.functionDtos.any { func.name == it.name }) {
         error("Duplicate function name declared: ${func.name}")

@@ -23,5 +23,4 @@ data class FunctionParametersDto(
   var type: String = "",
   val properties: MutableMap<String, FunctionPropertyDescDto> = mutableMapOf(),
   val required: MutableList<String> = mutableListOf(),
-) {
-}
+)

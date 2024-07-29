@@ -17,7 +17,7 @@
 package com.vapi4k.responses
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
-import com.vapi4k.dsl.tools.ToolCache.getToolCallFromCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType
 import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
 import com.vapi4k.dtos.model.ToolMessageConditionDto
@@ -56,7 +56,7 @@ data class ToolCallResponse(
                       toolCallResult.name = funcName
                       toolCallResult.result =
                         runCatching {
-                          getToolCallFromCache(sessionCacheId)
+                          toolCallCache.getFromCache(sessionCacheId)
                             .getFunction(funcName)
                             .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
                             .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->

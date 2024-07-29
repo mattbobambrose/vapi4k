@@ -22,9 +22,9 @@ import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.tools.ToolCache.cacheIsActive
-import com.vapi4k.dsl.tools.ToolCache.removeFunctionFromCache
-import com.vapi4k.dsl.tools.ToolCache.removeToolCallFromCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.cachesAreActive
+import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.dsl.vapi4k.enums.RequestResponseType
@@ -67,6 +67,8 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import io.ktor.util.pipeline.PipelineContext
+import io.micrometer.prometheusmetrics.PrometheusConfig
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -110,13 +112,18 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 
   with(application) {
-    defaultKtorConfig()
+    val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
+    defaultKtorConfig(appMicrometerRegistry)
 
     routing {
       val config = AssistantImpl.config
       config.applicationConfig = environment?.config ?: error("No environment config found")
 
       get("/ping") { call.respondText("pong") }
+
+      get("/metrics") {
+        call.respond(appMicrometerRegistry.scrape())
+      }
 
       val serverPath = config.configProperties.serverUrlPath
       logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
@@ -168,18 +175,20 @@ private suspend fun KtorCallContext.handleServerPathPost(
           val sessionCacheId = request.messageCallId.toSessionCacheId()
           var notFound = true
 
-          removeToolCallFromCache(sessionCacheId) { funcInfo ->
-            logger.info { "EOCR removed ${funcInfo.functions.size} toolCall objects [${funcInfo.ageSecs}] " }
+          toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
+            val name = toolCallCache.typeName
+            logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
             notFound = false
           }
 
-          removeFunctionFromCache(sessionCacheId) { funcInfo ->
-            logger.info { "EOCR removed ${funcInfo.functions.size} function objects [${funcInfo.ageSecs}] " }
+          functionCache.removeFromCache(sessionCacheId) { funcInfo ->
+            val name = toolCallCache.typeName
+            logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
             notFound = false
           }
 
-          if (notFound && cacheIsActive)
-            logger.warn { "EOCR unable to free toolCalls or functions for messageCallId: $sessionCacheId" }
+          if (notFound && cachesAreActive)
+            logger.warn { "EOCR unable to free Tools or Functions for messageCallId: $sessionCacheId" }
 
           val response = SimpleMessageResponse("End of call report received")
           call.respond(response)

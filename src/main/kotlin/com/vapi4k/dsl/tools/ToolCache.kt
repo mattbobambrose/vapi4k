@@ -24,49 +24,17 @@ import com.vapi4k.utils.ReflectionUtils.toolMethod
 import com.vapi4k.utils.Utils.isNull
 import java.util.concurrent.ConcurrentHashMap
 
-internal object ToolCache {
-  private val toolCallCache = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
-  private val functionCache = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
+internal class ToolCache(
+  val typeName: String,
+) {
+  private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
 
-  private var toolCallCacheIsActive = false
-  private var functionCacheIsActive = false
+  var cacheIsActive = false
 
-  val cacheIsActive get() = toolCallCacheIsActive || functionCacheIsActive
+  fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
+    cacheMap[sessionCacheId] ?: error("$typeName session cache id not found: $sessionCacheId")
 
-  fun getToolCallFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
-    toolCallCache[sessionCacheId] ?: error("Tool session cache id not found: $sessionCacheId")
-
-  fun getFunctionFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
-    functionCache[sessionCacheId] ?: error("Function session cache id key not found: $sessionCacheId")
-
-  fun resetCaches() {
-    toolCallCache.clear()
-    functionCache.clear()
-    toolCallCacheIsActive = false
-    functionCacheIsActive = false
-  }
-
-  fun addToolCallToCache(
-    sessionCacheId: SessionCacheId,
-    assistantCacheId: AssistantCacheId,
-    obj: Any,
-  ) {
-    toolCallCacheIsActive = true
-    addToCache(toolCallCache, "Tool", sessionCacheId, assistantCacheId, obj)
-  }
-
-  fun addFunctionToCache(
-    sessionCacheId: SessionCacheId,
-    assistantCacheId: AssistantCacheId,
-    obj: Any,
-  ) {
-    functionCacheIsActive = true
-    addToCache(functionCache, "Function", sessionCacheId, assistantCacheId, obj)
-  }
-
-  private fun addToCache(
-    cache: ConcurrentHashMap<SessionCacheId, FunctionInfo>,
-    prefix: String,
+  fun addToCache(
     sessionCacheId: SessionCacheId,
     assistantCacheId: AssistantCacheId,
     obj: Any,
@@ -74,47 +42,59 @@ internal object ToolCache {
     val method = obj.toolMethod
     val toolCallInfo = ToolCallInfo(assistantCacheId, method)
     val toolFuncName = toolCallInfo.llmName
-
-    val funcInfo = cache.computeIfAbsent(sessionCacheId) { FunctionInfo() }
+    val funcInfo = cacheMap.computeIfAbsent(sessionCacheId) { FunctionInfo() }
     val funcDetails = funcInfo.functions[toolFuncName]
 
     if (funcDetails.isNull()) {
       val newFuncDetails = FunctionDetails(obj)
       funcInfo.functions[toolFuncName] = newFuncDetails
-      logger.info { "Added $prefix \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
+      logger.info { "Added $typeName \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {
-      error("$prefix \"$toolFuncName\" has already been declared in ${funcDetails.fqName} [$sessionCacheId]")
+      error("$typeName \"$toolFuncName\" has already been declared in ${funcDetails.fqName} [$sessionCacheId]")
     }
   }
 
-  fun removeToolCallFromCache(
+  fun removeFromCache(
     sessionCacheId: SessionCacheId,
     block: (FunctionInfo) -> Unit,
   ): FunctionInfo? =
-    toolCallCache.remove(sessionCacheId)
+    cacheMap.remove(sessionCacheId)
       ?.also { block(it) }
       .also {
         if (it.isNull())
-          logger.debug { "Tool entry not found in cache: $sessionCacheId" }
+          logger.debug { "$typeName entry not found in cache: $sessionCacheId" }
       }
 
-  fun removeFunctionFromCache(
-    sessionCacheId: SessionCacheId,
-    block: (FunctionInfo) -> Unit,
-  ): FunctionInfo? =
-    functionCache.remove(sessionCacheId)
-      ?.also { block(it) }
-      .also { funcInfo ->
-        if (funcInfo.isNull())
-          logger.debug { "Function entry not found in cache: $sessionCacheId" }
-      }
+  private fun resetCache() {
+    cacheMap.clear()
+    cacheIsActive = false
+  }
 
-  fun swapCacheKeys(
+  private fun swapKeys(
     oldSessionCacheId: SessionCacheId,
     newSessionCacheKey: SessionCacheId,
   ) {
-    logger.info { "Swapping cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
-    toolCallCache.remove(oldSessionCacheId)?.also { toolCallCache[newSessionCacheKey] = it }
-    functionCache.remove(oldSessionCacheId)?.also { functionCache[newSessionCacheKey] = it }
+    logger.info { "Swapping $typeName cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
+    cacheMap.remove(oldSessionCacheId)?.also { cacheMap[newSessionCacheKey] = it }
+  }
+
+  companion object {
+    val toolCallCache = ToolCache("Tool")
+    val functionCache = ToolCache("Function")
+
+    val cachesAreActive get() = toolCallCache.cacheIsActive || functionCache.cacheIsActive
+
+    fun resetCaches() {
+      toolCallCache.resetCache()
+      functionCache.resetCache()
+    }
+
+    fun swapCacheKeys(
+      oldSessionCacheId: SessionCacheId,
+      newSessionCacheKey: SessionCacheId,
+    ) {
+      toolCallCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
+      functionCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
+    }
   }
 }

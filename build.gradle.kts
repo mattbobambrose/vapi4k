@@ -11,6 +11,7 @@ val pgjdbcVersion: String by project
 val postgresVersion: String by project
 val exposedVersion: String by project
 val serializationVersion: String by project
+val micrometerVersion: String by project
 
 val mainClassName = "com.vapi4k.ApplicationKt"
 
@@ -77,6 +78,9 @@ dependencies {
     implementation("io.ktor:ktor-server-compression-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-metrics-micrometer:$ktorVersion")
+
+    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
 
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
 

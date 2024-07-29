@@ -22,7 +22,7 @@ import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.tools.FunctionUtils.verifyObject
-import com.vapi4k.dsl.tools.ToolCache.addToolCallToCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dtos.model.ToolDto
@@ -59,7 +59,7 @@ data class ToolsImpl internal constructor(
           model.sessionCacheId
         else
           model.messageCallId.toSessionCacheId()
-      addToolCallToCache(sessionCacheId, model.assistantCacheId, obj)
+      toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, obj)
 
       with(toolDto) {
         type = ToolType.FUNCTION

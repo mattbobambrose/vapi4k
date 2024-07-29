@@ -23,5 +23,4 @@ data class FunctionDto(
   var name: String = "",
   var description: String = "",
   val parameters: FunctionParametersDto = FunctionParametersDto(),
-) {
-}
+)
