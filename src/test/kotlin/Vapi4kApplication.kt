@@ -28,11 +28,13 @@ import com.vapi4k.utils.DslUtils.printObject
 import com.vapi4k.utils.JsonElementUtils.requestType
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
+import io.micrometer.prometheusmetrics.PrometheusConfig
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 
 
 fun Application.module() {
-  defaultKtorConfig()
-  //connectToDbms()
+  val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
+  defaultKtorConfig(appMicrometerRegistry)
 
   install(Vapi4k) {
     val BASE_URL = "https://eocare-app-fiqm5.ondigitalocean.app"
