@@ -61,7 +61,9 @@ internal class ToolCache(
   private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
   var cacheIsActive = false
 
-  val values get() = cacheMap.values
+  val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
+    get() = cacheMap//.map { (k, v) -> k to v }.toMap()
+      .map { (k, v) -> k to FunctionInfoDto(v) }.toMap()
 
   fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
     cacheMap[sessionCacheId] ?: error("$cacheType session cache id not found: $sessionCacheId")
@@ -136,7 +138,7 @@ internal class ToolCache(
 @Serializable
 class CacheInfoDto(
   @EncodeDefault
-  val toolCallCache: List<FunctionInfoDto> = ToolCache.toolCallCache.values.map { FunctionInfoDto(it) },
+  val toolCallCache: Map<SessionCacheId, FunctionInfoDto> = ToolCache.toolCallCache.asDtoMap,
   @EncodeDefault
-  val functionCache: List<FunctionInfoDto> = ToolCache.functionCache.values.map { FunctionInfoDto(it) },
+  val functionCache: Map<SessionCacheId, FunctionInfoDto> = ToolCache.functionCache.asDtoMap,
 )

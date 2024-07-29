@@ -34,7 +34,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
-import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -108,7 +108,7 @@ class ServerTest {
       if (i == 6) {
         assertEquals(
           0,
-          jsonElement["toolCallCache"].jsonArray.size,
+          jsonElement["toolCallCache"].jsonObject.keys.size,
         )
       }
     }
@@ -133,7 +133,7 @@ class ServerTest {
       if (i == 2) {
         assertEquals(
           1,
-          jsonElement["toolCallCache"].jsonArray.size,
+          jsonElement["toolCallCache"].jsonObject.keys.size,
         )
       }
     }
