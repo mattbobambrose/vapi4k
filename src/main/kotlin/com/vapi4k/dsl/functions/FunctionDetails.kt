@@ -31,9 +31,7 @@ import com.vapi4k.utils.booleanValue
 import com.vapi4k.utils.get
 import com.vapi4k.utils.intValue
 import com.vapi4k.utils.stringValue
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import java.util.concurrent.atomic.AtomicInteger
@@ -74,20 +72,16 @@ class FunctionDetails(
 
   @Serializable
   data class FunctionDetailsDto(
-    @Transient
-    val functionDetails: FunctionDetails? = null,
-  ) {
-    @EncodeDefault
-    val fqName = functionDetails!!.fqName
+    val fqName: String = "",
+    val className: String = "",
+    val method: String = "",
+    val invokeCount: Int = -1,
 
-    @EncodeDefault
-    val className = functionDetails!!.className
-
-    @EncodeDefault
-    val method = functionDetails!!.methodWithParams
-
-    @EncodeDefault
-    val invokeCount = functionDetails!!.invokeCount.get()
+    ) {
+    companion object {
+      fun FunctionDetails.toFunctionDetailsDto() =
+        FunctionDetailsDto(fqName, className, methodWithParams, invokeCount.get())
+    }
   }
 
   private fun invokeMethod(args: JsonElement): String {

@@ -21,6 +21,7 @@ import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.functions.FunctionDetails
 import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
+import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.toolMethod
@@ -65,7 +66,7 @@ internal class ToolCache(
   var cacheIsActive = false
 
   val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
-    get() = cacheMap.map { (k, v) -> k to FunctionInfoDto(v) }.toMap()
+    get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
 
   fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
     cacheMap[sessionCacheId] ?: error("$cacheType session cache id not found: $sessionCacheId")
@@ -133,14 +134,14 @@ internal class ToolCache(
       functionCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
     }
 
-    fun cacheAsJson() = CacheInfoDto()
+    fun cacheAsJson() = CacheInfoDto(toolCallCache.asDtoMap, functionCache.asDtoMap)
   }
 }
 
 @Serializable
 class CacheInfoDto(
   @EncodeDefault
-  val toolCallCache: Map<SessionCacheId, FunctionInfoDto> = ToolCache.toolCallCache.asDtoMap,
+  val toolCallCache: Map<SessionCacheId, FunctionInfoDto> = emptyMap(),
   @EncodeDefault
-  val functionCache: Map<SessionCacheId, FunctionInfoDto> = ToolCache.functionCache.asDtoMap,
+  val functionCache: Map<SessionCacheId, FunctionInfoDto> = emptyMap(),
 )

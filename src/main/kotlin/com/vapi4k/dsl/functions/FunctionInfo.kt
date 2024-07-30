@@ -17,11 +17,10 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.dsl.functions.FunctionDetails.FunctionDetailsDto
+import com.vapi4k.dsl.functions.FunctionDetails.FunctionDetailsDto.Companion.toFunctionDetailsDto
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlin.time.DurationUnit
 
 class FunctionInfo {
@@ -37,15 +36,17 @@ class FunctionInfo {
 
 @Serializable
 class FunctionInfoDto(
-  @Transient
-  val functionInfo: FunctionInfo? = null,
+  val created: String = "",
+  val age: String = "",
+  val functions: Map<String, FunctionDetailsDto> = emptyMap(),
 ) {
-  @EncodeDefault
-  val created = functionInfo!!.created.toString()
 
-  @EncodeDefault
-  val age = functionInfo!!.age.toString()
-
-  @EncodeDefault
-  val functions = functionInfo!!.functions.mapValues { FunctionDetailsDto(it.value) }
+  companion object {
+    fun FunctionInfo.toFunctionInfoDto() =
+      FunctionInfoDto(
+        created.toString(),
+        age.toString(),
+        functions.mapValues { it.value.toFunctionDetailsDto() }
+      )
+  }
 }
