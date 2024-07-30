@@ -76,7 +76,7 @@ class FunctionDetails(
     val className: String = "",
     val method: String = "",
     val invokeCount: Int = -1,
-    ) {
+  ) {
     companion object {
       fun FunctionDetails.toFunctionDetailsDto() =
         FunctionDetailsDto(fqName, className, methodWithParams, invokeCount.get())

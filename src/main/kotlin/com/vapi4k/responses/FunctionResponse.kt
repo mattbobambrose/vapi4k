@@ -40,15 +40,11 @@ class FunctionResponse(
             functionCache.getFromCache(sessionCacheId)
               .getFunction(funcName)
               .invokeToolMethod(
-                args,
-                request,
-                mutableListOf(),
-                { result ->
-                  response.result = result
-                },
-                { result ->
-                  response.result = "Error invoking function"
-                },
+                args = args,
+                request = request,
+                message = mutableListOf(),
+                successAction = { result -> response.result = result },
+                errorAction = { result -> response.result = "Error invoking function" },
               )
           }.getOrElse { e ->
             val errorMsg = e.message ?: "Error invoking function"

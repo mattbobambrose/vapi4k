@@ -28,7 +28,7 @@ data class PerplexityAIModelDto(
   PerplexityAIModelProperties,
   CommonModelDto {
   @EncodeDefault
-  override val provider: ModelType = ModelType.OPEN_AI
+  override val provider: ModelType = ModelType.PERPLEXITY_AI
 
   fun verifyValues() {
     if (model.isEmpty())

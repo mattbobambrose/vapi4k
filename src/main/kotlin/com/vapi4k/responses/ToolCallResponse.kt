@@ -57,13 +57,11 @@ data class ToolCallResponse(
                           .getFunction(funcName)
                           .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
                           .invokeToolMethod(
-                            args,
-                            request,
-                            toolCallResult.message,
-                            { result ->
-                              toolCallResult.result = result
-                            },
-                            { errorMsg ->
+                            args = args,
+                            request = request,
+                            message = toolCallResult.message,
+                            successAction = { result -> toolCallResult.result = result },
+                            errorAction = { errorMsg ->
                               toolCallResult.error = errorMsg
                               errorMessage = errorMsg
                             },

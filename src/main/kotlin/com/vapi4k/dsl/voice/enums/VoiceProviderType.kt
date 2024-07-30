@@ -32,12 +32,12 @@ enum class VoiceProviderType(
   AZURE("azure"),
   CARTESIA("cartesia"),
   DEEPGRAM("deepgram"),
-  ELEVENLABS("elevenlabs"),
+  ELEVEN_LABS("elevenlabs"),
   LMNT("lmnt"),
   NEETS("neets"),
-  OPENAI("openai"),
-  PLAYHT("playht"),
-  RIMEAI("rime-ai"),
+  OPEN_AI("openai"),
+  PLAY_HT("playht"),
+  RIME_AI("rime-ai"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
   ;
 
