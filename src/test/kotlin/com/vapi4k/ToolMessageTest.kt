@@ -21,8 +21,8 @@ import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.get
+import com.vapi4k.utils.getToJsonElements
 import com.vapi4k.utils.stringValue
-import kotlinx.serialization.json.jsonArray
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -41,7 +41,7 @@ class ToolMessageTest {
               openAIModel {
                 modelType = OpenAIModelType.GPT_4_TURBO
                 tools {
-                  tool("tool 1") {
+                  tool(WeatherLookupService1()) {
                     requestStartMessage {
                       content = "tool 1 start message"
                       dto
@@ -59,10 +59,11 @@ class ToolMessageTest {
     }
 
     assertEquals(200, response.status.value)
-    val assistantTools = jsonElement["data"]["assistant"]["tools"].jsonArray.toList()
+    val assistantTools =
+      jsonElement["squad.members"].getToJsonElements()[0]["assistant.model.tools"].getToJsonElements()
     assertEquals(
       "tool 1 start message",
-      assistantTools[0]["toolMessages"]["requestStartMessage"]["content"].stringValue,
+      assistantTools[0]["messages"].getToJsonElements()[0]["content"].stringValue,
     )
   }
 }
