@@ -29,7 +29,7 @@ import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
-import com.vapi4k.dtos.model.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageConditionDto
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST

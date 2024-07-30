@@ -18,9 +18,9 @@ package com.vapi4k.dsl.model
 
 import com.vapi4k.common.MessageCallId.Companion.toMessageCallId
 import com.vapi4k.dsl.assistant.ModelUnion
+import com.vapi4k.dsl.functions.Functions
+import com.vapi4k.dsl.functions.FunctionsImpl
 import com.vapi4k.dsl.model.enums.MessageRoleType
-import com.vapi4k.dsl.tools.Functions
-import com.vapi4k.dsl.tools.FunctionsImpl
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dsl.tools.ToolsImpl
 import com.vapi4k.dtos.RoleMessage

@@ -18,7 +18,7 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
-import com.vapi4k.dtos.model.ToolMessageCompleteDto
+import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 
 interface ToolMessageCompleteProperties {
   var role: ToolMessageRoleType

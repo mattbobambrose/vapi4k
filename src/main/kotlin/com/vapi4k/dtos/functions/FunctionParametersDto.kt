@@ -14,17 +14,13 @@
  *
  */
 
-package com.vapi4k.dtos.model
+package com.vapi4k.dtos.functions
 
-import com.vapi4k.dsl.tools.enums.ToolType
-import com.vapi4k.dtos.ServerDto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ToolDto(
-  var type: ToolType = ToolType.UNSPECIFIED,
-  var async: Boolean? = null,
-  val function: FunctionDto = FunctionDto(),
-  val messages: MutableList<CommonToolMessageDto> = mutableListOf(),
-  val server: ServerDto = ServerDto(),
+data class FunctionParametersDto(
+  var type: String = "",
+  val properties: MutableMap<String, FunctionPropertyDescDto> = mutableMapOf(),
+  val required: MutableList<String> = mutableListOf(),
 )

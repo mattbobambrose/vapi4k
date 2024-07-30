@@ -14,13 +14,13 @@
  *
  */
 
-package com.vapi4k.dtos.model
+package com.vapi4k.dtos.functions
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FunctionParametersDto(
-  var type: String = "",
-  val properties: MutableMap<String, FunctionPropertyDescDto> = mutableMapOf(),
-  val required: MutableList<String> = mutableListOf(),
+data class FunctionDto(
+  var name: String = "",
+  var description: String = "",
+  val parameters: FunctionParametersDto = FunctionParametersDto(),
 )

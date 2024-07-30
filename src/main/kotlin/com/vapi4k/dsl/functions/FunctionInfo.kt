@@ -14,9 +14,9 @@
  *
  */
 
-package com.vapi4k.dsl.tools
+package com.vapi4k.dsl.functions
 
-import com.vapi4k.dsl.tools.FunctionDetails.FunctionDetailsDto
+import com.vapi4k.dsl.functions.FunctionDetails.FunctionDetailsDto
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.EncodeDefault

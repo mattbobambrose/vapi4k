@@ -14,15 +14,15 @@
  *
  */
 
-package com.vapi4k.dsl.tools
+package com.vapi4k.dsl.functions
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
+import com.vapi4k.dsl.functions.FunctionUtils.verifyObject
 import com.vapi4k.dsl.model.AbstractModelProperties
-import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
-import com.vapi4k.dsl.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
-import com.vapi4k.dtos.model.FunctionDto
+import com.vapi4k.dtos.functions.FunctionDto
 
 @AssistantDslMarker
 interface Functions {

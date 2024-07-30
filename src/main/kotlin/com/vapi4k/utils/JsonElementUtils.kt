@@ -17,7 +17,7 @@
 package com.vapi4k.utils
 
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
-import com.vapi4k.dtos.model.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageConditionDto
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 

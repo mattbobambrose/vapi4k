@@ -17,12 +17,12 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.model.ToolDto
-import com.vapi4k.dtos.model.ToolMessageCompleteDto
-import com.vapi4k.dtos.model.ToolMessageConditionDto
-import com.vapi4k.dtos.model.ToolMessageDelayedDto
-import com.vapi4k.dtos.model.ToolMessageFailedDto
-import com.vapi4k.dtos.model.ToolMessageStartDto
+import com.vapi4k.dtos.tools.ToolDto
+import com.vapi4k.dtos.tools.ToolMessageCompleteDto
+import com.vapi4k.dtos.tools.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageDelayedDto
+import com.vapi4k.dtos.tools.ToolMessageFailedDto
+import com.vapi4k.dtos.tools.ToolMessageStartDto
 import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
@@ -46,7 +46,7 @@ class ToolImpl internal constructor(
   internal val toolDto: ToolDto,
 ) : Tool {
   internal val messages get() = toolDto.messages
-  internal val conditionSetList
+  internal val dtoConditions
     get() = messages.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
   val requestStartChecker = DuplicateChecker()
   val requestCompleteChecker = DuplicateChecker()
@@ -92,13 +92,13 @@ class ToolImpl internal constructor(
     vararg additional: ToolMessageConditionDto,
     block: ToolCondition.() -> Unit,
   ) {
-    val conditionsSet = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
-    if (conditionsSet.isNotEmpty() && conditionsSet in conditionSetList) {
-      error("tool{} already has a condition(${conditionsSet.joinToString()}){} with the same set of conditions")
+    val conditionSet = mutableSetOf(requiredCondition).apply { addAll(additional) }
+    if (conditionSet in dtoConditions) {
+      error("tool{} already has a condition(${conditionSet.joinToString()}){} with the same set of conditions")
     }
-    ToolConditionImpl(this, conditionsSet).apply(block)
-    if (conditionsSet.isNotEmpty() && conditionsSet !in conditionSetList) {
-      error("condition(${conditionsSet.joinToString()}){} must have at least one message")
+    ToolConditionImpl(this, conditionSet).apply(block)
+    if (conditionSet !in dtoConditions) {
+      error("condition(${conditionSet.joinToString()}){} must have at least one message")
     }
   }
 }

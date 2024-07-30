@@ -18,8 +18,8 @@ package com.vapi4k.dsl.model
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.ModelUnion
+import com.vapi4k.dsl.functions.Functions
 import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.dsl.tools.Functions
 import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dtos.model.GroqModelDto
 

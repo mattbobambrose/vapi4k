@@ -44,7 +44,7 @@ enum class CartesiaVoiceLanguageType(
   fun isNotSpecified() = this == com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType.UNSPECIFIED
 }
 
-private object CartesiaVoiceLanguageSerializer : KSerializer<com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType> {
+private object CartesiaVoiceLanguageSerializer : KSerializer<CartesiaVoiceLanguageType> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("CartesiaVoiceLanguageType", STRING)
 
   override fun serialize(
@@ -53,5 +53,5 @@ private object CartesiaVoiceLanguageSerializer : KSerializer<com.vapi4k.dsl.voic
   ) = encoder.encodeString(value.desc)
 
   override fun deserialize(decoder: Decoder) =
-    com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType.entries.first { it.desc == decoder.decodeString() }
+    CartesiaVoiceLanguageType.entries.first { it.desc == decoder.decodeString() }
 }

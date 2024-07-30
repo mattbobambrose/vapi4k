@@ -14,9 +14,10 @@
  *
  */
 
-package com.vapi4k.dsl.tools
+package com.vapi4k.dsl.functions
 
-import com.vapi4k.dtos.model.CommonToolMessageDto
+import com.vapi4k.dsl.tools.ToolRequestService
+import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.findFunction

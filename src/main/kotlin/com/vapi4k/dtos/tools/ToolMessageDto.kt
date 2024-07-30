@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dtos.model
+package com.vapi4k.dtos.tools
 
 import com.vapi4k.dsl.tools.ToolMessageCompleteProperties
 import com.vapi4k.dsl.tools.ToolMessageDelayedProperties
@@ -93,11 +93,3 @@ data class ToolMessageDelayedDto(
 ) : AbstractToolMessageDto(ToolMessageType.REQUEST_RESPONSE_DELAYED),
   ToolMessageDelayedProperties,
   CommonToolMessageDto
-
-@Serializable
-data class ToolMessageDto(
-  var type: String = "",
-  var content: String = "",
-  var timingMilliseconds: Int = -1,
-  val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf(),
-)

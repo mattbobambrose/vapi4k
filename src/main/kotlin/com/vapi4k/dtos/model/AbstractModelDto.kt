@@ -17,6 +17,8 @@
 package com.vapi4k.dtos.model
 
 import com.vapi4k.dtos.RoleMessage
+import com.vapi4k.dtos.functions.FunctionDto
+import com.vapi4k.dtos.tools.ToolDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

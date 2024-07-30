@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.model.ToolMessageDelayedDto
+import com.vapi4k.dtos.tools.ToolMessageDelayedDto
 
 interface ToolMessageDelayedProperties {
   var timingMilliseconds: Int

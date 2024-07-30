@@ -18,7 +18,10 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.tools.FunctionUtils.ToolCallInfo
+import com.vapi4k.dsl.functions.FunctionDetails
+import com.vapi4k.dsl.functions.FunctionInfo
+import com.vapi4k.dsl.functions.FunctionInfoDto
+import com.vapi4k.dsl.functions.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.toolMethod
 import com.vapi4k.utils.Utils.isNull

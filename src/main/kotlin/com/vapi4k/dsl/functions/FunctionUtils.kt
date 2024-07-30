@@ -14,13 +14,13 @@
  *
  */
 
-package com.vapi4k.dsl.tools
+package com.vapi4k.dsl.functions
 
 import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
-import com.vapi4k.dtos.model.FunctionDto
-import com.vapi4k.dtos.model.FunctionPropertyDescDto
+import com.vapi4k.dtos.functions.FunctionDto
+import com.vapi4k.dtos.functions.FunctionPropertyDescDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions

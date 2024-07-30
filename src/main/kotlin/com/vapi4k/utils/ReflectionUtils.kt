@@ -44,9 +44,9 @@ internal object ReflectionUtils {
       .map { (name, type) -> name!! to type }
   val KFunction<*>.parameterSignature
     get() =
-      kParameters.map { (name, type) ->
+      kParameters.joinToString(", ") { (name, type) ->
         "$name: ${type.asKClass().simpleName}"
-      }.joinToString(", ")
+      }
 
 
   fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this

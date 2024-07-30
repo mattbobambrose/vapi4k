@@ -19,13 +19,13 @@ package com.vapi4k.dsl.tools
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
+import com.vapi4k.dsl.functions.FunctionUtils.verifyObject
 import com.vapi4k.dsl.model.AbstractModelProperties
-import com.vapi4k.dsl.tools.FunctionUtils.populateFunctionDto
-import com.vapi4k.dsl.tools.FunctionUtils.verifyObject
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dsl.vapi4k.Endpoint
-import com.vapi4k.dtos.model.ToolDto
+import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolFunction
 

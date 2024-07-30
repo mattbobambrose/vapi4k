@@ -17,13 +17,11 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.tools.enums.ToolMessageType
-import com.vapi4k.dtos.model.ToolMessageCompleteDto
-import com.vapi4k.dtos.model.ToolMessageConditionDto
-import com.vapi4k.dtos.model.ToolMessageDelayedDto
-import com.vapi4k.dtos.model.ToolMessageDto
-import com.vapi4k.dtos.model.ToolMessageFailedDto
-import com.vapi4k.dtos.model.ToolMessageStartDto
+import com.vapi4k.dtos.tools.ToolMessageCompleteDto
+import com.vapi4k.dtos.tools.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageDelayedDto
+import com.vapi4k.dtos.tools.ToolMessageFailedDto
+import com.vapi4k.dtos.tools.ToolMessageStartDto
 import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
@@ -41,20 +39,17 @@ class ToolConditionImpl internal constructor(
   internal val tool: ToolImpl,
   internal val conditionSet: Set<ToolMessageConditionDto>,
 ) : ToolCondition {
+  private val requestStartChecker = DuplicateChecker()
+  private val requestCompleteChecker = DuplicateChecker()
+  private val requestFailedChecker = DuplicateChecker()
+  private val requestDelayedChecker = DuplicateChecker()
   private val messages get() = tool.toolDto.messages
-  private val isMatchingRRD: (ToolMessageDto) -> Boolean
-    get() = { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc && it.conditions == conditionSet }
-
-  val requestStartChecker = DuplicateChecker()
-  val requestCompleteChecker = DuplicateChecker()
-  val requestFailedChecker = DuplicateChecker()
-  val requestDelayedChecker = DuplicateChecker()
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
     requestStartChecker.check("condition${conditionSet.joinToString()}{} already has a request start message")
     return ToolMessageStartDto().let { dto ->
       dto.conditions.addAll(conditionSet)
-      tool.toolDto.messages.add(dto)
+      messages.add(dto)
       ToolMessageStart(dto).apply(block)
     }
   }
@@ -63,7 +58,7 @@ class ToolConditionImpl internal constructor(
     requestCompleteChecker.check("condition${conditionSet.joinToString()}{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       dto.conditions.addAll(conditionSet)
-      tool.toolDto.messages.add(dto)
+      messages.add(dto)
       ToolMessageComplete(dto).apply(block)
     }
   }
@@ -72,7 +67,7 @@ class ToolConditionImpl internal constructor(
     requestFailedChecker.check("condition${conditionSet.joinToString()}{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
-      tool.toolDto.messages.add(dto)
+      messages.add(dto)
       ToolMessageFailed(dto).apply(block)
     }
   }
@@ -81,52 +76,8 @@ class ToolConditionImpl internal constructor(
     requestDelayedChecker.check("condition${conditionSet.joinToString()}{} already has a request delayed message")
     return ToolMessageDelayedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
-      tool.toolDto.messages.add(dto)
+      messages.add(dto)
       ToolMessageDelayed(dto).apply(block)
     }
-  }
-
-//  var requestStartMessage by ConditionDelegate(ToolMessageType.REQUEST_START)
-//  var requestCompleteMessage by ConditionDelegate(ToolMessageType.REQUEST_COMPLETE)
-//  var requestFailedMessage by ConditionDelegate(ToolMessageType.REQUEST_FAILED)
-//  var requestDelayedMessage by ConditionDelegate(ToolMessageType.REQUEST_RESPONSE_DELAYED)
-
-//  var delayedMillis
-//    get() = messages.singleOrNull(isMatchingRRD)?.timingMilliseconds ?: -1
-//    set(delayedMillis) {
-//      require(delayedMillis >= 0) { "delayedMillis must be greater than or equal to 0" }
-//      if (messages.any(isMatchingRRD)) {
-//        messages.single(isMatchingRRD).timingMilliseconds = delayedMillis
-//      } else tool.futureDelay = delayedMillis
-//    }
-
-  companion object {
-//    private class ConditionDelegate(val requestType: ToolMessageType) {
-//      operator fun getValue(
-//        condition: ToolCondition,
-//        property: KProperty<*>,
-//      ) = with(condition) { messages.singleOrNull(requestType.isMatch(conditionSet))?.content ?: "" }
-//
-//      operator fun setValue(
-//        condition: ToolCondition,
-//        property: KProperty<*>,
-//        newVal: String,
-//      ) =
-//        with(condition) {
-//          if (messages.any(requestType.isMatch(conditionSet))) {
-//            messages.single(requestType.isMatch(conditionSet)).content = newVal
-//          } else {
-//            messages += ToolMessageDto().apply {
-//              type = requestType.desc
-//              content = newVal
-//              timingMilliseconds = -1
-//              conditions.addAll(conditionSet)
-//            }
-//          }
-//        }
-//
-//      private fun ToolMessageType.isMatch(conditionSet: Set<ToolMessageConditionDto>): (ToolMessageDto) -> Boolean =
-//        { it.type == desc && it.conditions == conditionSet }
-//    }
   }
 }
