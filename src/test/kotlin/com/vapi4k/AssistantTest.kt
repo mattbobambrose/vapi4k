@@ -417,54 +417,11 @@ class AssistantTest {
           }
         }
       }
-//
-//    val chicagoCityDto = ToolMessageConditionDto("city", "eq", "Chicago")
-//    val illinoisStateDto = ToolMessageConditionDto("state", "eq", "Illinois")
-//
-//    val chicagoStartMessage =
-//      jsonElement.firstMessageOfType(
-//        ToolMessageType.REQUEST_START,
-//        chicagoCityDto,
-//        illinoisStateDto
-//      )
-//    val chicagoCompleteMessage =
-//      jsonElement.firstMessageOfType(
-//        ToolMessageType.REQUEST_COMPLETE,
-//        chicagoCityDto,
-//        illinoisStateDto
-//      )
-//    val chicagoFailedMessage =
-//      jsonElement.firstMessageOfType(
-//        ToolMessageType.REQUEST_FAILED,
-//        chicagoCityDto,
-//        illinoisStateDto
-//      )
-//    val chicagoDelayedMessage =
-//      jsonElement.firstMessageOfType(
-//        ToolMessageType.REQUEST_RESPONSE_DELAYED,
-//        chicagoCityDto,
-//        illinoisStateDto
-//      )
-//    val defaultStartMessage = jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START)
-//    val defaultCompleteMessage = jsonElement.firstMessageOfType(ToolMessageType.REQUEST_COMPLETE)
-//    val defaultFailedMessage = jsonElement.firstMessageOfType(ToolMessageType.REQUEST_FAILED)
-//    val defaultDelayedMessage = jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)
-//
-//    assertEquals(chicagoIllinoisStartMessage, chicagoStartMessage.stringValue("content"))
-//    assertEquals(chicagoIllinoisCompleteMessage, chicagoCompleteMessage.stringValue("content"))
-//    assertEquals(chicagoIllinoisFailedMessage, chicagoFailedMessage.stringValue("content"))
-//    assertEquals(chicagoIllinoisDelayedMessage, chicagoDelayedMessage.stringValue("content"))
-//    assertEquals(3000, chicagoDelayedMessage.intValue("timingMilliseconds"))
-//    assertEquals(chicagoIllinoisStartMessage + "2", defaultStartMessage.stringValue("content"))
-//    assertEquals(chicagoIllinoisCompleteMessage + "2", defaultCompleteMessage.stringValue("content"))
-//    assertEquals(chicagoIllinoisFailedMessage + "2", defaultFailedMessage.stringValue("content"))
-//    assertEquals(chicagoIllinoisDelayedMessage + "2", defaultDelayedMessage.stringValue("content"))
-//    assertEquals(1000, defaultDelayedMessage.intValue("timingMilliseconds"))
     }
   }
 
   @Test
-  fun `chicago illinois message reverse conditions 2`() {
+  fun `chicago illinois message duplicate reverse conditions`() {
     resetCaches()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
       assistant(request) {
