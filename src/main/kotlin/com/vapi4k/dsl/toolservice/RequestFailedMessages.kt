@@ -39,10 +39,10 @@ class RequestFailedMessages internal constructor() {
 
   fun condition(
     requiredCondition: ToolMessageConditionDto,
-    vararg additional: ToolMessageConditionDto,
+    vararg additionalConditions: ToolMessageConditionDto,
     block: RequestFailedCondition.() -> Unit,
   ) {
-    val conditionSet = mutableSetOf(requiredCondition).apply { addAll(additional) }
+    val conditionSet = mutableSetOf(requiredCondition).apply { addAll(additionalConditions) }
     if (conditionSet in dtoConditions) {
       error("condition(${conditionSet.joinToString()}){} duplicates an existing condition{}")
     }
