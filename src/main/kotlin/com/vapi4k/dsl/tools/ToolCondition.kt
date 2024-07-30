@@ -18,7 +18,7 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
-import com.vapi4k.dtos.tools.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageDelayedDto
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.dtos.tools.ToolMessageStartDto
@@ -37,7 +37,7 @@ interface ToolCondition {
 
 class ToolConditionImpl internal constructor(
   internal val tool: ToolImpl,
-  internal val conditionSet: Set<ToolMessageConditionDto>,
+  internal val conditionSet: Set<ToolMessageCondition>,
 ) : ToolCondition {
   private val requestStartChecker = DuplicateChecker()
   private val requestCompleteChecker = DuplicateChecker()

@@ -19,7 +19,7 @@ package com.vapi4k.dsl.tools
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
-import com.vapi4k.dtos.tools.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageDelayedDto
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.dtos.tools.ToolMessageStartDto
@@ -36,8 +36,8 @@ interface Tool {
   fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed
 
   fun condition(
-    requiredCondition: ToolMessageConditionDto,
-    vararg additionalConditions: ToolMessageConditionDto,
+    requiredCondition: ToolMessageCondition,
+    vararg additionalConditions: ToolMessageCondition,
     block: ToolCondition.() -> Unit,
   )
 }
@@ -89,8 +89,8 @@ class ToolImpl internal constructor(
   }
 
   override fun condition(
-    requiredCondition: ToolMessageConditionDto,
-    vararg additionalConditions: ToolMessageConditionDto,
+    requiredCondition: ToolMessageCondition,
+    vararg additionalConditions: ToolMessageCondition,
     block: ToolCondition.() -> Unit,
   ) {
     val conditionSet = mutableSetOf(requiredCondition).apply { addAll(additionalConditions) }

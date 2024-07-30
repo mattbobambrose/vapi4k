@@ -18,7 +18,7 @@ package com.vapi4k.dsl.toolservice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageFailed
-import com.vapi4k.dtos.tools.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.utils.DuplicateChecker
 
@@ -38,8 +38,8 @@ class RequestFailedMessages internal constructor() {
   }
 
   fun condition(
-    requiredCondition: ToolMessageConditionDto,
-    vararg additionalConditions: ToolMessageConditionDto,
+    requiredCondition: ToolMessageCondition,
+    vararg additionalConditions: ToolMessageCondition,
     block: RequestFailedCondition.() -> Unit,
   ) {
     val conditionSet = mutableSetOf(requiredCondition).apply { addAll(additionalConditions) }

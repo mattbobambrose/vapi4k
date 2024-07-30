@@ -19,13 +19,13 @@ package com.vapi4k.dsl.toolservice
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageComplete
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
-import com.vapi4k.dtos.tools.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
 class RequestCompleteCondition internal constructor(
   private val completeMessages: RequestCompleteMessages,
-  private val conditionSet: Set<ToolMessageConditionDto>,
+  private val conditionSet: Set<ToolMessageCondition>,
 ) {
   private val duplicateChecker = DuplicateChecker()
 

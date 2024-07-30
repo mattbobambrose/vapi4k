@@ -29,7 +29,7 @@ import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
-import com.vapi4k.dtos.tools.ToolMessageConditionDto
+import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
@@ -78,7 +78,7 @@ class AssistantTest {
 
   fun JsonElement.firstMessageOfType(
     type: ToolMessageType,
-    vararg conditions: ToolMessageConditionDto,
+    vararg conditions: ToolMessageCondition,
   ) = if (conditions.isEmpty())
     firstToolMessages().first { it.stringValue("type") == type.desc }
   else
@@ -365,35 +365,35 @@ class AssistantTest {
       }
     }
 
-    val chicagoCityConditionDto = ToolMessageConditionDto("city", "eq", "Chicago")
-    val illinoisStateConditionDto = ToolMessageConditionDto("state", "eq", "Illinois")
+    val chicagoCityCondition = "city" eq "Chicago"
+    val illinoisStateCondition = "state" eq "Illinois"
 
     val chicagoStartMessage =
       jsonElement.firstMessageOfType(
         ToolMessageType.REQUEST_START,
-        chicagoCityConditionDto,
-        illinoisStateConditionDto,
+        chicagoCityCondition,
+        illinoisStateCondition,
       )
 
     val chicagoCompleteMessage =
       jsonElement.firstMessageOfType(
         ToolMessageType.REQUEST_COMPLETE,
-        chicagoCityConditionDto,
-        illinoisStateConditionDto,
+        chicagoCityCondition,
+        illinoisStateCondition,
       )
 
     val chicagoFailedMessage =
       jsonElement.firstMessageOfType(
         ToolMessageType.REQUEST_FAILED,
-        chicagoCityConditionDto,
-        illinoisStateConditionDto,
+        chicagoCityCondition,
+        illinoisStateCondition,
       )
 
     val chicagoDelayedMessage =
       jsonElement.firstMessageOfType(
         ToolMessageType.REQUEST_RESPONSE_DELAYED,
-        chicagoCityConditionDto,
-        illinoisStateConditionDto,
+        chicagoCityCondition,
+        illinoisStateCondition,
       )
 
     val defaultStartMessage = jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START)
@@ -544,32 +544,32 @@ class AssistantTest {
         }
       }
     }
-    val chicagoCityDto = ToolMessageConditionDto("city", "eq", "Chicago")
-    val illinoisStateDto = ToolMessageConditionDto("state", "eq", "Illinois")
+    val chicagoCity = "city" eq "Chicago"
+    val illinoisState = "state" eq "Illinois"
 
     assertEquals(
       chicagoIllinoisStartMessage,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START, chicagoCityDto, illinoisStateDto)
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START, chicagoCity, illinoisState)
         .stringValue("content"),
     )
     assertEquals(
       chicagoIllinoisCompleteMessage,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_COMPLETE, chicagoCityDto, illinoisStateDto)
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_COMPLETE, chicagoCity, illinoisState)
         .stringValue("content"),
     )
     assertEquals(
       chicagoIllinoisFailedMessage,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_FAILED, chicagoCityDto, illinoisStateDto)
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_FAILED, chicagoCity, illinoisState)
         .stringValue("content"),
     )
     assertEquals(
       chicagoIllinoisDelayedMessage,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED, chicagoCityDto, illinoisStateDto)
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED, chicagoCity, illinoisState)
         .stringValue("content"),
     )
     assertEquals(
       3000,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED, chicagoCityDto, illinoisStateDto)
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED, chicagoCity, illinoisState)
         .intValue("timingMilliseconds"),
     )
   }

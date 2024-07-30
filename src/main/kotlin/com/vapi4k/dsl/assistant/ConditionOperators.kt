@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.dtos.tools.ToolMessageConditionDto.Companion.toolMessageCondition
+import com.vapi4k.dtos.tools.ToolMessageCondition.Companion.toolMessageCondition
 
 infix fun String.eq(value: String) = toolMessageCondition(this, "eq", value)
 

@@ -19,7 +19,7 @@ package com.vapi4k.dtos.tools
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ToolMessageConditionDto(
+class ToolMessageCondition private constructor(
   var param: String = "",
   var operator: String = "",
   var value: String = "",
@@ -31,18 +31,18 @@ data class ToolMessageConditionDto(
       param: String,
       operator: String,
       value: String,
-    ) = ToolMessageConditionDto(param, operator, value)
+    ) = ToolMessageCondition(param, operator, value)
 
     internal fun toolMessageCondition(
       param: String,
       operator: String,
       value: Int,
-    ) = ToolMessageConditionDto(param, operator, value.toString())
+    ) = ToolMessageCondition(param, operator, value.toString())
 
     internal fun toolMessageCondition(
       param: String,
       operator: String,
       value: Boolean,
-    ) = ToolMessageConditionDto(param, operator, value.toString())
+    ) = ToolMessageCondition(param, operator, value.toString())
   }
 }

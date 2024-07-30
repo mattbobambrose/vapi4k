@@ -32,7 +32,7 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ToolMessageSerializer::class)
 sealed interface CommonToolMessageDto {
-  val conditions: MutableSet<ToolMessageConditionDto>
+  val conditions: MutableSet<ToolMessageCondition>
 }
 
 private object ToolMessageSerializer : KSerializer<CommonToolMessageDto> {
@@ -59,7 +59,7 @@ abstract class AbstractToolMessageDto(
   @EncodeDefault
   val type: ToolMessageType,
   var content: String = "",
-  val conditions: MutableSet<ToolMessageConditionDto> = mutableSetOf(),
+  val conditions: MutableSet<ToolMessageCondition> = mutableSetOf(),
 ) {
   fun verifyValues() {
     if (content.isEmpty()) error("Content is required for ToolMessage")
