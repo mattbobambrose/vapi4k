@@ -16,35 +16,39 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.dsl.assistant.tools.ToolCache.getFunctionFromCache
-import com.vapi4k.plugin.Vapi4kLogger.logger
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
+import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.functionName
 import com.vapi4k.utils.JsonElementUtils.functionParameters
-import com.vapi4k.utils.JsonElementUtils.id
 import com.vapi4k.utils.JsonElementUtils.messageCallId
-import com.vapi4k.utils.JsonUtils.containsKey
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-class FunctionResponse(var result: String = "") {
+class FunctionResponse(
+  var result: String = "",
+) {
   companion object {
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
-          val cacheKey = if (request.containsKey("message")) request.messageCallId else request.id
+          val sessionCacheId = request.messageCallId.toSessionCacheId()
           val funcName = request.functionName
           val args = request.functionParameters
-          response.result =
-            runCatching {
-              getFunctionFromCache(cacheKey)
-                .getFunction(funcName)
-                .invokeToolMethod(args, request)
-            }.getOrElse { e ->
-              val errorMsg = e.message ?: "Error invoking function"
-              logger.error(e) { errorMsg }
-              errorMsg
-            }
+          runCatching {
+            functionCache.getFromCache(sessionCacheId)
+              .getFunction(funcName)
+              .invokeToolMethod(args, request, mutableListOf(),
+                { result ->
+                  response.result = result
+                }, { result ->
+                  response.result = "Error invoking function"
+                })
+          }.getOrElse { e ->
+            val errorMsg = e.message ?: "Error invoking function"
+            logger.error { errorMsg }
+          }
         }
   }
 }

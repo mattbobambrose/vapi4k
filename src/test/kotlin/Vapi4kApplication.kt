@@ -16,50 +16,51 @@
 
 import com.vapi4k.dbms.Messages.insertRequest
 import com.vapi4k.dbms.Messages.insertResponse
-import com.vapi4k.dsl.vapi4k.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.dsl.vapi4k.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.dsl.vapi4k.ServerRequestType.STATUS_UPDATE
-import com.vapi4k.dsl.vapi4k.ServerRequestType.TOOL_CALL
-import com.vapi4k.dsl.vapi4k.configureKtor
-import com.vapi4k.plugin.Vapi4k
-import com.vapi4k.plugin.Vapi4kLogger.logger
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.STATUS_UPDATE
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.server.Vapi4k
+import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.utils.DslUtils.logObject
 import com.vapi4k.utils.DslUtils.printObject
 import com.vapi4k.utils.JsonElementUtils.requestType
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
-
+import io.micrometer.prometheusmetrics.PrometheusConfig
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 
 fun Application.module() {
-  configureKtor()
-  //connectToDbms()
+  val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
+  defaultKtorConfig(appMicrometerRegistry)
 
   install(Vapi4k) {
-    val BASE_URL = "https://eocare-app-fiqm5.ondigitalocean.app"
+    val baseUrl = "https://eocare-app-fiqm5.ondigitalocean.app"
 
     configure {
-      serverUrl = "$BASE_URL/inboundRequest"
+      serverUrl = "$baseUrl/inboundRequest"
       serverUrlSecret = "12345"
     }
 
     toolCallEndpoints {
       endpoint {
         name = "endpoint1"
-        url = "$BASE_URL/toolCall"
-        secret = "456"
+        serverUrl = "$baseUrl/toolCall"
+        serverUrlSecret = "456"
         timeoutSeconds = 20
       }
 
       endpoint {
         name = "endpoint2"
-        url = "$BASE_URL/TC2"
-        secret = "456"
+        serverUrl = "$baseUrl/TC2"
+        serverUrlSecret = "456"
         timeoutSeconds = 20
       }
     }
 
-    onAssistantRequest { assistantRequest ->
-      myAssistantRequest(assistantRequest)
+    onAssistantRequest { request ->
+      myAssistantRequest(request)
     }
 
     onAllRequests { request ->

@@ -25,33 +25,43 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-object JsonUtils {
-  val JsonElement.stringValue get() = jsonPrimitive.content
-  val JsonElement.jsonList get() = jsonArray.toList()
+val JsonElement.stringValue get() = jsonPrimitive.content
+val JsonElement.intValue get() = jsonPrimitive.content.toInt()
+val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
 
-  private fun JsonElement.element(key: String) =
-    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
+fun JsonElement.getToJsonElements() = jsonArray.toList()
 
-  operator fun JsonElement.get(vararg keys: String): JsonElement =
-    keys.flatMap { it.split(".") }
-      .fold(this) { acc, key -> acc.element(key) }
+fun JsonElement.firstInList() = getToJsonElements().first()
 
-  inline fun <reified T> JsonElement.toObjectList() = jsonArray.map { Json.decodeFromJsonElement<T>(it) }
+private fun JsonElement.element(key: String) =
+  jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
 
-  val JsonElement.isEmpty get() = jsonObject.isEmpty()
-  fun JsonElement.containsKey(key: String) = jsonObject.containsKey(key)
+operator fun JsonElement.get(vararg keys: String): JsonElement =
+  keys.flatMap { it.split(".") }
+    .fold(this) { acc, key -> acc.element(key) }
 
-  val prettyFormat by lazy { Json { prettyPrint = true } }
-  val rawFormat by lazy { Json { prettyPrint = false } }
+inline fun <reified T> JsonElement.toObjectList() = jsonArray.map { Json.decodeFromJsonElement<T>(it) }
 
-  inline fun <reified T> T.toJsonString(prettyPrint: Boolean = false) =
-    (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)
+val JsonElement.isEmpty get() = jsonObject.isEmpty()
 
-  inline fun <reified T> T.toJsonElement() = Json.encodeToJsonElement(this)
+fun JsonElement.containsKey(key: String) = jsonObject.containsKey(key)
 
-  fun String.toJsonElement() = Json.parseToJsonElement(this)
+val prettyFormat by lazy { Json { prettyPrint = true } }
+val rawFormat by lazy { Json { prettyPrint = false } }
 
-  inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)
+inline fun <reified T> T.toJsonString(prettyPrint: Boolean = true) =
+  (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)
 
-  inline fun <reified T> String.toObject() = Json.decodeFromString<T>(this)
-}
+inline fun <reified T> T.toJsonElement() = Json.encodeToJsonElement(this)
+
+fun String.toJsonElement() = Json.parseToJsonElement(this)
+
+inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)
+
+inline fun <reified T> String.toObject() = Json.decodeFromString<T>(this)
+
+fun JsonElement.stringValue(key: String) = get(key).stringValue
+
+fun JsonElement.intValue(key: String) = get(key).intValue
+
+fun JsonElement.booleanValue(key: String) = get(key).booleanValue

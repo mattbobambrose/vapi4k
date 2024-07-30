@@ -14,7 +14,8 @@
  *
  */
 
-package com.vapi4k/*
+package com.vapi4k
+/*
  * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,12 +34,8 @@ package com.vapi4k/*
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.assistant.eq
-import com.vapi4k.dsl.assistant.tools.RequestComplete
-import com.vapi4k.dsl.assistant.tools.RequestComplete.Companion.requestComplete
-import com.vapi4k.dsl.assistant.tools.RequestFailed
-import com.vapi4k.dsl.assistant.tools.RequestFailed.Companion.requestFailed
-import com.vapi4k.dsl.assistant.tools.ToolCallService
-import com.vapi4k.dsl.vapi4k.ToolCallRoleType
+import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
+import com.vapi4k.dsl.toolservice.ToolRequestService
 import kotlinx.serialization.json.JsonElement
 
 class WeatherLookupService0 {
@@ -46,35 +43,43 @@ class WeatherLookupService0 {
   fun getFavFoodInChicago() = "Pizza"
 }
 
-class WeatherLookupService1 : ToolCallService() {
+class WeatherLookupService1 : ToolRequestService() {
   @ToolCall("Look up the weather for a city")
   fun getWeatherByCity(
     @Param(description = "The city name") city: String,
     state: String,
   ) = "The weather in city $city and state $state is windy"
 
-  override fun onRequestComplete(
+  override fun onToolRequestComplete(
     toolCallRequest: JsonElement,
     result: String,
-  ): RequestComplete =
-    requestComplete {
+  ) =
+    requestCompleteMessages {
       condition("city" eq "Chicago", "state" eq "Illinois") {
-        role = ToolCallRoleType.ASSISTANT
-        requestCompleteMessage = "Tool call request complete with condition"
+        requestCompleteMessage {
+          role = ToolMessageRoleType.ASSISTANT
+          content = "Tool call request complete with condition"
+        }
       }
-      role = ToolCallRoleType.SYSTEM
-      requestCompleteMessage = "Tool call request complete no condition"
+      requestCompleteMessage {
+        role = ToolMessageRoleType.SYSTEM
+        content = "Tool call request complete no condition"
+      }
     }
 
-  override fun onRequestFailed(
+  override fun onToolRequestFailed(
     toolCallRequest: JsonElement,
     errorMessage: String,
-  ): RequestFailed =
-    requestFailed {
+  ) =
+    requestFailedMessages {
       condition("city" eq "Houston", "state" eq "Texas") {
-        requestFailedMessage = "The weather in Chicago is always sunny"
+        requestFailedMessage {
+          content = "The weather in Chicago is always sunny"
+        }
       }
-      requestFailedMessage = "Tool call request failed"
+      requestFailedMessage {
+        content = "Tool call request failed"
+      }
     }
 }
 

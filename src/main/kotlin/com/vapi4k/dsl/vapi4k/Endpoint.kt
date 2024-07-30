@@ -17,13 +17,18 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.utils.ReflectionUtils.ensureStartsWith
+import kotlinx.serialization.SerialName
 import java.net.URI
 
 @Vapi4KDslMarker
 class Endpoint internal constructor() {
-  internal val path get() = URI(url).toURL().path.ensureStartsWith("/")
+  internal val path get() = URI(serverUrl).toURL().path.ensureStartsWith("/")
   var name = ""
-  var url = ""
-  var secret = ""
+
+  @SerialName("url")
+  var serverUrl = ""
+
+  @SerialName("secret")
+  var serverUrlSecret = ""
   var timeoutSeconds = -1
 }

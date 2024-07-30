@@ -16,18 +16,12 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.dsl.vapi4k.ServerRequestType
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.jsonList
-import com.vapi4k.utils.JsonUtils.stringValue
-import com.vapi4k.utils.JsonUtils.toJsonElement
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 
 object JsonElementUtils {
-
   val JsonElement.requestType get() = ServerRequestType.fromString(this["message.type"].stringValue)
-
   val JsonElement.isAssistantRequest get() = requestType == ServerRequestType.ASSISTANT_REQUEST
   val JsonElement.isConversationUpdate get() = requestType == ServerRequestType.CONVERSATION_UPDATE
   val JsonElement.isEndOfCallReport get() = requestType == ServerRequestType.END_OF_CALL_REPORT
@@ -56,24 +50,30 @@ object JsonElementUtils {
   val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
 
   val JsonElement.functionName
-    get() = if (isFunctionCall) this["message.functionCall.name"].stringValue else error("JsonElement is not a function call")
+    get() = if (isFunctionCall)
+      this["message.functionCall.name"].stringValue
+    else
+      error("JsonElement is not a function call")
 
   val JsonElement.functionParameters
-    get() = if (isFunctionCall) this["message.functionCall.parameters"] else error("JsonElement is not a function call")
+    get() = if (isFunctionCall)
+      this["message.functionCall.parameters"]
+    else
+      error("JsonElement is not a function call")
 
   val JsonElement.toolCallList
-    get() = if (isToolCall) this["message.toolCallList"].jsonList else error("JsonElement is not a tool call")
+    get() = if (isToolCall)
+      this["message.toolCallList"].getToJsonElements()
+    else
+      error("JsonElement is not a tool call")
 
   val JsonElement.toolCallId get() = this["id"].stringValue
-
   val JsonElement.toolCallName get() = this["function.name"].stringValue
-
   val JsonElement.toolCallArguments get() = this["function.arguments"]
-
   val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
-
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 
   private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
+
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
 }

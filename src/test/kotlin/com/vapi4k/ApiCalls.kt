@@ -16,13 +16,13 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.assistant.api.VapiApi.Companion.vapiApi
+import com.vapi4k.dsl.api.VapiApi.Companion.vapiApi
+import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
 import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class ApiCalls {
-
   @Test
   fun `multiple Assistant Decls`() {
     val api = vapiApi("123-445-666")
@@ -114,9 +114,8 @@ class ApiCalls {
           call {
             assistant {
               firstMessage = "Hi there. I am here to help."
-              model {
-                provider = "openai"
-                model = "gpt-4-turbo"
+              openAIModel {
+                modelType = OpenAIModelType.GPT_4_TURBO
                 systemMessage = "Answer questions."
               }
             }
@@ -131,11 +130,8 @@ class ApiCalls {
       println("Call status: ${callResp.status}")
       println("Call response:> ${callResp.bodyAsJsonElement()}")
 
-
 //    val listResp = api.list(ASSISTANTS)
 //    println("List response: ${listResp.jsonElement}")
-
-
 //
 //
 //    val saveResp =
@@ -147,19 +143,18 @@ class ApiCalls {
 //
 //    val delResp = api.delete("123-445-666")
 //
-////
-////    api.create(assistant)
-////
-////    api.create {
-////      assistant {
-////
-////      }
-////    }
-////
-////    api.list(ASSISTANT)
-////    api.delete(ASSISTANT, "123-445-666")
-////
+//
+//    api.create(assistant)
+//
+//    api.create {
+//      assistant {
+//
+//      }
+//    }
+//
+//    api.list(ASSISTANT)
+//    api.delete(ASSISTANT, "123-445-666")
+//
     }
   }
-
 }

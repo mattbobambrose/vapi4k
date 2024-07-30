@@ -16,6 +16,7 @@
 
 package com.vapi4k.dbms
 
+import com.vapi4k.common.EnvVar
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
@@ -26,13 +27,13 @@ object DbmsPool {
     Database.connect(
       HikariDataSource(
         HikariConfig().apply {
-          driverClassName = "com.impossibl.postgres.jdbc.PGDriver"
-          jdbcUrl = System.getenv("DBMS_URL") ?: "jdbc:pgsql://localhost:5432/postgres"
-          username = System.getenv("DBMS_USERNAME") ?: "postgres"
-          password = System.getenv("DBMS_PASSWORD") ?: "docker"
-          maximumPoolSize = 10
+          driverClassName = EnvVar.DBMS_DRIVER_CLASSNAME.value
+          jdbcUrl = EnvVar.DBMS_URL.value
+          username = EnvVar.DBMS_USERNAME.value
+          password = EnvVar.DBMS_PASSWORD.value
+          maximumPoolSize = EnvVar.DBMS_MAX_POOL_SIZE.toInt()
           transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-          maxLifetime = 30.minutes.inWholeMilliseconds
+          maxLifetime = EnvVar.DBMS_MAX_LIFETIME_MINS.toInt().minutes.inWholeMilliseconds
           validate()
         },
       ),

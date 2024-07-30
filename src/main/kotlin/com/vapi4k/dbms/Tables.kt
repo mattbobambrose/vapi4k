@@ -20,6 +20,8 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.jetbrains.exposed.sql.kotlin.datetime.duration
 
+object Tables
+
 object MessagesTable : IntIdTable("vapi4k.messages") {
   val created = datetime("created")
   val messageType = text("message_type")

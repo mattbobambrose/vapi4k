@@ -16,8 +16,7 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.plugin.Vapi4kLogger.logger
-import com.vapi4k.utils.JsonUtils.toJsonString
+import com.vapi4k.server.Vapi4kServer.logger
 
 object DslUtils {
   inline fun <reified T> logObject(
@@ -32,5 +31,13 @@ object DslUtils {
 
   val isLoggingEnabled: Boolean get() = System.getenv("LOGGING_ENABLED")?.toBoolean() ?: false
 
-  fun String.includeIf(condition: Boolean, otherWise: String = "") = if (condition) this else otherWise
+  fun String.includeIf(
+    condition: Boolean,
+    otherWise: String = "",
+  ) = if (condition) this else otherWise
+
+  fun getRandomSecret(
+    length: Int = 10,
+    charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9'),
+  ) = (1..length).map { charPool.random() }.joinToString("")
 }

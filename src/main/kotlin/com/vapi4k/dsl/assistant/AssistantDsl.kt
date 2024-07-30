@@ -16,11 +16,20 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.dsl.assistant.squad.Squad
-import com.vapi4k.dsl.assistant.squad.SquadId
-import com.vapi4k.responses.AssistantRequestMessageResponse
-import com.vapi4k.responses.assistant.NumberDestinationDto
-import com.vapi4k.responses.assistant.SipDestinationDto
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.dsl.destination.NumberDestination
+import com.vapi4k.dsl.destination.NumberDestinationImpl
+import com.vapi4k.dsl.destination.SipDestination
+import com.vapi4k.dsl.destination.SipDestinationImpl
+import com.vapi4k.dsl.squad.Squad
+import com.vapi4k.dsl.squad.SquadId
+import com.vapi4k.dsl.squad.SquadIdImpl
+import com.vapi4k.dsl.squad.SquadImpl
+import com.vapi4k.dtos.api.destination.NumberDestinationDto
+import com.vapi4k.dtos.api.destination.SipDestinationDto
+import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.utils.AssistantCacheIdSource
+import com.vapi4k.utils.JsonElementUtils.messageCallId
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
@@ -35,54 +44,59 @@ object AssistantDsl {
   fun assistant(
     request: JsonElement,
     block: Assistant.() -> Unit,
-  ) =
-    AssistantRequestMessageResponse().apply {
-      with(messageResponse) { Assistant(request, "", assistantDto, assistantOverridesDto).apply(block) }
-    }.messageResponse
+  ) = AssistantRequestResponse().apply {
+    val sessionCacheId = request.messageCallId.toSessionCacheId()
+    val assistantCacheIdSource = AssistantCacheIdSource()
+    AssistantImpl(request, sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
+      .apply(block)
+      .apply {
+        assistantDto.updated = true
+        assistantDto.verifyValues()
+      }
+  }
 
   fun assistantId(
     request: JsonElement,
     block: AssistantId.() -> Unit,
-  ) =
-    AssistantRequestMessageResponse().apply {
-      AssistantId(request, "", messageResponse).apply(block)
-    }.messageResponse
+  ) = AssistantRequestResponse().apply {
+    val sessionCacheId = request.messageCallId.toSessionCacheId()
+    val assistantCacheIdSource = AssistantCacheIdSource()
+    AssistantIdImpl(request, sessionCacheId, assistantCacheIdSource, this).apply(block)
+  }
 
   fun squad(
     request: JsonElement,
     block: Squad.() -> Unit,
-  ) =
-    AssistantRequestMessageResponse().apply {
-      Squad(request, "", messageResponse.squadDto).apply(block)
-    }.messageResponse
+  ) = AssistantRequestResponse().apply {
+    val sessionCacheId = request.messageCallId.toSessionCacheId()
+    val assistantCacheIdSource = AssistantCacheIdSource()
+    SquadImpl(request, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
+  }
 
   fun squadId(
     request: JsonElement,
     block: SquadId.() -> Unit,
-  ) =
-    AssistantRequestMessageResponse().apply {
-      SquadId(request, messageResponse).apply(block)
-    }.messageResponse
+  ) = AssistantRequestResponse().apply {
+    SquadIdImpl(request, this).apply(block)
+  }
 
   fun numberDestination(
     request: JsonElement,
     block: NumberDestination.() -> Unit,
-  ) =
-    AssistantRequestMessageResponse().apply {
-      val numDto = NumberDestinationDto()
-      messageResponse.destination = numDto
-      NumberDestination(request, numDto).apply(block)
-    }.messageResponse
+  ) = AssistantRequestResponse().apply {
+    val numDto = NumberDestinationDto()
+    destination = numDto
+    NumberDestinationImpl(request, numDto).apply(block)
+  }
 
   fun sipDestination(
     request: JsonElement,
     block: SipDestination.() -> Unit,
-  ) =
-    AssistantRequestMessageResponse().apply {
-      val sipDto = SipDestinationDto()
-      messageResponse.destination = sipDto
-      SipDestination(request, sipDto).apply(block)
-    }.messageResponse
+  ) = AssistantRequestResponse().apply {
+    val sipDto = SipDestinationDto()
+    destination = sipDto
+    SipDestinationImpl(request, sipDto).apply(block)
+  }
 }
 
 @Retention(RUNTIME)
@@ -94,4 +108,6 @@ annotation class ToolCall(
 
 @Retention(RUNTIME)
 @Target(VALUE_PARAMETER)
-annotation class Param(val description: String)
+annotation class Param(
+  val description: String,
+)

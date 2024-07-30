@@ -16,8 +16,10 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.assistant.Assistant
+import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.utils.Utils.isNull
 import io.ktor.server.config.ApplicationConfig
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
@@ -31,9 +33,8 @@ annotation class Vapi4KDslMarker
 
 @Vapi4KDslMarker
 class Vapi4kConfig internal constructor() {
-
   init {
-    Assistant.config = this
+    AssistantImpl.config = this
   }
 
   internal lateinit var applicationConfig: ApplicationConfig
@@ -43,24 +44,23 @@ class Vapi4kConfig internal constructor() {
   internal val perRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val allResponses = mutableListOf<ResponseArgs>()
   internal val perResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
-
-  internal val configProperties: Vapi4kConfigProperties = Vapi4kConfigProperties()
+  internal val configProperties: Vapi4kConfigPropertiesImpl = Vapi4kConfigPropertiesImpl()
   internal val toolCallEndpoints = mutableListOf<Endpoint>()
 
   internal val defaultToolCallEndpoint
     get() = Endpoint().apply {
-      url = this@Vapi4kConfig.configProperties.serverUrl.ifEmpty {
+      serverUrl = this@Vapi4kConfig.configProperties.serverUrl.ifEmpty {
         error("No default tool endpoint has been specified in the Vapi4k configuration")
       }
-      secret = this@Vapi4kConfig.configProperties.serverUrlSecret
+      serverUrlSecret = this@Vapi4kConfig.configProperties.serverUrlSecret
     }
 
   internal fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }
 
   internal fun getEndpoint(endpointName: String) =
-    (toolCallEndpoints.firstOrNull {
+    toolCallEndpoints.firstOrNull {
       it.name == endpointName
-    } ?: error("Endpoint not found in vapi4k configuration: $endpointName"))
+    } ?: error("Endpoint not found in vapi4k configuration: $endpointName")
 
   fun configure(block: Vapi4kConfigProperties.() -> Unit) {
     configProperties.apply(block)
@@ -70,10 +70,8 @@ class Vapi4kConfig internal constructor() {
     ToolCallEndpoints().apply(block)
   }
 
-  fun onAssistantRequest(
-    block: suspend (request: JsonElement) -> AssistantRequestResponse,
-  ) {
-    if (assistantRequest == null)
+  fun onAssistantRequest(block: suspend (request: JsonElement) -> AssistantRequestResponse) {
+    if (assistantRequest.isNull())
       assistantRequest = block
     else
       error("onAssistantRequest{} can be called only once")

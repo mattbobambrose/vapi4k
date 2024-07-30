@@ -16,11 +16,11 @@
 
 package com.vapi4k
 
-import com.vapi4k.utils.JsonUtils.get
-import com.vapi4k.utils.JsonUtils.jsonList
-import com.vapi4k.utils.JsonUtils.stringValue
-import com.vapi4k.utils.JsonUtils.toJsonElement
-import com.vapi4k.utils.JsonUtils.toObjectList
+import com.vapi4k.utils.get
+import com.vapi4k.utils.getToJsonElements
+import com.vapi4k.utils.stringValue
+import com.vapi4k.utils.toJsonElement
+import com.vapi4k.utils.toObjectList
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
 
@@ -324,7 +324,7 @@ class JsonExtensionTest {
   @Test
   fun testArrayValues() {
     val obj = json.toJsonElement()
-    assert(obj["message.toolWithToolCallList"].jsonList.size == 1)
+    assert(obj["message.toolWithToolCallList"].getToJsonElements().size == 1)
   }
 
   @Test
@@ -357,8 +357,8 @@ class JsonExtensionTest {
 
     val jsonElement = str.toJsonElement()
     val servers = jsonElement["servers"].toObjectList<Server>()
-    for (server in servers) {
-      println(server.url)
-    }
+//    for (server in servers) {
+//      println(server.url)
+//    }
   }
 }
