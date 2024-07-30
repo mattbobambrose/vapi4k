@@ -80,7 +80,9 @@ class AssistantTest {
     type: ToolMessageType,
     vararg conditions: ToolMessageCondition,
   ) = if (conditions.isEmpty())
-    firstToolMessages().first { it.stringValue("type") == type.desc }
+    firstToolMessages()
+      .filter { !it.containsKey("conditions") }
+      .first { it.stringValue("type") == type.desc }
   else
     firstToolMessages()
       .filter { it.containsKey("conditions") }
@@ -365,36 +367,20 @@ class AssistantTest {
       }
     }
 
-    val chicagoCityCondition = "city" eq "Chicago"
-    val illinoisStateCondition = "state" eq "Illinois"
+    val chicagoCity = "city" eq "Chicago"
+    val illinoisState = "state" eq "Illinois"
 
     val chicagoStartMessage =
-      jsonElement.firstMessageOfType(
-        ToolMessageType.REQUEST_START,
-        chicagoCityCondition,
-        illinoisStateCondition,
-      )
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START, chicagoCity, illinoisState)
 
     val chicagoCompleteMessage =
-      jsonElement.firstMessageOfType(
-        ToolMessageType.REQUEST_COMPLETE,
-        chicagoCityCondition,
-        illinoisStateCondition,
-      )
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_COMPLETE, chicagoCity, illinoisState)
 
     val chicagoFailedMessage =
-      jsonElement.firstMessageOfType(
-        ToolMessageType.REQUEST_FAILED,
-        chicagoCityCondition,
-        illinoisStateCondition,
-      )
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_FAILED, chicagoCity, illinoisState)
 
     val chicagoDelayedMessage =
-      jsonElement.firstMessageOfType(
-        ToolMessageType.REQUEST_RESPONSE_DELAYED,
-        chicagoCityCondition,
-        illinoisStateCondition,
-      )
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED, chicagoCity, illinoisState)
 
     val defaultStartMessage = jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START)
     val defaultCompleteMessage = jsonElement.firstMessageOfType(ToolMessageType.REQUEST_COMPLETE)
