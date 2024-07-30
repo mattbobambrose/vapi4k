@@ -22,10 +22,10 @@ import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.tools.ToolCache.Companion.resetCaches
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
-import com.vapi4k.utils.TestUtils.withTestApplication
 import com.vapi4k.utils.firstInList
 import com.vapi4k.utils.get
 import com.vapi4k.utils.stringValue
+import com.vapi4k.utils.withTestApplication
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText

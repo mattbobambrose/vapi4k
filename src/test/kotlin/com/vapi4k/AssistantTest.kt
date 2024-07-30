@@ -29,19 +29,16 @@ import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
-import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
-import com.vapi4k.utils.TestUtils.withTestApplication
-import com.vapi4k.utils.containsKey
+import com.vapi4k.utils.firstMessageOfType
 import com.vapi4k.utils.get
-import com.vapi4k.utils.getToJsonElements
 import com.vapi4k.utils.intValue
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
 import com.vapi4k.utils.toJsonString
-import kotlinx.serialization.json.JsonElement
+import com.vapi4k.utils.withTestApplication
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
@@ -70,27 +67,6 @@ class AssistantTest {
   val chicagoIllinoisCompleteMessage = "This is the Chicago Illinois request complete message"
   val chicagoIllinoisFailedMessage = "This is the Chicago Illinois request failed message"
   val chicagoIllinoisDelayedMessage = "This is the Chicago Illinois request delayed message"
-
-  fun JsonElement.tools() = get("assistant.model.tools").getToJsonElements()
-
-  fun JsonElement.firstTool() = tools().first()
-
-  fun JsonElement.firstToolMessages() = firstTool()["messages"].getToJsonElements()
-
-  fun JsonElement.firstMessageOfType(
-    type: ToolMessageType,
-    vararg conditions: ToolMessageCondition,
-  ) = if (conditions.isEmpty())
-    firstToolMessages()
-      .filter { !it.containsKey("conditions") }
-      .first { it.stringValue("type") == type.desc }
-  else
-    firstToolMessages()
-      .filter { it.containsKey("conditions") }
-      .filter {
-        conditions.all { c -> it["conditions"].getToJsonElements().contains(c.toJsonElement()) }
-      }
-      .first { it.stringValue("type") == type.desc }
 
   @Test
   fun testRegular() {

@@ -18,6 +18,8 @@ package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
 import com.vapi4k.common.Constants.DEFAULT_SERVER_PATH
+import com.vapi4k.dsl.tools.enums.ToolMessageType
+import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.Utils.resourceFile
@@ -30,86 +32,106 @@ import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
 
-object TestUtils {
-  fun withTestApplication(
-    fileName: String,
-    block: (JsonElement) -> AssistantRequestResponse,
-  ): Pair<HttpResponse, JsonElement> {
-    var response: HttpResponse? = null
-    var je: JsonElement? = null
-    testApplication {
-      application {
-        install(Vapi4k) {
-          onAssistantRequest { request ->
-            block(request)
-          }
+fun JsonElement.tools() = get("assistant.model.tools").getToJsonElements()
 
-          toolCallEndpoints {
-            // Provide a default endpoint
-            endpoint {
-              serverUrl = "https://test/toolCall"
-              serverUrlSecret = "456"
-              timeoutSeconds = 20
-            }
-          }
-        }
-      }
+fun JsonElement.firstTool() = tools().first()
 
-      response =
-        client.post("/$DEFAULT_SERVER_PATH") {
-          configPost()
-          setBody(resourceFile(fileName))
-        }
+fun JsonElement.firstToolMessages() = firstTool()["messages"].getToJsonElements()
 
-      je = response!!.bodyAsText().toJsonElement()
+fun JsonElement.firstMessageOfType(
+  type: ToolMessageType,
+  vararg conditions: ToolMessageCondition,
+) = if (conditions.isEmpty())
+  firstToolMessages()
+    .filter { !it.containsKey("conditions") }
+    .first { it.stringValue("type") == type.desc }
+else
+  firstToolMessages()
+    .filter { it.containsKey("conditions") }
+    .filter {
+      conditions.all { c -> it["conditions"].getToJsonElements().contains(c.toJsonElement()) }
     }
-    return response!! to je!!
-  }
+    .first { it.stringValue("type") == type.desc }
 
-  fun withTestApplication(
-    fileNames: List<String>,
-    getArg: String = "",
-    cacheRemovalEnabled: Boolean = true,
-    block: (JsonElement) -> AssistantRequestResponse,
-  ): List<Pair<HttpResponse, JsonElement>> {
-    val responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
-    testApplication {
-      application {
-        install(Vapi4k) {
-          configure {
-            isEOCRCacheRemovalEnabled = cacheRemovalEnabled
-          }
-          onAssistantRequest { request ->
-            block(request)
-          }
-          toolCallEndpoints {
-            // Provide a default endpoint
-            endpoint {
-              serverUrl = "https://test/toolCall"
-              serverUrlSecret = "456"
-              timeoutSeconds = 20
-            }
+
+fun withTestApplication(
+  fileName: String,
+  block: (JsonElement) -> AssistantRequestResponse,
+): Pair<HttpResponse, JsonElement> {
+  var response: HttpResponse? = null
+  var je: JsonElement? = null
+  testApplication {
+    application {
+      install(Vapi4k) {
+        onAssistantRequest { request ->
+          block(request)
+        }
+
+        toolCallEndpoints {
+          // Provide a default endpoint
+          endpoint {
+            serverUrl = "https://test/toolCall"
+            serverUrlSecret = "456"
+            timeoutSeconds = 20
           }
         }
-      }
-
-      responses
-        .addAll(
-          fileNames.map { fileName ->
-            val response = client.post("/$DEFAULT_SERVER_PATH") {
-              configPost()
-              setBody(resourceFile(fileName))
-            }
-            response to response.bodyAsText().toJsonElement()
-          },
-        )
-
-      if (getArg.isNotEmpty()) {
-        responses.add(
-          client.get(getArg) { configPost() }.let { it to it.bodyAsText().toJsonElement() }
-        )
       }
     }
-    return responses
+
+    response =
+      client.post("/$DEFAULT_SERVER_PATH") {
+        configPost()
+        setBody(resourceFile(fileName))
+      }
+
+    je = response!!.bodyAsText().toJsonElement()
   }
+  return response!! to je!!
+}
+
+fun withTestApplication(
+  fileNames: List<String>,
+  getArg: String = "",
+  cacheRemovalEnabled: Boolean = true,
+  block: (JsonElement) -> AssistantRequestResponse,
+): List<Pair<HttpResponse, JsonElement>> {
+  val responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
+  testApplication {
+    application {
+      install(Vapi4k) {
+        configure {
+          isEOCRCacheRemovalEnabled = cacheRemovalEnabled
+        }
+        onAssistantRequest { request ->
+          block(request)
+        }
+        toolCallEndpoints {
+          // Provide a default endpoint
+          endpoint {
+            serverUrl = "https://test/toolCall"
+            serverUrlSecret = "456"
+            timeoutSeconds = 20
+          }
+        }
+      }
+    }
+
+    responses
+      .addAll(
+        fileNames.map { fileName ->
+          val response = client.post("/$DEFAULT_SERVER_PATH") {
+            configPost()
+            setBody(resourceFile(fileName))
+          }
+          response to response.bodyAsText().toJsonElement()
+        },
+      )
+
+    if (getArg.isNotEmpty()) {
+      responses.add(
+        client.get(getArg) { configPost() }.let { it to it.bodyAsText().toJsonElement() }
+      )
+    }
+  }
+  return responses
 }
