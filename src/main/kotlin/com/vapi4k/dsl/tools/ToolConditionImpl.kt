@@ -55,7 +55,7 @@ class ToolConditionImpl internal constructor(
   val requestDelayedChecker = DuplicateChecker()
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
-    requestStartChecker.check("condition{} already has a request start message")
+    requestStartChecker.check("condition${conditionSet.joinToString()}{} already has a request start message")
     return ToolMessageStartDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       tool.toolDto.messages.add(dto)
@@ -64,7 +64,7 @@ class ToolConditionImpl internal constructor(
   }
 
   override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    requestCompleteChecker.check("condition{} already has a request complete message")
+    requestCompleteChecker.check("condition${conditionSet.joinToString()}{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       tool.toolDto.messages.add(dto)
@@ -73,7 +73,7 @@ class ToolConditionImpl internal constructor(
   }
 
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    requestFailedChecker.check("condition{} already has a request failed message")
+    requestFailedChecker.check("condition${conditionSet.joinToString()}{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       tool.toolDto.messages.add(dto)
@@ -82,7 +82,7 @@ class ToolConditionImpl internal constructor(
   }
 
   override fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed {
-    requestDelayedChecker.check("condition{} already has a request delayed message")
+    requestDelayedChecker.check("condition${conditionSet.joinToString()}{} already has a request delayed message")
     return ToolMessageDelayedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       tool.toolDto.messages.add(dto)

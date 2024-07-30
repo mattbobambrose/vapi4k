@@ -36,16 +36,19 @@ class FunctionResponse(
           val sessionCacheId = request.messageCallId.toSessionCacheId()
           val funcName = request.functionName
           val args = request.functionParameters
-          response.result =
-            runCatching {
-              functionCache.getFromCache(sessionCacheId)
-                .getFunction(funcName)
-                .invokeToolMethod(args, request)
-            }.getOrElse { e ->
-              val errorMsg = e.message ?: "Error invoking function"
-              logger.error { errorMsg }
-              errorMsg
-            }
+          runCatching {
+            functionCache.getFromCache(sessionCacheId)
+              .getFunction(funcName)
+              .invokeToolMethod(args, request, mutableListOf(),
+                { result ->
+                  response.result = result
+                }, { result ->
+                  response.result = "Error invoking function"
+                })
+          }.getOrElse { e ->
+            val errorMsg = e.message ?: "Error invoking function"
+            logger.error { errorMsg }
+          }
         }
   }
 }

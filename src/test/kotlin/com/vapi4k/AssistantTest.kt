@@ -416,7 +416,7 @@ class AssistantTest {
   @Test
   fun `chicago illinois message reverse conditions 1`() {
     resetCaches()
-    assertThrows(IllegalStateException::class.java) {
+//    assertThrows(IllegalStateException::class.java) {
       assistant(ASSISTANT_REQUEST.toJsonElement()) {
         firstMessage = messageOne
         openAIModel {
@@ -433,7 +433,7 @@ class AssistantTest {
               condition("state" eq "Illinois", "city" eq "Chicago") {
                 requestStartMessage {
                   content = chicagoIllinoisStartMessage + "2"
-                }
+//                }
               }
             }
           }

@@ -34,12 +34,8 @@ package com.vapi4k
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.assistant.eq
-import com.vapi4k.dsl.tools.ToolRequestComplete
-import com.vapi4k.dsl.tools.ToolRequestComplete.Companion.toolRequestComplete
-import com.vapi4k.dsl.tools.ToolRequestFailed
-import com.vapi4k.dsl.tools.ToolRequestFailed.Companion.toolRequestFailed
 import com.vapi4k.dsl.tools.ToolRequestService
-import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
+import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
 import kotlinx.serialization.json.JsonElement
 
 class WeatherLookupService0 {
@@ -57,25 +53,33 @@ class WeatherLookupService1 : ToolRequestService() {
   override fun onToolRequestComplete(
     toolCallRequest: JsonElement,
     result: String,
-  ): ToolRequestComplete =
-    toolRequestComplete {
+  ) =
+    requestCompleteMessages {
       condition("city" eq "Chicago", "state" eq "Illinois") {
-        role = ToolCallRoleType.ASSISTANT
-        requestCompleteMessage = "Tool call request complete with condition"
+        requestCompleteMessage {
+          role = ToolMessageRoleType.ASSISTANT
+          content = "Tool call request complete with condition"
+        }
       }
-      role = ToolCallRoleType.SYSTEM
-      requestCompleteMessage = "Tool call request complete no condition"
+      requestCompleteMessage {
+        role = ToolMessageRoleType.SYSTEM
+        content = "Tool call request complete no condition"
+      }
     }
 
   override fun onToolRequestFailed(
     toolCallRequest: JsonElement,
     errorMessage: String,
-  ): ToolRequestFailed =
-    toolRequestFailed {
+  ) =
+    requestFailedMessages {
       condition("city" eq "Houston", "state" eq "Texas") {
-        requestFailedMessage = "The weather in Chicago is always sunny"
+        requestFailedMessage {
+          content = "The weather in Chicago is always sunny"
+        }
       }
-      requestFailedMessage = "Tool call request failed"
+      requestFailedMessage {
+        content = "Tool call request failed"
+      }
     }
 }
 

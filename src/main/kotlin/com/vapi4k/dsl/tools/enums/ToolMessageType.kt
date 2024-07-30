@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.tools.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -32,6 +33,8 @@ enum class ToolMessageType(
   REQUEST_COMPLETE("request-complete"),
   REQUEST_FAILED("request-failed"),
   REQUEST_RESPONSE_DELAYED("request-response-delayed"),
+
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object ToolMessageTypeSerializer : KSerializer<ToolMessageType> {

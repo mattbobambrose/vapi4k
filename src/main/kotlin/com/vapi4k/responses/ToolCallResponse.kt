@@ -18,9 +18,7 @@ package com.vapi4k.responses
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
-import com.vapi4k.dsl.vapi4k.enums.ToolCallMessageType
-import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
-import com.vapi4k.dtos.model.ToolMessageConditionDto
+import com.vapi4k.dtos.model.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallArguments
@@ -54,20 +52,23 @@ data class ToolCallResponse(
                       val args = toolCall.toolCallArguments
                       toolCallResult.toolCallId = toolCall.toolCallId
                       toolCallResult.name = funcName
-                      toolCallResult.result =
-                        runCatching {
-                          toolCallCache.getFromCache(sessionCacheId)
-                            .getFunction(funcName)
-                            .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
-                            .invokeToolMethod(args, request, toolCallResult.message) { errorMsg ->
-                              toolCallResult.error = errorMsg
-                              errorMessage = errorMsg
-                            }
-                        }.getOrElse { e ->
-                          val errorMsg = e.message ?: "Error invoking tool $funcName"
-                          logger.error { errorMsg }
-                          errorMsg
-                        }.also { logger.info { "Tool call result: $it" } }
+                      runCatching {
+                        toolCallCache.getFromCache(sessionCacheId)
+                          .getFunction(funcName)
+                          .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
+                          .invokeToolMethod(
+                            args, request, toolCallResult.message,
+                            { result ->
+                              toolCallResult.result = result
+                            },
+                          ) { errorMsg ->
+                            toolCallResult.error = errorMsg
+                            errorMessage = errorMsg
+                          }
+                      }.getOrElse { e ->
+                        val errorMsg = e.message ?: "Error invoking tool $funcName"
+                        logger.error { errorMsg }
+                      }
                     }
 
                 if (errorMessage.isNotEmpty()) {
@@ -90,13 +91,5 @@ data class ToolCallResult(
   var result: String = "",
   // TODO: Ask Vapi if this should be messages (plural)
   var error: String = "",
-  val message: MutableList<ToolCallMessageDto> = mutableListOf(),
-)
-
-@Serializable
-data class ToolCallMessageDto(
-  var type: ToolCallMessageType = ToolCallMessageType.UNSPECIFIED,
-  var role: ToolCallRoleType = ToolCallRoleType.UNSPECIFIED,
-  var content: String = "",
-  val conditions: MutableList<ToolMessageConditionDto> = mutableListOf(),
+  val message: MutableList<CommonToolMessageDto> = mutableListOf(),
 )

@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.responses.ToolCallMessageDto
+import com.vapi4k.dtos.model.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.findFunction
@@ -49,25 +49,25 @@ class FunctionDetails(
   fun invokeToolMethod(
     args: JsonElement,
     request: JsonElement,
-    message: MutableList<ToolCallMessageDto> = mutableListOf(),
-    errorAction: (String) -> Unit = {},
-  ): String {
-    val results =
-      runCatching {
-        invokeCount.incrementAndGet()
-        invokeMethod(args)
-      }.getOrElse { e ->
-        val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
-        errorAction(errorMsg)
-        if (obj is ToolRequestService)
-          message += obj.onToolRequestFailed(request, errorMsg).messages
-        error(errorMsg)
-      }
-
-    if (obj is ToolRequestService)
-      message += obj.onToolRequestComplete(request, results).messages
-
-    return results
+    message: MutableList<CommonToolMessageDto> = mutableListOf(),
+    successAction: (String) -> Unit,
+    errorAction: (String) -> Unit,
+  ) {
+    runCatching {
+      invokeCount.incrementAndGet()
+      val result = invokeMethod(args).also { logger.info { "Tool call result: $it" } }
+      successAction(result)
+      if (obj is ToolRequestService)
+        message.addAll(obj.onToolRequestComplete(request, result).map { it.dto }).also {
+          logger.info { "Adding tool request messages $it" }
+        }
+    }.onFailure { e ->
+      val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
+      errorAction(errorMsg)
+      if (obj is ToolRequestService)
+        message.addAll(obj.onToolRequestFailed(request, errorMsg).map { it.dto })
+      logger.error { errorMsg }
+    }
   }
 
   @Serializable
@@ -102,9 +102,9 @@ class FunctionDetails(
         .map { (argName, argType) ->
           val kclass = argType.asKClass()
           when (kclass) {
-            String::class -> args.jsonObject.stringValue(argName!!)
-            Int::class -> args.jsonObject.intValue(argName!!)
-            Boolean::class -> args.jsonObject.booleanValue(argName!!)
+            String::class -> args.jsonObject.stringValue(argName)
+            Int::class -> args.jsonObject.intValue(argName)
+            Boolean::class -> args.jsonObject.booleanValue(argName)
             else -> error("Unsupported parameter type: $argType")
           }
         }

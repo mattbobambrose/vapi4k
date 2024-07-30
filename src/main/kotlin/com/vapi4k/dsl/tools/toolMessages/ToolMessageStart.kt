@@ -21,7 +21,6 @@ import com.vapi4k.dtos.model.ToolMessageStartDto
 
 interface ToolMessageStartProperties {
   var content: String
-//  val conditions: MutableSet<ToolMessageConditionDto>
 }
 
 @AssistantDslMarker

@@ -24,6 +24,8 @@ data class ToolMessageConditionDto(
   var operator: String = "",
   var value: String = "",
 ) {
+  override fun toString() = "\"$param\" $operator \"$value\""
+
   companion object {
     internal fun toolMessageCondition(
       param: String,

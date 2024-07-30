@@ -17,7 +17,15 @@
 package com.vapi4k.dsl.assistant.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
+@Serializable(with = VoicemailDetectionTypeSerializer::class)
 enum class VoicemailDetectionType(
   val desc: String,
 ) {
@@ -29,4 +37,17 @@ enum class VoicemailDetectionType(
   MACHINE_END_SILENCE("machine_end_silence"),
   MACHINE_END_OTHER("machine_end_other"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
+}
+
+private object VoicemailDetectionTypeSerializer : KSerializer<VoicemailDetectionType> {
+  override val descriptor: SerialDescriptor =
+    PrimitiveSerialDescriptor("VoicemailDetectionType", PrimitiveKind.STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: VoicemailDetectionType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) =
+    VoicemailDetectionType.entries.first { it.desc == decoder.decodeString() }
 }

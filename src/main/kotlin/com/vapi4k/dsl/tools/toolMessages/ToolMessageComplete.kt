@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.tools.toolMessages
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.RequestCompleteCondition
 import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
 import com.vapi4k.dtos.model.ToolMessageCompleteDto
 import com.vapi4k.dtos.model.ToolMessageConditionDto
@@ -25,10 +26,65 @@ interface ToolMessageCompleteProperties {
   var role: ToolMessageRoleType
   var endCallAfterSpokenEnabled: Boolean?
   var content: String
-  val conditions: MutableSet<ToolMessageConditionDto>
 }
 
 @AssistantDslMarker
-data class ToolMessageComplete internal constructor(
+class ToolMessageComplete internal constructor(
   internal val dto: ToolMessageCompleteDto,
-) : ToolMessageCompleteProperties by dto
+) : ToolMessageCompleteProperties by dto {
+  fun condition(
+    requiredConditionDto: ToolMessageConditionDto,
+    vararg additional: ToolMessageConditionDto,
+    block: RequestCompleteCondition.() -> Unit,
+  ) = RequestCompleteCondition()
+    .apply(block)
+    .also { rcc ->
+//      if (content.isNotEmpty()) {
+//        val cond = mutableSetOf(requiredConditionDto).apply { addAll(additional.toSet()) }
+//        addToolCallMessage(REQUEST_COMPLETE, rcc.message, cond).apply { role = rcc.role }
+//      }
+    }
+}
+
+
+//@AssistantDslMarker
+//interface ToolRequestComplete {
+//  var role: ToolCallRoleType
+//  var content: String
+//  var endCallAfterSpokenEnabled: Boolean?
+//  fun condition(
+//    requiredConditionDto: ToolMessageConditionDto,
+//    vararg additional: ToolMessageConditionDto,
+//    block: RequestCompleteCondition.() -> Unit,
+//  ): RequestCompleteCondition
+//}
+//
+//class ToolRequestCompleteImpl internal constructor(internal val dto: ToolMessageCompleteDto) :
+//  ToolRequestComplete by dto, AbstractToolRequest(), ToolRequestComplete {
+//  override var role = ToolCallRoleType.ASSISTANT
+//  override var content = ""
+//  override var endCallAfterSpokenEnabled: Boolean? = null
+//
+//  override fun condition(
+//    requiredConditionDto: ToolMessageConditionDto,
+//    vararg additional: ToolMessageConditionDto,
+//    block: RequestCompleteCondition.() -> Unit,
+//  ) = RequestCompleteCondition()
+//    .apply(block)
+//    .also { rcc ->
+//      if (message.isNotEmpty()) {
+//        val cond = mutableSetOf(requiredConditionDto).apply { addAll(additional.toSet()) }
+//        addToolCallMessage(REQUEST_COMPLETE, rcc.message, cond).apply { role = rcc.role }
+//      }
+//    }
+//
+//  companion object {
+//    fun toolRequestComplete(block: ToolRequestComplete.() -> Unit) =
+//      ToolRequestCompleteImpl()
+//        .apply(block)
+//        .also { rc ->
+//          if (rc.message.isNotEmpty())
+//            rc.addToolCallMessage(ToolMessageType.REQUEST_COMPLETE, rc.message).apply { role = rc.role }
+//        }
+//  }
+//}
