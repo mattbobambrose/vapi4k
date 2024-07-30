@@ -34,7 +34,5 @@ abstract class ToolRequestService {
   fun requestCompleteMessages(block: RequestCompleteMessages.() -> Unit) =
     RequestCompleteMessages().apply(block).messageList
 
-  fun requestFailedMessages(block: RequestFailedMessages.() -> Unit) =
-    RequestFailedMessages().apply(block).messageList
+  fun requestFailedMessages(block: RequestFailedMessages.() -> Unit) = RequestFailedMessages().apply(block).messageList
 }
-

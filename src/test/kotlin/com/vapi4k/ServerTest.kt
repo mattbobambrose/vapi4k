@@ -83,7 +83,7 @@ class ServerTest {
           "/json-tool-tests/toolRequest2.json",
           "/json-tool-tests/toolRequest3.json",
           "/json-tool-tests/toolRequest4.json",
-          "/json-tool-tests/endOfCallReportRequest.json"
+          "/json-tool-tests/endOfCallReportRequest.json",
         ),
         "/caches",
         true,
@@ -121,7 +121,7 @@ class ServerTest {
       withTestApplication(
         listOf(
           JsonFilenames.JSON_ASSISTANT_REQUEST,
-          "/json-tool-tests/endOfCallReportRequest.json"
+          "/json-tool-tests/endOfCallReportRequest.json",
         ),
         "/caches",
         false,

@@ -53,34 +53,32 @@ class WeatherLookupService1 : ToolRequestService() {
   override fun onToolRequestComplete(
     toolCallRequest: JsonElement,
     result: String,
-  ) =
-    requestCompleteMessages {
-      condition("city" eq "Chicago", "state" eq "Illinois") {
-        requestCompleteMessage {
-          role = ToolMessageRoleType.ASSISTANT
-          content = "Tool call request complete with condition"
-        }
-      }
+  ) = requestCompleteMessages {
+    condition("city" eq "Chicago", "state" eq "Illinois") {
       requestCompleteMessage {
-        role = ToolMessageRoleType.SYSTEM
-        content = "Tool call request complete no condition"
+        role = ToolMessageRoleType.ASSISTANT
+        content = "Tool call request complete with condition"
       }
     }
+    requestCompleteMessage {
+      role = ToolMessageRoleType.SYSTEM
+      content = "Tool call request complete no condition"
+    }
+  }
 
   override fun onToolRequestFailed(
     toolCallRequest: JsonElement,
     errorMessage: String,
-  ) =
-    requestFailedMessages {
-      condition("city" eq "Houston", "state" eq "Texas") {
-        requestFailedMessage {
-          content = "The weather in Chicago is always sunny"
-        }
-      }
+  ) = requestFailedMessages {
+    condition("city" eq "Houston", "state" eq "Texas") {
       requestFailedMessage {
-        content = "Tool call request failed"
+        content = "The weather in Chicago is always sunny"
       }
     }
+    requestFailedMessage {
+      content = "Tool call request failed"
+    }
+  }
 }
 
 class WeatherLookupService2 {

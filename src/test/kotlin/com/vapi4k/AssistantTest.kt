@@ -393,6 +393,8 @@ class AssistantTest {
           }
         }
       }
+    }.also {
+      assert(it.message.orEmpty().contains("must have at least one message"))
     }
   }
 
@@ -457,6 +459,8 @@ class AssistantTest {
           }
         }
       }
+    }.also {
+      assert(it.message.orEmpty().contains("duplicates an existing condition{}"))
     }
   }
 

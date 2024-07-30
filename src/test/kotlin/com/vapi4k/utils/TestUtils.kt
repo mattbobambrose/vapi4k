@@ -53,7 +53,6 @@ else
     }
     .first { it.stringValue("type") == type.desc }
 
-
 fun withTestApplication(
   fileName: String,
   block: (JsonElement) -> AssistantRequestResponse,
@@ -129,7 +128,7 @@ fun withTestApplication(
 
     if (getArg.isNotEmpty()) {
       responses.add(
-        client.get(getArg) { configPost() }.let { it to it.bodyAsText().toJsonElement() }
+        client.get(getArg) { configPost() }.let { it to it.bodyAsText().toJsonElement() },
       )
     }
   }
