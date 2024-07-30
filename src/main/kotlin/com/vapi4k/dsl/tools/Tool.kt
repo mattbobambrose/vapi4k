@@ -45,13 +45,14 @@ interface Tool {
 class ToolImpl internal constructor(
   internal val toolDto: ToolDto,
 ) : Tool {
+  private val requestStartChecker = DuplicateChecker()
+  private val requestCompleteChecker = DuplicateChecker()
+  private val requestFailedChecker = DuplicateChecker()
+  private val requestDelayedChecker = DuplicateChecker()
+
   internal val messages get() = toolDto.messages
   internal val dtoConditions
     get() = messages.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
-  val requestStartChecker = DuplicateChecker()
-  val requestCompleteChecker = DuplicateChecker()
-  val requestFailedChecker = DuplicateChecker()
-  val requestDelayedChecker = DuplicateChecker()
 
   internal var futureDelay = -1
 
@@ -94,7 +95,7 @@ class ToolImpl internal constructor(
   ) {
     val conditionSet = mutableSetOf(requiredCondition).apply { addAll(additional) }
     if (conditionSet in dtoConditions) {
-      error("tool{} already has a condition(${conditionSet.joinToString()}){} with the same set of conditions")
+      error("condition(${conditionSet.joinToString()}){} duplicates an existing condition{}")
     }
     ToolConditionImpl(this, conditionSet).apply(block)
     if (conditionSet !in dtoConditions) {

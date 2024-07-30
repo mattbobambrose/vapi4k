@@ -44,7 +44,6 @@ class Vapi4kConfig internal constructor() {
   internal val perRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val allResponses = mutableListOf<ResponseArgs>()
   internal val perResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
-
   internal val configProperties: Vapi4kConfigPropertiesImpl = Vapi4kConfigPropertiesImpl()
   internal val toolCallEndpoints = mutableListOf<Endpoint>()
 

@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.dsl.tools.ToolRequestService
+import com.vapi4k.dsl.toolservice.ToolRequestService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -41,11 +41,12 @@ import java.util.concurrent.atomic.AtomicInteger
 class FunctionDetails(
   val obj: Any,
 ) {
+  val invokeCount = AtomicInteger(0)
   val className: String = obj::class.java.name
   val methodName: String = obj.toolMethod.name
+
   val fqName get() = "$className.$methodName()"
   val methodWithParams get() = "$methodName(${obj.toolFunction.parameterSignature})"
-  val invokeCount = AtomicInteger(0)
 
   fun invokeToolMethod(
     args: JsonElement,

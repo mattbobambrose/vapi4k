@@ -33,7 +33,6 @@ enum class ToolMessageType(
   REQUEST_COMPLETE("request-complete"),
   REQUEST_FAILED("request-failed"),
   REQUEST_RESPONSE_DELAYED("request-response-delayed"),
-
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

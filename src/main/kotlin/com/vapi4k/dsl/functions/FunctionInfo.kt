@@ -27,6 +27,7 @@ import kotlin.time.DurationUnit
 class FunctionInfo {
   val created: Instant = Clock.System.now()
   val functions = mutableMapOf<String, FunctionDetails>()
+
   val age get() = Clock.System.now() - created
   val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
   val ageMillis get() = age.toString(unit = DurationUnit.MILLISECONDS)

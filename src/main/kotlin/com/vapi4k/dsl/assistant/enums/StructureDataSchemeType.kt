@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.assistant.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -34,7 +35,7 @@ enum class StructureDataSchemeType(
   BOOLEAN("boolean"),
   ARRAY("array"),
   OBJECT("object"),
-  UNSPECIFIED("unspecified"),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object StructureDataSchemeTypeSerializer : KSerializer<StructureDataSchemeType> {

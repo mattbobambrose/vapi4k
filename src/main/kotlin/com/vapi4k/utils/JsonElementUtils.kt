@@ -23,7 +23,6 @@ import kotlinx.serialization.json.jsonArray
 
 object JsonElementUtils {
   val JsonElement.requestType get() = ServerRequestType.fromString(this["message.type"].stringValue)
-
   val JsonElement.isAssistantRequest get() = requestType == ServerRequestType.ASSISTANT_REQUEST
   val JsonElement.isConversationUpdate get() = requestType == ServerRequestType.CONVERSATION_UPDATE
   val JsonElement.isEndOfCallReport get() = requestType == ServerRequestType.END_OF_CALL_REPORT
@@ -70,13 +69,9 @@ object JsonElementUtils {
       error("JsonElement is not a tool call")
 
   val JsonElement.toolCallId get() = this["id"].stringValue
-
   val JsonElement.toolCallName get() = this["function.name"].stringValue
-
   val JsonElement.toolCallArguments get() = this["function.arguments"]
-
   val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
-
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 
   private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()

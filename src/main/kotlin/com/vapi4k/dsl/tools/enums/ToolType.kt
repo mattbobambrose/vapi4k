@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.tools.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -29,14 +30,13 @@ enum class ToolType(
   val desc: String,
 ) {
   DTMF("dtmf"),
-  ENDCALL("endCall"),
+  END_CALL("endCall"),
   VOICEMAIL("voicemail"),
   FUNCTION("function"),
   GHL("ghl"),
   MAKE("make"),
-  TRANSFERCALL("transferCall"),
-
-  UNSPECIFIED("unspecified"),
+  TRANSFER_CALL("transferCall"),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
 private object ToolTypeSerializer : KSerializer<ToolType> {

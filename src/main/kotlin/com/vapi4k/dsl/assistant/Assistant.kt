@@ -151,11 +151,11 @@ data class AssistantImpl internal constructor(
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
   override val assistantCacheId = assistantCacheIdSource.nextAssistantCacheId()
+
   override val modelDtoUnion get() = assistantDto
   override val voicemailDetectionDto get() = assistantDto.voicemailDetectionDto
   override val analysisPlanDto get() = assistantDto.analysisPlanDto
   override val artifactPlanDto get() = assistantDto.artifactPlanDto
-
   override var videoRecordingEnabled: Boolean?
     get() = assistantDto.artifactPlanDto.videoRecordingEnabled
     set(value) {
