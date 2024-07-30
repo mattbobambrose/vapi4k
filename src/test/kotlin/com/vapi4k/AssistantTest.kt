@@ -40,6 +40,7 @@ import com.vapi4k.utils.getToJsonElements
 import com.vapi4k.utils.intValue
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
+import com.vapi4k.utils.toJsonString
 import kotlinx.serialization.json.JsonElement
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -123,8 +124,8 @@ class AssistantTest {
         }
       }
 
-//    println(jsonElement.toJsonString(true))
-//    println("This is the first message: ${jsonElement.firstToolMessages().toJsonString(true)}")
+//    println(jsonElement.toJsonString())
+//    println("This is the first message: ${jsonElement.firstToolMessages().toJsonString()}")
     assertEquals(
       "This is the test request start message",
       jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START).stringValue("content"),
@@ -276,12 +277,12 @@ class AssistantTest {
         }
       }
     }
+
+    println(jsonElement.toJsonString())
+
     assertEquals(
       1000,
-      jsonElement["assistant.model.tools"].getToJsonElements()[0].firstMessageOfType(
-        ToolMessageType.REQUEST_RESPONSE_DELAYED,
-      )
-        .intValue("timingMilliseconds"),
+      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED).intValue("timingMilliseconds"),
     )
   }
 
@@ -317,7 +318,7 @@ class AssistantTest {
       }
     }
     with(jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)) {
-      assertEquals(secondDelayedMessage, this["content"])
+      assertEquals(secondDelayedMessage, stringValue("content"))
       assertEquals(1000, intValue("timingMilliseconds"))
     }
   }
@@ -716,7 +717,7 @@ class AssistantTest {
     val je = assistant.toJsonElement()
     assertEquals(
       DeepgramLanguageType.GERMAN.desc,
-      je["assistant.transcriber.language"].stringValue,
+      je.stringValue("assistant.transcriber.language"),
     )
   }
 
@@ -737,7 +738,7 @@ class AssistantTest {
     val jsonElement = assistant.toJsonElement()
     assertEquals(
       "zzz",
-      jsonElement["assistant.transcriber.language"].stringValue,
+      jsonElement.stringValue("assistant.transcriber.language"),
     )
   }
 

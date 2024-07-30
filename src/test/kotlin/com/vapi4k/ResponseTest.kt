@@ -56,6 +56,6 @@ class ResponseTest {
       message = "Hello"
     }
 
-    println(dest.toJsonString(true))
+    println(dest.toJsonString())
   }
 }

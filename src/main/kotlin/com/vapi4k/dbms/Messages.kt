@@ -29,7 +29,7 @@ import kotlin.time.Duration
 object Messages {
   fun insertRequest(request: JsonElement) {
     transaction {
-      val str = request.toJsonString(true)
+      val str = request.toJsonString()
       MessagesTable.insert { rec ->
         rec[messageType] = REQUEST.name
         rec[requestType] = request.requestType.desc
@@ -46,7 +46,7 @@ object Messages {
     elapsed: Duration,
   ) {
     transaction {
-      val str = response.toJsonString(true)
+      val str = response.toJsonString()
       MessagesTable.insert { rec ->
         rec[messageType] = RESPONSE.name
         rec[requestType] = type.desc
