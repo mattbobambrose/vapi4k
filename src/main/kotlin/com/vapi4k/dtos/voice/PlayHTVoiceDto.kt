@@ -41,7 +41,7 @@ data class PlayHTVoiceDto(
   PlayHTVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.PLAYHT
+  val provider: VoiceProviderType = VoiceProviderType.PLAY_HT
 
   fun assignEnumOverrides() {
     voiceId = customVoiceId.ifEmpty { voiceIdType.desc }

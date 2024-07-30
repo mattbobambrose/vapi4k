@@ -41,7 +41,7 @@ data class RimeAIVoiceDto(
   RimeAIVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.RIMEAI
+  val provider: VoiceProviderType = VoiceProviderType.RIME_AI
 
   fun assignEnumOverrides() {
     voiceId = customVoiceId.ifEmpty { voiceIdType.desc }

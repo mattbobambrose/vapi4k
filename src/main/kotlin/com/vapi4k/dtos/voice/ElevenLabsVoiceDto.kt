@@ -46,7 +46,7 @@ data class ElevenLabsVoiceDto(
   ElevenLabsVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.ELEVENLABS
+  val provider: VoiceProviderType = VoiceProviderType.ELEVEN_LABS
 
   fun assignEnumOverrides() {
     voiceId = customVoiceId.ifEmpty { voiceIdType.desc }

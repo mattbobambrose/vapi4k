@@ -35,7 +35,7 @@ data class OpenAIVoiceDto(
   OpenAIVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
-  val provider: VoiceProviderType = VoiceProviderType.OPENAI
+  val provider: VoiceProviderType = VoiceProviderType.OPEN_AI
 
   fun assignEnumOverrides() {
     voiceId = customVoiceId.ifEmpty { voiceIdType.desc }

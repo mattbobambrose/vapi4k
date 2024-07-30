@@ -38,7 +38,7 @@ class FunctionInfo {
 class FunctionInfoDto(
   val created: String = "",
   val age: String = "",
-  val functions: Map<String, FunctionDetailsDto> = emptyMap(),
+  val functions: Map<String, FunctionDetailsDto>? = null,
 ) {
   companion object {
     fun FunctionInfo.toFunctionInfoDto() =

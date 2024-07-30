@@ -26,7 +26,6 @@ import com.vapi4k.dsl.functions.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.toolMethod
 import com.vapi4k.utils.Utils.isNull
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
@@ -139,8 +138,6 @@ internal class ToolCache(
 
 @Serializable
 class CacheInfoDto(
-  @EncodeDefault
-  val toolCallCache: Map<SessionCacheId, FunctionInfoDto> = emptyMap(),
-  @EncodeDefault
-  val functionCache: Map<SessionCacheId, FunctionInfoDto> = emptyMap(),
+  val toolCallCache: Map<SessionCacheId, FunctionInfoDto>? = null,
+  val functionCache: Map<SessionCacheId, FunctionInfoDto>? = null,
 )
