@@ -17,5 +17,5 @@
 package com.vapi4k.utils
 
 object JsonFilenames {
-  const val JSON_ASSISTANT_REQUEST = "/json/assistantRequest.json"
+  const val JSON_ASSISTANT_REQUEST = "/json-tool-tests/assistantRequest.json"
 }

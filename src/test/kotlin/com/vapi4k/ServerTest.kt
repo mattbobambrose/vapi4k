@@ -60,7 +60,7 @@ class ServerTest {
   @Test
   fun `simple assistant request`() {
     val (response, jsonElement) =
-      withTestApplication("/json/assistantRequest.json") { request ->
+      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
           groqModel {
             modelType = GroqModelType.LLAMA3_70B
@@ -79,11 +79,11 @@ class ServerTest {
       withTestApplication(
         listOf(
           JsonFilenames.JSON_ASSISTANT_REQUEST,
-          "/json/toolRequest1.json",
-          "/json/toolRequest2.json",
-          "/json/toolRequest3.json",
-          "/json/toolRequest4.json",
-          "/json/endOfCallReportRequest.json"
+          "/json-tool-tests/toolRequest1.json",
+          "/json-tool-tests/toolRequest2.json",
+          "/json-tool-tests/toolRequest3.json",
+          "/json-tool-tests/toolRequest4.json",
+          "/json-tool-tests/endOfCallReportRequest.json"
         ),
         "/caches",
         true,
@@ -121,7 +121,7 @@ class ServerTest {
       withTestApplication(
         listOf(
           JsonFilenames.JSON_ASSISTANT_REQUEST,
-          "/json/endOfCallReportRequest.json"
+          "/json-tool-tests/endOfCallReportRequest.json"
         ),
         "/caches",
         false,
