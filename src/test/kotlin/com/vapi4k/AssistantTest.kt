@@ -421,93 +421,67 @@ class AssistantTest {
   }
 
   @Test
-  fun `chicago illinois message duplicate reverse conditions`() {
+  fun `error on duplicate reverse conditions`() {
     resetCaches()
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
-      assistant(request) {
-        firstMessage = messageOne
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+    assertThrows(IllegalStateException::class.java) {
+      withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
+        assistant(request) {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
-          systemMessage = sysMessage
-          tools {
-            tool(WeatherLookupService0()) {
-              condition("city" eq "Chicago", "state" eq "Illinois") {
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                condition("city" eq "Chicago", "state" eq "Illinois") {
+                  requestStartMessage {
+                    content = chicagoIllinoisStartMessage
+                  }
+                  requestCompleteMessage {
+                    content = chicagoIllinoisCompleteMessage
+                  }
+                  requestFailedMessage {
+                    content = chicagoIllinoisFailedMessage
+                  }
+                  requestDelayedMessage {
+                    content = chicagoIllinoisDelayedMessage
+                    timingMilliseconds = 2000
+                  }
+                }
+                condition("state" eq "Illinois", "city" eq "Chicago") {
+                  requestStartMessage {
+                    content = chicagoIllinoisStartMessage + "2"
+                  }
+                  requestCompleteMessage {
+                    content = chicagoIllinoisCompleteMessage + "2"
+                  }
+                  requestFailedMessage {
+                    content = chicagoIllinoisFailedMessage + "2"
+                  }
+                  requestDelayedMessage {
+                    content = chicagoIllinoisDelayedMessage + "2"
+                    timingMilliseconds = 3000
+                  }
+                }
                 requestStartMessage {
-                  content = chicagoIllinoisStartMessage
+                  content = startMessage
                 }
                 requestCompleteMessage {
-                  content = chicagoIllinoisCompleteMessage
+                  content = completeMessage
                 }
                 requestFailedMessage {
-                  content = chicagoIllinoisFailedMessage
+                  content = failedMessage
                 }
                 requestDelayedMessage {
-                  content = chicagoIllinoisDelayedMessage
-                  timingMilliseconds = 2000
+                  content = delayedMessage
+                  timingMilliseconds = 1000
                 }
-              }
-              condition("state" eq "Illinois", "city" eq "Chicago") {
-                requestStartMessage {
-                  content = chicagoIllinoisStartMessage + "2"
-                }
-                requestCompleteMessage {
-                  content = chicagoIllinoisCompleteMessage + "2"
-                }
-                requestFailedMessage {
-                  content = chicagoIllinoisFailedMessage + "2"
-                }
-                requestDelayedMessage {
-                  content = chicagoIllinoisDelayedMessage + "2"
-                  timingMilliseconds = 3000
-                }
-              }
-              requestStartMessage {
-                content = startMessage
-              }
-              requestCompleteMessage {
-                content = completeMessage
-              }
-              requestFailedMessage {
-                content = failedMessage
-              }
-              requestDelayedMessage {
-                content = delayedMessage
-                timingMilliseconds = 1000
               }
             }
           }
         }
       }
     }
-    val chicagoCity = "city" eq "Chicago"
-    val illinoisState = "state" eq "Illinois"
-
-    assertEquals(
-      chicagoIllinoisStartMessage,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START, chicagoCity, illinoisState)
-        .stringValue("content"),
-    )
-    assertEquals(
-      chicagoIllinoisCompleteMessage,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_COMPLETE, chicagoCity, illinoisState)
-        .stringValue("content"),
-    )
-    assertEquals(
-      chicagoIllinoisFailedMessage,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_FAILED, chicagoCity, illinoisState)
-        .stringValue("content"),
-    )
-    assertEquals(
-      chicagoIllinoisDelayedMessage,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED, chicagoCity, illinoisState)
-        .stringValue("content"),
-    )
-    assertEquals(
-      3000,
-      jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED, chicagoCity, illinoisState)
-        .intValue("timingMilliseconds"),
-    )
   }
 
   @Test
