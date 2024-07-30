@@ -561,6 +561,8 @@ class AssistantTest {
           transcriberModel = DeepgramModelType.BASE
         }
       }
+    }.also {
+      assertEquals("deepgramTranscriber{} requires a transcriberLanguage or customLanguagevalue", it.message)
     }
   }
 
@@ -577,6 +579,8 @@ class AssistantTest {
           transcriberModel = GladiaModelType.FAST
         }
       }
+    }.also {
+      assertEquals("gladiaTranscriber{} requires a transcriberLanguage or customLanguage value", it.message)
     }
   }
 
@@ -593,6 +597,8 @@ class AssistantTest {
           transcriberModel = TalkscriberModelType.WHISPER
         }
       }
+    }.also {
+      assertEquals("talkscriberTranscriber{} requires a transcriberLanguage or customLanguage value", it.message)
     }
   }
 
@@ -609,6 +615,8 @@ class AssistantTest {
           transcriberModel = GladiaModelType.FAST
         }
       }
+    }.also {
+      assertEquals("talkscriberTranscriber{} requires a transcriberLanguage or customLanguage value", it.message)
     }
   }
 
@@ -674,6 +682,11 @@ class AssistantTest {
         "zzz",
         je["assistant.transcriber.language"].stringValue,
       )
+    }.also {
+      assertEquals(
+        "deepgramTranscriber{} cannot have both transcriberLanguage and customLanguage values",
+        it.message
+      )
     }
   }
 
@@ -684,6 +697,8 @@ class AssistantTest {
       assistant(request) {
         firstMessage = "Something"
       }
+    }.also {
+      assertEquals("An assistant{} requires a model{} decl", it.message)
     }
   }
 

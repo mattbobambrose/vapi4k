@@ -114,7 +114,7 @@ data class AssistantDto(
 
   internal fun verifyValues() {
     if (modelDto.isNull())
-      error("An assistant{} requires a model{} decl ")
+      error("An assistant{} requires a model{} decl")
   }
 }
 

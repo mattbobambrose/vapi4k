@@ -104,6 +104,8 @@ class VoiceTest {
           }
         }
       }
+    }.also {
+      assertEquals("playHTVoice{} cannot have both voiceIdType and customVoiceId values", it.message)
     }
 
     assertThrows(IllegalStateException::class.java) {
@@ -125,6 +127,8 @@ class VoiceTest {
           }
         }
       }
+    }.also {
+      assertEquals("playHTVoice{} requires a voiceIdType or customVoiceId value", it.message)
     }
   }
 
@@ -151,6 +155,8 @@ class VoiceTest {
           }
         }
       }
+    }.also {
+      assertEquals("cartesiaVoice{} cannot have both modelType and customModel values", it.message)
     }
 
     assertThrows(IllegalStateException::class.java) {
@@ -172,6 +178,8 @@ class VoiceTest {
           }
         }
       }
+    }.also {
+      assertEquals("cartesiaVoice{} requires a modelType or customModel value", it.message)
     }
   }
 
@@ -199,6 +207,8 @@ class VoiceTest {
           }
         }
       }
+    }.also {
+      assertEquals("cartesiaVoice{} cannot have both languageType and customLanguage values", it.message)
     }
   }
 
@@ -229,6 +239,8 @@ class VoiceTest {
           }
         }
       }
+    }.also {
+      assertEquals("groqModel{} already called", it.message)
     }
   }
 
@@ -259,6 +271,8 @@ class VoiceTest {
           }
         }
       }
+    }.also {
+      assertEquals("cartesiaVoice{} already called", it.message)
     }
   }
 

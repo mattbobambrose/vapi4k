@@ -52,6 +52,6 @@ data class TalkscriberTranscriberDto(
       error("talkscriberTranscriber{} cannot have both transcriberLanguage and customLanguage values")
 
     if (transcriberLanguage.isNotSpecified() && customLanguage.isEmpty())
-      error("talkscriberTranscriber{} requires a transcriberLanguage or customLanguagevalue")
+      error("talkscriberTranscriber{} requires a transcriberLanguage or customLanguage value")
   }
 }

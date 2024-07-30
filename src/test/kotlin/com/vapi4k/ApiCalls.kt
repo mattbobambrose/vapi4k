@@ -19,6 +19,7 @@ package com.vapi4k
 import com.vapi4k.dsl.api.VapiApi.Companion.vapiApi
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
 
@@ -37,6 +38,8 @@ class ApiCalls {
           }
         }
       }
+    }.also {
+      assertEquals("assistantId{} already called", it.message)
     }
   }
 
@@ -54,6 +57,8 @@ class ApiCalls {
           }
         }
       }
+    }.also {
+      assertEquals("An assistant{} requires a model{} decl", it.message)
     }
   }
 
@@ -71,6 +76,8 @@ class ApiCalls {
           }
         }
       }
+    }.also {
+      assertEquals("assistantId{} already called", it.message)
     }
   }
 
@@ -88,6 +95,8 @@ class ApiCalls {
           }
         }
       }
+    }.also {
+      assertEquals("assistant{} or assistantId{} must be called before assistantOverrides{}", it.message)
     }
   }
 
@@ -102,6 +111,8 @@ class ApiCalls {
           }
         }
       }
+    }.also {
+      assertEquals("assistant{} or assistantId{} must be called before assistantOverrides{}", it.message)
     }
   }
 
