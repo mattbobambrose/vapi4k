@@ -57,14 +57,17 @@ data class ToolCallResponse(
                           .getFunction(funcName)
                           .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
                           .invokeToolMethod(
-                            args, request, toolCallResult.message,
+                            args,
+                            request,
+                            toolCallResult.message,
                             { result ->
                               toolCallResult.result = result
                             },
-                          ) { errorMsg ->
-                            toolCallResult.error = errorMsg
-                            errorMessage = errorMsg
-                          }
+                            { errorMsg ->
+                              toolCallResult.error = errorMsg
+                              errorMessage = errorMsg
+                            },
+                          )
                       }.getOrElse { e ->
                         val errorMsg = e.message ?: "Error invoking tool $funcName"
                         logger.error { errorMsg }
