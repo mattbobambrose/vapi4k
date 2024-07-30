@@ -19,7 +19,7 @@ package com.vapi4k.dtos.tools
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ToolMessageCondition private constructor(
+data class ToolMessageCondition(
   var param: String = "",
   var operator: String = "",
   var value: String = "",
