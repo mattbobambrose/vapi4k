@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.tools.toolMessages
+package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.model.ToolMessageDelayedDto

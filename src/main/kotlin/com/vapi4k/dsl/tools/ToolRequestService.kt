@@ -17,9 +17,6 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageComplete
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageFailed
-import com.vapi4k.dsl.vapi4k.enums.ToolCallRoleType
 import com.vapi4k.dtos.model.ToolMessageCompleteDto
 import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.dtos.model.ToolMessageFailedDto
@@ -39,15 +36,15 @@ abstract class ToolRequestService {
     errorMessage: String,
   ): List<ToolMessageFailed> = emptyList()
 
-  fun requestCompleteMessages(block: CompleteMessages.() -> Unit) =
-    CompleteMessages().apply(block).messageList
+  fun requestCompleteMessages(block: RequestCompleteMessages.() -> Unit) =
+    RequestCompleteMessages().apply(block).messageList
 
-  fun requestFailedMessages(block: FailedMessages.() -> Unit) =
-    FailedMessages().apply(block).messageList
+  fun requestFailedMessages(block: RequestFailedMessages.() -> Unit) =
+    RequestFailedMessages().apply(block).messageList
 }
 
 @AssistantDslMarker
-class CompleteMessages internal constructor() {
+class RequestCompleteMessages internal constructor() {
   internal val messageList = mutableListOf<ToolMessageComplete>()
   private val requestCompleteChecker = DuplicateChecker()
   private val conditionSetList
@@ -63,13 +60,13 @@ class CompleteMessages internal constructor() {
   fun condition(
     requiredCondition: ToolMessageConditionDto,
     vararg additional: ToolMessageConditionDto,
-    block: CompleteCondition.() -> Unit,
+    block: RequestCompleteCondition.() -> Unit,
   ) {
     val conditionsSet = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
     if (conditionsSet.isNotEmpty() && conditionsSet in conditionSetList) {
       error("tool{} already has a condition(${conditionsSet.joinToString()}){} with the same set of conditions")
     }
-    CompleteCondition(this, conditionsSet).apply(block)
+    RequestCompleteCondition(this, conditionsSet).apply(block)
     if (conditionsSet.isNotEmpty() && conditionsSet !in conditionSetList) {
       error("condition(${conditionsSet.joinToString()}){} must have at least one message")
     }
@@ -77,8 +74,8 @@ class CompleteMessages internal constructor() {
 }
 
 @AssistantDslMarker
-class CompleteCondition internal constructor(
-  private val completeMessages: CompleteMessages,
+class RequestCompleteCondition internal constructor(
+  private val completeMessages: RequestCompleteMessages,
   private val conditionSet: Set<ToolMessageConditionDto>,
 ) {
   private val requestCompleteChecker = DuplicateChecker()
@@ -87,13 +84,13 @@ class CompleteCondition internal constructor(
     requestCompleteChecker.check("condition${conditionSet.joinToString()}{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       dto.conditions.addAll(conditionSet)
-      ToolMessageComplete(dto).apply(block)
+      ToolMessageComplete(dto).apply(block).also { completeMessages.messageList += it }
     }
   }
 }
 
 @AssistantDslMarker
-class FailedMessages internal constructor() {
+class RequestFailedMessages internal constructor() {
   internal val messageList = mutableListOf<ToolMessageFailed>()
   private val requestFailedChecker = DuplicateChecker()
   private val conditionSetList
@@ -109,13 +106,13 @@ class FailedMessages internal constructor() {
   fun condition(
     requiredCondition: ToolMessageConditionDto,
     vararg additional: ToolMessageConditionDto,
-    block: FailedCondition.() -> Unit,
+    block: RequestFailedCondition.() -> Unit,
   ) {
     val conditionsSet = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
     if (conditionsSet.isNotEmpty() && conditionsSet in conditionSetList) {
       error("tool{} already has a condition(${conditionsSet.joinToString()}){} with the same set of conditions")
     }
-    FailedCondition(this, conditionsSet).apply(block)
+    RequestFailedCondition(this, conditionsSet).apply(block)
     if (conditionsSet.isNotEmpty() && conditionsSet !in conditionSetList) {
       error("condition(${conditionsSet.joinToString()}){} must have at least one message")
     }
@@ -123,46 +120,17 @@ class FailedMessages internal constructor() {
 }
 
 @AssistantDslMarker
-class FailedCondition internal constructor(
-  private val failedMessages: FailedMessages,
+class RequestFailedCondition internal constructor(
+  private val failedMessages: RequestFailedMessages,
   private val conditionSet: Set<ToolMessageConditionDto>,
 ) {
-  val requestFailedChecker = DuplicateChecker()
+  private val requestFailedChecker = DuplicateChecker()
 
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
     requestFailedChecker.check("condition${conditionSet.joinToString()}{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
-      ToolMessageFailed(dto).apply(block)
+      ToolMessageFailed(dto).apply(block).also { failedMessages.messageList += it }
     }
   }
 }
-
-@AssistantDslMarker
-class RequestCompleteCondition internal constructor() {
-  var role = ToolCallRoleType.ASSISTANT
-  var message = ""
-}
-
-@AssistantDslMarker
-class RequestFailedCondition internal constructor() {
-  var message = ""
-}
-
-//abstract class AbstractToolRequest {
-//  internal val messages = mutableListOf<CommonToolMessageDto>()
-//
-//  protected fun addToolCallMessage(
-//    type: ToolMessageType,
-//    content: String,
-//    conditions: Set<ToolMessageConditionDto> = emptySet(),
-//  ): CommonToolMessageDto =
-//    ToolCallMessageDto()
-//      .apply {
-//        this.type = type
-//        this.content = content
-//        if (conditions.isNotEmpty())
-//          this.conditions.addAll(conditions)
-//      }
-//      .apply { messages += this }
-//}

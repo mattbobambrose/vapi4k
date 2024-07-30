@@ -417,23 +417,22 @@ class AssistantTest {
   fun `chicago illinois message reverse conditions 1`() {
     resetCaches()
 //    assertThrows(IllegalStateException::class.java) {
-      assistant(ASSISTANT_REQUEST.toJsonElement()) {
-        firstMessage = messageOne
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+    assistant(ASSISTANT_REQUEST.toJsonElement()) {
+      firstMessage = messageOne
+      openAIModel {
+        modelType = OpenAIModelType.GPT_3_5_TURBO
 
-          systemMessage = sysMessage
-          tools {
-            tool(WeatherLookupService0()) {
-              condition("city" eq "Chicago", "state" eq "Illinois") {
+        systemMessage = sysMessage
+        tools {
+          tool(WeatherLookupService0()) {
+            condition("city" eq "Chicago", "state" eq "Illinois") {
 //                requestStartMessage {
 //                  content = chicagoIllinoisStartMessage
 //                }
-              }
-              condition("state" eq "Illinois", "city" eq "Chicago") {
-                requestStartMessage {
-                  content = chicagoIllinoisStartMessage + "2"
-//                }
+            }
+            condition("state" eq "Illinois", "city" eq "Chicago") {
+              requestStartMessage {
+                content = chicagoIllinoisStartMessage + "2"
               }
             }
           }

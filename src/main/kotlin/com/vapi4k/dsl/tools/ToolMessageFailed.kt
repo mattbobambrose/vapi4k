@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.tools.toolMessages
+package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.model.ToolMessageFailedDto
@@ -28,33 +28,3 @@ interface ToolMessageFailedProperties {
 data class ToolMessageFailed internal constructor(
   internal val dto: ToolMessageFailedDto,
 ) : ToolMessageFailedProperties by dto
-
-// @AssistantDslMarker
-// class ToolRequestFailed internal constructor() : AbstractToolRequest() {
-//  var message = ""
-//
-//  fun condition(
-//    requiredCondition: ToolMessageConditionDto,
-//    vararg additional: ToolMessageConditionDto,
-//    block: RequestFailedCondition.() -> Unit,
-//  ) {
-//    RequestFailedCondition()
-//      .apply(block)
-//      .also { rfc ->
-//        if (message.isNotEmpty()) {
-//          val conds = mutableSetOf(requiredCondition).apply { addAll(additional.toSet()) }
-//          addToolCallMessage(ToolMessageType.REQUEST_FAILED, rfc.message, conds)
-//        }
-//      }
-//  }
-//
-//  companion object {
-//    fun toolRequestFailed(block: ToolRequestFailed.() -> Unit) =
-//      ToolRequestFailed()
-//        .apply(block)
-//        .also { rf ->
-//          if (rf.message.isNotEmpty())
-//            rf.addToolCallMessage(REQUEST_FAILED, rf.message)
-//        }
-//  }
-// }

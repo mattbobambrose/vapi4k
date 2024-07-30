@@ -17,10 +17,6 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageComplete
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageDelayed
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageFailed
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageStart
 import com.vapi4k.dtos.model.ToolDto
 import com.vapi4k.dtos.model.ToolMessageCompleteDto
 import com.vapi4k.dtos.model.ToolMessageConditionDto
@@ -31,12 +27,6 @@ import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
 interface Tool {
-//  var requestStartMessage: String
-//  var requestCompleteMessage: String
-//  var requestFailedMessage: String
-//  var requestDelayedMessage: String
-//  var delayedMillis: Int
-
   fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart
 
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
@@ -97,20 +87,6 @@ class ToolImpl internal constructor(
     }
   }
 
-//  override var requestStartMessage by ToolMessageDelegate(ToolMessageType.REQUEST_START)
-//  override var requestCompleteMessage by ToolMessageDelegate(ToolMessageType.REQUEST_COMPLETE)
-//  override var requestFailedMessage by ToolMessageDelegate(ToolMessageType.REQUEST_FAILED)
-//  override var requestDelayedMessage by ToolMessageDelegate(ToolMessageType.REQUEST_RESPONSE_DELAYED)
-
-//  override var delayedMillis
-//    get() = messages.singleOrNull(ToolMessageType.REQUEST_RESPONSE_DELAYED.isMatching)?.timingMilliseconds ?: -1
-//    set(delayedMillis) {
-//      require(delayedMillis >= 0) { "delayedMillis must be greater than or equal to 0" }
-//      if (messages.any(ToolMessageType.REQUEST_RESPONSE_DELAYED.isMatching)) {
-//        messages.single(ToolMessageType.REQUEST_RESPONSE_DELAYED.isMatching).timingMilliseconds = delayedMillis
-//      } else futureDelay = delayedMillis
-//    }
-
   override fun condition(
     requiredCondition: ToolMessageConditionDto,
     vararg additional: ToolMessageConditionDto,
@@ -124,32 +100,5 @@ class ToolImpl internal constructor(
     if (conditionsSet.isNotEmpty() && conditionsSet !in conditionSetList) {
       error("condition(${conditionsSet.joinToString()}){} must have at least one message")
     }
-  }
-
-  companion object {
-//    private class ToolMessageDelegate(val requestType: ToolMessageType) {
-//      operator fun getValue(
-//        tool: ToolImpl,
-//        property: KProperty<*>,
-//      ) =
-//        tool.messages.singleOrNull(requestType.isMatching)?.content ?: ""
-//
-//      operator fun setValue(
-//        tool: ToolImpl,
-//        property: KProperty<*>,
-//        newVal: String,
-//      ) =
-//        with(tool) {
-//          if (messages.any(requestType.isMatching)) {
-//            messages.single(requestType.isMatching).content = newVal
-//          } else {
-//            messages += ToolMessageDto().apply {
-//              type = requestType.desc
-//              content = newVal
-//              timingMilliseconds = futureDelay
-//            }
-//          }
-//        }
-//    }
   }
 }

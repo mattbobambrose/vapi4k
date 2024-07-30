@@ -18,10 +18,6 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.enums.ToolMessageType
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageComplete
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageDelayed
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageFailed
-import com.vapi4k.dsl.tools.toolMessages.ToolMessageStart
 import com.vapi4k.dtos.model.ToolMessageCompleteDto
 import com.vapi4k.dtos.model.ToolMessageConditionDto
 import com.vapi4k.dtos.model.ToolMessageDelayedDto
