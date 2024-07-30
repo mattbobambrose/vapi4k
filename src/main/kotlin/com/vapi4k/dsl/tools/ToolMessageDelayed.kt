@@ -26,5 +26,5 @@ interface ToolMessageDelayedProperties {
 
 @AssistantDslMarker
 data class ToolMessageDelayed internal constructor(
-  internal val dto: ToolMessageDelayedDto,
+  private val dto: ToolMessageDelayedDto,
 ) : ToolMessageDelayedProperties by dto

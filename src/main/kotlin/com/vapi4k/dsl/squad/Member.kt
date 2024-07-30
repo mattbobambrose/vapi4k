@@ -33,7 +33,7 @@ interface Member {
 
 data class MemberImpl(
   internal val members: MembersImpl,
-  internal val dto: MemberDto,
+  private val dto: MemberDto,
 ) : Member {
   private val memberChecker = DuplicateChecker()
 

@@ -44,6 +44,7 @@ class ToolMessageTest {
                   tool("tool 1") {
                     requestStartMessage {
                       content = "tool 1 start message"
+                      dto
                     }
                     requestCompleteMessage {
                       content = "tool 1 complete message"

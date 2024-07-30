@@ -34,7 +34,7 @@ interface AnalysisPlanProperties {
 
 @AssistantDslMarker
 data class AnalysisPlan internal constructor(
-  internal val dto: AnalysisPlanDto,
+  private val dto: AnalysisPlanDto,
 ) : AnalysisPlanProperties by dto {
   fun structuredDataSchema(block: StructuredDataSchema.() -> Unit) {
     StructuredDataSchema(dto.structuredDataSchema).apply(block)
@@ -51,5 +51,5 @@ interface StructuredDataSchemaProperties {
 
 @AssistantDslMarker
 data class StructuredDataSchema internal constructor(
-  internal val dto: StructuredDataSchemaDto,
+  private val dto: StructuredDataSchemaDto,
 ) : StructuredDataSchemaProperties by dto

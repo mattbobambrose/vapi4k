@@ -55,7 +55,7 @@ interface Call : CallProperties {
 data class CallImpl internal constructor(
   private val sessionCacheId: SessionCacheId,
   private val assistantCacheIdSource: AssistantCacheIdSource,
-  internal val dto: CallRequestDto,
+  private val dto: CallRequestDto,
 ) : CallProperties by dto,
   Call {
   private val assistantChecker = DuplicateChecker()

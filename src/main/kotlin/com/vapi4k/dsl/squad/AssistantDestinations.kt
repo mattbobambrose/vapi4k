@@ -26,8 +26,8 @@ interface AssistantDestinations {
 }
 
 data class AssistantDestinationsImpl internal constructor(
-  internal val member: MemberImpl,
-  internal val dto: MemberDto,
+  private val member: MemberImpl,
+  private val dto: MemberDto,
 ) : AssistantDestinations {
   override fun destination(block: AssistantDestination.() -> Unit) {
     dto.assistantDestinations +=
