@@ -35,7 +35,7 @@ import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
-import com.vapi4k.dsl.toolservice.ToolRequestService
+import com.vapi4k.dsl.toolservice.ToolCallService
 import kotlinx.serialization.json.JsonElement
 
 class WeatherLookupService0 {
@@ -43,14 +43,14 @@ class WeatherLookupService0 {
   fun getFavFoodInChicago() = "Pizza"
 }
 
-class WeatherLookupService1 : ToolRequestService() {
+class WeatherLookupService1 : ToolCallService() {
   @ToolCall("Look up the weather for a city")
   fun getWeatherByCity(
     @Param(description = "The city name") city: String,
     state: String,
   ) = "The weather in city $city and state $state is windy"
 
-  override fun onToolRequestComplete(
+  override fun onToolCallComplete(
     toolCallRequest: JsonElement,
     result: String,
   ) = requestCompleteMessages {
@@ -66,7 +66,7 @@ class WeatherLookupService1 : ToolRequestService() {
     }
   }
 
-  override fun onToolRequestFailed(
+  override fun onToolCallFailed(
     toolCallRequest: JsonElement,
     errorMessage: String,
   ) = requestFailedMessages {

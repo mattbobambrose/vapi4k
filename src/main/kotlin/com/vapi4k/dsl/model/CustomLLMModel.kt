@@ -30,7 +30,7 @@ interface CustomLLMModelProperties {
   var metadataSendMode: MetaDataSendModeType
   var numFastTurns: Int
   var temperature: Int
-  var toolIds: MutableSet<String>
+  val toolIds: MutableSet<String>
   var url: String
 }
 

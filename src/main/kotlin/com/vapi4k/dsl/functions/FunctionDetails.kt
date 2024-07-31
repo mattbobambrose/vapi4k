@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.dsl.toolservice.ToolRequestService
+import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -57,15 +57,15 @@ class FunctionDetails(
       invokeCount.incrementAndGet()
       val result = invokeMethod(args).also { logger.info { "Tool call result: $it" } }
       successAction(result)
-      if (obj is ToolRequestService)
-        message.addAll(obj.onToolRequestComplete(request, result).map { it.dto }).also {
+      if (obj is ToolCallService)
+        message.addAll(obj.onToolCallComplete(request, result).map { it.dto }).also {
           logger.info { "Adding tool request messages $it" }
         }
     }.onFailure { e ->
       val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
       errorAction(errorMsg)
-      if (obj is ToolRequestService)
-        message.addAll(obj.onToolRequestFailed(request, errorMsg).map { it.dto })
+      if (obj is ToolCallService)
+        message.addAll(obj.onToolCallFailed(request, errorMsg).map { it.dto })
       logger.error { errorMsg }
     }
   }
