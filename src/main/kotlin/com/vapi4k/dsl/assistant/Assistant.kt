@@ -52,27 +52,29 @@ import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {
   var name: String
-  var firstMessage: String
-  var recordingEnabled: Boolean?
-  var hipaaEnabled: Boolean?
   var serverUrl: String
   var serverUrlSecret: String
-  var forwardingPhoneNumber: String
-  var endCallFunctionEnabled: Boolean?
-  var dialKeypadFunctionEnabled: Boolean?
+  var firstMessage: String
+  var firstMessageMode: FirstMessageModeType
+  var recordingEnabled: Boolean?
+  var hipaaEnabled: Boolean?
+  var silenceTimeoutSeconds: Int
   var responseDelaySeconds: Double
   var llmRequestDelaySeconds: Double
-  var silenceTimeoutSeconds: Int
-  var maxDurationSeconds: Int
-  var backgroundSound: BackgroundSoundType
-  var numWordsToInterruptAssistant: Int
-  var voicemailMessage: String
+  var llmRequestNonPunctuatedDelaySeconds: Double
   var endCallMessage: String
+  var backgroundSound: BackgroundSoundType
   var backchannelingEnabled: Boolean?
   var backgroundDenoisingEnabled: Boolean?
+  var voicemailMessage: String
+  var maxDurationSeconds: Int
+  var numWordsToInterruptAssistant: Int
   var modelOutputInMessagesEnabled: Boolean?
-  var llmRequestNonPunctuatedDelaySeconds: Double
-  var firstMessageMode: FirstMessageModeType
+
+  var endCallFunctionEnabled: Boolean?
+  var dialKeypadFunctionEnabled: Boolean?
+  var forwardingPhoneNumber: String
+
   var clientMessages: MutableSet<AssistantClientMessageType>
   var serverMessages: MutableSet<AssistantServerMessageType>
 }

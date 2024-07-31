@@ -99,7 +99,7 @@ fun withTestApplication(
     application {
       install(Vapi4k) {
         configure {
-          isEOCRCacheRemovalEnabled = cacheRemovalEnabled
+          eocrCacheRemovalEnabled = cacheRemovalEnabled
         }
         onAssistantRequest { request ->
           block(request)

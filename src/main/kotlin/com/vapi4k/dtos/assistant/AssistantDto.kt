@@ -55,49 +55,30 @@ abstract class AbstractAssistantDto(
   var modelOutputInMessagesEnabled: Boolean? = null,
   var voicemailMessage: String = "",
   var endCallMessage: String = "",
+  var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
+  var endCallPhrases: MutableSet<String> = mutableSetOf(),
+  val metadata: MutableMap<String, String> = mutableMapOf(),
+  // Need a copy of DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES here, so call toMutableSet()
+  var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
+  var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
+  // TODO: Came from squad assistant
+  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
+  // TODO: This needs to be added to docs - https://docs.vapi.ai/assistants/function-calling
+  var forwardingPhoneNumber: String = "",
+  // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
+  var endCallFunctionEnabled: Boolean? = null,
+  // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
+  var dialKeypadFunctionEnabled: Boolean? = null,
 )
 
 @Serializable
 data class AssistantDto(
-//  override var name: String = "",
-  // TODO: Came from squad assistant
-  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
-//  override var firstMessage: String = "",
-//  override var recordingEnabled: Boolean? = null,
-//  override var hipaaEnabled: Boolean? = null,
-//  override var serverUrl: String = "",
-//  override var serverUrlSecret: String = "",
-  // TODO: This needs to be added to docs
-  override var forwardingPhoneNumber: String = "",
-  // TODO: Not in docs or squad
-  override var endCallFunctionEnabled: Boolean? = null,
-  // TODO: Not in docs or squad
-  override var dialKeypadFunctionEnabled: Boolean? = null,
-//  override var silenceTimeoutSeconds: Int = -1,
-//  override var responseDelaySeconds: Double = -1.0,
-//  override var llmRequestDelaySeconds: Double = -1.0,
-//  override var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
-//  override var numWordsToInterruptAssistant: Int = -1,
-//  override var maxDurationSeconds: Int = -1,
-//  override var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
-//  override var backchannelingEnabled: Boolean? = null,
-//  override var backgroundDenoisingEnabled: Boolean? = null,
-//  override var modelOutputInMessagesEnabled: Boolean? = null,
-//  override var voicemailMessage: String = "",
-//  override var endCallMessage: String = "",
-  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
-  // Need a copy of DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES here, so call toMutableSet()
-  override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
-  override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
-  val metadata: MutableMap<String, String> = mutableMapOf(),
-  val endCallPhrases: MutableSet<String> = mutableSetOf(),
   @SerialName("transcriber")
   override var transcriberDto: CommonTranscriberDto? = null,
   @SerialName("model")
   override var modelDto: CommonModelDto? = null,
   @SerialName("voice")
   override var voiceDto: CommonVoiceDto? = null,
-  // TODO: Add verbs and enums
   @SerialName("voicemailDetection")
   val voicemailDetectionDto: VoicemailDetectionDto = VoicemailDetectionDto(),
   @SerialName("analysisPlan")
