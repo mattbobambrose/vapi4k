@@ -32,8 +32,8 @@ enum class OpenAIVoiceIdType(
   ALLOY("alloy"),
   ECHO("echo"),
   FABLE("fable"),
-  ONYX("onyx"),
   NOVA("nova"),
+  ONYX("onyx"),
   SHIMMER("shimmer"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
   ;

@@ -89,15 +89,15 @@ interface ModelDtoUnion {
 
 interface ModelUnion {
   val request: JsonElement
-  val sessionCacheId: SessionCacheId
-  val assistantCacheId: AssistantCacheId
-  val transcriberChecker: DuplicateChecker
-  val modelChecker: DuplicateChecker
-  val voiceChecker: DuplicateChecker
-  val modelDtoUnion: ModelDtoUnion
-  val voicemailDetectionDto: VoicemailDetectionDto
   val analysisPlanDto: AnalysisPlanDto
   val artifactPlanDto: ArtifactPlanDto
+  val assistantCacheId: AssistantCacheId
+  val modelChecker: DuplicateChecker
+  val modelDtoUnion: ModelDtoUnion
+  val sessionCacheId: SessionCacheId
+  val transcriberChecker: DuplicateChecker
+  val voiceChecker: DuplicateChecker
+  val voicemailDetectionDto: VoicemailDetectionDto
 }
 
 fun ModelUnion.voicemailDetectionUnion(block: VoicemailDetection.() -> Unit): VoicemailDetection =

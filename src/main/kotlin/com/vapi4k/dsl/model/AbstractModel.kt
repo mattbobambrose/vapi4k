@@ -36,10 +36,10 @@ abstract class AbstractModel(
   internal val request get() = modelUnion.request
   override val sessionCacheId get() = modelUnion.sessionCacheId
   override val assistantCacheId get() = modelUnion.assistantCacheId
-  override val messages get() = dto.messages
-  override val toolDtos get() = dto.tools
-  override val functionDtos get() = dto.functions
   override val messageCallId get() = request.messageCallId.toMessageCallId()
+  override val messages get() = dto.messages
+  override val functionDtos get() = dto.functions
+  override val toolDtos get() = dto.tools
 
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
   var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)

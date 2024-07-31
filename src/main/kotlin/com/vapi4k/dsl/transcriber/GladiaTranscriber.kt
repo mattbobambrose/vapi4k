@@ -21,14 +21,14 @@ import com.vapi4k.dsl.transcriber.enums.GladiaLanguageType
 import com.vapi4k.dtos.transcriber.GladiaTranscriberDto
 
 interface GladiaTranscriberProperties {
-  var transcriberModel: GladiaModelType
-  var customModel: String
-  var transcriberLanguage: GladiaLanguageType
-  var customLanguage: String
-  var languageBehavior: String
-  var transcriptionHint: String
-  var prosody: Boolean?
   var audioEnhancer: Boolean?
+  var customLanguage: String
+  var customModel: String
+  var languageBehavior: String
+  var prosody: Boolean?
+  var transcriberLanguage: GladiaLanguageType
+  var transcriberModel: GladiaModelType
+  var transcriptionHint: String
 }
 
 class GladiaTranscriber internal constructor(

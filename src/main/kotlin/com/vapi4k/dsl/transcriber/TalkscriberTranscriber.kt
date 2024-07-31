@@ -22,10 +22,10 @@ import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dtos.transcriber.TalkscriberTranscriberDto
 
 interface TalkscriberTranscriberProperties {
-  var transcriberModel: TalkscriberModelType
+  var customLanguage: String
   var customModel: String
   var transcriberLanguage: TalkscriberLanguageType
-  var customLanguage: String
+  var transcriberModel: TalkscriberModelType
 }
 
 @AssistantDslMarker

@@ -22,19 +22,19 @@ import com.vapi4k.dsl.voice.enums.PunctuationType
 import com.vapi4k.dtos.voice.PlayHTVoiceDto
 
 interface PlayHTVoiceProperties {
-  var inputPreprocessingEnabled: Boolean?
-  var inputReformattingEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var fillerInjectionEnabled: Boolean?
-  var voiceIdType: PlayHTVoiceIdType
   var customVoiceId: String
-  var speed: Double
-  var temperature: Double
   var emotion: PlayHTVoiceEmotionType
-  var voiceGuidance: Double
+  var fillerInjectionEnabled: Boolean?
+  var inputMinCharacters: Int
+  var inputPreprocessingEnabled: Boolean?
+  val inputPunctuationBoundaries: MutableSet<PunctuationType>
+  var inputReformattingEnabled: Boolean?
+  var speed: Double
   var styleGuidance: Double
+  var temperature: Double
   var textGuidance: Double
+  var voiceGuidance: Double
+  var voiceIdType: PlayHTVoiceIdType
 }
 
 data class PlayHTVoice internal constructor(

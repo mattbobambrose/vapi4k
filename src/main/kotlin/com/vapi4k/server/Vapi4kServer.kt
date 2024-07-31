@@ -185,7 +185,7 @@ private suspend fun KtorCallContext.handleServerPathPost(
         }
 
         END_OF_CALL_REPORT -> {
-          if (config.configProperties.isEOCRCacheRemovalEnabled) {
+          if (config.configProperties.eocrCacheRemovalEnabled) {
             val sessionCacheId = request.messageCallId.toSessionCacheId()
             var notFound = true
 

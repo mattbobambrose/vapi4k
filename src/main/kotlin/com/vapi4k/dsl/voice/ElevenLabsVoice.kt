@@ -23,21 +23,21 @@ import com.vapi4k.dsl.voice.enums.PunctuationType
 import com.vapi4k.dtos.voice.ElevenLabsVoiceDto
 
 interface ElevenLabsVoiceProperties {
-  var inputPreprocessingEnabled: Boolean?
-  var inputReformattingEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var fillerInjectionEnabled: Boolean?
-  var voiceIdType: ElevenLabsVoiceIdType
-  var customVoiceId: String
-  var modelType: ElevenLabsVoiceModelType
   var customModel: String
-  var stability: Double
+  var customVoiceId: String
+  var enableSsmlParsing: Boolean?
+  var fillerInjectionEnabled: Boolean?
+  var inputMinCharacters: Int
+  var inputPreprocessingEnabled: Boolean?
+  val inputPunctuationBoundaries: MutableSet<PunctuationType>
+  var inputReformattingEnabled: Boolean?
+  var modelType: ElevenLabsVoiceModelType
+  var optimizeStreaming: Double
   var similarityBoost: Double
+  var stability: Double
   var style: Double
   var useSpeakerBoost: Boolean?
-  var optimizeStreaming: Double
-  var enableSsmlParsing: Boolean?
+  var voiceIdType: ElevenLabsVoiceIdType
 }
 
 @AssistantDslMarker

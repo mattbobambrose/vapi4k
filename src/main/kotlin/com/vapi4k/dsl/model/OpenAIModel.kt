@@ -28,12 +28,12 @@ interface OpenAIModelProperties {
   var customModel: String
   val fallbackModelTypes: MutableList<OpenAIModelType>
   val customFallbackModels: MutableList<String>
-  val toolIds: MutableSet<String>
+  var emotionRecognitionEnabled: Boolean?
+  var maxTokens: Int
+  var numFastTurns: Int
   var semanticCachingEnabled: Boolean?
   var temperature: Int
-  var maxTokens: Int
-  var emotionRecognitionEnabled: Boolean?
-  var numFastTurns: Int
+  val toolIds: MutableSet<String>
 }
 
 @AssistantDslMarker

@@ -21,8 +21,8 @@ import com.vapi4k.dtos.assistant.AssistantDestinationDto
 
 interface AssistantDestinationProperties {
   var assistantName: String
-  var message: String
   var description: String
+  var message: String
 }
 
 @AssistantDslMarker

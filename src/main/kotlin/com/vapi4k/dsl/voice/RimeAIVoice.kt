@@ -22,16 +22,16 @@ import com.vapi4k.dsl.voice.enums.RimeAIVoiceModelType
 import com.vapi4k.dtos.voice.RimeAIVoiceDto
 
 interface RimeAIVoiceProperties {
-  var inputPreprocessingEnabled: Boolean?
-  var inputReformattingEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var fillerInjectionEnabled: Boolean?
-  var voiceIdType: RimeAIVoiceIdType
-  var customVoiceId: String
-  var modelType: RimeAIVoiceModelType
   var customModel: String
+  var customVoiceId: String
+  var fillerInjectionEnabled: Boolean?
+  var inputMinCharacters: Int
+  var inputPreprocessingEnabled: Boolean?
+  val inputPunctuationBoundaries: MutableSet<PunctuationType>
+  var inputReformattingEnabled: Boolean?
+  var modelType: RimeAIVoiceModelType
   var speed: Double
+  var voiceIdType: RimeAIVoiceIdType
 }
 
 data class RimeAIVoice internal constructor(

@@ -17,7 +17,10 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
+import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
+import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnyscaleModel
 import com.vapi4k.dsl.model.CustomLLMModel
@@ -46,27 +49,30 @@ import com.vapi4k.utils.DuplicateChecker
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesProperties {
-  var firstMessageMode: String
-  var recordingEnabled: Boolean?
-  var hipaaEnabled: Boolean?
-  var silenceTimeoutSeconds: Int
-  var responseDelaySeconds: Double
-  var llmRequestDelaySeconds: Double
-  var llmRequestNonPunctuatedDelaySeconds: Double
-  var numWordsToInterruptAssistant: Int
-  var maxDurationSeconds: Int
-  var backgroundSound: BackgroundSoundType
   var backchannelingEnabled: Boolean?
   var backgroundDenoisingEnabled: Boolean?
+  var backgroundSound: BackgroundSoundType
+  val clientMessages: MutableSet<AssistantClientMessageType>
+  var endCallMessage: String
+  var firstMessage: String
+  var firstMessageMode: FirstMessageModeType
+  var hipaaEnabled: Boolean?
+  var llmRequestDelaySeconds: Double
+  var llmRequestNonPunctuatedDelaySeconds: Double
+  var maxDurationSeconds: Int
   var modelOutputInMessagesEnabled: Boolean?
   var name: String
-  var firstMessage: String
-  var voicemailMessage: String
-  var endCallMessage: String
+  var numWordsToInterruptAssistant: Int
+  var recordingEnabled: Boolean?
+  var responseDelaySeconds: Double
+  val serverMessages: MutableSet<AssistantServerMessageType>
   var serverUrl: String
   var serverUrlSecret: String
-  val clientMessages: MutableSet<String>
-  val serverMessages: MutableSet<String>
+  var silenceTimeoutSeconds: Int
+  var voicemailMessage: String
+
+  // Used only in AssistantOverrides
+  val variableValues: MutableMap<String, String>
 }
 
 @AssistantDslMarker

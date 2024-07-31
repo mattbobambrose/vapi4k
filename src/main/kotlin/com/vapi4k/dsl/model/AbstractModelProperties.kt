@@ -28,9 +28,9 @@ interface AbstractModelProperties {
   val sessionCacheId: SessionCacheId
   val assistantCacheId: AssistantCacheId
   val messageCallId: MessageCallId
+  val messages: MutableList<RoleMessage>
   val toolDtos: MutableList<ToolDto>
   val functionDtos: MutableList<FunctionDto>
-  val messages: MutableList<RoleMessage>
 
   fun message(
     role: MessageRoleType,

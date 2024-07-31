@@ -25,13 +25,13 @@ import com.vapi4k.dtos.model.CustomLLMModelDto
 
 interface CustomLLMModelProperties {
   var model: String
-  val toolIds: MutableSet<String>
-  var temperature: Int
+  val emotionRecognitionEnabled: Boolean?
   var maxTokens: Int
-  var emotionRecognitionEnabled: Boolean?
-  var numFastTurns: Int
-  var url: String
   var metadataSendMode: MetaDataSendModeType
+  var numFastTurns: Int
+  var temperature: Int
+  var toolIds: MutableSet<String>
+  var url: String
 }
 
 @AssistantDslMarker

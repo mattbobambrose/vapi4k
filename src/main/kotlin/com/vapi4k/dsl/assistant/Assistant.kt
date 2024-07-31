@@ -51,30 +51,32 @@ import com.vapi4k.utils.DuplicateChecker
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {
-  var name: String
-  var firstMessage: String
-  var recordingEnabled: Boolean?
-  var hipaaEnabled: Boolean?
-  var serverUrl: String
-  var serverUrlSecret: String
-  var forwardingPhoneNumber: String
-  var endCallFunctionEnabled: Boolean?
-  var dialKeypadFunctionEnabled: Boolean?
-  var responseDelaySeconds: Double
-  var llmRequestDelaySeconds: Double
-  var silenceTimeoutSeconds: Int
-  var maxDurationSeconds: Int
-  var backgroundSound: BackgroundSoundType
-  var numWordsToInterruptAssistant: Int
-  var voicemailMessage: String
-  var endCallMessage: String
   var backchannelingEnabled: Boolean?
   var backgroundDenoisingEnabled: Boolean?
-  var modelOutputInMessagesEnabled: Boolean?
-  var llmRequestNonPunctuatedDelaySeconds: Double
+  var backgroundSound: BackgroundSoundType
+  var endCallMessage: String
+  var firstMessage: String
   var firstMessageMode: FirstMessageModeType
-  var clientMessages: MutableSet<AssistantClientMessageType>
-  var serverMessages: MutableSet<AssistantServerMessageType>
+  var hipaaEnabled: Boolean?
+  var llmRequestDelaySeconds: Double
+  var llmRequestNonPunctuatedDelaySeconds: Double
+  var maxDurationSeconds: Int
+  var modelOutputInMessagesEnabled: Boolean?
+  var name: String
+  var numWordsToInterruptAssistant: Int
+  var recordingEnabled: Boolean?
+  var responseDelaySeconds: Double
+  var serverUrl: String
+  var serverUrlSecret: String
+  var silenceTimeoutSeconds: Int
+  var voicemailMessage: String
+
+  var dialKeypadFunctionEnabled: Boolean?
+  var endCallFunctionEnabled: Boolean?
+  var forwardingPhoneNumber: String
+
+  val clientMessages: MutableSet<AssistantClientMessageType>
+  val serverMessages: MutableSet<AssistantServerMessageType>
 }
 
 @AssistantDslMarker

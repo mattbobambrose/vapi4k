@@ -21,8 +21,8 @@ import com.vapi4k.dtos.model.KnowledgeBaseDto
 import kotlinx.serialization.json.JsonElement
 
 interface KnowledgeBaseProperties {
-  var topK: Double
   val fileIds: MutableSet<String>
+  var topK: Double
 }
 
 @AssistantDslMarker

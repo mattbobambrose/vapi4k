@@ -29,33 +29,6 @@ import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
-// private object CacheMapSerializer : KSerializer<ConcurrentHashMap<SessionCacheId, FunctionInfo>> {
-//   override val descriptor: SerialDescriptor = buildClassSerialDescriptor("CommonDestinationDto")
-//
-//   override fun serialize(
-//     encoder: Encoder,
-//     value: ConcurrentHashMap<SessionCacheId, FunctionInfo>,
-//   ) {
-//     encoder.encodeStructure(descriptor) {
-//       val composite = encoder.beginStructure(descriptor)
-//
-//       value.forEach { (key, value) ->
-//         encodeStringElement(descriptor, 1,
-//           encoder.encodeSerializableValue(FunctionInfo.serializer(), value))
-//       }
-//     }
-//     when (value) {
-//
-//       is NumberDestinationDto -> encoder.encodeSerializableValue(NumberDestinationDto.serializer(), value)
-//       is SipDestinationDto -> encoder.encodeSerializableValue(SipDestinationDto.serializer(), value)
-//       else -> error("Invalid destination provider: ${value::class.simpleName}")
-//     }
-//   }
-//
-//   override fun deserialize(decoder: Decoder): CommonDestinationDto =
-//     throw NotImplementedError("Deserialization is not supported")
-// }
-
 internal class ToolCache(
   val cacheType: String,
 ) {

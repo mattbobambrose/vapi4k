@@ -22,6 +22,6 @@ abstract class AbstractVoiceDto {
   var inputPreprocessingEnabled: Boolean? = null
   var inputReformattingEnabled: Boolean? = null
   var inputMinCharacters: Int = -1
-  var inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf()
+  val inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf()
   var fillerInjectionEnabled: Boolean? = null
 }

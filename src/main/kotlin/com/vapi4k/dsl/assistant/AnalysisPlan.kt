@@ -22,14 +22,14 @@ import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.StructuredDataSchemaDto
 
 interface AnalysisPlanProperties {
-  var summaryPrompt: String
-  var summaryRequestTimeoutSeconds: Double
+  val structuredDataSchema: StructuredDataSchemaDto
+  var structuredDataPrompt: String
   var structuredDataRequestTimeoutSeconds: Double
   var successEvaluationPrompt: String
-  var successEvaluationRubric: SuccessEvaluationRubricType
   var successEvaluationRequestTimeoutSeconds: Double
-  var structuredDataPrompt: String
-  val structuredDataSchema: StructuredDataSchemaDto
+  var successEvaluationRubric: SuccessEvaluationRubricType
+  var summaryPrompt: String
+  var summaryRequestTimeoutSeconds: Double
 }
 
 @AssistantDslMarker

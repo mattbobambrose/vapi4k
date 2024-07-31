@@ -22,14 +22,14 @@ import com.vapi4k.dsl.voice.enums.PunctuationType
 import com.vapi4k.dtos.voice.AzureVoiceDto
 
 interface AzureVoiceProperties {
-  var inputPreprocessingEnabled: Boolean?
-  var inputReformattingEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var fillerInjectionEnabled: Boolean?
-  var voiceIdType: AzureVoiceIdType
   var customVoiceId: String
+  var fillerInjectionEnabled: Boolean?
+  var inputMinCharacters: Int
+  var inputPreprocessingEnabled: Boolean?
+  val inputPunctuationBoundaries: MutableSet<PunctuationType>
+  var inputReformattingEnabled: Boolean?
   var speed: Double
+  var voiceIdType: AzureVoiceIdType
 }
 
 @AssistantDslMarker

@@ -22,12 +22,12 @@ import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dtos.transcriber.DeepgramTranscriberDto
 
 interface DeepgramTranscriberProperties {
-  var transcriberModel: DeepgramModelType
-  var customModel: String
-  var transcriberLanguage: DeepgramLanguageType
   var customLanguage: String
-  var smartFormat: Boolean?
+  var customModel: String
   val keywords: MutableSet<String>
+  var smartFormat: Boolean?
+  var transcriberLanguage: DeepgramLanguageType
+  var transcriberModel: DeepgramModelType
 }
 
 @AssistantDslMarker
