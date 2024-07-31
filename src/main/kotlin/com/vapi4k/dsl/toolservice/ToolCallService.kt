@@ -21,6 +21,8 @@ import com.vapi4k.dsl.tools.ToolMessageFailed
 import kotlinx.serialization.json.JsonElement
 
 abstract class ToolCallService {
+  lateinit var toolCallServiceInfo: String
+
   open fun onToolCallComplete(
     toolCallRequest: JsonElement,
     result: String,

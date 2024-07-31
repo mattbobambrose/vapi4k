@@ -28,7 +28,7 @@ interface OpenRouterModelProperties {
   var maxTokens: Int
   var numFastTurns: Int
   var temperature: Int
-  var toolIds: MutableSet<String>
+  val toolIds: MutableSet<String>
 }
 
 @AssistantDslMarker

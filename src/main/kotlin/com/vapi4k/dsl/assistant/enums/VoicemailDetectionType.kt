@@ -29,13 +29,13 @@ import kotlinx.serialization.encoding.Encoder
 enum class VoicemailDetectionType(
   val desc: String,
 ) {
-  MACHINE_START("machine_start"),
-  HUMAN("human"),
   FAX("fax"),
-  UNKNOWN("unknown"),
+  HUMAN("human"),
   MACHINE_END_BEEP("machine_end_beep"),
-  MACHINE_END_SILENCE("machine_end_silence"),
   MACHINE_END_OTHER("machine_end_other"),
+  MACHINE_END_SILENCE("machine_end_silence"),
+  MACHINE_START("machine_start"),
+  UNKNOWN("unknown"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 

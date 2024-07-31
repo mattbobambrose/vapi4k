@@ -57,6 +57,12 @@ interface AssistantProperties {
   var endCallMessage: String
   var firstMessage: String
   var firstMessageMode: FirstMessageModeType
+
+  /**
+  When this is enabled, no logs, recordings, or transcriptions will be stored.
+  At the end of the call, you will still receive an end-of-call-report message
+  to store on your server. Defaults to false.
+   */
   var hipaaEnabled: Boolean?
   var llmRequestDelaySeconds: Double
   var llmRequestNonPunctuatedDelaySeconds: Double
@@ -64,17 +70,37 @@ interface AssistantProperties {
   var modelOutputInMessagesEnabled: Boolean?
   var name: String
   var numWordsToInterruptAssistant: Int
+
+  /**
+  This sets whether the assistant's calls are recorded. Defaults to true.
+
+   */
   var recordingEnabled: Boolean?
   var responseDelaySeconds: Double
   var serverUrl: String
   var serverUrlSecret: String
+
+  /**
+  How many seconds of silence to wait before ending the call. Defaults to 30.
+   */
   var silenceTimeoutSeconds: Int
+
+  /**
+  This is the message that the assistant will say if the call is forwarded to voicemail.
+
+  If unspecified, it will hang up.
+   */
   var voicemailMessage: String
 
   var dialKeypadFunctionEnabled: Boolean?
   var endCallFunctionEnabled: Boolean?
   var forwardingPhoneNumber: String
 
+  /**
+  These are the messages that will be sent to your Client SDKs.
+  Default is CONVERSATION_UPDATE, FUNCTION_CALL, HANG, MODEL_OUTPUT, SPEECH_UPDATE,
+  STATUS_UPDATE, TRANSCRIPT, TOOL_CALLS, USER_INTERRUPTED, and VOICE_INPUT.
+   */
   val clientMessages: MutableSet<AssistantClientMessageType>
   val serverMessages: MutableSet<AssistantServerMessageType>
 }

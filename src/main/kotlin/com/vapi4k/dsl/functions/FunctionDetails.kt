@@ -39,10 +39,11 @@ import java.util.concurrent.atomic.AtomicInteger
 class FunctionDetails(
   val obj: Any,
 ) {
-  val invokeCount = AtomicInteger(0)
+  private val invokeCounter = AtomicInteger(0)
   val className: String = obj::class.java.name
   val methodName: String = obj.toolMethod.name
 
+  val invokeCount get() = invokeCounter.get()
   val fqName get() = "$className.$methodName()"
   val methodWithParams get() = "$methodName(${obj.toolFunction.parameterSignature})"
 
@@ -54,7 +55,7 @@ class FunctionDetails(
     errorAction: (String) -> Unit,
   ) {
     runCatching {
-      invokeCount.incrementAndGet()
+      invokeCounter.incrementAndGet()
       val result = invokeMethod(args).also { logger.info { "Tool call result: $it" } }
       successAction(result)
       if (obj is ToolCallService)
@@ -79,7 +80,7 @@ class FunctionDetails(
   ) {
     companion object {
       fun FunctionDetails.toFunctionDetailsDto() =
-        FunctionDetailsDto(fqName, className, methodWithParams, invokeCount.get())
+        FunctionDetailsDto(fqName, className, methodWithParams, invokeCount)
     }
   }
 

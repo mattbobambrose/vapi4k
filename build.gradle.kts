@@ -1,4 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.jetbrains.dokka.DokkaConfiguration.Visibility
+import org.jetbrains.dokka.gradle.DokkaTask
 
 val cssVersion: String by project
 val kotlinVersion: String by project
@@ -28,6 +30,8 @@ plugins {
     id("com.github.ben-manes.versions") version versionsVersion
     id("com.github.gmazzo.buildconfig") version configVersion
     id("org.jmailen.kotlinter") version ktlintVersion
+    id("org.jetbrains.dokka") version "1.9.20"
+
 
     //id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
@@ -150,6 +154,27 @@ kotlinter {
     ignoreFailures = false
     reporters = arrayOf("checkstyle", "plain")
 }
+
+//tasks.dokkaHtml {
+//    outputDirectory.set(layout.buildDirectory.dir("documentation/html"))
+//}
+
+tasks.withType<DokkaTask>().configureEach {
+    dokkaSourceSets.configureEach {
+        documentedVisibilities.set(
+            setOf(
+                Visibility.PUBLIC,
+                // Visibility.PROTECTED,
+            )
+        )
+
+        perPackageOption {
+            matchingRegex.set(".*internal.*")
+            suppress.set(true)
+        }
+    }
+}
+
 
 //tasks.findByName("lintKotlinCommonMain")?.apply {
 //    dependsOn("kspCommonMainKotlinMetadata")

@@ -20,7 +20,6 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.application.pluginRegistry
-import io.ktor.server.metrics.micrometer.MicrometerMetrics
 import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.compression.Compression
 import io.ktor.server.plugins.compression.deflate
@@ -60,25 +59,10 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
     }
   }
 
-  if (!pregistry.contains(MicrometerMetrics.key)) {
-    install(MicrometerMetrics) {
-      registry = appMicrometerRegistry
-
-//      distributionStatisticConfig = DistributionStatisticConfig.Builder()
-//        .percentilesHistogram(true)
-//        .maximumExpectedValue(Duration.ofSeconds(20).toNanos().toDouble())
-//        .serviceLevelObjectives(
-//          Duration.ofMillis(100).toNanos().toDouble(),
-//          Duration.ofMillis(500).toNanos().toDouble()
-//        )
-//        .build()
-
-      meterBinders = emptyList()
-//        listOf(
-//        JvmMemoryMetrics(),
-//        JvmGcMetrics(),
-//        ProcessorMetrics()
-//      )
-    }
-  }
+//  if (!pregistry.contains(MicrometerMetrics.key)) {
+//    install(MicrometerMetrics) {
+//      registry = appMicrometerRegistry
+//      meterBinders = emptyList()
+//    }
+//  }
 }

@@ -30,6 +30,9 @@ stage:
 versioncheck:
 	./gradlew dependencyUpdates
 
+kdocs:
+	./gradlew dokkaHtml dokkaGfm
+
 publish:
 	./gradlew publishToMavenLocal
 
