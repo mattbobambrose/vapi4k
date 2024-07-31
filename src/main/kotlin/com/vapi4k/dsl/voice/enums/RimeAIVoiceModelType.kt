@@ -29,8 +29,8 @@ import kotlinx.serialization.encoding.Encoder
 enum class RimeAIVoiceModelType(
   val desc: String,
 ) {
-  V1("v1"),
   MIST("mist"),
+  V1("v1"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
   ;
 

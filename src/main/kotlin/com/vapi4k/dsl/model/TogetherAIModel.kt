@@ -24,11 +24,11 @@ import com.vapi4k.dtos.model.TogetherAIModelDto
 
 interface TogetherAIModelProperties {
   var model: String
-  val toolIds: MutableSet<String>
-  var temperature: Int
-  var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?
+  var maxTokens: Int
   var numFastTurns: Int
+  var temperature: Int
+  val toolIds: MutableSet<String>
 }
 
 @AssistantDslMarker

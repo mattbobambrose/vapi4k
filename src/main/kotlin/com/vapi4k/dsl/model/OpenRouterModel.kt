@@ -24,11 +24,11 @@ import com.vapi4k.dtos.model.OpenRouterModelDto
 
 interface OpenRouterModelProperties {
   var model: String
-  val toolIds: MutableSet<String>
-  var temperature: Int
+  val emotionRecognitionEnabled: Boolean?
   var maxTokens: Int
-  var emotionRecognitionEnabled: Boolean?
   var numFastTurns: Int
+  var temperature: Int
+  var toolIds: MutableSet<String>
 }
 
 @AssistantDslMarker

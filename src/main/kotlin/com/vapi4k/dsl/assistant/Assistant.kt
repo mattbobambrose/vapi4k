@@ -51,32 +51,32 @@ import com.vapi4k.utils.DuplicateChecker
 import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {
-  var name: String
-  var serverUrl: String
-  var serverUrlSecret: String
-  var firstMessage: String
-  var firstMessageMode: FirstMessageModeType
-  var recordingEnabled: Boolean?
-  var hipaaEnabled: Boolean?
-  var silenceTimeoutSeconds: Int
-  var responseDelaySeconds: Double
-  var llmRequestDelaySeconds: Double
-  var llmRequestNonPunctuatedDelaySeconds: Double
-  var endCallMessage: String
-  var backgroundSound: BackgroundSoundType
   var backchannelingEnabled: Boolean?
   var backgroundDenoisingEnabled: Boolean?
-  var voicemailMessage: String
+  var backgroundSound: BackgroundSoundType
+  var endCallMessage: String
+  var firstMessage: String
+  var firstMessageMode: FirstMessageModeType
+  var hipaaEnabled: Boolean?
+  var llmRequestDelaySeconds: Double
+  var llmRequestNonPunctuatedDelaySeconds: Double
   var maxDurationSeconds: Int
-  var numWordsToInterruptAssistant: Int
   var modelOutputInMessagesEnabled: Boolean?
+  var name: String
+  var numWordsToInterruptAssistant: Int
+  var recordingEnabled: Boolean?
+  var responseDelaySeconds: Double
+  var serverUrl: String
+  var serverUrlSecret: String
+  var silenceTimeoutSeconds: Int
+  var voicemailMessage: String
 
-  var endCallFunctionEnabled: Boolean?
   var dialKeypadFunctionEnabled: Boolean?
+  var endCallFunctionEnabled: Boolean?
   var forwardingPhoneNumber: String
 
-  var clientMessages: MutableSet<AssistantClientMessageType>
-  var serverMessages: MutableSet<AssistantServerMessageType>
+  val clientMessages: MutableSet<AssistantClientMessageType>
+  val serverMessages: MutableSet<AssistantServerMessageType>
 }
 
 @AssistantDslMarker

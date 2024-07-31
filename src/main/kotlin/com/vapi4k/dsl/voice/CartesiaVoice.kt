@@ -23,15 +23,15 @@ import com.vapi4k.dsl.voice.enums.PunctuationType
 import com.vapi4k.dtos.voice.CartesiaVoiceDto
 
 interface CartesiaVoiceProperties {
-  var inputPreprocessingEnabled: Boolean?
-  var inputReformattingEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var fillerInjectionEnabled: Boolean?
-  var modelType: CartesiaVoiceModelType
-  var customModel: String
-  var languageType: CartesiaVoiceLanguageType
   var customLanguage: String
+  var customModel: String
+  var fillerInjectionEnabled: Boolean?
+  var inputMinCharacters: Int
+  var inputPreprocessingEnabled: Boolean?
+  val inputPunctuationBoundaries: MutableSet<PunctuationType>
+  var inputReformattingEnabled: Boolean?
+  var languageType: CartesiaVoiceLanguageType
+  var modelType: CartesiaVoiceModelType
   var voiceId: String
 }
 

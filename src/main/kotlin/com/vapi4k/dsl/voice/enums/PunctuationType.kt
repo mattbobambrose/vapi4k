@@ -28,21 +28,21 @@ import kotlinx.serialization.encoding.Encoder
 enum class PunctuationType(
   val desc: String,
 ) {
+  ARABIC_COMMA('\u060C'.toString()),
+  ARABIC_FULL_STOP('\u06D4'.toString()),
+  COLON(":"),
+  COMMA(","),
+  DEVANAGARI_DANDA('\u0964'.toString()),
+  DEVANAGARI_DOUBLE_DANDA('\u0965'.toString()),
+  DOUBLE_VERTICAL_BAR("||"),
+  EXCLAMATION("!"),
   FULL_STOP('\u3002'.toString()),
   FULL_WIDTH_COMMA('\uff0c'.toString()),
   PERIOD("."),
-  EXCLAMATION("!"),
   QUESTION("?"),
-  SEMICOLON(";"),
   RIGHT_PAREN(")"),
-  ARABIC_COMMA('\u060C'.toString()),
-  ARABIC_FULL_STOP('\u06D4'.toString()),
-  DEVANAGARI_DANDA('\u0964'.toString()),
-  DEVANAGARI_DOUBLE_DANDA('\u0965'.toString()),
+  SEMICOLON(";"),
   VERTICAL_BAR("|"),
-  DOUBLE_VERTICAL_BAR("||"),
-  COMMA(","),
-  COLON(":"),
 }
 
 private object PunctuationTypeSerializer : KSerializer<PunctuationType> {

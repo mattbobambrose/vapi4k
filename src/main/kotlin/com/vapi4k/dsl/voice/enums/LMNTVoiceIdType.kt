@@ -29,8 +29,8 @@ import kotlinx.serialization.encoding.Encoder
 enum class LMNTVoiceIdType(
   val desc: String,
 ) {
-  LILY("lily"),
   DANIEL("daniel"),
+  LILY("lily"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
   ;
 

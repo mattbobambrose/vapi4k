@@ -42,11 +42,11 @@ import com.vapi4k.dtos.model.AnthropicModelDto
 interface AnthropicModelProperties {
   var modelType: AnthropicModelType
   var customModel: String
-  val toolIds: MutableSet<String>
-  var temperature: Int
-  var maxTokens: Int
   var emotionRecognitionEnabled: Boolean?
+  var maxTokens: Int
   var numFastTurns: Int
+  var temperature: Int
+  val toolIds: MutableSet<String>
 }
 
 @AssistantDslMarker

@@ -29,16 +29,16 @@ import kotlinx.serialization.encoding.Encoder
 enum class PlayHTVoiceIdType(
   val desc: String,
 ) {
-  JENNIFER("jennifer"),
-  MELISSA("melissa"),
-  WILL("will"),
   CHRIS("chris"),
-  MATT("matt"),
-  JACK("jack"),
-  RUBY("ruby"),
   DAVIS("davis"),
   DONNA("donna"),
+  JACK("jack"),
+  JENNIFER("jennifer"),
+  MATT("matt"),
+  MELISSA("melissa"),
   MICHAEL("michael"),
+  RUBY("ruby"),
+  WILL("will"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
   ;
 
