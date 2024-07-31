@@ -17,6 +17,8 @@
 package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
+import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
+import com.vapi4k.common.EnvVar.Companion.envIsProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.common.Version
@@ -138,9 +140,30 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         call.respond(cacheAsJson())
       }
 
+      if (!envIsProduction) {
+        get("/validate") {
+          val resp = validateAssistantRequestResponse()
+          call.respondText(resp)
+        }
+      }
+
       val serverPath = config.configProperties.serverUrlPath
       logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
-      post(serverPath) { handleServerPathPost(callbackChannel) }
+      post(serverPath) {
+        runCatching {
+          handleServerPathPost(callbackChannel)
+        }.onFailure { e ->
+          logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
+          val str = "${
+            e.stackTraceToString()
+              .lines()
+              .filterNot { it.trimStart().startsWith("at io.ktor") }
+              .filterNot { it.trimStart().startsWith("at kotlin") }
+              .joinToString("\n")
+          }\t..."
+          call.respondText(str, status = HttpStatusCode.InternalServerError)
+        }
+      }
 
       config.toolCallEndpoints.forEach { endpoint ->
         val toolCallPath = endpoint.path
