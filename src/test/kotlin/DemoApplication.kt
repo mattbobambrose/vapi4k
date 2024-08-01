@@ -1,6 +1,5 @@
 import SimpleAssistant.simpleAssistantRequest
 import com.vapi4k.server.Vapi4k
-import com.vapi4k.server.Vapi4kServer.logger
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
@@ -21,7 +20,6 @@ fun Application.module2() {
     }
 
     onAssistantRequest { assistantRequest ->
-      logger.info { "Assistant request has been made: $assistantRequest" }
       // doubleToolAssistant2(assistantRequest)
       simpleAssistantRequest(assistantRequest)
     }

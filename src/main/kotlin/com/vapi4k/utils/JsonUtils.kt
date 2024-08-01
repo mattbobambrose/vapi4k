@@ -63,6 +63,7 @@ inline fun <reified T> T.toJsonString(prettyPrint: Boolean = true) =
 inline fun <reified T> T.toJsonElement() = Json.encodeToJsonElement(this)
 
 fun String.toJsonElement() = Json.parseToJsonElement(this)
+fun String.toJsonString(prettyPrint: Boolean = true) = toJsonElement().toJsonString(prettyPrint)
 
 inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)
 

@@ -145,7 +145,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get("/validate") {
           val secret = call.request.queryParameters.get("secret").orEmpty()
           val resp = validateAssistantRequestResponse(secret)
-          call.respondText(resp)
+          call.respondText(resp, ContentType.Text.Html)
         }
 
         get("/clear-caches") {

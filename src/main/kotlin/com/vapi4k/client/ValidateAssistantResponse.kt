@@ -30,43 +30,59 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
+import kotlinx.html.body
+import kotlinx.html.h3
+import kotlinx.html.head
+import kotlinx.html.html
+import kotlinx.html.pre
+import kotlinx.html.stream.createHTML
+import kotlinx.html.title
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlin.collections.set
 
 object ValidateAssistantResponse {
-  fun validateAssistantRequestResponse(secret: String) =
-    runBlocking {
+  fun validateAssistantRequestResponse(secret: String): String {
+    val (status, body) = runBlocking {
       val response = httpClient.post(REQUEST_VALIDATION_URL.value) {
         contentType(Application.Json)
-
         if (secret.isNotEmpty())
           headers.append("x-vapi-secret", secret)
-
         val request = runCatching {
           resourceFile(REQUEST_VALIDATION_FILENAME.value)
         }.getOrElse { ASSISTANT_REQUEST }
-
         val newObject = copyWithNewCallId(request.toJsonElement())
-        println("Request:\n${newObject.toJsonString()}")
         setBody(newObject)
       }
+      response.status to response.bodyAsText()
+    }
 
-      buildString {
-        append("\nStatus: ${response.status}\n\n")
-        val body = response.bodyAsText()
-        if (response.status.value == 200) {
-          append("Response:\n${body.toJsonElement().toJsonString()}")
+    return createHTML().html {
+      head {
+        //link(STYLES_CSS, "stylesheet", CSS.toString())
+        title { +"Assistant Request Validation" }
+      }
+      body {
+        h3 { +"Status: $status" }
+        if (status.value == 200) {
+          h3 { +"Response:" }
+          pre { +body.toJsonString() }
         } else {
           if (body.isNotEmpty()) {
-            append("Error:${if (body.length < 80) " " else "\n"}$body")
+            if (body.length < 80)
+              h3 { +"Error: $body" }
+            else {
+              h3 { +"Error:" }
+              pre { +body }
+            }
           } else {
-            append("Check the ktor log for stack trace")
+            h3 { "Check the ktor log for error information." }
           }
         }
       }
     }
+  }
 
   private fun copyWithNewCallId(je: JsonElement): JsonElement =
     buildJsonObject {
