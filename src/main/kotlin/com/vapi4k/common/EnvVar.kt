@@ -36,6 +36,7 @@ enum class EnvVar(
   // Server details
   IS_PRODUCTION({ IS_PRODUCTION.getEnv(false) }),
 
+  REQUEST_VALIDATION_URL({ REQUEST_VALIDATION_URL.getEnv("http://localhost:8080/vapi4k") }),
   REQUEST_VALIDATION_FILENAME({ REQUEST_VALIDATION_FILENAME.getEnv("/json/AssistantRequestValidation.json") }),
   // Resend details
 //  RESEND_API_KEY({ RESEND_API_KEY.getRequired() }, { it.obfuscate(1) }),

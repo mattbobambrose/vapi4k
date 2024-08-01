@@ -26,6 +26,7 @@ import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.tools.ToolCache.Companion.cacheAsJson
 import com.vapi4k.dsl.tools.ToolCache.Companion.cachesAreActive
+import com.vapi4k.dsl.tools.ToolCache.Companion.clearCaches
 import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Endpoint
@@ -66,6 +67,7 @@ import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
@@ -145,6 +147,11 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           val secret = call.request.queryParameters.get("secret").orEmpty()
           val resp = validateAssistantRequestResponse(secret)
           call.respondText(resp)
+        }
+
+        get("/clear-caches") {
+          clearCaches()
+          call.respondRedirect("/caches")
         }
       }
 

@@ -24,7 +24,7 @@ import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.model.enums.DeepgramModelType
 import com.vapi4k.dsl.model.enums.GladiaModelType
 import com.vapi4k.dsl.model.enums.OpenAIModelType
-import com.vapi4k.dsl.tools.ToolCache.Companion.resetCaches
+import com.vapi4k.dsl.tools.ToolCache.Companion.clearCaches
 import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
@@ -70,7 +70,7 @@ class AssistantTest {
 
   @Test
   fun testRegular() {
-    resetCaches()
+    clearCaches()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -110,7 +110,7 @@ class AssistantTest {
 
   @Test
   fun `test reverse delay order`() {
-    resetCaches()
+    clearCaches()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -147,7 +147,7 @@ class AssistantTest {
 
   @Test
   fun `test message with no millis`() {
-    resetCaches()
+    clearCaches()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -185,7 +185,7 @@ class AssistantTest {
 
   @Test
   fun `multiple message`() {
-    resetCaches()
+    clearCaches()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -224,7 +224,7 @@ class AssistantTest {
 
   @Test
   fun `multiple delay time`() {
-    resetCaches()
+    clearCaches()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
       assistant(request) {
         firstMessage = messageOne
@@ -264,7 +264,7 @@ class AssistantTest {
 
   @Test
   fun `multiple message multiple delay time`() {
-    resetCaches()
+    clearCaches()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
       assistant(request) {
         firstMessage = messageOne
@@ -301,7 +301,7 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message`() {
-    resetCaches()
+    clearCaches()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
       assistant(it) {
         firstMessage = messageOne
@@ -378,7 +378,7 @@ class AssistantTest {
 
   @Test
   fun `Missing message`() {
-    resetCaches()
+    clearCaches()
     assertThrows(IllegalStateException::class.java) {
       assistant(ASSISTANT_REQUEST.toJsonElement()) {
         firstMessage = messageOne
@@ -400,7 +400,7 @@ class AssistantTest {
 
   @Test
   fun `error on duplicate reverse conditions`() {
-    resetCaches()
+    clearCaches()
     assertThrows(IllegalStateException::class.java) {
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -466,7 +466,7 @@ class AssistantTest {
 
   @Test
   fun `check non-default FirstMessageModeType values`() {
-    resetCaches()
+    clearCaches()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
@@ -485,7 +485,7 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 1`() {
-    resetCaches()
+    clearCaches()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
@@ -501,7 +501,7 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 2`() {
-    resetCaches()
+    clearCaches()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
@@ -517,7 +517,7 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 1`() {
-    resetCaches()
+    clearCaches()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
@@ -534,7 +534,7 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 2`() {
-    resetCaches()
+    clearCaches()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {

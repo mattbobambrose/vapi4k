@@ -73,7 +73,7 @@ internal class ToolCache(
           logger.debug { "$cacheType entry not found in cache: $sessionCacheId" }
       }
 
-  private fun resetCache() {
+  private fun clearCache() {
     cacheMap.clear()
     cacheIsActive = false
   }
@@ -92,9 +92,9 @@ internal class ToolCache(
 
     val cachesAreActive get() = toolCallCache.cacheIsActive || functionCache.cacheIsActive
 
-    fun resetCaches() {
-      toolCallCache.resetCache()
-      functionCache.resetCache()
+    fun clearCaches() {
+      toolCallCache.clearCache()
+      functionCache.clearCache()
     }
 
     fun swapCacheKeys(
