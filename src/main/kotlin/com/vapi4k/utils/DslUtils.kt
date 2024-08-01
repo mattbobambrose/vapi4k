@@ -36,6 +36,12 @@ object DslUtils {
     otherWise: String = "",
   ) = if (condition) this else otherWise
 
+  fun getRandomSecret(
+    requiredLength: Int = 10,
+    charPool: List<Char> = defaultCharPool,
+  ) =
+    (1..requiredLength).map { charPool.random() }.joinToString("")
+
   private val defaultCharPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
   fun getRandomSecret(
