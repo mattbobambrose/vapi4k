@@ -29,6 +29,7 @@ import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
+import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
@@ -700,6 +701,16 @@ class AssistantTest {
     }.also {
       assertEquals("An assistant{} requires a model{} decl", it.message)
     }
+  }
+
+  @Test
+  fun `new getRandomSecret`() {
+    println(getRandomSecret(8, 4, 4, 7))
+    println(getRandomSecret(8, 4, 4, 7))
+    println(getRandomSecret(8, 4, 4, 7))
+    println(getRandomSecret(8, 4, 4, 7))
+    println(getRandomSecret(8, 4, 4, 7))
+    println(getRandomSecret(8, 4, 4, 7))
   }
 
   companion object {

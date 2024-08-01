@@ -40,4 +40,14 @@ object DslUtils {
     length: Int = 10,
     charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9'),
   ) = (1..length).map { charPool.random() }.joinToString("")
+
+  fun getRandomSecret(
+    requiredLength: Int = 10,
+    vararg additionalLengths: Int,
+    charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9'),
+  ) =
+    buildString {
+      append((1..requiredLength).map { charPool.random() }.joinToString(""))
+      additionalLengths.forEach { length -> append("-" + (1..length).map { charPool.random() }.joinToString("")) }
+    }
 }
