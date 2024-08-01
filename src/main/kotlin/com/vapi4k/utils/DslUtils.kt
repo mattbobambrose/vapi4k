@@ -43,11 +43,7 @@ object DslUtils {
     vararg additionalLengths: Int,
     separator: String = "-",
     charPool: List<Char> = defaultCharPool,
-  ): String {
-    val list = mutableListOf(requiredLength)
-    list.addAll(additionalLengths.toList())
-    return list.joinToString(separator) { length ->
-      (1..length).map { charPool.random() }.joinToString("")
-    }
-  }
+  ) =
+    mutableListOf(requiredLength).also { it.addAll(additionalLengths.toList()) }
+      .joinToString(separator) { length -> (1..length).map { charPool.random() }.joinToString("") }
 }
