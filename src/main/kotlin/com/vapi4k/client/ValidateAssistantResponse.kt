@@ -29,10 +29,12 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 
 object ValidateAssistantResponse {
-  fun validateAssistantRequestResponse() =
+  fun validateAssistantRequestResponse(secret: String) =
     runBlocking {
       val response = httpClient.post("http://localhost:8080/vapi4k") {
         contentType(Application.Json)
+        if (secret.isNotEmpty())
+          headers.append("x-vapi-secret", secret)
         val request = runCatching { resourceFile(REQUEST_VALIDATION_FILENAME.value) }.getOrElse { assistantRequest }
         setBody(request)
       }
@@ -42,9 +44,12 @@ object ValidateAssistantResponse {
         if (response.status.value == 200) {
           append("Response:\n${body.toJsonElement().toJsonString()}")
         } else {
-          if (body.isNotEmpty())
-            append("Error: \n$body")
-          else {
+          if (body.isNotEmpty()) {
+            if (body.length < 80)
+              append("Error: $body")
+            else
+              append("Error:\n$body")
+          } else {
             append("Check the ktor log for stack trace")
           }
         }

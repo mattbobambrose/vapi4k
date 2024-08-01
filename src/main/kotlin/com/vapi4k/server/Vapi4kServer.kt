@@ -142,7 +142,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       if (!envIsProduction) {
         get("/validate") {
-          val resp = validateAssistantRequestResponse()
+          val secret = call.request.queryParameters.get("secret").orEmpty()
+          val resp = validateAssistantRequestResponse(secret)
           call.respondText(resp)
         }
       }
@@ -150,18 +151,22 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       val serverPath = config.configProperties.serverUrlPath
       logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
       post(serverPath) {
-        runCatching {
+        if (envIsProduction) {
           handleServerPathPost(callbackChannel)
-        }.onFailure { e ->
-          logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
-          val str = "${
-            e.stackTraceToString()
-              .lines()
-              .filterNot { it.trimStart().startsWith("at io.ktor") }
-              .filterNot { it.trimStart().startsWith("at kotlin") }
-              .joinToString("\n")
-          }\t..."
-          call.respondText(str, status = HttpStatusCode.InternalServerError)
+        } else {
+          runCatching {
+            handleServerPathPost(callbackChannel)
+          }.onFailure { e ->
+            logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
+            val str = "${
+              e.stackTraceToString()
+                .lines()
+                .filterNot { it.trimStart().startsWith("at io.ktor") }
+                .filterNot { it.trimStart().startsWith("at kotlin") }
+                .joinToString("\n")
+            }\t..."
+            call.respondText(str, status = HttpStatusCode.InternalServerError)
+          }
         }
       }
 
@@ -270,7 +275,7 @@ private suspend fun KtorCallContext.handleToolCallPathPost(
 }
 
 private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
-  val secret = call.request.headers["x-vapi-secret"]
+  val secret = call.request.headers["x-vapi-secret"].orEmpty()
   return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
     logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
     call.respond(HttpStatusCode.Forbidden, "Invalid secret")
