@@ -21,7 +21,7 @@ import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.Utils.resourceFile
-import com.vapi4k.utils.get
+import com.vapi4k.utils.modify
 import com.vapi4k.utils.toJsonElement
 import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.post
@@ -31,58 +31,28 @@ import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.put
-import kotlinx.serialization.json.putJsonObject
+import kotlin.collections.set
 
 object ValidateAssistantResponse {
-  fun assistantRequestWitNewCallId(je: JsonElement): JsonElement =
-    buildJsonObject {
-      putJsonObject("message") {
-        put("type", je["message.type"].jsonPrimitive)
-        put("phoneNumber", je["message.phoneNumber"].jsonObject)
-        putJsonObject("call") {
-          put(
-            "id",
-            "${getRandomSecret(8)}-${getRandomSecret(4)}-${getRandomSecret(4)}-${getRandomSecret(4)}-${
-              getRandomSecret(12)
-            }"
-          )
-          put("orgId", je["message.call.orgId"].jsonPrimitive)
-          put("createdAt", je["message.call.createdAt"].jsonPrimitive)
-          put("updatedAt", je["message.call.updatedAt"].jsonPrimitive)
-          put("type", je["message.call.type"].jsonPrimitive)
-          put("status", je["message.call.status"].jsonPrimitive)
-          put("phoneCallProvider", je["message.call.phoneCallProvider"].jsonPrimitive)
-          put("phoneCallProviderId", je["message.call.phoneCallProviderId"].jsonPrimitive)
-          put("phoneCallTransport", je["message.call.phoneCallTransport"].jsonPrimitive)
-          put("phoneNumberId", je["message.call.phoneNumberId"].jsonPrimitive)
-          put("assistantId", je["message.call.assistantId"].jsonPrimitive)
-          put("squadId", je["message.call.squadId"].jsonPrimitive)
-          put("customer", je["message.call.customer"].jsonObject)
-        }
-        put("customer", je["message.customer"].jsonObject)
-        put("timestamp", je["message.timestamp"].jsonPrimitive)
-      }
-    }
-
-  fun validateAssistantRequestResponse(
-    secret: String,
-  ) =
+  fun validateAssistantRequestResponse(secret: String) =
     runBlocking {
       val response = httpClient.post(REQUEST_VALIDATION_URL.value) {
         contentType(Application.Json)
+
         if (secret.isNotEmpty())
           headers.append("x-vapi-secret", secret)
+
         val request = runCatching {
           resourceFile(REQUEST_VALIDATION_FILENAME.value)
-        }.getOrElse { assistantRequest }
+        }.getOrElse { ASSISTANT_REQUEST }
 
-        val newObject = assistantRequestWitNewCallId(request.toJsonElement())
+        val newObject = copyWithNewCallId(request.toJsonElement())
+        println("Request:\n${newObject.toJsonString()}")
         setBody(newObject)
       }
+
       buildString {
         append("\nStatus: ${response.status}\n\n")
         val body = response.bodyAsText()
@@ -90,10 +60,7 @@ object ValidateAssistantResponse {
           append("Response:\n${body.toJsonElement().toJsonString()}")
         } else {
           if (body.isNotEmpty()) {
-            if (body.length < 80)
-              append("Error: $body")
-            else
-              append("Error:\n$body")
+            append("Error:${if (body.length < 80) " " else "\n"}$body")
           } else {
             append("Check the ktor log for stack trace")
           }
@@ -101,7 +68,20 @@ object ValidateAssistantResponse {
       }
     }
 
-  const val assistantRequest = """
+  private fun copyWithNewCallId(je: JsonElement): JsonElement =
+    buildJsonObject {
+      put(
+        "message",
+        je.modify("message") { messageMap ->
+          messageMap["call"] =
+            je.modify("message.call") { callMap ->
+              callMap["id"] = JsonPrimitive(getRandomSecret(8, 4, 4, 12))
+            }
+        },
+      )
+    }
+
+  const val ASSISTANT_REQUEST = """
     {
       "message": {
         "type": "assistant-request",

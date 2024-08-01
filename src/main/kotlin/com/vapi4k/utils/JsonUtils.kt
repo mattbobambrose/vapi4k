@@ -19,6 +19,7 @@ package com.vapi4k.utils
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonArray
@@ -30,6 +31,13 @@ val JsonElement.intValue get() = jsonPrimitive.content.toInt()
 val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
 
 fun JsonElement.getToJsonElements() = jsonArray.toList()
+
+fun JsonElement.modify(
+  key: String,
+  block: (MutableMap<String, JsonElement>) -> Unit,
+): JsonObject = this.get(key).jsonObject.toMutableMap().also(block).toJsonObject()
+
+fun Map<String, JsonElement>.toJsonObject() = JsonObject(this)
 
 fun JsonElement.firstInList() = getToJsonElements().first()
 

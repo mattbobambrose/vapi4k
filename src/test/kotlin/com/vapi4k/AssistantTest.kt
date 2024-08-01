@@ -686,7 +686,7 @@ class AssistantTest {
     }.also {
       assertEquals(
         "deepgramTranscriber{} cannot have both transcriberLanguage and customLanguage values",
-        it.message
+        it.message,
       )
     }
   }

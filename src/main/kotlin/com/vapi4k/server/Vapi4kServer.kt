@@ -129,7 +129,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       get("/version") {
         call.respondText(ContentType.Application.Json) {
-          // call.versionPage()
           Vapi4kServer::class.versionDesc(true)
         }
       }

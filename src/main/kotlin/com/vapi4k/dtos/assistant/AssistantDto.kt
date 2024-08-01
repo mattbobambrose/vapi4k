@@ -58,20 +58,15 @@ abstract class AbstractAssistantDto(
   var serverUrlSecret: String = "",
   var silenceTimeoutSeconds: Int = -1,
   var voicemailMessage: String = "",
-
   // Need a copy of DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES here, so call toMutableSet()
   var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
   var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
-
   // TODO: Came from squad assistant
   val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
-
   // TODO: This needs to be added to docs - https://docs.vapi.ai/assistants/function-calling
   var forwardingPhoneNumber: String = "",
-
   // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
   var endCallFunctionEnabled: Boolean? = null,
-
   // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
   var dialKeypadFunctionEnabled: Boolean? = null,
 )
