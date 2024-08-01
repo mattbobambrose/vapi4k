@@ -36,18 +36,18 @@ object DslUtils {
     otherWise: String = "",
   ) = if (condition) this else otherWise
 
-  fun getRandomSecret(
-    length: Int = 10,
-    charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9'),
-  ) = (1..length).map { charPool.random() }.joinToString("")
+  private val defaultCharPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
   fun getRandomSecret(
     requiredLength: Int = 10,
     vararg additionalLengths: Int,
-    charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9'),
-  ) =
-    buildString {
-      append((1..requiredLength).map { charPool.random() }.joinToString(""))
-      additionalLengths.forEach { length -> append("-" + (1..length).map { charPool.random() }.joinToString("")) }
+    separator: String = "-",
+    charPool: List<Char> = defaultCharPool,
+  ): String {
+    val list = mutableListOf(requiredLength)
+    list.addAll(additionalLengths.toList())
+    return list.joinToString(separator) { length ->
+      (1..length).map { charPool.random() }.joinToString("")
     }
+  }
 }
