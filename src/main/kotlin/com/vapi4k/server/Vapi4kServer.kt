@@ -49,9 +49,9 @@ import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
-import com.vapi4k.utils.ReflectionUtils.lambda
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.getBanner
+import com.vapi4k.utils.Utils.lambda
 import com.vapi4k.utils.toJsonElement
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.ContentType
@@ -132,19 +132,25 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
       }
 
-      get("/metrics") {
-        call.respond(appMicrometerRegistry.scrape())
-      }
-
-      get("/caches") {
-        call.respond(cacheAsJson())
-      }
-
       if (!envIsProduction) {
+        get("/metrics") {
+          call.respond(appMicrometerRegistry.scrape())
+        }
+
+        get("/caches") {
+          call.respond(cacheAsJson())
+        }
+
         get("/validate") {
           val secret = call.request.queryParameters["secret"].orEmpty()
           val resp = validateAssistantRequestResponse(secret)
           call.respondText(resp, ContentType.Text.Html)
+        }
+
+        get("/invokeTool") {
+          val params = call.request.queryParameters
+
+          call.respondText("Success: ${params.names().joinToString(", ") { "$it = ${params[it]}" }}")
         }
 
         get("/clear-caches") {

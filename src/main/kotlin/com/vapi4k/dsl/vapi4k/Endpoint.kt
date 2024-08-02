@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.utils.ReflectionUtils.ensureStartsWith
+import com.vapi4k.utils.Utils.ensureStartsWith
 import kotlinx.serialization.SerialName
 import java.net.URI
 

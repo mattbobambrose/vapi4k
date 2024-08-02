@@ -35,7 +35,7 @@ fun JsonElement.getToJsonElements() = jsonArray.toList()
 fun JsonElement.modify(
   key: String,
   block: (MutableMap<String, JsonElement>) -> Unit,
-): JsonObject = this.get(key).jsonObject.toMutableMap().also(block).toJsonObject()
+): JsonObject = this[key].jsonObject.toMutableMap().also(block).toJsonObject()
 
 fun Map<String, JsonElement>.toJsonObject() = JsonObject(this)
 

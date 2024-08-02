@@ -46,6 +46,7 @@ import kotlinx.html.form
 import kotlinx.html.h2
 import kotlinx.html.h3
 import kotlinx.html.head
+import kotlinx.html.hiddenInput
 import kotlinx.html.html
 import kotlinx.html.input
 import kotlinx.html.pre
@@ -105,42 +106,48 @@ object ValidateAssistantResponse {
 
               val functionInfo = ToolCache.toolCallCache.getFromCache(sessionCacheId)
 
-              funcs
-                .map { functionInfo.getFunction(it) }
-                .forEach { functionDetails ->
-
-                  h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
-                  form {
-                    table {
-                      functionDetails.params.forEach { param ->
-                        tr {
-                          td { +param.first }
-                          td {
-                            input {
-                              type =
-                                when (param.second.asKClass()) {
-                                  String::class -> InputType.text
-                                  Int::class -> InputType.number
-                                  Boolean::class -> InputType.checkBox
-                                  else -> InputType.text
-                                }
-                              name = param.first
-                            }
-                          }
-                        }
-                      }
+              funcs.forEach { func ->
+                val functionDetails = functionInfo.getFunction(func)
+                h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
+                form(action = "/invokeTool") {
+                  hiddenInput {
+                    name = "sessionCacheId"
+                    value = sessionCacheId.value
+                  }
+                  hiddenInput {
+                    name = "funcName"
+                    value = func
+                  }
+                  table {
+                    functionDetails.params.forEach { param ->
                       tr {
+                        td { +param.first }
                         td {
                           input {
-                            type = InputType.submit
-                            value = "Invoke Tool"
+                            type =
+                              when (param.second.asKClass()) {
+                                String::class -> InputType.text
+                                Int::class -> InputType.number
+                                Boolean::class -> InputType.checkBox
+                                else -> InputType.text
+                              }
+                            name = param.first
                           }
                         }
-                        td {}
                       }
+                    }
+                    tr {
+                      td {
+                        input {
+                          type = InputType.submit
+                          value = "Invoke Tool"
+                        }
+                      }
+                      td {}
                     }
                   }
                 }
+              }
             }
 
             jsonElement.isAssistantIdResponse -> {}

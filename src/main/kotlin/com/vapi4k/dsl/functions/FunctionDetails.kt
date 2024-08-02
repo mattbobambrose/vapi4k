@@ -20,14 +20,13 @@ import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
-import com.vapi4k.utils.ReflectionUtils.findFunction
-import com.vapi4k.utils.ReflectionUtils.findMethod
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.kParameters
 import com.vapi4k.utils.ReflectionUtils.parameterSignature
-import com.vapi4k.utils.ReflectionUtils.toolCall
+import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.Utils.findFunction
 import com.vapi4k.utils.booleanValue
 import com.vapi4k.utils.get
 import com.vapi4k.utils.intValue
@@ -43,7 +42,7 @@ class FunctionDetails(
   private val invokeCounter = AtomicInteger(0)
   val className: String = obj::class.qualifiedName.orEmpty()
   val functionName: String = obj.toolCallFunction.name
-  val toolCall = obj.toolCallFunction.toolCall
+  val toolCall = obj.toolCallFunction.toolCallAnnotation
 
   val invokeCount get() = invokeCounter.get()
   val fqName get() = "$className.$functionName()"
@@ -89,7 +88,6 @@ class FunctionDetails(
 
   private fun invokeMethod(args: JsonElement): String {
     // logger.info { "Invoking method $fqName" }
-    val method = obj.findMethod(functionName)
     val function = obj.findFunction(functionName)
     val isVoid = function.returnType.asKClass() == Unit::class
     val argNames = args.jsonObject.keys
@@ -109,7 +107,8 @@ class FunctionDetails(
         }
 
     logger.debug { "Actual vals: $actualVals" }
-    val result = method.invoke(obj, *actualVals.toTypedArray<Any>())
+    val result = function.call(obj, *actualVals.toTypedArray<Any>())
+
     return if (isVoid) "" else result.toString()
   }
 }

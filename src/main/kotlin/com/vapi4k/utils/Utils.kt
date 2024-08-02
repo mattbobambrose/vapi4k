@@ -17,6 +17,7 @@
 package com.vapi4k.utils
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.utils.ReflectionUtils.functions
 import io.github.oshai.kotlinlogging.KLogger
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -25,6 +26,17 @@ object Utils {
   internal val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
 
   internal fun nextSessionCacheId() = "Outbound-${System.currentTimeMillis()}".toSessionCacheId()
+
+  fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
+
+  fun String.ensureEndsWith(s: String) = if (endsWith(s)) this else this + s
+
+  fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }
+
+  fun <T> lambda(block: T) = block
+
+  fun Any.findFunction(methodName: String) =
+    functions.singleOrNull { it.name == methodName } ?: error("Method $methodName not found")
 
   fun resourceFile(filename: String): String =
     this::class.java.getResource(filename)?.readText() ?: error("File not found: $filename")
