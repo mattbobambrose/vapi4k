@@ -21,7 +21,6 @@ import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto
-import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
@@ -79,8 +78,6 @@ internal object FunctionUtils {
 
       params.forEach { param ->
         val kclass = param.type.asKClass()
-        logger.info { "Param: ${param.type}" }
-
         if (kclass !in allowedParamTypes) {
           val fqName = FunctionDetails(obj).fqName
           val simpleName = kclass.simpleName

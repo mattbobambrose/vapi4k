@@ -39,7 +39,9 @@ fun JsonElement.modifyObjectWith(
 ): JsonObject = this[key].jsonObject.toMutableMap().also(block).toJsonObject()
 
 fun Map<String, JsonElement>.toJsonObject() = JsonObject(this)
-fun Map<String, String>.toJsonObjectWithStrings() = mapValues { JsonPrimitive(it.value) }.toJsonObject()
+fun Map<String, Any>.toJsonPrimitives() = mapValues {
+  if (it.value is String) JsonPrimitive(it.value as String) else it.value as JsonPrimitive
+}
 
 fun JsonElement.firstInList() = getToJsonElements().first()
 

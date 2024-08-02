@@ -46,6 +46,7 @@ import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
 import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
@@ -56,6 +57,9 @@ import com.vapi4k.utils.toJsonElement
 import com.vapi4k.utils.toJsonObject
 import com.vapi4k.utils.toJsonString
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
@@ -80,6 +84,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -155,26 +160,45 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           val params = call.request.queryParameters
 
 
-          val lll = buildJsonObject {
-            put(
-              "message",
-              mapOf(
-                "toolCallList" to
-                  mapOf(
-                    "id" to JsonPrimitive("zzz"),
-                    "type" to JsonPrimitive("function"),
-                    "function" to mapOf(
-                      "name" to JsonPrimitive(params.get("functionName")),
-                      "arguments" to
-                        params.names().filterNot { it in setOf("sessionCacheId", "functionName") }
-                          .map { it to JsonPrimitive(params[it]) }.toMap().toJsonObject()
-                    ).toJsonObject()
-                  ).toJsonObject()
-              ).toJsonObject()
-            )
-          }
+          val sessionCacheId = params.get("sessionCacheId") ?: error("No sessionCacheId found")
+          runCatching {
+            val toolRequest = buildJsonObject {
+              put(
+                "message",
+                mapOf(
+                  "type" to JsonPrimitive("tool-calls"),
+                  "call" to mapOf("id" to JsonPrimitive(sessionCacheId)).toJsonObject(),
+                  "toolCallList" to JsonArray(
+                    listOf(
+                      mapOf(
+                        "id" to JsonPrimitive(sessionCacheId),
+                        "type" to JsonPrimitive("function"),
+                        "function" to mapOf(
+                          "name" to JsonPrimitive(params.get("functionName")),
+                          "arguments" to
+                            params.names().filterNot { it in setOf("sessionCacheId", "functionName") }
+                              .map { it to JsonPrimitive(params[it]) }.toMap().toJsonObject()
+                        ).toJsonObject()
+                      ).toJsonObject()
+                    )
+                  )
+                ).toJsonObject()
+              )
+            }
 
-          println(lll.toJsonString())
+            val endpoint = config.configProperties.serverUrlPath
+            val resp = httpClient.post("http://localhost:8080/${endpoint}") {
+              headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
+              setBody(toolRequest.toJsonString())
+            }
+
+            println("lll: $toolRequest")
+            println(toolRequest.toJsonString())
+            println("Response: ${resp.status}")
+            println("Response: ${resp.status} ${resp.bodyAsText()}")
+          }.onFailure {
+            logger.error(it) { "Error invoking tool: ${it.errorMsg}" }
+          }
           call.respondText("Success: ${params.names().joinToString(", ") { "$it = ${params[it]}" }}")
         }
 
