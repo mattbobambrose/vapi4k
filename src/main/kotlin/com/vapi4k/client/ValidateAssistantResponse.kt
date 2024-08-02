@@ -30,7 +30,7 @@ import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.Utils.resourceFile
 import com.vapi4k.utils.get
 import com.vapi4k.utils.getToJsonElements
-import com.vapi4k.utils.modify
+import com.vapi4k.utils.modifyObjectWith
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
 import com.vapi4k.utils.toJsonString
@@ -115,7 +115,7 @@ object ValidateAssistantResponse {
                     value = sessionCacheId.value
                   }
                   hiddenInput {
-                    name = "funcName"
+                    name = "functionName"
                     value = func
                   }
                   table {
@@ -176,9 +176,9 @@ object ValidateAssistantResponse {
     buildJsonObject {
       put(
         "message",
-        je.modify("message") { messageMap ->
+        je.modifyObjectWith("message") { messageMap ->
           messageMap["call"] =
-            je.modify("message.call") { callMap ->
+            je.modifyObjectWith("message.call") { callMap ->
               callMap["id"] = JsonPrimitive(getRandomSecret(8, 4, 4, 12))
             }
         },

@@ -97,8 +97,7 @@ class FunctionDetails(
       function
         .kParameters
         .map { (argName, argType) ->
-          val kclass = argType.asKClass()
-          when (kclass) {
+          when (argType.asKClass()) {
             String::class -> args.jsonObject.stringValue(argName)
             Int::class -> args.jsonObject.intValue(argName)
             Boolean::class -> args.jsonObject.booleanValue(argName)

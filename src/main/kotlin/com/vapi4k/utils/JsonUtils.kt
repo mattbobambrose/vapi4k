@@ -20,6 +20,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonArray
@@ -32,12 +33,13 @@ val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
 
 fun JsonElement.getToJsonElements() = jsonArray.toList()
 
-fun JsonElement.modify(
+fun JsonElement.modifyObjectWith(
   key: String,
   block: (MutableMap<String, JsonElement>) -> Unit,
 ): JsonObject = this[key].jsonObject.toMutableMap().also(block).toJsonObject()
 
 fun Map<String, JsonElement>.toJsonObject() = JsonObject(this)
+fun Map<String, String>.toJsonObjectWithStrings() = mapValues { JsonPrimitive(it.value) }.toJsonObject()
 
 fun JsonElement.firstInList() = getToJsonElements().first()
 

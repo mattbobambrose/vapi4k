@@ -99,14 +99,4 @@ data class ToolsImpl internal constructor(
     val endpoint = with(AssistantImpl.config) { getEmptyEndpoint() ?: defaultToolCallEndpoint }
     addTool(endpoint, obj, block)
   }
-
-  companion object {
-//    private fun ToolImpl.verifyFutureDelay(toolDto: ToolDto) {
-//      if (toolDto.messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc } == null) {
-//        if (futureDelay != -1) {
-//          error("delayedMillis must be set when using requestDelayedMessage")
-//        }
-//      }
-//    }
-  }
 }
