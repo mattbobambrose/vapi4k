@@ -18,6 +18,7 @@ import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.eq
+import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.toolservice.ToolCallService
 import kotlinx.serialization.json.JsonElement
@@ -44,7 +45,7 @@ object SimpleAssistant {
       firstMessage = "Hi there!"
 
       openAIModel {
-        // modelType = OpenAIModelType.GPT_4_TURBO
+        modelType = OpenAIModelType.GPT_4_TURBO
         systemMessage = "You're a weather lookup service"
 
         tools {

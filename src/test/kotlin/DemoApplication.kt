@@ -20,7 +20,7 @@ fun Application.module2() {
     }
 
     onAssistantRequest { assistantRequest ->
-      // doubleToolAssistant2(assistantRequest)
+      //doubleToolAssistant2(assistantRequest)
       simpleAssistantRequest(assistantRequest)
     }
   }

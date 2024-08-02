@@ -22,12 +22,14 @@ import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.server.Vapi4k
+import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.Utils.resourceFile
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
@@ -83,7 +85,11 @@ fun withTestApplication(
         setBody(resourceFile(fileName))
       }
 
-    je = response!!.bodyAsText().toJsonElement()
+    je =
+      if (response!!.status == HttpStatusCode.OK)
+        response!!.bodyAsText().toJsonElement()
+      else
+        emptyJsonElement()
   }
   return response!! to je!!
 }
