@@ -71,7 +71,7 @@ object JsonElementUtils {
 
   val JsonElement.toolCallList
     get() = if (isToolCall)
-      this["message.toolCallList"].getToJsonElements()
+      this["message.toolCallList"].toJsonElements()
     else
       error("JsonElement is not a tool call request")
 

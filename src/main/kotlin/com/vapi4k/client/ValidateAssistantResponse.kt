@@ -19,6 +19,7 @@ package com.vapi4k.client
 import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
@@ -30,10 +31,10 @@ import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.Utils.resourceFile
 import com.vapi4k.utils.get
-import com.vapi4k.utils.getToJsonElements
 import com.vapi4k.utils.modifyObjectWith
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
+import com.vapi4k.utils.toJsonElements
 import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -41,6 +42,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
+import kotlinx.html.BODY
 import kotlinx.html.InputType
 import kotlinx.html.body
 import kotlinx.html.form
@@ -100,68 +102,16 @@ object ValidateAssistantResponse {
           val jsonElement = body.toJsonElement()
 
           when {
-            jsonElement.isAssistantResponse -> {
-              val funcs =
-                jsonElement["assistant.model.tools"].getToJsonElements()
-                  .map { it.stringValue("function.name") }
-
-              h2 { +"Tools" }
-
-              val functionInfo = ToolCache.toolCallCache.getFromCache(sessionCacheId)
-
-              funcs.forEachIndexed { i, func ->
-                val functionDetails = functionInfo.getFunction(func)
-                h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
-                form {
-                  attributes["hx-get"] = INVOKE_TOOL_PATH
-                  attributes["hx-target"] = "#result-$i"
-
-                  hiddenInput {
-                    name = "sessionCacheId"
-                    value = sessionCacheId.value
-                  }
-                  hiddenInput {
-                    name = "functionName"
-                    value = func
-                  }
-                  table {
-                    functionDetails.params.forEach { param ->
-                      tr {
-                        td { +param.first }
-                        td {
-                          input {
-                            type =
-                              when (param.second.asKClass()) {
-                                String::class -> InputType.text
-                                Int::class -> InputType.number
-                                Boolean::class -> InputType.checkBox
-                                else -> InputType.text
-                              }
-                            name = param.first
-                          }
-                        }
-                      }
-                    }
-                    tr {
-                      td {
-                        input {
-                          type = InputType.submit
-                          value = "Invoke Tool"
-                        }
-                      }
-                      td {}
-                    }
-                  }
-                }
-
-                pre {
-                  id = "result-$i"
-                }
+            jsonElement.isAssistantResponse -> processAssistantRequest(jsonElement, sessionCacheId)
+            jsonElement.isAssistantIdResponse -> {}
+            jsonElement.isSquadResponse -> {
+              val assistants = jsonElement["squad.members"].toJsonElements()
+              assistants.forEachIndexed { i, assistant ->
+                h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
+                processAssistantRequest(assistant, sessionCacheId)
               }
             }
 
-            jsonElement.isAssistantIdResponse -> {}
-            jsonElement.isSquadResponse -> {}
             jsonElement.isSquadIdResponse -> {}
             else -> error("Unknown response type")
           }
@@ -174,9 +124,83 @@ object ValidateAssistantResponse {
               pre { +body }
             }
           } else {
-            h3 { "Check the ktor log for error information." }
+            h3 { +"Check the ktor log for error information." }
           }
         }
+      }
+    }
+  }
+
+  private fun getAssistantName(
+    assistantElement: JsonElement,
+    index: Int,
+  ): String =
+    runCatching {
+      assistantElement["assistant"].stringValue("name")
+    }.getOrElse {
+      index.toString()
+    }
+
+  private fun BODY.processAssistantRequest(
+    assistantElement: JsonElement,
+    sessionCacheId: SessionCacheId,
+  ) {
+    val funcs =
+      assistantElement["assistant.model.tools"].toJsonElements()
+        .map { it.stringValue("function.name") }
+
+    h2 { +"Tools" }
+
+    val functionInfo = ToolCache.toolCallCache.getFromCache(sessionCacheId)
+
+    funcs.forEach { func ->
+      val functionDetails = functionInfo.getFunction(func)
+      val divid = getRandomSecret()
+      h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
+      form {
+        attributes["hx-get"] = INVOKE_TOOL_PATH
+        attributes["hx-target"] = "#result-$divid"
+
+        hiddenInput {
+          name = "sessionCacheId"
+          value = sessionCacheId.value
+        }
+        hiddenInput {
+          name = "functionName"
+          value = func
+        }
+        table {
+          functionDetails.params.forEach { param ->
+            tr {
+              td { +param.first }
+              td {
+                input {
+                  type =
+                    when (param.second.asKClass()) {
+                      String::class -> InputType.text
+                      Int::class -> InputType.number
+                      Boolean::class -> InputType.checkBox
+                      else -> InputType.text
+                    }
+                  name = param.first
+                }
+              }
+            }
+          }
+          tr {
+            td {
+              input {
+                type = InputType.submit
+                value = "Invoke Tool"
+              }
+            }
+            td {}
+          }
+        }
+      }
+
+      pre {
+        id = "result-$divid"
       }
     }
   }

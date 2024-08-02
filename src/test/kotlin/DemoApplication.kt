@@ -1,4 +1,4 @@
-import SimpleAssistant.simpleAssistantRequest
+import SimpleSquad.doubleToolAssistant2
 import com.vapi4k.server.Vapi4k
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -20,8 +20,8 @@ fun Application.module2() {
     }
 
     onAssistantRequest { assistantRequest ->
-      // doubleToolAssistant2(assistantRequest)
-      simpleAssistantRequest(assistantRequest)
+      doubleToolAssistant2(assistantRequest)
+      //simpleAssistantRequest(assistantRequest)
     }
   }
 }
