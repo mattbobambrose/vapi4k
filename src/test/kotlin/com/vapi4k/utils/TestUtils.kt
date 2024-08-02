@@ -34,11 +34,11 @@ import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
 
-fun JsonElement.tools() = get("assistant.model.tools").toJsonElements()
+fun JsonElement.tools() = get("assistant.model.tools").toJsonElementList()
 
 fun JsonElement.firstTool() = tools().first()
 
-fun JsonElement.firstToolMessages() = firstTool()["messages"].toJsonElements()
+fun JsonElement.firstToolMessages() = firstTool()["messages"].toJsonElementList()
 
 fun JsonElement.firstMessageOfType(
   type: ToolMessageType,
@@ -51,7 +51,7 @@ else
   firstToolMessages()
     .filter { it.containsKey("conditions") }
     .filter {
-      conditions.all { c -> it["conditions"].toJsonElements().contains(c.toJsonElement()) }
+      conditions.all { c -> it["conditions"].toJsonElementList().contains(c.toJsonElement()) }
     }
     .first { it.stringValue("type") == type.desc }
 

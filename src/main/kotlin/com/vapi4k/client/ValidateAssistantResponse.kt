@@ -34,7 +34,7 @@ import com.vapi4k.utils.get
 import com.vapi4k.utils.modifyObjectWith
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
-import com.vapi4k.utils.toJsonElements
+import com.vapi4k.utils.toJsonElementList
 import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -105,7 +105,7 @@ object ValidateAssistantResponse {
             jsonElement.isAssistantResponse -> processAssistantRequest(jsonElement, sessionCacheId)
             jsonElement.isAssistantIdResponse -> {}
             jsonElement.isSquadResponse -> {
-              val assistants = jsonElement["squad.members"].toJsonElements()
+              val assistants = jsonElement["squad.members"].toJsonElementList()
               assistants.forEachIndexed { i, assistant ->
                 h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
                 processAssistantRequest(assistant, sessionCacheId)
@@ -146,7 +146,7 @@ object ValidateAssistantResponse {
     sessionCacheId: SessionCacheId,
   ) {
     val funcs =
-      assistantElement["assistant.model.tools"].toJsonElements()
+      assistantElement["assistant.model.tools"].toJsonElementList()
         .map { it.stringValue("function.name") }
 
     h2 { +"Tools" }
