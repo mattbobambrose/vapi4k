@@ -20,6 +20,8 @@ fun Application.module2() {
     }
 
     onAssistantRequest { assistantRequest ->
+//      AssistantId with tools
+//      SquadId with tools
       doubleToolAssistant2(assistantRequest)
       //simpleAssistantRequest(assistantRequest)
     }

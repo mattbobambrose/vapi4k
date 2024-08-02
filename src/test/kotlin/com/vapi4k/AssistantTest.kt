@@ -403,62 +403,60 @@ class AssistantTest {
   fun `error on duplicate reverse conditions`() {
     clearCaches()
     assertThrows(IllegalStateException::class.java) {
-//      withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
       assistant(ASSISTANT_REQUEST.toJsonElement()) {
-          firstMessage = messageOne
-          openAIModel {
-            modelType = OpenAIModelType.GPT_3_5_TURBO
+        firstMessage = messageOne
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
 
-            systemMessage = sysMessage
-            tools {
-              tool(WeatherLookupService0()) {
-                condition("city" eq "Chicago", "state" eq "Illinois") {
-                  requestStartMessage {
-                    content = chicagoIllinoisStartMessage
-                  }
-                  requestCompleteMessage {
-                    content = chicagoIllinoisCompleteMessage
-                  }
-                  requestFailedMessage {
-                    content = chicagoIllinoisFailedMessage
-                  }
-                  requestDelayedMessage {
-                    content = chicagoIllinoisDelayedMessage
-                    timingMilliseconds = 2000
-                  }
-                }
-                condition("state" eq "Illinois", "city" eq "Chicago") {
-                  requestStartMessage {
-                    content = chicagoIllinoisStartMessage + "2"
-                  }
-                  requestCompleteMessage {
-                    content = chicagoIllinoisCompleteMessage + "2"
-                  }
-                  requestFailedMessage {
-                    content = chicagoIllinoisFailedMessage + "2"
-                  }
-                  requestDelayedMessage {
-                    content = chicagoIllinoisDelayedMessage + "2"
-                    timingMilliseconds = 3000
-                  }
-                }
+          systemMessage = sysMessage
+          tools {
+            tool(WeatherLookupService0()) {
+              condition("city" eq "Chicago", "state" eq "Illinois") {
                 requestStartMessage {
-                  content = startMessage
+                  content = chicagoIllinoisStartMessage
                 }
                 requestCompleteMessage {
-                  content = completeMessage
+                  content = chicagoIllinoisCompleteMessage
                 }
                 requestFailedMessage {
-                  content = failedMessage
+                  content = chicagoIllinoisFailedMessage
                 }
                 requestDelayedMessage {
-                  content = delayedMessage
-                  timingMilliseconds = 1000
+                  content = chicagoIllinoisDelayedMessage
+                  timingMilliseconds = 2000
                 }
+              }
+              condition("state" eq "Illinois", "city" eq "Chicago") {
+                requestStartMessage {
+                  content = chicagoIllinoisStartMessage + "2"
+                }
+                requestCompleteMessage {
+                  content = chicagoIllinoisCompleteMessage + "2"
+                }
+                requestFailedMessage {
+                  content = chicagoIllinoisFailedMessage + "2"
+                }
+                requestDelayedMessage {
+                  content = chicagoIllinoisDelayedMessage + "2"
+                  timingMilliseconds = 3000
+                }
+              }
+              requestStartMessage {
+                content = startMessage
+              }
+              requestCompleteMessage {
+                content = completeMessage
+              }
+              requestFailedMessage {
+                content = failedMessage
+              }
+              requestDelayedMessage {
+                content = delayedMessage
+                timingMilliseconds = 1000
               }
             }
           }
-//        }
+        }
       }
     }.also {
       assert(it.message.orEmpty().contains("duplicates an existing condition{}"))

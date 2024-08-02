@@ -1,0 +1,256 @@
+{
+  "message": {
+    "type": "tool-calls",
+    "toolCalls": [
+      {
+        "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
+        "type": "function",
+        "function": {
+          "name": "getRealWeatherByCity_001",
+          "arguments": {
+            "city": "Danville",
+            "state": "CA"
+          }
+        }
+      }
+    ],
+    "toolCallList": [
+      {
+        "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
+        "type": "function",
+        "function": {
+          "name": "getRealWeatherByCity_001",
+          "arguments": {
+            "city": "Danville",
+            "state": "CA"
+          }
+        }
+      }
+    ],
+    "toolWithToolCallList": [
+      {
+        "type": "function",
+        "function": {
+          "name": "getRealWeatherByCity_001",
+          "description": "Look up the real weather for a city",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "description": "The city parameter",
+                "type": "string"
+              },
+              "state": {
+                "description": "The state parameter",
+                "type": "string"
+              }
+            },
+            "required": [
+              "city",
+              "state"
+            ]
+          }
+        },
+        "async": false,
+        "server": {
+          "url": "https://eocare-app-fiqm5.ondigitalocean.app/vapi4k",
+          "secret": "12345"
+        },
+        "messages": [
+          {
+            "content": "The real weather lookup has started",
+            "type": "request-start"
+          }
+        ],
+        "toolCall": {
+          "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
+          "type": "function",
+          "function": {
+            "name": "getRealWeatherByCity_001",
+            "arguments": {
+              "city": "Danville",
+              "state": "CA"
+            }
+          }
+        }
+      }
+    ],
+    "call": {
+      "id": "b84d0775-b497-4e53-8c46-fb822e89e38d",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "createdAt": "2024-08-02T21:58:17.866Z",
+      "updatedAt": "2024-08-02T21:58:17.866Z",
+      "type": "inboundPhoneCall",
+      "status": "ringing",
+      "phoneCallProvider": "twilio",
+      "phoneCallProviderId": "CA3d4ab690a91287ae9598123c8e6c4ad5",
+      "phoneCallTransport": "pstn",
+      "phoneNumberId": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "customer": {
+        "number": "+19256836490"
+      },
+      "assistant": {
+        "model": {
+          "model": "gpt-4-turbo",
+          "messages": [
+            {
+              "content": "You're a weather lookup service.\nTake in state and country names as the two letter abbreviations (e.g. Illinois is IL, California is CA, Vermont is VT)",
+              "role": "system"
+            }
+          ],
+          "tools": [
+            {
+              "async": false,
+              "function": {
+                "name": "getRealWeatherByCity_001",
+                "description": "Look up the real weather for a city",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "description": "The city parameter",
+                      "type": "string"
+                    },
+                    "state": {
+                      "description": "The state parameter",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "city",
+                    "state"
+                  ]
+                }
+              },
+              "messages": [
+                {
+                  "content": "The real weather lookup has started",
+                  "type": "request-start"
+                }
+              ],
+              "server": {
+                "url": "https://eocare-app-fiqm5.ondigitalocean.app/vapi4k",
+                "secret": "12345"
+              },
+              "type": "function"
+            }
+          ],
+          "provider": "openai"
+        },
+        "firstMessage": "Hi there!",
+        "serverMessages": [
+          "end-of-call-report",
+          "function-call",
+          "hang",
+          "status-update",
+          "tool-calls",
+          "transfer-destination-request",
+          "user-interrupted"
+        ]
+      }
+    },
+    "phoneNumber": {
+      "id": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "number": "+19254207621",
+      "createdAt": "2024-06-29T03:03:00.576Z",
+      "updatedAt": "2024-07-29T03:03:12.996Z",
+      "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33cFxM9B7",
+      "stripeSubscriptionStatus": "active",
+      "stripeSubscriptionCurrentPeriodStart": "2024-07-29T03:02:56.000Z",
+      "provider": "twilio"
+    },
+    "customer": {
+      "number": "+19256836490"
+    },
+    "artifact": {
+      "messages": [
+        {
+          "role": "bot",
+          "message": "Hi there.",
+          "time": 1722635902035,
+          "endTime": 1722635902775,
+          "secondsFromStart": 0.96,
+          "source": ""
+        },
+        {
+          "role": "user",
+          "message": "K.",
+          "time": 1722635902915,
+          "endTime": 1722635903345,
+          "secondsFromStart": 1.8399999,
+          "duration": 2.27
+        },
+        {
+          "role": "bot",
+          "message": "How can I assist you today?",
+          "time": 1722635905175,
+          "endTime": 1722635906835,
+          "secondsFromStart": 4.1,
+          "source": ""
+        },
+        {
+          "role": "user",
+          "message": "1 second. Keep talking for just a second. Okay. What's the weather in Danville, California?",
+          "time": 1722635909285,
+          "endTime": 1722635916035,
+          "secondsFromStart": 8.21,
+          "duration": 4.2500005
+        },
+        {
+          "toolCalls": [
+            {
+              "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
+              "type": "function",
+              "function": {
+                "name": "getRealWeatherByCity_001",
+                "arguments": "{\"city\": \"Danville\", \"state\": \"CA\"}"
+              }
+            }
+          ],
+          "role": "tool_calls",
+          "message": "",
+          "time": 1722635916630,
+          "secondsFromStart": 15.81
+        }
+      ],
+      "messagesOpenAIFormatted": [
+        {
+          "role": "assistant",
+          "content": "Hi there."
+        },
+        {
+          "role": "user",
+          "content": "K."
+        },
+        {
+          "role": "assistant",
+          "content": "How can I assist you today?"
+        },
+        {
+          "role": "user",
+          "content": "1 second. Keep talking for just a second. Okay. What's the weather in Danville, California?"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
+              "type": "function",
+              "function": {
+                "name": "getRealWeatherByCity_001",
+                "arguments": "{\"city\": \"Danville\", \"state\": \"CA\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_7sxV2b6yFHEKQnIG44a0bhog",
+          "content": "undefined"
+        }
+      ]
+    },
+    "timestamp": "2024-08-02T21:58:36.650Z"
+  }
+}
