@@ -29,7 +29,6 @@ class FunctionInfo {
 
   val age get() = Clock.System.now() - created
   val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
-  val ageMillis get() = age.toString(unit = DurationUnit.MILLISECONDS)
 
   fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
 }

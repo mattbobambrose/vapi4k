@@ -39,8 +39,7 @@ object DslUtils {
   fun getRandomSecret(
     requiredLength: Int = 10,
     charPool: List<Char> = defaultCharPool,
-  ) =
-    (1..requiredLength).map { charPool.random() }.joinToString("")
+  ) = (1..requiredLength).map { charPool.random() }.joinToString("")
 
   private val defaultCharPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
@@ -49,7 +48,6 @@ object DslUtils {
     vararg additionalLengths: Int,
     separator: String = "-",
     charPool: List<Char> = defaultCharPool,
-  ) =
-    mutableListOf(requiredLength).also { it.addAll(additionalLengths.toList()) }
-      .joinToString(separator) { length -> (1..length).map { charPool.random() }.joinToString("") }
+  ) = mutableListOf(requiredLength).also { it.addAll(additionalLengths.toList()) }
+    .joinToString(separator) { length -> (1..length).map { charPool.random() }.joinToString("") }
 }

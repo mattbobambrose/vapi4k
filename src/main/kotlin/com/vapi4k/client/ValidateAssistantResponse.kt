@@ -16,12 +16,23 @@
 
 package com.vapi4k.client
 
+import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
+import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.JsonElementUtils.isAssistantIdResponse
+import com.vapi4k.utils.JsonElementUtils.isAssistantResponse
+import com.vapi4k.utils.JsonElementUtils.isSquadIdResponse
+import com.vapi4k.utils.JsonElementUtils.isSquadResponse
+import com.vapi4k.utils.JsonElementUtils.sessionCacheId
+import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.Utils.resourceFile
-import com.vapi4k.utils.modify
+import com.vapi4k.utils.get
+import com.vapi4k.utils.getToJsonElements
+import com.vapi4k.utils.modifyObjectWith
+import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
 import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.post
@@ -30,37 +41,51 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
+import kotlinx.html.InputType
 import kotlinx.html.body
+import kotlinx.html.form
+import kotlinx.html.h2
 import kotlinx.html.h3
 import kotlinx.html.head
+import kotlinx.html.hiddenInput
 import kotlinx.html.html
+import kotlinx.html.input
 import kotlinx.html.pre
 import kotlinx.html.stream.createHTML
+import kotlinx.html.table
+import kotlinx.html.td
 import kotlinx.html.title
+import kotlinx.html.tr
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlin.collections.set
 
 object ValidateAssistantResponse {
+  fun getNewRequest(): JsonElement {
+    val request = runCatching {
+      resourceFile(REQUEST_VALIDATION_FILENAME.value)
+    }.getOrElse { ASSISTANT_REQUEST_JSON }
+    return copyWithNewCallId(request.toJsonElement())
+  }
+
   fun validateAssistantRequestResponse(secret: String): String {
+    val request = getNewRequest()
     val (status, body) = runBlocking {
       val response = httpClient.post(REQUEST_VALIDATION_URL.value) {
         contentType(Application.Json)
         if (secret.isNotEmpty())
           headers.append("x-vapi-secret", secret)
-        val request = runCatching {
-          resourceFile(REQUEST_VALIDATION_FILENAME.value)
-        }.getOrElse { ASSISTANT_REQUEST }
-        val newObject = copyWithNewCallId(request.toJsonElement())
-        setBody(newObject)
+        setBody(request)
       }
       response.status to response.bodyAsText()
     }
 
+    val sessionCacheId = request.sessionCacheId
+
     return createHTML().html {
       head {
-        //link(STYLES_CSS, "stylesheet", CSS.toString())
+        // link(STYLES_CSS, "stylesheet", CSS.toString())
         title { +"Assistant Request Validation" }
       }
       body {
@@ -68,11 +93,73 @@ object ValidateAssistantResponse {
         if (status.value == 200) {
           h3 { +"Response:" }
           pre { +body.toJsonString() }
+
+          val jsonElement = body.toJsonElement()
+
+          when {
+            jsonElement.isAssistantResponse -> {
+              val funcs =
+                jsonElement["assistant.model.tools"].getToJsonElements()
+                  .map { it.stringValue("function.name") }
+
+              h2 { +"Tools" }
+
+              val functionInfo = ToolCache.toolCallCache.getFromCache(sessionCacheId)
+
+              funcs.forEach { func ->
+                val functionDetails = functionInfo.getFunction(func)
+                h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
+                form(action = INVOKE_TOOL_PATH) {
+                  hiddenInput {
+                    name = "sessionCacheId"
+                    value = sessionCacheId.value
+                  }
+                  hiddenInput {
+                    name = "functionName"
+                    value = func
+                  }
+                  table {
+                    functionDetails.params.forEach { param ->
+                      tr {
+                        td { +param.first }
+                        td {
+                          input {
+                            type =
+                              when (param.second.asKClass()) {
+                                String::class -> InputType.text
+                                Int::class -> InputType.number
+                                Boolean::class -> InputType.checkBox
+                                else -> InputType.text
+                              }
+                            name = param.first
+                          }
+                        }
+                      }
+                    }
+                    tr {
+                      td {
+                        input {
+                          type = InputType.submit
+                          value = "Invoke Tool"
+                        }
+                      }
+                      td {}
+                    }
+                  }
+                }
+              }
+            }
+
+            jsonElement.isAssistantIdResponse -> {}
+            jsonElement.isSquadResponse -> {}
+            jsonElement.isSquadIdResponse -> {}
+            else -> error("Unknown response type")
+          }
         } else {
           if (body.isNotEmpty()) {
-            if (body.length < 80)
+            if (body.length < 80) {
               h3 { +"Error: $body" }
-            else {
+            } else {
               h3 { +"Error:" }
               pre { +body }
             }
@@ -88,16 +175,16 @@ object ValidateAssistantResponse {
     buildJsonObject {
       put(
         "message",
-        je.modify("message") { messageMap ->
+        je.modifyObjectWith("message") { messageMap ->
           messageMap["call"] =
-            je.modify("message.call") { callMap ->
+            je.modifyObjectWith("message.call") { callMap ->
               callMap["id"] = JsonPrimitive(getRandomSecret(8, 4, 4, 12))
             }
         },
       )
     }
 
-  const val ASSISTANT_REQUEST = """
+  const val ASSISTANT_REQUEST_JSON = """
     {
       "message": {
         "type": "assistant-request",

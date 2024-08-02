@@ -17,9 +17,18 @@
 package com.vapi4k.common
 
 object Constants {
-  const val DEFAULT_SERVER_PATH = "vapi4k"
   const val VAPI_API_URL = "https://api.vapi.ai"
   const val UNSPECIFIED_DEFAULT = "unspecified"
 
   const val UNKNOWN = "unknown"
+}
+
+object Endpoints {
+  const val DEFAULT_SERVER_PATH = "vapi4k"
+  const val PING_PATH = "/ping"
+  const val VERSION_PATH = "/version"
+  const val METRICS_PATH = "/metrics"
+  const val CACHES_PATH = "/caches"
+  const val VALIDATE_PATH = "/validate"
+  const val INVOKE_TOOL_PATH = "/invokeTool"
 }

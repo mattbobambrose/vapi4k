@@ -25,7 +25,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageSerializer::class)
+@Serializable(with = CartesiaVoiceLanguageSerializer::class)
 enum class CartesiaVoiceLanguageType(
   val desc: String,
 ) {

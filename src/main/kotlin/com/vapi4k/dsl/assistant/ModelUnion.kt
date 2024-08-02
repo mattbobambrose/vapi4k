@@ -251,7 +251,7 @@ fun ModelUnion.lmntVoiceUnion(block: LMNTVoice.() -> Unit): LMNTVoice {
 fun ModelUnion.neetsVoiceUnion(block: NeetsVoice.() -> Unit): NeetsVoice {
   voiceChecker.check("neetsVoice{} already called")
   val voiceDto = NeetsVoiceDto().also { modelDtoUnion.voiceDto = it }
-  return com.vapi4k.dsl.voice.NeetsVoice(voiceDto)
+  return NeetsVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
@@ -267,7 +267,7 @@ fun ModelUnion.openAIVoiceUnion(block: OpenAIVoice.() -> Unit): OpenAIVoice {
 fun ModelUnion.playHTVoiceUnion(block: PlayHTVoice.() -> Unit): PlayHTVoice {
   voiceChecker.check("playHTVoice{} already called")
   val voiceDto = PlayHTVoiceDto().also { modelDtoUnion.voiceDto = it }
-  return com.vapi4k.dsl.voice.PlayHTVoice(voiceDto)
+  return PlayHTVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }
@@ -275,7 +275,7 @@ fun ModelUnion.playHTVoiceUnion(block: PlayHTVoice.() -> Unit): PlayHTVoice {
 fun ModelUnion.rimeAIVoiceUnion(block: RimeAIVoice.() -> Unit): RimeAIVoice {
   voiceChecker.check("rimeAIVoice{} already called")
   val voiceDto = RimeAIVoiceDto().also { modelDtoUnion.voiceDto = it }
-  return com.vapi4k.dsl.voice.RimeAIVoice(voiceDto)
+  return RimeAIVoice(voiceDto)
     .apply(block)
     .apply { voiceDto.verifyValues() }
 }

@@ -24,7 +24,7 @@ import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.ReflectionUtils.toolMethod
+import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
@@ -47,8 +47,8 @@ internal class ToolCache(
     assistantCacheId: AssistantCacheId,
     obj: Any,
   ) {
-    val method = obj.toolMethod
-    val toolCallInfo = ToolCallInfo(assistantCacheId, method)
+    val function = obj.toolCallFunction
+    val toolCallInfo = ToolCallInfo(assistantCacheId, function)
     val toolFuncName = toolCallInfo.llmName
     val funcInfo = cacheMap.computeIfAbsent(sessionCacheId) { FunctionInfo() }
     val funcDetails = funcInfo.functions[toolFuncName]

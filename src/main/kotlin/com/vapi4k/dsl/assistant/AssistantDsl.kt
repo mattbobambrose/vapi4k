@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.destination.NumberDestination
 import com.vapi4k.dsl.destination.NumberDestinationImpl
 import com.vapi4k.dsl.destination.SipDestination
@@ -29,7 +28,7 @@ import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.JsonElementUtils.messageCallId
+import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
@@ -45,7 +44,7 @@ object AssistantDsl {
     request: JsonElement,
     block: Assistant.() -> Unit,
   ) = AssistantRequestResponse().apply {
-    val sessionCacheId = request.messageCallId.toSessionCacheId()
+    val sessionCacheId = request.sessionCacheId
     val assistantCacheIdSource = AssistantCacheIdSource()
     AssistantImpl(request, sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
       .apply(block)
@@ -59,7 +58,7 @@ object AssistantDsl {
     request: JsonElement,
     block: AssistantId.() -> Unit,
   ) = AssistantRequestResponse().apply {
-    val sessionCacheId = request.messageCallId.toSessionCacheId()
+    val sessionCacheId = request.sessionCacheId
     val assistantCacheIdSource = AssistantCacheIdSource()
     AssistantIdImpl(request, sessionCacheId, assistantCacheIdSource, this).apply(block)
   }
@@ -68,7 +67,7 @@ object AssistantDsl {
     request: JsonElement,
     block: Squad.() -> Unit,
   ) = AssistantRequestResponse().apply {
-    val sessionCacheId = request.messageCallId.toSessionCacheId()
+    val sessionCacheId = request.sessionCacheId
     val assistantCacheIdSource = AssistantCacheIdSource()
     SquadImpl(request, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
   }

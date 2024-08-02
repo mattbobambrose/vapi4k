@@ -18,8 +18,10 @@ package com.vapi4k.utils
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonArray
@@ -32,12 +34,19 @@ val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
 
 fun JsonElement.getToJsonElements() = jsonArray.toList()
 
-fun JsonElement.modify(
+fun JsonElement.modifyObjectWith(
   key: String,
   block: (MutableMap<String, JsonElement>) -> Unit,
-): JsonObject = this.get(key).jsonObject.toMutableMap().also(block).toJsonObject()
+): JsonObject = this[key].jsonObject.toMutableMap().also(block).toJsonObject()
 
 fun Map<String, JsonElement>.toJsonObject() = JsonObject(this)
+
+fun Map<String, Any>.toJsonPrimitives() =
+  mapValues {
+    if (it.value is String) JsonPrimitive(it.value as String) else it.value as JsonPrimitive
+  }
+
+fun List<JsonElement>.toJsonArray() = JsonArray(this)
 
 fun JsonElement.firstInList() = getToJsonElements().first()
 
@@ -63,6 +72,7 @@ inline fun <reified T> T.toJsonString(prettyPrint: Boolean = true) =
 inline fun <reified T> T.toJsonElement() = Json.encodeToJsonElement(this)
 
 fun String.toJsonElement() = Json.parseToJsonElement(this)
+
 fun String.toJsonString(prettyPrint: Boolean = true) = toJsonElement().toJsonString(prettyPrint)
 
 inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)

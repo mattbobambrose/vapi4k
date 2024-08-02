@@ -16,12 +16,11 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.functionName
 import com.vapi4k.utils.JsonElementUtils.functionParameters
-import com.vapi4k.utils.JsonElementUtils.messageCallId
+import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -33,7 +32,7 @@ class FunctionResponse(
     fun getFunctionCallResponse(request: JsonElement) =
       FunctionResponse()
         .also { response ->
-          val sessionCacheId = request.messageCallId.toSessionCacheId()
+          val sessionCacheId = request.sessionCacheId
           val funcName = request.functionName
           val args = request.functionParameters
           runCatching {

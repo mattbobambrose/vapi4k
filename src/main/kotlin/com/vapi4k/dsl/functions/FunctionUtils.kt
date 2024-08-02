@@ -21,15 +21,13 @@ import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto
-import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
-import com.vapi4k.utils.ReflectionUtils.hasTool
-import com.vapi4k.utils.ReflectionUtils.param
-import com.vapi4k.utils.ReflectionUtils.toolCall
-import com.vapi4k.utils.ReflectionUtils.toolFunction
-import com.vapi4k.utils.ReflectionUtils.toolMethod
-import java.lang.reflect.Method
+import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
+import com.vapi4k.utils.ReflectionUtils.paramAnnotation
+import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
+import com.vapi4k.utils.ReflectionUtils.toolCallFunction
+import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
 internal object FunctionUtils {
@@ -40,7 +38,7 @@ internal object FunctionUtils {
     isFunction: Boolean,
     obj: Any,
   ) {
-    val cnt = obj.functions.count { it.hasTool }
+    val cnt = obj.functions.count { it.hasToolCallAnnotation }
 
     when {
       cnt == 0 ->
@@ -54,7 +52,7 @@ internal object FunctionUtils {
         )
     }
 
-    return with(obj.functions.first { it.hasTool }) {
+    return with(obj.functions.first { it.hasToolCallAnnotation }) {
       val returnClass = returnType.asKClass()
       if (returnClass !in allowedReturnTypes) {
         val str = if (isFunction) "Function" else "Tool"
@@ -68,27 +66,18 @@ internal object FunctionUtils {
     obj: Any,
     functionDto: FunctionDto,
   ) {
-    val method = obj.toolMethod
-    val function = obj.toolFunction
+    val function = obj.toolCallFunction
 
-    ToolCallInfo(model.assistantCacheId, method).also { toolCallInfo ->
+    ToolCallInfo(model.assistantCacheId, function).also { toolCallInfo ->
       functionDto.name = toolCallInfo.llmName
       functionDto.description = toolCallInfo.llmDescription
       // TODO: This might be always object
       functionDto.parameters.type = "object" // llmReturnType
 
-      // Reduce the size of kparams if the first parameter is the object itself
-      val jparams = method.parameters.toList()
-      val kparams =
-        if (jparams.size == function.parameters.size)
-          function.parameters
-        else
-          function.parameters.subList(1, function.parameters.size)
+      val params = function.parameters.filter { it.kind == KParameter.Kind.VALUE }
 
-      kparams.forEach { param ->
+      params.forEach { param ->
         val kclass = param.type.asKClass()
-        logger.info { "Param: ${param.type}" }
-
         if (kclass !in allowedParamTypes) {
           val fqName = FunctionDetails(obj).fqName
           val simpleName = kclass.simpleName
@@ -98,15 +87,14 @@ internal object FunctionUtils {
         }
       }
 
-      jparams
-        .zip(kparams)
-        .forEach { (jParam, kparam) ->
-          val name = kparam.name ?: jParam.name
-          if (!kparam.isOptional)
+      params
+        .forEach { param ->
+          val name = param.name ?: error("Parameter name is null")
+          if (!param.isOptional)
             functionDto.parameters.required += name
           functionDto.parameters.properties[name] = FunctionPropertyDescDto(
-            type = kparam.llmType,
-            description = jParam.param?.description ?: "The $name parameter",
+            type = param.llmType,
+            description = param.paramAnnotation?.description ?: "The $name parameter",
           )
         }
     }
@@ -123,12 +111,12 @@ internal object FunctionUtils {
 
   class ToolCallInfo(
     private val assistantCacheId: AssistantCacheId,
-    private val method: Method,
+    private val function: KFunction<*>,
   ) {
-    private val toolCall get() = method.toolCall!!
+    private val toolCall get() = function.toolCallAnnotation!!
     private val toolHasName get() = toolCall.name.isNotEmpty()
     private val toolHasDescription get() = toolCall.description.isNotEmpty()
-    private val cacheName get() = if (toolHasName) toolCall.name else method.name
+    private val cacheName get() = if (toolHasName) toolCall.name else function.name
 
     val llmName get() = "${cacheName}_$assistantCacheId"
 
@@ -137,15 +125,15 @@ internal object FunctionUtils {
         when {
           toolHasDescription -> toolCall.description
           toolHasName -> toolCall.name
-          else -> method.name
+          else -> function.name
         }
 
     val llmReturnType
-      get() = when (method.returnType) {
-        String::class.java -> "string"
-        Int::class.java -> "integer"
-        Double::class.java -> "double"
-        Boolean::class.java -> "boolean"
+      get() = when (function.returnType.asKClass()) {
+        String::class -> "string"
+        Int::class -> "integer"
+        Double::class -> "double"
+        Boolean::class -> "boolean"
         else -> "object"
       }
   }

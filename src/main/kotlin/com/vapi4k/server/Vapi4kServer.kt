@@ -18,9 +18,14 @@ package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
+import com.vapi4k.common.Endpoints.CACHES_PATH
+import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
+import com.vapi4k.common.Endpoints.METRICS_PATH
+import com.vapi4k.common.Endpoints.PING_PATH
+import com.vapi4k.common.Endpoints.VALIDATE_PATH
+import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.EnvVar.Companion.envIsProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
@@ -47,16 +52,24 @@ import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
 import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
-import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
-import com.vapi4k.utils.ReflectionUtils.lambda
+import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.getBanner
+import com.vapi4k.utils.Utils.lambda
+import com.vapi4k.utils.toJsonArray
 import com.vapi4k.utils.toJsonElement
+import com.vapi4k.utils.toJsonObject
+import com.vapi4k.utils.toJsonString
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.Parameters
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
@@ -72,6 +85,7 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
+import io.ktor.server.util.url
 import io.ktor.util.pipeline.PipelineContext
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
@@ -80,6 +94,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 import kotlin.concurrent.thread
 import kotlin.time.Duration
 import kotlin.time.measureTimedValue
@@ -125,27 +142,47 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       val config = AssistantImpl.config
       config.applicationConfig = environment?.config ?: error("No environment config found")
 
-      get("/ping") { call.respondText("pong") }
+      get(PING_PATH) { call.respondText("pong") }
 
-      get("/version") {
+      get(VERSION_PATH) {
         call.respondText(ContentType.Application.Json) {
           Vapi4kServer::class.versionDesc(true)
         }
       }
 
-      get("/metrics") {
-        call.respond(appMicrometerRegistry.scrape())
-      }
-
-      get("/caches") {
-        call.respond(cacheAsJson())
-      }
-
       if (!envIsProduction) {
-        get("/validate") {
+        get(METRICS_PATH) {
+          call.respond(appMicrometerRegistry.scrape())
+        }
+
+        get(CACHES_PATH) {
+          call.respond(cacheAsJson())
+        }
+
+        get(VALIDATE_PATH) {
           val secret = call.request.queryParameters["secret"].orEmpty()
           val resp = validateAssistantRequestResponse(secret)
           call.respondText(resp, ContentType.Text.Html)
+        }
+
+        get(INVOKE_TOOL_PATH) {
+          val params = call.request.queryParameters
+
+          val resp = runCatching {
+            val toolRequest = getToolRequest(params)
+            httpClient.post(
+              url {
+                host = "localhost"
+                port = 8080
+                pathSegments = config.configProperties.serverUrlPathSegments
+              }
+            ) {
+              headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
+              setBody(toolRequest.toJsonString())
+            }
+          }.getOrThrow()
+
+          call.respondText(resp.bodyAsText().toJsonString())
         }
 
         get("/clear-caches") {
@@ -187,6 +224,32 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 }
 
+private fun getToolRequest(params: Parameters): JsonObject {
+  val sessionCacheId = params.get("sessionCacheId") ?: error("No sessionCacheId found")
+  return buildJsonObject {
+    put(
+      "message",
+      mapOf(
+        "type" to JsonPrimitive("tool-calls"),
+        "call" to mapOf("id" to JsonPrimitive(sessionCacheId)).toJsonObject(),
+        "toolCallList" to
+          listOf(
+            mapOf(
+              "id" to JsonPrimitive(sessionCacheId),
+              "type" to JsonPrimitive("function"),
+              "function" to mapOf(
+                "name" to JsonPrimitive(params.get("functionName")),
+                "arguments" to
+                  params.names().filterNot { it in setOf("sessionCacheId", "functionName") }
+                    .map { it to JsonPrimitive(params[it]) }.toMap().toJsonObject(),
+              ).toJsonObject(),
+            ).toJsonObject(),
+          ).toJsonArray(),
+      ).toJsonObject(),
+    )
+  }
+}
+
 private suspend fun KtorCallContext.handleServerPathPost(
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
@@ -220,7 +283,7 @@ private suspend fun KtorCallContext.handleServerPathPost(
 
         END_OF_CALL_REPORT -> {
           if (config.configProperties.eocrCacheRemovalEnabled) {
-            val sessionCacheId = request.messageCallId.toSessionCacheId()
+            val sessionCacheId = request.sessionCacheId
             var notFound = true
 
             toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->

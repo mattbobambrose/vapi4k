@@ -27,7 +27,7 @@ import com.vapi4k.dtos.RoleMessage
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
-import com.vapi4k.utils.ReflectionUtils.trimLeadingSpaces
+import com.vapi4k.utils.Utils.trimLeadingSpaces
 
 abstract class AbstractModel(
   private val modelUnion: ModelUnion,

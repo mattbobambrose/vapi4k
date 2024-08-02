@@ -27,7 +27,7 @@ import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
-import com.vapi4k.utils.ReflectionUtils.toolFunction
+import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 
 @AssistantDslMarker
 interface Tools {
@@ -63,12 +63,11 @@ data class ToolsImpl internal constructor(
 
       with(toolDto) {
         type = ToolType.FUNCTION
-        async = obj.toolFunction.isUnitReturnType
+        async = obj.toolCallFunction.isUnitReturnType
       }
 
       // Apply block to tool
       ToolImpl(toolDto).apply(block)
-//        .apply { verifyFutureDelay(toolDto) }
 
       with(toolDto.server) {
         url = endpoint.serverUrl
@@ -99,15 +98,5 @@ data class ToolsImpl internal constructor(
   ) {
     val endpoint = with(AssistantImpl.config) { getEmptyEndpoint() ?: defaultToolCallEndpoint }
     addTool(endpoint, obj, block)
-  }
-
-  companion object {
-//    private fun ToolImpl.verifyFutureDelay(toolDto: ToolDto) {
-//      if (toolDto.messages.firstOrNull { it.type == ToolMessageType.REQUEST_RESPONSE_DELAYED.desc } == null) {
-//        if (futureDelay != -1) {
-//          error("delayedMillis must be set when using requestDelayedMessage")
-//        }
-//      }
-//    }
   }
 }
