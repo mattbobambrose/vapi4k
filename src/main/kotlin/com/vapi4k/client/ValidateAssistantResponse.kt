@@ -49,8 +49,10 @@ import kotlinx.html.h3
 import kotlinx.html.head
 import kotlinx.html.hiddenInput
 import kotlinx.html.html
+import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.pre
+import kotlinx.html.script
 import kotlinx.html.stream.createHTML
 import kotlinx.html.table
 import kotlinx.html.td
@@ -87,6 +89,7 @@ object ValidateAssistantResponse {
       head {
         // link(STYLES_CSS, "stylesheet", CSS.toString())
         title { +"Assistant Request Validation" }
+        script { src = "https://unpkg.com/htmx.org@2.0.1" }
       }
       body {
         h3 { +"Status: $status" }
@@ -106,10 +109,13 @@ object ValidateAssistantResponse {
 
               val functionInfo = ToolCache.toolCallCache.getFromCache(sessionCacheId)
 
-              funcs.forEach { func ->
+              funcs.forEachIndexed { i, func ->
                 val functionDetails = functionInfo.getFunction(func)
                 h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
-                form(action = INVOKE_TOOL_PATH) {
+                form {
+                  attributes["hx-get"] = INVOKE_TOOL_PATH
+                  attributes["hx-target"] = "#result-$i"
+
                   hiddenInput {
                     name = "sessionCacheId"
                     value = sessionCacheId.value
@@ -146,6 +152,10 @@ object ValidateAssistantResponse {
                       td {}
                     }
                   }
+                }
+
+                pre {
+                  id = "result-$i"
                 }
               }
             }
