@@ -403,8 +403,8 @@ class AssistantTest {
   fun `error on duplicate reverse conditions`() {
     clearCaches()
     assertThrows(IllegalStateException::class.java) {
-      withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
-        assistant(request) {
+//      withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
+      assistant(ASSISTANT_REQUEST.toJsonElement()) {
           firstMessage = messageOne
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -458,7 +458,7 @@ class AssistantTest {
               }
             }
           }
-        }
+//        }
       }
     }.also {
       assert(it.message.orEmpty().contains("duplicates an existing condition{}"))

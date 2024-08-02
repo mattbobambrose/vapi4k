@@ -143,7 +143,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       if (!envIsProduction) {
         get("/validate") {
-          val secret = call.request.queryParameters.get("secret").orEmpty()
+          val secret = call.request.queryParameters["secret"].orEmpty()
           val resp = validateAssistantRequestResponse(secret)
           call.respondText(resp, ContentType.Text.Html)
         }
