@@ -84,7 +84,7 @@ object ValidateAssistantResponse {
 
     return createHTML().html {
       head {
-        //link(STYLES_CSS, "stylesheet", CSS.toString())
+        // link(STYLES_CSS, "stylesheet", CSS.toString())
         title { +"Assistant Request Validation" }
       }
       body {
@@ -100,7 +100,6 @@ object ValidateAssistantResponse {
               val funcs =
                 jsonElement["assistant.model.tools"].getToJsonElements()
                   .map { it.stringValue("function.name") }
-
 
               h2 { +"Tools" }
 
@@ -155,12 +154,11 @@ object ValidateAssistantResponse {
             jsonElement.isSquadIdResponse -> {}
             else -> error("Unknown response type")
           }
-
         } else {
           if (body.isNotEmpty()) {
-            if (body.length < 80)
+            if (body.length < 80) {
               h3 { +"Error: $body" }
-            else {
+            } else {
               h3 { +"Error:" }
               pre { +body }
             }

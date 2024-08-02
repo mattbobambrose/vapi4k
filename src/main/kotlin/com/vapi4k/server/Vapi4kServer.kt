@@ -53,6 +53,7 @@ import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.getBanner
 import com.vapi4k.utils.Utils.lambda
+import com.vapi4k.utils.toJsonArray
 import com.vapi4k.utils.toJsonElement
 import com.vapi4k.utils.toJsonObject
 import com.vapi4k.utils.toJsonString
@@ -84,7 +85,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -159,35 +159,34 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get("/invokeTool") {
           val params = call.request.queryParameters
 
-
           val sessionCacheId = params.get("sessionCacheId") ?: error("No sessionCacheId found")
           runCatching {
-            val toolRequest = buildJsonObject {
-              put(
-                "message",
-                mapOf(
-                  "type" to JsonPrimitive("tool-calls"),
-                  "call" to mapOf("id" to JsonPrimitive(sessionCacheId)).toJsonObject(),
-                  "toolCallList" to JsonArray(
-                    listOf(
-                      mapOf(
-                        "id" to JsonPrimitive(sessionCacheId),
-                        "type" to JsonPrimitive("function"),
-                        "function" to mapOf(
-                          "name" to JsonPrimitive(params.get("functionName")),
-                          "arguments" to
-                            params.names().filterNot { it in setOf("sessionCacheId", "functionName") }
-                              .map { it to JsonPrimitive(params[it]) }.toMap().toJsonObject()
-                        ).toJsonObject()
-                      ).toJsonObject()
-                    )
-                  )
-                ).toJsonObject()
-              )
-            }
+            val toolRequest =
+              buildJsonObject {
+                put(
+                  "message",
+                  mapOf(
+                    "type" to JsonPrimitive("tool-calls"),
+                    "call" to mapOf("id" to JsonPrimitive(sessionCacheId)).toJsonObject(),
+                    "toolCallList" to
+                      listOf(
+                        mapOf(
+                          "id" to JsonPrimitive(sessionCacheId),
+                          "type" to JsonPrimitive("function"),
+                          "function" to mapOf(
+                            "name" to JsonPrimitive(params.get("functionName")),
+                            "arguments" to
+                              params.names().filterNot { it in setOf("sessionCacheId", "functionName") }
+                                .map { it to JsonPrimitive(params[it]) }.toMap().toJsonObject(),
+                          ).toJsonObject(),
+                        ).toJsonObject(),
+                      ).toJsonArray(),
+                  ).toJsonObject(),
+                )
+              }
 
-            val endpoint = config.configProperties.serverUrlPath
-            val resp = httpClient.post("http://localhost:8080/${endpoint}") {
+            val path = config.configProperties.serverUrlPath
+            val resp = httpClient.post("http://localhost:8080/$path") {
               headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
               setBody(toolRequest.toJsonString())
             }
