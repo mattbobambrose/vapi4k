@@ -32,8 +32,8 @@ internal object ReflectionUtils {
   val KFunction<*>.toolCall: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
   val Method.hasTool get() = toolCall.isNotNull()
   val KFunction<*>.hasTool get() = toolCall.isNotNull()
-  val Any.toolFunction get() = functions.first { it.hasTool }
-  val Any.toolMethod get() = methods.first { it.hasTool }
+  val Any.toolCallFunction get() = functions.first { it.hasTool }
+  val Any.toolCallMethod get() = methods.first { it.hasTool }
   val KFunction<*>.isUnitReturnType get() = returnType.asKClass() == Unit::class
   val Any.functions get() = this::class.declaredFunctions
   val Any.methods get() = this::class.java.declaredMethods

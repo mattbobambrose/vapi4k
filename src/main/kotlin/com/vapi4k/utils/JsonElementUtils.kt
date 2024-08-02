@@ -16,6 +16,7 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
@@ -34,7 +35,14 @@ object JsonElementUtils {
   val JsonElement.isTransferDestinationRequest get() = requestType == ServerRequestType.TRANSFER_DESTINATION_REQUEST
   val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
 
+  val JsonElement.isAssistantResponse get() = containsKey("assistant")
+  val JsonElement.isAssistantIdResponse get() = containsKey("assistantId")
+  val JsonElement.isSquadResponse get() = containsKey("squad")
+  val JsonElement.isSquadIdResponse get() = containsKey("squadId")
+
   val JsonElement.messageCallId get() = this["message.call.id"].stringValue
+  val JsonElement.sessionCacheId get() = messageCallId.toSessionCacheId()
+
   val JsonElement.id get() = this["id"].stringValue
 
   val JsonElement.phoneNumber get() = this["message.call.customer.number"].stringValue

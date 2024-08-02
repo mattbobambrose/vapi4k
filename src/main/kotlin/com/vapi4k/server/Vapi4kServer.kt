@@ -20,7 +20,6 @@ import com.vapi4k.BuildConfig
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
 import com.vapi4k.common.EnvVar.Companion.envIsProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
@@ -48,8 +47,8 @@ import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
-import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.JsonElementUtils.requestType
+import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.ReflectionUtils.lambda
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.getBanner
@@ -220,7 +219,7 @@ private suspend fun KtorCallContext.handleServerPathPost(
 
         END_OF_CALL_REPORT -> {
           if (config.configProperties.eocrCacheRemovalEnabled) {
-            val sessionCacheId = request.messageCallId.toSessionCacheId()
+            val sessionCacheId = request.sessionCacheId
             var notFound = true
 
             toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->

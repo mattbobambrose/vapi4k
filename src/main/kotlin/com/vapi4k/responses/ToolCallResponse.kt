@@ -16,11 +16,10 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.JsonElementUtils.messageCallId
+import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonElementUtils.toolCallArguments
 import com.vapi4k.utils.JsonElementUtils.toolCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallList
@@ -47,7 +46,7 @@ data class ToolCallResponse(
                 response.results +=
                   ToolCallResult()
                     .also { toolCallResult ->
-                      val sessionCacheId = request.messageCallId.toSessionCacheId()
+                      val sessionCacheId = request.sessionCacheId
                       val funcName = toolCall.toolCallName
                       val args = toolCall.toolCallArguments
                       toolCallResult.toolCallId = toolCall.toolCallId

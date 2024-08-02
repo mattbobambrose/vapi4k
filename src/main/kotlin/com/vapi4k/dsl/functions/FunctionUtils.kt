@@ -27,8 +27,8 @@ import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasTool
 import com.vapi4k.utils.ReflectionUtils.param
 import com.vapi4k.utils.ReflectionUtils.toolCall
-import com.vapi4k.utils.ReflectionUtils.toolFunction
-import com.vapi4k.utils.ReflectionUtils.toolMethod
+import com.vapi4k.utils.ReflectionUtils.toolCallFunction
+import com.vapi4k.utils.ReflectionUtils.toolCallMethod
 import java.lang.reflect.Method
 import kotlin.reflect.KParameter
 
@@ -68,8 +68,8 @@ internal object FunctionUtils {
     obj: Any,
     functionDto: FunctionDto,
   ) {
-    val method = obj.toolMethod
-    val function = obj.toolFunction
+    val method = obj.toolCallMethod
+    val function = obj.toolCallFunction
 
     ToolCallInfo(model.assistantCacheId, method).also { toolCallInfo ->
       functionDto.name = toolCallInfo.llmName

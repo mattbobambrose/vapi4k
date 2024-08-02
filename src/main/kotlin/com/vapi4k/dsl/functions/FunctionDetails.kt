@@ -22,10 +22,11 @@ import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.findFunction
 import com.vapi4k.utils.ReflectionUtils.findMethod
+import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.kParameters
 import com.vapi4k.utils.ReflectionUtils.parameterSignature
-import com.vapi4k.utils.ReflectionUtils.toolFunction
-import com.vapi4k.utils.ReflectionUtils.toolMethod
+import com.vapi4k.utils.ReflectionUtils.toolCall
+import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.booleanValue
 import com.vapi4k.utils.get
@@ -40,12 +41,15 @@ class FunctionDetails(
   val obj: Any,
 ) {
   private val invokeCounter = AtomicInteger(0)
-  val className: String = obj::class.java.name
-  val methodName: String = obj.toolMethod.name
+  val className: String = obj::class.qualifiedName.orEmpty()
+  val functionName: String = obj.toolCallFunction.name
+  val toolCall = obj.toolCallFunction.toolCall
 
   val invokeCount get() = invokeCounter.get()
-  val fqName get() = "$className.$methodName()"
-  val methodWithParams get() = "$methodName(${obj.toolFunction.parameterSignature})"
+  val fqName get() = "$className.$functionName()"
+  val methodWithParams get() = "$functionName(${obj.toolCallFunction.parameterSignature})"
+  val isAsync get() = obj.toolCallFunction.isUnitReturnType
+  val params get() = obj.toolCallFunction.kParameters
 
   fun invokeToolMethod(
     args: JsonElement,
@@ -85,8 +89,8 @@ class FunctionDetails(
 
   private fun invokeMethod(args: JsonElement): String {
     // logger.info { "Invoking method $fqName" }
-    val method = obj.findMethod(methodName)
-    val function = obj.findFunction(methodName)
+    val method = obj.findMethod(functionName)
+    val function = obj.findFunction(functionName)
     val isVoid = function.returnType.asKClass() == Unit::class
     val argNames = args.jsonObject.keys
     val vals = argNames.map { argName -> args[argName].stringValue }
