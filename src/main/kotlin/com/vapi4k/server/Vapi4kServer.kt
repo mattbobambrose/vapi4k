@@ -182,7 +182,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             }
           }.getOrThrow()
 
-          call.respondText(resp.bodyAsText())
+          call.respondText(resp.bodyAsText().toJsonString())
         }
 
         get("/clear-caches") {
