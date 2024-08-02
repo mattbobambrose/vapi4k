@@ -63,6 +63,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.Parameters
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
@@ -78,6 +79,7 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
+import io.ktor.server.util.url
 import io.ktor.util.pipeline.PipelineContext
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
@@ -86,6 +88,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlin.concurrent.thread
@@ -159,34 +162,22 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get("/invokeTool") {
           val params = call.request.queryParameters
 
-          val sessionCacheId = params.get("sessionCacheId") ?: error("No sessionCacheId found")
           runCatching {
-            val toolRequest =
-              buildJsonObject {
-                put(
-                  "message",
-                  mapOf(
-                    "type" to JsonPrimitive("tool-calls"),
-                    "call" to mapOf("id" to JsonPrimitive(sessionCacheId)).toJsonObject(),
-                    "toolCallList" to
-                      listOf(
-                        mapOf(
-                          "id" to JsonPrimitive(sessionCacheId),
-                          "type" to JsonPrimitive("function"),
-                          "function" to mapOf(
-                            "name" to JsonPrimitive(params.get("functionName")),
-                            "arguments" to
-                              params.names().filterNot { it in setOf("sessionCacheId", "functionName") }
-                                .map { it to JsonPrimitive(params[it]) }.toMap().toJsonObject(),
-                          ).toJsonObject(),
-                        ).toJsonObject(),
-                      ).toJsonArray(),
-                  ).toJsonObject(),
-                )
-              }
+            val toolRequest = getToolRequest(params)
+            val u = url {
+              host = "localhost"
+              port = 8080
+              pathSegments = listOf(config.configProperties.serverUrlPath)
+            }
+            println("url: $u")
 
-            val path = config.configProperties.serverUrlPath
-            val resp = httpClient.post("http://localhost:8080/$path") {
+            val resp = httpClient.post(
+              url {
+                host = "localhost"
+                port = 8080
+                pathSegments = listOf(config.configProperties.serverUrlPath)
+              }
+            ) {
               headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
               setBody(toolRequest.toJsonString())
             }
@@ -237,6 +228,32 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
       }
     }
+  }
+}
+
+private fun getToolRequest(params: Parameters): JsonObject {
+  val sessionCacheId = params.get("sessionCacheId") ?: error("No sessionCacheId found")
+  return buildJsonObject {
+    put(
+      "message",
+      mapOf(
+        "type" to JsonPrimitive("tool-calls"),
+        "call" to mapOf("id" to JsonPrimitive(sessionCacheId)).toJsonObject(),
+        "toolCallList" to
+          listOf(
+            mapOf(
+              "id" to JsonPrimitive(sessionCacheId),
+              "type" to JsonPrimitive("function"),
+              "function" to mapOf(
+                "name" to JsonPrimitive(params.get("functionName")),
+                "arguments" to
+                  params.names().filterNot { it in setOf("sessionCacheId", "functionName") }
+                    .map { it to JsonPrimitive(params[it]) }.toMap().toJsonObject(),
+              ).toJsonObject(),
+            ).toJsonObject(),
+          ).toJsonArray(),
+      ).toJsonObject(),
+    )
   }
 }
 
