@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.common.Constants.DEFAULT_SERVER_PATH
+import com.vapi4k.common.Endpoints.DEFAULT_SERVER_PATH
 import com.vapi4k.utils.Utils.ensureStartsWith
 import java.net.URI
 
@@ -30,6 +30,9 @@ interface Vapi4kConfigProperties {
 class Vapi4kConfigPropertiesImpl internal constructor() : Vapi4kConfigProperties {
   internal val serverUrlPath
     get() = (if (serverUrl.isEmpty()) DEFAULT_SERVER_PATH else URI(serverUrl).toURL().path).ensureStartsWith("/")
+
+  internal val serverUrlPathSegments
+    get() = serverUrlPath.split("/").filter { it.isNotEmpty() }
 
   override var serverUrl = ""
   override var serverUrlSecret = ""

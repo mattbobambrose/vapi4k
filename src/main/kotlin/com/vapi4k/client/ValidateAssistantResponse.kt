@@ -16,6 +16,7 @@
 
 package com.vapi4k.client
 
+import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.dsl.tools.ToolCache
@@ -108,7 +109,7 @@ object ValidateAssistantResponse {
               funcs.forEach { func ->
                 val functionDetails = functionInfo.getFunction(func)
                 h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
-                form(action = "/invokeTool") {
+                form(action = INVOKE_TOOL_PATH) {
                   hiddenInput {
                     name = "sessionCacheId"
                     value = sessionCacheId.value

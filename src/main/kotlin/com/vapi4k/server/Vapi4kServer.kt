@@ -18,6 +18,12 @@ package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
+import com.vapi4k.common.Endpoints.CACHES_PATH
+import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
+import com.vapi4k.common.Endpoints.METRICS_PATH
+import com.vapi4k.common.Endpoints.PING_PATH
+import com.vapi4k.common.Endpoints.VALIDATE_PATH
+import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.EnvVar.Companion.envIsProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.Version
@@ -136,60 +142,47 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       val config = AssistantImpl.config
       config.applicationConfig = environment?.config ?: error("No environment config found")
 
-      get("/ping") { call.respondText("pong") }
+      get(PING_PATH) { call.respondText("pong") }
 
-      get("/version") {
+      get(VERSION_PATH) {
         call.respondText(ContentType.Application.Json) {
           Vapi4kServer::class.versionDesc(true)
         }
       }
 
       if (!envIsProduction) {
-        get("/metrics") {
+        get(METRICS_PATH) {
           call.respond(appMicrometerRegistry.scrape())
         }
 
-        get("/caches") {
+        get(CACHES_PATH) {
           call.respond(cacheAsJson())
         }
 
-        get("/validate") {
+        get(VALIDATE_PATH) {
           val secret = call.request.queryParameters["secret"].orEmpty()
           val resp = validateAssistantRequestResponse(secret)
           call.respondText(resp, ContentType.Text.Html)
         }
 
-        get("/invokeTool") {
+        get(INVOKE_TOOL_PATH) {
           val params = call.request.queryParameters
 
-          runCatching {
+          val resp = runCatching {
             val toolRequest = getToolRequest(params)
-            val u = url {
-              host = "localhost"
-              port = 8080
-              pathSegments = listOf(config.configProperties.serverUrlPath)
-            }
-            println("url: $u")
-
-            val resp = httpClient.post(
+            httpClient.post(
               url {
                 host = "localhost"
                 port = 8080
-                pathSegments = listOf(config.configProperties.serverUrlPath)
+                pathSegments = config.configProperties.serverUrlPathSegments
               }
             ) {
               headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
               setBody(toolRequest.toJsonString())
             }
+          }.getOrThrow()
 
-            println("lll: $toolRequest")
-            println(toolRequest.toJsonString())
-            println("Response: ${resp.status}")
-            println("Response: ${resp.status} ${resp.bodyAsText()}")
-          }.onFailure {
-            logger.error(it) { "Error invoking tool: ${it.errorMsg}" }
-          }
-          call.respondText("Success: ${params.names().joinToString(", ") { "$it = ${params[it]}" }}")
+          call.respondText(resp.bodyAsText())
         }
 
         get("/clear-caches") {

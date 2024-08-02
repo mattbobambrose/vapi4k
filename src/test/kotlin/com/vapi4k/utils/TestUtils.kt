@@ -17,7 +17,7 @@
 package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
-import com.vapi4k.common.Constants.DEFAULT_SERVER_PATH
+import com.vapi4k.common.Endpoints.DEFAULT_SERVER_PATH
 import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantRequestResponse
