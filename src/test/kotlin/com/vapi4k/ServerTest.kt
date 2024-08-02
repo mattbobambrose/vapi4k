@@ -17,6 +17,7 @@
 package com.vapi4k
 
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
+import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearCaches
@@ -85,7 +86,7 @@ class ServerTest {
           "/json-tool-tests/toolRequest4.json",
           "/json-tool-tests/endOfCallReportRequest.json",
         ),
-        "/caches",
+        CACHES_PATH,
         true,
       ) { request ->
         doubleToolAssistant(request)
@@ -123,7 +124,7 @@ class ServerTest {
           JsonFilenames.JSON_ASSISTANT_REQUEST,
           "/json-tool-tests/endOfCallReportRequest.json",
         ),
-        "/caches",
+        CACHES_PATH,
         false,
       ) { request ->
         doubleToolAssistant(request)

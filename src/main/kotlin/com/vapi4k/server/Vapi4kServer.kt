@@ -19,6 +19,7 @@ package com.vapi4k.server
 import com.vapi4k.BuildConfig
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
 import com.vapi4k.common.Endpoints.CACHES_PATH
+import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
@@ -156,7 +157,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
 
         get(CACHES_PATH) {
-          call.respond(cacheAsJson())
+          call.respond(cacheAsJson().toJsonString())
         }
 
         get(VALIDATE_PATH) {
@@ -185,9 +186,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           call.respondText(resp.bodyAsText().toJsonString())
         }
 
-        get("/clear-caches") {
+        get(CLEAR_CACHES_PATH) {
           clearCaches()
-          call.respondRedirect("/caches")
+          call.respondRedirect(CACHES_PATH)
         }
       }
 
