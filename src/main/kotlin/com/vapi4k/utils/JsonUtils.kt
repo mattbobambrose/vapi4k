@@ -34,6 +34,8 @@ val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
 
 fun JsonElement.toJsonElementList() = jsonArray.toList()
 
+fun JsonElement.firstInList() = toJsonElementList().first()
+
 fun JsonElement.modifyObjectWith(
   key: String,
   block: (MutableMap<String, JsonElement>) -> Unit,
@@ -47,8 +49,6 @@ fun Map<String, Any>.toJsonPrimitives() =
   }
 
 fun List<JsonElement>.toJsonArray() = JsonArray(this)
-
-fun JsonElement.firstInList() = toJsonElementList().first()
 
 private fun JsonElement.element(key: String) =
   jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")

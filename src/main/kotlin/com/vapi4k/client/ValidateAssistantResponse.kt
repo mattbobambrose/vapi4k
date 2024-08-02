@@ -103,7 +103,6 @@ object ValidateAssistantResponse {
 
           when {
             jsonElement.isAssistantResponse -> processAssistantRequest(jsonElement, sessionCacheId)
-            jsonElement.isAssistantIdResponse -> {}
             jsonElement.isSquadResponse -> {
               val assistants = jsonElement["squad.members"].toJsonElementList()
               assistants.forEachIndexed { i, assistant ->
@@ -112,6 +111,7 @@ object ValidateAssistantResponse {
               }
             }
 
+            jsonElement.isAssistantIdResponse -> {}
             jsonElement.isSquadIdResponse -> {}
             else -> error("Unknown response type")
           }
@@ -137,9 +137,7 @@ object ValidateAssistantResponse {
   ): String =
     runCatching {
       assistantElement["assistant"].stringValue("name")
-    }.getOrElse {
-      index.toString()
-    }
+    }.getOrElse { index.toString() }
 
   private fun BODY.processAssistantRequest(
     assistantElement: JsonElement,

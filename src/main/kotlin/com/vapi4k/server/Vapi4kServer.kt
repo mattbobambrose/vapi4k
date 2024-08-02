@@ -53,6 +53,7 @@ import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
 import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.requestType
@@ -236,7 +237,7 @@ private fun getToolRequest(params: Parameters): JsonObject {
         "toolCallList" to
           listOf(
             mapOf(
-              "id" to JsonPrimitive(sessionCacheId),
+              "id" to JsonPrimitive("call_${getRandomSecret(24)}"),
               "type" to JsonPrimitive("function"),
               "function" to mapOf(
                 "name" to JsonPrimitive(params.get("functionName")),
