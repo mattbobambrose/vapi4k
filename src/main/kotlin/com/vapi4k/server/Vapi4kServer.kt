@@ -240,8 +240,13 @@ private fun getToolRequest(params: Parameters): JsonObject {
               "function" to mapOf(
                 "name" to JsonPrimitive(params.get("functionName")),
                 "arguments" to
-                  params.names().filterNot { it in setOf("sessionCacheId", "functionName") }
-                    .map { it to JsonPrimitive(params[it]) }.toMap().toJsonObject(),
+                  params
+                    .names()
+                    .filterNot { it in setOf("sessionCacheId", "functionName") }
+                    .filter { params[it].orEmpty().isNotEmpty() }
+                    .map { it to JsonPrimitive(params[it]) }
+                    .toMap()
+                    .toJsonObject(),
               ).toJsonObject(),
             ).toJsonObject(),
           ).toJsonArray(),

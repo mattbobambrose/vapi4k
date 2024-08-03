@@ -24,8 +24,7 @@ import io.ktor.server.engine.embeddedServer
 import simpleDemo.SimpleAssistant.simpleAssistantRequest
 
 fun main() {
-  embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::module2)
-    .start(wait = true)
+  embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::module2).start(wait = true)
 }
 
 const val BASE_URL = "https://app.ondigitalocean.app"
