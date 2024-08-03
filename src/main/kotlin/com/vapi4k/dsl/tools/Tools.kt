@@ -62,20 +62,20 @@ data class ToolsImpl internal constructor(
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(true, function)
-      addTool(endpoint, obj, function, block)
+      addTool(obj, function, endpoint, block)
     } else {
       functions.forEach { function ->
         verifyIsToolCall(true, function)
         verifyIsValidReturnType(true, function)
-        addTool(endpoint, obj, function, block)
+        addTool(obj, function, endpoint, block)
       }
     }
   }
 
   private fun addTool(
-    endpoint: Endpoint,
     obj: Any,
     function: KFunction<*>,
+    endpoint: Endpoint,
     block: Tool.() -> Unit,
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
