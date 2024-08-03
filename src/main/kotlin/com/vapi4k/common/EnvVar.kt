@@ -38,6 +38,10 @@ enum class EnvVar(
 
   REQUEST_VALIDATION_URL({ REQUEST_VALIDATION_URL.getEnv("http://localhost:8080/vapi4k") }),
   REQUEST_VALIDATION_FILENAME({ REQUEST_VALIDATION_FILENAME.getEnv("/json/AssistantRequestValidation.json") }),
+
+  TOOL_CACHE_CLEAN_PAUSE_MINS({ TOOL_CACHE_CLEAN_PAUSE_MINS.getEnv(30) }),
+  TOOL_CACHE_MAX_AGE_MINS({ TOOL_CACHE_MAX_AGE_MINS.getEnv(60) }),
+
   // Resend details
 //  RESEND_API_KEY({ RESEND_API_KEY.getRequired() }, { it.obfuscate(1) }),
 //  RESEND_SENDER_EMAIL({ RESEND_SENDER_EMAIL.getRequired() })

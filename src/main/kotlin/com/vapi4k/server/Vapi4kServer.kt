@@ -27,6 +27,8 @@ import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.EnvVar.Companion.envIsProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
+import com.vapi4k.common.EnvVar.TOOL_CACHE_CLEAN_PAUSE_MINS
+import com.vapi4k.common.EnvVar.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
@@ -354,10 +356,11 @@ private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String
 
 private fun startCacheCleaningThread() {
   thread {
+    val pause = TOOL_CACHE_CLEAN_PAUSE_MINS.toInt().minutes
+    val maxAge = TOOL_CACHE_MAX_AGE_MINS.toInt().minutes
     while (true) {
       runCatching {
-        val maxAge = 60.minutes
-        Thread.sleep(maxAge.inWholeMilliseconds)
+        Thread.sleep(pause.inWholeMilliseconds)
         toolCallCache.purgeToolCache(maxAge)
       }.onFailure { e ->
         logger.error(e) { "Error clearing cache: ${e.errorMsg}" }

@@ -74,11 +74,11 @@ internal class ToolCache {
 
   private fun clearCache() {
     cacheMap.clear()
-    lastCacheCleanInstant = Clock.System.now()
   }
 
   fun purgeToolCache(maxAge: Duration): Int {
     var count = 0
+    lastCacheCleanInstant = Clock.System.now()
     cacheMap.entries.removeIf { (sessionCacheId, funcInfo) ->
       (funcInfo.age > maxAge).also { isOld ->
         if (isOld) {
