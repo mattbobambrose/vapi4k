@@ -18,7 +18,9 @@ package com.vapi4k
 
 import com.vapi4k.dsl.api.VapiApi.Companion.vapiApi
 import com.vapi4k.dsl.model.enums.OpenAIModelType
-import com.vapi4k.utils.HttpUtils.bodyAsJsonElement
+import com.vapi4k.utils.toJsonElement
+import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -139,7 +141,9 @@ class ApiCalls {
           }
         }
       println("Call status: ${callResp.status}")
-      println("Call response:> ${callResp.bodyAsJsonElement()}")
+      runBlocking {
+        println("Call response:> ${callResp.bodyAsText().toJsonElement()}")
+      }
 
 //    val listResp = api.list(ASSISTANTS)
 //    println("List response: ${listResp.jsonElement}")
