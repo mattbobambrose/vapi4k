@@ -25,8 +25,8 @@ import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
-import com.vapi4k.common.EnvVar.Companion.envIsProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
+import com.vapi4k.common.EnvVar.IS_PRODUCTION
 import com.vapi4k.common.EnvVar.TOOL_CACHE_CLEAN_PAUSE_MINS
 import com.vapi4k.common.EnvVar.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.common.Version
@@ -157,7 +157,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
       }
 
-      if (!envIsProduction) {
+      if (!IS_PRODUCTION.toBoolean()) {
         get(METRICS_PATH) {
           call.respond(appMicrometerRegistry.scrape())
         }
@@ -201,7 +201,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       val serverPath = config.configProperties.serverUrlPath
       logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
       post(serverPath) {
-        if (envIsProduction) {
+        if (IS_PRODUCTION.toBoolean()) {
           handleServerPathPost(callbackChannel)
         } else {
           runCatching {

@@ -19,8 +19,11 @@ package com.vapi4k.common
 import com.vapi4k.common.Constants.UNKNOWN
 import com.vapi4k.utils.DateUtils.TIME_ZONE
 import com.vapi4k.utils.DateUtils.toFullDateString
+import com.vapi4k.utils.toJsonString
 import kotlinx.datetime.Instant.Companion.fromEpochMilliseconds
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 
@@ -37,8 +40,11 @@ annotation class Version(
     private fun buildDateTimeStr(buildTime: Long) = buildDateTime(buildTime).toFullDateString()
 
     val jsonStr = { version: String, buildDate: String, buildTime: Long ->
-      val dateStr = buildDateTimeStr(buildTime)
-      """{"Version": "$version", "Release Date": "$buildDate", "Build Time: ": "$dateStr"}"""
+      buildJsonObject {
+        put("version", version)
+        put("release_date", buildDate)
+        put("build_time: ", buildDateTimeStr(buildTime))
+      }.toJsonString()
     }
     val plainStr = { version: String, buildDate: String, buildTime: Long ->
       "Version: $version Release Date: $buildDate Build Date: ${buildDateTimeStr(buildTime)}"
