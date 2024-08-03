@@ -24,7 +24,7 @@ import com.vapi4k.dtos.functions.FunctionPropertyDescDto
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
-import com.vapi4k.utils.ReflectionUtils.paramAnnotation
+import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -95,7 +95,7 @@ internal object FunctionUtils {
             functionDto.parameters.required += name
           functionDto.parameters.properties[name] = FunctionPropertyDescDto(
             type = param.llmType,
-            description = param.paramAnnotation?.description ?: "The $name parameter",
+            description = param.paramAnnotationWithDefault,
           )
         }
     }

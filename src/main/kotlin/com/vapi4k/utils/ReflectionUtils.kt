@@ -29,6 +29,7 @@ internal object ReflectionUtils {
   val Any.functions get() = this::class.declaredFunctions
   val Any.toolCallFunction get() = functions.first { it.hasToolCallAnnotation }
   val KParameter.paramAnnotation: Param? get() = annotations.firstOrNull { it is Param } as Param?
+  val KParameter.paramAnnotationWithDefault: String get() = paramAnnotation?.description ?: "The $name parameter"
   val KFunction<*>.toolCallAnnotation: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
   val KFunction<*>.hasToolCallAnnotation get() = toolCallAnnotation.isNotNull()
   val KFunction<*>.isUnitReturnType get() = returnType.asKClass() == Unit::class

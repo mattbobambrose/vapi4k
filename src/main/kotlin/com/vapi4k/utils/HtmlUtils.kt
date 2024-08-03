@@ -14,25 +14,12 @@
  *
  */
 
-package com.vapi4k.common
+package com.vapi4k.utils
 
-object Constants {
-  const val VAPI_API_URL = "https://api.vapi.ai"
-  const val HTMX_SOURCE_URL = "https://unpkg.com/htmx.org@2.0.1"
+import kotlinx.html.HTMLTag
+import kotlinx.html.unsafe
 
-  const val UNSPECIFIED_DEFAULT = "unspecified"
-  const val UNKNOWN = "unknown"
-  const val STYLES_CSS = "/assets/css/styles.css"
+object HtmlUtils {
+  fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
 
-}
-
-object Endpoints {
-  const val DEFAULT_SERVER_PATH = "vapi4k"
-  const val PING_PATH = "/ping"
-  const val VERSION_PATH = "/version"
-  const val METRICS_PATH = "/metrics"
-  const val CACHES_PATH = "/caches"
-  const val CLEAR_CACHES_PATH = "/clear-caches"
-  const val VALIDATE_PATH = "/validate"
-  const val INVOKE_TOOL_PATH = "/invokeTool"
 }

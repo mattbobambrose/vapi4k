@@ -78,6 +78,7 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
+import io.ktor.server.http.content.staticResources
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
@@ -141,6 +142,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     routing {
       val config = AssistantImpl.config
       config.applicationConfig = environment?.config ?: error("No environment config found")
+
+      staticResources("/assets", "static")
 
       get(PING_PATH) { call.respondText("pong") }
 

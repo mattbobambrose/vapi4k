@@ -17,18 +17,21 @@
 package com.vapi4k.client
 
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
+import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.utils.DslUtils.getRandomSecret
+import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.isAssistantIdResponse
 import com.vapi4k.utils.JsonElementUtils.isAssistantResponse
 import com.vapi4k.utils.JsonElementUtils.isSquadResponse
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.ReflectionUtils.asKClass
+import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
 import com.vapi4k.utils.Utils.resourceFile
 import com.vapi4k.utils.get
 import com.vapi4k.utils.modifyObjectWith
@@ -45,6 +48,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.html.BODY
 import kotlinx.html.InputType
 import kotlinx.html.body
+import kotlinx.html.code
 import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h2
@@ -54,13 +58,14 @@ import kotlinx.html.hiddenInput
 import kotlinx.html.html
 import kotlinx.html.id
 import kotlinx.html.input
+import kotlinx.html.link
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.stream.createHTML
 import kotlinx.html.style
 import kotlinx.html.table
+import kotlinx.html.tbody
 import kotlinx.html.td
-import kotlinx.html.textArea
 import kotlinx.html.title
 import kotlinx.html.tr
 import kotlinx.serialization.json.JsonElement
@@ -95,21 +100,24 @@ object ValidateAssistantResponse {
 
     return createHTML().html {
       head {
-        // link(STYLES_CSS, "stylesheet", CSS.toString())
+        link { rel = "stylesheet"; href = STYLES_CSS }
+        link { rel = "stylesheet"; href = "/assets/prism.css" }
         title { +"Assistant Request Validation" }
         script { src = HTMX_SOURCE_URL }
+        //script { src = "https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/pretty-print-json.min.js" }
       }
       body {
-        h2 { +"Assistant Request Response" }
+        script { src = "/assets/prism.js" }
+        h2 { +"Vapi4k Assistant Request Response" }
         if (status.value == 200) {
           div {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
             h3 { +"Path: $serverPath" }
             h3 { +"Status: $status" }
-            textArea {
-              style = "width: 100%;"
-              rows = "20"
-              +body.toJsonString()
+            pre {
+              code(classes = "language-json line-numbers match-braces") {
+                +body.toJsonString()
+              }
             }
           }
           val jsonElement = body.toJsonElement()
@@ -174,6 +182,7 @@ object ValidateAssistantResponse {
         h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
         form {
           attributes["hx-get"] = INVOKE_TOOL_PATH
+          attributes["hx-trigger"] = "submit"
           attributes["hx-target"] = "#result-$divid"
 
           hiddenInput {
@@ -185,40 +194,63 @@ object ValidateAssistantResponse {
             value = function
           }
           table {
-            functionDetails.params.forEach { param ->
-              tr {
-                td { +param.first }
-                td {
-                  input {
-                    type =
-                      when (param.second.asKClass()) {
-                        String::class -> InputType.text
-                        Int::class -> InputType.number
-                        Boolean::class -> InputType.checkBox
-                        else -> InputType.text
-                      }
-                    name = param.first
+            tbody {
+              functionDetails.params.forEach { functionDetail ->
+                tr {
+                  td { +"${functionDetail.first}:" }
+                  td {
+                    style = "width: 325px;"
+                    input {
+                      style = "width: 325px;"
+                      type =
+                        when (functionDetail.second.asKClass()) {
+                          String::class -> InputType.text
+                          Int::class -> InputType.number
+                          Boolean::class -> InputType.checkBox
+                          else -> InputType.text
+                        }
+                      name = functionDetail.first
+                    }
+                  }
+                  td {
+                    +"[${functionDetail.second.paramAnnotationWithDefault}]"
                   }
                 }
               }
-            }
-            tr {
-              td {
-                input {
-                  style = "margin-top: 10px;"
-                  type = InputType.submit
-                  value = "Invoke Tool"
+              tr {
+                td {
+                  input {
+                    style = "margin-top: 10px;"
+                    type = InputType.submit
+                    value = "Invoke Tool"
+                  }
                 }
+                td {}
+                td {}
               }
-              td {}
             }
           }
         }
 
-        textArea {
-          id = "result-$divid"
-          style = "width: 100%;"
-          rows = "10"
+        script {
+          rawHtml(
+            """
+              document.body.addEventListener('htmx:afterOnLoad', function(event) {
+                if (event.detail.target.id === 'result-$divid') {
+                  let responseData = event.detail.target.innerHTML;
+                  const codeElement = document.querySelector('#result-$divid');
+                  codeElement.textContent = responseData;
+                  Prism.highlightElement(codeElement);
+                }
+              });
+            """
+          )
+        }
+
+        pre {
+          code(classes = "language-json line-numbers match-braces") {
+            id = "result-$divid"
+          }
         }
       }
     }
