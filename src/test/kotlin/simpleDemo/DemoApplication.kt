@@ -38,12 +38,10 @@ fun Application.module2() {
     }
 
     onAssistantRequest { assistantRequest ->
-//      AssistantId with tools
-//      SquadId with tools
-//      AssistantOverrides with Assistant
-//      AssistantOverrides with AssistantId
+//      getAssistantIdWithTool(assistantRequest)
+//      getAssistantWithOverrides(assistantRequest)
+//
 //      AssistantOverrides with Squad
-//      AssistantOverrides with SquadId
 //      MemberOverrides with Squad
 
       // doubleToolAssistant2(assistantRequest)

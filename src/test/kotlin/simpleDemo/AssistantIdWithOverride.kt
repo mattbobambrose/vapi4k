@@ -20,8 +20,8 @@ import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import kotlinx.serialization.json.JsonElement
 
-class AssistantIdWithTool {
-  fun getAssistantIdWithTool(request: JsonElement) =
+class AssistantIdWithOverride {
+  fun getAssistantIdWithOverride(request: JsonElement) =
     assistantId(request) {
       assistantOverrides {
         openAIModel {
