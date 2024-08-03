@@ -16,6 +16,7 @@
 
 package com.vapi4k.client
 
+import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
@@ -25,7 +26,6 @@ import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.isAssistantIdResponse
 import com.vapi4k.utils.JsonElementUtils.isAssistantResponse
-import com.vapi4k.utils.JsonElementUtils.isSquadIdResponse
 import com.vapi4k.utils.JsonElementUtils.isSquadResponse
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -45,6 +45,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.html.BODY
 import kotlinx.html.InputType
 import kotlinx.html.body
+import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h2
 import kotlinx.html.h3
@@ -56,8 +57,10 @@ import kotlinx.html.input
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.stream.createHTML
+import kotlinx.html.style
 import kotlinx.html.table
 import kotlinx.html.td
+import kotlinx.html.textArea
 import kotlinx.html.title
 import kotlinx.html.tr
 import kotlinx.serialization.json.JsonElement
@@ -66,14 +69,17 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlin.collections.set
 
 object ValidateAssistantResponse {
-  fun getNewRequest(): JsonElement {
+  private fun getNewRequest(): JsonElement {
     val request = runCatching {
       resourceFile(REQUEST_VALIDATION_FILENAME.value)
     }.getOrElse { ASSISTANT_REQUEST_JSON }
     return copyWithNewCallId(request.toJsonElement())
   }
 
-  fun validateAssistantRequestResponse(secret: String): String {
+  fun validateAssistantRequestResponse(
+    secret: String,
+    serverPath: String,
+  ): String {
     val request = getNewRequest()
     val (status, body) = runBlocking {
       val response = httpClient.post(REQUEST_VALIDATION_URL.value) {
@@ -91,31 +97,40 @@ object ValidateAssistantResponse {
       head {
         // link(STYLES_CSS, "stylesheet", CSS.toString())
         title { +"Assistant Request Validation" }
-        script { src = "https://unpkg.com/htmx.org@2.0.1" }
+        script { src = HTMX_SOURCE_URL }
       }
       body {
-        h3 { +"Status: $status" }
+        h2 { +"Assistant Request Response" }
         if (status.value == 200) {
-          h3 { +"Response:" }
-          pre { +body.toJsonString() }
-
+          div {
+            style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            h3 { +"Path: $serverPath" }
+            h3 { +"Status: $status" }
+            textArea {
+              style = "width: 100%;"
+              rows = "20"
+              +body.toJsonString()
+            }
+          }
           val jsonElement = body.toJsonElement()
 
-          when {
-            jsonElement.isAssistantResponse -> processAssistantRequest(jsonElement, sessionCacheId)
-            jsonElement.isSquadResponse -> {
-              val assistants = jsonElement["squad.members"].toJsonElementList()
-              assistants.forEachIndexed { i, assistant ->
-                h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
-                processAssistantRequest(assistant, sessionCacheId)
+          with(jsonElement) {
+            when {
+              isAssistantResponse -> processAssistantRequest(jsonElement, sessionCacheId)
+              isSquadResponse -> {
+                val assistants = jsonElement["squad.members"].toJsonElementList()
+                assistants.forEachIndexed { i, assistant ->
+                  h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
+                  processAssistantRequest(assistant, sessionCacheId)
+                }
               }
+              // TODO - Add support for assistantId responses
+              isAssistantIdResponse -> {}
             }
-
-            jsonElement.isAssistantIdResponse -> {}
-            jsonElement.isSquadIdResponse -> {}
-            else -> error("Unknown response type")
           }
         } else {
+          h3 { +"Path: $serverPath" }
+          h3 { +"Status: $status" }
           if (body.isNotEmpty()) {
             if (body.length < 80) {
               h3 { +"Error: $body" }
@@ -143,7 +158,7 @@ object ValidateAssistantResponse {
     assistantElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
-    val funcs =
+    val functions =
       assistantElement["assistant.model.tools"].toJsonElementList()
         .map { it.stringValue("function.name") }
 
@@ -151,54 +166,60 @@ object ValidateAssistantResponse {
 
     val functionInfo = ToolCache.toolCallCache.getFromCache(sessionCacheId)
 
-    funcs.forEach { func ->
-      val functionDetails = functionInfo.getFunction(func)
-      val divid = getRandomSecret()
-      h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
-      form {
-        attributes["hx-get"] = INVOKE_TOOL_PATH
-        attributes["hx-target"] = "#result-$divid"
+    functions.forEach { function ->
+      div {
+        style = "border: 1px solid black; padding: 10px; margin: 10px;"
+        val functionDetails = functionInfo.getFunction(function)
+        val divid = getRandomSecret()
+        h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
+        form {
+          attributes["hx-get"] = INVOKE_TOOL_PATH
+          attributes["hx-target"] = "#result-$divid"
 
-        hiddenInput {
-          name = "sessionCacheId"
-          value = sessionCacheId.value
-        }
-        hiddenInput {
-          name = "functionName"
-          value = func
-        }
-        table {
-          functionDetails.params.forEach { param ->
-            tr {
-              td { +param.first }
-              td {
-                input {
-                  type =
-                    when (param.second.asKClass()) {
-                      String::class -> InputType.text
-                      Int::class -> InputType.number
-                      Boolean::class -> InputType.checkBox
-                      else -> InputType.text
-                    }
-                  name = param.first
+          hiddenInput {
+            name = "sessionCacheId"
+            value = sessionCacheId.value
+          }
+          hiddenInput {
+            name = "functionName"
+            value = function
+          }
+          table {
+            functionDetails.params.forEach { param ->
+              tr {
+                td { +param.first }
+                td {
+                  input {
+                    type =
+                      when (param.second.asKClass()) {
+                        String::class -> InputType.text
+                        Int::class -> InputType.number
+                        Boolean::class -> InputType.checkBox
+                        else -> InputType.text
+                      }
+                    name = param.first
+                  }
                 }
               }
             }
-          }
-          tr {
-            td {
-              input {
-                type = InputType.submit
-                value = "Invoke Tool"
+            tr {
+              td {
+                input {
+                  style = "margin-top: 10px;"
+                  type = InputType.submit
+                  value = "Invoke Tool"
+                }
               }
+              td {}
             }
-            td {}
           }
         }
-      }
 
-      pre {
-        id = "result-$divid"
+        textArea {
+          id = "result-$divid"
+          style = "width: 100%;"
+          rows = "10"
+        }
       }
     }
   }

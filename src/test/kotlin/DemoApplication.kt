@@ -1,4 +1,4 @@
-import SimpleSquad.doubleToolAssistant2
+import SimpleAssistant.simpleAssistantRequest
 import com.vapi4k.server.Vapi4k
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -28,8 +28,8 @@ fun Application.module2() {
 //      AssistantOverrides with SquadId
 //      MemberOverrides with Squad
 
-      doubleToolAssistant2(assistantRequest)
-      //simpleAssistantRequest(assistantRequest)
+      // doubleToolAssistant2(assistantRequest)
+      simpleAssistantRequest(assistantRequest)
     }
   }
 }

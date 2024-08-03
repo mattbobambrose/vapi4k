@@ -163,14 +163,14 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
         get(VALIDATE_PATH) {
           val secret = call.request.queryParameters["secret"].orEmpty()
-          val resp = validateAssistantRequestResponse(secret)
+          val serverPath = config.configProperties.serverUrlPath
+          val resp = validateAssistantRequestResponse(secret, serverPath)
           call.respondText(resp, ContentType.Text.Html)
         }
 
         get(INVOKE_TOOL_PATH) {
           val params = call.request.queryParameters
-
-          val resp = runCatching {
+          val response = runCatching {
             val toolRequest = getToolRequest(params)
             httpClient.post(
               url {
@@ -184,7 +184,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             }
           }.getOrThrow()
 
-          call.respondText(resp.bodyAsText().toJsonString())
+          call.respondText(response.bodyAsText().toJsonString())
         }
 
         get(CLEAR_CACHES_PATH) {

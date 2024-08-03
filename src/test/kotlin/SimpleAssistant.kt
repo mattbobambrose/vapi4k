@@ -61,7 +61,7 @@ object SimpleAssistant {
           }
           tool(
             WeatherLookupService2(),
-            WeatherLookupService2::getWeatherByCity2,
+            // WeatherLookupService2::getWeatherByCity2,
             WeatherLookupService2::getWeatherByZipCode,
           ) {
             requestStartMessage {

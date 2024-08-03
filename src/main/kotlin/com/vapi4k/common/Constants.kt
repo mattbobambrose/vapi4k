@@ -18,8 +18,9 @@ package com.vapi4k.common
 
 object Constants {
   const val VAPI_API_URL = "https://api.vapi.ai"
-  const val UNSPECIFIED_DEFAULT = "unspecified"
+  const val HTMX_SOURCE_URL = "https://unpkg.com/htmx.org@2.0.1"
 
+  const val UNSPECIFIED_DEFAULT = "unspecified"
   const val UNKNOWN = "unknown"
 }
 
