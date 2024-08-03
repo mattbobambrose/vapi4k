@@ -43,7 +43,7 @@ object SimpleSquad {
       members {
         member {
           assistant {
-            //name = "assistant1"
+            // name = "assistant1"
             firstMessage = "Hi there! I'm assistant1"
 
             groqModel {

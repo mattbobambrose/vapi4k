@@ -24,10 +24,10 @@ import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.reflect.KFunction
 
 internal class ToolCache(
   val cacheType: String,
@@ -46,19 +46,19 @@ internal class ToolCache(
     sessionCacheId: SessionCacheId,
     assistantCacheId: AssistantCacheId,
     obj: Any,
+    function: KFunction<*>,
   ) {
-    val function = obj.toolCallFunction
     val toolCallInfo = ToolCallInfo(assistantCacheId, function)
     val toolFuncName = toolCallInfo.llmName
     val funcInfo = cacheMap.computeIfAbsent(sessionCacheId) { FunctionInfo() }
     val funcDetails = funcInfo.functions[toolFuncName]
 
     if (funcDetails.isNull()) {
-      val newFuncDetails = FunctionDetails(obj)
+      val newFuncDetails = FunctionDetails(obj, function)
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added $cacheType \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {
-      error("$cacheType \"$toolFuncName\" has already been declared in ${funcDetails.fqName} [$sessionCacheId]")
+      error("$cacheType \"$toolFuncName\" already declared in ${funcDetails.fqName} [$sessionCacheId]")
     }
   }
 

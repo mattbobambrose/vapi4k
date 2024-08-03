@@ -24,7 +24,6 @@ import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.kParameters
 import com.vapi4k.utils.ReflectionUtils.parameterSignature
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
-import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.findFunction
 import com.vapi4k.utils.booleanValue
@@ -35,22 +34,25 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.reflect.KFunction
 
 class FunctionDetails(
   val obj: Any,
+  val function: KFunction<*>,
 ) {
   private val invokeCounter = AtomicInteger(0)
   val className: String = obj::class.qualifiedName.orEmpty()
-  val functionName: String = obj.toolCallFunction.name
-  val toolCall = obj.toolCallFunction.toolCallAnnotation
+  val functionName: String = function.name
+  val toolCall = function.toolCallAnnotation
 
   val invokeCount get() = invokeCounter.get()
   val fqName get() = "$className.$functionName()"
-  val methodWithParams get() = "$functionName(${obj.toolCallFunction.parameterSignature})"
-  val isAsync get() = obj.toolCallFunction.isUnitReturnType
-  val params get() = obj.toolCallFunction.kParameters
+  val methodWithParams get() = "$functionName(${function.parameterSignature})"
+  val isAsync get() = function.isUnitReturnType
+  val params get() = function.kParameters
 
   fun invokeToolMethod(
+    isTool: Boolean,
     args: JsonElement,
     request: JsonElement,
     message: MutableList<CommonToolMessageDto> = mutableListOf(),
@@ -61,14 +63,14 @@ class FunctionDetails(
       invokeCounter.incrementAndGet()
       val result = invokeMethod(args).also { logger.info { "Tool call result: $it" } }
       successAction(result)
-      if (obj is ToolCallService)
+      if (isTool && obj is ToolCallService)
         message.addAll(obj.onToolCallComplete(request, result).map { it.dto }).also {
           logger.info { "Adding tool request messages $it" }
         }
     }.onFailure { e ->
       val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
       errorAction(errorMsg)
-      if (obj is ToolCallService)
+      if (isTool && obj is ToolCallService)
         message.addAll(obj.onToolCallFailed(request, errorMsg).map { it.dto })
       logger.error { errorMsg }
     }

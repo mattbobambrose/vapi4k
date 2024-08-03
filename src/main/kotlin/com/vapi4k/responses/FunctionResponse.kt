@@ -39,6 +39,7 @@ class FunctionResponse(
             functionCache.getFromCache(sessionCacheId)
               .getFunction(funcName)
               .invokeToolMethod(
+                isTool = false,
                 args = args,
                 request = request,
                 message = mutableListOf(),

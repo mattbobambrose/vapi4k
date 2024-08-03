@@ -177,7 +177,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                 host = "localhost"
                 port = 8080
                 pathSegments = config.configProperties.serverUrlPathSegments
-              }
+              },
             ) {
               headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
               setBody(toolRequest.toJsonString())

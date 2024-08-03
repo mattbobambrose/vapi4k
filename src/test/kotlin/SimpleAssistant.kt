@@ -49,18 +49,24 @@ object SimpleAssistant {
         systemMessage = "You're a weather lookup service"
 
         tools {
-          tool(ADWeatherLookupService()) {
+          tool(WeatherLookupService1()) {
             requestStartMessage {
               content = "Default request start weather lookup"
             }
-//                    requestCompleteMessage {
-//                        content = "Default request complete weather lookup"
-//                    }
-//                    condition("city" eq "Chicago", "state" eq "Illinois") {
-//                        requestCompleteMessage {
-//                            content = "Default Chicago request complete weather lookup"
-//                        }
-//                    }
+          }
+          tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
+            requestStartMessage {
+              content = "Default request start weather lookup"
+            }
+          }
+          tool(
+            WeatherLookupService2(),
+            WeatherLookupService2::getWeatherByCity2,
+            WeatherLookupService2::getWeatherByZipCode,
+          ) {
+            requestStartMessage {
+              content = "Default request start weather lookup"
+            }
           }
         }
       }
@@ -71,12 +77,38 @@ object SimpleAssistant {
       )
     }
 
-  class ADWeatherLookupService : ToolCallService() {
+  class WeatherLookupService1 : ToolCallService() {
     @ToolCall("Look up the weather for a city")
-    fun getWeatherByCity(
+    fun getWeatherByCity1(
       city: String,
       state: String,
     ) = "The weather in city $city and state $state is windy"
+
+    override fun onToolCallComplete(
+      toolCallRequest: JsonElement,
+      result: String,
+    ) = requestCompleteMessages {
+      condition("city" eq "Chicago", "state" eq "Illinois") {
+        requestCompleteMessage {
+          content = "The Chicago override request complete weather lookup"
+        }
+      }
+      requestCompleteMessage {
+        role = ToolMessageRoleType.ASSISTANT
+        content = "The override request Complete Message weather has arrived"
+      }
+    }
+  }
+
+  class WeatherLookupService2 : ToolCallService() {
+    @ToolCall("Look up the weather for a city")
+    fun getWeatherByCity2(
+      city: String,
+      state: String,
+    ) = "The weather in city $city and state $state is windy"
+
+    @ToolCall("Look up the weather for a zip code")
+    fun getWeatherByZipCode(zipCode: String) = "The weather in zip code $zipCode is rainy"
 
     override fun onToolCallComplete(
       toolCallRequest: JsonElement,

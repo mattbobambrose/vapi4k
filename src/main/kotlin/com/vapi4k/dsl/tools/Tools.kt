@@ -20,7 +20,9 @@ import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
-import com.vapi4k.dsl.functions.FunctionUtils.verifyObject
+import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
+import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
+import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.tools.enums.ToolType
@@ -28,17 +30,14 @@ import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
+import kotlin.reflect.KFunction
 
 @AssistantDslMarker
 interface Tools {
   fun tool(
-    endpointName: String,
     obj: Any,
-    block: Tool.() -> Unit = {},
-  )
-
-  fun tool(
-    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String = "",
     block: Tool.() -> Unit = {},
   )
 }
@@ -46,24 +45,51 @@ interface Tools {
 data class ToolsImpl internal constructor(
   internal val model: AbstractModelProperties,
 ) : Tools {
+  override fun tool(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String,
+    block: Tool.() -> Unit,
+  ) {
+    val endpoint =
+      with(AssistantImpl.config) {
+        if (endpointName.isEmpty())
+          getEmptyEndpoint() ?: defaultToolCallEndpoint
+        else
+          getEndpoint(endpointName)
+      }
+    if (functions.isEmpty()) {
+      verifyObjectHasOnlyOneToolCall(obj)
+      val function = obj.toolCallFunction
+      verifyIsValidReturnType(true, function)
+      addTool(endpoint, obj, function, block)
+    } else {
+      functions.forEach { function ->
+        verifyIsToolCall(true, function)
+        verifyIsValidReturnType(true, function)
+        addTool(endpoint, obj, function, block)
+      }
+    }
+  }
+
   private fun addTool(
     endpoint: Endpoint,
     obj: Any,
+    function: KFunction<*>,
     block: Tool.() -> Unit,
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
-      verifyObject(false, obj)
-      populateFunctionDto(model, obj, toolDto.function)
+      populateFunctionDto(model, obj, function, toolDto.function)
       val sessionCacheId =
         if (model.sessionCacheId.isNotSpecified())
           model.sessionCacheId
         else
           model.messageCallId.toSessionCacheId()
-      toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, obj)
+      toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
 
       with(toolDto) {
         type = ToolType.FUNCTION
-        async = obj.toolCallFunction.isUnitReturnType
+        async = function.isUnitReturnType
       }
 
       // Apply block to tool
@@ -81,22 +107,5 @@ data class ToolsImpl internal constructor(
         error("Duplicate tool name declared: ${toolDto.function.name}")
       }
     }
-  }
-
-  override fun tool(
-    endpointName: String,
-    obj: Any,
-    block: Tool.() -> Unit,
-  ) {
-    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
-    addTool(endpoint, obj, block)
-  }
-
-  override fun tool(
-    obj: Any,
-    block: Tool.() -> Unit,
-  ) {
-    val endpoint = with(AssistantImpl.config) { getEmptyEndpoint() ?: defaultToolCallEndpoint }
-    addTool(endpoint, obj, block)
   }
 }

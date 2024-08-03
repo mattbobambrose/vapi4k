@@ -26,48 +26,49 @@ import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.paramAnnotation
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
-import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
 internal object FunctionUtils {
   private val allowedParamTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
   private val allowedReturnTypes = setOf(String::class, Unit::class)
+  private val tcName by lazy { ToolCall::class.simpleName.orEmpty() }
 
-  fun verifyObject(
-    isFunction: Boolean,
-    obj: Any,
+  fun verifyIsToolCall(
+    isTool: Boolean,
+    function: KFunction<*>,
   ) {
-    val cnt = obj.functions.count { it.hasToolCallAnnotation }
-
-    when {
-      cnt == 0 ->
-        error(
-          "No method with ${ToolCall::class.simpleName} annotation found in class ${obj::class.qualifiedName}",
-        )
-
-      cnt > 1 ->
-        error(
-          "Only one method with ${ToolCall::class.simpleName} annotation is allowed in class ${obj::class.qualifiedName}",
-        )
+    if (!function.hasToolCallAnnotation) {
+      val str = if (isTool) "Tool" else "Function"
+      error("$str ${function.name} is missing @$tcName annotation")
     }
+  }
 
-    return with(obj.functions.first { it.hasToolCallAnnotation }) {
-      val returnClass = returnType.asKClass()
-      if (returnClass !in allowedReturnTypes) {
-        val str = if (isFunction) "Function" else "Tool"
-        error("$str $name returns a ${returnClass.qualifiedName}. Allowed return types are String or Unit")
-      }
+  fun verifyObjectHasOnlyOneToolCall(obj: Any) {
+    val cnt = obj.functions.count { it.hasToolCallAnnotation }
+    when {
+      cnt == 0 -> error("No method with @$tcName annotation found in class ${obj::class.qualifiedName}")
+      cnt > 1 -> error("Only one method with @$tcName annotation is allowed in class ${obj::class.qualifiedName}")
+    }
+  }
+
+  fun verifyIsValidReturnType(
+    isTool: Boolean,
+    function: KFunction<*>,
+  ) {
+    val returnClass = function.returnType.asKClass()
+    if (returnClass !in allowedReturnTypes) {
+      val str = if (isTool) "Tool" else "Function"
+      error("$str ${function.name} returns a ${returnClass.qualifiedName}. Allowed return types are String or Unit")
     }
   }
 
   fun populateFunctionDto(
     model: AbstractModelProperties,
     obj: Any,
+    function: KFunction<*>,
     functionDto: FunctionDto,
   ) {
-    val function = obj.toolCallFunction
-
     ToolCallInfo(model.assistantCacheId, function).also { toolCallInfo ->
       functionDto.name = toolCallInfo.llmName
       functionDto.description = toolCallInfo.llmDescription
@@ -79,7 +80,7 @@ internal object FunctionUtils {
       params.forEach { param ->
         val kclass = param.type.asKClass()
         if (kclass !in allowedParamTypes) {
-          val fqName = FunctionDetails(obj).fqName
+          val fqName = FunctionDetails(obj, function).fqName
           val simpleName = kclass.simpleName
           error(
             "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, and Boolean",
