@@ -171,7 +171,7 @@ object ValidateAssistantResponse {
         style = "border: 1px solid black; padding: 10px; margin: 10px;"
         val functionDetails = functionInfo.getFunction(function)
         val divid = getRandomSecret()
-        h3 { +"${functionDetails.fqName}  (${functionDetails.toolCall?.description.orEmpty()})" }
+        h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
         form {
           attributes["hx-get"] = INVOKE_TOOL_PATH
           attributes["hx-target"] = "#result-$divid"

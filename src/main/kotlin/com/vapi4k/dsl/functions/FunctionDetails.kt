@@ -47,6 +47,7 @@ class FunctionDetails(
 
   val invokeCount get() = invokeCounter.get()
   val fqName get() = "$className.$functionName()"
+  val fqNameWithParams get() = "$className.$functionName(${function.parameterSignature})"
   val methodWithParams get() = "$functionName(${function.parameterSignature})"
   val isAsync get() = function.isUnitReturnType
   val params get() = function.kParameters
