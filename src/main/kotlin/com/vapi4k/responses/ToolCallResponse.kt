@@ -69,6 +69,8 @@ data class ToolCallResponse(
                       }.getOrElse { e ->
                         val errorMsg = e.message ?: "Error invoking tool $funcName"
                         logger.error { errorMsg }
+                        toolCallResult.error = errorMsg
+                        errorMessage = errorMsg
                       }
                     }
 

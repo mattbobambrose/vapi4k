@@ -57,6 +57,15 @@ object Utils {
 
   internal fun String.obfuscate(freq: Int = 2) = mapIndexed { i, v -> if (i % freq == 0) '*' else v }.joinToString("")
 
+  internal fun Throwable.toErrorString() =
+    "${
+      stackTraceToString()
+        .lines()
+        .filterNot { it.trimStart().startsWith("at io.ktor") }
+        .filterNot { it.trimStart().startsWith("at kotlin") }
+        .joinToString("\n")
+    }\t..."
+
   @OptIn(ExperimentalContracts::class)
   internal fun Any?.isNotNull(): Boolean {
     contract {

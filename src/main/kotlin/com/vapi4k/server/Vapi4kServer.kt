@@ -61,6 +61,7 @@ import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.getBanner
 import com.vapi4k.utils.Utils.lambda
+import com.vapi4k.utils.Utils.toErrorString
 import com.vapi4k.utils.toJsonArray
 import com.vapi4k.utils.toJsonElement
 import com.vapi4k.utils.toJsonObject
@@ -175,7 +176,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
         get(INVOKE_TOOL_PATH) {
           val params = call.request.queryParameters
-          val response = runCatching {
+          runCatching {
             val toolRequest = getToolRequest(params)
             httpClient.post(
               url {
@@ -187,9 +188,12 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
               setBody(toolRequest.toJsonString())
             }
-          }.getOrThrow()
-
-          call.respondText(response.bodyAsText().toJsonString())
+          }.onSuccess { response ->
+            call.respondText(response.bodyAsText().toJsonString())
+          }
+            .onFailure { e ->
+              call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
+            }
         }
 
         get(CLEAR_CACHES_PATH) {
@@ -208,14 +212,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             handleServerPathPost(callbackChannel)
           }.onFailure { e ->
             logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
-            val str = "${
-              e.stackTraceToString()
-                .lines()
-                .filterNot { it.trimStart().startsWith("at io.ktor") }
-                .filterNot { it.trimStart().startsWith("at kotlin") }
-                .joinToString("\n")
-            }\t..."
-            call.respondText(str, status = HttpStatusCode.InternalServerError)
+            call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
           }
         }
       }
