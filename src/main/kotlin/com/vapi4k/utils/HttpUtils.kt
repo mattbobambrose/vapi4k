@@ -18,7 +18,6 @@ package com.vapi4k.utils
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -41,10 +40,11 @@ object HttpUtils {
         )
       }
 
-      install(ContentEncoding) {
-        deflate(1.0F)
-        gzip(0.9F)
-      }
+      // TODO: Look into this
+//      install(ContentEncoding) {
+//        deflate(1.0F)
+//        gzip(0.9F)
+//      }
     }
   }
 }

@@ -16,11 +16,13 @@
 
 package com.vapi4k.dtos.functions
 
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FunctionParametersDto(
   var type: String = "",
+  @EncodeDefault
   val properties: MutableMap<String, FunctionPropertyDescDto> = mutableMapOf(),
   val required: MutableList<String> = mutableListOf(),
 )

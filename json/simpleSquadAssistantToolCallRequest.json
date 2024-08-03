@@ -1,0 +1,218 @@
+{
+  "message": {
+    "type": "tool-calls",
+    "toolCalls": [
+      {
+        "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
+        "type": "function",
+        "function": {
+          "name": "lookupTime_001",
+          "arguments": {}
+        }
+      }
+    ],
+    "toolCallList": [
+      {
+        "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
+        "type": "function",
+        "function": {
+          "name": "lookupTime_001",
+          "arguments": {}
+        }
+      }
+    ],
+    "toolWithToolCallList": [
+      {
+        "type": "function",
+        "function": {
+          "name": "lookupTime_001",
+          "description": "Look up the current time for the given coast",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        "async": false,
+        "server": {
+          "url": "https://eocare-app-fiqm5.ondigitalocean.app/vapi4k",
+          "secret": "12345"
+        },
+        "messages": [],
+        "toolCall": {
+          "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
+          "type": "function",
+          "function": {
+            "name": "lookupTime_001",
+            "arguments": {}
+          }
+        }
+      }
+    ],
+    "call": {
+      "id": "bd20a04c-4b07-4148-b576-b2d394263d94",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "createdAt": "2024-08-02T22:13:21.495Z",
+      "updatedAt": "2024-08-02T22:13:21.495Z",
+      "type": "inboundPhoneCall",
+      "status": "ringing",
+      "phoneCallProvider": "twilio",
+      "phoneCallProviderId": "CA8dcbb5046df9b7f6fe534e2b5164c0ff",
+      "phoneCallTransport": "pstn",
+      "phoneNumberId": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "customer": {
+        "number": "+19256836490"
+      },
+      "squad": {
+        "members": [
+          {
+            "assistant": {
+              "name": "East Coast Assistant",
+              "model": {
+                "model": "gpt-4-turbo",
+                "messages": [
+                  {
+                    "content": "You look up the current time in the East Coast.",
+                    "role": "system"
+                  }
+                ],
+                "tools": [
+                  {
+                    "async": false,
+                    "function": {
+                      "name": "lookupTime_001",
+                      "description": "Look up the current time for the given coast",
+                      "parameters": {
+                        "type": "object",
+                        "properties": {}
+                      }
+                    },
+                    "server": {
+                      "url": "https://eocare-app-fiqm5.ondigitalocean.app/vapi4k",
+                      "secret": "12345"
+                    },
+                    "type": "function"
+                  }
+                ],
+                "provider": "openai"
+              },
+              "firstMessage": "Hi there! I can look up the current time for the East Coast."
+            }
+          },
+          {
+            "assistant": {
+              "name": "West Coast Assistant",
+              "model": {
+                "model": "gpt-4-turbo",
+                "messages": [
+                  {
+                    "content": "You look up the current time in the West Coast.",
+                    "role": "system"
+                  }
+                ],
+                "tools": [
+                  {
+                    "async": false,
+                    "function": {
+                      "name": "lookupTime_002",
+                      "description": "Look up the current time for the given coast",
+                      "parameters": {
+                        "type": "object",
+                        "properties": {}
+                      }
+                    },
+                    "server": {
+                      "url": "https://eocare-app-fiqm5.ondigitalocean.app/vapi4k",
+                      "secret": "12345"
+                    },
+                    "type": "function"
+                  }
+                ],
+                "provider": "openai"
+              },
+              "firstMessage": "Hi there! I can look up the current time for the West Coast."
+            }
+          }
+        ]
+      }
+    },
+    "phoneNumber": {
+      "id": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "number": "+19254207621",
+      "createdAt": "2024-06-29T03:03:00.576Z",
+      "updatedAt": "2024-07-29T03:03:12.996Z",
+      "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33cFxM9B7",
+      "stripeSubscriptionStatus": "active",
+      "stripeSubscriptionCurrentPeriodStart": "2024-07-29T03:02:56.000Z",
+      "provider": "twilio"
+    },
+    "customer": {
+      "number": "+19256836490"
+    },
+    "artifact": {
+      "messages": [
+        {
+          "role": "bot",
+          "message": "Hi there. I can look up the current time for the East Coast.",
+          "time": 1722636806994,
+          "endTime": 1722636810434,
+          "secondsFromStart": 3.04,
+          "source": ""
+        },
+        {
+          "role": "user",
+          "message": "What's the current time on the East Coast?",
+          "time": 1722636812164,
+          "endTime": 1722636814424,
+          "secondsFromStart": 8.21,
+          "duration": 2.4499998
+        },
+        {
+          "toolCalls": [
+            {
+              "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
+              "type": "function",
+              "function": {
+                "name": "lookupTime_001",
+                "arguments": "{}"
+              }
+            }
+          ],
+          "role": "tool_calls",
+          "message": "",
+          "time": 1722636814420,
+          "secondsFromStart": 10.537
+        }
+      ],
+      "messagesOpenAIFormatted": [
+        {
+          "role": "assistant",
+          "content": "Hi there. I can look up the current time for the East Coast."
+        },
+        {
+          "role": "user",
+          "content": "What's the current time on the East Coast?"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
+              "type": "function",
+              "function": {
+                "name": "lookupTime_001",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
+          "content": "undefined"
+        }
+      ]
+    },
+    "timestamp": "2024-08-02T22:13:34.427Z"
+  }
+}
