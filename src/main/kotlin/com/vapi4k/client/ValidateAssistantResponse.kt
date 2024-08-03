@@ -21,7 +21,7 @@ import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.tools.ToolCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.isAssistantIdResponse
@@ -164,14 +164,14 @@ object ValidateAssistantResponse {
 
     h2 { +"Tools" }
 
-    val functionInfo = ToolCache.toolCallCache.getFromCache(sessionCacheId)
+    val functionInfo = toolCallCache.getFromCache(sessionCacheId)
 
     functions.forEach { function ->
       div {
         style = "border: 1px solid black; padding: 10px; margin: 10px;"
         val functionDetails = functionInfo.getFunction(function)
         val divid = getRandomSecret()
-        h3 { +"${functionDetails.fqName} - ${functionDetails.toolCall?.description.orEmpty()}" }
+        h3 { +"${functionDetails.fqName}  (${functionDetails.toolCall?.description.orEmpty()})" }
         form {
           attributes["hx-get"] = INVOKE_TOOL_PATH
           attributes["hx-target"] = "#result-$divid"

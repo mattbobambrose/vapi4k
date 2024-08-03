@@ -20,7 +20,7 @@ import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearCaches
+import com.vapi4k.dsl.tools.ToolCache.Companion.clearCache
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.firstInList
@@ -75,7 +75,7 @@ class ServerTest {
 
   @Test
   fun `Tool requests arg ordering`() {
-    clearCaches()
+    clearCache()
     val responses =
       withTestApplication(
         listOf(
@@ -117,7 +117,7 @@ class ServerTest {
 
   @Test
   fun `Check for EOCR cache removal`() {
-    clearCaches()
+    clearCache()
     val responses =
       withTestApplication(
         listOf(

@@ -29,9 +29,7 @@ import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KFunction
 
-internal class ToolCache(
-  val cacheType: String,
-) {
+internal class ToolCache {
   //  @Serializable(with = CacheMapSerializer::class)
   private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
   var cacheIsActive = false
@@ -40,7 +38,7 @@ internal class ToolCache(
     get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
 
   fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
-    cacheMap[sessionCacheId] ?: error("$cacheType session cache id not found: $sessionCacheId")
+    cacheMap[sessionCacheId] ?: error("Session cache id not found: $sessionCacheId")
 
   fun addToCache(
     sessionCacheId: SessionCacheId,
@@ -56,9 +54,9 @@ internal class ToolCache(
     if (funcDetails.isNull()) {
       val newFuncDetails = FunctionDetails(obj, function)
       funcInfo.functions[toolFuncName] = newFuncDetails
-      logger.info { "Added $cacheType \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
+      logger.info { "Added \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {
-      error("$cacheType \"$toolFuncName\" already declared in ${funcDetails.fqName} [$sessionCacheId]")
+      error("\"$toolFuncName\" already declared in cache at ${funcDetails.fqName} [$sessionCacheId]")
     }
   }
 
@@ -70,7 +68,7 @@ internal class ToolCache(
       ?.also { block(it) }
       .also {
         if (it.isNull())
-          logger.debug { "$cacheType entry not found in cache: $sessionCacheId" }
+          logger.debug { "Entry not found in cache: $sessionCacheId" }
       }
 
   private fun clearCache() {
@@ -82,19 +80,15 @@ internal class ToolCache(
     oldSessionCacheId: SessionCacheId,
     newSessionCacheKey: SessionCacheId,
   ) {
-    logger.info { "Swapping $cacheType cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
+    logger.info { "Swapping cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
     cacheMap.remove(oldSessionCacheId)?.also { cacheMap[newSessionCacheKey] = it }
   }
 
   companion object {
-    val toolCallCache = ToolCache("Tool")
-    val functionCache = ToolCache("Function")
+    val toolCallCache = ToolCache()
 
-    val cachesAreActive get() = toolCallCache.cacheIsActive || functionCache.cacheIsActive
-
-    fun clearCaches() {
+    fun clearCache() {
       toolCallCache.clearCache()
-      functionCache.clearCache()
     }
 
     fun swapCacheKeys(
@@ -102,15 +96,13 @@ internal class ToolCache(
       newSessionCacheKey: SessionCacheId,
     ) {
       toolCallCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
-      functionCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
     }
 
-    fun cacheAsJson() = CacheInfoDto(toolCallCache.asDtoMap, functionCache.asDtoMap)
+    fun cacheAsJson() = CacheInfoDto(toolCallCache.asDtoMap)
   }
 }
 
 @Serializable
 class CacheInfoDto(
   val toolCallCache: Map<SessionCacheId, FunctionInfoDto>? = null,
-  val functionCache: Map<SessionCacheId, FunctionInfoDto>? = null,
 )

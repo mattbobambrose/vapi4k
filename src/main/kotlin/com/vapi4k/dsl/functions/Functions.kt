@@ -23,7 +23,7 @@ import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
-import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import kotlin.reflect.KFunction
@@ -69,7 +69,7 @@ data class FunctionsImpl internal constructor(
             model.sessionCacheId
           else
             model.messageCallId.toSessionCacheId()
-        functionCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
+        toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
       }.also { func ->
         if (model.functionDtos.any { func.name == it.name }) {
           error("Duplicate function name declared: ${func.name}")

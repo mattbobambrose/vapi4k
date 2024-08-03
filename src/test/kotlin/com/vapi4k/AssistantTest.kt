@@ -24,7 +24,7 @@ import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.model.enums.DeepgramModelType
 import com.vapi4k.dsl.model.enums.GladiaModelType
 import com.vapi4k.dsl.model.enums.OpenAIModelType
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearCaches
+import com.vapi4k.dsl.tools.ToolCache.Companion.clearCache
 import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
@@ -71,7 +71,7 @@ class AssistantTest {
 
   @Test
   fun testRegular() {
-    clearCaches()
+    clearCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -111,7 +111,7 @@ class AssistantTest {
 
   @Test
   fun `test reverse delay order`() {
-    clearCaches()
+    clearCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -148,7 +148,7 @@ class AssistantTest {
 
   @Test
   fun `test message with no millis`() {
-    clearCaches()
+    clearCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -186,7 +186,7 @@ class AssistantTest {
 
   @Test
   fun `multiple message`() {
-    clearCaches()
+    clearCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
         assistant(request) {
@@ -225,7 +225,7 @@ class AssistantTest {
 
   @Test
   fun `multiple delay time`() {
-    clearCaches()
+    clearCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
       assistant(request) {
         firstMessage = messageOne
@@ -265,7 +265,7 @@ class AssistantTest {
 
   @Test
   fun `multiple message multiple delay time`() {
-    clearCaches()
+    clearCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
       assistant(request) {
         firstMessage = messageOne
@@ -302,7 +302,7 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message`() {
-    clearCaches()
+    clearCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
       assistant(it) {
         firstMessage = messageOne
@@ -379,7 +379,7 @@ class AssistantTest {
 
   @Test
   fun `Missing message`() {
-    clearCaches()
+    clearCache()
     assertThrows(IllegalStateException::class.java) {
       assistant(ASSISTANT_REQUEST.toJsonElement()) {
         firstMessage = messageOne
@@ -401,7 +401,7 @@ class AssistantTest {
 
   @Test
   fun `error on duplicate reverse conditions`() {
-    clearCaches()
+    clearCache()
     assertThrows(IllegalStateException::class.java) {
       assistant(ASSISTANT_REQUEST.toJsonElement()) {
         firstMessage = messageOne
@@ -465,7 +465,7 @@ class AssistantTest {
 
   @Test
   fun `check non-default FirstMessageModeType values`() {
-    clearCaches()
+    clearCache()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
@@ -484,7 +484,7 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 1`() {
-    clearCaches()
+    clearCache()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
@@ -500,7 +500,7 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 2`() {
-    clearCaches()
+    clearCache()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
@@ -516,7 +516,7 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 1`() {
-    clearCaches()
+    clearCache()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {
@@ -533,7 +533,7 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 2`() {
-    clearCaches()
+    clearCache()
     val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
       assistant(request) {

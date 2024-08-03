@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.functionName
 import com.vapi4k.utils.JsonElementUtils.functionParameters
@@ -36,7 +36,7 @@ class FunctionResponse(
           val funcName = request.functionName
           val args = request.functionParameters
           runCatching {
-            functionCache.getFromCache(sessionCacheId)
+            toolCallCache.getFromCache(sessionCacheId)
               .getFunction(funcName)
               .invokeToolMethod(
                 isTool = false,

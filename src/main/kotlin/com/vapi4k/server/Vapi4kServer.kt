@@ -31,9 +31,7 @@ import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.tools.ToolCache.Companion.cacheAsJson
-import com.vapi4k.dsl.tools.ToolCache.Companion.cachesAreActive
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearCaches
-import com.vapi4k.dsl.tools.ToolCache.Companion.functionCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.clearCache
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
@@ -188,7 +186,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
 
         get(CLEAR_CACHES_PATH) {
-          clearCaches()
+          clearCache()
           call.respondRedirect(CACHES_PATH)
         }
       }
@@ -289,18 +287,11 @@ private suspend fun KtorCallContext.handleServerPathPost(
             var notFound = true
 
             toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
-              val name = toolCallCache.cacheType
-              logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
+              logger.info { "EOCR removed ${funcInfo.functions.size} cache entries [${funcInfo.ageSecs}] " }
               notFound = false
             }
 
-            functionCache.removeFromCache(sessionCacheId) { funcInfo ->
-              val name = toolCallCache.cacheType
-              logger.info { "EOCR removed ${funcInfo.functions.size} $name entries [${funcInfo.ageSecs}] " }
-              notFound = false
-            }
-
-            if (notFound && cachesAreActive)
+            if (notFound && toolCallCache.cacheIsActive)
               logger.warn { "EOCR unable to free Tools or Functions for messageCallId: $sessionCacheId" }
           }
 
