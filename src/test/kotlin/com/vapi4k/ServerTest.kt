@@ -20,11 +20,12 @@ import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.firstInList
 import com.vapi4k.utils.get
+import com.vapi4k.utils.intValue
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.withTestApplication
 import io.ktor.client.request.HttpRequestBuilder
@@ -75,7 +76,7 @@ class ServerTest {
 
   @Test
   fun `Tool requests arg ordering`() {
-    clearCache()
+    clearToolCache()
     val responses =
       withTestApplication(
         listOf(
@@ -109,7 +110,7 @@ class ServerTest {
       if (i == 6) {
         assertEquals(
           0,
-          jsonElement["toolCallCache"].jsonObject.keys.size,
+          jsonElement["toolCallCacheSize"].intValue,
         )
       }
     }
@@ -117,7 +118,7 @@ class ServerTest {
 
   @Test
   fun `Check for EOCR cache removal`() {
-    clearCache()
+    clearToolCache()
     val responses =
       withTestApplication(
         listOf(

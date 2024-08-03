@@ -31,7 +31,7 @@ import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.tools.ToolCache.Companion.cacheAsJson
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearCache
+import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Endpoint
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
@@ -100,6 +100,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlin.concurrent.thread
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.measureTimedValue
 
 @Version(
@@ -127,6 +128,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   logEnvVarValues()
 
   startCallbackThread(callbackChannel)
+  startCacheCleaningThread()
 
   environment?.monitor?.apply {
     subscribe(ApplicationStarting) { it.environment.log.info("Vapi4kServer is starting") }
@@ -189,7 +191,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
 
         get(CLEAR_CACHES_PATH) {
-          clearCache()
+          clearToolCache()
           call.respondRedirect(CACHES_PATH)
         }
       }
@@ -292,15 +294,10 @@ private suspend fun KtorCallContext.handleServerPathPost(
         END_OF_CALL_REPORT -> {
           if (config.configProperties.eocrCacheRemovalEnabled) {
             val sessionCacheId = request.sessionCacheId
-            var notFound = true
 
             toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
               logger.info { "EOCR removed ${funcInfo.functions.size} cache entries [${funcInfo.ageSecs}] " }
-              notFound = false
-            }
-
-            if (notFound && toolCallCache.cacheIsActive)
-              logger.warn { "EOCR unable to free Tools or Functions for messageCallId: $sessionCacheId" }
+            } ?: logger.warn { "EOCR unable to find and remove cache entry [$sessionCacheId]" }
           }
 
           val response = SimpleMessageResponse("End of call report received")
@@ -352,6 +349,20 @@ private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String
     false
   } else {
     true
+  }
+}
+
+private fun startCacheCleaningThread() {
+  thread {
+    while (true) {
+      runCatching {
+        val maxAge = 60.minutes
+        Thread.sleep(maxAge.inWholeMilliseconds)
+        toolCallCache.purgeToolCache(maxAge)
+      }.onFailure { e ->
+        logger.error(e) { "Error clearing cache: ${e.errorMsg}" }
+      }
+    }
   }
 }
 

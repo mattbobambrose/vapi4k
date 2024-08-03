@@ -53,6 +53,8 @@ class FunctionDetails(
   val isAsync get() = function.isUnitReturnType
   val params get() = function.valueParameters
 
+  override fun toString() = fqNameWithParams
+
   fun invokeToolMethod(
     isTool: Boolean,
     args: JsonElement,

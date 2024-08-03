@@ -25,14 +25,15 @@ import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionUtils.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.Utils.isNull
+import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KFunction
+import kotlin.time.Duration
 
 internal class ToolCache {
-  //  @Serializable(with = CacheMapSerializer::class)
   private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
-  var cacheIsActive = false
+  private var lastCacheCleanInstant = Clock.System.now()
 
   val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
     get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
@@ -73,7 +74,21 @@ internal class ToolCache {
 
   private fun clearCache() {
     cacheMap.clear()
-    cacheIsActive = false
+    lastCacheCleanInstant = Clock.System.now()
+  }
+
+  fun purgeToolCache(maxAge: Duration): Int {
+    var count = 0
+    cacheMap.entries.removeIf { (sessionCacheId, funcInfo) ->
+      (funcInfo.age > maxAge).also { isOld ->
+        if (isOld) {
+          count++
+          logger.info { "Purging toolCall cache entry $sessionCacheId: $funcInfo" }
+        }
+      }
+    }
+    logger.info { "Purged toolCall Cache ($count)" }
+    return count
   }
 
   private fun swapKeys(
@@ -87,7 +102,7 @@ internal class ToolCache {
   companion object {
     val toolCallCache = ToolCache()
 
-    fun clearCache() {
+    fun clearToolCache() {
       toolCallCache.clearCache()
     }
 
@@ -98,11 +113,17 @@ internal class ToolCache {
       toolCallCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
     }
 
-    fun cacheAsJson() = CacheInfoDto(toolCallCache.asDtoMap)
+    fun cacheAsJson() = CacheInfoDto(
+      toolCallCache.lastCacheCleanInstant.toString(),
+      toolCallCache.asDtoMap.size,
+      toolCallCache.asDtoMap
+    )
   }
 }
 
 @Serializable
 class CacheInfoDto(
+  val lastPurgeTime: String = "",
+  val toolCallCacheSize: Int = -1,
   val toolCallCache: Map<SessionCacheId, FunctionInfoDto>? = null,
 )

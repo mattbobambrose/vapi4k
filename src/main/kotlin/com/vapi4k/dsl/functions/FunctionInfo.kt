@@ -31,6 +31,8 @@ class FunctionInfo {
   val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
 
   fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
+
+  override fun toString() = "FunctionInfo(age=$age, functions=$functions)"
 }
 
 @Serializable
