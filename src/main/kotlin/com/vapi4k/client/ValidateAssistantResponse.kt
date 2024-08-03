@@ -241,6 +241,9 @@ object ValidateAssistantResponse {
                   const codeElement = document.querySelector('#result-$divid');
                   codeElement.textContent = responseData;
                   Prism.highlightElement(codeElement);
+
+                  const preElement = document.querySelector('#display-$divid');
+                  preElement.style.display = 'block';
                 }
               });
             """
@@ -248,6 +251,8 @@ object ValidateAssistantResponse {
         }
 
         pre {
+          style = "display: none;"
+          id = "display-$divid"
           code(classes = "language-json line-numbers match-braces") {
             id = "result-$divid"
           }
