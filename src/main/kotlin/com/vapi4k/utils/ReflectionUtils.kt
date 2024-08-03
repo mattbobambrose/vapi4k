@@ -32,17 +32,21 @@ internal object ReflectionUtils {
   val KFunction<*>.toolCallAnnotation: ToolCall? get() = annotations.firstOrNull { it is ToolCall } as ToolCall?
   val KFunction<*>.hasToolCallAnnotation get() = toolCallAnnotation.isNotNull()
   val KFunction<*>.isUnitReturnType get() = returnType.asKClass() == Unit::class
-  val KFunction<*>.kParameters: List<Pair<String, KType>>
+  val KFunction<*>.valueParameters: List<Pair<String, KParameter>>
     get() = parameters
       .filter { it.kind == KParameter.Kind.VALUE }
-      .map { it.name.orEmpty() to it.type }
-      .filter { (name, _) -> name.isNotEmpty() }
-      .map { (name, type) -> name to type }
+      .map { it.name.orEmpty() to it }
+  val KFunction<*>.instanceParameter: KParameter?
+    get() = parameters
+      .filter { it.kind == KParameter.Kind.INSTANCE }
+      .firstOrNull()
+
   val KFunction<*>.parameterSignature
     get() =
-      kParameters.joinToString(", ") { (name, type) ->
-        "$name: ${type.asKClass().simpleName}"
+      valueParameters.joinToString(", ") { (name, param) ->
+        "$name: ${param.asKClass().simpleName}"
       }
 
   fun KType.asKClass() = classifier as KClass<*>
+  fun KParameter.asKClass() = type.classifier as KClass<*>
 }

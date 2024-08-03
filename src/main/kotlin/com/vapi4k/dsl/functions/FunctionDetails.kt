@@ -20,14 +20,14 @@ import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
+import com.vapi4k.utils.ReflectionUtils.instanceParameter
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
-import com.vapi4k.utils.ReflectionUtils.kParameters
 import com.vapi4k.utils.ReflectionUtils.parameterSignature
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
+import com.vapi4k.utils.ReflectionUtils.valueParameters
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.findFunction
 import com.vapi4k.utils.booleanValue
-import com.vapi4k.utils.get
 import com.vapi4k.utils.intValue
 import com.vapi4k.utils.stringValue
 import kotlinx.serialization.Serializable
@@ -35,6 +35,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KFunction
+import kotlin.reflect.KType
 
 class FunctionDetails(
   val obj: Any,
@@ -50,7 +51,7 @@ class FunctionDetails(
   val fqNameWithParams get() = "$className.$functionName(${function.parameterSignature})"
   val methodWithParams get() = "$functionName(${function.parameterSignature})"
   val isAsync get() = function.isUnitReturnType
-  val params get() = function.kParameters
+  val params get() = function.valueParameters
 
   fun invokeToolMethod(
     isTool: Boolean,
@@ -89,28 +90,35 @@ class FunctionDetails(
     }
   }
 
+  private fun getArgValue(
+    args: JsonElement,
+    argName: String,
+    argType: KType,
+  ) =
+    when (argType.asKClass()) {
+      String::class -> args.jsonObject.stringValue(argName)
+      Int::class -> args.jsonObject.intValue(argName)
+      Boolean::class -> args.jsonObject.booleanValue(argName)
+      else -> error("Unsupported parameter type: $argType")
+    }
+
   private fun invokeMethod(args: JsonElement): String {
-    // logger.info { "Invoking method $fqName" }
     val function = obj.findFunction(functionName)
-    val isVoid = function.returnType.asKClass() == Unit::class
     val argNames = args.jsonObject.keys
-    val vals = argNames.map { argName -> args[argName].stringValue }
-    logger.info { "Invoking method $fqName with args $args and vals $vals" }
-    val actualVals =
-      function
-        .kParameters
-        .map { (argName, argType) ->
-          when (argType.asKClass()) {
-            String::class -> args.jsonObject.stringValue(argName)
-            Int::class -> args.jsonObject.intValue(argName)
-            Boolean::class -> args.jsonObject.booleanValue(argName)
-            else -> error("Unsupported parameter type: $argType")
-          }
-        }
+    logger.info { "Invoking method $fqName with args $argNames" }
+    val paramMap = function.valueParameters.toMap()
+    val valueMap =
+      argNames
+        .map { argName ->
+          val param = paramMap[argName] ?: error("Parameter $argName not found in method $fqName")
+          param to getArgValue(args, argName, param.type)
+        }.toMap()
 
-    logger.debug { "Actual vals: $actualVals" }
-    val result = function.call(obj, *actualVals.toTypedArray<Any>())
+    logger.info { "valueMap: $valueMap" }
+    val callMap =
+      function.instanceParameter?.let { param -> valueMap.toMutableMap().also { it[param] = obj } } ?: valueMap
+    val result = function.callBy(callMap)
 
-    return if (isVoid) "" else result.toString()
+    return if (function.isUnitReturnType) "" else result?.toString().orEmpty()
   }
 }

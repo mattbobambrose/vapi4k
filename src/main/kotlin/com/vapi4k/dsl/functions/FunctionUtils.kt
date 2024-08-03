@@ -78,7 +78,7 @@ internal object FunctionUtils {
       val params = function.parameters.filter { it.kind == KParameter.Kind.VALUE }
 
       params.forEach { param ->
-        val kclass = param.type.asKClass()
+        val kclass = param.asKClass()
         if (kclass !in allowedParamTypes) {
           val fqName = FunctionDetails(obj, function).fqName
           val simpleName = kclass.simpleName
