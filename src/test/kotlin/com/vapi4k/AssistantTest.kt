@@ -155,6 +155,19 @@ class AssistantTest {
     }
   }
 
+  @Test
+  fun `Missing application{} decls`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(REQUEST_CONTEXT) {
+      }
+    }.also {
+      assertEquals(
+        "assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration",
+        it.message
+      )
+    }
+  }
+
 
   @Test
   fun `test reverse delay order`() {
