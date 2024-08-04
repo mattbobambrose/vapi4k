@@ -185,7 +185,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.processAssistantRequests(callbackChannel: Channel<RequestResponseCallback>) {
+private suspend fun KtorCallContext.processAssistantRequests(callbackChannel: Channel<RequestResponseCallback>) {
   if (IS_PRODUCTION.toBoolean()) {
     handleServerPathPost(callbackChannel)
   } else {
@@ -198,7 +198,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.processAssistantReque
   }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.processValidateRequest(config: Vapi4kConfig) {
+private suspend fun KtorCallContext.processValidateRequest(config: Vapi4kConfig) {
   val secret = call.request.queryParameters["secret"].orEmpty()
   val serverPath = config.configProperties.serverUrlPath
   val resp = validateAssistantRequestResponse(secret, serverPath)

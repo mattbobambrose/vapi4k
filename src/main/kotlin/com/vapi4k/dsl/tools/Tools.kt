@@ -40,6 +40,41 @@ interface Tools {
     endpointName: String = "",
     block: Tool.() -> Unit = {},
   )
+
+  fun dtmf(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String = "",
+    block: Tool.() -> Unit = {},
+  )
+
+  fun endCall(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String = "",
+    block: Tool.() -> Unit = {},
+  )
+
+  fun voiceMail(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String = "",
+    block: Tool.() -> Unit = {},
+  )
+
+  fun ghl(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String = "",
+    block: ToolWithMetaData.() -> Unit = {},
+  )
+
+  fun make(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String = "",
+    block: ToolWithMetaData.() -> Unit = {},
+  )
 }
 
 data class ToolsImpl internal constructor(
@@ -51,49 +86,135 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint =
-      with(AssistantImpl.config) {
-        if (endpointName.isEmpty())
-          getEmptyEndpoint() ?: defaultToolCallEndpoint
-        else
-          getEndpoint(endpointName)
-      }
+    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    processFunctions(ToolType.FUNCTION, functions, obj, endpoint, block)
+  }
+
+  override fun dtmf(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String,
+    block: Tool.() -> Unit,
+  ) {
+    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    processFunctions(ToolType.DTMF, functions, obj, endpoint, block)
+  }
+
+  override fun endCall(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String,
+    block: Tool.() -> Unit,
+  ) {
+    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    processFunctions(ToolType.END_CALL, functions, obj, endpoint, block)
+  }
+
+  override fun voiceMail(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String,
+    block: Tool.() -> Unit,
+  ) {
+    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    processFunctions(ToolType.VOICEMAIL, functions, obj, endpoint, block)
+  }
+
+  override fun ghl(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String,
+    block: ToolWithMetaData.() -> Unit,
+  ) {
+    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    processFunctionsWithMetaData(ToolType.GHL, functions, obj, endpoint, block)
+  }
+
+  override fun make(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String,
+    block: ToolWithMetaData.() -> Unit,
+  ) {
+    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    processFunctionsWithMetaData(ToolType.MAKE, functions, obj, endpoint, block)
+  }
+
+  private fun processFunctions(
+    toolType: ToolType,
+    functions: Array<out KFunction<*>>,
+    obj: Any,
+    endpoint: Endpoint,
+    block: Tool.() -> Unit,
+  ) {
     if (functions.isEmpty()) {
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(true, function)
-      addTool(obj, function, endpoint, block)
+      addTool(toolType, obj, function, endpoint) {
+        ToolImpl(it).apply(block)
+      }
     } else {
       functions.forEach { function ->
         verifyIsToolCall(true, function)
         verifyIsValidReturnType(true, function)
-        addTool(obj, function, endpoint, block)
+        addTool(toolType, obj, function, endpoint) {
+          ToolImpl(it).apply(block)
+        }
       }
     }
   }
 
+  private fun processFunctionsWithMetaData(
+    toolType: ToolType,
+    functions: Array<out KFunction<*>>,
+    obj: Any,
+    endpoint: Endpoint,
+    block: ToolWithMetaData.() -> Unit,
+  ) {
+    if (functions.isEmpty()) {
+      verifyObjectHasOnlyOneToolCall(obj)
+      val function = obj.toolCallFunction
+      verifyIsValidReturnType(true, function)
+      addTool(toolType, obj, function, endpoint) {
+        ToolWithMetaDataImpl(it).apply(block)
+      }
+    } else {
+      functions.forEach { function ->
+        verifyIsToolCall(true, function)
+        verifyIsValidReturnType(true, function)
+        addTool(toolType, obj, function, endpoint) {
+          ToolWithMetaDataImpl(it).apply(block)
+        }
+      }
+    }
+  }
+
+  private fun getSessionCacheId() =
+    if (model.sessionCacheId.isNotSpecified())
+      model.sessionCacheId
+    else
+      model.messageCallId.toSessionCacheId()
+
   private fun addTool(
+    toolType: ToolType,
     obj: Any,
     function: KFunction<*>,
     endpoint: Endpoint,
-    block: Tool.() -> Unit,
+    implInitBlock: (ToolDto) -> Unit,
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
-      populateFunctionDto(model, obj, function, toolDto.function)
-      val sessionCacheId =
-        if (model.sessionCacheId.isNotSpecified())
-          model.sessionCacheId
-        else
-          model.messageCallId.toSessionCacheId()
-      toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
+      populateFunctionDto(toolType, model, obj, function, toolDto.function)
+      val sessionCacheId = getSessionCacheId()
+      toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, toolType, obj, function)
 
       with(toolDto) {
-        type = ToolType.FUNCTION
+        type = toolType
         async = function.isUnitReturnType
       }
 
       // Apply block to tool
-      ToolImpl(toolDto).apply(block)
+      implInitBlock(toolDto)
 
       with(toolDto.server) {
         url = endpoint.serverUrl

@@ -42,7 +42,21 @@ interface Tool {
   )
 }
 
-class ToolImpl internal constructor(
+interface ToolWithMetaDataProperties {
+  val metadata: MutableMap<String, String>
+}
+
+interface ToolWithMetaData : Tool {
+  val metadata: MutableMap<String, String>
+}
+
+class ToolWithMetaDataImpl internal constructor(
+  val dto: ToolDto,
+) : ToolImpl(dto),
+  ToolWithMetaDataProperties by dto,
+  ToolWithMetaData
+
+open class ToolImpl internal constructor(
   internal val toolDto: ToolDto,
 ) : Tool {
   private val requestStartChecker = DuplicateChecker()

@@ -23,6 +23,7 @@ import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionUtils.ToolCallInfo
+import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.Utils.isNull
 import kotlinx.datetime.Clock
@@ -44,6 +45,7 @@ internal class ToolCache {
   fun addToCache(
     sessionCacheId: SessionCacheId,
     assistantCacheId: AssistantCacheId,
+    toolType: ToolType,
     obj: Any,
     function: KFunction<*>,
   ) {
@@ -53,7 +55,7 @@ internal class ToolCache {
     val funcDetails = funcInfo.functions[toolFuncName]
 
     if (funcDetails.isNull()) {
-      val newFuncDetails = FunctionDetails(obj, function)
+      val newFuncDetails = FunctionDetails(toolType, obj, function)
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {

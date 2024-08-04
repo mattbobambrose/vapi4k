@@ -55,13 +55,6 @@ class Vapi4kConfig internal constructor() {
       serverUrlSecret = this@Vapi4kConfig.configProperties.serverUrlSecret
     }
 
-  internal fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }
-
-  internal fun getEndpoint(endpointName: String) =
-    toolCallEndpoints.firstOrNull {
-      it.name == endpointName
-    } ?: error("Endpoint not found in vapi4k configuration: $endpointName")
-
   fun configure(block: Vapi4kConfigProperties.() -> Unit) {
     configProperties.apply(block)
   }
@@ -104,4 +97,14 @@ class Vapi4kConfig internal constructor() {
     perResponses += requestType to block
     requestTypes.forEach { perResponses += it to block }
   }
+
+  private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }
+
+  internal fun getEndpoint(endpointName: String) =
+    if (endpointName.isEmpty())
+      getEmptyEndpoint() ?: defaultToolCallEndpoint
+    else
+      toolCallEndpoints.firstOrNull {
+        it.name == endpointName
+      } ?: error("Endpoint not found in vapi4k configuration: $endpointName")
 }

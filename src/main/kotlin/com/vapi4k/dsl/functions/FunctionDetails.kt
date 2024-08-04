@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.functions
 
+import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
@@ -38,6 +39,7 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 
 class FunctionDetails(
+  val toolType: ToolType,
   val obj: Any,
   val function: KFunction<*>,
 ) {

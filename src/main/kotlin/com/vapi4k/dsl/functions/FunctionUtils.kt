@@ -19,6 +19,7 @@ package com.vapi4k.dsl.functions
 import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
+import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -64,6 +65,7 @@ internal object FunctionUtils {
   }
 
   fun populateFunctionDto(
+    toolType: ToolType,
     model: AbstractModelProperties,
     obj: Any,
     function: KFunction<*>,
@@ -72,7 +74,7 @@ internal object FunctionUtils {
     ToolCallInfo(model.assistantCacheId, function).also { toolCallInfo ->
       functionDto.name = toolCallInfo.llmName
       functionDto.description = toolCallInfo.llmDescription
-      // TODO: This might be always object
+      // TODO: This might always be object
       functionDto.parameters.type = "object" // llmReturnType
 
       val params = function.parameters.filter { it.kind == KParameter.Kind.VALUE }
@@ -80,7 +82,7 @@ internal object FunctionUtils {
       params.forEach { param ->
         val kclass = param.asKClass()
         if (kclass !in allowedParamTypes) {
-          val fqName = FunctionDetails(obj, function).fqName
+          val fqName = FunctionDetails(toolType, obj, function).fqName
           val simpleName = kclass.simpleName
           error(
             "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, and Boolean",
