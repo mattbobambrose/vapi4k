@@ -204,6 +204,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       val serverPath = config.configProperties.serverUrlPath
       logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
+      get(serverPath) {
+        call.respondText("$serverPath requires a post request", status = HttpStatusCode.MethodNotAllowed)
+      }
       post(serverPath) {
         if (IS_PRODUCTION.toBoolean()) {
           handleServerPathPost(callbackChannel)
@@ -220,6 +223,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       config.toolCallEndpoints.forEach { endpoint ->
         val toolCallPath = endpoint.path
         logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
+        get(toolCallPath) {
+          call.respondText("$toolCallPath requires a post request", status = HttpStatusCode.MethodNotAllowed)
+        }
         post(toolCallPath) {
           handleToolCallPathPost(endpoint, callbackChannel)
         }
