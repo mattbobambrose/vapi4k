@@ -19,13 +19,13 @@ package simpleDemo
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.model.enums.OpenAIModelType
-import kotlinx.serialization.json.JsonElement
+import com.vapi4k.dsl.vapi4k.RequestContext
 import simpleDemo.Coasts.EAST
 import simpleDemo.Coasts.WEST
 
 class AssistantWithOverrides {
-  fun getAssistantWithOverride(request: JsonElement) =
-    assistant(request) {
+  fun getAssistantWithOverride(requestContext: RequestContext) =
+    assistant(requestContext) {
       name = "assistant1"
       firstMessage = "Hi there! I'm assistant1"
 

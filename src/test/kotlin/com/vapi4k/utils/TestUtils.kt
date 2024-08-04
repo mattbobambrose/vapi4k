@@ -19,6 +19,7 @@ package com.vapi4k.utils
 import com.vapi4k.ServerTest.Companion.configPost
 import com.vapi4k.common.Endpoints.DEFAULT_SERVER_PATH
 import com.vapi4k.dsl.tools.enums.ToolMessageType
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.server.Vapi4k
@@ -57,23 +58,25 @@ else
 
 fun withTestApplication(
   fileName: String,
-  block: (JsonElement) -> AssistantRequestResponse,
+  block: (RequestContext) -> AssistantRequestResponse,
 ): Pair<HttpResponse, JsonElement> {
   var response: HttpResponse? = null
   var je: JsonElement? = null
   testApplication {
     application {
       install(Vapi4k) {
-        onAssistantRequest { request ->
-          block(request)
-        }
+        vapi4kApplication {
+          onAssistantRequest { request ->
+            block(request)
+          }
 
-        toolCallEndpoints {
-          // Provide a default endpoint
-          endpoint {
-            serverUrl = "https://test/toolCall"
-            serverUrlSecret = "456"
-            timeoutSeconds = 20
+          toolCallEndpoints {
+            // Provide a default endpoint
+            endpoint {
+              serverUrl = "https://test/toolCall"
+              serverUrlSecret = "456"
+              timeoutSeconds = 20
+            }
           }
         }
       }
@@ -98,24 +101,26 @@ fun withTestApplication(
   fileNames: List<String>,
   getArg: String = "",
   cacheRemovalEnabled: Boolean = true,
-  block: (JsonElement) -> AssistantRequestResponse,
+  block: (RequestContext) -> AssistantRequestResponse,
 ): List<Pair<HttpResponse, JsonElement>> {
   val responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
   testApplication {
     application {
       install(Vapi4k) {
-        configure {
+        vapi4kApplication {
           eocrCacheRemovalEnabled = cacheRemovalEnabled
-        }
-        onAssistantRequest { request ->
-          block(request)
-        }
-        toolCallEndpoints {
-          // Provide a default endpoint
-          endpoint {
-            serverUrl = "https://test/toolCall"
-            serverUrlSecret = "456"
-            timeoutSeconds = 20
+
+          onAssistantRequest { request ->
+            block(request)
+          }
+
+          toolCallEndpoints {
+            // Provide a default endpoint
+            endpoint {
+              serverUrl = "https://test/toolCall"
+              serverUrlSecret = "456"
+              timeoutSeconds = 20
+            }
           }
         }
       }

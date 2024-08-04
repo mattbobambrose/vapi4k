@@ -16,21 +16,20 @@
 
 package com.vapi4k
 
-import com.vapi4k.AssistantTest.Companion.ASSISTANT_REQUEST
+import com.vapi4k.AssistantTest.Companion.REQUEST_CONTEXT
 import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.AssistantDsl.sipDestination
 import com.vapi4k.dsl.model.enums.AnthropicModelType
 import com.vapi4k.dsl.model.enums.DeepgramModelType
-import com.vapi4k.utils.toJsonElement
 import com.vapi4k.utils.toJsonString
 import org.junit.Test
 
 class ResponseTest {
   @Test
   fun testGetTwoSquadIds() {
-    val request = ASSISTANT_REQUEST.toJsonElement()
+    val requestContext = REQUEST_CONTEXT
     val assistant =
-      assistant(request) {
+      assistant(requestContext) {
         anthropicModel {
           modelType = AnthropicModelType.CLAUDE_3_OPUS
 //          maxTokens = 99
@@ -51,7 +50,7 @@ class ResponseTest {
         }
       }
 
-    val dest = sipDestination(request) {
+    val dest = sipDestination(requestContext) {
       sipUri = "sip:wedwedwed"
       message = "Hello"
     }

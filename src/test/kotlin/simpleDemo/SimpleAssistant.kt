@@ -38,6 +38,7 @@ import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.toolservice.ToolCallService
+import com.vapi4k.dsl.vapi4k.RequestContext
 import kotlinx.serialization.json.JsonElement
 
 /*
@@ -57,8 +58,8 @@ import kotlinx.serialization.json.JsonElement
  */
 
 object SimpleAssistant {
-  fun simpleAssistantRequest(request: JsonElement) =
-    assistant(request) {
+  fun simpleAssistantRequest(requestContext: RequestContext) =
+    assistant(requestContext) {
       firstMessage = "Hi there!"
 
       openAIModel {

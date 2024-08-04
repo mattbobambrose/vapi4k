@@ -16,7 +16,7 @@
 
 package com.vapi4k
 
-import com.vapi4k.AssistantTest.Companion.ASSISTANT_REQUEST
+import com.vapi4k.AssistantTest.Companion.REQUEST_CONTEXT
 import com.vapi4k.dsl.assistant.AssistantDsl.squad
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
@@ -50,8 +50,7 @@ import kotlin.test.assertEquals
 class VoiceTest {
   @Test
   fun `playHt voice basic test`() {
-    val request = ASSISTANT_REQUEST.toJsonElement()
-    val squad = squad(request) {
+    val squad = squad(REQUEST_CONTEXT) {
       members {
         member {
           assistant {
@@ -84,7 +83,7 @@ class VoiceTest {
   @Test
   fun `playHt voice two or no voiceId error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(ASSISTANT_REQUEST.toJsonElement()) {
+      squad(REQUEST_CONTEXT) {
         members {
           member {
             assistant {
@@ -109,7 +108,7 @@ class VoiceTest {
     }
 
     assertThrows(IllegalStateException::class.java) {
-      squad(ASSISTANT_REQUEST.toJsonElement()) {
+      squad(REQUEST_CONTEXT) {
         members {
           member {
             assistant {
@@ -135,7 +134,7 @@ class VoiceTest {
   @Test
   fun `cartesia voice two or no models error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(ASSISTANT_REQUEST.toJsonElement()) {
+      squad(REQUEST_CONTEXT) {
         members {
           member {
             assistant {
@@ -160,7 +159,7 @@ class VoiceTest {
     }
 
     assertThrows(IllegalStateException::class.java) {
-      squad(ASSISTANT_REQUEST.toJsonElement()) {
+      squad(REQUEST_CONTEXT) {
         members {
           member {
             assistant {
@@ -186,7 +185,7 @@ class VoiceTest {
   @Test
   fun `cartesia voice two languages error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(ASSISTANT_REQUEST.toJsonElement()) {
+      squad(REQUEST_CONTEXT) {
         members {
           member {
             assistant {
@@ -215,7 +214,7 @@ class VoiceTest {
   @Test
   fun `cartesia voice double model error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(ASSISTANT_REQUEST.toJsonElement()) {
+      squad(REQUEST_CONTEXT) {
         members {
           member {
             assistant {
@@ -247,7 +246,7 @@ class VoiceTest {
   @Test
   fun `cartesia voice double voice error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(ASSISTANT_REQUEST.toJsonElement()) {
+      squad(REQUEST_CONTEXT) {
         members {
           member {
             assistant {
@@ -278,7 +277,7 @@ class VoiceTest {
 
   @Test
   fun `double values test`() {
-    val squad = squad(ASSISTANT_REQUEST.toJsonElement()) {
+    val squad = squad(REQUEST_CONTEXT) {
       members {
         member {
           assistant {

@@ -37,66 +37,65 @@ fun Application.module() {
 
   install(Vapi4k) {
     val baseUrl = "https://eocare-app-fiqm5.ondigitalocean.app"
-
-    configure {
+    vapi4kApplication {
       serverUrl = "$baseUrl/inboundRequest"
       serverUrlSecret = "12345"
-    }
 
-    toolCallEndpoints {
-      endpoint {
-        name = "endpoint1"
-        serverUrl = "$baseUrl/toolCall"
-        serverUrlSecret = "456"
-        timeoutSeconds = 20
+      toolCallEndpoints {
+        endpoint {
+          name = "endpoint1"
+          serverUrl = "$baseUrl/toolCall"
+          serverUrlSecret = "456"
+          timeoutSeconds = 20
+        }
+
+        endpoint {
+          name = "endpoint2"
+          serverUrl = "$baseUrl/TC2"
+          serverUrlSecret = "456"
+          timeoutSeconds = 20
+        }
       }
 
-      endpoint {
-        name = "endpoint2"
-        serverUrl = "$baseUrl/TC2"
-        serverUrlSecret = "456"
-        timeoutSeconds = 20
+      onAssistantRequest { request ->
+        myAssistantRequest(request)
       }
-    }
 
-    onAssistantRequest { request ->
-      myAssistantRequest(request)
-    }
+      onAllRequests { request ->
+        logger.info { "All requests: ${request.requestType}" }
+        insertRequest(request)
+        logObject(request)
+        printObject(request)
+      }
 
-    onAllRequests { request ->
-      logger.info { "All requests: ${request.requestType}" }
-      insertRequest(request)
-      logObject(request)
-      printObject(request)
-    }
+      onRequest(TOOL_CALL) { request ->
+        logger.info { "Tool call: $request" }
+      }
 
-    onRequest(TOOL_CALL) { request ->
-      logger.info { "Tool call: $request" }
-    }
+      onRequest(FUNCTION_CALL) { request ->
+        logger.info { "Function call: $request" }
+      }
 
-    onRequest(FUNCTION_CALL) { request ->
-      logger.info { "Function call: $request" }
-    }
+      onRequest(STATUS_UPDATE) { request ->
+        logger.info { "Status update: STATUS_UPDATE" }
+      }
 
-    onRequest(STATUS_UPDATE) { request ->
-      logger.info { "Status update: STATUS_UPDATE" }
-    }
-
-    onRequest(STATUS_UPDATE) { request ->
+      onRequest(STATUS_UPDATE) { request ->
 //      if (request.hasStatusUpdateError) {
 //        logger.info { "Status update error: ${request.statusUpdateError}" }
 //      }
-    }
+      }
 
-    onAllResponses { requestType, response, elapsedTime ->
+      onAllResponses { requestType, response, elapsedTime ->
 //      logger.info { "All responses: $response" }
 //      logObject(response)
 //      printObject(response)
-      insertResponse(requestType, response, elapsedTime)
-    }
+        insertResponse(requestType, response, elapsedTime)
+      }
 
-    onResponse(ASSISTANT_REQUEST) { requestType, response, elapsed ->
+      onResponse(ASSISTANT_REQUEST) { requestType, response, elapsed ->
 //      logger.info { "Response: $response" }
+      }
     }
   }
 }

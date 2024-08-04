@@ -24,14 +24,13 @@ import com.vapi4k.dsl.assistant.AssistantDsl.squad
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.model.enums.OpenAIModelType
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.responses.AssistantRequestResponse
-import com.vapi4k.utils.JsonElementUtils.phoneNumber
-import kotlinx.serialization.json.JsonElement
 
-fun myAssistantRequest(request: JsonElement): AssistantRequestResponse =
+fun myAssistantRequest(requestContext: RequestContext): AssistantRequestResponse =
   (
-    when (request.phoneNumber) {
-      "+14156721042" -> assistantId(request) {
+    when (requestContext.phoneNumber) {
+      "+14156721042" -> assistantId(requestContext) {
         id = "44792a91-d7f9-4915-9445-0991aeef97bc"
 
         assistantOverrides {
@@ -43,12 +42,12 @@ fun myAssistantRequest(request: JsonElement): AssistantRequestResponse =
         }
       }
 
-      else -> getAssistant(request, "")
+      else -> getAssistant(requestContext, "")
     }
     )
 
-fun getSquad(request: JsonElement) =
-  squad(request) {
+fun getSquad(requestContext: RequestContext) =
+  squad(requestContext) {
     name = "Squad Name"
     members {
       member {
@@ -74,9 +73,9 @@ fun getSquad(request: JsonElement) =
   }
 
 fun getAssistant(
-  request: JsonElement,
+  requestContext: RequestContext,
   callerName: String = "Bill",
-) = assistant(request) {
+) = assistant(requestContext) {
   assistantOverrides {
     firstMessage = "This is the first message override"
   }
