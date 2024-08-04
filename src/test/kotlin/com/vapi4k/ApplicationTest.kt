@@ -48,5 +48,6 @@ class ApplicationTest {
         }
       }
     assertEquals(DEFAULT_SERVER_PATH.value.dropLeading("/"), application.serverPath)
+    assertEquals("", application.serverSecret)
   }
 }

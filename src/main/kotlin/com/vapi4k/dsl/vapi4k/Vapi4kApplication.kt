@@ -33,10 +33,10 @@ class Vapi4kApplication {
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
+  internal var eocrCacheRemovalEnabled = true
 
   var serverPath = defaultServerPath
   var serverSecret = ""
-  var eocrCacheRemovalEnabled = true
 
   fun onAssistantRequest(block: suspend (requestContext: RequestContext) -> AssistantRequestResponse) {
     if (assistantRequest.isNull())
