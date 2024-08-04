@@ -42,11 +42,12 @@ class Vapi4kConfig internal constructor() {
   internal val globalAllResponses = mutableListOf<ResponseArgs>()
   internal val globalPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  fun vapi4kApplication(block: Vapi4kApplication.() -> Unit) {
+  fun vapi4kApplication(block: Vapi4kApplication.() -> Unit): Vapi4kApplication {
     val application = Vapi4kApplication().apply(block)
     if (applications.any { it.serverPath == application.serverPath })
       error("vapi4kApplication{} with serverPath=${application.serverPath} already exists")
     applications += application
+    return application
   }
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {

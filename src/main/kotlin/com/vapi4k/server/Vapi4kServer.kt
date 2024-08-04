@@ -20,8 +20,10 @@ import com.vapi4k.BuildConfig
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
+import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
+import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.EnvVar.Companion.isProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
@@ -165,8 +167,18 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           call.respondRedirect(CACHES_PATH)
         }
 
-//        get(VALIDATE_PATH) { processValidateRequest(config) }
-//        get(INVOKE_TOOL_PATH) { processToolInvokeRequest(config) }
+        get(VALIDATE_PATH) {
+          config.applications.forEach { application ->
+            val secret = call.request.queryParameters["secret"].orEmpty()
+            val resp = validateAssistantRequestResponse(secret, application.serverPath)
+            call.respondText(resp, ContentType.Text.Html)
+          }
+          //processValidateRequest(config)
+        }
+
+        get(INVOKE_TOOL_PATH) {
+          // processToolInvokeRequest(config)
+        }
       }
 
       config.applications.forEach { application ->

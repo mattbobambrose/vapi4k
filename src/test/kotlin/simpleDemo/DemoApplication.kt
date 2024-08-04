@@ -32,7 +32,7 @@ const val BASE_URL = "https://app.ondigitalocean.app"
 fun Application.module2() {
   install(Vapi4k) {
     vapi4kApplication {
-      serverPath = "$BASE_URL/vapi4k"
+      serverPath = "/vapi4k"
       serverSecret = "12345"
 
       onAssistantRequest { requestContext ->

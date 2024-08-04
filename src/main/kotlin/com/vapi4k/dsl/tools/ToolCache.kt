@@ -22,7 +22,7 @@ import com.vapi4k.dsl.functions.FunctionDetails
 import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
-import com.vapi4k.dsl.functions.FunctionUtils.ToolCallInfo
+import com.vapi4k.dsl.functions.ToolCallInfo
 import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.Utils.isNull
