@@ -16,37 +16,42 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.common.Endpoints.DEFAULT_SERVER_PATH
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
-import io.ktor.server.config.ApplicationConfig
+import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.utils.Utils.ensureStartsWith
+import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.json.JsonElement
+import java.net.URI
 import kotlin.time.Duration
 
-typealias RequestArgs = suspend (JsonElement) -> Unit
-typealias ResponseArgs = suspend (requestType: ServerRequestType, JsonElement, Duration) -> Unit
+class Vapi4kApplication {
+  internal val toolCallEndpoints = mutableListOf<Endpoint>()
+  internal val serverUrlPath
+    get() = (if (serverUrl.isEmpty()) DEFAULT_SERVER_PATH else URI(serverUrl).toURL().path).ensureStartsWith("/")
 
-@DslMarker
-@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
-annotation class Vapi4KDslMarker
+  internal val serverUrlPathSegments
+    get() = serverUrlPath.split("/").filter { it.isNotEmpty() }
 
-@Vapi4KDslMarker
-class Vapi4kConfig internal constructor() {
-  init {
-    AssistantImpl.config = this
-  }
-
-  internal lateinit var applicationConfig: ApplicationConfig
-
-  internal val configProperties: Vapi4kConfigProperties = Vapi4kConfigProperties()
-  internal val applications = mutableListOf<Vapi4kApplication>()
-
+  internal var assistantRequest: (suspend (request: JsonElement) -> AssistantRequestResponse)? = null
   internal var allRequests = mutableListOf<(RequestArgs)>()
   internal val perRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val allResponses = mutableListOf<ResponseArgs>()
   internal val perResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  fun application(block: Vapi4kApplication.() -> Unit) {
-    applications += Vapi4kApplication().apply(block)
+  var serverUrl = ""
+  var serverUrlSecret = ""
+  var eocrCacheRemovalEnabled = true
+
+  fun onAssistantRequest(block: suspend (request: JsonElement) -> AssistantRequestResponse) {
+    if (assistantRequest.isNull())
+      assistantRequest = block
+    else
+      error("onAssistantRequest{} can be called only once")
+  }
+
+  fun toolCallEndpoints(block: ToolCallEndpoints.() -> Unit) {
+    ToolCallEndpoints(this).apply(block)
   }
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
@@ -76,4 +81,23 @@ class Vapi4kConfig internal constructor() {
     perResponses += requestType to block
     requestTypes.forEach { perResponses += it to block }
   }
+
+  private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }
+
+  internal val defaultToolCallEndpoint
+    get() = Endpoint().apply {
+      this.serverUrl = this@Vapi4kApplication.serverUrl.ifEmpty {
+        error("No default tool endpoint has been specified in the Vapi4k configuration")
+      }
+      this.serverUrlSecret = this@Vapi4kApplication.serverUrlSecret
+    }
+
+  internal fun getEndpoint(endpointName: String) =
+    if (endpointName.isEmpty())
+      getEmptyEndpoint() ?: defaultToolCallEndpoint
+    else
+      toolCallEndpoints.firstOrNull {
+        it.name == endpointName
+      } ?: error("Endpoint not found in vapi4k configuration: $endpointName")
+
 }

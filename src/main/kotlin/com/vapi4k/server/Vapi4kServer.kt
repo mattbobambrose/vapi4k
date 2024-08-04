@@ -36,6 +36,7 @@ import com.vapi4k.dsl.tools.ToolCache.Companion.cacheAsJson
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Endpoint
+import com.vapi4k.dsl.vapi4k.Vapi4kApplication
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.dsl.vapi4k.enums.RequestResponseType
 import com.vapi4k.dsl.vapi4k.enums.RequestResponseType.REQUEST
@@ -185,12 +186,15 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 }
 
-private suspend fun KtorCallContext.processAssistantRequests(callbackChannel: Channel<RequestResponseCallback>) {
+private suspend fun KtorCallContext.processAssistantRequests(
+  application: Vapi4kApplication,
+  callbackChannel: Channel<RequestResponseCallback>
+) {
   if (IS_PRODUCTION.toBoolean()) {
-    handleServerPathPost(callbackChannel)
+    handleServerPathPost(application, callbackChannel)
   } else {
     runCatching {
-      handleServerPathPost(callbackChannel)
+      handleServerPathPost(application, callbackChannel)
     }.onFailure { e ->
       logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
       call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -198,14 +202,14 @@ private suspend fun KtorCallContext.processAssistantRequests(callbackChannel: Ch
   }
 }
 
-private suspend fun KtorCallContext.processValidateRequest(config: Vapi4kConfig) {
+private suspend fun KtorCallContext.processValidateRequest(application: Vapi4kApplication) {
   val secret = call.request.queryParameters["secret"].orEmpty()
-  val serverPath = config.configProperties.serverUrlPath
+  val serverPath = application.serverUrlPath
   val resp = validateAssistantRequestResponse(secret, serverPath)
   call.respondText(resp, ContentType.Text.Html)
 }
 
-private suspend fun KtorCallContext.processToolInvokeRequest(config: Vapi4kConfig) {
+private suspend fun KtorCallContext.processToolInvokeRequest(application: Vapi4kApplication) {
   val params = call.request.queryParameters
   runCatching {
     val toolRequest = getToolRequest(params)
@@ -213,10 +217,10 @@ private suspend fun KtorCallContext.processToolInvokeRequest(config: Vapi4kConfi
       url {
         host = "localhost"
         port = 8080
-        pathSegments = config.configProperties.serverUrlPathSegments
+        pathSegments = application.serverUrlPathSegments
       },
     ) {
-      headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
+      headers.append("x-vapi-secret", application.serverUrlSecret)
       setBody(toolRequest.toJsonString())
     }
   }.onSuccess { response ->
@@ -258,10 +262,11 @@ private fun getToolRequest(params: Parameters): JsonObject {
 }
 
 private suspend fun KtorCallContext.handleServerPathPost(
+  application: Vapi4kApplication,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
   val config = AssistantImpl.config
-  if (isValidSecret(config.configProperties.serverUrlSecret)) {
+  if (isValidSecret(application.serverUrlSecret)) {
     val json = call.receive<String>()
     val request = json.toJsonElement()
     val requestType = request.requestType
@@ -289,7 +294,7 @@ private suspend fun KtorCallContext.handleServerPathPost(
         }
 
         END_OF_CALL_REPORT -> {
-          if (config.configProperties.eocrCacheRemovalEnabled) {
+          if (application.eocrCacheRemovalEnabled) {
             val sessionCacheId = request.sessionCacheId
 
             toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->

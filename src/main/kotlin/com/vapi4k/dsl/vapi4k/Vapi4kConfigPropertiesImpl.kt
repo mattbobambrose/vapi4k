@@ -16,25 +16,5 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.common.Endpoints.DEFAULT_SERVER_PATH
-import com.vapi4k.utils.Utils.ensureStartsWith
-import java.net.URI
-
 @Vapi4KDslMarker
-interface Vapi4kConfigProperties {
-  var serverUrl: String
-  var serverUrlSecret: String
-  var eocrCacheRemovalEnabled: Boolean
-}
-
-class Vapi4kConfigPropertiesImpl internal constructor() : Vapi4kConfigProperties {
-  internal val serverUrlPath
-    get() = (if (serverUrl.isEmpty()) DEFAULT_SERVER_PATH else URI(serverUrl).toURL().path).ensureStartsWith("/")
-
-  internal val serverUrlPathSegments
-    get() = serverUrlPath.split("/").filter { it.isNotEmpty() }
-
-  override var serverUrl = ""
-  override var serverUrlSecret = ""
-  override var eocrCacheRemovalEnabled = true
-}
+class Vapi4kConfigProperties internal constructor()
