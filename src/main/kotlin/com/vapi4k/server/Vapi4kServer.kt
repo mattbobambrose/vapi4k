@@ -23,8 +23,9 @@ import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
+import com.vapi4k.common.EnvVar.Companion.isProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
-import com.vapi4k.common.EnvVar.IS_PRODUCTION
+import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
 import com.vapi4k.common.EnvVar.TOOL_CACHE_CLEAN_PAUSE_MINS
 import com.vapi4k.common.EnvVar.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.common.Version
@@ -56,6 +57,7 @@ import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
+import com.vapi4k.utils.Utils.dropLeading
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.getBanner
 import com.vapi4k.utils.Utils.lambda
@@ -88,7 +90,6 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import io.ktor.server.util.url
 import io.ktor.util.pipeline.PipelineContext
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
@@ -155,7 +156,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
       }
 
-      if (!IS_PRODUCTION.toBoolean()) {
+      if (!isProduction) {
         get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
         get(CACHES_PATH) { call.respond(cacheAsJson().toJsonString()) }
 
@@ -169,7 +170,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       }
 
       config.applications.forEach { application ->
-        val serverPath = application.serverUrlPath
+        val serverPath = application.serverPath
         logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
         get(serverPath) { call.respondText("$serverPath requires a post request", status = MethodNotAllowed) }
         post(serverPath) { processAssistantRequests(application, callbackChannel) }
@@ -191,7 +192,7 @@ private suspend fun KtorCallContext.processAssistantRequests(
   application: Vapi4kApplication,
   callbackChannel: Channel<RequestResponseCallback>,
 ) {
-  if (IS_PRODUCTION.toBoolean()) {
+  if (isProduction) {
     handleServerPathPost(application, callbackChannel)
   } else {
     runCatching {
@@ -205,8 +206,7 @@ private suspend fun KtorCallContext.processAssistantRequests(
 
 private suspend fun KtorCallContext.processValidateRequest(application: Vapi4kApplication) {
   val secret = call.request.queryParameters["secret"].orEmpty()
-  val serverPath = application.serverUrlPath
-  val resp = validateAssistantRequestResponse(secret, serverPath)
+  val resp = validateAssistantRequestResponse(secret, application.serverPath)
   call.respondText(resp, ContentType.Text.Html)
 }
 
@@ -214,14 +214,8 @@ private suspend fun KtorCallContext.processToolInvokeRequest(application: Vapi4k
   val params = call.request.queryParameters
   runCatching {
     val toolRequest = getToolRequest(params)
-    httpClient.post(
-      url {
-        host = "localhost"
-        port = 8080
-        pathSegments = application.serverUrlPathSegments
-      },
-    ) {
-      headers.append("x-vapi-secret", application.serverUrlSecret)
+    httpClient.post("$serverBaseUrl/${application.serverPath.dropLeading("/")}") {
+      headers.append("x-vapi-secret", application.serverSecret)
       setBody(toolRequest.toJsonString())
     }
   }.onSuccess { response ->
@@ -267,7 +261,7 @@ private suspend fun KtorCallContext.handleServerPathPost(
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
   val config = AssistantImpl.config
-  if (isValidSecret(application.serverUrlSecret)) {
+  if (isValidSecret(application.serverSecret)) {
     val json = call.receive<String>()
     val request = json.toJsonElement()
     val requestType = request.requestType
@@ -325,7 +319,7 @@ private suspend fun KtorCallContext.handleToolCallPathPost(
   endpoint: Endpoint,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
-  if (isValidSecret(endpoint.serverUrlSecret)) {
+  if (isValidSecret(endpoint.serverSecret)) {
     val json = call.receive<String>()
     val request = json.toJsonElement()
     val requestType = request.requestType

@@ -17,6 +17,8 @@
 package com.vapi4k.common
 
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.Utils.dropEnding
+import com.vapi4k.utils.Utils.dropLeading
 import com.vapi4k.utils.Utils.isNull
 import com.vapi4k.utils.Utils.obfuscate
 
@@ -25,6 +27,11 @@ enum class EnvVar(
   private val maskFunc: ((str: String) -> String)? = null,
   private val width: Int = 10,
 ) {
+  // Server details
+  SERVER_BASE_URL({ SERVER_BASE_URL.getEnv("http://localhost:8080") }),
+  DEFAULT_SERVER_PATH({ DEFAULT_SERVER_PATH.getEnv("/vapi4k") }),
+  IS_PRODUCTION({ IS_PRODUCTION.getEnv(false) }),
+
   // Database details
   DBMS_DRIVER_CLASSNAME({ DBMS_DRIVER_CLASSNAME.getEnv("com.impossibl.postgres.jdbc.PGDriver") }),
   DBMS_URL({ DBMS_URL.getEnv("jdbc:pgsql://localhost:5432/postgres") }),
@@ -33,8 +40,6 @@ enum class EnvVar(
   DBMS_MAX_POOL_SIZE({ DBMS_MAX_POOL_SIZE.getEnv(10) }),
   DBMS_MAX_LIFETIME_MINS({ DBMS_MAX_LIFETIME_MINS.getEnv(30) }),
 
-  // Server details
-  IS_PRODUCTION({ IS_PRODUCTION.getEnv(false) }),
 
   REQUEST_VALIDATION_URL({ REQUEST_VALIDATION_URL.getEnv("http://localhost:8080/vapi4k") }),
   REQUEST_VALIDATION_FILENAME({ REQUEST_VALIDATION_FILENAME.getEnv("/json/AssistantRequestValidation.json") }),
@@ -79,7 +84,9 @@ enum class EnvVar(
       System.setProperty("kotlin-logging.throwOnMessageError", "true")
     }
 
-    val envIsProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
+    val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
+    val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.dropEnding("/") }
+    val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.dropLeading("/") }
 
 //    val envResendApiKey: String by lazy { RESEND_API_KEY.value }
 //    val envResendEmailSender: Email by lazy { RESEND_SENDER_EMAIL.value.toEmail() }

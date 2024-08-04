@@ -32,8 +32,8 @@ const val BASE_URL = "https://app.ondigitalocean.app"
 fun Application.module2() {
   install(Vapi4k) {
     vapi4kApplication {
-      serverUrl = "$BASE_URL/vapi4k"
-      serverUrlSecret = "12345"
+      serverPath = "$BASE_URL/vapi4k"
+      serverSecret = "12345"
 
       onAssistantRequest { requestContext ->
 //      getAssistantIdWithTool(requestContext)

@@ -17,7 +17,7 @@
 package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
-import com.vapi4k.common.Endpoints.DEFAULT_SERVER_PATH
+import com.vapi4k.common.EnvVar.Companion.defaultServerPath
 import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.tools.ToolMessageCondition
@@ -74,7 +74,7 @@ fun withTestApplication(
             // Provide a default endpoint
             endpoint {
               serverUrl = "https://test/toolCall"
-              serverUrlSecret = "456"
+              serverSecret = "456"
               timeoutSeconds = 20
             }
           }
@@ -83,7 +83,7 @@ fun withTestApplication(
     }
 
     response =
-      client.post("/$DEFAULT_SERVER_PATH") {
+      client.post("/$defaultServerPath") {
         configPost()
         setBody(resourceFile(fileName))
       }
@@ -118,7 +118,7 @@ fun withTestApplication(
             // Provide a default endpoint
             endpoint {
               serverUrl = "https://test/toolCall"
-              serverUrlSecret = "456"
+              serverSecret = "456"
               timeoutSeconds = 20
             }
           }
@@ -129,7 +129,7 @@ fun withTestApplication(
     responses
       .addAll(
         fileNames.map { fileName ->
-          val response = client.post("/$DEFAULT_SERVER_PATH") {
+          val response = client.post("/$defaultServerPath") {
             configPost()
             setBody(resourceFile(fileName))
           }

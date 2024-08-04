@@ -16,23 +16,17 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.common.Endpoints.DEFAULT_SERVER_PATH
+import com.vapi4k.common.EnvVar.Companion.defaultServerPath
+import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import com.vapi4k.responses.AssistantRequestResponse
-import com.vapi4k.utils.Utils.ensureStartsWith
+import com.vapi4k.utils.Utils.dropLeading
 import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.json.JsonElement
-import java.net.URI
 import kotlin.time.Duration
 
 class Vapi4kApplication {
   internal val toolCallEndpoints = mutableListOf<Endpoint>()
-  internal val serverUrlPath
-    get() = (if (serverUrl.isEmpty()) DEFAULT_SERVER_PATH else URI(serverUrl).toURL().path).ensureStartsWith("/")
-
-  internal val serverUrlPathSegments
-    get() = serverUrlPath.split("/").filter { it.isNotEmpty() }
-
   internal var assistantRequest: (suspend (requestContext: RequestContext) -> AssistantRequestResponse)? = null
 
   internal var applicationAllRequests = mutableListOf<(RequestArgs)>()
@@ -40,8 +34,8 @@ class Vapi4kApplication {
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  var serverUrl = ""
-  var serverUrlSecret = ""
+  var serverPath = defaultServerPath
+  var serverSecret = ""
   var eocrCacheRemovalEnabled = true
 
   fun onAssistantRequest(block: suspend (requestContext: RequestContext) -> AssistantRequestResponse) {
@@ -94,10 +88,8 @@ class Vapi4kApplication {
 
   internal val defaultToolCallEndpoint
     get() = Endpoint().apply {
-      this.serverUrl = this@Vapi4kApplication.serverUrl.ifEmpty {
-        error("No default tool endpoint has been specified in the Vapi4k configuration")
-      }
-      this.serverUrlSecret = this@Vapi4kApplication.serverUrlSecret
+      this.serverUrl = "$serverBaseUrl/${serverPath.dropLeading("/")}"
+      this.serverSecret = this@Vapi4kApplication.serverSecret
     }
 
   internal fun getEndpoint(endpointName: String) =
@@ -106,5 +98,5 @@ class Vapi4kApplication {
     else
       toolCallEndpoints.firstOrNull {
         it.name == endpointName
-      } ?: error("Endpoint not found in vapi4k configuration: $endpointName")
+      } ?: error("Endpoint not found in the vapi4kApplication{}: $endpointName")
 }

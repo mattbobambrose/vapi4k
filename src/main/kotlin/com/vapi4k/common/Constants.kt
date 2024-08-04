@@ -26,7 +26,6 @@ object Constants {
 }
 
 object Endpoints {
-  const val DEFAULT_SERVER_PATH = "vapi4k"
   const val PING_PATH = "/ping"
   const val VERSION_PATH = "/version"
   const val METRICS_PATH = "/metrics"
