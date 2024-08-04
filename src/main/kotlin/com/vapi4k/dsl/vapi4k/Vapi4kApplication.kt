@@ -29,7 +29,7 @@ class Vapi4kApplication {
   internal val toolCallEndpoints = mutableListOf<Endpoint>()
   internal var assistantRequest: (suspend (requestContext: RequestContext) -> AssistantRequestResponse)? = null
 
-  internal var applicationAllRequests = mutableListOf<(RequestArgs)>()
+  internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
