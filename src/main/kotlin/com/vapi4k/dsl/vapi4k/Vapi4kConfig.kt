@@ -36,9 +36,7 @@ class Vapi4kConfig internal constructor() {
   }
 
   internal lateinit var applicationConfig: ApplicationConfig
-
   internal val applications = mutableListOf<Vapi4kApplication>()
-
   internal val globalAllRequests = mutableListOf<(RequestArgs)>()
   internal val globalPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val globalAllResponses = mutableListOf<ResponseArgs>()

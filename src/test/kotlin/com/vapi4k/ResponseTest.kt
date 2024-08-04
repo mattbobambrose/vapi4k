@@ -17,10 +17,10 @@
 package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.REQUEST_CONTEXT
-import com.vapi4k.dsl.assistant.AssistantDsl.assistant
-import com.vapi4k.dsl.assistant.AssistantDsl.sipDestination
+import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.model.enums.AnthropicModelType
 import com.vapi4k.dsl.model.enums.DeepgramModelType
+import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.utils.toJsonString
 import org.junit.Test
 
@@ -29,32 +29,37 @@ class ResponseTest {
   fun testGetTwoSquadIds() {
     val requestContext = REQUEST_CONTEXT
     val assistant =
-      assistant(requestContext) {
-        anthropicModel {
-          modelType = AnthropicModelType.CLAUDE_3_OPUS
+      assistantResponse(requestContext) {
+        assistant {
+          anthropicModel {
+            modelType = AnthropicModelType.CLAUDE_3_OPUS
 //          maxTokens = 99
-          userMessage = "Hello"
-          userMessage += " Hello2"
-          systemMessage = "Hello4"
-          systemMessage += " Hello5"
+            userMessage = "Hello"
+            userMessage += " Hello2"
+            systemMessage = "Hello4"
+            systemMessage += " Hello5"
 
-          knowledgeBase {
-            fileIds += listOf("eeeee", "ffff")
-            topK = 5.3
+            knowledgeBase {
+              fileIds += listOf("eeeee", "ffff")
+              topK = 5.3
+            }
           }
-        }
 
-        deepgramTranscriber {
-          transcriberModel = DeepgramModelType.BASE
-          customLanguage = "zzz"
+          deepgramTranscriber {
+            transcriberModel = DeepgramModelType.BASE
+            customLanguage = "zzz"
+          }
         }
       }
 
-    val dest = sipDestination(requestContext) {
-      sipUri = "sip:wedwedwed"
-      message = "Hello"
-    }
+    val dest =
+      assistantResponse(requestContext) {
+        sipDestination {
+          sipUri = "sip:wedwedwed"
+          message = "Hello"
+        }
+      }
 
-    println(dest.toJsonString())
+    println((dest.destination as SipDestinationDto).toJsonString())
   }
 }

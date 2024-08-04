@@ -17,7 +17,7 @@
 package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.REQUEST_CONTEXT
-import com.vapi4k.dsl.assistant.AssistantDsl.squad
+import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.dsl.voice.enums.CartesiaVoiceModelType
@@ -50,25 +50,28 @@ import kotlin.test.assertEquals
 class VoiceTest {
   @Test
   fun `playHt voice basic test`() {
-    val squad = squad(REQUEST_CONTEXT) {
-      members {
-        member {
-          assistant {
-            name = "Receptionist"
-            firstMessage = "Hi there!"
+    val squad =
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist"
+                firstMessage = "Hi there!"
 
-            groqModel {
-              modelType = GroqModelType.MIXTRAL_8X7B
-            }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-            playHTVoice {
-              voiceIdType = PlayHTVoiceIdType.MATT
-              emotion = PlayHTVoiceEmotionType.MALE_SAD
+                playHTVoice {
+                  voiceIdType = PlayHTVoiceIdType.MATT
+                  emotion = PlayHTVoiceEmotionType.MALE_SAD
+                }
+              }
             }
           }
         }
       }
-    }
     val jsonElement = squad.toJsonElement()
     val members = jsonElement["squad.members"].jsonArray.toList()
     assertEquals(1, members.size)
@@ -83,21 +86,23 @@ class VoiceTest {
   @Test
   fun `playHt voice two or no voiceId error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(REQUEST_CONTEXT) {
-        members {
-          member {
-            assistant {
-              name = "Receptionist"
-              firstMessage = "Hi there!"
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist"
+                firstMessage = "Hi there!"
 
-              groqModel {
-                modelType = GroqModelType.MIXTRAL_8X7B
-              }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-              playHTVoice {
-                voiceIdType = PlayHTVoiceIdType.MATT
-                emotion = PlayHTVoiceEmotionType.MALE_SAD
-                customVoiceId = "jeff"
+                playHTVoice {
+                  voiceIdType = PlayHTVoiceIdType.MATT
+                  emotion = PlayHTVoiceEmotionType.MALE_SAD
+                  customVoiceId = "jeff"
+                }
               }
             }
           }
@@ -108,19 +113,21 @@ class VoiceTest {
     }
 
     assertThrows(IllegalStateException::class.java) {
-      squad(REQUEST_CONTEXT) {
-        members {
-          member {
-            assistant {
-              name = "Receptionist"
-              firstMessage = "Hi there!"
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist"
+                firstMessage = "Hi there!"
 
-              groqModel {
-                modelType = GroqModelType.MIXTRAL_8X7B
-              }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-              playHTVoice {
-                emotion = PlayHTVoiceEmotionType.MALE_SAD
+                playHTVoice {
+                  emotion = PlayHTVoiceEmotionType.MALE_SAD
+                }
               }
             }
           }
@@ -134,21 +141,23 @@ class VoiceTest {
   @Test
   fun `cartesia voice two or no models error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(REQUEST_CONTEXT) {
-        members {
-          member {
-            assistant {
-              name = "Receptionist"
-              firstMessage = "Hi there!"
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist"
+                firstMessage = "Hi there!"
 
-              groqModel {
-                modelType = GroqModelType.MIXTRAL_8X7B
-              }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-              cartesiaVoice {
-                voiceId = "matt"
-                modelType = CartesiaVoiceModelType.SONIC_ENGLISH
-                customModel = "specialModel"
+                cartesiaVoice {
+                  voiceId = "matt"
+                  modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+                  customModel = "specialModel"
+                }
               }
             }
           }
@@ -159,19 +168,21 @@ class VoiceTest {
     }
 
     assertThrows(IllegalStateException::class.java) {
-      squad(REQUEST_CONTEXT) {
-        members {
-          member {
-            assistant {
-              name = "Receptionist"
-              firstMessage = "Hi there!"
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist"
+                firstMessage = "Hi there!"
 
-              groqModel {
-                modelType = GroqModelType.MIXTRAL_8X7B
-              }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-              cartesiaVoice {
-                voiceId = "matt"
+                cartesiaVoice {
+                  voiceId = "matt"
+                }
               }
             }
           }
@@ -185,22 +196,24 @@ class VoiceTest {
   @Test
   fun `cartesia voice two languages error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(REQUEST_CONTEXT) {
-        members {
-          member {
-            assistant {
-              name = "Receptionist"
-              firstMessage = "Hi there!"
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist"
+                firstMessage = "Hi there!"
 
-              groqModel {
-                modelType = GroqModelType.MIXTRAL_8X7B
-              }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-              cartesiaVoice {
-                voiceId = "matt"
-                modelType = CartesiaVoiceModelType.SONIC_ENGLISH
-                languageType = CartesiaVoiceLanguageType.FRENCH
-                customLanguage = "specialLanguage"
+                cartesiaVoice {
+                  voiceId = "matt"
+                  modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+                  languageType = CartesiaVoiceLanguageType.FRENCH
+                  customLanguage = "specialLanguage"
+                }
               }
             }
           }
@@ -214,25 +227,27 @@ class VoiceTest {
   @Test
   fun `cartesia voice double model error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(REQUEST_CONTEXT) {
-        members {
-          member {
-            assistant {
-              name = "Receptionist"
-              firstMessage = "Hi there!"
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist"
+                firstMessage = "Hi there!"
 
-              groqModel {
-                modelType = GroqModelType.MIXTRAL_8X7B
-              }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-              groqModel {
-                modelType = GroqModelType.MIXTRAL_8X7B
-              }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-              cartesiaVoice {
-                voiceId = "matt"
-                modelType = CartesiaVoiceModelType.SONIC_ENGLISH
-                customModel = "specialModel"
+                cartesiaVoice {
+                  voiceId = "matt"
+                  modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+                  customModel = "specialModel"
+                }
               }
             }
           }
@@ -246,25 +261,27 @@ class VoiceTest {
   @Test
   fun `cartesia voice double voice error test`() {
     assertThrows(IllegalStateException::class.java) {
-      squad(REQUEST_CONTEXT) {
-        members {
-          member {
-            assistant {
-              name = "Receptionist"
-              firstMessage = "Hi there!"
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist"
+                firstMessage = "Hi there!"
 
-              groqModel {
-                modelType = GroqModelType.MIXTRAL_8X7B
-              }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                }
 
-              cartesiaVoice {
-                voiceId = "matt"
-                modelType = CartesiaVoiceModelType.SONIC_ENGLISH
-              }
+                cartesiaVoice {
+                  voiceId = "matt"
+                  modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+                }
 
-              cartesiaVoice {
-                voiceId = "matt"
-                modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+                cartesiaVoice {
+                  voiceId = "matt"
+                  modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+                }
               }
             }
           }
@@ -277,32 +294,35 @@ class VoiceTest {
 
   @Test
   fun `double values test`() {
-    val squad = squad(REQUEST_CONTEXT) {
-      members {
-        member {
-          assistant {
-            name = "Receptionist 1"
-            name = "Receptionist"
-            firstMessage = "Hi there!"
-            firstMessage = "Hello!"
+    val squad =
+      assistantResponse(REQUEST_CONTEXT) {
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Receptionist 1"
+                name = "Receptionist"
+                firstMessage = "Hi there!"
+                firstMessage = "Hello!"
 
-            groqModel {
-              modelType = GroqModelType.MIXTRAL_8X7B
-              modelType = GroqModelType.LLAMA3_8B
-            }
+                groqModel {
+                  modelType = GroqModelType.MIXTRAL_8X7B
+                  modelType = GroqModelType.LLAMA3_8B
+                }
 
-            playHTVoice {
-              voiceIdType = PlayHTVoiceIdType.MATT
-              voiceIdType = PlayHTVoiceIdType.JACK
-              emotion = PlayHTVoiceEmotionType.MALE_SAD
-              emotion = PlayHTVoiceEmotionType.MALE_ANGRY
-              temperature = 5.0
-              temperature = 10.0
+                playHTVoice {
+                  voiceIdType = PlayHTVoiceIdType.MATT
+                  voiceIdType = PlayHTVoiceIdType.JACK
+                  emotion = PlayHTVoiceEmotionType.MALE_SAD
+                  emotion = PlayHTVoiceEmotionType.MALE_ANGRY
+                  temperature = 5.0
+                  temperature = 10.0
+                }
+              }
             }
           }
         }
       }
-    }
     val jsonElement = squad.toJsonElement()
     val members = jsonElement["squad.members"].jsonArray.toList()
     assertEquals("Hello!", members[0]["assistant.firstMessage"].stringValue)

@@ -16,18 +16,20 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
+import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.dsl.vapi4k.RequestContext
 
 class AssistantIdWithOverride {
   fun getAssistantIdWithOverride(requestContext: RequestContext) =
-    assistantId(requestContext) {
-      assistantOverrides {
-        openAIModel {
-          modelType = OpenAIModelType.GPT_4_TURBO
-          tools {
-            tool(WeatherLookupService())
+    assistantResponse(requestContext) {
+      assistantId {
+        assistantOverrides {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_4_TURBO
+            tools {
+              tool(WeatherLookupService())
+            }
           }
         }
       }

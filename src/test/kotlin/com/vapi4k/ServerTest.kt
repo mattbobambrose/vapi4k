@@ -18,7 +18,7 @@ package com.vapi4k
 
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.common.Endpoints.CACHES_PATH
-import com.vapi4k.dsl.assistant.AssistantDsl.assistant
+import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.server.Vapi4k
@@ -62,10 +62,12 @@ class ServerTest {
   @Test
   fun `simple assistant request`() {
     val (response, jsonElement) =
-      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { request ->
-        assistant(request) {
-          groqModel {
-            modelType = GroqModelType.LLAMA3_70B
+      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { requestContext ->
+        assistantResponse(requestContext) {
+          assistant {
+            groqModel {
+              modelType = GroqModelType.LLAMA3_70B
+            }
           }
         }
       }

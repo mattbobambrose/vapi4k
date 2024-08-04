@@ -31,7 +31,7 @@ package simpleDemo
  *
  */
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistant
+import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.eq
@@ -59,40 +59,42 @@ import kotlinx.serialization.json.JsonElement
 
 object SimpleAssistant {
   fun simpleAssistantRequest(requestContext: RequestContext) =
-    assistant(requestContext) {
-      firstMessage = "Hi there!"
+    assistantResponse(requestContext) {
+      assistant {
+        firstMessage = "Hi there!"
 
-      openAIModel {
-        modelType = OpenAIModelType.GPT_4_TURBO
-        systemMessage = "You're a weather lookup service"
+        openAIModel {
+          modelType = OpenAIModelType.GPT_4_TURBO
+          systemMessage = "You're a weather lookup service"
 
-        tools {
-          tool(WeatherLookupService1()) {
-            requestStartMessage {
-              content = "Default request start weather lookup"
+          tools {
+            tool(WeatherLookupService1()) {
+              requestStartMessage {
+                content = "Default request start weather lookup"
+              }
             }
-          }
-          tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
-            requestStartMessage {
-              content = "Default request start weather lookup"
+            tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
+              requestStartMessage {
+                content = "Default request start weather lookup"
+              }
             }
-          }
-          tool(
-            WeatherLookupService2(),
-            // WeatherLookupService2::getWeatherByCity2,
-            WeatherLookupService2::getWeatherByZipCode,
-          ) {
-            requestStartMessage {
-              content = "Default request start weather lookup"
+            tool(
+              WeatherLookupService2(),
+              // WeatherLookupService2::getWeatherByCity2,
+              WeatherLookupService2::getWeatherByZipCode,
+            ) {
+              requestStartMessage {
+                content = "Default request start weather lookup"
+              }
             }
           }
         }
-      }
 
-      serverMessages -= setOf(
-        AssistantServerMessageType.CONVERSATION_UPDATE,
-        AssistantServerMessageType.SPEECH_UPDATE,
-      )
+        serverMessages -= setOf(
+          AssistantServerMessageType.CONVERSATION_UPDATE,
+          AssistantServerMessageType.SPEECH_UPDATE,
+        )
+      }
     }
 
   class WeatherLookupService1 : ToolCallService() {

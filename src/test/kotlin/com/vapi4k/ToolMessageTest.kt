@@ -16,7 +16,7 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.assistant.AssistantDsl.squad
+import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.get
@@ -31,24 +31,27 @@ class ToolMessageTest {
   @Test
   fun `toolMessageStart test`() {
     val (response, jsonElement) =
-      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { request ->
-      squad(request) {
-        members {
-          member {
-            assistant {
-              name = "assistant 1"
-              firstMessage = "I'm assistant 1"
+      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { requestContext ->
+        assistantResponse(requestContext) {
+          squad {
+            members {
+              member {
+                assistant {
+                  name = "assistant 1"
+                  firstMessage = "I'm assistant 1"
 
-              openAIModel {
-                modelType = OpenAIModelType.GPT_4_TURBO
-                tools {
-                  tool(WeatherLookupService1()) {
-                    requestStartMessage {
-                      content = "tool 1 start message"
-                      dto
-                    }
-                    requestCompleteMessage {
-                      content = "tool 1 complete message"
+                  openAIModel {
+                    modelType = OpenAIModelType.GPT_4_TURBO
+                    tools {
+                      tool(WeatherLookupService1()) {
+                        requestStartMessage {
+                          content = "tool 1 start message"
+                          dto
+                        }
+                        requestCompleteMessage {
+                          content = "tool 1 complete message"
+                        }
+                      }
                     }
                   }
                 }
@@ -57,7 +60,6 @@ class ToolMessageTest {
           }
         }
       }
-    }
 
     assertEquals(200, response.status.value)
     val assistantTools = jsonElement["squad.members"].toJsonElementList().first().tools()

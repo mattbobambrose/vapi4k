@@ -18,9 +18,8 @@ import com.vapi4k.WeatherLookupService0
 import com.vapi4k.WeatherLookupService1
 import com.vapi4k.WeatherLookupService2
 import com.vapi4k.WeatherLookupService3
-import com.vapi4k.dsl.assistant.AssistantDsl.assistant
-import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
-import com.vapi4k.dsl.assistant.AssistantDsl.squad
+import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.model.enums.OpenAIModelType
@@ -30,24 +29,27 @@ import com.vapi4k.responses.AssistantRequestResponse
 fun myAssistantRequest(requestContext: RequestContext): AssistantRequestResponse =
   (
     when (requestContext.phoneNumber) {
-      "+14156721042" -> assistantId(requestContext) {
-        id = "44792a91-d7f9-4915-9445-0991aeef97bc"
+      "+14156721042" ->
+        assistantResponse(requestContext) {
+          assistantId {
+            id = "44792a91-d7f9-4915-9445-0991aeef97bc"
 
-        assistantOverrides {
-          firstMessage = "This is the first message override"
+            assistantOverrides {
+              firstMessage = "This is the first message override"
 
-          openAIModel {
-            modelType = OpenAIModelType.GPT_4_TURBO
+              openAIModel {
+                modelType = OpenAIModelType.GPT_4_TURBO
+              }
+            }
           }
         }
-      }
 
       else -> getAssistant(requestContext, "")
     }
     )
 
-fun getSquad(requestContext: RequestContext) =
-  squad(requestContext) {
+fun AssistantResponse.getSquad(requestContext: RequestContext) =
+  squad {
     name = "Squad Name"
     members {
       member {
@@ -75,24 +77,26 @@ fun getSquad(requestContext: RequestContext) =
 fun getAssistant(
   requestContext: RequestContext,
   callerName: String = "Bill",
-) = assistant(requestContext) {
-  assistantOverrides {
-    firstMessage = "This is the first message override"
-  }
-  firstMessage =
-    """
+) =
+  assistantResponse(requestContext) {
+    assistant {
+      assistantOverrides {
+        firstMessage = "This is the first message override"
+      }
+      firstMessage =
+        """
             Hi there. My name is Ellen. I'd like to collect some information from you
             today. Is that alright?
             """
-  serverMessages -= setOf(
-    AssistantServerMessageType.CONVERSATION_UPDATE,
-    AssistantServerMessageType.SPEECH_UPDATE,
-  )
+      serverMessages -= setOf(
+        AssistantServerMessageType.CONVERSATION_UPDATE,
+        AssistantServerMessageType.SPEECH_UPDATE,
+      )
 
-  openAIModel {
-    modelType = OpenAIModelType.GPT_4_TURBO
+      openAIModel {
+        modelType = OpenAIModelType.GPT_4_TURBO
 
-    systemMessage = """
+        systemMessage = """
             [Identity]
             You are the friendly and helpful voice of EO Care. Your goal is to collect the name of
             the user.
@@ -114,10 +118,10 @@ fun getAssistant(
             they give all of the information.
         """
 
-    functions {
-      function(WeatherLookupService0())
-      function(WeatherLookupService3())
-    }
+        functions {
+          function(WeatherLookupService0())
+          function(WeatherLookupService3())
+        }
 
 //      tools {
 //        tool(NameService())
@@ -127,72 +131,73 @@ fun getAssistant(
 //        function(ManyInfoService())
 //      }
 
-    tools {
-      tool(WeatherLookupService1()) {
-        condition("city" eq "Chicago", "state" eq "Illinois") {
-          requestStartMessage {
-            content = "This is the Chicago Illinois start message"
-          }
-          requestCompleteMessage {
-            content = "This is the Chicago Illinois complete message"
-          }
-          requestFailedMessage {
-            content = "This is the Chicago Illinois failed message"
+        tools {
+          tool(WeatherLookupService1()) {
+            condition("city" eq "Chicago", "state" eq "Illinois") {
+              requestStartMessage {
+                content = "This is the Chicago Illinois start message"
+              }
+              requestCompleteMessage {
+                content = "This is the Chicago Illinois complete message"
+              }
+              requestFailedMessage {
+                content = "This is the Chicago Illinois failed message"
+              }
+
+              requestDelayedMessage {
+                content = "This is the Chicago Illinois delayed message"
+                timingMilliseconds = 2000
+              }
+            }
+            requestStartMessage {
+              content = "This is the default start message"
+            }
+            requestCompleteMessage {
+              content = "This is the default complete message"
+            }
+            requestFailedMessage {
+              content = "This is the default failed message"
+            }
+            requestDelayedMessage {
+              content = "This is the default delayed message"
+              timingMilliseconds = 1000
+            }
+
+            condition("city" eq "Chicago") {
+              requestStartMessage {
+                content = "This is the Chicago start message"
+              }
+            }
+            condition("city" eq "Houston") {
+              requestStartMessage {
+                content = "This is the Houston start message"
+              }
+            }
           }
 
-          requestDelayedMessage {
-            content = "This is the Chicago Illinois delayed message"
-            timingMilliseconds = 2000
+          tool(WeatherLookupService2()) {
+            condition("city" eq "Chicago") {
+              requestStartMessage {
+                content = "This is the Chicago start message"
+              }
+            }
+            condition("city" eq "Houston") {
+              requestStartMessage {
+                content = "This is the Houston start message"
+              }
+            }
+            requestCompleteMessage {
+              content = "This is the default complete message"
+            }
+            requestFailedMessage {
+              content = "This is the default failed message"
+            }
+            requestDelayedMessage {
+              content = "This is the default delayed message"
+              timingMilliseconds = 1000
+            }
           }
-        }
-        requestStartMessage {
-          content = "This is the default start message"
-        }
-        requestCompleteMessage {
-          content = "This is the default complete message"
-        }
-        requestFailedMessage {
-          content = "This is the default failed message"
-        }
-        requestDelayedMessage {
-          content = "This is the default delayed message"
-          timingMilliseconds = 1000
-        }
-
-        condition("city" eq "Chicago") {
-          requestStartMessage {
-            content = "This is the Chicago start message"
-          }
-        }
-        condition("city" eq "Houston") {
-          requestStartMessage {
-            content = "This is the Houston start message"
-          }
-        }
-      }
-
-      tool(WeatherLookupService2()) {
-        condition("city" eq "Chicago") {
-          requestStartMessage {
-            content = "This is the Chicago start message"
-          }
-        }
-        condition("city" eq "Houston") {
-          requestStartMessage {
-            content = "This is the Houston start message"
-          }
-        }
-        requestCompleteMessage {
-          content = "This is the default complete message"
-        }
-        requestFailedMessage {
-          content = "This is the default failed message"
-        }
-        requestDelayedMessage {
-          content = "This is the default delayed message"
-          timingMilliseconds = 1000
         }
       }
     }
   }
-}
