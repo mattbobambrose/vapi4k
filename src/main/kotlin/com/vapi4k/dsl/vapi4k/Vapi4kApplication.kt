@@ -34,10 +34,11 @@ class Vapi4kApplication {
     get() = serverUrlPath.split("/").filter { it.isNotEmpty() }
 
   internal var assistantRequest: (suspend (request: JsonElement) -> AssistantRequestResponse)? = null
-  internal var allRequests = mutableListOf<(RequestArgs)>()
-  internal val perRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
-  internal val allResponses = mutableListOf<ResponseArgs>()
-  internal val perResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
+
+  internal var applicationAllRequests = mutableListOf<(RequestArgs)>()
+  internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
+  internal val applicationAllResponses = mutableListOf<ResponseArgs>()
+  internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
   var serverUrl = ""
   var serverUrlSecret = ""
@@ -55,7 +56,7 @@ class Vapi4kApplication {
   }
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
-    allRequests += block
+    applicationAllRequests += block
   }
 
   fun onRequest(
@@ -63,14 +64,12 @@ class Vapi4kApplication {
     vararg requestTypes: ServerRequestType,
     block: suspend (request: JsonElement) -> Unit,
   ) {
-    perRequests += requestType to block
-    requestTypes.forEach { perRequests += it to block }
+    applicationPerRequests += requestType to block
+    requestTypes.forEach { applicationPerRequests += it to block }
   }
 
-  fun onAllResponses(
-    block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit,
-  ) {
-    allResponses += block
+  fun onAllResponses(block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit) {
+    applicationAllResponses += block
   }
 
   fun onResponse(
@@ -78,8 +77,8 @@ class Vapi4kApplication {
     vararg requestTypes: ServerRequestType,
     block: suspend (requestType: ServerRequestType, request: JsonElement, elapsed: Duration) -> Unit,
   ) {
-    perResponses += requestType to block
-    requestTypes.forEach { perResponses += it to block }
+    applicationPerResponses += requestType to block
+    requestTypes.forEach { applicationPerResponses += it to block }
   }
 
   private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }

@@ -31,20 +31,20 @@ const val BASE_URL = "https://app.ondigitalocean.app"
 
 fun Application.module2() {
   install(Vapi4k) {
-    configure {
+    vapi4kApplication {
       serverUrl = "$BASE_URL/vapi4k"
       serverUrlSecret = "12345"
-    }
 
-    onAssistantRequest { assistantRequest ->
+      onAssistantRequest { assistantRequest ->
 //      getAssistantIdWithTool(assistantRequest)
 //      getAssistantWithOverrides(assistantRequest)
 //
 //      AssistantOverrides with Squad
 //      MemberOverrides with Squad
 
-      // doubleToolAssistant2(assistantRequest)
-      simpleAssistantRequest(assistantRequest)
+        // doubleToolAssistant2(assistantRequest)
+        simpleAssistantRequest(assistantRequest)
+      }
     }
   }
 }

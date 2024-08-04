@@ -40,17 +40,17 @@ class Vapi4kConfig internal constructor() {
   internal val configProperties: Vapi4kConfigProperties = Vapi4kConfigProperties()
   internal val applications = mutableListOf<Vapi4kApplication>()
 
-  internal var allRequests = mutableListOf<(RequestArgs)>()
-  internal val perRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
-  internal val allResponses = mutableListOf<ResponseArgs>()
-  internal val perResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
+  internal var globalAllRequests = mutableListOf<(RequestArgs)>()
+  internal val globalPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
+  internal val globalAllResponses = mutableListOf<ResponseArgs>()
+  internal val globalPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  fun application(block: Vapi4kApplication.() -> Unit) {
+  fun vapi4kApplication(block: Vapi4kApplication.() -> Unit) {
     applications += Vapi4kApplication().apply(block)
   }
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
-    allRequests += block
+    globalAllRequests += block
   }
 
   fun onRequest(
@@ -58,14 +58,14 @@ class Vapi4kConfig internal constructor() {
     vararg requestTypes: ServerRequestType,
     block: suspend (request: JsonElement) -> Unit,
   ) {
-    perRequests += requestType to block
-    requestTypes.forEach { perRequests += it to block }
+    globalPerRequests += requestType to block
+    requestTypes.forEach { globalPerRequests += it to block }
   }
 
   fun onAllResponses(
     block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit,
   ) {
-    allResponses += block
+    globalAllResponses += block
   }
 
   fun onResponse(
@@ -73,7 +73,7 @@ class Vapi4kConfig internal constructor() {
     vararg requestTypes: ServerRequestType,
     block: suspend (requestType: ServerRequestType, request: JsonElement, elapsed: Duration) -> Unit,
   ) {
-    perResponses += requestType to block
-    requestTypes.forEach { perResponses += it to block }
+    globalPerResponses += requestType to block
+    requestTypes.forEach { globalPerResponses += it to block }
   }
 }

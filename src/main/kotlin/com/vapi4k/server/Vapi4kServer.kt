@@ -161,25 +161,29 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       if (!IS_PRODUCTION.toBoolean()) {
         get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
         get(CACHES_PATH) { call.respond(cacheAsJson().toJsonString()) }
-        get(VALIDATE_PATH) { processValidateRequest(config) }
-        get(INVOKE_TOOL_PATH) { processToolInvokeRequest(config) }
+
         get(CLEAR_CACHES_PATH) {
           clearToolCache()
           call.respondRedirect(CACHES_PATH)
         }
+
+        get(VALIDATE_PATH) { processValidateRequest(config) }
+        get(INVOKE_TOOL_PATH) { processToolInvokeRequest(config) }
       }
 
-      val serverPath = config.configProperties.serverUrlPath
-      logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
-      get(serverPath) { call.respondText("$serverPath requires a post request", status = MethodNotAllowed) }
-      post(serverPath) { processAssistantRequests(callbackChannel) }
+      config.applications.forEach { application ->
+        val serverPath = application.serverUrlPath
+        logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
+        get(serverPath) { call.respondText("$serverPath requires a post request", status = MethodNotAllowed) }
+        post(serverPath) { processAssistantRequests(application, callbackChannel) }
 
-      config.toolCallEndpoints.forEach { endpoint ->
-        val toolCallPath = endpoint.path
-        logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
-        get(toolCallPath) { call.respondText("$toolCallPath requires a post request", status = MethodNotAllowed) }
-        post(toolCallPath) {
-          handleToolCallPathPost(endpoint, callbackChannel)
+        application.toolCallEndpoints.forEach { endpoint ->
+          val toolCallPath = endpoint.path
+          logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
+          get(toolCallPath) { call.respondText("$toolCallPath requires a post request", status = MethodNotAllowed) }
+          post(toolCallPath) {
+            handleToolCallPathPost(endpoint, callbackChannel)
+          }
         }
       }
     }
@@ -188,7 +192,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
 private suspend fun KtorCallContext.processAssistantRequests(
   application: Vapi4kApplication,
-  callbackChannel: Channel<RequestResponseCallback>
+  callbackChannel: Channel<RequestResponseCallback>,
 ) {
   if (IS_PRODUCTION.toBoolean()) {
     handleServerPathPost(application, callbackChannel)
@@ -379,19 +383,46 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
             coroutineScope {
               with(callback) {
                 when (callback.type) {
-                  REQUEST ->
-                    with(config) {
-                      allRequests.forEach { launch { it.invoke(request) } }
-                      perRequests
-                        .filter { it.first == requestType }
-                        .forEach { (reqType, block) ->
-                          launch { block(request) }
-                        }
+                  REQUEST -> {
+                    config.applications.forEach { application ->
+                      with(application) {
+                        applicationAllRequests.forEach { launch { it.invoke(request) } }
+                        applicationPerRequests
+                          .filter { it.first == requestType }
+                          .forEach { (_, block) -> launch { block(request) } }
+                      }
                     }
-
-                  RESPONSE ->
                     with(config) {
-                      if (allResponses.isNotEmpty() || perResponses.isNotEmpty()) {
+                      globalAllRequests.forEach { launch { it.invoke(request) } }
+                      globalPerRequests
+                        .filter { it.first == requestType }
+                        .forEach { (_, block) -> launch { block(request) } }
+                    }
+                  }
+
+                  RESPONSE -> {
+                    config.applications.forEach { application ->
+                      with(application) {
+                        if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
+                          val resp =
+                            runCatching {
+                              response.invoke()
+                            }.onFailure { e ->
+                              logger.error { "Error creating response" }
+                              error("Error creating response")
+                            }.getOrThrow()
+
+                          applicationAllResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
+                          applicationPerResponses
+                            .filter { it.first == requestType }
+                            .forEach { (reqType, block) ->
+                              launch { block(reqType, resp, elapsed) }
+                            }
+                        }
+                      }
+                    }
+                    with(config) {
+                      if (globalAllResponses.isNotEmpty() || globalPerResponses.isNotEmpty()) {
                         val resp =
                           runCatching {
                             response.invoke()
@@ -400,14 +431,15 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
                             error("Error creating response")
                           }.getOrThrow()
 
-                        allResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
-                        perResponses
+                        globalAllResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
+                        globalPerResponses
                           .filter { it.first == requestType }
                           .forEach { (reqType, block) ->
                             launch { block(reqType, resp, elapsed) }
                           }
                       }
                     }
+                  }
                 }
               }
             }
