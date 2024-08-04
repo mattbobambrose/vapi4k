@@ -72,6 +72,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.http.Parameters
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
@@ -153,49 +154,14 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       get(PING_PATH) { call.respondText("pong") }
 
       get(VERSION_PATH) {
-        call.respondText(ContentType.Application.Json) {
-          Vapi4kServer::class.versionDesc(true)
-        }
+        call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
       }
 
       if (!IS_PRODUCTION.toBoolean()) {
-        get(METRICS_PATH) {
-          call.respond(appMicrometerRegistry.scrape())
-        }
-
-        get(CACHES_PATH) {
-          call.respond(cacheAsJson().toJsonString())
-        }
-
-        get(VALIDATE_PATH) {
-          val secret = call.request.queryParameters["secret"].orEmpty()
-          val serverPath = config.configProperties.serverUrlPath
-          val resp = validateAssistantRequestResponse(secret, serverPath)
-          call.respondText(resp, ContentType.Text.Html)
-        }
-
-        get(INVOKE_TOOL_PATH) {
-          val params = call.request.queryParameters
-          runCatching {
-            val toolRequest = getToolRequest(params)
-            httpClient.post(
-              url {
-                host = "localhost"
-                port = 8080
-                pathSegments = config.configProperties.serverUrlPathSegments
-              },
-            ) {
-              headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
-              setBody(toolRequest.toJsonString())
-            }
-          }.onSuccess { response ->
-            call.respondText(response.bodyAsText().toJsonString())
-          }
-            .onFailure { e ->
-              call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
-            }
-        }
-
+        get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
+        get(CACHES_PATH) { call.respond(cacheAsJson().toJsonString()) }
+        get(VALIDATE_PATH) { processValidateRequest(config) }
+        get(INVOKE_TOOL_PATH) { processToolInvokeRequest(config) }
         get(CLEAR_CACHES_PATH) {
           clearToolCache()
           call.respondRedirect(CACHES_PATH)
@@ -204,33 +170,59 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       val serverPath = config.configProperties.serverUrlPath
       logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
-      get(serverPath) {
-        call.respondText("$serverPath requires a post request", status = HttpStatusCode.MethodNotAllowed)
-      }
-      post(serverPath) {
-        if (IS_PRODUCTION.toBoolean()) {
-          handleServerPathPost(callbackChannel)
-        } else {
-          runCatching {
-            handleServerPathPost(callbackChannel)
-          }.onFailure { e ->
-            logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
-            call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
-          }
-        }
-      }
+      get(serverPath) { call.respondText("$serverPath requires a post request", status = MethodNotAllowed) }
+      post(serverPath) { processAssistantRequests(callbackChannel) }
 
       config.toolCallEndpoints.forEach { endpoint ->
         val toolCallPath = endpoint.path
         logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
-        get(toolCallPath) {
-          call.respondText("$toolCallPath requires a post request", status = HttpStatusCode.MethodNotAllowed)
-        }
+        get(toolCallPath) { call.respondText("$toolCallPath requires a post request", status = MethodNotAllowed) }
         post(toolCallPath) {
           handleToolCallPathPost(endpoint, callbackChannel)
         }
       }
     }
+  }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.processAssistantRequests(callbackChannel: Channel<RequestResponseCallback>) {
+  if (IS_PRODUCTION.toBoolean()) {
+    handleServerPathPost(callbackChannel)
+  } else {
+    runCatching {
+      handleServerPathPost(callbackChannel)
+    }.onFailure { e ->
+      logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
+      call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
+    }
+  }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.processValidateRequest(config: Vapi4kConfig) {
+  val secret = call.request.queryParameters["secret"].orEmpty()
+  val serverPath = config.configProperties.serverUrlPath
+  val resp = validateAssistantRequestResponse(secret, serverPath)
+  call.respondText(resp, ContentType.Text.Html)
+}
+
+private suspend fun KtorCallContext.processToolInvokeRequest(config: Vapi4kConfig) {
+  val params = call.request.queryParameters
+  runCatching {
+    val toolRequest = getToolRequest(params)
+    httpClient.post(
+      url {
+        host = "localhost"
+        port = 8080
+        pathSegments = config.configProperties.serverUrlPathSegments
+      },
+    ) {
+      headers.append("x-vapi-secret", config.configProperties.serverUrlSecret)
+      setBody(toolRequest.toJsonString())
+    }
+  }.onSuccess { response ->
+    call.respondText(response.bodyAsText().toJsonString())
+  }.onFailure { e ->
+    call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
   }
 }
 
