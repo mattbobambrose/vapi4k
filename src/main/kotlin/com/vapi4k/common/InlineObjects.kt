@@ -20,6 +20,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @JvmInline
+value class ApplicationId private constructor(
+  val value: String,
+) {
+  override fun toString() = value
+
+  companion object {
+    fun String.toApplicationId() = ApplicationId(this)
+  }
+}
+
+@Serializable
+@JvmInline
 value class SessionCacheId private constructor(
   val value: String,
 ) {

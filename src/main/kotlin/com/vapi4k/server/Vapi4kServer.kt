@@ -18,7 +18,11 @@ package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
+import com.vapi4k.common.ApplicationId.Companion.toApplicationId
+import com.vapi4k.common.Constants.APPLICATION_ID
+import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
+import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
@@ -225,7 +229,11 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
 
         get(INVOKE_TOOL_PATH) {
-          // processToolInvokeRequest(config)
+          val params = call.request.queryParameters
+          val applicationId = params.get(APPLICATION_ID)?.toApplicationId() ?: error("No $APPLICATION_ID found")
+          val application = config.applications.firstOrNull { it.applicationId == applicationId }
+            ?: error("Application not found: $applicationId")
+          processToolInvokeRequest(application, params)
         }
       }
 
@@ -266,12 +274,14 @@ private suspend fun KtorCallContext.processAssistantRequests(
 
 private suspend fun KtorCallContext.processValidateRequest(application: Vapi4kApplication) {
   val secret = call.request.queryParameters["secret"].orEmpty()
-  val resp = validateAssistantRequestResponse(secret, application.serverPath)
+  val resp = validateAssistantRequestResponse(application, secret)
   call.respondText(resp, ContentType.Text.Html)
 }
 
-private suspend fun KtorCallContext.processToolInvokeRequest(application: Vapi4kApplication) {
-  val params = call.request.queryParameters
+private suspend fun KtorCallContext.processToolInvokeRequest(
+  application: Vapi4kApplication,
+  params: Parameters,
+) {
   runCatching {
     val toolRequest = getToolRequest(params)
     httpClient.post("$serverBaseUrl/${application.serverPathAsSegment}") {
@@ -286,7 +296,7 @@ private suspend fun KtorCallContext.processToolInvokeRequest(application: Vapi4k
 }
 
 private fun getToolRequest(params: Parameters): JsonObject {
-  val sessionCacheId = params.get("sessionCacheId") ?: error("No sessionCacheId found")
+  val sessionCacheId = params.get(SESSION_CACHE_ID) ?: error("No $SESSION_CACHE_ID found")
   return buildJsonObject {
     put(
       "message",
@@ -299,11 +309,11 @@ private fun getToolRequest(params: Parameters): JsonObject {
               "id" to JsonPrimitive("call_${getRandomSecret(24)}"),
               "type" to JsonPrimitive("function"),
               "function" to mapOf(
-                "name" to JsonPrimitive(params.get("functionName")),
+                "name" to JsonPrimitive(params.get(FUNCTION_NAME) ?: error("No $FUNCTION_NAME found")),
                 "arguments" to
                   params
                     .names()
-                    .filterNot { it in setOf("sessionCacheId", "functionName") }
+                    .filterNot { it in setOf(APPLICATION_ID, SESSION_CACHE_ID, FUNCTION_NAME) }
                     .filter { params[it].orEmpty().isNotEmpty() }
                     .map { it to JsonPrimitive(params[it]) }
                     .toMap()
