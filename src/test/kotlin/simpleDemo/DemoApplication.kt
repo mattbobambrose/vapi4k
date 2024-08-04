@@ -27,8 +27,6 @@ fun main() {
   embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::module2).start(wait = true)
 }
 
-const val BASE_URL = "https://app.ondigitalocean.app"
-
 fun Application.module2() {
   install(Vapi4k) {
     vapi4kApplication {

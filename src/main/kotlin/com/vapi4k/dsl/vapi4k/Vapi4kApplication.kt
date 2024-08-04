@@ -34,6 +34,7 @@ class Vapi4kApplication {
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
   internal var eocrCacheRemovalEnabled = true
+  internal val serverPathAsSegment get() = serverPath.dropLeading("/")
 
   var serverPath = defaultServerPath
   var serverSecret = ""
@@ -88,7 +89,7 @@ class Vapi4kApplication {
 
   internal val defaultToolCallEndpoint
     get() = Endpoint().apply {
-      this.serverUrl = "$serverBaseUrl/${serverPath.dropLeading("/")}"
+      this.serverUrl = "$serverBaseUrl/$serverPathAsSegment"
       this.serverSecret = this@Vapi4kApplication.serverSecret
     }
 

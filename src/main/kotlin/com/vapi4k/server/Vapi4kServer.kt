@@ -18,6 +18,8 @@ package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
+import com.vapi4k.common.Constants.HTMX_SOURCE_URL
+import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
@@ -59,9 +61,9 @@ import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
-import com.vapi4k.utils.Utils.dropLeading
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.getBanner
+import com.vapi4k.utils.Utils.isNotNull
 import com.vapi4k.utils.Utils.lambda
 import com.vapi4k.utils.Utils.toErrorString
 import com.vapi4k.utils.toJsonArray
@@ -99,6 +101,17 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.html.a
+import kotlinx.html.body
+import kotlinx.html.h2
+import kotlinx.html.head
+import kotlinx.html.html
+import kotlinx.html.li
+import kotlinx.html.link
+import kotlinx.html.script
+import kotlinx.html.stream.createHTML
+import kotlinx.html.title
+import kotlinx.html.ul
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -168,12 +181,47 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
 
         get(VALIDATE_PATH) {
-          config.applications.forEach { application ->
-            val secret = call.request.queryParameters["secret"].orEmpty()
-            val resp = validateAssistantRequestResponse(secret, application.serverPath)
-            call.respondText(resp, ContentType.Text.Html)
+          if (config.applications.size == 1) {
+            val application = config.applications.first()
+            call.respondRedirect("$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}")
+          } else {
+            val html = createHTML()
+              .html {
+                head {
+                  link {
+                    rel = "stylesheet"
+                    href = STYLES_CSS
+                  }
+                  title { +"Assistant Request Validation" }
+                  script { src = HTMX_SOURCE_URL }
+                }
+                body {
+                  h2 {
+                    +"All Vapi4k Applications"
+                  }
+                  ul {
+                    config.applications.forEach { application ->
+                      li {
+                        a {
+                          href = "$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}"
+                          +application.serverPath
+                        }
+                      }
+                    }
+                  }
+
+                }
+              }
+            call.respondText(html, ContentType.Text.Html)
           }
-          //processValidateRequest(config)
+        }
+        get("$VALIDATE_PATH/{appName}") {
+          val appName = call.parameters["appName"].orEmpty()
+          val application = config.applications.firstOrNull { it.serverPathAsSegment == appName }
+          if (application.isNotNull())
+            processValidateRequest(application)
+          else
+            call.respondText("Application not found", status = HttpStatusCode.NotFound)
         }
 
         get(INVOKE_TOOL_PATH) {
@@ -226,7 +274,7 @@ private suspend fun KtorCallContext.processToolInvokeRequest(application: Vapi4k
   val params = call.request.queryParameters
   runCatching {
     val toolRequest = getToolRequest(params)
-    httpClient.post("$serverBaseUrl/${application.serverPath.dropLeading("/")}") {
+    httpClient.post("$serverBaseUrl/${application.serverPathAsSegment}") {
       headers.append("x-vapi-secret", application.serverSecret)
       setBody(toolRequest.toJsonString())
     }
