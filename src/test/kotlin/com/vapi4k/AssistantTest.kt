@@ -163,11 +163,10 @@ class AssistantTest {
     }.also {
       assertEquals(
         "assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration",
-        it.message
+        it.message,
       )
     }
   }
-
 
   @Test
   fun `test reverse delay order`() {

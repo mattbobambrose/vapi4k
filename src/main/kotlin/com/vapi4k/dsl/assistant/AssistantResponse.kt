@@ -33,7 +33,9 @@ import com.vapi4k.utils.DuplicateChecker
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 
 @AssistantDslMarker
-class AssistantResponse(val requestContext: RequestContext) {
+class AssistantResponse(
+  val requestContext: RequestContext,
+) {
   private val checker = DuplicateChecker()
   internal lateinit var assistantRequestResponse: AssistantRequestResponse
   internal val isAssigned: Boolean
@@ -87,9 +89,7 @@ class AssistantResponse(val requestContext: RequestContext) {
     }
   }
 
-  fun sipDestination(
-    block: SipDestination.() -> Unit,
-  ) {
+  fun sipDestination(block: SipDestination.() -> Unit) {
     checker.check("sipDestination{} already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
       val sipDto = SipDestinationDto()

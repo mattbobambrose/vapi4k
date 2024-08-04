@@ -40,7 +40,6 @@ enum class EnvVar(
   DBMS_MAX_POOL_SIZE({ DBMS_MAX_POOL_SIZE.getEnv(10) }),
   DBMS_MAX_LIFETIME_MINS({ DBMS_MAX_LIFETIME_MINS.getEnv(30) }),
 
-
   REQUEST_VALIDATION_URL({ REQUEST_VALIDATION_URL.getEnv("http://localhost:8080/vapi4k") }),
   REQUEST_VALIDATION_FILENAME({ REQUEST_VALIDATION_FILENAME.getEnv("/json/AssistantRequestValidation.json") }),
 
