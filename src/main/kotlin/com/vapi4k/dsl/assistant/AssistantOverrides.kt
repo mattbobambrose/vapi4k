@@ -34,6 +34,7 @@ import com.vapi4k.dsl.model.VapiModel
 import com.vapi4k.dsl.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriber
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dsl.voice.AzureVoice
 import com.vapi4k.dsl.voice.CartesiaVoice
 import com.vapi4k.dsl.voice.DeepgramVoice
@@ -46,7 +47,6 @@ import com.vapi4k.dsl.voice.RimeAIVoice
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
-import kotlinx.serialization.json.JsonElement
 
 interface AssistantOverridesProperties {
   var backchannelingEnabled: Boolean?
@@ -134,7 +134,7 @@ interface AssistantOverrides : AssistantOverridesProperties {
 }
 
 data class AssistantOverridesImpl internal constructor(
-  override val request: JsonElement,
+  override val requestContext: RequestContext,
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
   private val assistantOverridesDto: AssistantOverridesDto,

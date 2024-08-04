@@ -45,7 +45,7 @@ data class MemberImpl(
   override fun assistant(block: Assistant.() -> Unit): Assistant {
     memberChecker.check("Member already has an assistant assigned")
     return AssistantImpl(
-      members.squad.request,
+      members.squad.requestContext,
       members.squad.sessionCacheId,
       members.squad.assistantCacheIdSource,
       dto.assistant,

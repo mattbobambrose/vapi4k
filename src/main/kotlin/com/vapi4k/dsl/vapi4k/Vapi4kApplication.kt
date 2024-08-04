@@ -33,7 +33,7 @@ class Vapi4kApplication {
   internal val serverUrlPathSegments
     get() = serverUrlPath.split("/").filter { it.isNotEmpty() }
 
-  internal var assistantRequest: (suspend (request: JsonElement) -> AssistantRequestResponse)? = null
+  internal var assistantRequest: (suspend (requestContext: RequestContext) -> AssistantRequestResponse)? = null
 
   internal var applicationAllRequests = mutableListOf<(RequestArgs)>()
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
@@ -44,11 +44,11 @@ class Vapi4kApplication {
   var serverUrlSecret = ""
   var eocrCacheRemovalEnabled = true
 
-  fun onAssistantRequest(block: suspend (request: JsonElement) -> AssistantRequestResponse) {
+  fun onAssistantRequest(block: suspend (requestContext: RequestContext) -> AssistantRequestResponse) {
     if (assistantRequest.isNull())
       assistantRequest = block
     else
-      error("onAssistantRequest{} can be called only once")
+      error("onAssistantRequest{} can be called only once per vapi4kApplication{}")
   }
 
   fun toolCallEndpoints(block: ToolCallEndpoints.() -> Unit) {
@@ -68,7 +68,13 @@ class Vapi4kApplication {
     requestTypes.forEach { applicationPerRequests += it to block }
   }
 
-  fun onAllResponses(block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit) {
+  fun onAllResponses(
+    block: suspend (
+      requestType: ServerRequestType,
+      response: JsonElement,
+      elapsed: Duration,
+    ) -> Unit,
+  ) {
     applicationAllResponses += block
   }
 
@@ -80,6 +86,9 @@ class Vapi4kApplication {
     applicationPerResponses += requestType to block
     requestTypes.forEach { applicationPerResponses += it to block }
   }
+
+  internal suspend fun getAssistantResponse(request: JsonElement) =
+    assistantRequest?.invoke(RequestContext(this, request)) ?: error("onAssistantRequest{} not called")
 
   private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }
 
@@ -98,5 +107,4 @@ class Vapi4kApplication {
       toolCallEndpoints.firstOrNull {
         it.name == endpointName
       } ?: error("Endpoint not found in vapi4k configuration: $endpointName")
-
 }

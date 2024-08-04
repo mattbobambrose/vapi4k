@@ -20,10 +20,8 @@ import com.vapi4k.BuildConfig
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
-import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
-import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.EnvVar.IS_PRODUCTION
@@ -47,7 +45,6 @@ import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.TOOL_CALL
-import com.vapi4k.responses.AssistantRequestResponse.Companion.getAssistantResponse
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
@@ -167,8 +164,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           call.respondRedirect(CACHES_PATH)
         }
 
-        get(VALIDATE_PATH) { processValidateRequest(config) }
-        get(INVOKE_TOOL_PATH) { processToolInvokeRequest(config) }
+//        get(VALIDATE_PATH) { processValidateRequest(config) }
+//        get(INVOKE_TOOL_PATH) { processToolInvokeRequest(config) }
       }
 
       config.applications.forEach { application ->
@@ -280,7 +277,7 @@ private suspend fun KtorCallContext.handleServerPathPost(
     val (response, duration) = measureTimedValue {
       when (requestType) {
         ASSISTANT_REQUEST -> {
-          val response = getAssistantResponse(request)
+          val response = application.getAssistantResponse(request)
           call.respond(response)
           lambda { response.toJsonElement() }
         }

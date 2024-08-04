@@ -18,7 +18,6 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
@@ -86,7 +85,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    val endpoint = model.application.getEndpoint(endpointName)
     processFunctions(ToolType.FUNCTION, functions, obj, endpoint, block)
   }
 
@@ -96,7 +95,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    val endpoint = model.application.getEndpoint(endpointName)
     processFunctions(ToolType.DTMF, functions, obj, endpoint, block)
   }
 
@@ -106,7 +105,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    val endpoint = model.application.getEndpoint(endpointName)
     processFunctions(ToolType.END_CALL, functions, obj, endpoint, block)
   }
 
@@ -116,7 +115,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    val endpoint = model.application.getEndpoint(endpointName)
     processFunctions(ToolType.VOICEMAIL, functions, obj, endpoint, block)
   }
 
@@ -126,7 +125,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: ToolWithMetaData.() -> Unit,
   ) {
-    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    val endpoint = model.application.getEndpoint(endpointName)
     processFunctionsWithMetaData(ToolType.GHL, functions, obj, endpoint, block)
   }
 
@@ -136,7 +135,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: ToolWithMetaData.() -> Unit,
   ) {
-    val endpoint = AssistantImpl.config.getEndpoint(endpointName)
+    val endpoint = model.application.getEndpoint(endpointName)
     processFunctionsWithMetaData(ToolType.MAKE, functions, obj, endpoint, block)
   }
 

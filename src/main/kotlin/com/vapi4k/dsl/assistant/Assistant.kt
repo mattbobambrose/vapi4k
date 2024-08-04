@@ -34,6 +34,7 @@ import com.vapi4k.dsl.model.VapiModel
 import com.vapi4k.dsl.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriber
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.dsl.voice.AzureVoice
 import com.vapi4k.dsl.voice.CartesiaVoice
@@ -48,7 +49,6 @@ import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
-import kotlinx.serialization.json.JsonElement
 
 interface AssistantProperties {
   var backchannelingEnabled: Boolean?
@@ -167,7 +167,7 @@ interface Assistant : AssistantProperties {
 }
 
 data class AssistantImpl internal constructor(
-  override val request: JsonElement,
+  override val requestContext: RequestContext,
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
   private val assistantDto: AssistantDto,
@@ -242,7 +242,7 @@ data class AssistantImpl internal constructor(
 
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(request, sessionCacheId, assistantCacheIdSource, assistantOverridesDto).apply(block)
+    AssistantOverridesImpl(requestContext, sessionCacheId, assistantCacheIdSource, assistantOverridesDto).apply(block)
 
   override fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan = analysisPlanUnion(block)
 

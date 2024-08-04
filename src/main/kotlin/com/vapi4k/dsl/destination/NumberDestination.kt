@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.destination
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
-import kotlinx.serialization.json.JsonElement
 
 @AssistantDslMarker
 interface NumberDestination {
@@ -28,6 +28,6 @@ interface NumberDestination {
 }
 
 class NumberDestinationImpl internal constructor(
-  internal val request: JsonElement,
+  internal val requestContext: RequestContext,
   private val dto: NumberDestinationDto,
 ) : NumberDestination by dto

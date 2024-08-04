@@ -14,20 +14,15 @@
  *
  */
 
-package com.vapi4k.dsl.destination
+package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.vapi4k.RequestContext
-import com.vapi4k.dtos.api.destination.SipDestinationDto
+import com.vapi4k.utils.JsonElementUtils.phoneNumber
+import kotlinx.serialization.json.JsonElement
 
-@AssistantDslMarker
-interface SipDestination {
-  var sipUri: String
-  var message: String
-  var description: String
+data class RequestContext(
+  val application: Vapi4kApplication,
+  val assistantRequest: JsonElement,
+) {
+  val phoneNumber: String
+    get() = assistantRequest.phoneNumber
 }
-
-class SipDestinationImpl internal constructor(
-  internal val requestContext: RequestContext,
-  private val dto: SipDestinationDto,
-) : SipDestination by dto

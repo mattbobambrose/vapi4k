@@ -31,7 +31,7 @@ import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dtos.api.CallRequestDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
-import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
+import com.vapi4k.utils.JsonElementUtils.emptyRequestContext
 
 interface CallProperties {
   var phoneNumberId: String
@@ -63,13 +63,13 @@ data class CallImpl internal constructor(
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     assistantChecker.check("assistantId{} already called")
-    return AssistantIdImpl(emptyJsonElement(), sessionCacheId, assistantCacheIdSource, dto).apply(block)
+    return AssistantIdImpl(emptyRequestContext(), sessionCacheId, assistantCacheIdSource, dto).apply(block)
   }
 
   override fun assistant(block: Assistant.() -> Unit): Assistant {
     assistantChecker.check("assistant{} already called")
     return with(dto) {
-      AssistantImpl(emptyJsonElement(), sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
+      AssistantImpl(emptyRequestContext(), sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
         .apply(block)
         .apply {
           assistantDto.updated = true
@@ -80,13 +80,13 @@ data class CallImpl internal constructor(
 
   override fun squadId(block: SquadId.() -> Unit): SquadId {
     assistantChecker.check("squadId{} already called")
-    return SquadIdImpl(emptyJsonElement(), dto).apply(block)
+    return SquadIdImpl(emptyRequestContext(), dto).apply(block)
   }
 
   override fun squad(block: Squad.() -> Unit): Squad {
     assistantChecker.check("squad{} already called")
     return with(dto) {
-      SquadImpl(emptyJsonElement(), sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
+      SquadImpl(emptyRequestContext(), sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
     }
   }
 
@@ -94,7 +94,7 @@ data class CallImpl internal constructor(
     overridesChecker.check("assistantOverrides{} already called")
     return if (dto.assistantDto.updated || dto.assistantId.isNotEmpty())
       AssistantOverridesImpl(
-        emptyJsonElement(),
+        emptyRequestContext(),
         sessionCacheId,
         assistantCacheIdSource,
         dto.assistantOverridesDto,

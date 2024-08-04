@@ -17,6 +17,8 @@
 package com.vapi4k.utils
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.dsl.vapi4k.RequestContext
+import com.vapi4k.dsl.vapi4k.Vapi4kApplication
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
@@ -84,4 +86,8 @@ object JsonElementUtils {
   private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
 
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
+
+  private val EMPTY_REQUEST_CONTEXT = RequestContext(Vapi4kApplication(), emptyJsonElement())
+
+  fun emptyRequestContext() = EMPTY_REQUEST_CONTEXT
 }

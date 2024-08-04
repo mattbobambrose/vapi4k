@@ -24,12 +24,12 @@ import com.vapi4k.dsl.squad.Squad
 import com.vapi4k.dsl.squad.SquadId
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
-import kotlinx.serialization.json.JsonElement
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
 import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
@@ -41,12 +41,12 @@ annotation class AssistantDslMarker
 
 object AssistantDsl {
   fun assistant(
-    request: JsonElement,
+    requestContext: RequestContext,
     block: Assistant.() -> Unit,
   ) = AssistantRequestResponse().apply {
-    val sessionCacheId = request.sessionCacheId
+    val sessionCacheId = requestContext.assistantRequest.sessionCacheId
     val assistantCacheIdSource = AssistantCacheIdSource()
-    AssistantImpl(request, sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
+    AssistantImpl(requestContext, sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
       .apply(block)
       .apply {
         assistantDto.updated = true
@@ -55,46 +55,46 @@ object AssistantDsl {
   }
 
   fun assistantId(
-    request: JsonElement,
+    requestContext: RequestContext,
     block: AssistantId.() -> Unit,
   ) = AssistantRequestResponse().apply {
-    val sessionCacheId = request.sessionCacheId
+    val sessionCacheId = requestContext.assistantRequest.sessionCacheId
     val assistantCacheIdSource = AssistantCacheIdSource()
-    AssistantIdImpl(request, sessionCacheId, assistantCacheIdSource, this).apply(block)
+    AssistantIdImpl(requestContext, sessionCacheId, assistantCacheIdSource, this).apply(block)
   }
 
   fun squad(
-    request: JsonElement,
+    requestContext: RequestContext,
     block: Squad.() -> Unit,
   ) = AssistantRequestResponse().apply {
-    val sessionCacheId = request.sessionCacheId
+    val sessionCacheId = requestContext.assistantRequest.sessionCacheId
     val assistantCacheIdSource = AssistantCacheIdSource()
-    SquadImpl(request, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
+    SquadImpl(requestContext, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
   }
 
   fun squadId(
-    request: JsonElement,
+    requestContext: RequestContext,
     block: SquadId.() -> Unit,
   ) = AssistantRequestResponse().apply {
-    SquadIdImpl(request, this).apply(block)
+    SquadIdImpl(requestContext, this).apply(block)
   }
 
   fun numberDestination(
-    request: JsonElement,
+    requestContext: RequestContext,
     block: NumberDestination.() -> Unit,
   ) = AssistantRequestResponse().apply {
     val numDto = NumberDestinationDto()
     destination = numDto
-    NumberDestinationImpl(request, numDto).apply(block)
+    NumberDestinationImpl(requestContext, numDto).apply(block)
   }
 
   fun sipDestination(
-    request: JsonElement,
+    requestContext: RequestContext,
     block: SipDestination.() -> Unit,
   ) = AssistantRequestResponse().apply {
     val sipDto = SipDestinationDto()
     destination = sipDto
-    SipDestinationImpl(request, sipDto).apply(block)
+    SipDestinationImpl(requestContext, sipDto).apply(block)
   }
 }
 

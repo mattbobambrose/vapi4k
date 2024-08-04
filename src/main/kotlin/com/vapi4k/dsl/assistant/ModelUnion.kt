@@ -41,6 +41,7 @@ import com.vapi4k.dsl.model.VapiModelImpl
 import com.vapi4k.dsl.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriber
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dsl.voice.AzureVoice
 import com.vapi4k.dsl.voice.CartesiaVoice
 import com.vapi4k.dsl.voice.DeepgramVoice
@@ -79,7 +80,6 @@ import com.vapi4k.dtos.voice.OpenAIVoiceDto
 import com.vapi4k.dtos.voice.PlayHTVoiceDto
 import com.vapi4k.dtos.voice.RimeAIVoiceDto
 import com.vapi4k.utils.DuplicateChecker
-import kotlinx.serialization.json.JsonElement
 
 interface ModelDtoUnion {
   var transcriberDto: CommonTranscriberDto?
@@ -88,7 +88,7 @@ interface ModelDtoUnion {
 }
 
 interface ModelUnion {
-  val request: JsonElement
+  val requestContext: RequestContext
   val analysisPlanDto: AnalysisPlanDto
   val artifactPlanDto: ArtifactPlanDto
   val assistantCacheId: AssistantCacheId
