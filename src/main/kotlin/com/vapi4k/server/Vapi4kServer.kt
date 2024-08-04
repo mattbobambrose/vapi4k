@@ -179,7 +179,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
           get(toolCallPath) { call.respondText("$toolCallPath requires a post request", status = MethodNotAllowed) }
           post(toolCallPath) {
-            handleToolCallPathPost(endpoint, callbackChannel)
+            handleToolCallPathPost(application, endpoint, callbackChannel)
           }
         }
       }
@@ -272,7 +272,7 @@ private suspend fun KtorCallContext.handleServerPathPost(
     val request = json.toJsonElement()
     val requestType = request.requestType
 
-    invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
+    invokeRequestCallbacks(application, requestResponseCallbackChannel, requestType, request)
 
     val (response, duration) = measureTimedValue {
       when (requestType) {
@@ -316,11 +316,12 @@ private suspend fun KtorCallContext.handleServerPathPost(
       }
     }
 
-    invokeResponseCallbacks(requestResponseCallbackChannel, requestType, response, duration)
+    invokeResponseCallbacks(application, requestResponseCallbackChannel, requestType, response, duration)
   }
 }
 
 private suspend fun KtorCallContext.handleToolCallPathPost(
+  application: Vapi4kApplication,
   endpoint: Endpoint,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
@@ -329,7 +330,7 @@ private suspend fun KtorCallContext.handleToolCallPathPost(
     val request = json.toJsonElement()
     val requestType = request.requestType
 
-    invokeRequestCallbacks(requestResponseCallbackChannel, requestType, request)
+    invokeRequestCallbacks(application, requestResponseCallbackChannel, requestType, request)
 
     if (requestType.isToolCall) {
       call.respond(HttpStatusCode.BadRequest, "Invalid message type: requires ToolCallRequest")
@@ -339,7 +340,7 @@ private suspend fun KtorCallContext.handleToolCallPathPost(
         call.respond(response)
         lambda { response.toJsonElement() }
       }
-      invokeResponseCallbacks(requestResponseCallbackChannel, requestType, response, duration)
+      invokeResponseCallbacks(application, requestResponseCallbackChannel, requestType, response, duration)
     }
   }
 }
@@ -378,63 +379,67 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
         runBlocking {
           for (callback in callbackChannel) {
             coroutineScope {
-              with(callback) {
-                when (callback.type) {
-                  REQUEST -> {
-                    config.applications.forEach { application ->
+              when (callback.type) {
+                REQUEST -> {
+                  config.applications
+                    .filter { it == callback.application }
+                    .forEach { application ->
                       with(application) {
-                        applicationAllRequests.forEach { launch { it.invoke(request) } }
+                        applicationAllRequests.forEach { launch { it.invoke(callback.request) } }
                         applicationPerRequests
-                          .filter { it.first == requestType }
-                          .forEach { (_, block) -> launch { block(request) } }
+                          .filter { it.first == callback.requestType }
+                          .forEach { (_, block) -> launch { block(callback.request) } }
                       }
                     }
-                    with(config) {
-                      globalAllRequests.forEach { launch { it.invoke(request) } }
-                      globalPerRequests
-                        .filter { it.first == requestType }
-                        .forEach { (_, block) -> launch { block(request) } }
-                    }
+                  with(config) {
+                    globalAllRequests.forEach { launch { it.invoke(callback.request) } }
+                    globalPerRequests
+                      .filter { it.first == callback.requestType }
+                      .forEach { (_, block) -> launch { block(callback.request) } }
                   }
+                }
 
-                  RESPONSE -> {
-                    config.applications.forEach { application ->
-                      with(application) {
-                        if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
-                          val resp =
-                            runCatching {
-                              response.invoke()
-                            }.onFailure { e ->
-                              logger.error { "Error creating response" }
-                              error("Error creating response")
-                            }.getOrThrow()
-
-                          applicationAllResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
-                          applicationPerResponses
-                            .filter { it.first == requestType }
-                            .forEach { (reqType, block) ->
-                              launch { block(reqType, resp, elapsed) }
-                            }
-                        }
-                      }
-                    }
-                    with(config) {
-                      if (globalAllResponses.isNotEmpty() || globalPerResponses.isNotEmpty()) {
+                RESPONSE -> {
+                  config.applications.forEach { application ->
+                    with(application) {
+                      if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
                         val resp =
                           runCatching {
-                            response.invoke()
+                            callback.response.invoke()
                           }.onFailure { e ->
                             logger.error { "Error creating response" }
                             error("Error creating response")
                           }.getOrThrow()
 
-                        globalAllResponses.forEach { launch { it.invoke(requestType, resp, elapsed) } }
-                        globalPerResponses
-                          .filter { it.first == requestType }
+                        applicationAllResponses.forEach {
+                          launch {
+                            it.invoke(callback.requestType, resp, callback.elapsed)
+                          }
+                        }
+                        applicationPerResponses
+                          .filter { it.first == callback.requestType }
                           .forEach { (reqType, block) ->
-                            launch { block(reqType, resp, elapsed) }
+                            launch { block(reqType, resp, callback.elapsed) }
                           }
                       }
+                    }
+                  }
+                  with(config) {
+                    if (globalAllResponses.isNotEmpty() || globalPerResponses.isNotEmpty()) {
+                      val resp =
+                        runCatching {
+                          callback.response.invoke()
+                        }.onFailure { e ->
+                          logger.error { "Error creating response" }
+                          error("Error creating response")
+                        }.getOrThrow()
+
+                      globalAllResponses.forEach { launch { it.invoke(callback.requestType, resp, callback.elapsed) } }
+                      globalPerResponses
+                        .filter { it.first == callback.requestType }
+                        .forEach { (reqType, block) ->
+                          launch { block(reqType, resp, callback.elapsed) }
+                        }
                     }
                   }
                 }
@@ -450,19 +455,22 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
 }
 
 private suspend fun invokeRequestCallbacks(
+  application: Vapi4kApplication,
   channel: Channel<RequestResponseCallback>,
   requestType: ServerRequestType,
   request: JsonElement,
-) = channel.send(requestCallback(requestType, request))
+) = channel.send(requestCallback(application, requestType, request))
 
 private suspend fun invokeResponseCallbacks(
+  application: Vapi4kApplication,
   channel: Channel<RequestResponseCallback>,
   requestType: ServerRequestType,
   response: () -> JsonElement,
   elapsed: Duration,
-) = channel.send(responseCallback(requestType, response, elapsed))
+) = channel.send(responseCallback(application, requestType, response, elapsed))
 
 private data class RequestResponseCallback(
+  val application: Vapi4kApplication,
   val type: RequestResponseType,
   val requestType: ServerRequestType,
   val request: JsonElement = emptyJsonElement(),
@@ -471,14 +479,16 @@ private data class RequestResponseCallback(
 ) {
   companion object {
     fun requestCallback(
+      application: Vapi4kApplication,
       requestType: ServerRequestType,
       request: JsonElement,
-    ) = RequestResponseCallback(REQUEST, requestType, request)
+    ) = RequestResponseCallback(application, REQUEST, requestType, request)
 
     fun responseCallback(
+      application: Vapi4kApplication,
       requestType: ServerRequestType,
       response: () -> JsonElement,
       elapsed: Duration,
-    ) = RequestResponseCallback(RESPONSE, requestType, response = response, elapsed = elapsed)
+    ) = RequestResponseCallback(application, RESPONSE, requestType, response = response, elapsed = elapsed)
   }
 }
