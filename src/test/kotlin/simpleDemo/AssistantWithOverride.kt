@@ -51,5 +51,6 @@ class AssistantWithOverrides {
 }
 
 enum class Coasts {
-  EAST, WEST
+  EAST,
+  WEST,
 }

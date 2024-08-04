@@ -100,11 +100,16 @@ object ValidateAssistantResponse {
 
     return createHTML().html {
       head {
-        link { rel = "stylesheet"; href = STYLES_CSS }
-        link { rel = "stylesheet"; href = "/assets/prism.css" }
+        link {
+          rel = "stylesheet"
+          href = STYLES_CSS
+        }
+        link {
+          rel = "stylesheet"
+          href = "/assets/prism.css"
+        }
         title { +"Assistant Request Validation" }
         script { src = HTMX_SOURCE_URL }
-        //script { src = "https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/pretty-print-json.min.js" }
       }
       body {
         script { src = "/assets/prism.js" }
@@ -248,7 +253,7 @@ object ValidateAssistantResponse {
                   preElement.style.display = 'block';
                 }
               });
-            """
+            """,
           )
         }
 

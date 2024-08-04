@@ -96,8 +96,7 @@ class FunctionDetails(
     args: JsonElement,
     argName: String,
     argType: KType,
-  ) =
-    when (argType.asKClass()) {
+  ) = when (argType.asKClass()) {
       String::class -> args.jsonObject.stringValue(argName)
       Int::class -> args.jsonObject.intValue(argName)
       Boolean::class -> args.jsonObject.booleanValue(argName)

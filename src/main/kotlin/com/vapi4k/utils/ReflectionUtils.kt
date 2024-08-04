@@ -49,5 +49,6 @@ internal object ReflectionUtils {
       }
 
   fun KType.asKClass() = classifier as KClass<*>
+
   fun KParameter.asKClass() = type.classifier as KClass<*>
 }

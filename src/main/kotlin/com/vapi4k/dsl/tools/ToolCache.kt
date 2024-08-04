@@ -113,11 +113,12 @@ internal class ToolCache {
       toolCallCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
     }
 
-    fun cacheAsJson() = CacheInfoDto(
-      toolCallCache.lastCacheCleanInstant.toString(),
-      toolCallCache.asDtoMap.size,
-      toolCallCache.asDtoMap
-    )
+    fun cacheAsJson() =
+      CacheInfoDto(
+        toolCallCache.lastCacheCleanInstant.toString(),
+        toolCallCache.asDtoMap.size,
+        toolCallCache.asDtoMap,
+      )
   }
 }
 

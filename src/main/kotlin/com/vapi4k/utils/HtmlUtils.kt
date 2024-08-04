@@ -21,5 +21,4 @@ import kotlinx.html.unsafe
 
 object HtmlUtils {
   fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
-
 }

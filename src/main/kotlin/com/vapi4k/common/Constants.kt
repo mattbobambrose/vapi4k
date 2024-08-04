@@ -23,7 +23,6 @@ object Constants {
   const val UNSPECIFIED_DEFAULT = "unspecified"
   const val UNKNOWN = "unknown"
   const val STYLES_CSS = "/assets/css/styles.css"
-
 }
 
 object Endpoints {

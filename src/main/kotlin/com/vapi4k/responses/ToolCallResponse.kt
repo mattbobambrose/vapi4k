@@ -51,6 +51,10 @@ data class ToolCallResponse(
                       val args = toolCall.toolCallArguments
                       toolCallResult.toolCallId = toolCall.toolCallId
                       toolCallResult.name = funcName
+                      val errorAction = { errorMsg: String ->
+                        toolCallResult.error = errorMsg
+                        errorMessage = errorMsg
+                      }
                       runCatching {
                         toolCallCache.getFromCache(sessionCacheId)
                           .getFunction(funcName)
@@ -61,16 +65,12 @@ data class ToolCallResponse(
                             request = request,
                             message = toolCallResult.message,
                             successAction = { result -> toolCallResult.result = result },
-                            errorAction = { errorMsg ->
-                              toolCallResult.error = errorMsg
-                              errorMessage = errorMsg
-                            },
+                            errorAction = errorAction,
                           )
                       }.getOrElse { e ->
                         val errorMsg = e.message ?: "Error invoking tool $funcName"
                         logger.error { errorMsg }
-                        toolCallResult.error = errorMsg
-                        errorMessage = errorMsg
+                        errorAction(errorMsg)
                       }
                     }
 
