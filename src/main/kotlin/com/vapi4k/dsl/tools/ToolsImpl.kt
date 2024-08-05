@@ -23,11 +23,12 @@ import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.api.vapi4k.ToolServer
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
-import com.vapi4k.dsl.functions.FunctionUtils
+import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
+import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
@@ -196,9 +197,9 @@ data class ToolsImpl internal constructor(
     implInitBlock: (ToolDto) -> Unit,
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
-      FunctionUtils.populateFunctionDto(toolType, model, obj, function, toolDto.function)
+      populateFunctionDto(toolType, model, obj, function, toolDto.function)
       val sessionCacheId = getSessionCacheId()
-      ToolCache.toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, toolType, obj, function)
+      toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, toolType, obj, function)
 
       with(toolDto) {
         type = toolType

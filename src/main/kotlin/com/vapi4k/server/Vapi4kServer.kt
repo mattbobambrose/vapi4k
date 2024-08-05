@@ -53,8 +53,7 @@ import com.vapi4k.common.EnvVar.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.tools.ToolCache.Companion.cacheAsJson
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
+import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -148,6 +147,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     info { Vapi4kServer::class.versionDesc() }
   }
 
+  val config = AssistantImpl.config
+  config.applicationConfig = environment?.config ?: error("No environment config found")
+
   logEnvVarValues()
 
   startCallbackThread(callbackChannel)
@@ -165,8 +167,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     defaultKtorConfig(appMicrometerRegistry)
 
     routing {
-      val config = AssistantImpl.config
-      config.applicationConfig = environment?.config ?: error("No environment config found")
 
       staticResources("/assets", "static")
 
@@ -175,8 +175,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       if (!isProduction) {
         get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
-        get(CACHES_PATH) { call.respond(cacheAsJson().toJsonString()) }
-        get(CLEAR_CACHES_PATH) { clearCacheResponse() }
+        get(CACHES_PATH) { call.respond(toolCallCache.cacheAsJson().toJsonString()) }
+        get(CLEAR_CACHES_PATH) { clearCacheResponse(toolCallCache) }
 
         get(VALIDATE_PATH) { validateRoot(config) }
         get("$VALIDATE_PATH/{appName}") { validateApplication(config) }
@@ -202,8 +202,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   }
 }
 
-private suspend fun KtorCallContext.clearCacheResponse() {
-  clearToolCache()
+private suspend fun KtorCallContext.clearCacheResponse(toolCache: ToolCache) {
+  toolCache.clearToolCache()
   call.respondRedirect(CACHES_PATH)
 }
 
@@ -357,7 +357,6 @@ private suspend fun KtorCallContext.assistantRequestResponse(
         END_OF_CALL_REPORT -> {
           if (application.eocrCacheRemovalEnabled) {
             val sessionCacheId = request.sessionCacheId
-
             toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
               logger.info { "EOCR removed ${funcInfo.functions.size} cache entries [${funcInfo.ageSecs}] " }
             } ?: logger.warn { "EOCR unable to find and remove cache entry [$sessionCacheId]" }

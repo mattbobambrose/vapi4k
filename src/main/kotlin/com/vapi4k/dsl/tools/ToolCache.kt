@@ -74,7 +74,7 @@ internal class ToolCache {
           logger.debug { "Entry not found in cache: $sessionCacheId" }
       }
 
-  private fun clearCache() {
+  internal fun clearToolCache() {
     cacheMap.clear()
   }
 
@@ -101,26 +101,20 @@ internal class ToolCache {
     cacheMap.remove(oldSessionCacheId)?.also { cacheMap[newSessionCacheKey] = it }
   }
 
+  fun cacheAsJson() =
+    CacheInfoDto(
+      lastCacheCleanInstant.toString(),
+      asDtoMap.size,
+      asDtoMap,
+    )
+
+  fun swapCacheKeys(
+    oldSessionCacheId: SessionCacheId,
+    newSessionCacheKey: SessionCacheId,
+  ) = swapKeys(oldSessionCacheId, newSessionCacheKey)
+
   companion object {
     val toolCallCache = ToolCache()
-
-    fun clearToolCache() {
-      toolCallCache.clearCache()
-    }
-
-    fun swapCacheKeys(
-      oldSessionCacheId: SessionCacheId,
-      newSessionCacheKey: SessionCacheId,
-    ) {
-      toolCallCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
-    }
-
-    fun cacheAsJson() =
-      CacheInfoDto(
-        toolCallCache.lastCacheCleanInstant.toString(),
-        toolCallCache.asDtoMap.size,
-        toolCallCache.asDtoMap,
-      )
   }
 }
 
