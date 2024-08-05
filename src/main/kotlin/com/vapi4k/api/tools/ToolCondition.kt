@@ -17,12 +17,6 @@
 package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.tools.ToolMessageCompleteDto
-import com.vapi4k.dtos.tools.ToolMessageCondition
-import com.vapi4k.dtos.tools.ToolMessageDelayedDto
-import com.vapi4k.dtos.tools.ToolMessageFailedDto
-import com.vapi4k.dtos.tools.ToolMessageStartDto
-import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
 interface ToolCondition {
@@ -33,52 +27,4 @@ interface ToolCondition {
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed
 
   fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed
-}
-
-class ToolConditionImpl internal constructor(
-  internal val tool: ToolImpl,
-  private val conditionSet: Set<ToolMessageCondition>,
-) : ToolCondition {
-  private val requestStartChecker = DuplicateChecker()
-  private val requestCompleteChecker = DuplicateChecker()
-  private val requestFailedChecker = DuplicateChecker()
-  private val requestDelayedChecker = DuplicateChecker()
-
-  private val messages get() = tool.toolDto.messages
-
-  override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
-    requestStartChecker.check("condition${conditionSet.joinToString()}{} already has a requestStartMessage{}")
-    return ToolMessageStartDto().let { dto ->
-      dto.conditions.addAll(conditionSet)
-      messages.add(dto)
-      ToolMessageStart(dto).apply(block)
-    }
-  }
-
-  override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    requestCompleteChecker.check("condition${conditionSet.joinToString()}{} already has a requestCompleteMessage{}")
-    return ToolMessageCompleteDto().let { dto ->
-      dto.conditions.addAll(conditionSet)
-      messages.add(dto)
-      ToolMessageComplete(dto).apply(block)
-    }
-  }
-
-  override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    requestFailedChecker.check("condition${conditionSet.joinToString()}{} already has a requestFailedMessage{}")
-    return ToolMessageFailedDto().let { dto ->
-      dto.conditions.addAll(conditionSet)
-      messages.add(dto)
-      ToolMessageFailed(dto).apply(block)
-    }
-  }
-
-  override fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed {
-    requestDelayedChecker.check("condition${conditionSet.joinToString()}{} already has a requestDelayedMessage{}")
-    return ToolMessageDelayedDto().let { dto ->
-      dto.conditions.addAll(conditionSet)
-      messages.add(dto)
-      ToolMessageDelayed(dto).apply(block)
-    }
-  }
 }

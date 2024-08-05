@@ -16,10 +16,10 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.dsl.vapi4k.RequestContext
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 

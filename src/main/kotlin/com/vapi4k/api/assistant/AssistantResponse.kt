@@ -17,17 +17,17 @@
 package com.vapi4k.api.assistant
 
 import com.vapi4k.api.destination.NumberDestination
-import com.vapi4k.api.destination.NumberDestinationImpl
 import com.vapi4k.api.destination.SipDestination
-import com.vapi4k.api.destination.SipDestinationImpl
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantIdImpl
 import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.destination.NumberDestinationImpl
+import com.vapi4k.dsl.destination.SipDestinationImpl
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.responses.AssistantRequestResponse

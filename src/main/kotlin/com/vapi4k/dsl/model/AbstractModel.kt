@@ -20,10 +20,10 @@ import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.model.enums.MessageRoleType
 import com.vapi4k.api.tools.Tools
-import com.vapi4k.api.tools.ToolsImpl
 import com.vapi4k.common.MessageCallId.Companion.toMessageCallId
 import com.vapi4k.dsl.functions.FunctionsImpl
-import com.vapi4k.dtos.RoleMessage
+import com.vapi4k.dsl.tools.ToolsImpl
+import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
 import com.vapi4k.utils.JsonElementUtils.messageCallId
@@ -68,6 +68,6 @@ abstract class AbstractModel(
     // Remove any existing messages with the same role
     messages.removeAll { it.role == role.desc }
     // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
-    messages += RoleMessage(role.desc, content.trimLeadingSpaces())
+    messages += RoleMessageDto(role.desc, content.trimLeadingSpaces())
   }
 }

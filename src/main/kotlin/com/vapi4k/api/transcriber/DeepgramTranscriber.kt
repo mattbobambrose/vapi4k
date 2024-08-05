@@ -16,19 +16,9 @@
 
 package com.vapi4k.api.transcriber
 
-import com.vapi4k.api.model.enums.DeepgramModelType
-import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.transcriber.DeepgramTranscriberProperties
 import com.vapi4k.dtos.transcriber.DeepgramTranscriberDto
-
-interface DeepgramTranscriberProperties {
-  var customLanguage: String
-  var customModel: String
-  val keywords: MutableSet<String>
-  var smartFormat: Boolean?
-  var transcriberLanguage: DeepgramLanguageType
-  var transcriberModel: DeepgramModelType
-}
 
 @AssistantDslMarker
 class DeepgramTranscriber internal constructor(

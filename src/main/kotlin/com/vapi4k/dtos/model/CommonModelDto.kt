@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos.model
 
-import com.vapi4k.api.model.enums.ModelType
-import com.vapi4k.dtos.RoleMessage
+import com.vapi4k.dsl.model.ModelType
+import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.tools.ToolDto
 import kotlinx.serialization.KSerializer
@@ -33,7 +33,7 @@ interface CommonModelDto {
   val tools: MutableList<ToolDto>
   val functions: MutableList<FunctionDto>
   var knowledgeBaseDto: KnowledgeBaseDto?
-  val messages: MutableList<RoleMessage>
+  val messages: MutableList<RoleMessageDto>
 }
 
 private object ModelSerializer : KSerializer<CommonModelDto> {

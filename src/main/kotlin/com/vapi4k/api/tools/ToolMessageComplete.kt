@@ -16,15 +16,9 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.api.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.ToolMessageCompleteProperties
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
-
-interface ToolMessageCompleteProperties {
-  var role: ToolMessageRoleType
-  var endCallAfterSpokenEnabled: Boolean?
-  var content: String
-}
 
 @AssistantDslMarker
 class ToolMessageComplete internal constructor(

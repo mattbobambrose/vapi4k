@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.squad
 
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.dsl.vapi4k.RequestContext
 
 internal interface SquadIdSource {
   var squadId: String

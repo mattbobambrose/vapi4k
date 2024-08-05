@@ -16,6 +16,7 @@
 
 package com.vapi4k.api.vapi4k
 
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.utils.Utils.ensureStartsWith
 import kotlinx.serialization.SerialName
 import java.net.URI
@@ -23,6 +24,7 @@ import java.net.URI
 @Vapi4KDslMarker
 class Endpoint internal constructor() {
   internal val path get() = URI(serverUrl).toURL().path.ensureStartsWith("/")
+
   var name = ""
 
   @SerialName("url")

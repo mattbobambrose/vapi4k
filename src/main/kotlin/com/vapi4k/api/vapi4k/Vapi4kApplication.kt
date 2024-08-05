@@ -21,6 +21,8 @@ import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.EnvVar.Companion.defaultServerPath
 import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
+import com.vapi4k.dsl.vapi4k.RequestContext
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.Utils.dropLeading
@@ -28,6 +30,7 @@ import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
+@Vapi4KDslMarker
 class Vapi4kApplication {
   internal val applicationId = getRandomSecret(10).toApplicationId()
   internal val toolCallEndpoints = mutableListOf<Endpoint>()
@@ -100,7 +103,7 @@ class Vapi4kApplication {
 
   private val defaultToolCallEndpoint
     get() = Endpoint().apply {
-      this.serverUrl = "$serverBaseUrl/$serverPathAsSegment"
+      this.serverUrl = "$serverBaseUrl/${this@Vapi4kApplication.serverPathAsSegment}"
       this.serverSecret = this@Vapi4kApplication.serverSecret
     }
 

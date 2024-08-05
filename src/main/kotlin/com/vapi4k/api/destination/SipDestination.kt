@@ -17,7 +17,6 @@
 package com.vapi4k.api.destination
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.api.destination.SipDestinationDto
 
 @AssistantDslMarker
 interface SipDestination {
@@ -25,7 +24,3 @@ interface SipDestination {
   var message: String
   var description: String
 }
-
-class SipDestinationImpl internal constructor(
-  private val dto: SipDestinationDto,
-) : SipDestination by dto

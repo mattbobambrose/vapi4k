@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos.model
 
-import com.vapi4k.api.model.enums.ModelType
 import com.vapi4k.dsl.model.AnyscaleModelProperties
+import com.vapi4k.dsl.model.ModelType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 

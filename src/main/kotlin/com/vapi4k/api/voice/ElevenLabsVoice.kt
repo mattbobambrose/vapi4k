@@ -16,29 +16,9 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
-import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
-import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.ElevenLabsVoiceProperties
 import com.vapi4k.dtos.voice.ElevenLabsVoiceDto
-
-interface ElevenLabsVoiceProperties {
-  var customModel: String
-  var customVoiceId: String
-  var enableSsmlParsing: Boolean?
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
-  var modelType: ElevenLabsVoiceModelType
-  var optimizeStreaming: Double
-  var similarityBoost: Double
-  var stability: Double
-  var style: Double
-  var useSpeakerBoost: Boolean?
-  var voiceIdType: ElevenLabsVoiceIdType
-}
 
 @AssistantDslMarker
 data class ElevenLabsVoice internal constructor(

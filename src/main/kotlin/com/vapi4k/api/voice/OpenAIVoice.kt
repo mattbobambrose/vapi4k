@@ -16,21 +16,9 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.OpenAIVoiceIdType
-import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.OpenAIVoiceProperties
 import com.vapi4k.dtos.voice.OpenAIVoiceDto
-
-interface OpenAIVoiceProperties {
-  var customVoiceId: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
-  var speed: Double
-  var voiceIdType: OpenAIVoiceIdType
-}
 
 @AssistantDslMarker
 data class OpenAIVoice internal constructor(

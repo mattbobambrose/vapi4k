@@ -16,24 +16,9 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
-import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
-import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.CartesiaVoiceProperties
 import com.vapi4k.dtos.voice.CartesiaVoiceDto
-
-interface CartesiaVoiceProperties {
-  var customLanguage: String
-  var customModel: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
-  var languageType: CartesiaVoiceLanguageType
-  var modelType: CartesiaVoiceModelType
-  var voiceId: String
-}
 
 @AssistantDslMarker
 data class CartesiaVoice internal constructor(

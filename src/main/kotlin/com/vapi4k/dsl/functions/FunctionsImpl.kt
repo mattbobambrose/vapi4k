@@ -17,10 +17,10 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.api.functions.Functions
-import com.vapi4k.api.tools.ToolCache
 import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.model.AbstractModelProperties
+import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import kotlin.reflect.KFunction

@@ -16,7 +16,6 @@
 
 package com.vapi4k.client
 
-import com.vapi4k.api.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
@@ -27,6 +26,7 @@ import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.HttpUtils.httpClient

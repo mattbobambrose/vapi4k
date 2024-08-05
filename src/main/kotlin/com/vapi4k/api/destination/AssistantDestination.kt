@@ -18,7 +18,6 @@ package com.vapi4k.api.destination
 
 import com.vapi4k.api.destination.enums.AssistantTransferMode
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 
 @AssistantDslMarker
 interface AssistantDestination {
@@ -26,7 +25,3 @@ interface AssistantDestination {
   var message: String
   var description: String
 }
-
-class AssistantDestinationImpl internal constructor(
-  private val dto: AssistantDestinationDto,
-) : AssistantDestination by dto

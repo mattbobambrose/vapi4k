@@ -14,8 +14,9 @@
  *
  */
 
-package com.vapi4k.api.vapi4k
+package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.utils.JsonElementUtils.phoneNumber
 import kotlinx.serialization.json.JsonElement
 

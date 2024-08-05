@@ -16,17 +16,9 @@
 
 package com.vapi4k.api.transcriber
 
-import com.vapi4k.api.transcriber.enums.TalkscriberLanguageType
-import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.transcriber.TalkscriberTranscriberProperties
 import com.vapi4k.dtos.transcriber.TalkscriberTranscriberDto
-
-interface TalkscriberTranscriberProperties {
-  var customLanguage: String
-  var customModel: String
-  var transcriberLanguage: TalkscriberLanguageType
-  var transcriberModel: TalkscriberModelType
-}
 
 @AssistantDslMarker
 class TalkscriberTranscriber internal constructor(

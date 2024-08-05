@@ -16,26 +16,8 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.PlayHTVoiceEmotionType
-import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
-import com.vapi4k.api.voice.enums.PunctuationType
+import com.vapi4k.dsl.voice.PlayHTVoiceProperties
 import com.vapi4k.dtos.voice.PlayHTVoiceDto
-
-interface PlayHTVoiceProperties {
-  var customVoiceId: String
-  var emotion: PlayHTVoiceEmotionType
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
-  var speed: Double
-  var styleGuidance: Double
-  var temperature: Double
-  var textGuidance: Double
-  var voiceGuidance: Double
-  var voiceIdType: PlayHTVoiceIdType
-}
 
 data class PlayHTVoice internal constructor(
   private val dto: PlayHTVoiceDto,

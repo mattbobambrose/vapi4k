@@ -16,10 +16,10 @@
 
 package com.vapi4k.dtos.voice
 
-import com.vapi4k.api.voice.RimeAIVoiceProperties
 import com.vapi4k.api.voice.enums.RimeAIVoiceIdType
 import com.vapi4k.api.voice.enums.RimeAIVoiceModelType
 import com.vapi4k.api.voice.enums.VoiceProviderType
+import com.vapi4k.dsl.voice.RimeAIVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

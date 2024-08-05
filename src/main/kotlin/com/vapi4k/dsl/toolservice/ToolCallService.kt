@@ -14,10 +14,12 @@
  *
  */
 
-package com.vapi4k.api.toolservice
+package com.vapi4k.dsl.toolservice
 
 import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.api.tools.ToolMessageFailed
+import com.vapi4k.api.toolservice.RequestCompleteMessages
+import com.vapi4k.api.toolservice.RequestFailedMessages
 import kotlinx.serialization.json.JsonElement
 
 abstract class ToolCallService {

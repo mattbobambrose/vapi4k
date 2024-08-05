@@ -18,9 +18,9 @@ package com.vapi4k
 
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.tools.enums.ToolMessageRoleType
-import com.vapi4k.api.toolservice.ToolCallService
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.dsl.toolservice.ToolCallService
 import kotlinx.serialization.json.JsonElement
 
 class WeatherLookupService0 {

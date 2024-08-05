@@ -16,20 +16,8 @@
 
 package com.vapi4k.api.transcriber
 
-import com.vapi4k.api.model.enums.GladiaModelType
-import com.vapi4k.api.transcriber.enums.GladiaLanguageType
+import com.vapi4k.dsl.transcriber.GladiaTranscriberProperties
 import com.vapi4k.dtos.transcriber.GladiaTranscriberDto
-
-interface GladiaTranscriberProperties {
-  var audioEnhancer: Boolean?
-  var customLanguage: String
-  var customModel: String
-  var languageBehavior: String
-  var prosody: Boolean?
-  var transcriberLanguage: GladiaLanguageType
-  var transcriberModel: GladiaModelType
-  var transcriptionHint: String
-}
 
 class GladiaTranscriber internal constructor(
   private val dto: GladiaTranscriberDto,

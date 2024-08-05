@@ -16,20 +16,9 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.NeetsVoiceIdType
-import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.NeetsVoiceProperties
 import com.vapi4k.dtos.voice.NeetsVoiceDto
-
-interface NeetsVoiceProperties {
-  var customVoiceId: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
-  var voiceIdType: NeetsVoiceIdType
-}
 
 @AssistantDslMarker
 data class NeetsVoice internal constructor(

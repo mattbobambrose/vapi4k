@@ -17,6 +17,12 @@
 package com.vapi4k.api.model.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 enum class MetaDataSendModeType(
   val desc: String,
@@ -30,4 +36,15 @@ enum class MetaDataSendModeType(
   fun isSpecified() = this != UNSPECIFIED
 
   fun isNotSpecified() = this == UNSPECIFIED
+}
+
+private object MetaDataSendModeTypeSerializer : KSerializer<MetaDataSendModeType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("MetaDataSendModeType", STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: MetaDataSendModeType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = MetaDataSendModeType.entries.first { it.desc == decoder.decodeString() }
 }

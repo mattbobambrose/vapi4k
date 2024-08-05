@@ -14,8 +14,12 @@
  *
  */
 
-package com.vapi4k.api.tools
+package com.vapi4k.dsl.tools
 
+import com.vapi4k.api.tools.Tool
+import com.vapi4k.api.tools.ToolWithMetaData
+import com.vapi4k.api.tools.Tools
+import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.api.vapi4k.Endpoint
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId

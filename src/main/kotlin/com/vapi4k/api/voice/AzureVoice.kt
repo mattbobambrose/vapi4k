@@ -16,21 +16,9 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.AzureVoiceIdType
-import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.AzureVoiceProperties
 import com.vapi4k.dtos.voice.AzureVoiceDto
-
-interface AzureVoiceProperties {
-  var customVoiceId: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
-  var speed: Double
-  var voiceIdType: AzureVoiceIdType
-}
 
 @AssistantDslMarker
 data class AzureVoice internal constructor(

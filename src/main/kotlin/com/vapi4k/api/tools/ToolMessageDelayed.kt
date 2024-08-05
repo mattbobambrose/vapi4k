@@ -17,12 +17,8 @@
 package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.ToolMessageDelayedProperties
 import com.vapi4k.dtos.tools.ToolMessageDelayedDto
-
-interface ToolMessageDelayedProperties {
-  var timingMilliseconds: Int
-  var content: String
-}
 
 @AssistantDslMarker
 data class ToolMessageDelayed internal constructor(

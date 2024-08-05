@@ -17,11 +17,8 @@
 package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.ToolMessageStartProperties
 import com.vapi4k.dtos.tools.ToolMessageStartDto
-
-interface ToolMessageStartProperties {
-  var content: String
-}
 
 @AssistantDslMarker
 data class ToolMessageStart internal constructor(

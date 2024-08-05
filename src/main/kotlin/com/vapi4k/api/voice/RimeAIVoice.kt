@@ -16,23 +16,8 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.PunctuationType
-import com.vapi4k.api.voice.enums.RimeAIVoiceIdType
-import com.vapi4k.api.voice.enums.RimeAIVoiceModelType
+import com.vapi4k.dsl.voice.RimeAIVoiceProperties
 import com.vapi4k.dtos.voice.RimeAIVoiceDto
-
-interface RimeAIVoiceProperties {
-  var customModel: String
-  var customVoiceId: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
-  var modelType: RimeAIVoiceModelType
-  var speed: Double
-  var voiceIdType: RimeAIVoiceIdType
-}
 
 data class RimeAIVoice internal constructor(
   private val dto: RimeAIVoiceDto,

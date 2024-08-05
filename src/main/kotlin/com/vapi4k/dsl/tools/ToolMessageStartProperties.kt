@@ -14,13 +14,8 @@
  *
  */
 
-package com.vapi4k.dtos
+package com.vapi4k.dsl.tools
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class RoleMessage(
-  var role: String = "",
-  var content: String = "",
-  var delay: Int = -1,
-)
+interface ToolMessageStartProperties {
+  var content: String
+}

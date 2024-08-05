@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.api.tools
+package com.vapi4k.dsl.tools
 
 import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.common.AssistantCacheId

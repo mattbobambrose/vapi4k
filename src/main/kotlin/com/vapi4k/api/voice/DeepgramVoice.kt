@@ -16,20 +16,9 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.DeepGramVoiceIdType
-import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.voice.DeepgramVoiceProperties
 import com.vapi4k.dtos.voice.DeepgramVoiceDto
-
-interface DeepgramVoiceProperties {
-  var customVoiceId: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
-  var voiceIdType: DeepGramVoiceIdType
-}
 
 @AssistantDslMarker
 data class DeepgramVoice internal constructor(

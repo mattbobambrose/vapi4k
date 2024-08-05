@@ -19,9 +19,9 @@ package com.vapi4k.dsl.squad
 import com.vapi4k.api.assistant.AssistantOverrides
 import com.vapi4k.api.squad.Members
 import com.vapi4k.api.squad.Squad
-import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantOverridesImpl
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.squad.SquadDto
 import com.vapi4k.utils.AssistantCacheIdSource
 
