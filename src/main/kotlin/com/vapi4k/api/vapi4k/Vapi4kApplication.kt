@@ -21,7 +21,7 @@ import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.EnvVar.Companion.defaultServerPath
 import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
-import com.vapi4k.dsl.vapi4k.RequestContext
+import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.DslUtils.getRandomSecret
@@ -91,7 +91,7 @@ class Vapi4kApplication {
 
   internal suspend fun getAssistantResponse(request: JsonElement): AssistantRequestResponse {
     val requestContext = RequestContext(this, request)
-    val assistantResponse = AssistantResponse(requestContext)
+    val assistantResponse = AssistantResponseImpl(requestContext)
     assistantRequest?.invoke(assistantResponse) ?: error("onAssistantRequest{} not called")
     return if (assistantResponse.isAssigned)
       assistantResponse.assistantRequestResponse

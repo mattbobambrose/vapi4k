@@ -34,6 +34,7 @@ import com.vapi4k.api.model.VapiModel
 import com.vapi4k.api.transcriber.DeepgramTranscriber
 import com.vapi4k.api.transcriber.GladiaTranscriber
 import com.vapi4k.api.transcriber.TalkscriberTranscriber
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.voice.AzureVoice
 import com.vapi4k.api.voice.CartesiaVoice
@@ -71,7 +72,6 @@ import com.vapi4k.dsl.model.talkscriberTranscriberUnion
 import com.vapi4k.dsl.model.togetherAIModelUnion
 import com.vapi4k.dsl.model.vapiModelUnion
 import com.vapi4k.dsl.model.voicemailDetectionUnion
-import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource

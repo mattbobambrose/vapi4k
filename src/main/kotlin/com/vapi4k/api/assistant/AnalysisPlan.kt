@@ -18,6 +18,7 @@ package com.vapi4k.api.assistant
 
 import com.vapi4k.dsl.assistant.AnalysisPlanProperties
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.StructuredDataSchema
 import com.vapi4k.dtos.AnalysisPlanDto
 
 @AssistantDslMarker

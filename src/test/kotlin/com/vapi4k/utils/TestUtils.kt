@@ -19,8 +19,9 @@ package com.vapi4k.utils
 import com.vapi4k.ServerTest.Companion.configPost
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.common.EnvVar.Companion.defaultServerPath
-import com.vapi4k.dsl.vapi4k.RequestContext
+import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.server.Vapi4k
@@ -40,7 +41,7 @@ fun assistantResponse(
   requestContext: RequestContext,
   block: AssistantResponse.() -> Unit,
 ): AssistantRequestResponse {
-  val assistantResponse = AssistantResponse(requestContext).apply(block)
+  val assistantResponse = AssistantResponseImpl(requestContext).apply(block)
   return if (assistantResponse.isAssigned)
     assistantResponse.assistantRequestResponse
   else

@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.api.model.enums
+package com.vapi4k.dsl.model
 
 enum class MessageRoleType(
   val desc: String,

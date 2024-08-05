@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.api.model.enums.MessageRoleType
 import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.common.MessageCallId
 import com.vapi4k.common.SessionCacheId
