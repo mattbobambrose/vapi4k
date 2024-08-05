@@ -71,7 +71,7 @@ object Utils {
     }\t..."
 
   @OptIn(ExperimentalContracts::class)
-  internal fun Any?.isNotNull(): Boolean {
+  fun Any?.isNotNull(): Boolean {
     contract {
       returns(true) implies (this@isNotNull != null)
     }

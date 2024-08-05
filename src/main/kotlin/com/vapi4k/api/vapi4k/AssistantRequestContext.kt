@@ -16,7 +16,8 @@
 
 package com.vapi4k.api.vapi4k
 
-import com.vapi4k.utils.JsonElementUtils.phoneNumber
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.phoneNumber
 import kotlinx.serialization.json.JsonElement
 
 data class AssistantRequestContext(
@@ -25,4 +26,6 @@ data class AssistantRequestContext(
 ) {
   val phoneNumber: String
     get() = assistantRequest.phoneNumber
+  val messageCallId: String
+    get() = assistantRequest.messageCallId
 }

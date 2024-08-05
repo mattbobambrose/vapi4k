@@ -18,6 +18,9 @@ package com.vapi4k.api.call
 
 import com.typesafe.config.ConfigFactory
 import com.vapi4k.api.call.enums.ApiObjectType
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionCacheId.Companion.UNSPECIFIED_SESSION_CACHE_ID
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
@@ -27,11 +30,8 @@ import com.vapi4k.dtos.api.CallRequestDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonElementUtils.id
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.nextSessionCacheId
-import com.vapi4k.utils.toJsonElement
-import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get

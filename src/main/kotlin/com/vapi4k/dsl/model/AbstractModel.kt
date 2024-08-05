@@ -19,13 +19,13 @@ package com.vapi4k.dsl.model
 import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.tools.Tools
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
 import com.vapi4k.common.MessageCallId.Companion.toMessageCallId
 import com.vapi4k.dsl.functions.FunctionsImpl
 import com.vapi4k.dsl.tools.ToolsImpl
 import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
-import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.Utils.trimLeadingSpaces
 
 abstract class AbstractModel(

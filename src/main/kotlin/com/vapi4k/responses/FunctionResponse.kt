@@ -16,10 +16,10 @@
 
 package com.vapi4k.responses
 
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.functionName
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.functionParameters
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.JsonElementUtils.functionName
-import com.vapi4k.utils.JsonElementUtils.functionParameters
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement

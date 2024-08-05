@@ -18,14 +18,14 @@ package com.vapi4k
 
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.api.model.enums.GroqModelType
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
-import com.vapi4k.utils.firstInList
-import com.vapi4k.utils.get
-import com.vapi4k.utils.intValue
-import com.vapi4k.utils.stringValue
+import com.vapi4k.utils.JsonUtils.firstInList
 import com.vapi4k.utils.withTestApplication
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get

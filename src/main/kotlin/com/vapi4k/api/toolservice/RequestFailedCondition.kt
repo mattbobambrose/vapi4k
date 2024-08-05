@@ -30,7 +30,7 @@ class RequestFailedCondition internal constructor(
   private val duplicateChecker = DuplicateChecker()
 
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    duplicateChecker.check("condition${conditionSet.joinToString()}{} already has a requestFailedMessage{}")
+    duplicateChecker.checkForError("condition${conditionSet.joinToString()}{} already has a requestFailedMessage{}")
     return ToolMessageFailedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       ToolMessageFailed(dto).apply(block).also { failedMessages.messageList += it }

@@ -28,6 +28,10 @@ import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.Vapi4kConfig
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
@@ -36,11 +40,6 @@ import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.firstMessageOfType
-import com.vapi4k.utils.get
-import com.vapi4k.utils.intValue
-import com.vapi4k.utils.stringValue
-import com.vapi4k.utils.toJsonElement
-import com.vapi4k.utils.toJsonString
 import com.vapi4k.utils.withTestApplication
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -312,7 +311,7 @@ class AssistantTest {
       }
     }
 
-    println(jsonElement.toJsonString())
+    // println(jsonElement.toJsonString())
 
     assertEquals(
       1000,

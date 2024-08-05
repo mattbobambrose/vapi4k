@@ -31,7 +31,7 @@ class RequestCompleteMessages internal constructor() {
     get() = messageList.map { it.dto }.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
 
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    duplicateChecker.check("tool{} already has a request complete message")
+    duplicateChecker.checkForError("tool{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       ToolMessageComplete(dto).apply(block).also { messageList += it }
     }

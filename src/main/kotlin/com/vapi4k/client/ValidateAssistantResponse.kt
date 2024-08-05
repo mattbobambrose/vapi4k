@@ -16,6 +16,14 @@
 
 package com.vapi4k.client
 
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantIdResponse
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantResponse
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isSquadResponse
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
@@ -30,19 +38,11 @@ import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonElementUtils.isAssistantIdResponse
-import com.vapi4k.utils.JsonElementUtils.isAssistantResponse
-import com.vapi4k.utils.JsonElementUtils.isSquadResponse
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
+import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
 import com.vapi4k.utils.Utils.resourceFile
-import com.vapi4k.utils.get
-import com.vapi4k.utils.modifyObjectWith
-import com.vapi4k.utils.stringValue
-import com.vapi4k.utils.toJsonElement
-import com.vapi4k.utils.toJsonElementList
-import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText

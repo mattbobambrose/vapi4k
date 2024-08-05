@@ -16,6 +16,7 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.server.Vapi4kServer.logger
 
 object DslUtils {

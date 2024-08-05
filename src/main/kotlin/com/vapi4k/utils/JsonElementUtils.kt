@@ -17,59 +17,18 @@
 package com.vapi4k.utils
 
 import com.vapi4k.api.vapi4k.AssistantRequestContext
-import com.vapi4k.api.vapi4k.enums.ServerRequestType
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isToolCall
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 
 object JsonElementUtils {
-  val JsonElement.requestType get() = ServerRequestType.fromString(this["message.type"].stringValue)
-  val JsonElement.isAssistantRequest get() = requestType == ServerRequestType.ASSISTANT_REQUEST
-  val JsonElement.isConversationUpdate get() = requestType == ServerRequestType.CONVERSATION_UPDATE
-  val JsonElement.isEndOfCallReport get() = requestType == ServerRequestType.END_OF_CALL_REPORT
-  val JsonElement.isFunctionCall get() = requestType == ServerRequestType.FUNCTION_CALL
-  val JsonElement.isHang get() = requestType == ServerRequestType.HANG
-  val JsonElement.isPhoneCallControl get() = requestType == ServerRequestType.PHONE_CALL_CONTROL
-  val JsonElement.isSpeechUpdate get() = requestType == ServerRequestType.SPEECH_UPDATE
-  val JsonElement.isStatusUpdate get() = requestType == ServerRequestType.STATUS_UPDATE
-  val JsonElement.isToolCall get() = requestType == ServerRequestType.TOOL_CALL
-  val JsonElement.isTransferDestinationRequest get() = requestType == ServerRequestType.TRANSFER_DESTINATION_REQUEST
-  val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
-
-  val JsonElement.isAssistantResponse get() = containsKey("assistant")
-  val JsonElement.isAssistantIdResponse get() = containsKey("assistantId")
-  val JsonElement.isSquadResponse get() = containsKey("squad")
-  val JsonElement.isSquadIdResponse get() = containsKey("squadId")
-
-  val JsonElement.messageCallId get() = this["message.call.id"].stringValue
   val JsonElement.sessionCacheId get() = messageCallId.toSessionCacheId()
-
-  val JsonElement.id get() = this["id"].stringValue
-
-  val JsonElement.phoneNumber get() = this["message.call.customer.number"].stringValue
-
-  val JsonElement.statusUpdateError: String
-    get() = if (isStatusUpdate)
-      runCatching {
-        this["message.inboundPhoneCallDebuggingArtifacts.assistantRequestError"].stringValue
-      }.getOrElse { "" }
-    else
-      error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
-
-  val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
-
-  val JsonElement.functionName
-    get() = if (isFunctionCall)
-      this["message.functionCall.name"].stringValue
-    else
-      error("JsonElement is not a function call")
-
-  val JsonElement.functionParameters
-    get() = if (isFunctionCall)
-      this["message.functionCall.parameters"]
-    else
-      error("JsonElement is not a function call")
 
   val JsonElement.toolCallList
     get() = if (isToolCall)
@@ -77,9 +36,7 @@ object JsonElementUtils {
     else
       error("JsonElement is not a tool call request")
 
-  val JsonElement.toolCallId get() = this["id"].stringValue
-  val JsonElement.toolCallName get() = this["function.name"].stringValue
-  val JsonElement.toolCallArguments get() = this["function.arguments"]
+
   val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 

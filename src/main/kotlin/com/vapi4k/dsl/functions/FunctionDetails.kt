@@ -17,6 +17,9 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.api.tools.enums.ToolType
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.booleanValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
@@ -28,9 +31,6 @@ import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.valueParameters
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.findFunction
-import com.vapi4k.utils.booleanValue
-import com.vapi4k.utils.intValue
-import com.vapi4k.utils.stringValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject

@@ -31,7 +31,7 @@ class RequestFailedMessages internal constructor() {
     get() = messageList.map { it.dto }.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
 
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    duplicateChecker.check("tool{} already has a request failed message")
+    duplicateChecker.checkForError("tool{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       ToolMessageFailed(dto).apply(block).also { messageList += it }
     }

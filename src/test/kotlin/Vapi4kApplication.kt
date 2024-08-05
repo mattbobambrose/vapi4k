@@ -18,6 +18,7 @@ import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.STATUS_UPDATE
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.requestType
 import com.vapi4k.dbms.Messages.insertRequest
 import com.vapi4k.dbms.Messages.insertResponse
 import com.vapi4k.server.Vapi4k
@@ -25,7 +26,6 @@ import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.utils.DslUtils.logObject
 import com.vapi4k.utils.DslUtils.printObject
-import com.vapi4k.utils.JsonElementUtils.requestType
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.micrometer.prometheusmetrics.PrometheusConfig

@@ -30,7 +30,7 @@ class RequestCompleteCondition internal constructor(
   private val duplicateChecker = DuplicateChecker()
 
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    duplicateChecker.check("condition${conditionSet.joinToString()}{} already has a requestCompleteMessage{}")
+    duplicateChecker.checkForError("condition${conditionSet.joinToString()}{} already has a requestCompleteMessage{}")
     return ToolMessageCompleteDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       ToolMessageComplete(dto).apply(block).also { completeMessages.messageList += it }

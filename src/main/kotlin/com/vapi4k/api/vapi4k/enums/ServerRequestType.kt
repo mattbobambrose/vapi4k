@@ -33,7 +33,7 @@ enum class ServerRequestType(
   TRANSCRIPT("transcript"),
   TRANSFER_DESTINATION_REQUEST("transfer-destination-request"),
   USER_INTERRUPTED("user-interrupted"),
-  UNKNOWN_REUEST_TYPE("unknown-request-type"),
+  UNKNOWN_REQUEST_TYPE("unknown-request-type"),
   ;
 
   companion object {
@@ -44,7 +44,7 @@ enum class ServerRequestType(
         ServerRequestType.entries.first { it.desc == desc }
       } catch (e: Exception) {
         logger.error { "Invalid ServerMessageType: $desc" }
-        UNKNOWN_REUEST_TYPE
+        UNKNOWN_REQUEST_TYPE
       }
   }
 }
