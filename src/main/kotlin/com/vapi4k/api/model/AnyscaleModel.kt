@@ -16,22 +16,9 @@
 
 package com.vapi4k.api.model
 
-import com.vapi4k.api.functions.Functions
-import com.vapi4k.api.tools.Tools
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.AnyscaleModelProperties
+import com.vapi4k.dsl.model.CommonModel
 
 @AssistantDslMarker
-interface AnyscaleModel : AnyscaleModelProperties {
-  var systemMessage: String
-  var assistantMessage: String
-  var functionMessage: String
-  var toolMessage: String
-  var userMessage: String
-
-  fun tools(block: Tools.() -> Unit): Tools
-
-  fun functions(block: Functions.() -> Unit): Functions
-
-  fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase
-}
+interface AnyscaleModel : AnyscaleModelProperties, CommonModel

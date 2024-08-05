@@ -31,7 +31,7 @@ versioncheck:
 	./gradlew dependencyUpdates
 
 kdocs:
-	./gradlew dokkaHtml dokkaGfm
+	./gradlew dokkaHtml
 
 publish:
 	./gradlew publishToMavenLocal
