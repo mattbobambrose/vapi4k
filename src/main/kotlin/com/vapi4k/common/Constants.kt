@@ -36,5 +36,5 @@ object Endpoints {
   const val CACHES_PATH = "/caches"
   const val CLEAR_CACHES_PATH = "/clear-caches"
   const val VALIDATE_PATH = "/validate"
-  const val INVOKE_TOOL_PATH = "/invokeTool"
+  const val VALIDATE_INVOKE_TOOL_PATH = "/validateInvokeTool"
 }

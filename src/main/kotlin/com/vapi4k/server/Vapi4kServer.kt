@@ -26,9 +26,9 @@ import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
-import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
+import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.EnvVar.Companion.isProduction
@@ -170,76 +170,21 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       staticResources("/assets", "static")
 
       get(PING_PATH) { call.respondText("pong") }
-
-      get(VERSION_PATH) {
-        call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
-      }
+      get(VERSION_PATH) { versionResponse() }
 
       if (!isProduction) {
         get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
         get(CACHES_PATH) { call.respond(cacheAsJson().toJsonString()) }
+        get(CLEAR_CACHES_PATH) { clearCacheResponse() }
 
-        get(CLEAR_CACHES_PATH) {
-          clearToolCache()
-          call.respondRedirect(CACHES_PATH)
-        }
-
-        get(VALIDATE_PATH) {
-          if (config.applications.size == 1) {
-            val application = config.applications.first()
-            call.respondRedirect("$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}")
-          } else {
-            val html = createHTML()
-              .html {
-                head {
-                  link {
-                    rel = "stylesheet"
-                    href = STYLES_CSS
-                  }
-                  title { +"Assistant Request Validation" }
-                  script { src = HTMX_SOURCE_URL }
-                }
-                body {
-                  h2 {
-                    +"All Vapi4k Applications"
-                  }
-                  ul {
-                    config.applications.forEach { application ->
-                      li {
-                        a {
-                          href = "$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}"
-                          +application.serverPath
-                        }
-                      }
-                    }
-                  }
-
-                }
-              }
-            call.respondText(html, ContentType.Text.Html)
-          }
-        }
-        get("$VALIDATE_PATH/{appName}") {
-          val appName = call.parameters["appName"].orEmpty()
-          val application = config.applications.firstOrNull { it.serverPathAsSegment == appName }
-          if (application.isNotNull())
-            processValidateRequest(application)
-          else
-            call.respondText("Application not found", status = HttpStatusCode.NotFound)
-        }
-
-        get(INVOKE_TOOL_PATH) {
-          val params = call.request.queryParameters
-          val applicationId = params.get(APPLICATION_ID)?.toApplicationId() ?: error("No $APPLICATION_ID found")
-          val application = config.applications.firstOrNull { it.applicationId == applicationId }
-            ?: error("Application not found: $applicationId")
-          processToolInvokeRequest(application, params)
-        }
+        get(VALIDATE_PATH) { validateRoot(config) }
+        get("$VALIDATE_PATH/{appName}") { validateApplication(config) }
+        get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeResponse(config) }
       }
 
       config.applications.forEach { application ->
         val serverPath = application.serverPath
-        logger.info { "Adding POST serverUrl endpoint: \"$serverPath\"" }
+        logger.info { "Adding POST serverPath endpoint: \"$serverPath\"" }
         get(serverPath) { call.respondText("$serverPath requires a post request", status = MethodNotAllowed) }
         post(serverPath) { processAssistantRequests(application, callbackChannel) }
 
@@ -253,6 +198,60 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
       }
     }
+  }
+}
+
+private suspend fun KtorCallContext.clearCacheResponse() {
+  clearToolCache()
+  call.respondRedirect(CACHES_PATH)
+}
+
+private suspend fun KtorCallContext.versionResponse() {
+  call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
+}
+
+private suspend fun KtorCallContext.validateApplication(config: Vapi4kConfig) {
+  val appName = call.parameters["appName"].orEmpty()
+  val application = config.applications.firstOrNull { it.serverPathAsSegment == appName }
+  if (application.isNotNull())
+    processValidateRequest(application)
+  else
+    call.respondText("Application not found", status = HttpStatusCode.NotFound)
+}
+
+private suspend fun KtorCallContext.validateRoot(config: Vapi4kConfig) {
+  if (config.applications.size == 1) {
+    val application = config.applications.first()
+    call.respondRedirect("$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}")
+  } else {
+    val html = createHTML()
+      .html {
+        head {
+          link {
+            rel = "stylesheet"
+            href = STYLES_CSS
+          }
+          title { +"Assistant Request Validation" }
+          script { src = HTMX_SOURCE_URL }
+        }
+        body {
+          h2 {
+            +"All Vapi4k Applications"
+          }
+          ul {
+            config.applications.forEach { application ->
+              li {
+                a {
+                  href = "$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}"
+                  +application.serverPath
+                }
+              }
+            }
+          }
+
+        }
+      }
+    call.respondText(html, ContentType.Text.Html)
   }
 }
 
@@ -278,22 +277,22 @@ private suspend fun KtorCallContext.processValidateRequest(application: Vapi4kAp
   call.respondText(resp, ContentType.Text.Html)
 }
 
-private suspend fun KtorCallContext.processToolInvokeRequest(
-  application: Vapi4kApplication,
-  params: Parameters,
-) {
+private suspend fun KtorCallContext.validateToolInvokeResponse(config: Vapi4kConfig) =
   runCatching {
+    val params = call.request.queryParameters
+    val applicationId = params.get(APPLICATION_ID)?.toApplicationId() ?: error("No $APPLICATION_ID found")
+    val application = config.getApplication(applicationId)
     val toolRequest = getToolRequest(params)
+
     httpClient.post("$serverBaseUrl/${application.serverPathAsSegment}") {
       headers.append("x-vapi-secret", application.serverSecret)
-      setBody(toolRequest.toJsonString())
+      setBody(toolRequest.toJsonString<JsonObject>())
     }
   }.onSuccess { response ->
     call.respondText(response.bodyAsText().toJsonString())
   }.onFailure { e ->
     call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
   }
-}
 
 private fun getToolRequest(params: Parameters): JsonObject {
   val sessionCacheId = params.get(SESSION_CACHE_ID) ?: error("No $SESSION_CACHE_ID found")

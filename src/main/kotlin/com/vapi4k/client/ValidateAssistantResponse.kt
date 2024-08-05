@@ -21,7 +21,7 @@ import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
-import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
+import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.common.SessionCacheId
@@ -192,7 +192,7 @@ object ValidateAssistantResponse {
         val divid = getRandomSecret()
         h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
         form {
-          attributes["hx-get"] = INVOKE_TOOL_PATH
+          attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
           attributes["hx-trigger"] = "submit"
           attributes["hx-target"] = "#result-$divid"
 

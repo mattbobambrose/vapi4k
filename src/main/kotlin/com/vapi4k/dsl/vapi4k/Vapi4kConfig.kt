@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import io.ktor.server.config.ApplicationConfig
@@ -77,4 +78,12 @@ class Vapi4kConfig internal constructor() {
     globalPerResponses += requestType to block
     requestTypes.forEach { globalPerResponses += it to block }
   }
+
+  internal fun getApplication(applicationId: ApplicationId): Vapi4kApplication =
+    applications.firstOrNull { it.applicationId == applicationId }
+      ?: error("Application not found for applicationId: $applicationId")
+
+  internal fun getApplication(serverPath: String): Vapi4kApplication =
+    applications.firstOrNull { it.serverPath == serverPath }
+      ?: error("Application with serverPath=$serverPath not found")
 }
