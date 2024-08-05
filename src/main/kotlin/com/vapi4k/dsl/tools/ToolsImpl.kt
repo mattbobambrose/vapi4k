@@ -28,6 +28,7 @@ import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
@@ -42,7 +43,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = model.application.getEndpoint(endpointName)
+    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
     processFunctions(ToolType.FUNCTION, functions, obj, endpoint, block)
   }
 
@@ -52,7 +53,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = model.application.getEndpoint(endpointName)
+    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
     processFunctions(ToolType.DTMF, functions, obj, endpoint, block)
   }
 
@@ -62,7 +63,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = model.application.getEndpoint(endpointName)
+    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
     processFunctions(ToolType.END_CALL, functions, obj, endpoint, block)
   }
 
@@ -72,7 +73,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = model.application.getEndpoint(endpointName)
+    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
     processFunctions(ToolType.VOICEMAIL, functions, obj, endpoint, block)
   }
 
@@ -82,7 +83,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: ToolWithMetaData.() -> Unit,
   ) {
-    val endpoint = model.application.getEndpoint(endpointName)
+    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
     processFunctionsWithMetaData(ToolType.GHL, functions, obj, endpoint, block)
   }
 
@@ -92,7 +93,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: ToolWithMetaData.() -> Unit,
   ) {
-    val endpoint = model.application.getEndpoint(endpointName)
+    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
     processFunctionsWithMetaData(ToolType.MAKE, functions, obj, endpoint, block)
   }
 
@@ -102,7 +103,7 @@ data class ToolsImpl internal constructor(
     endpointName: String,
     block: TransferTool.() -> Unit,
   ) {
-    val endpoint = model.application.getEndpoint(endpointName)
+    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
     processFunctionsWithDestinations(ToolType.TRANSFER_CALL, functions, obj, endpoint, block)
   }
 

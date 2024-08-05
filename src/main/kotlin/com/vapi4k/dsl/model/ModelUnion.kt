@@ -32,7 +32,7 @@ import com.vapi4k.api.model.VapiModel
 import com.vapi4k.api.transcriber.DeepgramTranscriber
 import com.vapi4k.api.transcriber.GladiaTranscriber
 import com.vapi4k.api.transcriber.TalkscriberTranscriber
-import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.voice.AzureVoice
 import com.vapi4k.api.voice.CartesiaVoice
 import com.vapi4k.api.voice.DeepgramVoice
@@ -81,7 +81,7 @@ interface ModelDtoUnion {
 }
 
 interface ModelUnion {
-  val requestContext: RequestContext
+  val assistantRequestContext: AssistantRequestContext
   val analysisPlanDto: AnalysisPlanDto
   val artifactPlanDto: ArtifactPlanDto
   val assistantCacheId: AssistantCacheId

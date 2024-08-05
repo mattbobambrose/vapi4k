@@ -34,7 +34,7 @@ import com.vapi4k.api.model.VapiModel
 import com.vapi4k.api.transcriber.DeepgramTranscriber
 import com.vapi4k.api.transcriber.GladiaTranscriber
 import com.vapi4k.api.transcriber.TalkscriberTranscriber
-import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.voice.AzureVoice
 import com.vapi4k.api.voice.CartesiaVoice
@@ -78,7 +78,7 @@ import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 
 data class AssistantImpl internal constructor(
-  override val requestContext: RequestContext,
+  override val assistantRequestContext: AssistantRequestContext,
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
   private val assistantDto: AssistantDto,
@@ -153,7 +153,12 @@ data class AssistantImpl internal constructor(
 
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(requestContext, sessionCacheId, assistantCacheIdSource, assistantOverridesDto).apply(block)
+    AssistantOverridesImpl(
+      assistantRequestContext,
+      sessionCacheId,
+      assistantCacheIdSource,
+      assistantOverridesDto
+    ).apply(block)
 
   override fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan = analysisPlanUnion(block)
 

@@ -20,12 +20,12 @@ import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface AssistantResponse {
-  val requestContext: RequestContext
+  val assistantRequestContext: AssistantRequestContext
 
   fun assistant(block: Assistant.() -> Unit)
 

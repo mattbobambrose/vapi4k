@@ -17,10 +17,11 @@
 package com.vapi4k.api.vapi4k
 
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 
 @Vapi4KDslMarker
 class ToolCallEndpoints internal constructor(
-  internal val application: Vapi4kApplication,
+  internal val application: Vapi4kApplicationImpl,
 ) {
   private fun hasName(endpoint: Endpoint) = application.toolCallEndpoints.any { it.name == endpoint.name }
 

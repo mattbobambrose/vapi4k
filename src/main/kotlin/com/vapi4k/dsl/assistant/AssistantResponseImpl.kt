@@ -23,7 +23,7 @@ import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.destination.NumberDestinationImpl
 import com.vapi4k.dsl.destination.SipDestinationImpl
 import com.vapi4k.dsl.squad.SquadIdImpl
@@ -36,7 +36,7 @@ import com.vapi4k.utils.DuplicateChecker
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 
 class AssistantResponseImpl(
-  override val requestContext: RequestContext,
+  override val assistantRequestContext: AssistantRequestContext,
 ) : AssistantResponse {
   private val checker = DuplicateChecker()
   internal lateinit var assistantRequestResponse: AssistantRequestResponse
@@ -46,9 +46,15 @@ class AssistantResponseImpl(
   override fun assistant(block: Assistant.() -> Unit) {
     checker.check("An assistant{} is already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
-      val sessionCacheId = requestContext.assistantRequest.sessionCacheId
+      val sessionCacheId = assistantRequestContext.assistantRequest.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
-      AssistantImpl(requestContext, sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
+      AssistantImpl(
+        assistantRequestContext,
+        sessionCacheId,
+        assistantCacheIdSource,
+        assistantDto,
+        assistantOverridesDto
+      )
         .apply(block)
         .apply {
           assistantDto.updated = true
@@ -60,25 +66,25 @@ class AssistantResponseImpl(
   override fun assistantId(block: AssistantId.() -> Unit) {
     checker.check("An assistantId{} is already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
-      val sessionCacheId = requestContext.assistantRequest.sessionCacheId
+      val sessionCacheId = assistantRequestContext.assistantRequest.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
-      AssistantIdImpl(requestContext, sessionCacheId, assistantCacheIdSource, this).apply(block)
+      AssistantIdImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, this).apply(block)
     }
   }
 
   override fun squad(block: Squad.() -> Unit) {
     checker.check("An squad{} is already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
-      val sessionCacheId = requestContext.assistantRequest.sessionCacheId
+      val sessionCacheId = assistantRequestContext.assistantRequest.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
-      SquadImpl(requestContext, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
+      SquadImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
     }
   }
 
   override fun squadId(block: SquadId.() -> Unit) {
     checker.check("An squadId{} is already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
-      SquadIdImpl(requestContext, this).apply(block)
+      SquadIdImpl(assistantRequestContext, this).apply(block)
     }
   }
 

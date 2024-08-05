@@ -37,5 +37,5 @@ interface AbstractModelProperties {
     content: String,
   )
 
-  val application get() = modelUnion.requestContext.application
+  val application get() = modelUnion.assistantRequestContext.application
 }

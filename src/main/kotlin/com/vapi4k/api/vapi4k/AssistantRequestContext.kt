@@ -19,7 +19,7 @@ package com.vapi4k.api.vapi4k
 import com.vapi4k.utils.JsonElementUtils.phoneNumber
 import kotlinx.serialization.json.JsonElement
 
-data class RequestContext(
+data class AssistantRequestContext(
   val application: Vapi4kApplication,
   val assistantRequest: JsonElement,
 ) {

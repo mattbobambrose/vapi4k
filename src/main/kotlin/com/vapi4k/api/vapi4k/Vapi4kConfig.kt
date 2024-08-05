@@ -20,6 +20,7 @@ import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import io.ktor.server.config.ApplicationConfig
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
@@ -34,14 +35,14 @@ class Vapi4kConfig internal constructor() {
   }
 
   internal lateinit var applicationConfig: ApplicationConfig
-  internal val applications = mutableListOf<Vapi4kApplication>()
+  internal val applications = mutableListOf<Vapi4kApplicationImpl>()
   internal val globalAllRequests = mutableListOf<(RequestArgs)>()
   internal val globalPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val globalAllResponses = mutableListOf<ResponseArgs>()
   internal val globalPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
   fun vapi4kApplication(block: Vapi4kApplication.() -> Unit): Vapi4kApplication {
-    val application = Vapi4kApplication().apply(block)
+    val application = Vapi4kApplicationImpl().apply(block)
     if (applications.any { it.serverPath == application.serverPath })
       error("vapi4kApplication{} with serverPath \"${application.serverPath}\" already exists")
     applications += application
@@ -76,11 +77,11 @@ class Vapi4kConfig internal constructor() {
     requestTypes.forEach { globalPerResponses += it to block }
   }
 
-  internal fun getApplication(applicationId: ApplicationId): Vapi4kApplication =
+  internal fun getApplication(applicationId: ApplicationId): Vapi4kApplicationImpl =
     applications.firstOrNull { it.applicationId == applicationId }
       ?: error("Application not found for applicationId: $applicationId")
 
-  internal fun getApplication(serverPath: String): Vapi4kApplication =
+  internal fun getApplication(serverPath: String): Vapi4kApplicationImpl =
     applications.firstOrNull { it.serverPath == serverPath }
       ?: error("Application with serverPath=$serverPath not found")
 }

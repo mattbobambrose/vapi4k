@@ -18,7 +18,6 @@ package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Endpoint
-import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.enums.RequestResponseType
 import com.vapi4k.api.vapi4k.enums.RequestResponseType.REQUEST
@@ -54,6 +53,7 @@ import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.tools.ToolCache.Companion.cacheAsJson
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
@@ -255,7 +255,7 @@ private suspend fun KtorCallContext.validateRoot(config: Vapi4kConfig) {
 }
 
 private suspend fun KtorCallContext.processAssistantRequests(
-  application: Vapi4kApplication,
+  application: Vapi4kApplicationImpl,
   callbackChannel: Channel<RequestResponseCallback>,
 ) {
   if (isProduction) {
@@ -270,7 +270,7 @@ private suspend fun KtorCallContext.processAssistantRequests(
   }
 }
 
-private suspend fun KtorCallContext.processValidateRequest(application: Vapi4kApplication) {
+private suspend fun KtorCallContext.processValidateRequest(application: Vapi4kApplicationImpl) {
   val secret = call.request.queryParameters["secret"].orEmpty()
   val resp = validateAssistantRequestResponse(application, secret)
   call.respondText(resp, ContentType.Text.Html)
@@ -323,7 +323,7 @@ private fun getToolRequest(params: Parameters): JsonObject {
 }
 
 private suspend fun KtorCallContext.assistantRequestResponse(
-  application: Vapi4kApplication,
+  application: Vapi4kApplicationImpl,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
   if (isValidSecret(application.serverSecret)) {
@@ -380,7 +380,7 @@ private suspend fun KtorCallContext.assistantRequestResponse(
 }
 
 private suspend fun KtorCallContext.handleToolCallPathPost(
-  application: Vapi4kApplication,
+  application: Vapi4kApplicationImpl,
   endpoint: Endpoint,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
@@ -514,14 +514,14 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
 }
 
 private suspend fun invokeRequestCallbacks(
-  application: Vapi4kApplication,
+  application: Vapi4kApplicationImpl,
   channel: Channel<RequestResponseCallback>,
   requestType: ServerRequestType,
   request: JsonElement,
 ) = channel.send(requestCallback(application, requestType, request))
 
 private suspend fun invokeResponseCallbacks(
-  application: Vapi4kApplication,
+  application: Vapi4kApplicationImpl,
   channel: Channel<RequestResponseCallback>,
   requestType: ServerRequestType,
   response: () -> JsonElement,
@@ -529,7 +529,7 @@ private suspend fun invokeResponseCallbacks(
 ) = channel.send(responseCallback(application, requestType, response, elapsed))
 
 private data class RequestResponseCallback(
-  val application: Vapi4kApplication,
+  val application: Vapi4kApplicationImpl,
   val type: RequestResponseType,
   val requestType: ServerRequestType,
   val request: JsonElement = emptyJsonElement(),
@@ -538,13 +538,13 @@ private data class RequestResponseCallback(
 ) {
   companion object {
     fun requestCallback(
-      application: Vapi4kApplication,
+      application: Vapi4kApplicationImpl,
       requestType: ServerRequestType,
       request: JsonElement,
     ) = RequestResponseCallback(application, REQUEST, requestType, request)
 
     fun responseCallback(
-      application: Vapi4kApplication,
+      application: Vapi4kApplicationImpl,
       requestType: ServerRequestType,
       response: () -> JsonElement,
       elapsed: Duration,

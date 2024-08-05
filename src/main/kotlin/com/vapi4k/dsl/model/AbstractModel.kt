@@ -32,7 +32,7 @@ abstract class AbstractModel(
   override val modelUnion: ModelUnion,
   private val dto: CommonModelDto,
 ) : AbstractModelProperties {
-  internal val request get() = modelUnion.requestContext.assistantRequest
+  internal val request get() = modelUnion.assistantRequestContext.assistantRequest
   override val sessionCacheId get() = modelUnion.sessionCacheId
   override val assistantCacheId get() = modelUnion.assistantCacheId
   override val messageCallId get() = request.messageCallId.toMessageCallId()

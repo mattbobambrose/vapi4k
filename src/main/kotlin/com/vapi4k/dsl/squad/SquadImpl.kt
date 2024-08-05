@@ -19,7 +19,7 @@ package com.vapi4k.dsl.squad
 import com.vapi4k.api.assistant.AssistantOverrides
 import com.vapi4k.api.squad.Members
 import com.vapi4k.api.squad.Squad
-import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantOverridesImpl
 import com.vapi4k.dtos.squad.SquadDto
@@ -30,7 +30,7 @@ interface SquadProperties {
 }
 
 data class SquadImpl internal constructor(
-  internal val requestContext: RequestContext,
+  internal val assistantRequestContext: AssistantRequestContext,
   internal val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
   internal val dto: SquadDto,
@@ -39,5 +39,7 @@ data class SquadImpl internal constructor(
   override fun members(block: Members.() -> Unit): Members = MembersImpl(this).apply(block)
 
   override fun memberOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(requestContext, sessionCacheId, assistantCacheIdSource, dto.membersOverrides).apply(block)
+    AssistantOverridesImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, dto.membersOverrides).apply(
+      block
+    )
 }

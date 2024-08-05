@@ -19,9 +19,10 @@ package com.vapi4k.utils
 import com.vapi4k.ServerTest.Companion.configPost
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
-import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.common.EnvVar.Companion.defaultServerPath
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.server.Vapi4k
@@ -38,10 +39,10 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
 
 fun assistantResponse(
-  requestContext: RequestContext,
+  assistantRequestContext: AssistantRequestContext,
   block: AssistantResponse.() -> Unit,
 ): AssistantRequestResponse {
-  val assistantResponse = AssistantResponseImpl(requestContext).apply(block)
+  val assistantResponse = AssistantResponseImpl(assistantRequestContext).apply(block)
   return if (assistantResponse.isAssigned)
     assistantResponse.assistantRequestResponse
   else
@@ -121,7 +122,7 @@ fun withTestApplication(
     application {
       install(Vapi4k) {
         vapi4kApplication {
-          eocrCacheRemovalEnabled = cacheRemovalEnabled
+          (this as Vapi4kApplicationImpl).eocrCacheRemovalEnabled = cacheRemovalEnabled
 
           onAssistantRequest {
             block()

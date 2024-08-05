@@ -37,7 +37,7 @@ import com.vapi4k.api.model.VapiModel
 import com.vapi4k.api.transcriber.DeepgramTranscriber
 import com.vapi4k.api.transcriber.GladiaTranscriber
 import com.vapi4k.api.transcriber.TalkscriberTranscriber
-import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.voice.AzureVoice
 import com.vapi4k.api.voice.CartesiaVoice
 import com.vapi4k.api.voice.DeepgramVoice
@@ -106,7 +106,7 @@ interface AssistantOverridesProperties {
 }
 
 data class AssistantOverridesImpl internal constructor(
-  override val requestContext: RequestContext,
+  override val assistantRequestContext: AssistantRequestContext,
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
   private val assistantOverridesDto: AssistantOverridesDto,
