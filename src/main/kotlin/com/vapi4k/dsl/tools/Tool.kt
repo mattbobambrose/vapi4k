@@ -117,7 +117,7 @@ open class ToolImpl internal constructor(
   private val requestDelayedChecker = DuplicateChecker()
 
   internal val messages get() = toolDto.messages
-  internal val dtoConditions
+  private val dtoConditions
     get() = messages.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
 
   internal var futureDelay = -1

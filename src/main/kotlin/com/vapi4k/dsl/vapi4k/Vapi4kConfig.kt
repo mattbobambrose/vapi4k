@@ -46,7 +46,7 @@ class Vapi4kConfig internal constructor() {
   fun vapi4kApplication(block: Vapi4kApplication.() -> Unit): Vapi4kApplication {
     val application = Vapi4kApplication().apply(block)
     if (applications.any { it.serverPath == application.serverPath })
-      error("vapi4kApplication{} with serverPath=${application.serverPath} already exists")
+      error("vapi4kApplication{} with serverPath \"${application.serverPath}\" already exists")
     applications += application
     return application
   }
