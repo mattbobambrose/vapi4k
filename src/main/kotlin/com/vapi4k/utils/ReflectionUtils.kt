@@ -38,9 +38,7 @@ internal object ReflectionUtils {
       .filter { it.kind == KParameter.Kind.VALUE }
       .map { it.name.orEmpty() to it }
   val KFunction<*>.instanceParameter: KParameter?
-    get() = parameters
-      .filter { it.kind == KParameter.Kind.INSTANCE }
-      .firstOrNull()
+    get() = parameters.firstOrNull { it.kind == KParameter.Kind.INSTANCE }
 
   val KFunction<*>.parameterSignature
     get() =

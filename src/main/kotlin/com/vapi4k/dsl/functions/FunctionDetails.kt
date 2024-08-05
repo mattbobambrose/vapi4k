@@ -111,11 +111,10 @@ class FunctionDetails(
     logger.info { "Invoking method $fqName with args $argNames" }
     val paramMap = function.valueParameters.toMap()
     val valueMap =
-      argNames
-        .map { argName ->
-          val param = paramMap[argName] ?: error("Parameter $argName not found in method $fqName")
-          param to getArgValue(args, argName, param.type)
-        }.toMap()
+      argNames.associate { argName ->
+        val param = paramMap[argName] ?: error("Parameter $argName not found in method $fqName")
+        param to getArgValue(args, argName, param.type)
+      }
 
     logger.info { "valueMap: $valueMap" }
     val callMap =

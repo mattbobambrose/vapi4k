@@ -88,9 +88,9 @@ class Vapi4kApplication {
   internal suspend fun getAssistantResponse(request: JsonElement) =
     assistantRequest?.invoke(RequestContext(this, request)) ?: error("onAssistantRequest{} not called")
 
-  private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }
+  private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { endpoint -> endpoint.name.isEmpty() }
 
-  internal val defaultToolCallEndpoint
+  private val defaultToolCallEndpoint
     get() = Endpoint().apply {
       this.serverUrl = "$serverBaseUrl/$serverPathAsSegment"
       this.serverSecret = this@Vapi4kApplication.serverSecret
@@ -100,7 +100,6 @@ class Vapi4kApplication {
     if (endpointName.isEmpty())
       getEmptyEndpoint() ?: defaultToolCallEndpoint
     else
-      toolCallEndpoints.firstOrNull {
-        it.name == endpointName
-      } ?: error("Endpoint not found in the vapi4kApplication{}: $endpointName")
+      toolCallEndpoints.firstOrNull { endpoint -> endpoint.name == endpointName }
+        ?: error("Endpoint not found in the vapi4kApplication{}: $endpointName")
 }

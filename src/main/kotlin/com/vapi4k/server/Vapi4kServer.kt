@@ -260,10 +260,10 @@ private suspend fun KtorCallContext.processAssistantRequests(
   callbackChannel: Channel<RequestResponseCallback>,
 ) {
   if (isProduction) {
-    handleServerPathPost(application, callbackChannel)
+    assistantRequestResponse(application, callbackChannel)
   } else {
     runCatching {
-      handleServerPathPost(application, callbackChannel)
+      assistantRequestResponse(application, callbackChannel)
     }.onFailure { e ->
       logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
       call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -280,7 +280,7 @@ private suspend fun KtorCallContext.processValidateRequest(application: Vapi4kAp
 private suspend fun KtorCallContext.validateToolInvokeResponse(config: Vapi4kConfig) =
   runCatching {
     val params = call.request.queryParameters
-    val applicationId = params.get(APPLICATION_ID)?.toApplicationId() ?: error("No $APPLICATION_ID found")
+    val applicationId = params[APPLICATION_ID]?.toApplicationId() ?: error("No $APPLICATION_ID found")
     val application = config.getApplication(applicationId)
     val toolRequest = getToolRequest(params)
 
@@ -295,7 +295,7 @@ private suspend fun KtorCallContext.validateToolInvokeResponse(config: Vapi4kCon
   }
 
 private fun getToolRequest(params: Parameters): JsonObject {
-  val sessionCacheId = params.get(SESSION_CACHE_ID) ?: error("No $SESSION_CACHE_ID found")
+  val sessionCacheId = params[SESSION_CACHE_ID] ?: error("No $SESSION_CACHE_ID found")
   return buildJsonObject {
     put(
       "message",
@@ -308,14 +308,12 @@ private fun getToolRequest(params: Parameters): JsonObject {
               "id" to JsonPrimitive("call_${getRandomSecret(24)}"),
               "type" to JsonPrimitive("function"),
               "function" to mapOf(
-                "name" to JsonPrimitive(params.get(FUNCTION_NAME) ?: error("No $FUNCTION_NAME found")),
+                "name" to JsonPrimitive(params[FUNCTION_NAME] ?: error("No $FUNCTION_NAME found")),
                 "arguments" to
                   params
                     .names()
                     .filterNot { it in setOf(APPLICATION_ID, SESSION_CACHE_ID, FUNCTION_NAME) }
-                    .filter { params[it].orEmpty().isNotEmpty() }
-                    .map { it to JsonPrimitive(params[it]) }
-                    .toMap()
+                    .filter { params[it].orEmpty().isNotEmpty() }.associateWith { JsonPrimitive(params[it]) }
                     .toJsonObject(),
               ).toJsonObject(),
             ).toJsonObject(),
@@ -325,11 +323,10 @@ private fun getToolRequest(params: Parameters): JsonObject {
   }
 }
 
-private suspend fun KtorCallContext.handleServerPathPost(
+private suspend fun KtorCallContext.assistantRequestResponse(
   application: Vapi4kApplication,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
-  val config = AssistantImpl.config
   if (isValidSecret(application.serverSecret)) {
     val json = call.receive<String>()
     val request = json.toJsonElement()

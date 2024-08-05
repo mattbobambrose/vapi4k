@@ -73,11 +73,13 @@ object SimpleAssistant {
                 content = "Default request start weather lookup"
               }
             }
+
             tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
               requestStartMessage {
                 content = "Default request start weather lookup"
               }
             }
+
             tool(
               WeatherLookupService2(),
               // WeatherLookupService2::getWeatherByCity2,
