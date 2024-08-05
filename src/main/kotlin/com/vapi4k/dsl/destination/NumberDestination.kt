@@ -17,17 +17,17 @@
 package com.vapi4k.dsl.destination
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 
 @AssistantDslMarker
 interface NumberDestination {
   var number: String
+  var extension: String
+  var numberE164CheckEnabled: Boolean?
   var message: String
   var description: String
 }
 
 class NumberDestinationImpl internal constructor(
-  internal val requestContext: RequestContext,
   private val dto: NumberDestinationDto,
 ) : NumberDestination by dto

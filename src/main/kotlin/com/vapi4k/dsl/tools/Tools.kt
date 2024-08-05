@@ -62,4 +62,11 @@ interface Tools {
     endpointName: String = "",
     block: ToolWithMetaData.() -> Unit = {},
   )
+
+  fun transfer(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String = "",
+    block: TransferTool.() -> Unit = {},
+  )
 }

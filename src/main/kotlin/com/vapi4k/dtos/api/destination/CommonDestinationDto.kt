@@ -34,6 +34,7 @@ private object DestinationSerializer : KSerializer<CommonDestinationDto> {
     value: CommonDestinationDto,
   ) {
     when (value) {
+      is AssistantDestinationDto -> encoder.encodeSerializableValue(AssistantDestinationDto.serializer(), value)
       is NumberDestinationDto -> encoder.encodeSerializableValue(NumberDestinationDto.serializer(), value)
       is SipDestinationDto -> encoder.encodeSerializableValue(SipDestinationDto.serializer(), value)
       else -> error("Invalid destination provider: ${value::class.simpleName}")

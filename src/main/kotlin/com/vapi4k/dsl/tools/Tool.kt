@@ -17,12 +17,23 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.destination.AssistantDestination
+import com.vapi4k.dsl.destination.AssistantDestinationImpl
+import com.vapi4k.dsl.destination.NumberDestination
+import com.vapi4k.dsl.destination.NumberDestinationImpl
+import com.vapi4k.dsl.destination.SipDestination
+import com.vapi4k.dsl.destination.SipDestinationImpl
+import com.vapi4k.dtos.api.destination.AssistantDestinationDto
+import com.vapi4k.dtos.api.destination.CommonDestinationDto
+import com.vapi4k.dtos.api.destination.NumberDestinationDto
+import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageDelayedDto
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.dtos.tools.ToolMessageStartDto
+import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
@@ -46,6 +57,11 @@ interface ToolWithMetaDataProperties {
   val metadata: MutableMap<String, String>
 }
 
+interface TransferToolProperties {
+  val destinations: MutableList<CommonDestinationDto>
+}
+
+@AssistantDslMarker
 interface ToolWithMetaData : Tool {
   val metadata: MutableMap<String, String>
 }
@@ -55,6 +71,38 @@ class ToolWithMetaDataImpl internal constructor(
 ) : ToolImpl(dto),
   ToolWithMetaDataProperties by dto,
   ToolWithMetaData
+
+@AssistantDslMarker
+interface TransferTool : Tool {
+}
+
+class TransferToolImpl internal constructor(
+  val dto: ToolDto,
+) : ToolImpl(dto),
+  TransferToolProperties by dto,
+  TransferTool {
+  fun assistantDestination(block: AssistantDestination.() -> Unit) {
+    AssistantRequestResponse().apply {
+      val assistantDto = AssistantDestinationDto().also { destinations += it }
+      AssistantDestinationImpl(assistantDto).apply(block)
+    }
+  }
+
+  fun numberDestination(block: NumberDestination.() -> Unit) {
+    AssistantRequestResponse().apply {
+      val numDto = NumberDestinationDto().also { destinations += it }
+      NumberDestinationImpl(numDto).apply(block)
+    }
+  }
+
+  fun sipDestination(block: SipDestination.() -> Unit) {
+    AssistantRequestResponse().apply {
+      val sipDto = SipDestinationDto().also { destinations += it }
+      SipDestinationImpl(sipDto).apply(block)
+    }
+  }
+
+}
 
 open class ToolImpl internal constructor(
   internal val toolDto: ToolDto,

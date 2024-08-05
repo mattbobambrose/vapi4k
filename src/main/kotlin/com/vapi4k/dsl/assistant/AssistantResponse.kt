@@ -85,7 +85,7 @@ class AssistantResponse(
     assistantRequestResponse = AssistantRequestResponse().apply {
       val numDto = NumberDestinationDto()
       destination = numDto
-      NumberDestinationImpl(requestContext, numDto).apply(block)
+      NumberDestinationImpl(numDto).apply(block)
     }
   }
 
@@ -94,7 +94,7 @@ class AssistantResponse(
     assistantRequestResponse = AssistantRequestResponse().apply {
       val sipDto = SipDestinationDto()
       destination = sipDto
-      SipDestinationImpl(requestContext, sipDto).apply(block)
+      SipDestinationImpl(sipDto).apply(block)
     }
   }
 }

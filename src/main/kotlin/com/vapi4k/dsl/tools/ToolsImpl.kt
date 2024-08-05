@@ -18,6 +18,9 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.functions.FunctionUtils
+import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
+import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
+import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dsl.vapi4k.Endpoint
@@ -89,6 +92,16 @@ data class ToolsImpl internal constructor(
     processFunctionsWithMetaData(ToolType.MAKE, functions, obj, endpoint, block)
   }
 
+  override fun transfer(
+    obj: Any,
+    vararg functions: KFunction<*>,
+    endpointName: String,
+    block: TransferTool.() -> Unit,
+  ) {
+    val endpoint = model.application.getEndpoint(endpointName)
+    processFunctionsWithDestinations(ToolType.TRANSFER_CALL, functions, obj, endpoint, block)
+  }
+
   private fun processFunctions(
     toolType: ToolType,
     functions: Array<out KFunction<*>>,
@@ -97,16 +110,16 @@ data class ToolsImpl internal constructor(
     block: Tool.() -> Unit,
   ) {
     if (functions.isEmpty()) {
-      FunctionUtils.verifyObjectHasOnlyOneToolCall(obj)
+      verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
-      FunctionUtils.verifyIsValidReturnType(true, function)
+      verifyIsValidReturnType(true, function)
       addTool(toolType, obj, function, endpoint) {
         ToolImpl(it).apply(block)
       }
     } else {
       functions.forEach { function ->
-        FunctionUtils.verifyIsToolCall(true, function)
-        FunctionUtils.verifyIsValidReturnType(true, function)
+        verifyIsToolCall(true, function)
+        verifyIsValidReturnType(true, function)
         addTool(toolType, obj, function, endpoint) {
           ToolImpl(it).apply(block)
         }
@@ -122,18 +135,43 @@ data class ToolsImpl internal constructor(
     block: ToolWithMetaData.() -> Unit,
   ) {
     if (functions.isEmpty()) {
-      FunctionUtils.verifyObjectHasOnlyOneToolCall(obj)
+      verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
-      FunctionUtils.verifyIsValidReturnType(true, function)
+      verifyIsValidReturnType(true, function)
       addTool(toolType, obj, function, endpoint) {
         ToolWithMetaDataImpl(it).apply(block)
       }
     } else {
       functions.forEach { function ->
-        FunctionUtils.verifyIsToolCall(true, function)
-        FunctionUtils.verifyIsValidReturnType(true, function)
+        verifyIsToolCall(true, function)
+        verifyIsValidReturnType(true, function)
         addTool(toolType, obj, function, endpoint) {
           ToolWithMetaDataImpl(it).apply(block)
+        }
+      }
+    }
+  }
+
+  private fun processFunctionsWithDestinations(
+    toolType: ToolType,
+    functions: Array<out KFunction<*>>,
+    obj: Any,
+    endpoint: Endpoint,
+    block: TransferTool.() -> Unit,
+  ) {
+    if (functions.isEmpty()) {
+      verifyObjectHasOnlyOneToolCall(obj)
+      val function = obj.toolCallFunction
+      verifyIsValidReturnType(true, function)
+      addTool(toolType, obj, function, endpoint) {
+        TransferToolImpl(it).apply(block)
+      }
+    } else {
+      functions.forEach { function ->
+        verifyIsToolCall(true, function)
+        verifyIsValidReturnType(true, function)
+        addTool(toolType, obj, function, endpoint) {
+          TransferToolImpl(it).apply(block)
         }
       }
     }

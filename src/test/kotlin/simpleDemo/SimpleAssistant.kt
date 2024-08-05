@@ -89,6 +89,10 @@ object SimpleAssistant {
                 content = "Default request start weather lookup"
               }
             }
+
+            transfer(WeatherLookupService2()) {
+
+            }
           }
         }
 

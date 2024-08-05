@@ -14,21 +14,19 @@
  *
  */
 
-package com.vapi4k.dtos.api.destination
+package com.vapi4k.dsl.destination
 
-import com.vapi4k.dsl.destination.NumberDestination
-import com.vapi4k.dsl.destination.enums.DestinationType
-import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.Serializable
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.destination.enums.AssistantTransferMode
+import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 
-@Serializable
-class NumberDestinationDto(
-  override var number: String = "",
-  override var extension: String = "",
-  override var numberE164CheckEnabled: Boolean? = null,
-) : AbstractDestinationDto(),
-  CommonDestinationDto,
-  NumberDestination {
-  @EncodeDefault
-  val type: DestinationType = DestinationType.NUMBER
+@AssistantDslMarker
+interface AssistantDestination {
+  var transferMode: AssistantTransferMode
+  var message: String
+  var description: String
 }
+
+class AssistantDestinationImpl internal constructor(
+  private val dto: AssistantDestinationDto,
+) : AssistantDestination by dto
