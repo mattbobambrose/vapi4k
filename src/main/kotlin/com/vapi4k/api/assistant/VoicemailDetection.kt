@@ -16,17 +16,9 @@
 
 package com.vapi4k.api.assistant
 
-import com.vapi4k.api.assistant.enums.VoicemailDetectionType
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.VoicemailDetectionProperties
 import com.vapi4k.dtos.VoicemailDetectionDto
-
-interface VoicemailDetectionProperties {
-  var enabled: Boolean?
-  var machineDetectionTimeout: Int
-  var machineDetectionSpeechThreshold: Int
-  var machineDetectionSpeechEndThreshold: Int
-  var machineDetectionSilenceTimeout: Int
-  val voicemailDetectionTypes: MutableSet<VoicemailDetectionType>
-}
 
 @AssistantDslMarker
 class VoicemailDetection internal constructor(

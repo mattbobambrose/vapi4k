@@ -16,43 +16,11 @@
 
 package com.vapi4k.api.assistant
 
-import com.vapi4k.api.vapi4k.RequestContext
-import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dtos.assistant.AssistantDto
-import com.vapi4k.dtos.assistant.AssistantOverridesDto
-import com.vapi4k.utils.AssistantCacheIdSource
-
-interface AssistantIdProperties {
-  var assistantId: String
-  val assistantDto: AssistantDto
-  val assistantOverridesDto: AssistantOverridesDto
-}
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface AssistantId {
   var id: String
 
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
-}
-
-data class AssistantIdImpl internal constructor(
-  internal val requestContext: RequestContext,
-  private val sessionCacheId: SessionCacheId,
-  private val assistantCacheIdSource: AssistantCacheIdSource,
-  internal val assistantIdProperties: AssistantIdProperties,
-) : AssistantIdProperties by assistantIdProperties,
-  AssistantId {
-  override var id
-    get() = assistantIdProperties.assistantId
-    set(value) {
-      assistantIdProperties.assistantId = value
-    }
-
-  override fun assistantOverrides(block: AssistantOverrides.() -> Unit) =
-    AssistantOverridesImpl(
-      requestContext,
-      sessionCacheId,
-      assistantCacheIdSource,
-      assistantIdProperties.assistantOverridesDto,
-    ).apply(block)
 }

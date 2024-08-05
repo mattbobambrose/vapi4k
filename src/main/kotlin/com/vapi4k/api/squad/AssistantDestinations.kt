@@ -16,10 +16,9 @@
 
 package com.vapi4k.api.squad
 
-import com.vapi4k.api.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface AssistantDestinations {
   fun destination(block: AssistantDestination.() -> Unit)
 }
-

@@ -16,10 +16,10 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.assistant.AssistantDslMarker
 import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
 import com.vapi4k.api.voice.enums.PunctuationType
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.voice.CartesiaVoiceDto
 
 interface CartesiaVoiceProperties {

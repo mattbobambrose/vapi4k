@@ -16,9 +16,9 @@
 
 package com.vapi4k.api.vapi4k
 
-import com.vapi4k.api.assistant.AssistantImpl
 import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId
+import com.vapi4k.dsl.assistant.AssistantImpl
 import io.ktor.server.config.ApplicationConfig
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration

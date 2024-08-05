@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.squad
 
-import com.vapi4k.api.assistant.AssistantDslMarker
 import com.vapi4k.api.assistant.AssistantOverrides
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.squad.SquadProperties
 
 @AssistantDslMarker
@@ -26,4 +26,3 @@ interface Squad : SquadProperties {
 
   fun memberOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }
-

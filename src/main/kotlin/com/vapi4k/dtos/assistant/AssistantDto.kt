@@ -16,11 +16,11 @@
 
 package com.vapi4k.dtos.assistant
 
-import com.vapi4k.api.assistant.AssistantProperties
 import com.vapi4k.api.assistant.enums.AssistantClientMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.BackgroundSoundType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType
+import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.model.ModelDtoUnion
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto

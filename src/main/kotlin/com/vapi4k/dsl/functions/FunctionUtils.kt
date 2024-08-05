@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.api.assistant.ToolCall
 import com.vapi4k.api.tools.enums.ToolType
+import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto

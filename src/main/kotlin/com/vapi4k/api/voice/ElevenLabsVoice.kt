@@ -16,10 +16,10 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.api.assistant.AssistantDslMarker
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.api.voice.enums.PunctuationType
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.voice.ElevenLabsVoiceDto
 
 interface ElevenLabsVoiceProperties {

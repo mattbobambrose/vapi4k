@@ -17,7 +17,6 @@
 package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
-import com.vapi4k.api.assistant.AssistantImpl
 import com.vapi4k.api.tools.ToolCache.Companion.cacheAsJson
 import com.vapi4k.api.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.api.tools.ToolCache.Companion.toolCallCache
@@ -54,6 +53,7 @@ import com.vapi4k.common.EnvVar.TOOL_CACHE_CLEAN_PAUSE_MINS
 import com.vapi4k.common.EnvVar.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
+import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse

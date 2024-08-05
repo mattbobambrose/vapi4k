@@ -19,7 +19,7 @@ package com.vapi4k
 import com.vapi4k.api.assistant.enums.AssistantClientMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
-import com.vapi4k.api.assistant.eq
+import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.DeepgramModelType
 import com.vapi4k.api.model.enums.GladiaModelType
 import com.vapi4k.api.model.enums.OpenAIModelType

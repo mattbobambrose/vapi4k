@@ -16,13 +16,13 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.api.assistant.AssistantDslMarker
 import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.destination.AssistantDestinationImpl
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.NumberDestinationImpl
 import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.api.destination.SipDestinationImpl
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import com.vapi4k.dtos.api.destination.NumberDestinationDto

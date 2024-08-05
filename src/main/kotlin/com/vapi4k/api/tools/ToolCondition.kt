@@ -16,7 +16,7 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.api.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageDelayedDto

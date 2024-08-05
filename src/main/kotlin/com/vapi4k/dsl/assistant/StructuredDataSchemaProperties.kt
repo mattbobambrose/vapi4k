@@ -14,19 +14,14 @@
  *
  */
 
-package com.vapi4k.api.destination
+package com.vapi4k.dsl.assistant
 
-import com.vapi4k.api.destination.enums.AssistantTransferMode
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.api.destination.AssistantDestinationDto
+import com.vapi4k.api.assistant.enums.StructureDataSchemeType
 
-@AssistantDslMarker
-interface AssistantDestination {
-  var transferMode: AssistantTransferMode
-  var message: String
+interface StructuredDataSchemaProperties {
+  var type: StructureDataSchemeType
   var description: String
+  val items: MutableMap<String, String>
+  val properties: MutableMap<String, String>
+  val required: MutableList<String>
 }
-
-class AssistantDestinationImpl internal constructor(
-  private val dto: AssistantDestinationDto,
-) : AssistantDestination by dto

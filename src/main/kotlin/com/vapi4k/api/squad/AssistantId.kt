@@ -16,7 +16,7 @@
 
 package com.vapi4k.api.squad
 
-import com.vapi4k.api.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.squad.MemberDto
 
 @AssistantDslMarker

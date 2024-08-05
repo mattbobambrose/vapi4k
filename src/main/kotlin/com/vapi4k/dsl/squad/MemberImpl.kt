@@ -17,10 +17,10 @@
 package com.vapi4k.dsl.squad
 
 import com.vapi4k.api.assistant.Assistant
-import com.vapi4k.api.assistant.AssistantImpl
 import com.vapi4k.api.squad.AssistantDestinations
 import com.vapi4k.api.squad.AssistantId
 import com.vapi4k.api.squad.Member
+import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dtos.squad.MemberDto
 import com.vapi4k.utils.DuplicateChecker
 

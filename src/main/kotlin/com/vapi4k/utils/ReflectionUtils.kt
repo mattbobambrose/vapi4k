@@ -16,8 +16,8 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.api.assistant.Param
-import com.vapi4k.api.assistant.ToolCall
+import com.vapi4k.dsl.assistant.Param
+import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.utils.Utils.isNotNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction

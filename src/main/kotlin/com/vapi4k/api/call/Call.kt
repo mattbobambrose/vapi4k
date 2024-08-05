@@ -17,15 +17,15 @@
 package com.vapi4k.api.call
 
 import com.vapi4k.api.assistant.Assistant
-import com.vapi4k.api.assistant.AssistantDslMarker
 import com.vapi4k.api.assistant.AssistantId
-import com.vapi4k.api.assistant.AssistantIdImpl
-import com.vapi4k.api.assistant.AssistantImpl
 import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.api.assistant.AssistantOverridesImpl
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
 import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.AssistantIdImpl
+import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.assistant.AssistantOverridesImpl
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dtos.api.CallRequestDto

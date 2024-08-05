@@ -16,21 +16,9 @@
 
 package com.vapi4k.api.assistant
 
-import com.vapi4k.api.assistant.enums.StructureDataSchemeType
-import com.vapi4k.api.assistant.enums.SuccessEvaluationRubricType
+import com.vapi4k.dsl.assistant.AnalysisPlanProperties
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.AnalysisPlanDto
-import com.vapi4k.dtos.StructuredDataSchemaDto
-
-interface AnalysisPlanProperties {
-  val structuredDataSchema: StructuredDataSchemaDto
-  var structuredDataPrompt: String
-  var structuredDataRequestTimeoutSeconds: Double
-  var successEvaluationPrompt: String
-  var successEvaluationRequestTimeoutSeconds: Double
-  var successEvaluationRubric: SuccessEvaluationRubricType
-  var summaryPrompt: String
-  var summaryRequestTimeoutSeconds: Double
-}
 
 @AssistantDslMarker
 data class AnalysisPlan internal constructor(
@@ -40,16 +28,3 @@ data class AnalysisPlan internal constructor(
     StructuredDataSchema(dto.structuredDataSchema).apply(block)
   }
 }
-
-interface StructuredDataSchemaProperties {
-  var type: StructureDataSchemeType
-  var description: String
-  val items: MutableMap<String, String>
-  val properties: MutableMap<String, String>
-  val required: MutableList<String>
-}
-
-@AssistantDslMarker
-data class StructuredDataSchema internal constructor(
-  private val dto: StructuredDataSchemaDto,
-) : StructuredDataSchemaProperties by dto

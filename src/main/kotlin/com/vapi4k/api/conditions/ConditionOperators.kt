@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.api.assistant
+package com.vapi4k.api.conditions
 
 import com.vapi4k.dtos.tools.ToolMessageCondition.Companion.toolMessageCondition
 

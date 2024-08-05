@@ -16,24 +16,11 @@
 
 package com.vapi4k.api.assistant
 
-import kotlin.annotation.AnnotationRetention.RUNTIME
-import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
-import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
-import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.StructuredDataSchemaProperties
+import com.vapi4k.dtos.StructuredDataSchemaDto
 
-@DslMarker
-@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
-annotation class AssistantDslMarker
-
-@Retention(RUNTIME)
-@Target(AnnotationTarget.FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER)
-annotation class ToolCall(
-  val description: String = "",
-  val name: String = "",
-)
-
-@Retention(RUNTIME)
-@Target(VALUE_PARAMETER)
-annotation class Param(
-  val description: String,
-)
+@AssistantDslMarker
+data class StructuredDataSchema internal constructor(
+  private val dto: StructuredDataSchemaDto,
+) : StructuredDataSchemaProperties by dto

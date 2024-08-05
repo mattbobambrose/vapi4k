@@ -17,12 +17,12 @@
 package com.vapi4k.api.call
 
 import com.typesafe.config.ConfigFactory
-import com.vapi4k.api.assistant.AssistantDslMarker
 import com.vapi4k.api.call.enums.ApiObjectType
 import com.vapi4k.api.tools.ToolCache.Companion.swapCacheKeys
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionCacheId.Companion.UNSPECIFIED_SESSION_CACHE_ID
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.api.CallRequestDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.AssistantCacheIdSource

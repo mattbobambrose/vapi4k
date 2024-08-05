@@ -16,11 +16,9 @@
 
 package com.vapi4k.api.assistant
 
+import com.vapi4k.dsl.assistant.ArtifactPlanProperties
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.ArtifactPlanDto
-
-interface ArtifactPlanProperties {
-  var videoRecordingEnabled: Boolean?
-}
 
 @AssistantDslMarker
 data class ArtifactPlan internal constructor(

@@ -16,9 +16,9 @@
 
 package com.vapi4k.api.model
 
-import com.vapi4k.api.assistant.AssistantDslMarker
 import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.tools.Tools
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.CustomLLMModelProperties
 
 @AssistantDslMarker

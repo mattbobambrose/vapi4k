@@ -16,7 +16,7 @@
 
 package com.vapi4k.api.functions
 
-import com.vapi4k.api.assistant.AssistantDslMarker
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import kotlin.reflect.KFunction
 
 @AssistantDslMarker
