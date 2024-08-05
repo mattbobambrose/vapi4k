@@ -16,9 +16,9 @@
 
 package com.vapi4k.dtos.voice
 
-import com.vapi4k.dsl.voice.OpenAIVoiceProperties
-import com.vapi4k.dsl.voice.enums.OpenAIVoiceIdType
-import com.vapi4k.dsl.voice.enums.VoiceProviderType
+import com.vapi4k.api.voice.OpenAIVoiceProperties
+import com.vapi4k.api.voice.enums.OpenAIVoiceIdType
+import com.vapi4k.api.voice.enums.VoiceProviderType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

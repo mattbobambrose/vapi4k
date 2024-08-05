@@ -17,11 +17,11 @@
 package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.REQUEST_CONTEXT
-import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
-import com.vapi4k.dsl.voice.enums.CartesiaVoiceModelType
-import com.vapi4k.dsl.voice.enums.PlayHTVoiceEmotionType
-import com.vapi4k.dsl.voice.enums.PlayHTVoiceIdType
+import com.vapi4k.api.model.enums.GroqModelType
+import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
+import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
+import com.vapi4k.api.voice.enums.PlayHTVoiceEmotionType
+import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.get
 import com.vapi4k.utils.stringValue

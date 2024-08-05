@@ -16,10 +16,10 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.AssistantResponse
-import com.vapi4k.dsl.assistant.ToolCall
-import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.dsl.toolservice.ToolCallService
+import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.assistant.ToolCall
+import com.vapi4k.api.model.enums.GroqModelType
+import com.vapi4k.api.toolservice.ToolCallService
 
 object SimpleSquad {
   fun AssistantResponse.doubleToolAssistant2() =

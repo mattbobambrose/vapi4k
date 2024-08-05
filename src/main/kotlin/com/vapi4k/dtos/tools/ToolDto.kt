@@ -16,9 +16,9 @@
 
 package com.vapi4k.dtos.tools
 
-import com.vapi4k.dsl.tools.ToolWithMetaDataProperties
-import com.vapi4k.dsl.tools.TransferToolProperties
-import com.vapi4k.dsl.tools.enums.ToolType
+import com.vapi4k.api.tools.ToolWithMetaDataProperties
+import com.vapi4k.api.tools.TransferToolProperties
+import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.dtos.ServerDto
 import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import com.vapi4k.dtos.functions.FunctionDto

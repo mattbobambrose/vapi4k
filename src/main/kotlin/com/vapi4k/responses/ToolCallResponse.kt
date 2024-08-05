@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
+import com.vapi4k.api.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId

@@ -16,9 +16,9 @@
 
 package com.vapi4k.dbms
 
-import com.vapi4k.dsl.vapi4k.enums.RequestResponseType.REQUEST
-import com.vapi4k.dsl.vapi4k.enums.RequestResponseType.RESPONSE
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
+import com.vapi4k.api.vapi4k.enums.RequestResponseType.REQUEST
+import com.vapi4k.api.vapi4k.enums.RequestResponseType.RESPONSE
+import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.utils.JsonElementUtils.requestType
 import com.vapi4k.utils.toJsonString
 import kotlinx.serialization.json.JsonElement

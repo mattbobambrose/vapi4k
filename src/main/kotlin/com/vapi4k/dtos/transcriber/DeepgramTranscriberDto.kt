@@ -16,10 +16,10 @@
 
 package com.vapi4k.dtos.transcriber
 
-import com.vapi4k.dsl.model.enums.DeepgramModelType
-import com.vapi4k.dsl.transcriber.DeepgramTranscriberProperties
-import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
-import com.vapi4k.dsl.transcriber.enums.TranscriberType
+import com.vapi4k.api.model.enums.DeepgramModelType
+import com.vapi4k.api.transcriber.DeepgramTranscriberProperties
+import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
+import com.vapi4k.api.transcriber.enums.TranscriberType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

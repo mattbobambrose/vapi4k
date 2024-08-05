@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos
 
-import com.vapi4k.dsl.assistant.AnalysisPlanProperties
-import com.vapi4k.dsl.assistant.enums.SuccessEvaluationRubricType
+import com.vapi4k.api.assistant.AnalysisPlanProperties
+import com.vapi4k.api.assistant.enums.SuccessEvaluationRubricType
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -16,8 +16,8 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.api.VapiApi.Companion.vapiApi
-import com.vapi4k.dsl.model.enums.OpenAIModelType
+import com.vapi4k.api.call.VapiApi.Companion.vapiApi
+import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.utils.toJsonElement
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking

@@ -16,7 +16,7 @@
 
 package com.vapi4k.dtos.voice
 
-import com.vapi4k.dsl.voice.enums.PunctuationType
+import com.vapi4k.api.voice.enums.PunctuationType
 
 abstract class AbstractVoiceDto {
   var inputPreprocessingEnabled: Boolean? = null

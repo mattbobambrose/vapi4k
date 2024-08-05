@@ -16,7 +16,7 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.api.assistant.ToolCall
 import simpleDemo.Coasts.EAST
 import java.time.ZoneId
 import java.time.ZonedDateTime

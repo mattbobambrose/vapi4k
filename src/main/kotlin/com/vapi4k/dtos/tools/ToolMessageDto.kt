@@ -16,12 +16,12 @@
 
 package com.vapi4k.dtos.tools
 
-import com.vapi4k.dsl.tools.ToolMessageCompleteProperties
-import com.vapi4k.dsl.tools.ToolMessageDelayedProperties
-import com.vapi4k.dsl.tools.ToolMessageFailedProperties
-import com.vapi4k.dsl.tools.ToolMessageStartProperties
-import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
-import com.vapi4k.dsl.tools.enums.ToolMessageType
+import com.vapi4k.api.tools.ToolMessageCompleteProperties
+import com.vapi4k.api.tools.ToolMessageDelayedProperties
+import com.vapi4k.api.tools.ToolMessageFailedProperties
+import com.vapi4k.api.tools.ToolMessageStartProperties
+import com.vapi4k.api.tools.enums.ToolMessageRoleType
+import com.vapi4k.api.tools.enums.ToolMessageType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.dsl.tools.enums.ToolType
-import com.vapi4k.dsl.toolservice.ToolCallService
+import com.vapi4k.api.tools.enums.ToolType
+import com.vapi4k.api.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -99,11 +99,11 @@ class FunctionDetails(
     argName: String,
     argType: KType,
   ) = when (argType.asKClass()) {
-      String::class -> args.jsonObject.stringValue(argName)
-      Int::class -> args.jsonObject.intValue(argName)
-      Boolean::class -> args.jsonObject.booleanValue(argName)
-      else -> error("Unsupported parameter type: $argType")
-    }
+    String::class -> args.jsonObject.stringValue(argName)
+    Int::class -> args.jsonObject.intValue(argName)
+    Boolean::class -> args.jsonObject.booleanValue(argName)
+    else -> error("Unsupported parameter type: $argType")
+  }
 
   private fun invokeMethod(args: JsonElement): String {
     val function = obj.findFunction(functionName)

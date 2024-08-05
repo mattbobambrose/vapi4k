@@ -16,8 +16,8 @@
 
 package com.vapi4k
 
+import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.EnvVar.DEFAULT_SERVER_PATH
-import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.utils.Utils.dropLeading
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows

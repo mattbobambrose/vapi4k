@@ -14,12 +14,12 @@
  *
  */
 
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.STATUS_UPDATE
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.dbms.Messages.insertRequest
 import com.vapi4k.dbms.Messages.insertResponse
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.STATUS_UPDATE
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig

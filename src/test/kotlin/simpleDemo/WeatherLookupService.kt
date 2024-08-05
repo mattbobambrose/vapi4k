@@ -16,7 +16,7 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.api.assistant.ToolCall
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement

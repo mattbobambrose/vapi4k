@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos
 
-import com.vapi4k.dsl.assistant.StructuredDataSchemaProperties
-import com.vapi4k.dsl.assistant.enums.StructureDataSchemeType
+import com.vapi4k.api.assistant.StructuredDataSchemaProperties
+import com.vapi4k.api.assistant.enums.StructureDataSchemeType
 import kotlinx.serialization.Serializable
 
 @Serializable

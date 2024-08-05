@@ -28,6 +28,7 @@ enum class EnvVar(
   private val width: Int = 10,
 ) {
   // Server details
+  PORT({ PORT.getEnv(8080) }),
   SERVER_BASE_URL({ SERVER_BASE_URL.getEnv("http://localhost:8080") }),
   DEFAULT_SERVER_PATH({ DEFAULT_SERVER_PATH.getEnv("/vapi4k") }),
   IS_PRODUCTION({ IS_PRODUCTION.getEnv(false) }),
@@ -47,8 +48,8 @@ enum class EnvVar(
   TOOL_CACHE_MAX_AGE_MINS({ TOOL_CACHE_MAX_AGE_MINS.getEnv(60) }),
 
   // Resend details
-//  RESEND_API_KEY({ RESEND_API_KEY.getRequired() }, { it.obfuscate(1) }),
-//  RESEND_SENDER_EMAIL({ RESEND_SENDER_EMAIL.getRequired() })
+  // RESEND_API_KEY({ RESEND_API_KEY.getRequired() }, { it.obfuscate(1) }),
+  // RESEND_SENDER_EMAIL({ RESEND_SENDER_EMAIL.getRequired() })
   ;
 
   val value: String by lazy { src().toString() }

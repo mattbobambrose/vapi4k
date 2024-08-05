@@ -16,7 +16,7 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.dsl.assistant.AssistantIdProperties
+import com.vapi4k.api.assistant.AssistantIdProperties
 import com.vapi4k.dsl.squad.SquadIdSource
 import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import com.vapi4k.dtos.assistant.AssistantDto

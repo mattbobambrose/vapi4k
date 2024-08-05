@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos.assistant
 
-import com.vapi4k.dsl.assistant.AssistantOverridesProperties
-import com.vapi4k.dsl.assistant.ModelDtoUnion
+import com.vapi4k.api.assistant.AssistantOverridesProperties
+import com.vapi4k.dsl.model.ModelDtoUnion
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
 import com.vapi4k.dtos.MessagePlanDto

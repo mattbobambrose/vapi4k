@@ -175,6 +175,34 @@ tasks.withType<DokkaTask>().configureEach {
     }
 }
 
+tasks.dokkaHtml.configure {
+//    outputDirectory.set(buildDir.resolve("dokka"))
+
+    dokkaSourceSets {
+        named("main") {
+            displayName.set("Vapi4k")
+            noStdlibLink.set(true)
+            noJdkLink.set(true)
+
+            // Exclude everything first
+            perPackageOption {
+                matchingRegex.set("com.vapi4k.*") // will match kotlin and all sub-packages of it
+                suppress.set(true)
+            }
+
+            // Include specific packages
+            perPackageOption {
+                matchingRegex.set("com.vapi4k.api.*") // will match kotlin and all sub-packages of it
+                includeNonPublic.set(false)
+                reportUndocumented.set(false)
+                skipDeprecated.set(false)
+                suppress.set(false)
+            }
+        }
+    }
+}
+
+
 
 //tasks.findByName("lintKotlinCommonMain")?.apply {
 //    dependsOn("kspCommonMainKotlinMetadata")

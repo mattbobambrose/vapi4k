@@ -16,20 +16,20 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
-import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
-import com.vapi4k.dsl.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
-import com.vapi4k.dsl.assistant.eq
-import com.vapi4k.dsl.model.enums.DeepgramModelType
-import com.vapi4k.dsl.model.enums.GladiaModelType
-import com.vapi4k.dsl.model.enums.OpenAIModelType
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
-import com.vapi4k.dsl.tools.enums.ToolMessageType
-import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
-import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
-import com.vapi4k.dsl.vapi4k.RequestContext
-import com.vapi4k.dsl.vapi4k.Vapi4kApplication
-import com.vapi4k.dsl.vapi4k.Vapi4kConfig
+import com.vapi4k.api.assistant.enums.AssistantClientMessageType
+import com.vapi4k.api.assistant.enums.AssistantServerMessageType
+import com.vapi4k.api.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
+import com.vapi4k.api.assistant.eq
+import com.vapi4k.api.model.enums.DeepgramModelType
+import com.vapi4k.api.model.enums.GladiaModelType
+import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.tools.ToolCache.Companion.clearToolCache
+import com.vapi4k.api.tools.enums.ToolMessageType
+import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
+import com.vapi4k.api.transcriber.enums.TalkscriberModelType
+import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.Vapi4kApplication
+import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
