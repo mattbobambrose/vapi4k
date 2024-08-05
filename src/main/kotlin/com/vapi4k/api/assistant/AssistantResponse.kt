@@ -39,4 +39,3 @@ interface AssistantResponse {
 
   fun sipDestination(block: SipDestination.() -> Unit)
 }
-

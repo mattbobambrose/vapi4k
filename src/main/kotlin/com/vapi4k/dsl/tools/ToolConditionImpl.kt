@@ -32,15 +32,15 @@ class ToolConditionImpl internal constructor(
   internal val tool: ToolImpl,
   private val conditionSet: Set<ToolMessageCondition>,
 ) : ToolCondition {
-  private val requestStartChecker = DuplicateChecker()
-  private val requestCompleteChecker = DuplicateChecker()
-  private val requestFailedChecker = DuplicateChecker()
-  private val requestDelayedChecker = DuplicateChecker()
+  private val startChecker = DuplicateChecker()
+  private val completeChecker = DuplicateChecker()
+  private val failedChecker = DuplicateChecker()
+  private val delayedChecker = DuplicateChecker()
 
   private val messages get() = tool.toolDto.messages
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
-    requestStartChecker.checkForError("condition${conditionSet.joinToString()}{} already has a requestStartMessage{}")
+    startChecker.check("condition${conditionSet.joinToString()}{} already has a requestStartMessage{}")
     return ToolMessageStartDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       messages.add(dto)
@@ -49,7 +49,7 @@ class ToolConditionImpl internal constructor(
   }
 
   override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    requestCompleteChecker.checkForError("condition${conditionSet.joinToString()}{} already has a requestCompleteMessage{}")
+    completeChecker.check("condition${conditionSet.joinToString()}{} already has a requestCompleteMessage{}")
     return ToolMessageCompleteDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       messages.add(dto)
@@ -58,7 +58,7 @@ class ToolConditionImpl internal constructor(
   }
 
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    requestFailedChecker.checkForError("condition${conditionSet.joinToString()}{} already has a requestFailedMessage{}")
+    failedChecker.check("condition${conditionSet.joinToString()}{} already has a requestFailedMessage{}")
     return ToolMessageFailedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       messages.add(dto)
@@ -67,7 +67,7 @@ class ToolConditionImpl internal constructor(
   }
 
   override fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed {
-    requestDelayedChecker.checkForError("condition${conditionSet.joinToString()}{} already has a requestDelayedMessage{}")
+    delayedChecker.check("condition${conditionSet.joinToString()}{} already has a requestDelayedMessage{}")
     return ToolMessageDelayedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       messages.add(dto)

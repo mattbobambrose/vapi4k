@@ -36,7 +36,6 @@ object JsonElementUtils {
     else
       error("JsonElement is not a tool call request")
 
-
   val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
   val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
 

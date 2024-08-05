@@ -23,10 +23,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ToolServerDto(
   override var name: String = "",
-
   @SerialName("url")
   override var serverUrl: String = "",
-
   @SerialName("secret")
   override var serverSecret: String = "",
   override var timeoutSeconds: Int = -1,

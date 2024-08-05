@@ -62,12 +62,12 @@ data class CallImpl internal constructor(
   private val overridesChecker = DuplicateChecker()
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
-    assistantChecker.checkForError("assistantId{} already called")
+    assistantChecker.check("assistantId{} already called")
     return AssistantIdImpl(emptyRequestContext(), sessionCacheId, assistantCacheIdSource, dto).apply(block)
   }
 
   override fun assistant(block: Assistant.() -> Unit): Assistant {
-    assistantChecker.checkForError("assistant{} already called")
+    assistantChecker.check("assistant{} already called")
     return with(dto) {
       AssistantImpl(emptyRequestContext(), sessionCacheId, assistantCacheIdSource, assistantDto, assistantOverridesDto)
         .apply(block)
@@ -79,19 +79,19 @@ data class CallImpl internal constructor(
   }
 
   override fun squadId(block: SquadId.() -> Unit): SquadId {
-    assistantChecker.checkForError("squadId{} already called")
+    assistantChecker.check("squadId{} already called")
     return SquadIdImpl(emptyRequestContext(), dto).apply(block)
   }
 
   override fun squad(block: Squad.() -> Unit): Squad {
-    assistantChecker.checkForError("squad{} already called")
+    assistantChecker.check("squad{} already called")
     return with(dto) {
       SquadImpl(emptyRequestContext(), sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
     }
   }
 
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides {
-    overridesChecker.checkForError("assistantOverrides{} already called")
+    overridesChecker.check("assistantOverrides{} already called")
     return if (dto.assistantDto.updated || dto.assistantId.isNotEmpty())
       AssistantOverridesImpl(
         emptyRequestContext(),

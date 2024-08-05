@@ -21,4 +21,6 @@ import com.vapi4k.dsl.model.CommonModel
 import com.vapi4k.dsl.model.OpenAIModelProperties
 
 @AssistantDslMarker
-interface OpenAIModel : OpenAIModelProperties, CommonModel
+interface OpenAIModel :
+  OpenAIModelProperties,
+  CommonModel

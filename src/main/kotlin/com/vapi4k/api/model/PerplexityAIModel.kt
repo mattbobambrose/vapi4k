@@ -21,4 +21,6 @@ import com.vapi4k.dsl.model.CommonModel
 import com.vapi4k.dsl.model.PerplexityAIModelProperties
 
 @AssistantDslMarker
-interface PerplexityAIModel : PerplexityAIModelProperties, CommonModel
+interface PerplexityAIModel :
+  PerplexityAIModelProperties,
+  CommonModel

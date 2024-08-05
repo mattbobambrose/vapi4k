@@ -21,4 +21,6 @@ import com.vapi4k.dsl.model.AnyscaleModelProperties
 import com.vapi4k.dsl.model.CommonModel
 
 @AssistantDslMarker
-interface AnyscaleModel : AnyscaleModelProperties, CommonModel
+interface AnyscaleModel :
+  AnyscaleModelProperties,
+  CommonModel

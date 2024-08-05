@@ -22,4 +22,3 @@ import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 interface ToolServers {
   fun toolServer(block: ToolServer.() -> Unit)
 }
-

@@ -33,9 +33,7 @@ interface Vapi4kConfig {
     block: suspend (request: JsonElement) -> Unit,
   )
 
-  fun onAllResponses(
-    block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit,
-  )
+  fun onAllResponses(block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit)
 
   fun onResponse(
     requestType: ServerRequestType,
@@ -43,4 +41,3 @@ interface Vapi4kConfig {
     block: suspend (requestType: ServerRequestType, request: JsonElement, elapsed: Duration) -> Unit,
   )
 }
-

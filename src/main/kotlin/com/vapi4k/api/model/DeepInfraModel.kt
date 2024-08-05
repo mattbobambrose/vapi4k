@@ -21,5 +21,6 @@ import com.vapi4k.dsl.model.CommonModel
 import com.vapi4k.dsl.model.DeepInfraModelProperties
 
 @AssistantDslMarker
-interface DeepInfraModel : DeepInfraModelProperties,
+interface DeepInfraModel :
+  DeepInfraModelProperties,
   CommonModel

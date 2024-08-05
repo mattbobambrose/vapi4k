@@ -44,7 +44,7 @@ class AssistantResponseImpl(
     get() = this::assistantRequestResponse.isInitialized
 
   override fun assistant(block: Assistant.() -> Unit) {
-    checker.checkForError("An assistant{} is already declared")
+    checker.check("An assistant{} is already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
       val sessionCacheId = assistantRequestContext.assistantRequest.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -64,7 +64,7 @@ class AssistantResponseImpl(
   }
 
   override fun assistantId(block: AssistantId.() -> Unit) {
-    checker.checkForError("An assistantId{} is already declared")
+    checker.check("An assistantId{} is already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
       val sessionCacheId = assistantRequestContext.assistantRequest.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -73,7 +73,7 @@ class AssistantResponseImpl(
   }
 
   override fun squad(block: Squad.() -> Unit) {
-    checker.checkForError("An squad{} is already declared")
+    checker.check("An squad{} is already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
       val sessionCacheId = assistantRequestContext.assistantRequest.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -82,14 +82,14 @@ class AssistantResponseImpl(
   }
 
   override fun squadId(block: SquadId.() -> Unit) {
-    checker.checkForError("An squadId{} is already declared")
+    checker.check("An squadId{} is already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
       SquadIdImpl(assistantRequestContext, this).apply(block)
     }
   }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
-    checker.checkForError("numberDestination{} already declared")
+    checker.check("numberDestination{} already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
       val numDto = NumberDestinationDto()
       destination = numDto
@@ -98,7 +98,7 @@ class AssistantResponseImpl(
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
-    checker.checkForError("sipDestination{} already declared")
+    checker.check("sipDestination{} already declared")
     assistantRequestResponse = AssistantRequestResponse().apply {
       val sipDto = SipDestinationDto()
       destination = sipDto

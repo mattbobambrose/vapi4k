@@ -21,4 +21,6 @@ import com.vapi4k.dsl.model.AnthropicModelProperties
 import com.vapi4k.dsl.model.CommonModel
 
 @AssistantDslMarker
-interface AnthropicModel : AnthropicModelProperties, CommonModel
+interface AnthropicModel :
+  AnthropicModelProperties,
+  CommonModel

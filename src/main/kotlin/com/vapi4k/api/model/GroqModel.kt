@@ -21,4 +21,6 @@ import com.vapi4k.dsl.model.CommonModel
 import com.vapi4k.dsl.model.GroqModelProperties
 
 @AssistantDslMarker
-interface GroqModel : GroqModelProperties, CommonModel
+interface GroqModel :
+  GroqModelProperties,
+  CommonModel

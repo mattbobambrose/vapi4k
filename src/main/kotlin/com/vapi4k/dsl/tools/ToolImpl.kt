@@ -45,7 +45,7 @@ open class ToolImpl internal constructor(
   internal var futureDelay = -1
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
-    requestStartChecker.checkForError("tool{} already has a request start message")
+    requestStartChecker.check("tool{} already has a request start message")
     return ToolMessageStartDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageStart(dto).apply(block)
@@ -53,7 +53,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    requestCompleteChecker.checkForError("tool{} already has a request complete message")
+    requestCompleteChecker.check("tool{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageComplete(dto).apply(block)
@@ -61,7 +61,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    requestFailedChecker.checkForError("tool{} already has a request failed message")
+    requestFailedChecker.check("tool{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageFailed(dto).apply(block)
@@ -69,7 +69,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed {
-    requestDelayedChecker.checkForError("tool{} already has a request delayed message")
+    requestDelayedChecker.check("tool{} already has a request delayed message")
     return ToolMessageDelayedDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageDelayed(dto).apply(block)

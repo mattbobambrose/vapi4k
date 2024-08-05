@@ -21,4 +21,6 @@ import com.vapi4k.dsl.model.CommonModel
 import com.vapi4k.dsl.model.OpenRouterModelProperties
 
 @AssistantDslMarker
-interface OpenRouterModel : OpenRouterModelProperties, CommonModel
+interface OpenRouterModel :
+  OpenRouterModelProperties,
+  CommonModel

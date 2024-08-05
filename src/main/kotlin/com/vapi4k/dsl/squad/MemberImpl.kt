@@ -31,12 +31,12 @@ data class MemberImpl(
   private val memberChecker = DuplicateChecker()
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
-    memberChecker.checkForError("Member already has an assistantId assigned")
+    memberChecker.check("Member already has an assistantId assigned")
     return AssistantId(dto).apply(block)
   }
 
   override fun assistant(block: Assistant.() -> Unit): Assistant {
-    memberChecker.checkForError("Member already has an assistant assigned")
+    memberChecker.check("Member already has an assistant assigned")
     return AssistantImpl(
       members.squad.assistantRequestContext,
       members.squad.sessionCacheId,

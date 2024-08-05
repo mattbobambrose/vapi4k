@@ -23,6 +23,8 @@ import com.vapi4k.utils.Utils.ensureStartsWith
 import java.net.URI
 
 @Vapi4KDslMarker
-class ToolServer internal constructor(private val dto: ToolServerDto) : ToolServerProperties by dto {
+class ToolServer internal constructor(
+  private val dto: ToolServerDto,
+) : ToolServerProperties by dto {
   internal val path get() = URI(serverUrl).toURL().path.ensureStartsWith("/")
 }

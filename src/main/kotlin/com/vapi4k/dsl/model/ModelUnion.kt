@@ -98,7 +98,7 @@ fun ModelUnion.voicemailDetectionUnion(block: VoicemailDetection.() -> Unit): Vo
 
 // Transcribers
 fun ModelUnion.deepgramTranscriberUnion(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {
-  transcriberChecker.checkForError("deepGramTranscriber{} already called")
+  transcriberChecker.check("deepGramTranscriber{} already called")
   val transcriberDto = DeepgramTranscriberDto().also { modelDtoUnion.transcriberDto = it }
   return DeepgramTranscriber(transcriberDto)
     .apply(block)
@@ -106,7 +106,7 @@ fun ModelUnion.deepgramTranscriberUnion(block: DeepgramTranscriber.() -> Unit): 
 }
 
 fun ModelUnion.gladiaTranscriberUnion(block: GladiaTranscriber.() -> Unit): GladiaTranscriber {
-  transcriberChecker.checkForError("gladiaTranscriber{} already called")
+  transcriberChecker.check("gladiaTranscriber{} already called")
   val transcriberDto = GladiaTranscriberDto().also { modelDtoUnion.transcriberDto = it }
   return GladiaTranscriber(transcriberDto)
     .apply(block)
@@ -114,7 +114,7 @@ fun ModelUnion.gladiaTranscriberUnion(block: GladiaTranscriber.() -> Unit): Glad
 }
 
 fun ModelUnion.talkscriberTranscriberUnion(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber {
-  transcriberChecker.checkForError("talkscriberTranscriber{} already called")
+  transcriberChecker.check("talkscriberTranscriber{} already called")
   val transcriberDto = TalkscriberTranscriberDto().also { modelDtoUnion.transcriberDto = it }
   return TalkscriberTranscriber(transcriberDto)
     .apply(block)
@@ -123,7 +123,7 @@ fun ModelUnion.talkscriberTranscriberUnion(block: TalkscriberTranscriber.() -> U
 
 // Models
 fun ModelUnion.anyscaleModelUnion(block: AnyscaleModel.() -> Unit): AnyscaleModel {
-  modelChecker.checkForError("anyscaleModel{} already called")
+  modelChecker.check("anyscaleModel{} already called")
   val modelDto = AnyscaleModelDto().also { modelDtoUnion.modelDto = it }
   return AnyscaleModelImpl(this, modelDto)
     .apply(block)
@@ -138,7 +138,7 @@ fun ModelUnion.anthropicModelUnion(block: AnthropicModel.() -> Unit): AnthropicM
 }
 
 fun ModelUnion.customLLMModelUnion(block: CustomLLMModel.() -> Unit): CustomLLMModel {
-  modelChecker.checkForError("customLLMModel{} already called")
+  modelChecker.check("customLLMModel{} already called")
   val modelDto = CustomLLMModelDto().also { modelDtoUnion.modelDto = it }
   return CustomLLMModelImpl(this, modelDto)
     .apply(block)
@@ -146,7 +146,7 @@ fun ModelUnion.customLLMModelUnion(block: CustomLLMModel.() -> Unit): CustomLLMM
 }
 
 fun ModelUnion.deepInfraModelUnion(block: DeepInfraModel.() -> Unit): DeepInfraModel {
-  modelChecker.checkForError("deepInfraModel{} already called")
+  modelChecker.check("deepInfraModel{} already called")
   val modelDto = DeepInfraModelDto().also { modelDtoUnion.modelDto = it }
   return DeepInfraModelImpl(this, modelDto)
     .apply(block)
@@ -154,7 +154,7 @@ fun ModelUnion.deepInfraModelUnion(block: DeepInfraModel.() -> Unit): DeepInfraM
 }
 
 fun ModelUnion.groqModelUnion(block: GroqModel.() -> Unit): GroqModel {
-  modelChecker.checkForError("groqModel{} already called")
+  modelChecker.check("groqModel{} already called")
   val modelDto = GroqModelDto().also { modelDtoUnion.modelDto = it }
   return GroqModelImpl(this, modelDto)
     .apply(block)
@@ -162,7 +162,7 @@ fun ModelUnion.groqModelUnion(block: GroqModel.() -> Unit): GroqModel {
 }
 
 fun ModelUnion.openAIModelUnion(block: OpenAIModel.() -> Unit): OpenAIModel {
-  modelChecker.checkForError("openAIModel{} already called")
+  modelChecker.check("openAIModel{} already called")
   val modelDto = OpenAIModelDto().also { modelDtoUnion.modelDto = it }
   return OpenAIModelImpl(this, modelDto)
     .apply(block)
@@ -170,7 +170,7 @@ fun ModelUnion.openAIModelUnion(block: OpenAIModel.() -> Unit): OpenAIModel {
 }
 
 fun ModelUnion.openRouterModelUnion(block: OpenRouterModel.() -> Unit): OpenRouterModel {
-  modelChecker.checkForError("openRouterModel{} already called")
+  modelChecker.check("openRouterModel{} already called")
   val modelDto = OpenRouterModelDto().also { modelDtoUnion.modelDto = it }
   return OpenRouterModelImpl(this, modelDto)
     .apply(block)
@@ -178,7 +178,7 @@ fun ModelUnion.openRouterModelUnion(block: OpenRouterModel.() -> Unit): OpenRout
 }
 
 fun ModelUnion.perplexityAIModelUnion(block: PerplexityAIModel.() -> Unit): PerplexityAIModel {
-  modelChecker.checkForError("perplexityAIModel{} already called")
+  modelChecker.check("perplexityAIModel{} already called")
   val modelDto = PerplexityAIModelDto().also { modelDtoUnion.modelDto = it }
   return PerplexityAIModelImpl(this, modelDto)
     .apply(block)
@@ -186,7 +186,7 @@ fun ModelUnion.perplexityAIModelUnion(block: PerplexityAIModel.() -> Unit): Perp
 }
 
 fun ModelUnion.togetherAIModelUnion(block: TogetherAIModel.() -> Unit): TogetherAIModel {
-  modelChecker.checkForError("togetherAIModel{} already called")
+  modelChecker.check("togetherAIModel{} already called")
   val modelDto = TogetherAIModelDto().also { modelDtoUnion.modelDto = it }
   return TogetherAIModelImpl(this, modelDto)
     .apply(block)
@@ -194,7 +194,7 @@ fun ModelUnion.togetherAIModelUnion(block: TogetherAIModel.() -> Unit): Together
 }
 
 fun ModelUnion.vapiModelUnion(block: VapiModel.() -> Unit): VapiModel {
-  modelChecker.checkForError("vapiModel{} already called")
+  modelChecker.check("vapiModel{} already called")
   val modelDto = VapiModelDto().also { modelDtoUnion.modelDto = it }
   return VapiModelImpl(this, modelDto)
     .apply(block)
@@ -203,7 +203,7 @@ fun ModelUnion.vapiModelUnion(block: VapiModel.() -> Unit): VapiModel {
 
 // Voices
 fun ModelUnion.azureVoiceUnion(block: AzureVoice.() -> Unit): AzureVoice {
-  voiceChecker.checkForError("azureVoice{} already called")
+  voiceChecker.check("azureVoice{} already called")
   val voiceDto = AzureVoiceDto().also { modelDtoUnion.voiceDto = it }
   return AzureVoice(voiceDto)
     .apply(block)
@@ -211,7 +211,7 @@ fun ModelUnion.azureVoiceUnion(block: AzureVoice.() -> Unit): AzureVoice {
 }
 
 fun ModelUnion.cartesiaVoiceUnion(block: CartesiaVoice.() -> Unit): CartesiaVoice {
-  voiceChecker.checkForError("cartesiaVoice{} already called")
+  voiceChecker.check("cartesiaVoice{} already called")
   val voiceDto = CartesiaVoiceDto().also { modelDtoUnion.voiceDto = it }
   return CartesiaVoice(voiceDto)
     .apply(block)
@@ -219,7 +219,7 @@ fun ModelUnion.cartesiaVoiceUnion(block: CartesiaVoice.() -> Unit): CartesiaVoic
 }
 
 fun ModelUnion.deepgramVoiceUnion(block: DeepgramVoice.() -> Unit): DeepgramVoice {
-  voiceChecker.checkForError("deepgramVoice{} already called")
+  voiceChecker.check("deepgramVoice{} already called")
   val voiceDto = DeepgramVoiceDto().also { modelDtoUnion.voiceDto = it }
   return DeepgramVoice(voiceDto)
     .apply(block)
@@ -227,7 +227,7 @@ fun ModelUnion.deepgramVoiceUnion(block: DeepgramVoice.() -> Unit): DeepgramVoic
 }
 
 fun ModelUnion.elevenLabsVoiceUnion(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice {
-  voiceChecker.checkForError("elevenLabsVoice{} already called")
+  voiceChecker.check("elevenLabsVoice{} already called")
   val voiceDto = ElevenLabsVoiceDto().also { modelDtoUnion.voiceDto = it }
   return ElevenLabsVoice(voiceDto)
     .apply(block)
@@ -235,14 +235,14 @@ fun ModelUnion.elevenLabsVoiceUnion(block: ElevenLabsVoice.() -> Unit): ElevenLa
 }
 
 fun ModelUnion.lmntVoiceUnion(block: LMNTVoice.() -> Unit): LMNTVoice {
-  voiceChecker.checkForError("lmntVoice{} already called")
+  voiceChecker.check("lmntVoice{} already called")
   val voiceDto = LMNTVoiceDto().also { modelDtoUnion.voiceDto = it }
   return LMNTVoice(voiceDto)
     .apply(block)
 }
 
 fun ModelUnion.neetsVoiceUnion(block: NeetsVoice.() -> Unit): NeetsVoice {
-  voiceChecker.checkForError("neetsVoice{} already called")
+  voiceChecker.check("neetsVoice{} already called")
   val voiceDto = NeetsVoiceDto().also { modelDtoUnion.voiceDto = it }
   return NeetsVoice(voiceDto)
     .apply(block)
@@ -250,7 +250,7 @@ fun ModelUnion.neetsVoiceUnion(block: NeetsVoice.() -> Unit): NeetsVoice {
 }
 
 fun ModelUnion.openAIVoiceUnion(block: OpenAIVoice.() -> Unit): OpenAIVoice {
-  voiceChecker.checkForError("openAIVoice{} already called")
+  voiceChecker.check("openAIVoice{} already called")
   val voiceDto = OpenAIVoiceDto().also { modelDtoUnion.voiceDto = it }
   return OpenAIVoice(voiceDto)
     .apply(block)
@@ -258,7 +258,7 @@ fun ModelUnion.openAIVoiceUnion(block: OpenAIVoice.() -> Unit): OpenAIVoice {
 }
 
 fun ModelUnion.playHTVoiceUnion(block: PlayHTVoice.() -> Unit): PlayHTVoice {
-  voiceChecker.checkForError("playHTVoice{} already called")
+  voiceChecker.check("playHTVoice{} already called")
   val voiceDto = PlayHTVoiceDto().also { modelDtoUnion.voiceDto = it }
   return PlayHTVoice(voiceDto)
     .apply(block)
@@ -266,7 +266,7 @@ fun ModelUnion.playHTVoiceUnion(block: PlayHTVoice.() -> Unit): PlayHTVoice {
 }
 
 fun ModelUnion.rimeAIVoiceUnion(block: RimeAIVoice.() -> Unit): RimeAIVoice {
-  voiceChecker.checkForError("rimeAIVoice{} already called")
+  voiceChecker.check("rimeAIVoice{} already called")
   val voiceDto = RimeAIVoiceDto().also { modelDtoUnion.voiceDto = it }
   return RimeAIVoice(voiceDto)
     .apply(block)
