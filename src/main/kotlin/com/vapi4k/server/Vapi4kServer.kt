@@ -17,7 +17,7 @@
 package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
-import com.vapi4k.api.vapi4k.Endpoint
+import com.vapi4k.api.vapi4k.ToolServer
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.enums.RequestResponseType
 import com.vapi4k.api.vapi4k.enums.RequestResponseType.REQUEST
@@ -57,6 +57,7 @@ import com.vapi4k.dsl.tools.ToolCache.Companion.cacheAsJson
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
@@ -138,7 +139,7 @@ typealias KtorCallContext = PipelineContext<Unit, ApplicationCall>
 
 val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",
-  createConfiguration = { Vapi4kConfig() },
+  createConfiguration = { Vapi4kConfigImpl() },
 ) {
   val callbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
 
@@ -188,12 +189,12 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get(serverPath) { call.respondText("$serverPath requires a post request", status = MethodNotAllowed) }
         post(serverPath) { processAssistantRequests(application, callbackChannel) }
 
-        application.toolCallEndpoints.forEach { endpoint ->
-          val toolCallPath = endpoint.path
-          logger.info { "Adding POST toolCall endpoint ${endpoint.name}: \"$toolCallPath\"" }
+        application.toolServers.forEach { toolServer ->
+          val toolCallPath = toolServer.path
+          logger.info { "Adding POST toolCall endpoint ${toolServer.name}: \"$toolCallPath\"" }
           get(toolCallPath) { call.respondText("$toolCallPath requires a post request", status = MethodNotAllowed) }
           post(toolCallPath) {
-            handleToolCallPathPost(application, endpoint, callbackChannel)
+            handleToolCallPathPost(application, toolServer, callbackChannel)
           }
         }
       }
@@ -210,7 +211,7 @@ private suspend fun KtorCallContext.versionResponse() {
   call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
 }
 
-private suspend fun KtorCallContext.validateApplication(config: Vapi4kConfig) {
+private suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl) {
   val appName = call.parameters["appName"].orEmpty()
   val application = config.applications.firstOrNull { it.serverPathAsSegment == appName }
   if (application.isNotNull())
@@ -219,7 +220,7 @@ private suspend fun KtorCallContext.validateApplication(config: Vapi4kConfig) {
     call.respondText("Application not found", status = HttpStatusCode.NotFound)
 }
 
-private suspend fun KtorCallContext.validateRoot(config: Vapi4kConfig) {
+private suspend fun KtorCallContext.validateRoot(config: Vapi4kConfigImpl) {
   if (config.applications.size == 1) {
     val application = config.applications.first()
     call.respondRedirect("$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}")
@@ -276,7 +277,7 @@ private suspend fun KtorCallContext.processValidateRequest(application: Vapi4kAp
   call.respondText(resp, ContentType.Text.Html)
 }
 
-private suspend fun KtorCallContext.validateToolInvokeResponse(config: Vapi4kConfig) =
+private suspend fun KtorCallContext.validateToolInvokeResponse(config: Vapi4kConfigImpl) =
   runCatching {
     val params = call.request.queryParameters
     val applicationId = params[APPLICATION_ID]?.toApplicationId() ?: error("No $APPLICATION_ID found")
@@ -381,10 +382,10 @@ private suspend fun KtorCallContext.assistantRequestResponse(
 
 private suspend fun KtorCallContext.handleToolCallPathPost(
   application: Vapi4kApplicationImpl,
-  endpoint: Endpoint,
+  toolServer: ToolServer,
   requestResponseCallbackChannel: Channel<RequestResponseCallback>,
 ) {
-  if (isValidSecret(endpoint.serverSecret)) {
+  if (isValidSecret(toolServer.serverSecret)) {
     val json = call.receive<String>()
     val request = json.toJsonElement()
     val requestType = request.requestType

@@ -29,7 +29,7 @@ interface Vapi4kApplication {
 
   fun onAssistantRequest(block: suspend AssistantResponse.() -> Unit)
 
-  fun toolCallEndpoints(block: ToolCallEndpoints.() -> Unit)
+  fun toolServers(block: ToolServers.() -> Unit)
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit)
 

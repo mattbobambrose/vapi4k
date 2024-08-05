@@ -18,15 +18,15 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.vapi4k.AssistantRequestContext
-import com.vapi4k.api.vapi4k.Endpoint
-import com.vapi4k.api.vapi4k.RequestArgs
-import com.vapi4k.api.vapi4k.ResponseArgs
-import com.vapi4k.api.vapi4k.ToolCallEndpoints
+import com.vapi4k.api.vapi4k.ToolServer
+import com.vapi4k.api.vapi4k.ToolServers
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.EnvVar
+import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
+import com.vapi4k.dtos.vapi4k.ToolServerDto
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.DslUtils
 import com.vapi4k.utils.Utils.dropLeading
@@ -36,7 +36,7 @@ import kotlin.time.Duration
 
 class Vapi4kApplicationImpl : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
-  internal val toolCallEndpoints = mutableListOf<Endpoint>()
+  internal val toolServers = mutableListOf<ToolServer>()
   internal var assistantRequest: (suspend AssistantResponse.() -> Unit)? = null
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
@@ -56,8 +56,8 @@ class Vapi4kApplicationImpl : Vapi4kApplication {
       error("onAssistantRequest{} can be called only once per vapi4kApplication{}")
   }
 
-  override fun toolCallEndpoints(block: ToolCallEndpoints.() -> Unit) {
-    ToolCallEndpoints(this).apply(block)
+  override fun toolServers(block: ToolServers.() -> Unit) {
+    ToolServersImpl(this).apply(block)
   }
 
   override fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
@@ -102,18 +102,20 @@ class Vapi4kApplicationImpl : Vapi4kApplication {
       error("onAssistantRequest{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
   }
 
-  private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { endpoint -> endpoint.name.isEmpty() }
+  private fun getEmptyToolServerName() = toolServers.firstOrNull { toolServer -> toolServer.name.isEmpty() }
 
-  private val defaultToolCallEndpoint
-    get() = Endpoint().apply {
-      this.serverUrl = "${EnvVar.serverBaseUrl}/${this@Vapi4kApplicationImpl.serverPathAsSegment}"
-      this.serverSecret = this@Vapi4kApplicationImpl.serverSecret
+  private val defaultToolServer
+    by lazy {
+      ToolServer(ToolServerDto()).apply {
+        this.serverUrl = "$serverBaseUrl/${this@Vapi4kApplicationImpl.serverPathAsSegment}"
+        this.serverSecret = this@Vapi4kApplicationImpl.serverSecret
+      }
     }
 
-  internal fun getToolCallEndpoint(endpointName: String) =
-    if (endpointName.isEmpty())
-      getEmptyEndpoint() ?: defaultToolCallEndpoint
+  internal fun getToolServer(toolServerName: String) =
+    if (toolServerName.isEmpty())
+      getEmptyToolServerName() ?: defaultToolServer
     else
-      toolCallEndpoints.firstOrNull { endpoint -> endpoint.name == endpointName }
-        ?: error("Endpoint not found in the vapi4kApplication{}: $endpointName")
+      toolServers.firstOrNull { toolServer -> toolServer.name == toolServerName }
+        ?: error("ToolServer name not found in the vapi4kApplication{}: $toolServerName")
 }

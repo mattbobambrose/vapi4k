@@ -16,8 +16,8 @@
 
 package com.vapi4k
 
-import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.EnvVar.DEFAULT_SERVER_PATH
+import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.Utils.dropLeading
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -29,7 +29,7 @@ class ApplicationTest {
   fun `test for serverPath and serverSecret`() {
     val str = "/something_else"
     val application =
-      with(Vapi4kConfig()) {
+      with(Vapi4kConfigImpl()) {
         vapi4kApplication {
           serverPath = str
           serverSecret = "12345"
@@ -42,7 +42,7 @@ class ApplicationTest {
   @Test
   fun `test for default serverPath`() {
     val application =
-      with(Vapi4kConfig()) {
+      with(Vapi4kConfigImpl()) {
         vapi4kApplication {
         }
       }
@@ -55,7 +55,7 @@ class ApplicationTest {
     val str = "/something_else"
     assertThrows(IllegalStateException::class.java) {
       val application =
-        with(Vapi4kConfig()) {
+        with(Vapi4kConfigImpl()) {
           vapi4kApplication {
           }
           vapi4kApplication {
@@ -71,7 +71,7 @@ class ApplicationTest {
     val str = "/something_else"
     assertThrows(IllegalStateException::class.java) {
       val application =
-        with(Vapi4kConfig()) {
+        with(Vapi4kConfigImpl()) {
           vapi4kApplication {
             serverPath = str
           }

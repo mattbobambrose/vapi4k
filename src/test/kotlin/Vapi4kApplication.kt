@@ -41,15 +41,15 @@ fun Application.module() {
       serverPath = "$baseUrl/inboundRequest"
       serverSecret = "12345"
 
-      toolCallEndpoints {
-        endpoint {
+      toolServers {
+        toolServer {
           name = "endpoint1"
           serverUrl = "$baseUrl/toolCall"
           serverSecret = "456"
           timeoutSeconds = 20
         }
 
-        endpoint {
+        toolServer {
           name = "endpoint2"
           serverUrl = "$baseUrl/TC2"
           serverSecret = "456"

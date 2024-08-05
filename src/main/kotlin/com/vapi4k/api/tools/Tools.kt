@@ -24,49 +24,49 @@ interface Tools {
   fun tool(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String = "",
+    toolServerName: String = "",
     block: Tool.() -> Unit = {},
   )
 
   fun dtmf(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String = "",
+    toolServerName: String = "",
     block: Tool.() -> Unit = {},
   )
 
   fun endCall(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String = "",
+    toolServerName: String = "",
     block: Tool.() -> Unit = {},
   )
 
   fun voiceMail(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String = "",
+    toolServerName: String = "",
     block: Tool.() -> Unit = {},
   )
 
   fun ghl(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String = "",
+    toolServerName: String = "",
     block: ToolWithMetaData.() -> Unit = {},
   )
 
   fun make(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String = "",
+    toolServerName: String = "",
     block: ToolWithMetaData.() -> Unit = {},
   )
 
   fun transfer(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String = "",
+    toolServerName: String = "",
     block: TransferTool.() -> Unit = {},
   )
 }

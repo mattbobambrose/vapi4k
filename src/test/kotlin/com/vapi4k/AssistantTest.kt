@@ -27,13 +27,13 @@ import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
-import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
@@ -47,7 +47,7 @@ import kotlin.test.Test
 
 class AssistantTest {
   init {
-    Vapi4kConfig()
+    Vapi4kConfigImpl()
 //      .apply {
 //        configure {
 //          serverUrl = "HelloWorld"

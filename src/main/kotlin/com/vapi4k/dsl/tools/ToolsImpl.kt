@@ -21,7 +21,7 @@ import com.vapi4k.api.tools.ToolWithMetaData
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.enums.ToolType
-import com.vapi4k.api.vapi4k.Endpoint
+import com.vapi4k.api.vapi4k.ToolServer
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.functions.FunctionUtils
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
@@ -40,92 +40,92 @@ data class ToolsImpl internal constructor(
   override fun tool(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String,
+    toolServerName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
-    processFunctions(ToolType.FUNCTION, functions, obj, endpoint, block)
+    val toolServer = (model.application as Vapi4kApplicationImpl).getToolServer(toolServerName)
+    processFunctions(ToolType.FUNCTION, functions, obj, toolServer, block)
   }
 
   override fun dtmf(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String,
+    toolServerName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
-    processFunctions(ToolType.DTMF, functions, obj, endpoint, block)
+    val toolServer = (model.application as Vapi4kApplicationImpl).getToolServer(toolServerName)
+    processFunctions(ToolType.DTMF, functions, obj, toolServer, block)
   }
 
   override fun endCall(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String,
+    toolServerName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
-    processFunctions(ToolType.END_CALL, functions, obj, endpoint, block)
+    val toolServer = (model.application as Vapi4kApplicationImpl).getToolServer(toolServerName)
+    processFunctions(ToolType.END_CALL, functions, obj, toolServer, block)
   }
 
   override fun voiceMail(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String,
+    toolServerName: String,
     block: Tool.() -> Unit,
   ) {
-    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
-    processFunctions(ToolType.VOICEMAIL, functions, obj, endpoint, block)
+    val toolServer = (model.application as Vapi4kApplicationImpl).getToolServer(toolServerName)
+    processFunctions(ToolType.VOICEMAIL, functions, obj, toolServer, block)
   }
 
   override fun ghl(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String,
+    toolServerName: String,
     block: ToolWithMetaData.() -> Unit,
   ) {
-    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
-    processFunctionsWithMetaData(ToolType.GHL, functions, obj, endpoint, block)
+    val toolServer = (model.application as Vapi4kApplicationImpl).getToolServer(toolServerName)
+    processFunctionsWithMetaData(ToolType.GHL, functions, obj, toolServer, block)
   }
 
   override fun make(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String,
+    toolServerName: String,
     block: ToolWithMetaData.() -> Unit,
   ) {
-    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
-    processFunctionsWithMetaData(ToolType.MAKE, functions, obj, endpoint, block)
+    val toolServer = (model.application as Vapi4kApplicationImpl).getToolServer(toolServerName)
+    processFunctionsWithMetaData(ToolType.MAKE, functions, obj, toolServer, block)
   }
 
   override fun transfer(
     obj: Any,
     vararg functions: KFunction<*>,
-    endpointName: String,
+    toolServerName: String,
     block: TransferTool.() -> Unit,
   ) {
-    val endpoint = (model.application as Vapi4kApplicationImpl).getToolCallEndpoint(endpointName)
-    processFunctionsWithDestinations(ToolType.TRANSFER_CALL, functions, obj, endpoint, block)
+    val toolServer = (model.application as Vapi4kApplicationImpl).getToolServer(toolServerName)
+    processFunctionsWithDestinations(ToolType.TRANSFER_CALL, functions, obj, toolServer, block)
   }
 
   private fun processFunctions(
     toolType: ToolType,
     functions: Array<out KFunction<*>>,
     obj: Any,
-    endpoint: Endpoint,
+    toolServer: ToolServer,
     block: Tool.() -> Unit,
   ) {
     if (functions.isEmpty()) {
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(true, function)
-      addTool(toolType, obj, function, endpoint) {
+      addTool(toolType, obj, function, toolServer) {
         ToolImpl(it).apply(block)
       }
     } else {
       functions.forEach { function ->
         verifyIsToolCall(true, function)
         verifyIsValidReturnType(true, function)
-        addTool(toolType, obj, function, endpoint) {
+        addTool(toolType, obj, function, toolServer) {
           ToolImpl(it).apply(block)
         }
       }
@@ -136,21 +136,21 @@ data class ToolsImpl internal constructor(
     toolType: ToolType,
     functions: Array<out KFunction<*>>,
     obj: Any,
-    endpoint: Endpoint,
+    toolServer: ToolServer,
     block: ToolWithMetaData.() -> Unit,
   ) {
     if (functions.isEmpty()) {
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(true, function)
-      addTool(toolType, obj, function, endpoint) {
+      addTool(toolType, obj, function, toolServer) {
         ToolWithMetaDataImpl(it).apply(block)
       }
     } else {
       functions.forEach { function ->
         verifyIsToolCall(true, function)
         verifyIsValidReturnType(true, function)
-        addTool(toolType, obj, function, endpoint) {
+        addTool(toolType, obj, function, toolServer) {
           ToolWithMetaDataImpl(it).apply(block)
         }
       }
@@ -161,21 +161,21 @@ data class ToolsImpl internal constructor(
     toolType: ToolType,
     functions: Array<out KFunction<*>>,
     obj: Any,
-    endpoint: Endpoint,
+    toolServer: ToolServer,
     block: TransferTool.() -> Unit,
   ) {
     if (functions.isEmpty()) {
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(true, function)
-      addTool(toolType, obj, function, endpoint) {
+      addTool(toolType, obj, function, toolServer) {
         TransferToolImpl(it).apply(block)
       }
     } else {
       functions.forEach { function ->
         verifyIsToolCall(true, function)
         verifyIsValidReturnType(true, function)
-        addTool(toolType, obj, function, endpoint) {
+        addTool(toolType, obj, function, toolServer) {
           TransferToolImpl(it).apply(block)
         }
       }
@@ -192,7 +192,7 @@ data class ToolsImpl internal constructor(
     toolType: ToolType,
     obj: Any,
     function: KFunction<*>,
-    endpoint: Endpoint,
+    toolServer: ToolServer,
     implInitBlock: (ToolDto) -> Unit,
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
@@ -209,10 +209,10 @@ data class ToolsImpl internal constructor(
       implInitBlock(toolDto)
 
       with(toolDto.server) {
-        url = endpoint.serverUrl
-        secret = endpoint.serverSecret
-        if (endpoint.timeoutSeconds != -1) {
-          timeoutSeconds = endpoint.timeoutSeconds
+        url = toolServer.serverUrl
+        secret = toolServer.serverSecret
+        if (toolServer.timeoutSeconds != -1) {
+          timeoutSeconds = toolServer.timeoutSeconds
         }
       }
     }.also { toolDto ->

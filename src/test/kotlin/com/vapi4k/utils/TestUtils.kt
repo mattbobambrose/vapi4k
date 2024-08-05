@@ -89,9 +89,9 @@ fun withTestApplication(
             block()
           }
 
-          toolCallEndpoints {
-            // Provide a default endpoint
-            endpoint {
+          toolServers {
+            // Provide a default toolServer
+            toolServer {
               serverUrl = "https://test/toolCall"
               serverSecret = "456"
               timeoutSeconds = 20
@@ -133,9 +133,9 @@ fun withTestApplication(
             block()
           }
 
-          toolCallEndpoints {
-            // Provide a default endpoint
-            endpoint {
+          toolServers {
+            // Provide a default toolServer
+            toolServer {
               serverUrl = "https://test/toolCall"
               serverSecret = "456"
               timeoutSeconds = 20
