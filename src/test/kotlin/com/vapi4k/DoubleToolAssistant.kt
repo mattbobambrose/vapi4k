@@ -16,56 +16,52 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.dsl.vapi4k.RequestContext
-import com.vapi4k.responses.AssistantRequestResponse
 
 object DoubleToolAssistant {
-  fun doubleToolAssistant(requestContext: RequestContext): AssistantRequestResponse =
-    assistantResponse(requestContext) {
-      squad {
-        members {
-          member {
-            assistant {
-              name = "assistant1"
-              firstMessage = "Hi there! I'm assistant1"
+  fun AssistantResponse.doubleToolAssistant() =
+    squad {
+      members {
+        member {
+          assistant {
+            name = "assistant1"
+            firstMessage = "Hi there! I'm assistant1"
 
-              groqModel {
-                modelType = GroqModelType.LLAMA3_70B
-                tools {
-                  tool(TestWeatherLookupService("windy"))
-                }
-              }
-            }
-            destinations {
-              destination {
-                assistantName = "assistant2"
-                message = "Transfer to assistant2"
-                description = "assistant 2"
+            groqModel {
+              modelType = GroqModelType.LLAMA3_70B
+              tools {
+                tool(TestWeatherLookupService("windy"))
               }
             }
           }
+          destinations {
+            destination {
+              assistantName = "assistant2"
+              message = "Transfer to assistant2"
+              description = "assistant 2"
+            }
+          }
+        }
 
-          member {
-            assistant {
-              name = "assistant2"
-              firstMessage = "Hi there! I'm assistant2"
+        member {
+          assistant {
+            name = "assistant2"
+            firstMessage = "Hi there! I'm assistant2"
 
-              groqModel {
-                modelType = GroqModelType.LLAMA3_70B
-                tools {
-                  tool(TestWeatherLookupService("rainy"))
-                }
+            groqModel {
+              modelType = GroqModelType.LLAMA3_70B
+              tools {
+                tool(TestWeatherLookupService("rainy"))
               }
             }
-            destinations {
-              destination {
-                assistantName = "assistant1"
-                message = "Transfer to assistant1"
-                description = "assistant 1"
-              }
+          }
+          destinations {
+            destination {
+              assistantName = "assistant1"
+              message = "Transfer to assistant1"
+              description = "assistant 1"
             }
           }
         }

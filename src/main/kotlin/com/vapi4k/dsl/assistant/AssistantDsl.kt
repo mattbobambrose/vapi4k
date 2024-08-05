@@ -16,8 +16,6 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.dsl.vapi4k.RequestContext
-import com.vapi4k.responses.AssistantRequestResponse
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
 import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
@@ -26,19 +24,6 @@ import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 @DslMarker
 @Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
 annotation class AssistantDslMarker
-
-object AssistantDsl {
-  fun assistantResponse(
-    requestContext: RequestContext,
-    block: AssistantResponse.() -> Unit,
-  ): AssistantRequestResponse {
-    val assistantResponse = AssistantResponse(requestContext).apply(block)
-    return if (assistantResponse.isAssigned)
-      assistantResponse.assistantRequestResponse
-    else
-      error("assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
-  }
-}
 
 @Retention(RUNTIME)
 @Target(AnnotationTarget.FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER)

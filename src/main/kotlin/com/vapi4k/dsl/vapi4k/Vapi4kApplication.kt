@@ -19,6 +19,7 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.EnvVar.Companion.defaultServerPath
 import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.DslUtils.getRandomSecret
@@ -30,7 +31,7 @@ import kotlin.time.Duration
 class Vapi4kApplication {
   internal val applicationId = getRandomSecret(10).toApplicationId()
   internal val toolCallEndpoints = mutableListOf<Endpoint>()
-  internal var assistantRequest: (suspend (requestContext: RequestContext) -> AssistantRequestResponse)? = null
+  internal var assistantRequest: (suspend AssistantResponse.() -> Unit)? = null
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
@@ -42,7 +43,7 @@ class Vapi4kApplication {
   var serverPath = defaultServerPath
   var serverSecret = ""
 
-  fun onAssistantRequest(block: suspend (requestContext: RequestContext) -> AssistantRequestResponse) {
+  fun onAssistantRequest(block: suspend AssistantResponse.() -> Unit) {
     if (assistantRequest.isNull())
       assistantRequest = block
     else
@@ -85,8 +86,15 @@ class Vapi4kApplication {
     requestTypes.forEach { applicationPerResponses += it to block }
   }
 
-  internal suspend fun getAssistantResponse(request: JsonElement) =
-    assistantRequest?.invoke(RequestContext(this, request)) ?: error("onAssistantRequest{} not called")
+  internal suspend fun getAssistantResponse(request: JsonElement): AssistantRequestResponse {
+    val requestContext = RequestContext(this, request)
+    val assistantResponse = AssistantResponse(requestContext)
+    assistantRequest?.invoke(assistantResponse) ?: error("onAssistantRequest{} not called")
+    return if (assistantResponse.isAssigned)
+      assistantResponse.assistantRequestResponse
+    else
+      error("onAssistantRequest{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
+  }
 
   private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { endpoint -> endpoint.name.isEmpty() }
 

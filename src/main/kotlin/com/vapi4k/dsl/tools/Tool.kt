@@ -74,6 +74,11 @@ class ToolWithMetaDataImpl internal constructor(
 
 @AssistantDslMarker
 interface TransferTool : Tool {
+  fun assistantDestination(block: AssistantDestination.() -> Unit)
+
+  fun numberDestination(block: NumberDestination.() -> Unit)
+
+  fun sipDestination(block: SipDestination.() -> Unit)
 }
 
 class TransferToolImpl internal constructor(
@@ -81,27 +86,26 @@ class TransferToolImpl internal constructor(
 ) : ToolImpl(dto),
   TransferToolProperties by dto,
   TransferTool {
-  fun assistantDestination(block: AssistantDestination.() -> Unit) {
+  override fun assistantDestination(block: AssistantDestination.() -> Unit) {
     AssistantRequestResponse().apply {
       val assistantDto = AssistantDestinationDto().also { destinations += it }
       AssistantDestinationImpl(assistantDto).apply(block)
     }
   }
 
-  fun numberDestination(block: NumberDestination.() -> Unit) {
+  override fun numberDestination(block: NumberDestination.() -> Unit) {
     AssistantRequestResponse().apply {
       val numDto = NumberDestinationDto().also { destinations += it }
       NumberDestinationImpl(numDto).apply(block)
     }
   }
 
-  fun sipDestination(block: SipDestination.() -> Unit) {
+  override fun sipDestination(block: SipDestination.() -> Unit) {
     AssistantRequestResponse().apply {
       val sipDto = SipDestinationDto().also { destinations += it }
       SipDestinationImpl(sipDto).apply(block)
     }
   }
-
 }
 
 open class ToolImpl internal constructor(

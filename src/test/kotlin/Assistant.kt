@@ -18,35 +18,29 @@ import com.vapi4k.WeatherLookupService0
 import com.vapi4k.WeatherLookupService1
 import com.vapi4k.WeatherLookupService2
 import com.vapi4k.WeatherLookupService3
-import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.eq
 import com.vapi4k.dsl.model.enums.OpenAIModelType
 import com.vapi4k.dsl.vapi4k.RequestContext
-import com.vapi4k.responses.AssistantRequestResponse
 
-fun myAssistantRequest(requestContext: RequestContext): AssistantRequestResponse =
-  (
-    when (requestContext.phoneNumber) {
-      "+14156721042" ->
-        assistantResponse(requestContext) {
-          assistantId {
-            id = "44792a91-d7f9-4915-9445-0991aeef97bc"
+fun AssistantResponse.myAssistantRequest() =
+  when (requestContext.phoneNumber) {
+    "+14156721042" ->
+      assistantId {
+        id = "44792a91-d7f9-4915-9445-0991aeef97bc"
 
-            assistantOverrides {
-              firstMessage = "This is the first message override"
+        assistantOverrides {
+          firstMessage = "This is the first message override"
 
-              openAIModel {
-                modelType = OpenAIModelType.GPT_4_TURBO
-              }
-            }
+          openAIModel {
+            modelType = OpenAIModelType.GPT_4_TURBO
           }
         }
+      }
 
-      else -> getAssistant(requestContext, "")
-    }
-    )
+    else -> getAssistant("")
+  }
 
 fun AssistantResponse.getSquad(requestContext: RequestContext) =
   squad {
@@ -74,10 +68,7 @@ fun AssistantResponse.getSquad(requestContext: RequestContext) =
     }
   }
 
-fun getAssistant(
-  requestContext: RequestContext,
-  callerName: String = "Bill",
-) = assistantResponse(requestContext) {
+fun AssistantResponse.getAssistant(callerName: String = "Bill") =
   assistant {
     assistantOverrides {
       firstMessage = "This is the first message override"
@@ -199,4 +190,3 @@ fun getAssistant(
       }
     }
   }
-}

@@ -18,6 +18,7 @@ package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
 import com.vapi4k.common.EnvVar.Companion.defaultServerPath
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.tools.ToolMessageCondition
@@ -34,6 +35,17 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
+
+fun assistantResponse(
+  requestContext: RequestContext,
+  block: AssistantResponse.() -> Unit,
+): AssistantRequestResponse {
+  val assistantResponse = AssistantResponse(requestContext).apply(block)
+  return if (assistantResponse.isAssigned)
+    assistantResponse.assistantRequestResponse
+  else
+    error("assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
+}
 
 fun JsonElement.tools() = get("assistant.model.tools").toJsonElementList()
 
@@ -58,7 +70,7 @@ else
 
 fun withTestApplication(
   fileName: String,
-  block: (RequestContext) -> AssistantRequestResponse,
+  block: AssistantResponse.() -> Unit,
 ): Pair<HttpResponse, JsonElement> {
   var response: HttpResponse? = null
   var je: JsonElement? = null
@@ -66,8 +78,8 @@ fun withTestApplication(
     application {
       install(Vapi4k) {
         vapi4kApplication {
-          onAssistantRequest { request ->
-            block(request)
+          onAssistantRequest {
+            block()
           }
 
           toolCallEndpoints {
@@ -101,7 +113,7 @@ fun withTestApplication(
   fileNames: List<String>,
   getArg: String = "",
   cacheRemovalEnabled: Boolean = true,
-  block: (RequestContext) -> AssistantRequestResponse,
+  block: AssistantResponse.() -> Unit,
 ): List<Pair<HttpResponse, JsonElement>> {
   val responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
   testApplication {
@@ -110,8 +122,8 @@ fun withTestApplication(
         vapi4kApplication {
           eocrCacheRemovalEnabled = cacheRemovalEnabled
 
-          onAssistantRequest { request ->
-            block(request)
+          onAssistantRequest {
+            block()
           }
 
           toolCallEndpoints {

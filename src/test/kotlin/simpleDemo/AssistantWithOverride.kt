@@ -16,36 +16,33 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.model.enums.OpenAIModelType
-import com.vapi4k.dsl.vapi4k.RequestContext
 import simpleDemo.Coasts.EAST
 import simpleDemo.Coasts.WEST
 
 class AssistantWithOverrides {
-  fun getAssistantWithOverride(requestContext: RequestContext) =
-    assistantResponse(requestContext) {
-      assistant {
-        name = "assistant1"
-        firstMessage = "Hi there! I'm assistant1"
+  fun AssistantResponse.getAssistantWithOverride() =
+    assistant {
+      name = "assistant1"
+      firstMessage = "Hi there! I'm assistant1"
 
-        groqModel {
-          modelType = GroqModelType.LLAMA3_70B
-          tools {
-            tool(TimeLookupService(EAST))
-          }
+      groqModel {
+        modelType = GroqModelType.LLAMA3_70B
+        tools {
+          tool(TimeLookupService(EAST))
         }
+      }
 
-        assistantOverrides {
-          name = "Jeremy"
-          firstMessage = "Hi there! I'm Jeremy"
-          openAIModel {
-            modelType = OpenAIModelType.GPT_4_TURBO
-            tools {
-              tool(TimeLookupService(WEST))
-              tool(WeatherLookupService())
-            }
+      assistantOverrides {
+        name = "Jeremy"
+        firstMessage = "Hi there! I'm Jeremy"
+        openAIModel {
+          modelType = OpenAIModelType.GPT_4_TURBO
+          tools {
+            tool(TimeLookupService(WEST))
+            tool(WeatherLookupService())
           }
         }
       }

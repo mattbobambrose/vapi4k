@@ -16,7 +16,6 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
@@ -35,6 +34,7 @@ import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
+import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.firstMessageOfType
 import com.vapi4k.utils.get
 import com.vapi4k.utils.intValue
@@ -76,29 +76,27 @@ class AssistantTest {
   fun testRegular() {
     clearToolCache()
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) { requestContext ->
-        assistantResponse(requestContext) {
-          assistant {
-            firstMessage = messageOne
-            openAIModel {
-              modelType = OpenAIModelType.GPT_3_5_TURBO
+      withTestApplication(JSON_ASSISTANT_REQUEST) {
+        assistant {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
-              systemMessage = sysMessage
-              tools {
-                tool(WeatherLookupService0()) {
-                  requestStartMessage {
-                    content = startMessage
-                  }
-                  requestCompleteMessage {
-                    content = completeMessage
-                  }
-                  requestFailedMessage {
-                    content = failedMessage
-                  }
-                  requestDelayedMessage {
-                    content = delayedMessage
-                    timingMilliseconds = 2000
-                  }
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                requestStartMessage {
+                  content = startMessage
+                }
+                requestCompleteMessage {
+                  content = completeMessage
+                }
+                requestFailedMessage {
+                  content = failedMessage
+                }
+                requestDelayedMessage {
+                  content = delayedMessage
+                  timingMilliseconds = 2000
                 }
               }
             }
@@ -172,29 +170,27 @@ class AssistantTest {
   fun `test reverse delay order`() {
     clearToolCache()
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) { requestContext ->
-        assistantResponse(requestContext) {
-          assistant {
-            firstMessage = messageOne
-            openAIModel {
-              modelType = OpenAIModelType.GPT_3_5_TURBO
+      withTestApplication(JSON_ASSISTANT_REQUEST) {
+        assistant {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
-              systemMessage = sysMessage
-              tools {
-                tool(WeatherLookupService0()) {
-                  requestStartMessage {
-                    content = startMessage
-                  }
-                  requestCompleteMessage {
-                    content = completeMessage
-                  }
-                  requestFailedMessage {
-                    content = failedMessage
-                  }
-                  requestDelayedMessage {
-                    content = delayedMessage
-                    timingMilliseconds = 2000
-                  }
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                requestStartMessage {
+                  content = startMessage
+                }
+                requestCompleteMessage {
+                  content = completeMessage
+                }
+                requestFailedMessage {
+                  content = failedMessage
+                }
+                requestDelayedMessage {
+                  content = delayedMessage
+                  timingMilliseconds = 2000
                 }
               }
             }
@@ -211,28 +207,26 @@ class AssistantTest {
   fun `test message with no millis`() {
     clearToolCache()
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) { requestContext ->
-        assistantResponse(requestContext) {
-          assistant {
-            firstMessage = messageOne
-            openAIModel {
-              modelType = OpenAIModelType.GPT_3_5_TURBO
-              systemMessage = sysMessage
-              tools {
-                tool(WeatherLookupService0()) {
-                  requestStartMessage {
-                    content = startMessage
-                  }
-                  requestCompleteMessage {
-                    content = completeMessage
-                  }
-                  requestFailedMessage {
-                    content = failedMessage
-                  }
-                  requestDelayedMessage {
-                    content = delayedMessage
-                    timingMilliseconds = 99
-                  }
+      withTestApplication(JSON_ASSISTANT_REQUEST) {
+        assistant {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                requestStartMessage {
+                  content = startMessage
+                }
+                requestCompleteMessage {
+                  content = completeMessage
+                }
+                requestFailedMessage {
+                  content = failedMessage
+                }
+                requestDelayedMessage {
+                  content = delayedMessage
+                  timingMilliseconds = 99
                 }
               }
             }
@@ -251,48 +245,7 @@ class AssistantTest {
   fun `multiple message`() {
     clearToolCache()
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) { requestContext ->
-        assistantResponse(requestContext) {
-          assistant {
-            firstMessage = messageOne
-            openAIModel {
-              modelType = OpenAIModelType.GPT_3_5_TURBO
-
-              systemMessage = sysMessage
-              tools {
-                tool(WeatherLookupService0()) {
-                  requestStartMessage {
-                    content = startMessage
-                  }
-                  requestCompleteMessage {
-                    content = completeMessage
-                  }
-                  requestFailedMessage {
-                    content = failedMessage
-                  }
-                  requestDelayedMessage {
-                    content = delayedMessage
-                    content = secondDelayedMessage
-                    timingMilliseconds = 2000
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-    with(jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)) {
-      assertEquals(secondDelayedMessage, stringValue("content"))
-      assertEquals(2000, intValue("timingMilliseconds"))
-    }
-  }
-
-  @Test
-  fun `multiple delay time`() {
-    clearToolCache()
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { requestContext ->
-      assistantResponse(requestContext) {
+      withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
           firstMessage = messageOne
           openAIModel {
@@ -312,9 +265,46 @@ class AssistantTest {
                 }
                 requestDelayedMessage {
                   content = delayedMessage
+                  content = secondDelayedMessage
                   timingMilliseconds = 2000
-                  timingMilliseconds = 1000
                 }
+              }
+            }
+          }
+        }
+      }
+
+    with(jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)) {
+      assertEquals(secondDelayedMessage, stringValue("content"))
+      assertEquals(2000, intValue("timingMilliseconds"))
+    }
+  }
+
+  @Test
+  fun `multiple delay time`() {
+    clearToolCache()
+    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
+      assistant {
+        firstMessage = messageOne
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+
+          systemMessage = sysMessage
+          tools {
+            tool(WeatherLookupService0()) {
+              requestStartMessage {
+                content = startMessage
+              }
+              requestCompleteMessage {
+                content = completeMessage
+              }
+              requestFailedMessage {
+                content = failedMessage
+              }
+              requestDelayedMessage {
+                content = delayedMessage
+                timingMilliseconds = 2000
+                timingMilliseconds = 1000
               }
             }
           }
@@ -333,30 +323,28 @@ class AssistantTest {
   @Test
   fun `multiple message multiple delay time`() {
     clearToolCache()
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { requestContext ->
-      assistantResponse(requestContext) {
-        assistant {
-          firstMessage = messageOne
-          openAIModel {
-            modelType = OpenAIModelType.GPT_3_5_TURBO
-            systemMessage = sysMessage
-            tools {
-              tool(WeatherLookupService0()) {
-                requestStartMessage {
-                  content = startMessage
-                }
-                requestCompleteMessage {
-                  content = completeMessage
-                }
-                requestFailedMessage {
-                  content = failedMessage
-                }
-                requestDelayedMessage {
-                  content = delayedMessage
-                  content = secondDelayedMessage
-                  timingMilliseconds = 2000
-                  timingMilliseconds = 1000
-                }
+    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
+      assistant {
+        firstMessage = messageOne
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+          systemMessage = sysMessage
+          tools {
+            tool(WeatherLookupService0()) {
+              requestStartMessage {
+                content = startMessage
+              }
+              requestCompleteMessage {
+                content = completeMessage
+              }
+              requestFailedMessage {
+                content = failedMessage
+              }
+              requestDelayedMessage {
+                content = delayedMessage
+                content = secondDelayedMessage
+                timingMilliseconds = 2000
+                timingMilliseconds = 1000
               }
             }
           }
@@ -372,43 +360,41 @@ class AssistantTest {
   @Test
   fun `chicago illinois message`() {
     clearToolCache()
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { requestContext ->
-      assistantResponse(requestContext) {
-        assistant {
-          firstMessage = messageOne
-          openAIModel {
-            modelType = OpenAIModelType.GPT_3_5_TURBO
-            systemMessage = sysMessage
-            tools {
-              tool(WeatherLookupService0()) {
-                condition("city" eq "Chicago", "state" eq "Illinois") {
-                  requestStartMessage {
-                    content = chicagoIllinoisStartMessage
-                  }
-                  requestCompleteMessage {
-                    content = chicagoIllinoisCompleteMessage
-                  }
-                  requestFailedMessage {
-                    content = chicagoIllinoisFailedMessage
-                  }
-                  requestDelayedMessage {
-                    content = chicagoIllinoisDelayedMessage
-                    timingMilliseconds = 2000
-                  }
-                }
+    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
+      assistant {
+        firstMessage = messageOne
+        openAIModel {
+          modelType = OpenAIModelType.GPT_3_5_TURBO
+          systemMessage = sysMessage
+          tools {
+            tool(WeatherLookupService0()) {
+              condition("city" eq "Chicago", "state" eq "Illinois") {
                 requestStartMessage {
-                  content = startMessage
+                  content = chicagoIllinoisStartMessage
                 }
                 requestCompleteMessage {
-                  content = completeMessage
+                  content = chicagoIllinoisCompleteMessage
                 }
                 requestFailedMessage {
-                  content = failedMessage
+                  content = chicagoIllinoisFailedMessage
                 }
                 requestDelayedMessage {
-                  content = delayedMessage
-                  timingMilliseconds = 1000
+                  content = chicagoIllinoisDelayedMessage
+                  timingMilliseconds = 2000
                 }
+              }
+              requestStartMessage {
+                content = startMessage
+              }
+              requestCompleteMessage {
+                content = completeMessage
+              }
+              requestFailedMessage {
+                content = failedMessage
+              }
+              requestDelayedMessage {
+                content = delayedMessage
+                timingMilliseconds = 1000
               }
             }
           }

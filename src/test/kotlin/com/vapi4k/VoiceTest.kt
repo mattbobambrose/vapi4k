@@ -17,12 +17,12 @@
 package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.REQUEST_CONTEXT
-import com.vapi4k.dsl.assistant.AssistantDsl.assistantResponse
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.dsl.voice.enums.CartesiaVoiceModelType
 import com.vapi4k.dsl.voice.enums.PlayHTVoiceEmotionType
 import com.vapi4k.dsl.voice.enums.PlayHTVoiceIdType
+import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.get
 import com.vapi4k.utils.stringValue
 import com.vapi4k.utils.toJsonElement
@@ -30,22 +30,6 @@ import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import kotlin.test.assertEquals
-
-/*
- * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License.
- *
- */
 
 class VoiceTest {
   @Test

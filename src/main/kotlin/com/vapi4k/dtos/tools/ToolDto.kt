@@ -33,4 +33,5 @@ data class ToolDto(
   val server: ServerDto = ServerDto(),
   override val metadata: MutableMap<String, String> = mutableMapOf(),
   override val destinations: MutableList<CommonDestinationDto> = mutableListOf(),
-) : ToolWithMetaDataProperties, TransferToolProperties
+) : ToolWithMetaDataProperties,
+  TransferToolProperties

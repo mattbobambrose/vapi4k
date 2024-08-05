@@ -33,7 +33,7 @@ fun Application.module2() {
       serverPath = "/vapi4k"
       serverSecret = "12345"
 
-      onAssistantRequest { requestContext ->
+      onAssistantRequest {
 //      getAssistantIdWithTool(requestContext)
 //      getAssistantWithOverrides(requestContext)
 //
@@ -41,7 +41,7 @@ fun Application.module2() {
 //      MemberOverrides with Squad
 
         // doubleToolAssistant2(requestContext)
-        simpleAssistantRequest(requestContext)
+        simpleAssistantRequest()
       }
     }
   }

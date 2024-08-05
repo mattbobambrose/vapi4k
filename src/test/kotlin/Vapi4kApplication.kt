@@ -57,8 +57,8 @@ fun Application.module() {
         }
       }
 
-      onAssistantRequest { request ->
-        myAssistantRequest(request)
+      onAssistantRequest {
+        myAssistantRequest()
       }
 
       onAllRequests { request ->
