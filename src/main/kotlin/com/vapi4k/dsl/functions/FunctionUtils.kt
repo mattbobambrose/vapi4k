@@ -109,5 +109,4 @@ internal object FunctionUtils {
       Boolean::class -> "boolean"
       else -> "object"
     }
-
 }

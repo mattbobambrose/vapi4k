@@ -248,7 +248,6 @@ private suspend fun KtorCallContext.validateRoot(config: Vapi4kConfig) {
               }
             }
           }
-
         }
       }
     call.respondText(html, ContentType.Text.Html)

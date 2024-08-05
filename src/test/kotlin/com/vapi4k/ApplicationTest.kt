@@ -23,7 +23,6 @@ import org.junit.Assert.assertEquals
 import kotlin.test.Test
 
 class ApplicationTest {
-
   @Test
   fun `test for serverPath and serverSecret`() {
     val str = "/something_else"
