@@ -39,7 +39,6 @@ data class SquadImpl internal constructor(
   override fun members(block: Members.() -> Unit): Members = MembersImpl(this).apply(block)
 
   override fun memberOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, dto.membersOverrides).apply(
-      block
-    )
+    AssistantOverridesImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, dto.membersOverrides)
+      .apply(block)
 }

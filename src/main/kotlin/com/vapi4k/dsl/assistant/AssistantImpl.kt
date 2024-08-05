@@ -157,7 +157,7 @@ data class AssistantImpl internal constructor(
       assistantRequestContext,
       sessionCacheId,
       assistantCacheIdSource,
-      assistantOverridesDto
+      assistantOverridesDto,
     ).apply(block)
 
   override fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan = analysisPlanUnion(block)

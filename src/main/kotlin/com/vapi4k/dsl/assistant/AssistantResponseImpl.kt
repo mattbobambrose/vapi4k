@@ -53,7 +53,7 @@ class AssistantResponseImpl(
         sessionCacheId,
         assistantCacheIdSource,
         assistantDto,
-        assistantOverridesDto
+        assistantOverridesDto,
       )
         .apply(block)
         .apply {

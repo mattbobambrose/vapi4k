@@ -21,4 +21,5 @@ import com.vapi4k.dsl.model.CommonModel
 import com.vapi4k.dsl.model.CustomLLMModelProperties
 
 @AssistantDslMarker
-interface CustomLLMModel : CustomLLMModelProperties, CommonModel
+interface CustomLLMModel : CustomLLMModelProperties,
+  CommonModel
