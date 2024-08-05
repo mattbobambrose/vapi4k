@@ -16,16 +16,15 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistant
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.model.enums.OpenAIModelType
-import kotlinx.serialization.json.JsonElement
 import simpleDemo.Coasts.EAST
 import simpleDemo.Coasts.WEST
 
 class AssistantWithOverrides {
-  fun getAssistantWithOverride(request: JsonElement) =
-    assistant(request) {
+  fun AssistantResponse.getAssistantWithOverride() =
+    assistant {
       name = "assistant1"
       firstMessage = "Hi there! I'm assistant1"
 

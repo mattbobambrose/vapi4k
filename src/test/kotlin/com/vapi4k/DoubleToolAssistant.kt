@@ -16,15 +16,13 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.assistant.AssistantDsl.squad
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.responses.AssistantRequestResponse
-import kotlinx.serialization.json.JsonElement
 
 object DoubleToolAssistant {
-  fun doubleToolAssistant(request: JsonElement): AssistantRequestResponse =
-    squad(request) {
+  fun AssistantResponse.doubleToolAssistant() =
+    squad {
       members {
         member {
           assistant {

@@ -18,7 +18,6 @@ package com.vapi4k.dsl.destination
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.api.destination.SipDestinationDto
-import kotlinx.serialization.json.JsonElement
 
 @AssistantDslMarker
 interface SipDestination {
@@ -28,6 +27,5 @@ interface SipDestination {
 }
 
 class SipDestinationImpl internal constructor(
-  internal val request: JsonElement,
   private val dto: SipDestinationDto,
 ) : SipDestination by dto

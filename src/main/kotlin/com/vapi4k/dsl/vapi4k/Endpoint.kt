@@ -29,6 +29,6 @@ class Endpoint internal constructor() {
   var serverUrl = ""
 
   @SerialName("secret")
-  var serverUrlSecret = ""
+  var serverSecret = ""
   var timeoutSeconds = -1
 }

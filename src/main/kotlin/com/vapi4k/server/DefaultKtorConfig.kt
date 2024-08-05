@@ -27,6 +27,7 @@ import io.ktor.server.plugins.compression.gzip
 import io.ktor.server.plugins.compression.minimumSize
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.path
+import io.ktor.server.routing.Routing
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
@@ -57,6 +58,10 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
       level = Level.INFO
       filter { call -> call.request.path().startsWith("/") }
     }
+  }
+
+  if (!pregistry.contains(Routing.key)) {
+    install(Routing)
   }
 
 //  if (!pregistry.contains(MicrometerMetrics.key)) {

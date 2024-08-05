@@ -16,7 +16,6 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
 import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
 import com.vapi4k.dsl.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
@@ -28,11 +27,14 @@ import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.dsl.tools.enums.ToolMessageType
 import com.vapi4k.dsl.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.dsl.transcriber.enums.TalkscriberModelType
+import com.vapi4k.dsl.vapi4k.RequestContext
+import com.vapi4k.dsl.vapi4k.Vapi4kApplication
 import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
+import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.firstMessageOfType
 import com.vapi4k.utils.get
 import com.vapi4k.utils.intValue
@@ -46,12 +48,13 @@ import kotlin.test.Test
 
 class AssistantTest {
   init {
-    Vapi4kConfig().apply {
-      configure {
-        serverUrl = "HelloWorld"
-        serverUrlSecret = "12345"
-      }
-    }
+    Vapi4kConfig()
+//      .apply {
+//        configure {
+//          serverUrl = "HelloWorld"
+//          serverUrlSecret = "12345"
+//        }
+//      }
   }
 
   val messageOne = "Hi there test"
@@ -73,8 +76,8 @@ class AssistantTest {
   fun testRegular() {
     clearToolCache()
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
-        assistant(request) {
+      withTestApplication(JSON_ASSISTANT_REQUEST) {
+        assistant {
           firstMessage = messageOne
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -110,11 +113,65 @@ class AssistantTest {
   }
 
   @Test
+  fun `multiple application{} decls`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          firstMessage = "Something"
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
+        }
+        assistant {
+          firstMessage = "Something"
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
+        }
+      }
+    }.also {
+      assertEquals("An assistant{} is already declared", it.message)
+    }
+  }
+
+  @Test
+  fun `application{} and squad{} decls`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          firstMessage = "Something"
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
+        }
+        assistantId {
+          id = "12345"
+        }
+      }
+    }.also {
+      assertEquals("An assistant{} is already declared", it.message)
+    }
+  }
+
+  @Test
+  fun `Missing application{} decls`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(REQUEST_CONTEXT) {
+      }
+    }.also {
+      assertEquals(
+        "assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration",
+        it.message,
+      )
+    }
+  }
+
+  @Test
   fun `test reverse delay order`() {
     clearToolCache()
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
-        assistant(request) {
+      withTestApplication(JSON_ASSISTANT_REQUEST) {
+        assistant {
           firstMessage = messageOne
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -150,8 +207,8 @@ class AssistantTest {
   fun `test message with no millis`() {
     clearToolCache()
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
-        assistant(request) {
+      withTestApplication(JSON_ASSISTANT_REQUEST) {
+        assistant {
           firstMessage = messageOne
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -188,8 +245,8 @@ class AssistantTest {
   fun `multiple message`() {
     clearToolCache()
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
-        assistant(request) {
+      withTestApplication(JSON_ASSISTANT_REQUEST) {
+        assistant {
           firstMessage = messageOne
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -226,8 +283,8 @@ class AssistantTest {
   @Test
   fun `multiple delay time`() {
     clearToolCache()
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
-      assistant(request) {
+    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
+      assistant {
         firstMessage = messageOne
         openAIModel {
           modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -266,8 +323,8 @@ class AssistantTest {
   @Test
   fun `multiple message multiple delay time`() {
     clearToolCache()
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) { request ->
-      assistant(request) {
+    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
+      assistant {
         firstMessage = messageOne
         openAIModel {
           modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -304,7 +361,7 @@ class AssistantTest {
   fun `chicago illinois message`() {
     clearToolCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
-      assistant(it) {
+      assistant {
         firstMessage = messageOne
         openAIModel {
           modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -381,14 +438,16 @@ class AssistantTest {
   fun `Missing message`() {
     clearToolCache()
     assertThrows(IllegalStateException::class.java) {
-      assistant(ASSISTANT_REQUEST.toJsonElement()) {
-        firstMessage = messageOne
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
-          systemMessage = sysMessage
-          tools {
-            tool(WeatherLookupService0()) {
-              condition("city" eq "Chicago", "state" eq "Illinois") {
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                condition("city" eq "Chicago", "state" eq "Illinois") {
+                }
               }
             }
           }
@@ -403,56 +462,58 @@ class AssistantTest {
   fun `error on duplicate reverse conditions`() {
     clearToolCache()
     assertThrows(IllegalStateException::class.java) {
-      assistant(ASSISTANT_REQUEST.toJsonElement()) {
-        firstMessage = messageOne
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
-          systemMessage = sysMessage
-          tools {
-            tool(WeatherLookupService0()) {
-              condition("city" eq "Chicago", "state" eq "Illinois") {
+            systemMessage = sysMessage
+            tools {
+              tool(WeatherLookupService0()) {
+                condition("city" eq "Chicago", "state" eq "Illinois") {
+                  requestStartMessage {
+                    content = chicagoIllinoisStartMessage
+                  }
+                  requestCompleteMessage {
+                    content = chicagoIllinoisCompleteMessage
+                  }
+                  requestFailedMessage {
+                    content = chicagoIllinoisFailedMessage
+                  }
+                  requestDelayedMessage {
+                    content = chicagoIllinoisDelayedMessage
+                    timingMilliseconds = 2000
+                  }
+                }
+                condition("state" eq "Illinois", "city" eq "Chicago") {
+                  requestStartMessage {
+                    content = chicagoIllinoisStartMessage + "2"
+                  }
+                  requestCompleteMessage {
+                    content = chicagoIllinoisCompleteMessage + "2"
+                  }
+                  requestFailedMessage {
+                    content = chicagoIllinoisFailedMessage + "2"
+                  }
+                  requestDelayedMessage {
+                    content = chicagoIllinoisDelayedMessage + "2"
+                    timingMilliseconds = 3000
+                  }
+                }
                 requestStartMessage {
-                  content = chicagoIllinoisStartMessage
+                  content = startMessage
                 }
                 requestCompleteMessage {
-                  content = chicagoIllinoisCompleteMessage
+                  content = completeMessage
                 }
                 requestFailedMessage {
-                  content = chicagoIllinoisFailedMessage
+                  content = failedMessage
                 }
                 requestDelayedMessage {
-                  content = chicagoIllinoisDelayedMessage
-                  timingMilliseconds = 2000
+                  content = delayedMessage
+                  timingMilliseconds = 1000
                 }
-              }
-              condition("state" eq "Illinois", "city" eq "Chicago") {
-                requestStartMessage {
-                  content = chicagoIllinoisStartMessage + "2"
-                }
-                requestCompleteMessage {
-                  content = chicagoIllinoisCompleteMessage + "2"
-                }
-                requestFailedMessage {
-                  content = chicagoIllinoisFailedMessage + "2"
-                }
-                requestDelayedMessage {
-                  content = chicagoIllinoisDelayedMessage + "2"
-                  timingMilliseconds = 3000
-                }
-              }
-              requestStartMessage {
-                content = startMessage
-              }
-              requestCompleteMessage {
-                content = completeMessage
-              }
-              requestFailedMessage {
-                content = failedMessage
-              }
-              requestDelayedMessage {
-                content = delayedMessage
-                timingMilliseconds = 1000
               }
             }
           }
@@ -466,12 +527,13 @@ class AssistantTest {
   @Test
   fun `check non-default FirstMessageModeType values`() {
     clearToolCache()
-    val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
-      assistant(request) {
-        firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
         }
       }
 
@@ -485,12 +547,13 @@ class AssistantTest {
   @Test
   fun `check assistant client messages 1`() {
     clearToolCache()
-    val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
-      assistant(request) {
-        clientMessages -= AssistantClientMessageType.HANG
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          clientMessages -= AssistantClientMessageType.HANG
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
         }
       }
 
@@ -501,12 +564,13 @@ class AssistantTest {
   @Test
   fun `check assistant client messages 2`() {
     clearToolCache()
-    val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
-      assistant(request) {
-        clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
         }
       }
 
@@ -517,13 +581,14 @@ class AssistantTest {
   @Test
   fun `check assistant server messages 1`() {
     clearToolCache()
-    val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
-      assistant(request) {
-        firstMessage = "Something"
-        serverMessages -= AssistantServerMessageType.HANG
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          firstMessage = "Something"
+          serverMessages -= AssistantServerMessageType.HANG
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
         }
       }
 
@@ -534,12 +599,13 @@ class AssistantTest {
   @Test
   fun `check assistant server messages 2`() {
     clearToolCache()
-    val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
-      assistant(request) {
-        serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
         }
       }
 
@@ -550,14 +616,15 @@ class AssistantTest {
   @Test
   fun `multiple deepgram transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
-      val request = ASSISTANT_REQUEST.toJsonElement()
-      assistant(request) {
-        deepgramTranscriber {
-          transcriberModel = DeepgramModelType.BASE
-        }
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          deepgramTranscriber {
+            transcriberModel = DeepgramModelType.BASE
+          }
 
-        deepgramTranscriber {
-          transcriberModel = DeepgramModelType.BASE
+          deepgramTranscriber {
+            transcriberModel = DeepgramModelType.BASE
+          }
         }
       }
     }.also {
@@ -568,14 +635,15 @@ class AssistantTest {
   @Test
   fun `multiple gladia transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
-      val request = ASSISTANT_REQUEST.toJsonElement()
-      assistant(request) {
-        gladiaTranscriber {
-          transcriberModel = GladiaModelType.FAST
-        }
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          gladiaTranscriber {
+            transcriberModel = GladiaModelType.FAST
+          }
 
-        gladiaTranscriber {
-          transcriberModel = GladiaModelType.FAST
+          gladiaTranscriber {
+            transcriberModel = GladiaModelType.FAST
+          }
         }
       }
     }.also {
@@ -586,14 +654,15 @@ class AssistantTest {
   @Test
   fun `multiple talkscriber transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
-      val request = ASSISTANT_REQUEST.toJsonElement()
-      assistant(request) {
-        talkscriberTranscriber {
-          transcriberModel = TalkscriberModelType.WHISPER
-        }
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          talkscriberTranscriber {
+            transcriberModel = TalkscriberModelType.WHISPER
+          }
 
-        talkscriberTranscriber {
-          transcriberModel = TalkscriberModelType.WHISPER
+          talkscriberTranscriber {
+            transcriberModel = TalkscriberModelType.WHISPER
+          }
         }
       }
     }.also {
@@ -604,14 +673,15 @@ class AssistantTest {
   @Test
   fun `multiple transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
-      val request = ASSISTANT_REQUEST.toJsonElement()
-      assistant(request) {
-        talkscriberTranscriber {
-          transcriberModel = TalkscriberModelType.WHISPER
-        }
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          talkscriberTranscriber {
+            transcriberModel = TalkscriberModelType.WHISPER
+          }
 
-        gladiaTranscriber {
-          transcriberModel = GladiaModelType.FAST
+          gladiaTranscriber {
+            transcriberModel = GladiaModelType.FAST
+          }
         }
       }
     }.also {
@@ -621,15 +691,16 @@ class AssistantTest {
 
   @Test
   fun `deepgram transcriber enum value`() {
-    val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
-      assistant(request) {
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
-        }
-        deepgramTranscriber {
-          transcriberModel = DeepgramModelType.BASE
-          transcriberLanguage = DeepgramLanguageType.GERMAN
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
+          deepgramTranscriber {
+            transcriberModel = DeepgramModelType.BASE
+            transcriberLanguage = DeepgramLanguageType.GERMAN
+          }
         }
       }
     val je = assistant.toJsonElement()
@@ -641,16 +712,17 @@ class AssistantTest {
 
   @Test
   fun `deepgram transcriber custom value`() {
-    val request = ASSISTANT_REQUEST.toJsonElement()
     val assistant =
-      assistant(request) {
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
-        }
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+          }
 
-        deepgramTranscriber {
-          transcriberModel = DeepgramModelType.BASE
-          customLanguage = "zzz"
+          deepgramTranscriber {
+            transcriberModel = DeepgramModelType.BASE
+            customLanguage = "zzz"
+          }
         }
       }
     val jsonElement = assistant.toJsonElement()
@@ -663,17 +735,18 @@ class AssistantTest {
   @Test
   fun `deepgram transcriber conflicting values`() {
     assertThrows(IllegalStateException::class.java) {
-      val request = ASSISTANT_REQUEST.toJsonElement()
       val assistant =
-        assistant(request) {
-          openAIModel {
-            modelType = OpenAIModelType.GPT_3_5_TURBO
-          }
+        assistantResponse(REQUEST_CONTEXT) {
+          assistant {
+            openAIModel {
+              modelType = OpenAIModelType.GPT_3_5_TURBO
+            }
 
-          deepgramTranscriber {
-            transcriberModel = DeepgramModelType.BASE
-            transcriberLanguage = DeepgramLanguageType.GERMAN
-            customLanguage = "zzz"
+            deepgramTranscriber {
+              transcriberModel = DeepgramModelType.BASE
+              transcriberLanguage = DeepgramLanguageType.GERMAN
+              customLanguage = "zzz"
+            }
           }
         }
       val je = assistant.toJsonElement()
@@ -692,9 +765,10 @@ class AssistantTest {
   @Test
   fun `missing model decl`() {
     assertThrows(IllegalStateException::class.java) {
-      val request = ASSISTANT_REQUEST.toJsonElement()
-      assistant(request) {
-        firstMessage = "Something"
+      assistantResponse(REQUEST_CONTEXT) {
+        assistant {
+          firstMessage = "Something"
+        }
       }
     }.also {
       assertEquals("An assistant{} requires a model{} decl", it.message)
@@ -724,5 +798,6 @@ class AssistantTest {
       }
     }
     """
+    val REQUEST_CONTEXT = RequestContext(Vapi4kApplication(), ASSISTANT_REQUEST.toJsonElement())
   }
 }

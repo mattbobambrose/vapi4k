@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dsl.tools.enums.ToolType
@@ -26,7 +25,6 @@ import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
-import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
@@ -111,33 +109,4 @@ internal object FunctionUtils {
       Boolean::class -> "boolean"
       else -> "object"
     }
-
-  class ToolCallInfo(
-    private val assistantCacheId: AssistantCacheId,
-    private val function: KFunction<*>,
-  ) {
-    private val toolCall get() = function.toolCallAnnotation!!
-    private val toolHasName get() = toolCall.name.isNotEmpty()
-    private val toolHasDescription get() = toolCall.description.isNotEmpty()
-    private val cacheName get() = if (toolHasName) toolCall.name else function.name
-
-    val llmName get() = "${cacheName}_$assistantCacheId"
-
-    val llmDescription
-      get() =
-        when {
-          toolHasDescription -> toolCall.description
-          toolHasName -> toolCall.name
-          else -> function.name
-        }
-
-    val llmReturnType
-      get() = when (function.returnType.asKClass()) {
-        String::class -> "string"
-        Int::class -> "integer"
-        Double::class -> "double"
-        Boolean::class -> "boolean"
-        else -> "object"
-      }
-  }
 }

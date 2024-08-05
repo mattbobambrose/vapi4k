@@ -16,13 +16,12 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.AssistantDsl.assistantId
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.model.enums.OpenAIModelType
-import kotlinx.serialization.json.JsonElement
 
 class AssistantIdWithOverride {
-  fun getAssistantIdWithOverride(request: JsonElement) =
-    assistantId(request) {
+  fun AssistantResponse.getAssistantIdWithOverride() =
+    assistantId {
       assistantOverrides {
         openAIModel {
           modelType = OpenAIModelType.GPT_4_TURBO

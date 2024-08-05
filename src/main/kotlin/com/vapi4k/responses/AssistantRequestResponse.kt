@@ -17,7 +17,6 @@
 package com.vapi4k.responses
 
 import com.vapi4k.dsl.assistant.AssistantIdProperties
-import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.squad.SquadIdSource
 import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import com.vapi4k.dtos.assistant.AssistantDto
@@ -25,7 +24,6 @@ import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.dtos.squad.SquadDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class AssistantRequestResponse(
@@ -40,9 +38,4 @@ data class AssistantRequestResponse(
   val squadDto: SquadDto = SquadDto(),
   var error: String = "",
 ) : AssistantIdProperties,
-  SquadIdSource {
-  companion object {
-    internal suspend fun getAssistantResponse(request: JsonElement) =
-      AssistantImpl.config.assistantRequest?.invoke(request) ?: error("onAssistantRequest{} not called")
-  }
-}
+  SquadIdSource

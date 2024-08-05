@@ -16,10 +16,9 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.enums.ServerRequestType
-import com.vapi4k.responses.AssistantRequestResponse
-import com.vapi4k.utils.Utils.isNull
 import io.ktor.server.config.ApplicationConfig
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
@@ -38,40 +37,22 @@ class Vapi4kConfig internal constructor() {
   }
 
   internal lateinit var applicationConfig: ApplicationConfig
+  internal val applications = mutableListOf<Vapi4kApplication>()
+  internal val globalAllRequests = mutableListOf<(RequestArgs)>()
+  internal val globalPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
+  internal val globalAllResponses = mutableListOf<ResponseArgs>()
+  internal val globalPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  internal var assistantRequest: (suspend (request: JsonElement) -> AssistantRequestResponse)? = null
-  internal var allRequests = mutableListOf<(RequestArgs)>()
-  internal val perRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
-  internal val allResponses = mutableListOf<ResponseArgs>()
-  internal val perResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
-  internal val configProperties: Vapi4kConfigPropertiesImpl = Vapi4kConfigPropertiesImpl()
-  internal val toolCallEndpoints = mutableListOf<Endpoint>()
-
-  internal val defaultToolCallEndpoint
-    get() = Endpoint().apply {
-      serverUrl = this@Vapi4kConfig.configProperties.serverUrl.ifEmpty {
-        error("No default tool endpoint has been specified in the Vapi4k configuration")
-      }
-      serverUrlSecret = this@Vapi4kConfig.configProperties.serverUrlSecret
-    }
-
-  fun configure(block: Vapi4kConfigProperties.() -> Unit) {
-    configProperties.apply(block)
-  }
-
-  fun toolCallEndpoints(block: ToolCallEndpoints.() -> Unit) {
-    ToolCallEndpoints().apply(block)
-  }
-
-  fun onAssistantRequest(block: suspend (request: JsonElement) -> AssistantRequestResponse) {
-    if (assistantRequest.isNull())
-      assistantRequest = block
-    else
-      error("onAssistantRequest{} can be called only once")
+  fun vapi4kApplication(block: Vapi4kApplication.() -> Unit): Vapi4kApplication {
+    val application = Vapi4kApplication().apply(block)
+    if (applications.any { it.serverPath == application.serverPath })
+      error("vapi4kApplication{} with serverPath \"${application.serverPath}\" already exists")
+    applications += application
+    return application
   }
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
-    allRequests += block
+    globalAllRequests += block
   }
 
   fun onRequest(
@@ -79,14 +60,14 @@ class Vapi4kConfig internal constructor() {
     vararg requestTypes: ServerRequestType,
     block: suspend (request: JsonElement) -> Unit,
   ) {
-    perRequests += requestType to block
-    requestTypes.forEach { perRequests += it to block }
+    globalPerRequests += requestType to block
+    requestTypes.forEach { globalPerRequests += it to block }
   }
 
   fun onAllResponses(
     block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit,
   ) {
-    allResponses += block
+    globalAllResponses += block
   }
 
   fun onResponse(
@@ -94,17 +75,15 @@ class Vapi4kConfig internal constructor() {
     vararg requestTypes: ServerRequestType,
     block: suspend (requestType: ServerRequestType, request: JsonElement, elapsed: Duration) -> Unit,
   ) {
-    perResponses += requestType to block
-    requestTypes.forEach { perResponses += it to block }
+    globalPerResponses += requestType to block
+    requestTypes.forEach { globalPerResponses += it to block }
   }
 
-  private fun getEmptyEndpoint() = toolCallEndpoints.firstOrNull { it.name.isEmpty() }
+  internal fun getApplication(applicationId: ApplicationId): Vapi4kApplication =
+    applications.firstOrNull { it.applicationId == applicationId }
+      ?: error("Application not found for applicationId: $applicationId")
 
-  internal fun getEndpoint(endpointName: String) =
-    if (endpointName.isEmpty())
-      getEmptyEndpoint() ?: defaultToolCallEndpoint
-    else
-      toolCallEndpoints.firstOrNull {
-        it.name == endpointName
-      } ?: error("Endpoint not found in vapi4k configuration: $endpointName")
+  internal fun getApplication(serverPath: String): Vapi4kApplication =
+    applications.firstOrNull { it.serverPath == serverPath }
+      ?: error("Application with serverPath=$serverPath not found")
 }

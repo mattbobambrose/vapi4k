@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.destination.enums
 
+import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -24,22 +25,22 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = DestinationTypeSerializer::class)
-enum class DestinationType(
+@Serializable(with = AssistantTransferModeSerializer::class)
+enum class AssistantTransferMode(
   val desc: String,
 ) {
-  ASSISTANT("assistant"),
-  NUMBER("number"),
-  SIP("sip"),
+  ROLLING_HISTORY("rolling-history"),
+  SWAP_SYSTEM_MESSAGE_IN_HISTORY("swap-system-message-in-history"),
+  UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
-private object DestinationTypeSerializer : KSerializer<DestinationType> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DestinationType", STRING)
+private object AssistantTransferModeSerializer : KSerializer<AssistantTransferMode> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("AssistantTransferMode", STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: DestinationType,
+    value: AssistantTransferMode,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = DestinationType.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = AssistantTransferMode.entries.first { it.desc == decoder.decodeString() }
 }

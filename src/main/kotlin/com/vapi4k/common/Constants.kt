@@ -23,15 +23,18 @@ object Constants {
   const val UNSPECIFIED_DEFAULT = "unspecified"
   const val UNKNOWN = "unknown"
   const val STYLES_CSS = "/assets/css/styles.css"
+
+  const val APPLICATION_ID = "applicationId"
+  const val SESSION_CACHE_ID = "sessionCacheId"
+  const val FUNCTION_NAME = "functionName"
 }
 
 object Endpoints {
-  const val DEFAULT_SERVER_PATH = "vapi4k"
   const val PING_PATH = "/ping"
   const val VERSION_PATH = "/version"
   const val METRICS_PATH = "/metrics"
   const val CACHES_PATH = "/caches"
   const val CLEAR_CACHES_PATH = "/clear-caches"
   const val VALIDATE_PATH = "/validate"
-  const val INVOKE_TOOL_PATH = "/invokeTool"
+  const val VALIDATE_INVOKE_TOOL_PATH = "/validateInvokeTool"
 }

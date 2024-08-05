@@ -37,7 +37,7 @@ interface ToolCondition {
 
 class ToolConditionImpl internal constructor(
   internal val tool: ToolImpl,
-  internal val conditionSet: Set<ToolMessageCondition>,
+  private val conditionSet: Set<ToolMessageCondition>,
 ) : ToolCondition {
   private val requestStartChecker = DuplicateChecker()
   private val requestCompleteChecker = DuplicateChecker()

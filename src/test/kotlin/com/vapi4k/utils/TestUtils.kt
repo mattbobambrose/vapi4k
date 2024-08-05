@@ -17,8 +17,10 @@
 package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
-import com.vapi4k.common.Endpoints.DEFAULT_SERVER_PATH
+import com.vapi4k.common.EnvVar.Companion.defaultServerPath
+import com.vapi4k.dsl.assistant.AssistantResponse
 import com.vapi4k.dsl.tools.enums.ToolMessageType
+import com.vapi4k.dsl.vapi4k.RequestContext
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.server.Vapi4k
@@ -33,6 +35,17 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
+
+fun assistantResponse(
+  requestContext: RequestContext,
+  block: AssistantResponse.() -> Unit,
+): AssistantRequestResponse {
+  val assistantResponse = AssistantResponse(requestContext).apply(block)
+  return if (assistantResponse.isAssigned)
+    assistantResponse.assistantRequestResponse
+  else
+    error("assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
+}
 
 fun JsonElement.tools() = get("assistant.model.tools").toJsonElementList()
 
@@ -57,30 +70,32 @@ else
 
 fun withTestApplication(
   fileName: String,
-  block: (JsonElement) -> AssistantRequestResponse,
+  block: AssistantResponse.() -> Unit,
 ): Pair<HttpResponse, JsonElement> {
   var response: HttpResponse? = null
   var je: JsonElement? = null
   testApplication {
     application {
       install(Vapi4k) {
-        onAssistantRequest { request ->
-          block(request)
-        }
+        vapi4kApplication {
+          onAssistantRequest {
+            block()
+          }
 
-        toolCallEndpoints {
-          // Provide a default endpoint
-          endpoint {
-            serverUrl = "https://test/toolCall"
-            serverUrlSecret = "456"
-            timeoutSeconds = 20
+          toolCallEndpoints {
+            // Provide a default endpoint
+            endpoint {
+              serverUrl = "https://test/toolCall"
+              serverSecret = "456"
+              timeoutSeconds = 20
+            }
           }
         }
       }
     }
 
     response =
-      client.post("/$DEFAULT_SERVER_PATH") {
+      client.post("/$defaultServerPath") {
         configPost()
         setBody(resourceFile(fileName))
       }
@@ -98,24 +113,26 @@ fun withTestApplication(
   fileNames: List<String>,
   getArg: String = "",
   cacheRemovalEnabled: Boolean = true,
-  block: (JsonElement) -> AssistantRequestResponse,
+  block: AssistantResponse.() -> Unit,
 ): List<Pair<HttpResponse, JsonElement>> {
   val responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
   testApplication {
     application {
       install(Vapi4k) {
-        configure {
+        vapi4kApplication {
           eocrCacheRemovalEnabled = cacheRemovalEnabled
-        }
-        onAssistantRequest { request ->
-          block(request)
-        }
-        toolCallEndpoints {
-          // Provide a default endpoint
-          endpoint {
-            serverUrl = "https://test/toolCall"
-            serverUrlSecret = "456"
-            timeoutSeconds = 20
+
+          onAssistantRequest {
+            block()
+          }
+
+          toolCallEndpoints {
+            // Provide a default endpoint
+            endpoint {
+              serverUrl = "https://test/toolCall"
+              serverSecret = "456"
+              timeoutSeconds = 20
+            }
           }
         }
       }
@@ -124,7 +141,7 @@ fun withTestApplication(
     responses
       .addAll(
         fileNames.map { fileName ->
-          val response = client.post("/$DEFAULT_SERVER_PATH") {
+          val response = client.post("/$defaultServerPath") {
             configPost()
             setBody(resourceFile(fileName))
           }

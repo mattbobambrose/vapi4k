@@ -18,7 +18,6 @@ package com.vapi4k
 
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.common.Endpoints.CACHES_PATH
-import com.vapi4k.dsl.assistant.AssistantDsl.assistant
 import com.vapi4k.dsl.model.enums.GroqModelType
 import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.server.Vapi4k
@@ -62,8 +61,8 @@ class ServerTest {
   @Test
   fun `simple assistant request`() {
     val (response, jsonElement) =
-      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) { request ->
-        assistant(request) {
+      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) {
+        assistant {
           groqModel {
             modelType = GroqModelType.LLAMA3_70B
           }
@@ -89,8 +88,8 @@ class ServerTest {
         ),
         CACHES_PATH,
         true,
-      ) { request ->
-        doubleToolAssistant(request)
+      ) {
+        doubleToolAssistant()
       }
 
     responses.forEachIndexed { i, (response, jsonElement) ->
@@ -127,8 +126,8 @@ class ServerTest {
         ),
         CACHES_PATH,
         false,
-      ) { request ->
-        doubleToolAssistant(request)
+      ) {
+        doubleToolAssistant()
       }
     responses.forEachIndexed { i, (response, jsonElement) ->
       assertEquals(HttpStatusCode.OK, response.status)

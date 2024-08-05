@@ -30,10 +30,10 @@ import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.Utils.trimLeadingSpaces
 
 abstract class AbstractModel(
-  private val modelUnion: ModelUnion,
+  override val modelUnion: ModelUnion,
   private val dto: CommonModelDto,
 ) : AbstractModelProperties {
-  internal val request get() = modelUnion.request
+  internal val request get() = modelUnion.requestContext.assistantRequest
   override val sessionCacheId get() = modelUnion.sessionCacheId
   override val assistantCacheId get() = modelUnion.assistantCacheId
   override val messageCallId get() = request.messageCallId.toMessageCallId()

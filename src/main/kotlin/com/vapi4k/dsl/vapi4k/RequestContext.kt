@@ -14,21 +14,15 @@
  *
  */
 
-package com.vapi4k.dtos.api.destination
+package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.destination.NumberDestination
-import com.vapi4k.dsl.destination.enums.DestinationType
-import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.Serializable
+import com.vapi4k.utils.JsonElementUtils.phoneNumber
+import kotlinx.serialization.json.JsonElement
 
-@Serializable
-class NumberDestinationDto(
-  override var number: String = "",
-  override var extension: String = "",
-  override var numberE164CheckEnabled: Boolean? = null,
-) : AbstractDestinationDto(),
-  CommonDestinationDto,
-  NumberDestination {
-  @EncodeDefault
-  val type: DestinationType = DestinationType.NUMBER
+data class RequestContext(
+  val application: Vapi4kApplication,
+  val assistantRequest: JsonElement,
+) {
+  val phoneNumber: String
+    get() = assistantRequest.phoneNumber
 }

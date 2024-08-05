@@ -17,10 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.assistant.enums.AssistantClientMessageType
-import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
-import com.vapi4k.dsl.assistant.enums.BackgroundSoundType
-import com.vapi4k.dsl.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.model.AnthropicModel
 import com.vapi4k.dsl.model.AnyscaleModel
 import com.vapi4k.dsl.model.CustomLLMModel
@@ -35,6 +31,7 @@ import com.vapi4k.dsl.transcriber.DeepgramTranscriber
 import com.vapi4k.dsl.transcriber.GladiaTranscriber
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriber
 import com.vapi4k.dsl.vapi4k.RequestContext
+import com.vapi4k.dsl.vapi4k.Vapi4kConfig
 import com.vapi4k.dsl.voice.AzureVoice
 import com.vapi4k.dsl.voice.CartesiaVoice
 import com.vapi4k.dsl.voice.DeepgramVoice
@@ -44,116 +41,33 @@ import com.vapi4k.dsl.voice.NeetsVoice
 import com.vapi4k.dsl.voice.OpenAIVoice
 import com.vapi4k.dsl.voice.PlayHTVoice
 import com.vapi4k.dsl.voice.RimeAIVoice
+import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 
-interface AssistantOverridesProperties {
-  var backchannelingEnabled: Boolean?
-  var backgroundDenoisingEnabled: Boolean?
-  var backgroundSound: BackgroundSoundType
-  val clientMessages: MutableSet<AssistantClientMessageType>
-  var endCallMessage: String
-  var firstMessage: String
-  var firstMessageMode: FirstMessageModeType
-  var hipaaEnabled: Boolean?
-  var llmRequestDelaySeconds: Double
-  var llmRequestNonPunctuatedDelaySeconds: Double
-  var maxDurationSeconds: Int
-  var modelOutputInMessagesEnabled: Boolean?
-  var name: String
-  var numWordsToInterruptAssistant: Int
-  var recordingEnabled: Boolean?
-  var responseDelaySeconds: Double
-  val serverMessages: MutableSet<AssistantServerMessageType>
-  var serverUrl: String
-  var serverUrlSecret: String
-  var silenceTimeoutSeconds: Int
-  var voicemailMessage: String
-
-  // Used only in AssistantOverrides
-  val variableValues: MutableMap<String, String>
-}
-
-@AssistantDslMarker
-interface AssistantOverrides : AssistantOverridesProperties {
-  var videoRecordingEnabled: Boolean?
-
-  fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection
-
-  // Transcribers
-  fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber
-
-  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber
-
-  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber
-
-  // Models
-  fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel
-
-  fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel
-
-  fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel
-
-  fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel
-
-  fun groqModel(block: GroqModel.() -> Unit): GroqModel
-
-  fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel
-
-  fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel
-
-  fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel
-
-  fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel
-
-  fun vapiModel(block: VapiModel.() -> Unit): VapiModel
-
-  // Voices
-  fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice
-
-  fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice
-
-  fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice
-
-  fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice
-
-  fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice
-
-  fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice
-
-  fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice
-
-  fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice
-
-  fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice
-
-  fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan
-
-  fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan
-}
-
-data class AssistantOverridesImpl internal constructor(
+data class AssistantImpl internal constructor(
   override val requestContext: RequestContext,
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
+  private val assistantDto: AssistantDto,
   private val assistantOverridesDto: AssistantOverridesDto,
-) : AssistantOverridesProperties by assistantOverridesDto,
-  AssistantOverrides,
+) : AssistantProperties by assistantDto,
+  Assistant,
   ModelUnion {
   override val transcriberChecker = DuplicateChecker()
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
   override val assistantCacheId = assistantCacheIdSource.nextAssistantCacheId()
-  override val modelDtoUnion get() = assistantOverridesDto
-  override val voicemailDetectionDto get() = assistantOverridesDto.voicemailDetectionDto
-  override val analysisPlanDto get() = assistantOverridesDto.analysisPlanDto
-  override val artifactPlanDto get() = assistantOverridesDto.artifactPlanDto
 
+  override val modelDtoUnion get() = assistantDto
+  override val voicemailDetectionDto get() = assistantDto.voicemailDetectionDto
+  override val analysisPlanDto get() = assistantDto.analysisPlanDto
+  override val artifactPlanDto get() = assistantDto.artifactPlanDto
   override var videoRecordingEnabled: Boolean?
-    get() = assistantOverridesDto.artifactPlanDto.videoRecordingEnabled
+    get() = assistantDto.artifactPlanDto.videoRecordingEnabled
     set(value) {
-      assistantOverridesDto.artifactPlanDto.videoRecordingEnabled = value
+      assistantDto.artifactPlanDto.videoRecordingEnabled = value
     }
 
   override fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =
@@ -206,7 +120,15 @@ data class AssistantOverridesImpl internal constructor(
 
   override fun rimeAIVoice(block: RimeAIVoice.() -> Unit) = rimeAIVoiceUnion(block)
 
+  // AssistantOverrides
+  override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
+    AssistantOverridesImpl(requestContext, sessionCacheId, assistantCacheIdSource, assistantOverridesDto).apply(block)
+
   override fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan = analysisPlanUnion(block)
 
   override fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan = artifactPlanUnion(block)
+
+  companion object {
+    internal lateinit var config: Vapi4kConfig
+  }
 }

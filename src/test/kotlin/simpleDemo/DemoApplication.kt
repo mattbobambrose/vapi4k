@@ -27,24 +27,22 @@ fun main() {
   embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::module2).start(wait = true)
 }
 
-const val BASE_URL = "https://app.ondigitalocean.app"
-
 fun Application.module2() {
   install(Vapi4k) {
-    configure {
-      serverUrl = "$BASE_URL/vapi4k"
-      serverUrlSecret = "12345"
-    }
+    vapi4kApplication {
+      serverPath = "/vapi4k"
+      serverSecret = "12345"
 
-    onAssistantRequest { assistantRequest ->
-//      getAssistantIdWithTool(assistantRequest)
-//      getAssistantWithOverrides(assistantRequest)
+      onAssistantRequest {
+//      getAssistantIdWithTool(requestContext)
+//      getAssistantWithOverrides(requestContext)
 //
 //      AssistantOverrides with Squad
 //      MemberOverrides with Squad
 
-      // doubleToolAssistant2(assistantRequest)
-      simpleAssistantRequest(assistantRequest)
+        // doubleToolAssistant2(requestContext)
+        simpleAssistantRequest()
+      }
     }
   }
 }

@@ -16,13 +16,17 @@
 
 package com.vapi4k.client
 
+import com.vapi4k.common.Constants.APPLICATION_ID
+import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
+import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
-import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
+import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
+import com.vapi4k.dsl.vapi4k.Vapi4kApplication
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.HttpUtils.httpClient
@@ -82,8 +86,8 @@ object ValidateAssistantResponse {
   }
 
   fun validateAssistantRequestResponse(
+    application: Vapi4kApplication,
     secret: String,
-    serverPath: String,
   ): String {
     val request = getNewRequest()
     val (status, body) = runBlocking {
@@ -98,65 +102,66 @@ object ValidateAssistantResponse {
 
     val sessionCacheId = request.sessionCacheId
 
-    return createHTML().html {
-      head {
-        link {
-          rel = "stylesheet"
-          href = STYLES_CSS
-        }
-        link {
-          rel = "stylesheet"
-          href = "/assets/prism.css"
-        }
-        title { +"Assistant Request Validation" }
-        script { src = HTMX_SOURCE_URL }
-      }
-      body {
-        script { src = "/assets/prism.js" }
-        h2 { +"Vapi4k Assistant Request Response" }
-        if (status.value == 200) {
-          div {
-            style = "border: 1px solid black; padding: 10px; margin: 10px;"
-            h3 { +"Path: $serverPath" }
-            h3 { +"Status: $status" }
-            pre {
-              code(classes = "language-json line-numbers match-braces") {
-                +body.toJsonString()
-              }
-            }
+    return createHTML()
+      .html {
+        head {
+          link {
+            rel = "stylesheet"
+            href = STYLES_CSS
           }
-          val jsonElement = body.toJsonElement()
-
-          with(jsonElement) {
-            when {
-              isAssistantResponse -> processAssistantRequest(jsonElement, sessionCacheId)
-              isSquadResponse -> {
-                val assistants = jsonElement["squad.members"].toJsonElementList()
-                assistants.forEachIndexed { i, assistant ->
-                  h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
-                  processAssistantRequest(assistant, sessionCacheId)
+          link {
+            rel = "stylesheet"
+            href = "/assets/prism.css"
+          }
+          title { +"Assistant Request Validation" }
+          script { src = HTMX_SOURCE_URL }
+        }
+        body {
+          script { src = "/assets/prism.js" }
+          h2 { +"Vapi4k Assistant Request Response" }
+          if (status.value == 200) {
+            div {
+              style = "border: 1px solid black; padding: 10px; margin: 10px;"
+              h3 { +"Path: ${application.serverPath}" }
+              h3 { +"Status: $status" }
+              pre {
+                code(classes = "language-json line-numbers match-braces") {
+                  +body.toJsonString()
                 }
               }
-              // TODO - Add support for assistantId responses
-              isAssistantIdResponse -> {}
             }
-          }
-        } else {
-          h3 { +"Path: $serverPath" }
-          h3 { +"Status: $status" }
-          if (body.isNotEmpty()) {
-            if (body.length < 80) {
-              h3 { +"Error: $body" }
-            } else {
-              h3 { +"Error:" }
-              pre { +body }
+            val jsonElement = body.toJsonElement()
+
+            with(jsonElement) {
+              when {
+                isAssistantResponse -> processAssistantRequest(application, jsonElement, sessionCacheId)
+                isSquadResponse -> {
+                  val assistants = jsonElement["squad.members"].toJsonElementList()
+                  assistants.forEachIndexed { i, assistant ->
+                    h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
+                    processAssistantRequest(application, assistant, sessionCacheId)
+                  }
+                }
+                // TODO - Add support for assistantId responses
+                isAssistantIdResponse -> {}
+              }
             }
           } else {
-            h3 { +"Check the ktor log for error information." }
+            h3 { +"Path: ${application.serverPath}" }
+            h3 { +"Status: $status" }
+            if (body.isNotEmpty()) {
+              if (body.length < 80) {
+                h3 { +"Error: $body" }
+              } else {
+                h3 { +"Error:" }
+                pre { +body }
+              }
+            } else {
+              h3 { +"Check the ktor log for error information." }
+            }
           }
         }
       }
-    }
   }
 
   private fun getAssistantName(
@@ -168,6 +173,7 @@ object ValidateAssistantResponse {
     }.getOrElse { index.toString() }
 
   private fun BODY.processAssistantRequest(
+    application: Vapi4kApplication,
     assistantElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
@@ -186,16 +192,20 @@ object ValidateAssistantResponse {
         val divid = getRandomSecret()
         h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
         form {
-          attributes["hx-get"] = INVOKE_TOOL_PATH
+          attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
           attributes["hx-trigger"] = "submit"
           attributes["hx-target"] = "#result-$divid"
 
           hiddenInput {
-            name = "sessionCacheId"
+            name = APPLICATION_ID
+            value = application.applicationId.value
+          }
+          hiddenInput {
+            name = SESSION_CACHE_ID
             value = sessionCacheId.value
           }
           hiddenInput {
-            name = "functionName"
+            name = FUNCTION_NAME
             value = function
           }
           table {

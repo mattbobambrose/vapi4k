@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import kotlinx.serialization.json.JsonElement
+import com.vapi4k.dsl.vapi4k.RequestContext
 
 @AssistantDslMarker
 interface SquadId {
@@ -25,7 +25,7 @@ interface SquadId {
 }
 
 data class SquadIdImpl internal constructor(
-  internal val request: JsonElement,
+  internal val requestContext: RequestContext,
   private val squadIdSource: SquadIdSource,
 ) : SquadId {
   override var id
