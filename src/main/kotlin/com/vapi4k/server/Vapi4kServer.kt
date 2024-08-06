@@ -54,7 +54,6 @@ import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.tools.ToolCache
-import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
@@ -153,7 +152,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   logEnvVarValues()
 
   startCallbackThread(callbackChannel)
-  startCacheCleaningThread()
+  startCacheCleaningThread(config)
 
   environment?.monitor?.apply {
     subscribe(ApplicationStarting) { it.environment.log.info("Vapi4kServer is starting") }
@@ -175,8 +174,23 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       if (!isProduction) {
         get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
-        get(CACHES_PATH) { call.respond(toolCallCache.cacheAsJson().toJsonString()) }
-        get(CLEAR_CACHES_PATH) { clearCacheResponse(toolCallCache) }
+        get(CACHES_PATH) {
+          call.respond(
+            buildJsonObject {
+              config.applications.forEach { application ->
+                put(
+                  application.serverPathAsSegment,
+                  application.toolCallCache.cacheAsJson().toJsonElement()
+                )
+              }
+            }
+          )
+        }
+        get(CLEAR_CACHES_PATH) {
+          config.applications.forEach { application ->
+            clearCacheResponse(application.toolCallCache)
+          }
+        }
 
         get(VALIDATE_PATH) { validateRoot(config) }
         get("$VALIDATE_PATH/{appName}") { validateApplication(config) }
@@ -343,13 +357,13 @@ private suspend fun KtorCallContext.assistantRequestResponse(
         }
 
         FUNCTION_CALL -> {
-          val response = getFunctionCallResponse(request)
+          val response = getFunctionCallResponse(application, request)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         TOOL_CALL -> {
-          val response = getToolCallResponse(request)
+          val response = getToolCallResponse(application, request)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
@@ -357,7 +371,7 @@ private suspend fun KtorCallContext.assistantRequestResponse(
         END_OF_CALL_REPORT -> {
           if (application.eocrCacheRemovalEnabled) {
             val sessionCacheId = request.sessionCacheId
-            toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
+            application.toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
               logger.info { "EOCR removed ${funcInfo.functions.size} cache entries [${funcInfo.ageSecs}] " }
             } ?: logger.warn { "EOCR unable to find and remove cache entry [$sessionCacheId]" }
           }
@@ -395,7 +409,7 @@ private suspend fun KtorCallContext.handleToolCallPathPost(
       call.respond(HttpStatusCode.BadRequest, "Invalid message type: requires ToolCallRequest")
     } else {
       val (response, duration) = measureTimedValue {
-        val response = getToolCallResponse(request)
+        val response = getToolCallResponse(application, request)
         call.respond(response)
         lambda { response.toJsonElement() }
       }
@@ -415,14 +429,17 @@ private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String
   }
 }
 
-private fun startCacheCleaningThread() {
+private fun startCacheCleaningThread(config: Vapi4kConfigImpl) {
   thread {
     val pause = TOOL_CACHE_CLEAN_PAUSE_MINS.toInt().minutes
     val maxAge = TOOL_CACHE_MAX_AGE_MINS.toInt().minutes
     while (true) {
       runCatching {
         Thread.sleep(pause.inWholeMilliseconds)
-        toolCallCache.purgeToolCache(maxAge)
+        config.applications.forEach { application ->
+          logger.info { "Purging cache for ${application.serverPath}" }
+          application.toolCallCache.purgeToolCache(maxAge)
+        }
       }.onFailure { e ->
         logger.error(e) { "Error clearing cache: ${e.errorMsg}" }
       }

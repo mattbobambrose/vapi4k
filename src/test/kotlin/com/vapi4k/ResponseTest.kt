@@ -16,7 +16,7 @@
 
 package com.vapi4k
 
-import com.vapi4k.AssistantTest.Companion.REQUEST_CONTEXT
+import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.AnthropicModelType
 import com.vapi4k.api.model.enums.DeepgramModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
@@ -27,7 +27,7 @@ import org.junit.Test
 class ResponseTest {
   @Test
   fun testGetTwoSquadIds() {
-    val requestContext = REQUEST_CONTEXT
+    val requestContext = newRequestContext()
     val assistant =
       assistantResponse(requestContext) {
         assistant {

@@ -22,7 +22,7 @@ import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.common.Endpoints.CACHES_PATH
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
+import com.vapi4k.common.EnvVar.DEFAULT_SERVER_PATH
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.JsonUtils.firstInList
@@ -75,7 +75,7 @@ class ServerTest {
 
   @Test
   fun `Tool requests arg ordering`() {
-    clearToolCache()
+    // clearToolCache()
     val responses =
       withTestApplication(
         listOf(
@@ -109,7 +109,7 @@ class ServerTest {
       if (i == 6) {
         assertEquals(
           0,
-          jsonElement["toolCallCacheSize"].intValue,
+          jsonElement["${DEFAULT_SERVER_PATH.value.removePrefix("/")}.toolCallCacheSize"].intValue,
         )
       }
     }
@@ -117,7 +117,7 @@ class ServerTest {
 
   @Test
   fun `Check for EOCR cache removal`() {
-    clearToolCache()
+    // clearToolCache()
     val responses =
       withTestApplication(
         listOf(
@@ -134,7 +134,7 @@ class ServerTest {
       if (i == 2) {
         assertEquals(
           1,
-          jsonElement["toolCallCache"].jsonObject.keys.size,
+          jsonElement["${DEFAULT_SERVER_PATH.value.removePrefix("/")}.toolCallCache"].jsonObject.keys.size,
         )
       }
     }

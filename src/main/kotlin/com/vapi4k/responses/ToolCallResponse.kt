@@ -19,7 +19,7 @@ package com.vapi4k.responses
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallArguments
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallName
-import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
@@ -34,7 +34,10 @@ data class ToolCallResponse(
   var error: String = "",
 ) {
   companion object {
-    fun getToolCallResponse(request: JsonElement) =
+    fun getToolCallResponse(
+      application: Vapi4kApplicationImpl,
+      request: JsonElement,
+    ) =
       runCatching {
         ToolCallResponse()
           .also { response ->
@@ -56,7 +59,7 @@ data class ToolCallResponse(
                           errorMessage = errorMsg
                         }
                         runCatching {
-                          toolCallCache.getFromCache(sessionCacheId)
+                          application.toolCallCache.getFromCache(sessionCacheId)
                             .getFunction(funcName)
                             .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
                             .invokeToolMethod(

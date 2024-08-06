@@ -26,10 +26,10 @@ import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.EnvVar
 import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
+import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.dtos.vapi4k.ToolServerDto
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.DslUtils
-import com.vapi4k.utils.Utils.dropLeading
 import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
@@ -37,6 +37,8 @@ import kotlin.time.Duration
 class Vapi4kApplicationImpl : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
   internal val toolServers = mutableListOf<ToolServer>()
+  internal val toolCallCache = ToolCache()
+
   internal var assistantRequest: (suspend AssistantResponse.() -> Unit)? = null
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
@@ -44,7 +46,7 @@ class Vapi4kApplicationImpl : Vapi4kApplication {
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
   internal var eocrCacheRemovalEnabled = true
-  internal val serverPathAsSegment get() = serverPath.dropLeading("/")
+  internal val serverPathAsSegment get() = serverPath.removePrefix("/")
 
   override var serverPath = EnvVar.defaultServerPath
   override var serverSecret = ""

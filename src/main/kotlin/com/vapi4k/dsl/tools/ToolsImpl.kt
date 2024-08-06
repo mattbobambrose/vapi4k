@@ -28,7 +28,6 @@ import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
-import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
@@ -199,7 +198,8 @@ data class ToolsImpl internal constructor(
     model.toolDtos += ToolDto().also { toolDto ->
       populateFunctionDto(toolType, model, obj, function, toolDto.function)
       val sessionCacheId = getSessionCacheId()
-      toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, toolType, obj, function)
+      val application = (model.application as Vapi4kApplicationImpl)
+      application.toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, toolType, obj, function)
 
       with(toolDto) {
         type = toolType

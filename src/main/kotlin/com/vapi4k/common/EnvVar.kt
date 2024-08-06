@@ -17,8 +17,6 @@
 package com.vapi4k.common
 
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.Utils.dropEnding
-import com.vapi4k.utils.Utils.dropLeading
 import com.vapi4k.utils.Utils.isNull
 import com.vapi4k.utils.Utils.obfuscate
 
@@ -85,8 +83,8 @@ enum class EnvVar(
     }
 
     val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
-    val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.dropEnding("/") }
-    val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.dropLeading("/") }
+    val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.removeSuffix("/") }
+    val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removePrefix("/") }
 
 //    val envResendApiKey: String by lazy { RESEND_API_KEY.value }
 //    val envResendEmailSender: Email by lazy { RESEND_SENDER_EMAIL.value.toEmail() }

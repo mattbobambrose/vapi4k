@@ -31,7 +31,6 @@ import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
@@ -73,7 +72,7 @@ class AssistantTest {
 
   @Test
   fun testRegular() {
-    clearToolCache()
+    //clearToolCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
@@ -114,7 +113,7 @@ class AssistantTest {
   @Test
   fun `multiple application{} decls`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           firstMessage = "Something"
           openAIModel {
@@ -136,7 +135,7 @@ class AssistantTest {
   @Test
   fun `application{} and squad{} decls`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           firstMessage = "Something"
           openAIModel {
@@ -155,7 +154,7 @@ class AssistantTest {
   @Test
   fun `Missing application{} decls`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
       }
     }.also {
       assertEquals(
@@ -167,7 +166,7 @@ class AssistantTest {
 
   @Test
   fun `test reverse delay order`() {
-    clearToolCache()
+    // clearToolCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
@@ -204,7 +203,7 @@ class AssistantTest {
 
   @Test
   fun `test message with no millis`() {
-    clearToolCache()
+    // clearToolCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
@@ -242,7 +241,7 @@ class AssistantTest {
 
   @Test
   fun `multiple message`() {
-    clearToolCache()
+    // clearToolCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
@@ -281,7 +280,7 @@ class AssistantTest {
 
   @Test
   fun `multiple delay time`() {
-    clearToolCache()
+    // clearToolCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
       assistant {
         firstMessage = messageOne
@@ -321,7 +320,7 @@ class AssistantTest {
 
   @Test
   fun `multiple message multiple delay time`() {
-    clearToolCache()
+    // clearToolCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
       assistant {
         firstMessage = messageOne
@@ -358,7 +357,7 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message`() {
-    clearToolCache()
+    // clearToolCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
       assistant {
         firstMessage = messageOne
@@ -435,9 +434,9 @@ class AssistantTest {
 
   @Test
   fun `Missing message`() {
-    clearToolCache()
+    // clearToolCache()
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           firstMessage = messageOne
           openAIModel {
@@ -459,9 +458,9 @@ class AssistantTest {
 
   @Test
   fun `error on duplicate reverse conditions`() {
-    clearToolCache()
+    // clearToolCache()
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           firstMessage = messageOne
           openAIModel {
@@ -525,9 +524,9 @@ class AssistantTest {
 
   @Test
   fun `check non-default FirstMessageModeType values`() {
-    clearToolCache()
+    // clearToolCache()
     val assistant =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           firstMessageMode = ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
           openAIModel {
@@ -545,9 +544,9 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 1`() {
-    clearToolCache()
+    //  clearToolCache()
     val assistant =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           clientMessages -= AssistantClientMessageType.HANG
           openAIModel {
@@ -562,9 +561,9 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 2`() {
-    clearToolCache()
+    // clearToolCache()
     val assistant =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           clientMessages -= setOf(AssistantClientMessageType.HANG, AssistantClientMessageType.STATUS_UPDATE)
           openAIModel {
@@ -579,9 +578,9 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 1`() {
-    clearToolCache()
+    // clearToolCache()
     val assistant =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           firstMessage = "Something"
           serverMessages -= AssistantServerMessageType.HANG
@@ -597,9 +596,9 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 2`() {
-    clearToolCache()
+    // clearToolCache()
     val assistant =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           serverMessages -= setOf(AssistantServerMessageType.HANG, AssistantServerMessageType.SPEECH_UPDATE)
           openAIModel {
@@ -615,7 +614,7 @@ class AssistantTest {
   @Test
   fun `multiple deepgram transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           deepgramTranscriber {
             transcriberModel = DeepgramModelType.BASE
@@ -634,7 +633,7 @@ class AssistantTest {
   @Test
   fun `multiple gladia transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           gladiaTranscriber {
             transcriberModel = GladiaModelType.FAST
@@ -653,7 +652,7 @@ class AssistantTest {
   @Test
   fun `multiple talkscriber transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           talkscriberTranscriber {
             transcriberModel = TalkscriberModelType.WHISPER
@@ -672,7 +671,7 @@ class AssistantTest {
   @Test
   fun `multiple transcriber decls`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           talkscriberTranscriber {
             transcriberModel = TalkscriberModelType.WHISPER
@@ -691,7 +690,7 @@ class AssistantTest {
   @Test
   fun `deepgram transcriber enum value`() {
     val assistant =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -712,7 +711,7 @@ class AssistantTest {
   @Test
   fun `deepgram transcriber custom value`() {
     val assistant =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -735,7 +734,7 @@ class AssistantTest {
   fun `deepgram transcriber conflicting values`() {
     assertThrows(IllegalStateException::class.java) {
       val assistant =
-        assistantResponse(REQUEST_CONTEXT) {
+        assistantResponse(newRequestContext()) {
           assistant {
             openAIModel {
               modelType = OpenAIModelType.GPT_3_5_TURBO
@@ -764,7 +763,7 @@ class AssistantTest {
   @Test
   fun `missing model decl`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         assistant {
           firstMessage = "Something"
         }
@@ -797,6 +796,6 @@ class AssistantTest {
       }
     }
     """
-    val REQUEST_CONTEXT = AssistantRequestContext(Vapi4kApplicationImpl(), ASSISTANT_REQUEST.toJsonElement())
+    fun newRequestContext() = AssistantRequestContext(Vapi4kApplicationImpl(), ASSISTANT_REQUEST.toJsonElement())
   }
 }
