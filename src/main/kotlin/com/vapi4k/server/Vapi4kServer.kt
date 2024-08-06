@@ -206,7 +206,7 @@ private suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl
   if (application.isNotNull())
     processValidateRequest(application)
   else
-    call.respondText("Application not found", status = HttpStatusCode.NotFound)
+    call.respondText("Application for /$appName found", status = HttpStatusCode.NotFound)
 }
 
 private suspend fun KtorCallContext.validateRoot(config: Vapi4kConfigImpl) {

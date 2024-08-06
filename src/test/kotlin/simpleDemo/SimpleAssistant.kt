@@ -34,10 +34,6 @@ object SimpleAssistant {
         modelType = OpenAIModelType.GPT_4_TURBO
         systemMessage = "You're a weather lookup service"
 
-        functions {
-          function(WeatherLookupService1(), WeatherLookupService1::getWeatherByCity1)
-        }
-
         tools {
 //          tool(WeatherLookupService1()) {
 //            requestStartMessage {
@@ -45,17 +41,32 @@ object SimpleAssistant {
 //            }
 //          }
 
-          dtmf(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
-            requestStartMessage {
-              content = "Default request start weather lookup"
-            }
+          externalTool {
+            name = "wed"
+            description = "a description"
+            async = true
+
+            addParameter("param1", "a description")
+            addParameter("param2", "a description")
 
             server {
-              url = "http://localhost:8080/toolCall"
+              url = "yyy"
               secret = "456"
-              timeoutSeconds = 20
+              timeoutSeconds = 5
             }
           }
+
+//          dtmf(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
+//            requestStartMessage {
+//              content = "Default request start weather lookup"
+//            }
+//
+//            server {
+//              url = "http://localhost:8080/toolCall"
+//              secret = "456"
+//              timeoutSeconds = 20
+//            }
+//          }
 
 //          tool(
 //            WeatherLookupService2(),
@@ -67,11 +78,11 @@ object SimpleAssistant {
 //            }
 //          }
 
-          transfer(WeatherLookupService2(), WeatherLookupService2::getWeatherByZipCode) {
-            assistantDestination {
-              description = "Transfer to assistant 2"
-            }
-          }
+//          transfer(WeatherLookupService2(), WeatherLookupService2::getWeatherByZipCode) {
+//            assistantDestination {
+//              description = "Transfer to assistant 2"
+//            }
+//          }
         }
       }
 

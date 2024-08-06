@@ -32,7 +32,7 @@ import kotlin.time.Duration
 
 class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
-  internal val toolCache = ToolCache()
+  internal val toolCache = ToolCache() { serverPath }
   internal var assistantRequest: (suspend AssistantResponse.() -> Unit)? = null
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
