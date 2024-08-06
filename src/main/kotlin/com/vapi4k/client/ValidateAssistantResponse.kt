@@ -180,75 +180,78 @@ object ValidateAssistantResponse {
       assistantElement["assistant.model.tools"].toJsonElementList()
         .map { it.stringValue("function.name") }
 
-    h2 { +"Tools" }
 
-    val functionInfo = application.toolCache.getFromCache(sessionCacheId)
+    if (!application.toolCache.contains(sessionCacheId)) {
+      h2 { +"No Tools Declared" }
 
-    functions.forEach { function ->
-      div {
-        style = "border: 1px solid black; padding: 10px; margin: 10px;"
-        val functionDetails = functionInfo.getFunction(function)
-        val divid = getRandomSecret()
-        h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
-        form {
-          attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
-          attributes["hx-trigger"] = "submit"
-          attributes["hx-target"] = "#result-$divid"
+    } else {
+      h2 { +"Tools" }
+      val functionInfo = application.toolCache.getFromCache(sessionCacheId)
+      functions.forEach { function ->
+        div {
+          style = "border: 1px solid black; padding: 10px; margin: 10px;"
+          val functionDetails = functionInfo.getFunction(function)
+          val divid = getRandomSecret()
+          h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
+          form {
+            attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
+            attributes["hx-trigger"] = "submit"
+            attributes["hx-target"] = "#result-$divid"
 
-          hiddenInput {
-            name = APPLICATION_ID
-            value = application.applicationId.value
-          }
-          hiddenInput {
-            name = SESSION_CACHE_ID
-            value = sessionCacheId.value
-          }
-          hiddenInput {
-            name = FUNCTION_NAME
-            value = function
-          }
-          table {
-            tbody {
-              functionDetails.params.forEach { functionDetail ->
-                tr {
-                  td { +"${functionDetail.first}:" }
-                  td {
-                    style = "width: 325px;"
-                    input {
+            hiddenInput {
+              name = APPLICATION_ID
+              value = application.applicationId.value
+            }
+            hiddenInput {
+              name = SESSION_CACHE_ID
+              value = sessionCacheId.value
+            }
+            hiddenInput {
+              name = FUNCTION_NAME
+              value = function
+            }
+            table {
+              tbody {
+                functionDetails.params.forEach { functionDetail ->
+                  tr {
+                    td { +"${functionDetail.first}:" }
+                    td {
                       style = "width: 325px;"
-                      type =
-                        when (functionDetail.second.asKClass()) {
-                          String::class -> InputType.text
-                          Int::class -> InputType.number
-                          Boolean::class -> InputType.checkBox
-                          else -> InputType.text
-                        }
-                      name = functionDetail.first
+                      input {
+                        style = "width: 325px;"
+                        type =
+                          when (functionDetail.second.asKClass()) {
+                            String::class -> InputType.text
+                            Int::class -> InputType.number
+                            Boolean::class -> InputType.checkBox
+                            else -> InputType.text
+                          }
+                        name = functionDetail.first
+                      }
+                    }
+                    td {
+                      +"[${functionDetail.second.paramAnnotationWithDefault}]"
                     }
                   }
+                }
+                tr {
                   td {
-                    +"[${functionDetail.second.paramAnnotationWithDefault}]"
+                    input {
+                      style = "margin-top: 10px;"
+                      type = InputType.submit
+                      value = "Invoke Tool"
+                    }
                   }
+                  td {}
+                  td {}
                 }
-              }
-              tr {
-                td {
-                  input {
-                    style = "margin-top: 10px;"
-                    type = InputType.submit
-                    value = "Invoke Tool"
-                  }
-                }
-                td {}
-                td {}
               }
             }
           }
-        }
 
-        script {
-          rawHtml(
-            """
+          script {
+            rawHtml(
+              """
               document.body.addEventListener('htmx:afterOnLoad', function(event) {
                 if (event.detail.target.id === 'result-$divid') {
                   // Highlight the json result
@@ -263,14 +266,15 @@ object ValidateAssistantResponse {
                 }
               });
             """,
-          )
-        }
+            )
+          }
 
-        pre {
-          style = "display: none;"
-          id = "display-$divid"
-          code(classes = "language-json line-numbers match-braces") {
-            id = "result-$divid"
+          pre {
+            style = "display: none;"
+            id = "display-$divid"
+            code(classes = "language-json line-numbers match-braces") {
+              id = "result-$divid"
+            }
           }
         }
       }

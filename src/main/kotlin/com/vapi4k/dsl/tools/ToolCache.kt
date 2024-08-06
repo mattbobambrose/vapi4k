@@ -58,6 +58,8 @@ internal class ToolCache {
     }
   }
 
+  fun contains(sessionCacheId: SessionCacheId) = cacheMap.contains(sessionCacheId)
+
   fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
     cacheMap[sessionCacheId] ?: error("Session cache id not found: $sessionCacheId")
 
