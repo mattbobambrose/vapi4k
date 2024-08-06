@@ -29,5 +29,5 @@ data class AnalysisPlanDto(
   override var successEvaluationRubric: SuccessEvaluationRubricType = SuccessEvaluationRubricType.UNSPECIFIED,
   override var successEvaluationRequestTimeoutSeconds: Double = -1.0,
   override var structuredDataPrompt: String = "",
-  override val structuredDataSchema: StructuredDataSchemaDto = StructuredDataSchemaDto(),
+  val structuredDataSchema: StructuredDataSchemaDto = StructuredDataSchemaDto(),
 ) : AnalysisPlanProperties

@@ -21,10 +21,19 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.StructuredDataSchema
 import com.vapi4k.dtos.AnalysisPlanDto
 
+/**
+This is the plan for analysis of assistant's calls. Stored in `call.analysis`.
+ */
 @AssistantDslMarker
 class AnalysisPlan internal constructor(
   private val dto: AnalysisPlanDto,
 ) : AnalysisPlanProperties by dto {
+  /**
+  This enforces the schema of the structured data. This output is stored in call.analysis.structuredData.
+  Complete guide on JSON Schema can be found <a href="https://ajv.js.org/json-schema.html#json-data-type" target="_blank">here</a>.
+  Disabled by default.
+  You can use this standalone or in combination with structuredDataPrompt. If both are provided, they are concatenated into appropriate instructions.
+   */
   fun structuredDataSchema(block: StructuredDataSchema.() -> Unit) {
     StructuredDataSchema(dto.structuredDataSchema).apply(block)
   }

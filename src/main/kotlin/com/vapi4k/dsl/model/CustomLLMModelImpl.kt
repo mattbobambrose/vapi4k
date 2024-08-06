@@ -38,10 +38,12 @@ interface CustomLLMModelProperties {
   var maxTokens: Int
 
   /**
-  This determines whether metadata is sent in requests to the custom provider.
+  <p>This determines whether metadata is sent in requests to the custom provider.
+  <li>`off` will not send any metadata. Payload will look like `{ messages }`</li>
+  <li>`variable` will send `assistant.metadata` as a variable on the payload. Payload will look like `{ messages, metadata }`</li>
+  <li>`destructured` will send `assistant.metadata` fields directly on the payload. Payload will look like `{ messages, ...metadata }`</li>
   Further, `variable` and `destructured` will send `call`, `phoneNumber`, and `customer` objects in the payload.
-  Default is `variable`.
-  Available options: `off`, `variable`, `destructured`
+  <br>Default is `variable`.</p>
    */
   var metadataSendMode: MetaDataSendModeType
 

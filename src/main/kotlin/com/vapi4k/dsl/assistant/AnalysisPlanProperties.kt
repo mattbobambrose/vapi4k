@@ -17,13 +17,35 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.enums.SuccessEvaluationRubricType
-import com.vapi4k.dtos.StructuredDataSchemaDto
 
 interface AnalysisPlanProperties {
-  val structuredDataSchema: StructuredDataSchemaDto
+  /**
+  <p>This is the prompt that's used to extract structured data from the call. The output is stored in `call.analysis.structuredData`.
+  <br>Disabled by default.
+  <br>You can use this standalone or in combination with `structuredDataSchema`. If both are provided, they are concatenated into appropriate instructions.</p>
+   */
   var structuredDataPrompt: String
+
+  /**
+  <p>This is how long the request is tried before giving up. When request times out, `call.analysis.structuredData` will be empty. Increasing this timeout will delay the end of call report.
+  <br>Default is 5 seconds.</p>
+   */
   var structuredDataRequestTimeoutSeconds: Double
+
+  /**
+  <p>This is the prompt that's used to evaluate if the call was successful. The output is stored in `call.analysis.successEvaluation`.
+  <br>Default is "You are an expert call evaluator. You will be given a transcript of a call and the system prompt of the AI participant.
+  Determine if the call was successful based on the objectives inferred from the system prompt. DO NOT return anything except the result.".
+  <br>Set to '' or 'off' to disable.
+  <br>You can use this standalone or in combination with `successEvaluationRubric`. If both are provided, they areconcatenated into appropriate instructions.
+  </p>
+   */
   var successEvaluationPrompt: String
+
+  /**
+  <p>This is how long the request is tried before giving up. When request times out, call.analysis.successEvaluation will be empty. Increasing this timeout will delay the end of call report.
+  <br>Default is 5 seconds.</p>
+   */
   var successEvaluationRequestTimeoutSeconds: Double
   var successEvaluationRubric: SuccessEvaluationRubricType
   var summaryPrompt: String
