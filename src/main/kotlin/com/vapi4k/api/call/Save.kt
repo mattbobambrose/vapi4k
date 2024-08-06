@@ -28,8 +28,6 @@ class Save {
 
   fun call(block: Call.() -> Unit): CallRequestDto =
     CallRequestDto().also {
-      CallImpl(SessionCacheId.UNSPECIFIED_SESSION_CACHE_ID, assistantCacheIdSource, it).apply(
-        block
-      )
+      CallImpl(SessionCacheId.UNSPECIFIED_SESSION_CACHE_ID, assistantCacheIdSource, it).apply(block)
     }
 }

@@ -126,7 +126,7 @@ internal object AdminJobs {
                             it.invoke(
                               callback.requestType,
                               resp,
-                              callback.elapsed
+                              callback.elapsed,
                             )
                           }
                         }

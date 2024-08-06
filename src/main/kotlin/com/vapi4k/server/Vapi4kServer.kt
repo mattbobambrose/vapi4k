@@ -167,10 +167,10 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               config.allApplications.forEach { application ->
                 put(
                   application.serverPathAsSegment,
-                  application.toolCache.cacheAsJson().toJsonElement()
+                  application.toolCache.cacheAsJson().toJsonElement(),
                 )
               }
-            }
+            },
           )
         }
         get(CLEAR_CACHES_PATH) {

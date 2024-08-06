@@ -49,9 +49,7 @@ data class CallImpl internal constructor(
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     assistantChecker.check("assistantId{} already called")
-    return AssistantIdImpl(outboundRequestContext, sessionCacheId, assistantCacheIdSource, dto).apply(
-      block
-    )
+    return AssistantIdImpl(outboundRequestContext, sessionCacheId, assistantCacheIdSource, dto).apply(block)
   }
 
   override fun assistant(block: Assistant.() -> Unit): Assistant {
@@ -62,7 +60,7 @@ data class CallImpl internal constructor(
         sessionCacheId,
         assistantCacheIdSource,
         assistantDto,
-        assistantOverridesDto
+        assistantOverridesDto,
       )
         .apply(block)
         .apply {

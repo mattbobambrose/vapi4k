@@ -24,7 +24,6 @@ import com.vapi4k.api.squad.SquadId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.CallProperties
 
-
 @AssistantDslMarker
 interface Call : CallProperties {
   fun assistantId(block: AssistantId.() -> Unit): AssistantId

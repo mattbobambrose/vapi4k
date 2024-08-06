@@ -32,27 +32,26 @@ class FunctionResponse(
     fun getFunctionCallResponse(
       application: Vapi4kApplicationImpl,
       request: JsonElement,
-    ) =
-      FunctionResponse()
-        .also { response ->
-          val sessionCacheId = request.sessionCacheId
-          val funcName = request.functionName
-          val args = request.functionParameters
-          runCatching {
-            application.toolCache.getFromCache(sessionCacheId)
-              .getFunction(funcName)
-              .invokeToolMethod(
-                isTool = false,
-                args = args,
-                request = request,
-                message = mutableListOf(),
-                successAction = { result -> response.result = result },
-                errorAction = { result -> response.result = "Error invoking function" },
-              )
-          }.getOrElse { e ->
-            val errorMsg = e.message ?: "Error invoking function"
-            logger.error { errorMsg }
-          }
+    ) = FunctionResponse()
+      .also { response ->
+        val sessionCacheId = request.sessionCacheId
+        val funcName = request.functionName
+        val args = request.functionParameters
+        runCatching {
+          application.toolCache.getFromCache(sessionCacheId)
+            .getFunction(funcName)
+            .invokeToolMethod(
+              isTool = false,
+              args = args,
+              request = request,
+              message = mutableListOf(),
+              successAction = { result -> response.result = result },
+              errorAction = { result -> response.result = "Error invoking function" },
+            )
+        }.getOrElse { e ->
+          val errorMsg = e.message ?: "Error invoking function"
+          logger.error { errorMsg }
         }
+      }
   }
 }

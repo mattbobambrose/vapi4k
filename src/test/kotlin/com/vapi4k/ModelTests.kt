@@ -45,7 +45,6 @@ class ModelTests {
                 }
               }
             }
-
           }
         }
       }
@@ -79,11 +78,9 @@ class ModelTests {
                 }
               }
             }
-
           }
         }
       }
-
     }.also {
       assertEquals(
         "tool{} already has a server{} decl",

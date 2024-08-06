@@ -75,7 +75,6 @@ class ServerTest {
 
   @Test
   fun `Tool requests arg ordering`() {
-    // clearToolCache()
     val responses =
       withTestApplication(
         listOf(
@@ -117,7 +116,6 @@ class ServerTest {
 
   @Test
   fun `Check for EOCR cache removal`() {
-    // clearToolCache()
     val responses =
       withTestApplication(
         listOf(

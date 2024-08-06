@@ -27,7 +27,5 @@ interface ServerProperties {
 
 class ServerImpl internal constructor(
   internal val dto: ServerDto,
-) :
-  ServerProperties by dto,
+) : ServerProperties by dto,
   Server
-

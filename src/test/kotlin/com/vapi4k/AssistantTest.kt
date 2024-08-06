@@ -70,7 +70,6 @@ class AssistantTest {
 
   @Test
   fun testRegular() {
-    //clearToolCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
@@ -164,7 +163,6 @@ class AssistantTest {
 
   @Test
   fun `test reverse delay order`() {
-    // clearToolCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
@@ -201,7 +199,6 @@ class AssistantTest {
 
   @Test
   fun `test message with no millis`() {
-    // clearToolCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
@@ -239,7 +236,6 @@ class AssistantTest {
 
   @Test
   fun `multiple message`() {
-    // clearToolCache()
     val (response, jsonElement) =
       withTestApplication(JSON_ASSISTANT_REQUEST) {
         assistant {
@@ -278,7 +274,6 @@ class AssistantTest {
 
   @Test
   fun `multiple delay time`() {
-    // clearToolCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
       assistant {
         firstMessage = messageOne
@@ -318,7 +313,6 @@ class AssistantTest {
 
   @Test
   fun `multiple message multiple delay time`() {
-    // clearToolCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
       assistant {
         firstMessage = messageOne
@@ -355,7 +349,6 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message`() {
-    // clearToolCache()
     val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
       assistant {
         firstMessage = messageOne
@@ -432,7 +425,6 @@ class AssistantTest {
 
   @Test
   fun `Missing message`() {
-    // clearToolCache()
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -456,7 +448,6 @@ class AssistantTest {
 
   @Test
   fun `error on duplicate reverse conditions`() {
-    // clearToolCache()
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -522,7 +513,6 @@ class AssistantTest {
 
   @Test
   fun `check non-default FirstMessageModeType values`() {
-    // clearToolCache()
     val assistant =
       assistantResponse(newRequestContext()) {
         assistant {
@@ -542,7 +532,6 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 1`() {
-    //  clearToolCache()
     val assistant =
       assistantResponse(newRequestContext()) {
         assistant {
@@ -559,7 +548,6 @@ class AssistantTest {
 
   @Test
   fun `check assistant client messages 2`() {
-    // clearToolCache()
     val assistant =
       assistantResponse(newRequestContext()) {
         assistant {
@@ -576,7 +564,6 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 1`() {
-    // clearToolCache()
     val assistant =
       assistantResponse(newRequestContext()) {
         assistant {
@@ -594,7 +581,6 @@ class AssistantTest {
 
   @Test
   fun `check assistant server messages 2`() {
-    // clearToolCache()
     val assistant =
       assistantResponse(newRequestContext()) {
         assistant {

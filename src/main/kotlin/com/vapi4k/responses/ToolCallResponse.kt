@@ -37,56 +37,55 @@ data class ToolCallResponse(
     fun getToolCallResponse(
       application: Vapi4kApplicationImpl,
       request: JsonElement,
-    ) =
-      runCatching {
-        ToolCallResponse()
-          .also { response ->
-            var errorMessage = ""
+    ) = runCatching {
+      ToolCallResponse()
+        .also { response ->
+          var errorMessage = ""
 
-            request.toolCallList
-              .forEach { toolCall ->
-                response.also { toolCallResponse ->
-                  response.results +=
-                    ToolCallResult()
-                      .also { toolCallResult ->
-                        val sessionCacheId = request.sessionCacheId
-                        val funcName = toolCall.toolCallName
-                        val args = toolCall.toolCallArguments
-                        toolCallResult.toolCallId = toolCall.id
-                        toolCallResult.name = funcName
-                        val errorAction = { errorMsg: String ->
-                          toolCallResult.error = errorMsg
-                          errorMessage = errorMsg
-                        }
-                        runCatching {
-                          application.toolCache.getFromCache(sessionCacheId)
-                            .getFunction(funcName)
-                            .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
-                            .invokeToolMethod(
-                              isTool = true,
-                              args = args,
-                              request = request,
-                              message = toolCallResult.message,
-                              successAction = { result -> toolCallResult.result = result },
-                              errorAction = errorAction,
-                            )
-                        }.getOrElse { e ->
-                          val errorMsg = e.message ?: "Error invoking tool $funcName"
-                          logger.error { errorMsg }
-                          errorAction(errorMsg)
-                        }
+          request.toolCallList
+            .forEach { toolCall ->
+              response.also { toolCallResponse ->
+                response.results +=
+                  ToolCallResult()
+                    .also { toolCallResult ->
+                      val sessionCacheId = request.sessionCacheId
+                      val funcName = toolCall.toolCallName
+                      val args = toolCall.toolCallArguments
+                      toolCallResult.toolCallId = toolCall.id
+                      toolCallResult.name = funcName
+                      val errorAction = { errorMsg: String ->
+                        toolCallResult.error = errorMsg
+                        errorMessage = errorMsg
                       }
+                      runCatching {
+                        application.toolCache.getFromCache(sessionCacheId)
+                          .getFunction(funcName)
+                          .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
+                          .invokeToolMethod(
+                            isTool = true,
+                            args = args,
+                            request = request,
+                            message = toolCallResult.message,
+                            successAction = { result -> toolCallResult.result = result },
+                            errorAction = errorAction,
+                          )
+                      }.getOrElse { e ->
+                        val errorMsg = e.message ?: "Error invoking tool $funcName"
+                        logger.error { errorMsg }
+                        errorAction(errorMsg)
+                      }
+                    }
 
-                  if (errorMessage.isNotEmpty()) {
-                    response.error = errorMessage
-                  }
+                if (errorMessage.isNotEmpty()) {
+                  response.error = errorMessage
                 }
               }
-          }
-      }.getOrElse { e ->
-        logger.error { "Error receiving tool call: ${e.errorMsg}" }
-        error("Error receiving tool call: ${e.errorMsg}")
-      }
+            }
+        }
+    }.getOrElse { e ->
+      logger.error { "Error receiving tool call: ${e.errorMsg}" }
+      error("Error receiving tool call: ${e.errorMsg}")
+    }
   }
 }
 
