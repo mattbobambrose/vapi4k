@@ -47,10 +47,11 @@ open class ExternalToolImpl internal constructor(
   ) {
     require(name.isNotBlank()) { "externalTool{} parameter name must not be blank" }
     require(type in FunctionUtils.allowedParamTypes) {
-      "externalTool{} parameter type must be one of String::class, Int::class, Double::class, Boolean::class"
+      "externalTool{} parameter type must be one of these: String::class, Int::class, Double::class, Boolean::class"
     }
 
     with(toolDto.functionDto.parametersDto) {
+      if (properties.containsKey(name)) error("externalTool{} parameter $name already exists")
       properties[name] = FunctionPropertyDescDto(type.llmType, description)
       if (required) this.required.add(name)
     }

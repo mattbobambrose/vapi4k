@@ -148,6 +148,139 @@ class ModelTests {
   }
 
   @Test
+  fun `blank param names with external tool decl`() {
+    assertThrows(IllegalArgumentException::class.java) {
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              externalTool {
+                name = "wed"
+                description = "a description"
+                async = true
+
+                addParameter("")
+
+                server {
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
+                }
+              }
+            }
+          }
+        }
+      }
+    }.also {
+      assertEquals(
+        "externalTool{} parameter name must not be blank",
+        it.message,
+      )
+    }
+  }
+
+  @Test
+  fun `Bad type with external tool decl`() {
+    assertThrows(IllegalArgumentException::class.java) {
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              externalTool {
+                name = "wed"
+                description = "a description"
+                async = true
+
+                addParameter("param1", "a description", Any::class)
+
+                server {
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
+                }
+              }
+            }
+          }
+        }
+      }
+    }.also {
+      assert(it.message.orEmpty().contains("externalTool{} parameter type must be one of"))
+    }
+  }
+
+  @Test
+  fun `Duplicate param names external tool decl`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              externalTool {
+                name = "wed"
+                description = "a description"
+                async = true
+
+                addParameter("param1", "a description")
+                addParameter("param1", "a description")
+
+                server {
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
+                }
+              }
+            }
+          }
+        }
+      }
+    }.also {
+      assert(it.message.orEmpty().contains("already exists"))
+    }
+  }
+
+  @Test
+  fun `check parameters with external tool decl`() {
+    val response =
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              externalTool {
+                name = "wed"
+                description = "a description"
+                async = true
+
+                addParameter("param1", "a description")
+                addParameter("param2", "a description")
+                addParameter("param3", "a description", type = Int::class)
+
+                server {
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
+                }
+              }
+            }
+          }
+        }
+      }
+    val je = response.toJsonElement()
+    val tool = je.tools().first().jsonObject
+    // zzz
+//    val function = tool["function"]?.jsonObject!!
+//    println(function.get("parameters.properties")?.toJsonString())
+//    assertEquals(3, tool["function.parameters.properties"]?.jsonObject?.keys?.size  )
+  }
+
+  @Test
   fun `multiple server with external tool decl`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
