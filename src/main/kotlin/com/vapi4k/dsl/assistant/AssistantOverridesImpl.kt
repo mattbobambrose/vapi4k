@@ -124,9 +124,7 @@ data class AssistantOverridesImpl internal constructor(
 
   override var videoRecordingEnabled: Boolean?
     get() = assistantOverridesDto.artifactPlanDto.videoRecordingEnabled
-    set(value) {
-      assistantOverridesDto.artifactPlanDto.videoRecordingEnabled = value
-    }
+    set(value) = run { assistantOverridesDto.artifactPlanDto.videoRecordingEnabled = value }
 
   override fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =
     voicemailDetectionUnion(block)

@@ -39,9 +39,7 @@ data class AssistantIdImpl internal constructor(
   AssistantId {
   override var id
     get() = assistantIdProperties.assistantId
-    set(value) {
-      assistantIdProperties.assistantId = value
-    }
+    set(value) = run { assistantIdProperties.assistantId = value }
 
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit) =
     AssistantOverridesImpl(

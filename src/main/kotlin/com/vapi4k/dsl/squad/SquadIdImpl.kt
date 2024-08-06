@@ -29,7 +29,5 @@ data class SquadIdImpl internal constructor(
 ) : SquadId {
   override var id
     get() = squadIdSource.squadId
-    set(value) {
-      squadIdSource.squadId = value
-    }
+    set(value) = run { squadIdSource.squadId = value }
 }

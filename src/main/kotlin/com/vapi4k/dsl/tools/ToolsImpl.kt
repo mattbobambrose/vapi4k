@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.api.tools.ExternalTool
 import com.vapi4k.api.tools.Tool
 import com.vapi4k.api.tools.ToolWithMetaData
 import com.vapi4k.api.tools.ToolWithServer
@@ -43,6 +44,15 @@ data class ToolsImpl internal constructor(
     block: Tool.() -> Unit,
   ) = processFunctions(ToolType.FUNCTION, functions, obj) {
     ToolImpl(it).apply(block)
+  }
+
+  override fun externalTool(block: ExternalTool.() -> Unit) {
+    val toolDto = ToolDto()
+    val impl = ExternalToolImpl(toolDto).apply(block)
+    toolDto.functionDto
+    if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
+    if (!impl.serverChecker.wasCalled) error("externalTool{} must contain a server{} decl")
+    model.toolDtos += toolDto
   }
 
   override fun dtmf(
@@ -126,7 +136,7 @@ data class ToolsImpl internal constructor(
     implInitBlock: (ToolDto) -> Unit,
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
-      populateFunctionDto(model, obj, function, toolDto.function)
+      populateFunctionDto(model, obj, function, toolDto.functionDto)
       val sessionCacheId = getSessionCacheId()
       val application = (model.application as Vapi4kApplicationImpl)
       application.toolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
@@ -139,8 +149,8 @@ data class ToolsImpl internal constructor(
       // Apply block to tool
       implInitBlock(toolDto)
     }.also { toolDto ->
-      if (model.toolDtos.any { toolDto.function.name == it.function.name }) {
-        error("Duplicate tool name declared: ${toolDto.function.name}")
+      if (model.toolDtos.any { toolDto.functionDto.name == it.functionDto.name }) {
+        error("Duplicate tool name declared: ${toolDto.functionDto.name}")
       }
     }
   }

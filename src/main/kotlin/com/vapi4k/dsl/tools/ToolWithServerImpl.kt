@@ -14,15 +14,22 @@
  *
  */
 
-package com.vapi4k.dtos.functions
+package com.vapi4k.dsl.tools
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.vapi4k.api.tools.ToolWithServer
+import com.vapi4k.api.vapi4k.Server
+import com.vapi4k.dsl.vapi4k.ServerImpl
+import com.vapi4k.dtos.tools.ToolDto
+import com.vapi4k.utils.DuplicateChecker
 
-@Serializable
-data class FunctionDto(
-  var name: String = "",
-  var description: String = "",
-  @SerialName("parameters")
-  val parametersDto: FunctionParametersDto = FunctionParametersDto(),
-)
+open class ToolWithServerImpl internal constructor(
+  toolDto: ToolDto,
+) : ToolImpl(toolDto),
+  ToolWithServer {
+  internal val serverChecker = DuplicateChecker()
+
+  override fun server(block: Server.() -> Unit): Server {
+    serverChecker.check("externalTool{} contains multiple server{} decls")
+    return ServerImpl(toolDto.server).apply(block)
+  }
+}

@@ -14,15 +14,21 @@
  *
  */
 
-package com.vapi4k.dtos.functions
+package com.vapi4k.api.tools
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import kotlin.reflect.KClass
 
-@Serializable
-data class FunctionDto(
-  var name: String = "",
-  var description: String = "",
-  @SerialName("parameters")
-  val parametersDto: FunctionParametersDto = FunctionParametersDto(),
-)
+@AssistantDslMarker
+interface ExternalTool : ToolWithServer {
+  var name: String
+  var description: String
+  var async: Boolean?
+
+  fun addParameter(
+    name: String,
+    description: String = "",
+    type: KClass<*> = String::class,
+    required: Boolean = true,
+  )
+}

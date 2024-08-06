@@ -27,6 +27,8 @@ interface Tools {
     block: Tool.() -> Unit = {},
   )
 
+  fun externalTool(block: ExternalTool.() -> Unit = {})
+
   fun dtmf(
     obj: Any,
     vararg functions: KFunction<*>,

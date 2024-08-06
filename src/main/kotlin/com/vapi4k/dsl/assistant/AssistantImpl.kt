@@ -97,9 +97,7 @@ data class AssistantImpl internal constructor(
   override val artifactPlanDto get() = assistantDto.artifactPlanDto
   override var videoRecordingEnabled: Boolean?
     get() = assistantDto.artifactPlanDto.videoRecordingEnabled
-    set(value) {
-      assistantDto.artifactPlanDto.videoRecordingEnabled = value
-    }
+    set(value) = run { assistantDto.artifactPlanDto.videoRecordingEnabled = value }
 
   override fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =
     voicemailDetectionUnion(block)

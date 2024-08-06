@@ -20,6 +20,7 @@ import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.tools
 import kotlinx.serialization.json.jsonObject
@@ -57,7 +58,7 @@ class ModelTests {
   }
 
   @Test
-  fun `duplicate server decls`() {
+  fun `missing external tool name decls`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -65,11 +66,103 @@ class ModelTests {
             modelType = OpenAIModelType.GPT_3_5_TURBO
 
             tools {
-              dtmf(WeatherLookupService1()) {
+              externalTool {
                 server {
-                  url = "zzz"
-                  secret = "123"
-                  timeoutSeconds = 10
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
+                }
+              }
+            }
+          }
+        }
+      }
+    }.also {
+      assertEquals(
+        "externalTool{} parameter name is required",
+        it.message,
+      )
+    }
+  }
+
+  @Test
+  fun `blank external tool name decls`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              externalTool {
+                name = ""
+
+                server {
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
+                }
+              }
+            }
+          }
+        }
+      }
+    }.also {
+      assertEquals(
+        "externalTool{} parameter name is required",
+        it.message,
+      )
+    }
+  }
+
+  @Test
+  fun `Check description with external tool decl`() {
+    val response =
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              externalTool {
+                name = "wed"
+                description = "a description"
+                async = true
+
+                server {
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
+                }
+              }
+            }
+          }
+        }
+      }
+    val je = response.toJsonElement()
+    val tool = je.tools().first().jsonObject
+    println(tool.toJsonString())
+    assertEquals("wed", tool["function"]?.stringValue("name"))
+    assertEquals("a description", tool["function"]?.stringValue("description"))
+    assertEquals("true", tool.stringValue("async"))
+  }
+
+  @Test
+  fun `multiple server with external tool decl`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              externalTool {
+                name = "wed"
+
+                server {
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
                 }
                 server {
                   url = "yyy"
@@ -83,7 +176,31 @@ class ModelTests {
       }
     }.also {
       assertEquals(
-        "tool{} already has a server{} decl",
+        "externalTool{} contains multiple server{} decls",
+        it.message,
+      )
+    }
+  }
+
+  @Test
+  fun `missing server with external tool decl`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              externalTool {
+                name = "wed"
+              }
+            }
+          }
+        }
+      }
+    }.also {
+      assertEquals(
+        "externalTool{} must contain a server{} decl",
         it.message,
       )
     }

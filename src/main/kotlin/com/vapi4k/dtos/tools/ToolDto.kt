@@ -21,13 +21,15 @@ import com.vapi4k.dsl.tools.ToolWithMetaDataProperties
 import com.vapi4k.dsl.tools.TransferToolProperties
 import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import com.vapi4k.dtos.functions.FunctionDto
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ToolDto(
   var type: ToolType = ToolType.UNSPECIFIED,
   var async: Boolean? = null,
-  val function: FunctionDto = FunctionDto(),
+  @SerialName("function")
+  val functionDto: FunctionDto = FunctionDto(),
   val messages: MutableList<CommonToolMessageDto> = mutableListOf(),
   val server: ServerDto = ServerDto(),
   override val metadata: MutableMap<String, String> = mutableMapOf(),
