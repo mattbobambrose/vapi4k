@@ -18,37 +18,15 @@ package com.vapi4k.api.toolservice
 
 import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
-import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
-class RequestCompleteMessages internal constructor() {
-  private val duplicateChecker = DuplicateChecker()
-  internal val messageList = mutableListOf<ToolMessageComplete>()
-
-  private val dtoConditions
-    get() = messageList.map { it.dto }.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
-
-  fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    duplicateChecker.check("tool{} already has a request complete message")
-    return ToolMessageCompleteDto().let { dto ->
-      ToolMessageComplete(dto).apply(block).also { messageList += it }
-    }
-  }
+interface RequestCompleteMessages {
+  fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
 
   fun condition(
     requiredCondition: ToolMessageCondition,
     vararg additionalConditions: ToolMessageCondition,
     block: RequestCompleteCondition.() -> Unit,
-  ) {
-    val conditionSet = mutableSetOf(requiredCondition).apply { addAll(additionalConditions) }
-    if (conditionSet in dtoConditions) {
-      error("condition(${conditionSet.joinToString()}){} duplicates an existing condition{}")
-    }
-    RequestCompleteCondition(this, conditionSet).apply(block)
-    if (conditionSet !in dtoConditions) {
-      error("condition(${conditionSet.joinToString()}){} must have at least one message")
-    }
-  }
+  )
 }

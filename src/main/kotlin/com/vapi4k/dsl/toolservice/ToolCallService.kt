@@ -23,8 +23,6 @@ import com.vapi4k.api.toolservice.RequestFailedMessages
 import kotlinx.serialization.json.JsonElement
 
 abstract class ToolCallService {
-  lateinit var toolCallServiceInfo: String
-
   open fun onToolCallComplete(
     toolCallRequest: JsonElement,
     result: String,
@@ -36,7 +34,8 @@ abstract class ToolCallService {
   ): List<ToolMessageFailed> = emptyList()
 
   fun requestCompleteMessages(block: RequestCompleteMessages.() -> Unit) =
-    RequestCompleteMessages().apply(block).messageList
+    RequestCompleteMessagesImpl().apply(block).messageList
 
-  fun requestFailedMessages(block: RequestFailedMessages.() -> Unit) = RequestFailedMessages().apply(block).messageList
+  fun requestFailedMessages(block: RequestFailedMessages.() -> Unit) =
+    RequestFailedMessagesImpl().apply(block).messageList
 }

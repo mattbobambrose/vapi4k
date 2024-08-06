@@ -18,22 +18,8 @@ package com.vapi4k.api.toolservice
 
 import com.vapi4k.api.tools.ToolMessageFailed
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.tools.ToolMessageCondition
-import com.vapi4k.dtos.tools.ToolMessageFailedDto
-import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
-class RequestFailedCondition internal constructor(
-  private val failedMessages: RequestFailedMessages,
-  private val conditionSet: Set<ToolMessageCondition>,
-) {
-  private val duplicateChecker = DuplicateChecker()
-
-  fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    duplicateChecker.check("condition${conditionSet.joinToString()}{} already has a requestFailedMessage{}")
-    return ToolMessageFailedDto().let { dto ->
-      dto.conditions.addAll(conditionSet)
-      ToolMessageFailed(dto).apply(block).also { failedMessages.messageList += it }
-    }
-  }
+interface RequestFailedCondition {
+  fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed
 }

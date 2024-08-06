@@ -26,8 +26,8 @@ import com.vapi4k.utils.AssistantCacheIdSource
 class Save {
   private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
 
-  fun call(block: Call.() -> Unit): CallRequestDto =
-    CallRequestDto().also {
+  fun call(block: Call.() -> Unit): Call =
+    CallRequestDto().let {
       CallImpl(SessionCacheId.UNSPECIFIED_SESSION_CACHE_ID, assistantCacheIdSource, it).apply(block)
     }
 }

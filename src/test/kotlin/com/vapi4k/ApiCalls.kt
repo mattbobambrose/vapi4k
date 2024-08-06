@@ -18,6 +18,7 @@ package com.vapi4k
 
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.dsl.call.VapiApiImpl
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.vapiApi
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking
@@ -104,7 +105,7 @@ class ApiCalls {
 
   @Test
   fun `declare AssistantOverrides without an Assistant or AssistantId Decl`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {

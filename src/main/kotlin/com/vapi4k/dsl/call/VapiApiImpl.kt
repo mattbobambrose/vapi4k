@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.call
 
 import com.typesafe.config.ConfigFactory
+import com.vapi4k.api.call.Call
 import com.vapi4k.api.call.Phone
 import com.vapi4k.api.call.Save
 import com.vapi4k.api.call.VapiApi
@@ -51,7 +52,7 @@ class VapiApiImpl private constructor(
   internal val config: ApplicationConfig,
   private val authString: String,
 ) : VapiApi {
-  override fun phone(block: Phone.() -> CallRequestDto): HttpResponse =
+  override fun phone(block: Phone.() -> Call): HttpResponse =
     runBlocking {
       val phone = Phone()
       val callRequest =
@@ -89,7 +90,7 @@ class VapiApiImpl private constructor(
         .getOrThrow()
     }
 
-  override fun save(block: Save.() -> CallRequestDto) =
+  override fun save(block: Save.() -> Call) =
     runBlocking {
       val callRequest =
         Save().runCatching(block)
@@ -138,7 +139,7 @@ class VapiApiImpl private constructor(
       bearerAuth(authString)
     }
 
-    fun vapiApi(authString: String = ""): VapiApiImpl {
+    fun vapiApi(authString: String = ""): VapiApi {
       val config = HoconApplicationConfig(ConfigFactory.load())
       val apiAuth =
         authString.ifEmpty {

@@ -27,6 +27,6 @@ class Phone {
   internal val sessionCacheId = Utils.nextSessionCacheId()
   private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
 
-  fun call(block: Call.() -> Unit): CallRequestDto =
-    CallRequestDto().also { CallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
+  fun call(block: Call.() -> Unit): Call =
+    CallRequestDto().let { CallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
 }

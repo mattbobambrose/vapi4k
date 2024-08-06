@@ -18,14 +18,13 @@ package com.vapi4k.api.call
 
 import com.vapi4k.api.call.enums.ApiObjectType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.api.CallRequestDto
 import io.ktor.client.statement.HttpResponse
 
 @AssistantDslMarker
 interface VapiApi {
-  fun phone(block: Phone.() -> CallRequestDto): HttpResponse
+  fun phone(block: Phone.() -> Call): HttpResponse
 
-  fun save(block: Save.() -> CallRequestDto): HttpResponse
+  fun save(block: Save.() -> Call): HttpResponse
 
   fun list(objectType: ApiObjectType): HttpResponse
 

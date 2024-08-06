@@ -18,22 +18,8 @@ package com.vapi4k.api.toolservice
 
 import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.tools.ToolMessageCompleteDto
-import com.vapi4k.dtos.tools.ToolMessageCondition
-import com.vapi4k.utils.DuplicateChecker
 
 @AssistantDslMarker
-class RequestCompleteCondition internal constructor(
-  private val completeMessages: RequestCompleteMessages,
-  private val conditionSet: Set<ToolMessageCondition>,
-) {
-  private val duplicateChecker = DuplicateChecker()
-
-  fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    duplicateChecker.check("condition${conditionSet.joinToString()}{} already has a requestCompleteMessage{}")
-    return ToolMessageCompleteDto().let { dto ->
-      dto.conditions.addAll(conditionSet)
-      ToolMessageComplete(dto).apply(block).also { completeMessages.messageList += it }
-    }
-  }
+interface RequestCompleteCondition {
+  fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
 }
