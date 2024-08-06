@@ -35,17 +35,18 @@ import com.vapi4k.utils.DuplicateChecker
 open class ToolImpl internal constructor(
   internal val toolDto: ToolDto,
 ) : Tool {
-  private val requestStartChecker = DuplicateChecker()
-  private val requestCompleteChecker = DuplicateChecker()
-  private val requestFailedChecker = DuplicateChecker()
-  private val requestDelayedChecker = DuplicateChecker()
+  private val startChecker = DuplicateChecker()
+  private val completeChecker = DuplicateChecker()
+  private val failedChecker = DuplicateChecker()
+  private val delayedChecker = DuplicateChecker()
+  private val serverChecker = DuplicateChecker()
 
   internal val messages get() = toolDto.messages
   private val dtoConditions
     get() = messages.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
-    requestStartChecker.check("tool{} already has a request start message")
+    startChecker.check("tool{} already has a request start message")
     return ToolMessageStartDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageStart(dto).apply(block)
@@ -53,7 +54,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    requestCompleteChecker.check("tool{} already has a request complete message")
+    completeChecker.check("tool{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageComplete(dto).apply(block)
@@ -61,7 +62,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    requestFailedChecker.check("tool{} already has a request failed message")
+    failedChecker.check("tool{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageFailed(dto).apply(block)
@@ -69,7 +70,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed {
-    requestDelayedChecker.check("tool{} already has a request delayed message")
+    delayedChecker.check("tool{} already has a request delayed message")
     return ToolMessageDelayedDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageDelayed(dto).apply(block)
@@ -91,5 +92,8 @@ open class ToolImpl internal constructor(
     }
   }
 
-  override fun server(block: Server.() -> Unit): Server = ServerImpl(toolDto.server).apply(block)
+  override fun server(block: Server.() -> Unit): Server {
+    serverChecker.check("tool{} already has a server{} decl")
+    return ServerImpl(toolDto.server).apply(block)
+  }
 }

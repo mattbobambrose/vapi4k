@@ -17,8 +17,11 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.api.functions.Functions
-import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
+import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
+import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
+import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.functions.FunctionDto
@@ -34,14 +37,14 @@ data class FunctionsImpl internal constructor(
   ) {
     val application = model.application as Vapi4kApplicationImpl
     if (functions.isEmpty()) {
-      FunctionUtils.verifyObjectHasOnlyOneToolCall(obj)
+      verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
-      FunctionUtils.verifyIsValidReturnType(false, function)
+      verifyIsValidReturnType(false, function)
       addFunction(application, obj, function)
     } else {
       functions.forEach { function ->
-        FunctionUtils.verifyIsToolCall(false, function)
-        FunctionUtils.verifyIsValidReturnType(false, function)
+        verifyIsToolCall(false, function)
+        verifyIsValidReturnType(false, function)
         addFunction(application, obj, function)
       }
     }
@@ -54,13 +57,13 @@ data class FunctionsImpl internal constructor(
   ) {
     model.functionDtos +=
       FunctionDto().also { functionDto ->
-        FunctionUtils.populateFunctionDto(ToolType.FUNCTION, model, obj, function, functionDto)
+        populateFunctionDto(model, obj, function, functionDto)
         val sessionCacheId =
           if (model.sessionCacheId.isNotSpecified())
             model.sessionCacheId
           else
             model.messageCallId.toSessionCacheId()
-        application.toolCache.addToCache(sessionCacheId, model.assistantCacheId, ToolType.FUNCTION, obj, function)
+        application.toolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
       }.also { func ->
         if (model.functionDtos.any { func.name == it.name }) {
           error("Duplicate function name declared: ${func.name}")

@@ -20,8 +20,8 @@ import com.vapi4k.api.vapi4k.Server
 import com.vapi4k.dtos.tools.ServerDto
 
 interface ServerProperties {
-  var serverUrl: String
-  var serverSecret: String
+  var url: String
+  var secret: String
   var timeoutSeconds: Int
 }
 

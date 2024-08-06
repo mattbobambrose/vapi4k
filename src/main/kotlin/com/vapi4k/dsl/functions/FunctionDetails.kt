@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.booleanValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
@@ -39,7 +38,6 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 
 class FunctionDetails internal constructor(
-  val toolType: ToolType,
   val obj: Any,
   val function: KFunction<*>,
 ) {

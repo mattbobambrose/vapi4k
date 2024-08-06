@@ -16,13 +16,79 @@
 
 package com.vapi4k
 
+import com.vapi4k.AssistantTest.Companion.newRequestContext
+import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.assistantResponse
+import com.vapi4k.utils.tools
+import kotlinx.serialization.json.jsonObject
+import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ModelTests {
   @Test
-  fun `model details`() {
-    val p = 1
-    assertEquals(1, p)
+  fun `tool server details`() {
+    val response =
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              tool(WeatherLookupService1()) {
+                server {
+                  url = "zzz"
+                  secret = "123"
+                  timeoutSeconds = 10
+                }
+              }
+            }
+
+          }
+        }
+      }
+
+    val je = response.toJsonElement()
+    val server = je.tools().first().jsonObject.get("server") ?: error("server not found")
+    assertEquals("zzz", server.stringValue("url"))
+    assertEquals("123", server.stringValue("secret"))
+    assertEquals("10", server.stringValue("timeoutSeconds"))
+  }
+
+  @Test
+  fun `duplicate server decls`() {
+    assertThrows(IllegalStateException::class.java) {
+      assistantResponse(newRequestContext()) {
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+
+            tools {
+              tool(WeatherLookupService1()) {
+                server {
+                  url = "zzz"
+                  secret = "123"
+                  timeoutSeconds = 10
+                }
+                server {
+                  url = "yyy"
+                  secret = "456"
+                  timeoutSeconds = 5
+                }
+              }
+            }
+
+          }
+        }
+      }
+
+    }.also {
+      assertEquals(
+        "tool{} already has a server{} decl",
+        it.message,
+      )
+    }
   }
 }

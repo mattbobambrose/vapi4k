@@ -24,20 +24,26 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
+// These are outside the object to improve auto-imports prompts in IJ
+private fun JsonElement.element(key: String) =
+  jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
+
+operator fun JsonElement.get(vararg keys: String): JsonElement =
+  keys.flatMap { it.split(".") }
+    .fold(this) { acc, key -> acc.element(key) }
+
 object JsonElementUtils {
-  val prettyFormat by lazy { Json { prettyPrint = true } }
+  val prettyFormat by lazy {
+    Json {
+      prettyPrint = true
+      prettyPrintIndent = "  "
+    }
+  }
   val rawFormat by lazy { Json { prettyPrint = false } }
 
   val JsonElement.stringValue get() = jsonPrimitive.content
   val JsonElement.intValue get() = jsonPrimitive.content.toInt()
   val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
-
-  private fun JsonElement.element(key: String) =
-    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
-
-  operator fun JsonElement.get(vararg keys: String): JsonElement =
-    keys.flatMap { it.split(".") }
-      .fold(this) { acc, key -> acc.element(key) }
 
   fun JsonElement.stringValue(key: String) = get(key).stringValue
 

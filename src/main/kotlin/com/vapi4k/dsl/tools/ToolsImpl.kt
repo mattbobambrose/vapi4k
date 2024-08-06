@@ -184,10 +184,10 @@ data class ToolsImpl internal constructor(
     implInitBlock: (ToolDto) -> Unit,
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
-      populateFunctionDto(toolType, model, obj, function, toolDto.function)
+      populateFunctionDto(model, obj, function, toolDto.function)
       val sessionCacheId = getSessionCacheId()
       val application = (model.application as Vapi4kApplicationImpl)
-      application.toolCache.addToCache(sessionCacheId, model.assistantCacheId, toolType, obj, function)
+      application.toolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
 
       with(toolDto) {
         type = toolType

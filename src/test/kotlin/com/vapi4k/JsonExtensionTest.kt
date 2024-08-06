@@ -16,10 +16,10 @@
 
 package com.vapi4k
 
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.utils.JsonUtils.toObjectList
 import kotlinx.serialization.Serializable
 import kotlin.test.Test

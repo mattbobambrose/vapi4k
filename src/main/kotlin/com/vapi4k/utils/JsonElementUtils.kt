@@ -18,9 +18,9 @@ package com.vapi4k.utils
 
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isToolCall
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray

@@ -18,9 +18,9 @@ package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.GroqModelType
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
 import com.vapi4k.api.voice.enums.PlayHTVoiceEmotionType

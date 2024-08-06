@@ -17,9 +17,9 @@
 package com.vapi4k
 
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.tools
 import com.vapi4k.utils.withTestApplication

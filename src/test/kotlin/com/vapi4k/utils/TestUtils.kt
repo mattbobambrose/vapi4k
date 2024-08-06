@@ -21,10 +21,10 @@ import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.containsKey
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.common.EnvVar.Companion.defaultServerPath
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
@@ -54,7 +54,7 @@ fun assistantResponse(
     error("assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
 }
 
-fun JsonElement.tools() = get("assistant.model.tools").toJsonElementList()
+fun JsonElement.tools() = this.get("assistant.model.tools").toJsonElementList()
 
 fun JsonElement.firstTool() = tools().first()
 

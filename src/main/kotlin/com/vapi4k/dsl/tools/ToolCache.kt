@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.functions.FunctionDetails
@@ -42,7 +41,6 @@ internal class ToolCache {
   fun addToCache(
     sessionCacheId: SessionCacheId,
     assistantCacheId: AssistantCacheId,
-    toolType: ToolType,
     obj: Any,
     function: KFunction<*>,
   ) {
@@ -52,7 +50,7 @@ internal class ToolCache {
     val funcDetails = funcInfo.functions[toolFuncName]
 
     if (funcDetails.isNull()) {
-      val newFuncDetails = FunctionDetails(toolType, obj, function)
+      val newFuncDetails = FunctionDetails(obj, function)
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {

@@ -34,12 +34,16 @@ object SimpleAssistant {
         modelType = OpenAIModelType.GPT_4_TURBO
         systemMessage = "You're a weather lookup service"
 
+        functions {
+          function(WeatherLookupService1(), WeatherLookupService1::getWeatherByCity1)
+        }
+
         tools {
-          tool(WeatherLookupService1()) {
-            requestStartMessage {
-              content = "Default request start weather lookup"
-            }
-          }
+//          tool(WeatherLookupService1()) {
+//            requestStartMessage {
+//              content = "Default request start weather lookup"
+//            }
+//          }
 
           tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
             requestStartMessage {
@@ -47,8 +51,8 @@ object SimpleAssistant {
             }
 
             server {
-              serverUrl = "http://localhost:8080/toolCall"
-              serverSecret = "456"
+              url = "http://localhost:8080/toolCall"
+              secret = "456"
               timeoutSeconds = 20
             }
           }

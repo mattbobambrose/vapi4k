@@ -18,7 +18,6 @@ package com.vapi4k.api.vapi4k.utils
 
 import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.containsKey
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 

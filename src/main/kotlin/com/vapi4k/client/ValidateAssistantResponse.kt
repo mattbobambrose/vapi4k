@@ -19,11 +19,11 @@ package com.vapi4k.client
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantIdResponse
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantResponse
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isSquadResponse
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
