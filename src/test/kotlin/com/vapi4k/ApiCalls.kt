@@ -29,7 +29,7 @@ import org.junit.Test
 class ApiCalls {
   @Test
   fun `multiple Assistant Decls`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -48,7 +48,7 @@ class ApiCalls {
 
   @Test
   fun `multiple AssistantId Decls`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -67,7 +67,7 @@ class ApiCalls {
 
   @Test
   fun `combination of Assistant and AssistantId Decls`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -86,7 +86,7 @@ class ApiCalls {
 
   @Test
   fun `multiple AssistantOverrides Decls`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -122,7 +122,7 @@ class ApiCalls {
   companion object {
     @JvmStatic
     fun main(args: Array<String>) {
-      val api = vapiApi("123-445-666")
+      val api = vapiApi("123-445-666") as VapiApiImpl
       val callResp =
         api.phone {
           call {

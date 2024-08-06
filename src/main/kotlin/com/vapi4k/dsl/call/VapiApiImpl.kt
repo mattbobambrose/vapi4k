@@ -29,7 +29,6 @@ import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
-import com.vapi4k.dtos.api.CallRequestDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
@@ -82,7 +81,7 @@ class VapiApiImpl private constructor(
       httpResponse
     }
 
-  internal fun test(block: Phone.() -> CallRequestDto) =
+  internal fun test(block: Phone.() -> Call) =
     runBlocking {
       Phone().runCatching(block)
         .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
