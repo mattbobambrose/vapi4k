@@ -35,11 +35,11 @@ object SimpleAssistant {
         systemMessage = "You're a weather lookup service"
 
         tools {
-//          tool(WeatherLookupService1()) {
-//            requestStartMessage {
-//              content = "Default request start weather lookup"
-//            }
-//          }
+          tool(WeatherLookupService1()) {
+            requestStartMessage {
+              content = "Default request start weather lookup"
+            }
+          }
 
           externalTool {
             name = "wed"
