@@ -17,14 +17,15 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.enums.NeetsVoiceIdType
-import com.vapi4k.api.voice.enums.PunctuationType
 
-interface NeetsVoiceProperties {
+interface NeetsVoiceProperties : CommonVoiceProperties {
+  /**
+  This enables specifying a voice that doesn't already exist as an NeetsVoiceIdType enum.
+   */
   var customVoiceId: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
+
+  /**
+  This is the provider-specific ID that will be used.
+   */
   var voiceIdType: NeetsVoiceIdType
 }

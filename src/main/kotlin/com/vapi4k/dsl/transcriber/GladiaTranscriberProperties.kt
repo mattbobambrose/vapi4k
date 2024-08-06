@@ -20,12 +20,46 @@ import com.vapi4k.api.model.enums.GladiaModelType
 import com.vapi4k.api.transcriber.enums.GladiaLanguageType
 
 interface GladiaTranscriberProperties {
+  /**
+  If true, audio will be pre-processed to improve accuracy but latency will increase. Default value is false.
+   */
   var audioEnhancer: Boolean?
+
+  /**
+  This enables specifying a language that doesn't already exist as an GladiaLanguageType enum.
+   */
   var customLanguage: String
+
+  /**
+  This enables specifying a model that doesn't already exist as an GladiaModelType enum.
+   */
   var customModel: String
+
+  /**
+  Defines how the transcription model detects the audio language. Default value is 'automatic single language'.
+   */
   var languageBehavior: String
+
+  /**
+  If prosody is true, you will get a transcription that can contain prosodies i.e. (laugh) (giggles) (malefic laugh) (toss) (music)… Default value is false.
+   */
   var prosody: Boolean?
+
+  /**
+  Defines the language to use for the transcription. Required when languageBehaviour is 'manual'.
+   */
   var transcriberLanguage: GladiaLanguageType
+
+  /**
+  This is the Gladia model that will be used. Default is 'fast'
+   */
   var transcriberModel: GladiaModelType
+
+  /**
+  Provides a custom vocabulary to the model to improve accuracy of transcribing context specific words, technical terms,
+  names, etc. If empty, this argument is ignored. ⚠️ Warning ⚠️: Please be aware that the transcription_hint field has
+  a character limit of 600. If you provide a transcription_hint longer than 600 characters, it will be automatically
+  truncated to meet this limit.
+   */
   var transcriptionHint: String
 }

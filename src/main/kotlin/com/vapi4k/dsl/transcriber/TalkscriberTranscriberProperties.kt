@@ -20,8 +20,24 @@ import com.vapi4k.api.transcriber.enums.TalkscriberLanguageType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 
 interface TalkscriberTranscriberProperties {
+  /**
+  This enables specifying a language that doesn't already exist as an TalkscriberLanguageType enum.
+   */
   var customLanguage: String
+
+  /**
+  This enables specifying a model that doesn't already exist as an TalkscriberModelType enum.
+   */
   var customModel: String
+
+  /**
+  This is the language that will be set for the transcription. The list of languages Whisper supports can be found
+  here: <a href="https://github.com/openai/whisper/blob/main/whisper/tokenizer.py" target="_blank">https://github.com/openai/whisper/blob/main/whisper/tokenizer.py</a>
+   */
   var transcriberLanguage: TalkscriberLanguageType
+
+  /**
+  This is the model that will be used for the transcription.
+   */
   var transcriberModel: TalkscriberModelType
 }

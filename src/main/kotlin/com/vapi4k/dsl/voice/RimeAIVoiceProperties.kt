@@ -16,19 +16,32 @@
 
 package com.vapi4k.dsl.voice
 
-import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.api.voice.enums.RimeAIVoiceIdType
 import com.vapi4k.api.voice.enums.RimeAIVoiceModelType
 
-interface RimeAIVoiceProperties {
+interface RimeAIVoiceProperties : CommonVoiceProperties {
+  /**
+  This enables specifying a model that doesn't already exist as an ElevenLabsVoiceModelType enum.
+   */
   var customModel: String
+
+  /**
+  This enables specifying a voice that doesn't already exist as an RimeAIVoiceIdType enum.
+   */
   var customVoiceId: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
+
+  /**
+  This is the model that will be used. Defaults to 'v1' when not specified.
+   */
   var modelType: RimeAIVoiceModelType
+
+  /**
+  This is the speed multiplier that will be used.
+   */
   var speed: Double
+
+  /**
+  This is the provider-specific ID that will be used.
+   */
   var voiceIdType: RimeAIVoiceIdType
 }

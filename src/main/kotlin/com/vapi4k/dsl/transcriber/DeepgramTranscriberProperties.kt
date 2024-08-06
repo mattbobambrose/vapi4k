@@ -20,10 +20,37 @@ import com.vapi4k.api.model.enums.DeepgramModelType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 
 interface DeepgramTranscriberProperties {
+  /**
+  This enables specifying a language that doesn't already exist as an DeepgramLanguageType enum.
+   */
   var customLanguage: String
+
+  /**
+  This enables specifying a model that doesn't already exist as an DeepgramModelType enum.
+   */
   var customModel: String
+
+  /**
+  These keywords are passed to the transcription model to help it pick up use-case specific words. Anything that may not
+  be a common word, like your company name, should be added here.
+   */
   val keywords: MutableSet<String>
+
+  /**
+  This will be use smart format option provided by Deepgram. It's default disabled because it can sometimes format
+  numbers as times sometimes, but it's getting better.
+   */
   var smartFormat: Boolean?
+
+  /**
+  This is the language that will be set for the transcription. The list of languages Deepgram supports can be found
+  here: <a href="https://developers.deepgram.com/docs/models-languages-overview" target="_blank">https://developers.deepgram.com/docs/models-languages-overview</a>
+   */
   var transcriberLanguage: DeepgramLanguageType
+
+  /**
+  This is the Deepgram model that will be used. A list of models can be found
+  here: <a href="https://developers.deepgram.com/docs/models-languages-overview" target="_blank">https://developers.deepgram.com/docs/models-languages-overview</a>
+   */
   var transcriberModel: DeepgramModelType
 }

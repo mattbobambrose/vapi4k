@@ -18,20 +18,51 @@ package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.enums.PlayHTVoiceEmotionType
 import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
-import com.vapi4k.api.voice.enums.PunctuationType
 
-interface PlayHTVoiceProperties {
+interface PlayHTVoiceProperties : CommonVoiceProperties {
+  /**
+  This enables specifying a voice that doesn't already exist as an PlayHTVoiceIdType enum.
+   */
   var customVoiceId: String
+
+  /**
+  An emotion to be applied to the speech.
+   */
   var emotion: PlayHTVoiceEmotionType
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
+
+  /**
+  This is the speed multiplier that will be used.
+   */
   var speed: Double
+
+  /**
+  A number between 1 and 30. Use lower numbers to to reduce how strong your chosen emotion will be. Higher numbers will
+  create a very emotional performance.
+   */
   var styleGuidance: Double
+
+  /**
+  A floating point number between 0, exclusive, and 2, inclusive. If equal to null or not provided, the model's default
+  temperature will be used. The temperature parameter controls variance. Lower temperatures result in more predictable
+  results, higher temperatures allow each run to vary more, so the voice may sound less like the baseline voice.
+   */
   var temperature: Double
+
+  /**
+  A number between 1 and 2. This number influences how closely the generated speech adheres to the input text. Use lower
+  values to create more fluid speech, but with a higher chance of deviating from the input text. Higher numbers will
+  make the generated speech more accurate to the input text, ensuring that the words spoken align closely with the
+  provided text.
+   */
   var textGuidance: Double
+
+  /**
+  A number between 1 and 6. Use lower numbers to reduce how unique your chosen voice will be compared to other voices.
+   */
   var voiceGuidance: Double
+
+  /**
+  This is the provider-specific ID that will be used.
+   */
   var voiceIdType: PlayHTVoiceIdType
 }

@@ -18,17 +18,30 @@ package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
-import com.vapi4k.api.voice.enums.PunctuationType
 
-interface CartesiaVoiceProperties {
+interface CartesiaVoiceProperties : CommonVoiceProperties {
+  /**
+  This enables specifying a language that doesn't already exist as an CartesiaVoiceLanguageType enum.
+   */
   var customLanguage: String
+
+  /**
+  This enables specifying a model that doesn't already exist as an CartesiaVoiceModelType enum.
+   */
   var customModel: String
-  var fillerInjectionEnabled: Boolean?
-  var inputMinCharacters: Int
-  var inputPreprocessingEnabled: Boolean?
-  val inputPunctuationBoundaries: MutableSet<PunctuationType>
-  var inputReformattingEnabled: Boolean?
+
+  /**
+  This is the language that will be used. This is optional and will default to the correct language for the voiceId.
+   */
   var languageType: CartesiaVoiceLanguageType
+
+  /**
+  This is the model that will be used. This is optional and will default to the correct model for the voiceId.
+   */
   var modelType: CartesiaVoiceModelType
+
+  /**
+  This is the provider-specific ID that will be used.
+   */
   var voiceId: String
 }

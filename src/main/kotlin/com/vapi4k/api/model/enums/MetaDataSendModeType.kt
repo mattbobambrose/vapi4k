@@ -27,8 +27,19 @@ import kotlinx.serialization.encoding.Encoder
 enum class MetaDataSendModeType(
   val desc: String,
 ) {
+  /**
+  `off` will not send any `metadata.payload` will look like `{ messages }`
+   */
   OFF("off"),
+
+  /**
+  `variable` will send `assistant.metadata` as a variable on the payload. payload will look like `{ messages, metadata }`
+   */
   VARIABLE("variable"),
+
+  /**
+  `destructured` will send `assistant.metadata` fields directly on the payload. payload will look like `{ messages, ...metadata }`
+   */
   DESTRUCTURED("destructured"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
   ;
