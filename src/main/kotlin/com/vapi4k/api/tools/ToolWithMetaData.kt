@@ -19,6 +19,6 @@ package com.vapi4k.api.tools
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
-interface ToolWithMetaData : Tool {
+interface ToolWithMetaData : ToolWithServer {
   val metadata: MutableMap<String, String>
 }

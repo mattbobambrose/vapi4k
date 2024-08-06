@@ -18,6 +18,7 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.api.tools.Tool
 import com.vapi4k.api.tools.ToolWithMetaData
+import com.vapi4k.api.tools.ToolWithServer
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.enums.ToolType
@@ -40,126 +41,74 @@ data class ToolsImpl internal constructor(
     obj: Any,
     vararg functions: KFunction<*>,
     block: Tool.() -> Unit,
-  ) {
-    processFunctions(ToolType.FUNCTION, functions, obj, block)
+  ) = processFunctions(ToolType.FUNCTION, functions, obj) {
+    ToolImpl(it).apply(block)
   }
 
   override fun dtmf(
     obj: Any,
     vararg functions: KFunction<*>,
-    block: Tool.() -> Unit,
-  ) {
-    processFunctions(ToolType.DTMF, functions, obj, block)
+    block: ToolWithServer.() -> Unit,
+  ) = processFunctions(ToolType.DTMF, functions, obj) {
+    ToolWithServerImpl(it).apply(block)
   }
 
   override fun endCall(
     obj: Any,
     vararg functions: KFunction<*>,
-    block: Tool.() -> Unit,
-  ) {
-    processFunctions(ToolType.END_CALL, functions, obj, block)
+    block: ToolWithServer.() -> Unit,
+  ) = processFunctions(ToolType.END_CALL, functions, obj) {
+    ToolWithServerImpl(it).apply(block)
   }
 
   override fun voiceMail(
     obj: Any,
     vararg functions: KFunction<*>,
-    block: Tool.() -> Unit,
-  ) {
-    processFunctions(ToolType.VOICEMAIL, functions, obj, block)
+    block: ToolWithServer.() -> Unit,
+  ) = processFunctions(ToolType.VOICEMAIL, functions, obj) {
+    ToolWithServerImpl(it).apply(block)
   }
 
   override fun ghl(
     obj: Any,
     vararg functions: KFunction<*>,
     block: ToolWithMetaData.() -> Unit,
-  ) {
-    processFunctionsWithMetaData(ToolType.GHL, functions, obj, block)
+  ) = processFunctions(ToolType.GHL, functions, obj) {
+    ToolWithMetaDataImpl(it).apply(block)
   }
 
   override fun make(
     obj: Any,
     vararg functions: KFunction<*>,
     block: ToolWithMetaData.() -> Unit,
-  ) {
-    processFunctionsWithMetaData(ToolType.MAKE, functions, obj, block)
+  ) = processFunctions(ToolType.MAKE, functions, obj) {
+    ToolWithMetaDataImpl(it).apply(block)
   }
 
   override fun transfer(
     obj: Any,
     vararg functions: KFunction<*>,
     block: TransferTool.() -> Unit,
-  ) {
-    processFunctionsWithDestinations(ToolType.TRANSFER_CALL, functions, obj, block)
+  ) = processFunctions(ToolType.TRANSFER_CALL, functions, obj) {
+    TransferToolImpl(it).apply(block)
   }
 
   private fun processFunctions(
     toolType: ToolType,
     functions: Array<out KFunction<*>>,
     obj: Any,
-    block: Tool.() -> Unit,
+    block: (ToolDto) -> Unit,
   ) {
     if (functions.isEmpty()) {
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(true, function)
-      addTool(toolType, obj, function) {
-        ToolImpl(it).apply(block)
-      }
+      addTool(toolType, obj, function) { block(it) }
     } else {
       functions.forEach { function ->
         verifyIsToolCall(true, function)
         verifyIsValidReturnType(true, function)
-        addTool(toolType, obj, function) {
-          ToolImpl(it).apply(block)
-        }
-      }
-    }
-  }
-
-  private fun processFunctionsWithMetaData(
-    toolType: ToolType,
-    functions: Array<out KFunction<*>>,
-    obj: Any,
-    block: ToolWithMetaData.() -> Unit,
-  ) {
-    if (functions.isEmpty()) {
-      verifyObjectHasOnlyOneToolCall(obj)
-      val function = obj.toolCallFunction
-      verifyIsValidReturnType(true, function)
-      addTool(toolType, obj, function) {
-        ToolWithMetaDataImpl(it).apply(block)
-      }
-    } else {
-      functions.forEach { function ->
-        verifyIsToolCall(true, function)
-        verifyIsValidReturnType(true, function)
-        addTool(toolType, obj, function) {
-          ToolWithMetaDataImpl(it).apply(block)
-        }
-      }
-    }
-  }
-
-  private fun processFunctionsWithDestinations(
-    toolType: ToolType,
-    functions: Array<out KFunction<*>>,
-    obj: Any,
-    block: TransferTool.() -> Unit,
-  ) {
-    if (functions.isEmpty()) {
-      verifyObjectHasOnlyOneToolCall(obj)
-      val function = obj.toolCallFunction
-      verifyIsValidReturnType(true, function)
-      addTool(toolType, obj, function) {
-        TransferToolImpl(it).apply(block)
-      }
-    } else {
-      functions.forEach { function ->
-        verifyIsToolCall(true, function)
-        verifyIsValidReturnType(true, function)
-        addTool(toolType, obj, function) {
-          TransferToolImpl(it).apply(block)
-        }
+        addTool(toolType, obj, function) { block(it) }
       }
     }
   }

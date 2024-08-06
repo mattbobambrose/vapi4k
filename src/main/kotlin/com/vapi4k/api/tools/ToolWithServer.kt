@@ -14,17 +14,12 @@
  *
  */
 
-package com.vapi4k.dsl.tools
+package com.vapi4k.api.tools
 
-import com.vapi4k.api.tools.ToolWithMetaData
-import com.vapi4k.dtos.tools.ToolDto
+import com.vapi4k.api.vapi4k.Server
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 
-interface ToolWithMetaDataProperties {
-  val metadata: MutableMap<String, String>
+@AssistantDslMarker
+interface ToolWithServer : Tool {
+  fun server(block: Server.() -> Unit): Server
 }
-
-class ToolWithMetaDataImpl internal constructor(
-  val dto: ToolDto,
-) : ToolWithServerImpl(dto),
-  ToolWithMetaDataProperties by dto,
-  ToolWithMetaData

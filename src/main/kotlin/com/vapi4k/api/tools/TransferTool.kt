@@ -22,7 +22,7 @@ import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
-interface TransferTool : Tool {
+interface TransferTool : ToolWithServer {
   fun assistantDestination(block: AssistantDestination.() -> Unit)
 
   fun numberDestination(block: NumberDestination.() -> Unit)

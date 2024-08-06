@@ -30,19 +30,19 @@ interface Tools {
   fun dtmf(
     obj: Any,
     vararg functions: KFunction<*>,
-    block: Tool.() -> Unit = {},
+    block: ToolWithServer.() -> Unit = {},
   )
 
   fun endCall(
     obj: Any,
     vararg functions: KFunction<*>,
-    block: Tool.() -> Unit = {},
+    block: ToolWithServer.() -> Unit = {},
   )
 
   fun voiceMail(
     obj: Any,
     vararg functions: KFunction<*>,
-    block: Tool.() -> Unit = {},
+    block: ToolWithServer.() -> Unit = {},
   )
 
   fun ghl(

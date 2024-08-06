@@ -45,7 +45,7 @@ object SimpleAssistant {
 //            }
 //          }
 
-          tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
+          dtmf(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
             requestStartMessage {
               content = "Default request start weather lookup"
             }

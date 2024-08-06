@@ -37,7 +37,7 @@ class ModelTests {
             modelType = OpenAIModelType.GPT_3_5_TURBO
 
             tools {
-              tool(WeatherLookupService1()) {
+              dtmf(WeatherLookupService1()) {
                 server {
                   url = "zzz"
                   secret = "123"
@@ -65,7 +65,7 @@ class ModelTests {
             modelType = OpenAIModelType.GPT_3_5_TURBO
 
             tools {
-              tool(WeatherLookupService1()) {
+              dtmf(WeatherLookupService1()) {
                 server {
                   url = "zzz"
                   secret = "123"

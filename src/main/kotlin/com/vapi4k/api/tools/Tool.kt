@@ -16,7 +16,6 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.api.vapi4k.Server
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.tools.ToolMessageCondition
 
@@ -35,6 +34,4 @@ interface Tool {
     vararg additionalConditions: ToolMessageCondition,
     block: ToolCondition.() -> Unit,
   )
-
-  fun server(block: Server.() -> Unit): Server
 }

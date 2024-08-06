@@ -22,6 +22,7 @@ import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.api.tools.ToolMessageDelayed
 import com.vapi4k.api.tools.ToolMessageFailed
 import com.vapi4k.api.tools.ToolMessageStart
+import com.vapi4k.api.tools.ToolWithServer
 import com.vapi4k.api.vapi4k.Server
 import com.vapi4k.dsl.vapi4k.ServerImpl
 import com.vapi4k.dtos.tools.ToolDto
@@ -32,6 +33,18 @@ import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.dtos.tools.ToolMessageStartDto
 import com.vapi4k.utils.DuplicateChecker
 
+open class ToolWithServerImpl internal constructor(
+  toolDto: ToolDto,
+) : ToolImpl(toolDto),
+  ToolWithServer {
+  private val serverChecker = DuplicateChecker()
+
+  override fun server(block: Server.() -> Unit): Server {
+    serverChecker.check("tool{} already has a server{} decl")
+    return ServerImpl(toolDto.server).apply(block)
+  }
+}
+
 open class ToolImpl internal constructor(
   internal val toolDto: ToolDto,
 ) : Tool {
@@ -39,7 +52,6 @@ open class ToolImpl internal constructor(
   private val completeChecker = DuplicateChecker()
   private val failedChecker = DuplicateChecker()
   private val delayedChecker = DuplicateChecker()
-  private val serverChecker = DuplicateChecker()
 
   internal val messages get() = toolDto.messages
   private val dtoConditions
@@ -90,10 +102,5 @@ open class ToolImpl internal constructor(
     if (conditionSet !in dtoConditions) {
       error("condition(${conditionSet.joinToString()}){} must have at least one message")
     }
-  }
-
-  override fun server(block: Server.() -> Unit): Server {
-    serverChecker.check("tool{} already has a server{} decl")
-    return ServerImpl(toolDto.server).apply(block)
   }
 }
