@@ -16,9 +16,9 @@
 
 package com.vapi4k
 
-import com.vapi4k.api.call.VapiApi.Companion.vapiApi
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.dsl.call.VapiApiImpl.Companion.vapiApi
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals

@@ -59,7 +59,7 @@ data class ToolCallResponse(
                           errorMessage = errorMsg
                         }
                         runCatching {
-                          application.toolCallCache.getFromCache(sessionCacheId)
+                          application.toolCache.getFromCache(sessionCacheId)
                             .getFunction(funcName)
                             .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
                             .invokeToolMethod(

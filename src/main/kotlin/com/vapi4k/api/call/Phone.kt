@@ -16,18 +16,17 @@
 
 package com.vapi4k.api.call
 
-import com.vapi4k.api.call.enums.ApiObjectType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.call.CallImpl
 import com.vapi4k.dtos.api.CallRequestDto
-import io.ktor.client.statement.HttpResponse
+import com.vapi4k.utils.AssistantCacheIdSource
+import com.vapi4k.utils.Utils
 
 @AssistantDslMarker
-interface VapiApi {
-  fun phone(block: Phone.() -> CallRequestDto): HttpResponse
+class Phone {
+  internal val sessionCacheId = Utils.nextSessionCacheId()
+  private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
 
-  fun save(block: Save.() -> CallRequestDto): HttpResponse
-
-  fun list(objectType: ApiObjectType): HttpResponse
-
-  fun delete(callId: String): HttpResponse
+  fun call(block: Call.() -> Unit): CallRequestDto =
+    CallRequestDto().also { CallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
 }

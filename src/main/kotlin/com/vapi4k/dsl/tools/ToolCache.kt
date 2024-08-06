@@ -39,9 +39,6 @@ internal class ToolCache {
   val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
     get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
 
-  fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
-    cacheMap[sessionCacheId] ?: error("Session cache id not found: $sessionCacheId")
-
   fun addToCache(
     sessionCacheId: SessionCacheId,
     assistantCacheId: AssistantCacheId,
@@ -62,6 +59,9 @@ internal class ToolCache {
       error("\"$toolFuncName\" already declared in cache at ${funcDetails.fqName} [$sessionCacheId]")
     }
   }
+
+  fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
+    cacheMap[sessionCacheId] ?: error("Session cache id not found: $sessionCacheId")
 
   fun removeFromCache(
     sessionCacheId: SessionCacheId,
@@ -112,10 +112,6 @@ internal class ToolCache {
     oldSessionCacheId: SessionCacheId,
     newSessionCacheKey: SessionCacheId,
   ) = swapKeys(oldSessionCacheId, newSessionCacheKey)
-
-  companion object {
-    val toolCallCache = ToolCache()
-  }
 }
 
 @Serializable

@@ -182,7 +182,7 @@ object ValidateAssistantResponse {
 
     h2 { +"Tools" }
 
-    val functionInfo = application.toolCallCache.getFromCache(sessionCacheId)
+    val functionInfo = application.toolCache.getFromCache(sessionCacheId)
 
     functions.forEach { function ->
       div {

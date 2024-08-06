@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 
-class FunctionDetails(
+class FunctionDetails internal constructor(
   val toolType: ToolType,
   val obj: Any,
   val function: KFunction<*>,

@@ -60,7 +60,7 @@ data class FunctionsImpl internal constructor(
             model.sessionCacheId
           else
             model.messageCallId.toSessionCacheId()
-        application.toolCallCache.addToCache(sessionCacheId, model.assistantCacheId, ToolType.FUNCTION, obj, function)
+        application.toolCache.addToCache(sessionCacheId, model.assistantCacheId, ToolType.FUNCTION, obj, function)
       }.also { func ->
         if (model.functionDtos.any { func.name == it.name }) {
           error("Duplicate function name declared: ${func.name}")

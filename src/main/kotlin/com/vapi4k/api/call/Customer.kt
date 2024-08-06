@@ -17,11 +17,8 @@
 package com.vapi4k.api.call
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.call.CustomerProperties
 import com.vapi4k.dtos.api.CustomerDto
-
-interface CustomerProperties {
-  var number: String
-}
 
 @AssistantDslMarker
 data class Customer internal constructor(

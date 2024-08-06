@@ -39,7 +39,7 @@ class FunctionResponse(
           val funcName = request.functionName
           val args = request.functionParameters
           runCatching {
-            application.toolCallCache.getFromCache(sessionCacheId)
+            application.toolCache.getFromCache(sessionCacheId)
               .getFunction(funcName)
               .invokeToolMethod(
                 isTool = false,

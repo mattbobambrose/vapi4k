@@ -16,14 +16,12 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isToolCall
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.get
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 
@@ -42,8 +40,4 @@ object JsonElementUtils {
   private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
 
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
-
-  private val EMPTY_REQUEST_CONTEXT = AssistantRequestContext(Vapi4kApplicationImpl(), emptyJsonElement())
-
-  fun emptyRequestContext() = EMPTY_REQUEST_CONTEXT
 }

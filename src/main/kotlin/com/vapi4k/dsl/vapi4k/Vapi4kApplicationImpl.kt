@@ -34,11 +34,10 @@ import com.vapi4k.utils.Utils.isNull
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
-class Vapi4kApplicationImpl : Vapi4kApplication {
+class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
   internal val toolServers = mutableListOf<ToolServer>()
-  internal val toolCallCache = ToolCache()
-
+  internal val toolCache = ToolCache()
   internal var assistantRequest: (suspend AssistantResponse.() -> Unit)? = null
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()

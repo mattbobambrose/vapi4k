@@ -53,7 +53,6 @@ import com.vapi4k.common.EnvVar.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
@@ -177,19 +176,20 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get(CACHES_PATH) {
           call.respond(
             buildJsonObject {
-              config.applications.forEach { application ->
+              config.allApplications.forEach { application ->
                 put(
                   application.serverPathAsSegment,
-                  application.toolCallCache.cacheAsJson().toJsonElement()
+                  application.toolCache.cacheAsJson().toJsonElement()
                 )
               }
             }
           )
         }
         get(CLEAR_CACHES_PATH) {
-          config.applications.forEach { application ->
-            clearCacheResponse(application.toolCallCache)
+          config.allApplications.forEach { application ->
+            application.toolCache.clearToolCache()
           }
+          call.respondRedirect(CACHES_PATH)
         }
 
         get(VALIDATE_PATH) { validateRoot(config) }
@@ -214,11 +214,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       }
     }
   }
-}
-
-private suspend fun KtorCallContext.clearCacheResponse(toolCache: ToolCache) {
-  toolCache.clearToolCache()
-  call.respondRedirect(CACHES_PATH)
 }
 
 private suspend fun KtorCallContext.versionResponse() {
@@ -254,7 +249,7 @@ private suspend fun KtorCallContext.validateRoot(config: Vapi4kConfigImpl) {
             +"All Vapi4k Applications"
           }
           ul {
-            config.applications.forEach { application ->
+            config.allApplications.forEach { application ->
               li {
                 a {
                   href = "$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}"
@@ -371,7 +366,7 @@ private suspend fun KtorCallContext.assistantRequestResponse(
         END_OF_CALL_REPORT -> {
           if (application.eocrCacheRemovalEnabled) {
             val sessionCacheId = request.sessionCacheId
-            application.toolCallCache.removeFromCache(sessionCacheId) { funcInfo ->
+            application.toolCache.removeFromCache(sessionCacheId) { funcInfo ->
               logger.info { "EOCR removed ${funcInfo.functions.size} cache entries [${funcInfo.ageSecs}] " }
             } ?: logger.warn { "EOCR unable to find and remove cache entry [$sessionCacheId]" }
           }
@@ -436,9 +431,9 @@ private fun startCacheCleaningThread(config: Vapi4kConfigImpl) {
     while (true) {
       runCatching {
         Thread.sleep(pause.inWholeMilliseconds)
-        config.applications.forEach { application ->
+        config.allApplications.forEach { application ->
           logger.info { "Purging cache for ${application.serverPath}" }
-          application.toolCallCache.purgeToolCache(maxAge)
+          application.toolCache.purgeToolCache(maxAge)
         }
       }.onFailure { e ->
         logger.error(e) { "Error clearing cache: ${e.errorMsg}" }
@@ -457,7 +452,7 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
             coroutineScope {
               when (callback.type) {
                 REQUEST -> {
-                  config.applications
+                  config.allApplications
                     .filter { it == callback.application }
                     .forEach { application ->
                       with(application) {
@@ -476,7 +471,7 @@ private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback
                 }
 
                 RESPONSE -> {
-                  config.applications.forEach { application ->
+                  config.allApplications.forEach { application ->
                     with(application) {
                       if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
                         val resp =

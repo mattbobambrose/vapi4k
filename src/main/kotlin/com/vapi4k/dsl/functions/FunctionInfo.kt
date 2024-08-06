@@ -23,7 +23,7 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.time.DurationUnit
 
-class FunctionInfo {
+class FunctionInfo internal constructor() {
   val created: Instant = Clock.System.now()
   val functions = mutableMapOf<String, FunctionDetails>()
 
