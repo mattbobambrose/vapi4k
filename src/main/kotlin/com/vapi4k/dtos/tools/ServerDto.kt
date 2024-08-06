@@ -14,13 +14,17 @@
  *
  */
 
-package com.vapi4k.dtos
+package com.vapi4k.dtos.tools
 
+import com.vapi4k.dsl.vapi4k.ServerProperties
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ServerDto(
-  var timeoutSeconds: Int = -1,
-  var url: String = "",
-  var secret: String = "",
-)
+  @SerialName("url")
+  override var serverUrl: String = "",
+  @SerialName("secret")
+  override var serverSecret: String = "",
+  override var timeoutSeconds: Int = -1,
+) : ServerProperties

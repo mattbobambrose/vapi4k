@@ -18,16 +18,12 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.vapi4k.AssistantRequestContext
-import com.vapi4k.api.vapi4k.ToolServer
-import com.vapi4k.api.vapi4k.ToolServers
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.EnvVar
-import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ToolCache
-import com.vapi4k.dtos.vapi4k.ToolServerDto
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.DslUtils
 import com.vapi4k.utils.Utils.isNull
@@ -36,7 +32,6 @@ import kotlin.time.Duration
 
 class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
-  internal val toolServers = mutableListOf<ToolServer>()
   internal val toolCache = ToolCache()
   internal var assistantRequest: (suspend AssistantResponse.() -> Unit)? = null
 
@@ -55,10 +50,6 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
       assistantRequest = block
     else
       error("onAssistantRequest{} can be called only once per vapi4kApplication{}")
-  }
-
-  override fun toolServers(block: ToolServers.() -> Unit) {
-    ToolServersImpl(this).apply(block)
   }
 
   override fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
@@ -102,21 +93,4 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
     else
       error("onAssistantRequest{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
   }
-
-  private fun getEmptyToolServerName() = toolServers.firstOrNull { toolServer -> toolServer.name.isEmpty() }
-
-  private val defaultToolServer
-    by lazy {
-      ToolServer(ToolServerDto()).apply {
-        this.serverUrl = "$serverBaseUrl/${this@Vapi4kApplicationImpl.serverPathAsSegment}"
-        this.serverSecret = this@Vapi4kApplicationImpl.serverSecret
-      }
-    }
-
-  internal fun getToolServer(toolServerName: String) =
-    if (toolServerName.isEmpty())
-      getEmptyToolServerName() ?: defaultToolServer
-    else
-      toolServers.firstOrNull { toolServer -> toolServer.name == toolServerName }
-        ?: error("ToolServer name not found in the vapi4kApplication{}: $toolServerName")
 }

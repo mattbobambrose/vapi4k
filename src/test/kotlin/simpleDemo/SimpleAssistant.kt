@@ -41,11 +41,17 @@ object SimpleAssistant {
             }
           }
 
-//          tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
-//            requestStartMessage {
-//              content = "Default request start weather lookup"
-//            }
-//          }
+          tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
+            requestStartMessage {
+              content = "Default request start weather lookup"
+            }
+
+            server {
+              serverUrl = "http://localhost:8080/toolCall"
+              serverSecret = "456"
+              timeoutSeconds = 20
+            }
+          }
 
 //          tool(
 //            WeatherLookupService2(),

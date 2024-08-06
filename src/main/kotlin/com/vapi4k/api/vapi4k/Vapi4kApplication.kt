@@ -29,8 +29,6 @@ interface Vapi4kApplication {
 
   fun onAssistantRequest(block: suspend AssistantResponse.() -> Unit)
 
-  fun toolServers(block: ToolServers.() -> Unit)
-
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit)
 
   fun onRequest(

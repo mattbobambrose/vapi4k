@@ -17,14 +17,8 @@
 package com.vapi4k.server
 
 import com.vapi4k.BuildConfig
-import com.vapi4k.api.vapi4k.ToolServer
 import com.vapi4k.api.vapi4k.Vapi4kConfig
-import com.vapi4k.api.vapi4k.enums.RequestResponseType
-import com.vapi4k.api.vapi4k.enums.RequestResponseType.REQUEST
-import com.vapi4k.api.vapi4k.enums.RequestResponseType.RESPONSE
-import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
@@ -48,8 +42,6 @@ import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.EnvVar.Companion.isProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
-import com.vapi4k.common.EnvVar.TOOL_CACHE_CLEAN_PAUSE_MINS
-import com.vapi4k.common.EnvVar.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
@@ -58,12 +50,14 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
-import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
-import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
+import com.vapi4k.server.AdminJobs.RequestResponseCallback
+import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
+import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
+import com.vapi4k.server.AdminJobs.startCacheCleaningThread
+import com.vapi4k.server.AdminJobs.startCallbackThread
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
@@ -100,9 +94,6 @@ import io.ktor.util.pipeline.PipelineContext
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.h2
@@ -114,13 +105,9 @@ import kotlinx.html.script
 import kotlinx.html.stream.createHTML
 import kotlinx.html.title
 import kotlinx.html.ul
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import kotlin.concurrent.thread
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.measureTimedValue
 
 @Version(
@@ -154,10 +141,11 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   startCacheCleaningThread(config)
 
   environment?.monitor?.apply {
-    subscribe(ApplicationStarting) { it.environment.log.info("Vapi4kServer is starting") }
-    subscribe(ApplicationStarted) { it.environment.log.info("Vapi4kServer is started") }
-    subscribe(ApplicationStopped) { it.environment.log.info("Vapi4kServer is stopped") }
-    subscribe(ApplicationStopping) { it.environment.log.info("Vapi4kServer is stopping") }
+    val name = Vapi4kServer::class.simpleName
+    subscribe(ApplicationStarting) { it.environment.log.info("$name is starting") }
+    subscribe(ApplicationStarted) { it.environment.log.info("$name is started") }
+    subscribe(ApplicationStopped) { it.environment.log.info("$name is stopped") }
+    subscribe(ApplicationStopping) { it.environment.log.info("$name is stopping") }
   }
 
   with(application) {
@@ -202,15 +190,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         logger.info { "Adding POST serverPath endpoint: \"$serverPath\"" }
         get(serverPath) { call.respondText("$serverPath requires a post request", status = MethodNotAllowed) }
         post(serverPath) { processAssistantRequests(application, callbackChannel) }
-
-        application.toolServers.forEach { toolServer ->
-          val toolCallPath = toolServer.path
-          logger.info { "Adding POST toolCall endpoint ${toolServer.name}: \"$toolCallPath\"" }
-          get(toolCallPath) { call.respondText("$toolCallPath requires a post request", status = MethodNotAllowed) }
-          post(toolCallPath) {
-            handleToolCallPathPost(application, toolServer, callbackChannel)
-          }
-        }
       }
     }
   }
@@ -388,31 +367,6 @@ private suspend fun KtorCallContext.assistantRequestResponse(
   }
 }
 
-private suspend fun KtorCallContext.handleToolCallPathPost(
-  application: Vapi4kApplicationImpl,
-  toolServer: ToolServer,
-  requestResponseCallbackChannel: Channel<RequestResponseCallback>,
-) {
-  if (isValidSecret(toolServer.serverSecret)) {
-    val json = call.receive<String>()
-    val request = json.toJsonElement()
-    val requestType = request.requestType
-
-    invokeRequestCallbacks(application, requestResponseCallbackChannel, requestType, request)
-
-    if (requestType.isToolCall) {
-      call.respond(HttpStatusCode.BadRequest, "Invalid message type: requires ToolCallRequest")
-    } else {
-      val (response, duration) = measureTimedValue {
-        val response = getToolCallResponse(application, request)
-        call.respond(response)
-        lambda { response.toJsonElement() }
-      }
-      invokeResponseCallbacks(application, requestResponseCallbackChannel, requestType, response, duration)
-    }
-  }
-}
-
 private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
   val secret = call.request.headers["x-vapi-secret"].orEmpty()
   return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
@@ -421,145 +375,5 @@ private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String
     false
   } else {
     true
-  }
-}
-
-private fun startCacheCleaningThread(config: Vapi4kConfigImpl) {
-  thread {
-    val pause = TOOL_CACHE_CLEAN_PAUSE_MINS.toInt().minutes
-    val maxAge = TOOL_CACHE_MAX_AGE_MINS.toInt().minutes
-    while (true) {
-      runCatching {
-        Thread.sleep(pause.inWholeMilliseconds)
-        config.allApplications.forEach { application ->
-          logger.info { "Purging cache for ${application.serverPath}" }
-          application.toolCache.purgeToolCache(maxAge)
-        }
-      }.onFailure { e ->
-        logger.error(e) { "Error clearing cache: ${e.errorMsg}" }
-      }
-    }
-  }
-}
-
-private fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback>) {
-  thread {
-    val config = AssistantImpl.config
-    while (true) {
-      runCatching {
-        runBlocking {
-          for (callback in callbackChannel) {
-            coroutineScope {
-              when (callback.type) {
-                REQUEST -> {
-                  config.allApplications
-                    .filter { it == callback.application }
-                    .forEach { application ->
-                      with(application) {
-                        applicationAllRequests.forEach { launch { it.invoke(callback.request) } }
-                        applicationPerRequests
-                          .filter { it.first == callback.requestType }
-                          .forEach { (_, block) -> launch { block(callback.request) } }
-                      }
-                    }
-                  with(config) {
-                    globalAllRequests.forEach { launch { it.invoke(callback.request) } }
-                    globalPerRequests
-                      .filter { it.first == callback.requestType }
-                      .forEach { (_, block) -> launch { block(callback.request) } }
-                  }
-                }
-
-                RESPONSE -> {
-                  config.allApplications.forEach { application ->
-                    with(application) {
-                      if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
-                        val resp =
-                          runCatching {
-                            callback.response.invoke()
-                          }.onFailure { e ->
-                            logger.error { "Error creating response" }
-                            error("Error creating response")
-                          }.getOrThrow()
-
-                        applicationAllResponses.forEach {
-                          launch {
-                            it.invoke(callback.requestType, resp, callback.elapsed)
-                          }
-                        }
-                        applicationPerResponses
-                          .filter { it.first == callback.requestType }
-                          .forEach { (reqType, block) ->
-                            launch { block(reqType, resp, callback.elapsed) }
-                          }
-                      }
-                    }
-                  }
-                  with(config) {
-                    if (globalAllResponses.isNotEmpty() || globalPerResponses.isNotEmpty()) {
-                      val resp =
-                        runCatching {
-                          callback.response.invoke()
-                        }.onFailure { e ->
-                          logger.error { "Error creating response" }
-                          error("Error creating response")
-                        }.getOrThrow()
-
-                      globalAllResponses.forEach { launch { it.invoke(callback.requestType, resp, callback.elapsed) } }
-                      globalPerResponses
-                        .filter { it.first == callback.requestType }
-                        .forEach { (reqType, block) ->
-                          launch { block(reqType, resp, callback.elapsed) }
-                        }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }.onFailure { e ->
-        logger.error(e) { "Error processing request response callback: ${e.errorMsg}" }
-      }
-    }
-  }
-}
-
-private suspend fun invokeRequestCallbacks(
-  application: Vapi4kApplicationImpl,
-  channel: Channel<RequestResponseCallback>,
-  requestType: ServerRequestType,
-  request: JsonElement,
-) = channel.send(requestCallback(application, requestType, request))
-
-private suspend fun invokeResponseCallbacks(
-  application: Vapi4kApplicationImpl,
-  channel: Channel<RequestResponseCallback>,
-  requestType: ServerRequestType,
-  response: () -> JsonElement,
-  elapsed: Duration,
-) = channel.send(responseCallback(application, requestType, response, elapsed))
-
-private data class RequestResponseCallback(
-  val application: Vapi4kApplicationImpl,
-  val type: RequestResponseType,
-  val requestType: ServerRequestType,
-  val request: JsonElement = emptyJsonElement(),
-  val response: (() -> JsonElement) = { emptyJsonElement() },
-  val elapsed: Duration = Duration.ZERO,
-) {
-  companion object {
-    fun requestCallback(
-      application: Vapi4kApplicationImpl,
-      requestType: ServerRequestType,
-      request: JsonElement,
-    ) = RequestResponseCallback(application, REQUEST, requestType, request)
-
-    fun responseCallback(
-      application: Vapi4kApplicationImpl,
-      requestType: ServerRequestType,
-      response: () -> JsonElement,
-      elapsed: Duration,
-    ) = RequestResponseCallback(application, RESPONSE, requestType, response = response, elapsed = elapsed)
   }
 }

@@ -16,15 +16,8 @@
 
 package com.vapi4k.api.vapi4k
 
-import com.vapi4k.dsl.vapi4k.ToolServerProperties
+import com.vapi4k.dsl.vapi4k.ServerProperties
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
-import com.vapi4k.dtos.vapi4k.ToolServerDto
-import com.vapi4k.utils.Utils.ensureStartsWith
-import java.net.URI
 
 @Vapi4KDslMarker
-class ToolServer internal constructor(
-  private val dto: ToolServerDto,
-) : ToolServerProperties by dto {
-  internal val path get() = URI(serverUrl).toURL().path.ensureStartsWith("/")
-}
+interface Server : ServerProperties

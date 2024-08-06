@@ -22,6 +22,8 @@ import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.api.tools.ToolMessageDelayed
 import com.vapi4k.api.tools.ToolMessageFailed
 import com.vapi4k.api.tools.ToolMessageStart
+import com.vapi4k.api.vapi4k.Server
+import com.vapi4k.dsl.vapi4k.ServerImpl
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
@@ -41,8 +43,6 @@ open class ToolImpl internal constructor(
   internal val messages get() = toolDto.messages
   private val dtoConditions
     get() = messages.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
-
-  internal var futureDelay = -1
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
     requestStartChecker.check("tool{} already has a request start message")
@@ -90,4 +90,6 @@ open class ToolImpl internal constructor(
       error("condition(${conditionSet.joinToString()}){} must have at least one message")
     }
   }
+
+  override fun server(block: Server.() -> Unit): Server = ServerImpl(toolDto.server).apply(block)
 }

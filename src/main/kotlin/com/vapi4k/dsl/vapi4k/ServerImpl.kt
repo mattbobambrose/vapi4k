@@ -14,18 +14,20 @@
  *
  */
 
-package com.vapi4k.dtos.vapi4k
+package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.dsl.vapi4k.ToolServerProperties
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.vapi4k.api.vapi4k.Server
+import com.vapi4k.dtos.tools.ServerDto
 
-@Serializable
-data class ToolServerDto(
-  override var name: String = "",
-  @SerialName("url")
-  override var serverUrl: String = "",
-  @SerialName("secret")
-  override var serverSecret: String = "",
-  override var timeoutSeconds: Int = -1,
-) : ToolServerProperties
+interface ServerProperties {
+  var serverUrl: String
+  var serverSecret: String
+  var timeoutSeconds: Int
+}
+
+class ServerImpl internal constructor(
+  internal val dto: ServerDto,
+) :
+  ServerProperties by dto,
+  Server
+

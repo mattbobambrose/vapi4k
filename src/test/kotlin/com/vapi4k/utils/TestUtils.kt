@@ -88,15 +88,6 @@ fun withTestApplication(
           onAssistantRequest {
             block()
           }
-
-          toolServers {
-            // Provide a default toolServer
-            toolServer {
-              serverUrl = "https://test/toolCall"
-              serverSecret = "456"
-              timeoutSeconds = 20
-            }
-          }
         }
       }
     }
@@ -131,15 +122,6 @@ fun withTestApplication(
 
           onAssistantRequest {
             block()
-          }
-
-          toolServers {
-            // Provide a default toolServer
-            toolServer {
-              serverUrl = "https://test/toolCall"
-              serverSecret = "456"
-              timeoutSeconds = 20
-            }
           }
         }
       }

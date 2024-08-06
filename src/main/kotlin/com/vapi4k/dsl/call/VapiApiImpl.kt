@@ -29,7 +29,6 @@ import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.api.CallRequestDto
-import com.vapi4k.server.Vapi4kServer
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
@@ -57,8 +56,8 @@ class VapiApiImpl private constructor(
       val phone = Phone()
       val callRequest =
         phone.runCatching(block)
-          .onSuccess { Vapi4kServer.logger.info { "Created call request: ${it.toJsonString()}" } }
-          .onFailure { e -> Vapi4kServer.logger.error { "Failed to create call request: ${e.errorMsg}" } }
+          .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
+          .onFailure { e -> logger.error { "Failed to create call request: ${e.errorMsg}" } }
           .getOrThrow()
 
       val httpResponse = runCatching {
@@ -66,8 +65,8 @@ class VapiApiImpl private constructor(
           configCall(authString)
           setBody(callRequest)
         }
-      }.onSuccess { Vapi4kServer.logger.info { "Call made successfully" } }
-        .onFailure { e -> Vapi4kServer.logger.error { "Failed to make call: ${e.errorMsg}" } }
+      }.onSuccess { logger.info { "Call made successfully" } }
+        .onFailure { e -> logger.error { "Failed to make call: ${e.errorMsg}" } }
         .getOrThrow()
 
       val jsonElement = httpResponse.bodyAsText().toJsonElement()
@@ -85,8 +84,8 @@ class VapiApiImpl private constructor(
   internal fun test(block: Phone.() -> CallRequestDto) =
     runBlocking {
       Phone().runCatching(block)
-        .onSuccess { Vapi4kServer.logger.info { "Created call request: ${it.toJsonString()}" } }
-        .onFailure { e -> Vapi4kServer.logger.error { "Failed to create call request: ${e.errorMsg}" } }
+        .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
+        .onFailure { e -> logger.error { "Failed to create call request: ${e.errorMsg}" } }
         .getOrThrow()
     }
 
@@ -94,8 +93,8 @@ class VapiApiImpl private constructor(
     runBlocking {
       val callRequest =
         Save().runCatching(block)
-          .onSuccess { Vapi4kServer.logger.info { "Created call request: ${it.toJsonString()}" } }
-          .onFailure { e -> Vapi4kServer.logger.error { "Failed to create call request: ${e.errorMsg}" } }
+          .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
+          .onFailure { e -> logger.error { "Failed to create call request: ${e.errorMsg}" } }
           .getOrThrow()
 
       runCatching {
@@ -103,8 +102,8 @@ class VapiApiImpl private constructor(
           configCall(authString)
           setBody(callRequest)
         }
-      }.onSuccess { Vapi4kServer.logger.info { "Call saved successfully" } }
-        .onFailure { e -> Vapi4kServer.logger.error { "Failed to save call: ${e.errorMsg}" } }
+      }.onSuccess { logger.info { "Call saved successfully" } }
+        .onFailure { e -> logger.error { "Failed to save call: ${e.errorMsg}" } }
         .getOrThrow()
     }
 
@@ -113,8 +112,8 @@ class VapiApiImpl private constructor(
       runCatching {
         runCatching {
           httpClient.get("$VAPI_API_URL/${objectType.endpoint}") { configCall(authString) }
-        }.onSuccess { Vapi4kServer.logger.info { "$objectType objects fetched successfully" } }
-          .onFailure { e -> Vapi4kServer.logger.error { "Failed to fetch $objectType objects: ${e.errorMsg}" } }
+        }.onSuccess { logger.info { "$objectType objects fetched successfully" } }
+          .onFailure { e -> logger.error { "Failed to fetch $objectType objects: ${e.errorMsg}" } }
           .getOrThrow()
       }
     }.getOrThrow()
@@ -124,8 +123,8 @@ class VapiApiImpl private constructor(
       runCatching {
         runCatching {
           httpClient.get("$VAPI_API_URL/call/$callId") { configCall(authString) }
-        }.onSuccess { Vapi4kServer.logger.info { "Call deleted successfully" } }
-          .onFailure { e -> Vapi4kServer.logger.error { "Failed to delete call: ${e.errorMsg}" } }
+        }.onSuccess { logger.info { "Call deleted successfully" } }
+          .onFailure { e -> logger.error { "Failed to delete call: ${e.errorMsg}" } }
           .getOrThrow()
       }
     }.getOrThrow()

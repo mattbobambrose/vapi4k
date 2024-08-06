@@ -796,6 +796,7 @@ class AssistantTest {
       }
     }
     """
+
     fun newRequestContext() = AssistantRequestContext(Vapi4kApplicationImpl(), ASSISTANT_REQUEST.toJsonElement())
   }
 }
