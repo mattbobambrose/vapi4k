@@ -21,6 +21,6 @@ import com.vapi4k.dsl.call.CustomerProperties
 import com.vapi4k.dtos.api.CustomerDto
 
 @AssistantDslMarker
-data class Customer internal constructor(
+class Customer internal constructor(
   private val dto: CustomerDto,
 ) : CustomerProperties by dto

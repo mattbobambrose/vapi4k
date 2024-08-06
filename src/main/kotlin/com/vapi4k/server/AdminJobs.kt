@@ -16,13 +16,13 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.api.vapi4k.enums.RequestResponseType
-import com.vapi4k.api.vapi4k.enums.RequestResponseType.REQUEST
-import com.vapi4k.api.vapi4k.enums.RequestResponseType.RESPONSE
 import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.EnvVar.TOOL_CACHE_CLEAN_PAUSE_MINS
 import com.vapi4k.common.EnvVar.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.vapi4k.RequestResponseType
+import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
+import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.AdminJobs.RequestResponseCallback.Companion.requestCallback

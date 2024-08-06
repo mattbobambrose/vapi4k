@@ -21,6 +21,6 @@ import com.vapi4k.dsl.voice.OpenAIVoiceProperties
 import com.vapi4k.dtos.voice.OpenAIVoiceDto
 
 @AssistantDslMarker
-data class OpenAIVoice internal constructor(
+class OpenAIVoice internal constructor(
   private val dto: OpenAIVoiceDto,
 ) : OpenAIVoiceProperties by dto

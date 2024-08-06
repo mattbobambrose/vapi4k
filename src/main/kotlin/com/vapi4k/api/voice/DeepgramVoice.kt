@@ -21,6 +21,6 @@ import com.vapi4k.dsl.voice.DeepgramVoiceProperties
 import com.vapi4k.dtos.voice.DeepgramVoiceDto
 
 @AssistantDslMarker
-data class DeepgramVoice internal constructor(
+class DeepgramVoice internal constructor(
   private val dto: DeepgramVoiceDto,
 ) : DeepgramVoiceProperties by dto

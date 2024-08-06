@@ -16,9 +16,11 @@
 
 package com.vapi4k.api.transcriber
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.transcriber.GladiaTranscriberProperties
 import com.vapi4k.dtos.transcriber.GladiaTranscriberDto
 
+@AssistantDslMarker
 class GladiaTranscriber internal constructor(
   private val dto: GladiaTranscriberDto,
 ) : GladiaTranscriberProperties by dto

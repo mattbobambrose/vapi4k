@@ -21,6 +21,6 @@ import com.vapi4k.dsl.voice.CartesiaVoiceProperties
 import com.vapi4k.dtos.voice.CartesiaVoiceDto
 
 @AssistantDslMarker
-data class CartesiaVoice internal constructor(
+class CartesiaVoice internal constructor(
   private val dto: CartesiaVoiceDto,
 ) : CartesiaVoiceProperties by dto

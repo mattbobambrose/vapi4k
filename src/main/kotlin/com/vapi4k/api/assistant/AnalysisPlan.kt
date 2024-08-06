@@ -22,7 +22,7 @@ import com.vapi4k.dsl.assistant.StructuredDataSchema
 import com.vapi4k.dtos.AnalysisPlanDto
 
 @AssistantDslMarker
-data class AnalysisPlan internal constructor(
+class AnalysisPlan internal constructor(
   private val dto: AnalysisPlanDto,
 ) : AnalysisPlanProperties by dto {
   fun structuredDataSchema(block: StructuredDataSchema.() -> Unit) {

@@ -21,6 +21,6 @@ import com.vapi4k.dsl.voice.NeetsVoiceProperties
 import com.vapi4k.dtos.voice.NeetsVoiceDto
 
 @AssistantDslMarker
-data class NeetsVoice internal constructor(
+class NeetsVoice internal constructor(
   private val dto: NeetsVoiceDto,
 ) : NeetsVoiceProperties by dto

@@ -21,6 +21,6 @@ import com.vapi4k.dsl.tools.ToolMessageDelayedProperties
 import com.vapi4k.dtos.tools.ToolMessageDelayedDto
 
 @AssistantDslMarker
-data class ToolMessageDelayed internal constructor(
+class ToolMessageDelayed internal constructor(
   private val dto: ToolMessageDelayedDto,
 ) : ToolMessageDelayedProperties by dto

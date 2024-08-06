@@ -21,6 +21,6 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.ArtifactPlanDto
 
 @AssistantDslMarker
-data class ArtifactPlan internal constructor(
+class ArtifactPlan internal constructor(
   private val dto: ArtifactPlanDto,
 ) : ArtifactPlanProperties by dto

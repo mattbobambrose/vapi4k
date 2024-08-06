@@ -20,7 +20,7 @@ import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.phoneNumber
 import kotlinx.serialization.json.JsonElement
 
-data class AssistantRequestContext(
+class AssistantRequestContext(
   val application: Vapi4kApplication,
   val assistantRequest: JsonElement,
 ) {

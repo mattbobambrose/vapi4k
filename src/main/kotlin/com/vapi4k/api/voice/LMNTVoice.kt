@@ -21,6 +21,6 @@ import com.vapi4k.dsl.voice.LMNTVoiceProperties
 import com.vapi4k.dtos.voice.LMNTVoiceDto
 
 @AssistantDslMarker
-data class LMNTVoice internal constructor(
+class LMNTVoice internal constructor(
   private val dto: LMNTVoiceDto,
 ) : LMNTVoiceProperties by dto

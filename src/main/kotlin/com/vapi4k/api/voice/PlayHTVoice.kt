@@ -16,9 +16,11 @@
 
 package com.vapi4k.api.voice
 
+import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.PlayHTVoiceProperties
 import com.vapi4k.dtos.voice.PlayHTVoiceDto
 
-data class PlayHTVoice internal constructor(
+@AssistantDslMarker
+class PlayHTVoice internal constructor(
   private val dto: PlayHTVoiceDto,
 ) : PlayHTVoiceProperties by dto
