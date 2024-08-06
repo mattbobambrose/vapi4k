@@ -39,7 +39,6 @@ data class ToolsImpl internal constructor(
   override fun tool(
     obj: Any,
     vararg functions: KFunction<*>,
-    toolServerName: String,
     block: Tool.() -> Unit,
   ) {
     processFunctions(ToolType.FUNCTION, functions, obj, block)
@@ -48,7 +47,6 @@ data class ToolsImpl internal constructor(
   override fun dtmf(
     obj: Any,
     vararg functions: KFunction<*>,
-    toolServerName: String,
     block: Tool.() -> Unit,
   ) {
     processFunctions(ToolType.DTMF, functions, obj, block)
@@ -57,7 +55,6 @@ data class ToolsImpl internal constructor(
   override fun endCall(
     obj: Any,
     vararg functions: KFunction<*>,
-    toolServerName: String,
     block: Tool.() -> Unit,
   ) {
     processFunctions(ToolType.END_CALL, functions, obj, block)
@@ -66,7 +63,6 @@ data class ToolsImpl internal constructor(
   override fun voiceMail(
     obj: Any,
     vararg functions: KFunction<*>,
-    toolServerName: String,
     block: Tool.() -> Unit,
   ) {
     processFunctions(ToolType.VOICEMAIL, functions, obj, block)
@@ -75,7 +71,6 @@ data class ToolsImpl internal constructor(
   override fun ghl(
     obj: Any,
     vararg functions: KFunction<*>,
-    toolServerName: String,
     block: ToolWithMetaData.() -> Unit,
   ) {
     processFunctionsWithMetaData(ToolType.GHL, functions, obj, block)
@@ -84,7 +79,6 @@ data class ToolsImpl internal constructor(
   override fun make(
     obj: Any,
     vararg functions: KFunction<*>,
-    toolServerName: String,
     block: ToolWithMetaData.() -> Unit,
   ) {
     processFunctionsWithMetaData(ToolType.MAKE, functions, obj, block)
@@ -93,7 +87,6 @@ data class ToolsImpl internal constructor(
   override fun transfer(
     obj: Any,
     vararg functions: KFunction<*>,
-    toolServerName: String,
     block: TransferTool.() -> Unit,
   ) {
     processFunctionsWithDestinations(ToolType.TRANSFER_CALL, functions, obj, block)
