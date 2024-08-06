@@ -36,9 +36,8 @@ fun Application.module() {
   defaultKtorConfig(appMicrometerRegistry)
 
   install(Vapi4k) {
-    val baseUrl = "https://eocare-app-fiqm5.ondigitalocean.app"
     vapi4kApplication {
-      serverPath = "$baseUrl/inboundRequest"
+      serverPath = "/inboundRequest"
       serverSecret = "12345"
 
       onAssistantRequest {

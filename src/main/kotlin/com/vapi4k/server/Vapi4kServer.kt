@@ -160,6 +160,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       get(VERSION_PATH) { versionResponse() }
 
       if (!isProduction) {
+        get("/") { call.respondRedirect(VALIDATE_PATH) }
         get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
         get(CACHES_PATH) {
           call.respond(
