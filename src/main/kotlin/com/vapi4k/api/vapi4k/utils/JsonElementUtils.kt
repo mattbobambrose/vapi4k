@@ -16,6 +16,7 @@
 
 package com.vapi4k.api.vapi4k.utils
 
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.element
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -24,10 +25,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-// These are outside the object to improve auto-imports prompts in IJ
-private fun JsonElement.element(key: String) =
-  jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
-
+// This is outside the object to improve auto-imports prompts in IJ
 operator fun JsonElement.get(vararg keys: String): JsonElement =
   keys.flatMap { it.split(".") }
     .fold(this) { acc, key -> acc.element(key) }
@@ -44,6 +42,13 @@ object JsonElementUtils {
   val JsonElement.stringValue get() = jsonPrimitive.content
   val JsonElement.intValue get() = jsonPrimitive.content.toInt()
   val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
+
+  fun JsonElement.element(key: String) =
+    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
+
+  fun JsonElement.property(vararg keys: String): JsonElement =
+    keys.flatMap { it.split(".") }
+      .fold(this) { acc, key -> acc.element(key) }
 
   fun JsonElement.stringValue(key: String) = get(key).stringValue
 

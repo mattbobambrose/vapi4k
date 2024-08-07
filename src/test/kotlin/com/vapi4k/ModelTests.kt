@@ -21,12 +21,14 @@ import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.tools
 import kotlinx.serialization.json.jsonObject
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
+
 
 class ModelTests {
   @Test
@@ -273,11 +275,8 @@ class ModelTests {
         }
       }
     val je = response.toJsonElement()
-    val tool = je.tools().first().jsonObject
-    // zzz
-//    val function = tool["function"]?.jsonObject!!
-//    println(function.get("parameters.properties")?.toJsonString())
-//    assertEquals(3, tool["function.parameters.properties"]?.jsonObject?.keys?.size  )
+    val tool = je.tools().first()
+    assertEquals(3, tool["function.parameters.properties"].jsonObject.keys.size)
   }
 
   @Test

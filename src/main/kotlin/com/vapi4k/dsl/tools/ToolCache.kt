@@ -31,7 +31,9 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KFunction
 import kotlin.time.Duration
 
-internal class ToolCache(val nameBlock: () -> String) {
+internal class ToolCache(
+  val nameBlock: () -> String,
+) {
   private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
   private var lastCacheCleanInstant = Clock.System.now()
 
@@ -50,7 +52,7 @@ internal class ToolCache(val nameBlock: () -> String) {
     val toolFuncName = toolCallInfo.llmName
     val funcInfo = cacheMap.computeIfAbsent(sessionCacheId) { FunctionInfo() }
     val funcDetails = funcInfo.functions[toolFuncName]
-    logger.debug { "Added to toolCache: $name [$sessionCacheId] [${cacheMap}]" }
+    logger.debug { "Added to toolCache: $name [$sessionCacheId] [$cacheMap]" }
 
     if (funcDetails.isNull()) {
       val newFuncDetails = FunctionDetails(obj, function)

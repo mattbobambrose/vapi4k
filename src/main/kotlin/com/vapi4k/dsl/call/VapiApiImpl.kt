@@ -130,7 +130,7 @@ class VapiApiImpl private constructor(
     }.getOrThrow()
 
   companion object {
-    internal val outboundApplication = Vapi4kApplicationImpl().also { it.serverPath = "__api" }
+    internal val outboundApplication = Vapi4kApplicationImpl().also { it.serverPath = "__outboundCalls" }
     internal val outboundRequestContext = AssistantRequestContext(outboundApplication, emptyJsonElement())
 
     internal fun HttpRequestBuilder.configCall(authString: String) {
