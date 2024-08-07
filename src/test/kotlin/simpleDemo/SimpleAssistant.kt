@@ -46,8 +46,16 @@ object SimpleAssistant {
             description = "a description"
             async = true
 
-            addParameter("param1", "a description")
-            addParameter("param2", "a description")
+            parameters {
+              parameter {
+                name = "param1"
+                description = "a description"
+              }
+              parameter {
+                name = "param2"
+                description = "a description"
+              }
+            }
 
             server {
               url = "yyy"

@@ -19,12 +19,8 @@ package com.vapi4k.api.tools
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
-interface ExternalTool : ToolWithServer {
-  var name: String
-  var description: String
-  var async: Boolean?
-
-  fun parameters(
-    block: Parameters.() -> Unit,
+interface Parameters {
+  fun parameter(
+    block: Parameter.() -> Unit,
   )
 }

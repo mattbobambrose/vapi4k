@@ -17,14 +17,12 @@
 package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import kotlin.reflect.KClass
 
 @AssistantDslMarker
-interface ExternalTool : ToolWithServer {
-  var name: String
-  var description: String
-  var async: Boolean?
-
-  fun parameters(
-    block: Parameters.() -> Unit,
-  )
+class Parameter internal constructor() {
+  var name = ""
+  var description = ""
+  var type: KClass<*> = String::class
+  var required = true
 }

@@ -17,11 +17,8 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.api.tools.ExternalTool
-import com.vapi4k.dsl.functions.FunctionUtils
-import com.vapi4k.dsl.functions.FunctionUtils.llmType
-import com.vapi4k.dtos.functions.FunctionPropertyDescDto
+import com.vapi4k.api.tools.Parameters
 import com.vapi4k.dtos.tools.ToolDto
-import kotlin.reflect.KClass
 
 open class ExternalToolImpl internal constructor(
   toolDto: ToolDto,
@@ -39,21 +36,9 @@ open class ExternalToolImpl internal constructor(
     get() = toolDto.async
     set(value) = run { toolDto.async = value }
 
-  override fun addParameter(
-    name: String,
-    description: String,
-    type: KClass<*>,
-    required: Boolean,
+  override fun parameters(
+    block: Parameters.() -> Unit,
   ) {
-    require(name.isNotBlank()) { "externalTool{} parameter name must not be blank" }
-    require(type in FunctionUtils.allowedParamTypes) {
-      "externalTool{} parameter type must be one of these: String::class, Int::class, Double::class, Boolean::class"
-    }
-
-    with(toolDto.functionDto.parametersDto) {
-      if (properties.containsKey(name)) error("externalTool{} parameter $name already exists")
-      properties[name] = FunctionPropertyDescDto(type.llmType, description)
-      if (required) this.required.add(name)
-    }
+    ParametersImpl(toolDto).apply(block)
   }
 }

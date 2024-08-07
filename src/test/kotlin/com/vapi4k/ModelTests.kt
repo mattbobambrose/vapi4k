@@ -151,7 +151,7 @@ class ModelTests {
 
   @Test
   fun `blank param names with external tool decl`() {
-    assertThrows(IllegalArgumentException::class.java) {
+    assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
           openAIModel {
@@ -163,7 +163,11 @@ class ModelTests {
                 description = "a description"
                 async = true
 
-                addParameter("")
+                parameters {
+                  parameter {
+                    name = ""
+                  }
+                }
 
                 server {
                   url = "yyy"
@@ -185,7 +189,7 @@ class ModelTests {
 
   @Test
   fun `Bad type with external tool decl`() {
-    assertThrows(IllegalArgumentException::class.java) {
+    assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
           openAIModel {
@@ -197,7 +201,13 @@ class ModelTests {
                 description = "a description"
                 async = true
 
-                addParameter("param1", "a description", Any::class)
+                parameters {
+                  parameter {
+                    name = "param1"
+                    description = "a description"
+                    type = Any::class
+                  }
+                }
 
                 server {
                   url = "yyy"
@@ -228,8 +238,16 @@ class ModelTests {
                 description = "a description"
                 async = true
 
-                addParameter("param1", "a description")
-                addParameter("param1", "a description")
+                parameters {
+                  parameter {
+                    name = "param1"
+                    description = "a description"
+                  }
+                  parameter {
+                    name = "param1"
+                    description = "a description"
+                  }
+                }
 
                 server {
                   url = "yyy"
@@ -260,9 +278,21 @@ class ModelTests {
                 description = "a description"
                 async = true
 
-                addParameter("param1", "a description")
-                addParameter("param2", "a description")
-                addParameter("param3", "a description", type = Int::class)
+                parameters {
+                  parameter {
+                    name = "param1"
+                    description = "a description"
+                  }
+                  parameter {
+                    name = "param2"
+                    description = "a description"
+                  }
+                  parameter {
+                    name = "param3"
+                    description = "a description"
+                    type = Int::class
+                  }
+                }
 
                 server {
                   url = "yyy"
