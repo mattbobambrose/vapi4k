@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.api.assistant.CommonAssistantProperties
 import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
@@ -34,9 +33,9 @@ data class AssistantOverridesImpl internal constructor(
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
   private val assistantOverridesDto: AssistantOverridesDto,
-) : AssistantOverridesProperties by assistantOverridesDto,
-  AssistantOverrides,
-  AbstractAssistantImpl() {
+) : AbstractAssistantImpl(),
+  AssistantOverridesProperties by assistantOverridesDto,
+  AssistantOverrides {
   override val transcriberChecker = DuplicateChecker()
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
