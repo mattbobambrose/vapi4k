@@ -24,7 +24,8 @@ interface ToolWithMetaDataProperties {
 }
 
 class ToolWithMetaDataImpl internal constructor(
+  callerName: String,
   val dto: ToolDto,
-) : ToolWithServerImpl(dto),
+) : ToolWithServerImpl(callerName, dto),
   ToolWithMetaDataProperties by dto,
   ToolWithMetaData

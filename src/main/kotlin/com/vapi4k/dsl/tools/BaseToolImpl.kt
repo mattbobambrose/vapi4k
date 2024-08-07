@@ -16,26 +16,20 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.api.tools.ToolWithServer
-import com.vapi4k.api.vapi4k.Server
-import com.vapi4k.dsl.vapi4k.ServerImpl
+import com.vapi4k.api.tools.BaseTool
+import com.vapi4k.api.tools.Parameters
 import com.vapi4k.dtos.tools.ToolDto
-import com.vapi4k.utils.DuplicateChecker
 
-open class ToolWithServerImpl internal constructor(
+open class BaseToolImpl internal constructor(
   callerName: String,
   toolDto: ToolDto,
-) : ToolImpl(callerName, toolDto),
-  ToolWithServer {
-  internal val serverChecker = DuplicateChecker()
+) : ToolWithServerImpl(callerName, toolDto),
+  BaseTool {
+  override var async
+    get() = toolDto.async ?: true
+    set(value) = run { toolDto.async = value }
 
-  override fun server(block: Server.() -> Unit): Server {
-    serverChecker.check("$callerName{} contains multiple server{} decls")
-    return ServerImpl(toolDto.server).apply(block)
-  }
-
-  internal fun checkIfServerCalled() {
-    if (!serverChecker.wasCalled)
-      error("$callerName{} must contain a server{} decl")
+  override fun parameters(block: Parameters.() -> Unit) {
+    ParametersImpl(toolDto).apply(block)
   }
 }

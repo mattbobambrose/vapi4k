@@ -35,8 +35,9 @@ interface TransferToolProperties {
 }
 
 class TransferToolImpl internal constructor(
+  callerName: String,
   val dto: ToolDto,
-) : ToolWithServerImpl(dto),
+) : ToolWithServerImpl(callerName, dto),
   TransferToolProperties by dto,
   TransferTool {
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {

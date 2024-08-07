@@ -31,6 +31,7 @@ import com.vapi4k.dtos.tools.ToolMessageStartDto
 import com.vapi4k.utils.DuplicateChecker
 
 open class ToolImpl internal constructor(
+  internal val callerName: String,
   internal val toolDto: ToolDto,
 ) : Tool {
   private val startChecker = DuplicateChecker()
@@ -43,7 +44,7 @@ open class ToolImpl internal constructor(
     get() = messages.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
-    startChecker.check("tool{} already has a request start message")
+    startChecker.check("$callerName{} already has a request start message")
     return ToolMessageStartDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageStart(dto).apply(block)
@@ -51,7 +52,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    completeChecker.check("tool{} already has a request complete message")
+    completeChecker.check("$callerName{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageComplete(dto).apply(block)
@@ -59,7 +60,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    failedChecker.check("tool{} already has a request failed message")
+    failedChecker.check("$callerName{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageFailed(dto).apply(block)
@@ -67,7 +68,7 @@ open class ToolImpl internal constructor(
   }
 
   override fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed {
-    delayedChecker.check("tool{} already has a request delayed message")
+    delayedChecker.check("$callerName{} already has a request delayed message")
     return ToolMessageDelayedDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageDelayed(dto).apply(block)

@@ -16,12 +16,11 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.api.tools.BaseTool
 import com.vapi4k.api.tools.ExternalTool
 import com.vapi4k.api.tools.Tool
 import com.vapi4k.api.tools.ToolWithMetaData
-import com.vapi4k.api.tools.ToolWithServer
 import com.vapi4k.api.tools.Tools
-import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
@@ -43,70 +42,43 @@ data class ToolsImpl internal constructor(
     vararg functions: KFunction<*>,
     block: Tool.() -> Unit,
   ) = processFunctions(ToolType.FUNCTION, functions, obj) {
-    ToolImpl(it).apply(block)
+    ToolImpl("tool", it).apply(block)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
-    val toolDto = ToolDto()
-    val impl = ExternalToolImpl(toolDto).apply(block)
-
+    val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
+    ExternalToolImpl("externalTool", toolDto).apply(block).checkIfServerCalled()
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
-    if (!impl.serverChecker.wasCalled) error("externalTool{} must contain a server{} decl")
-
-    with(toolDto) {
-      type = ToolType.FUNCTION
-      async = toolDto.async
-    }
-
-    model.toolDtos += toolDto
   }
 
-  override fun dtmf(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithServer.() -> Unit,
-  ) = processFunctions(ToolType.DTMF, functions, obj) {
-    ToolWithServerImpl(it).apply(block)
+  override fun dtmf(block: BaseTool.() -> Unit) {
+    val toolDto = ToolDto(ToolType.DTMF).also { model.toolDtos += it }
+    BaseToolImpl("dtmf", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun endCall(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithServer.() -> Unit,
-  ) = processFunctions(ToolType.END_CALL, functions, obj) {
-    ToolWithServerImpl(it).apply(block)
+  override fun endCall(block: BaseTool.() -> Unit) {
+    val toolDto = ToolDto(ToolType.END_CALL).also { model.toolDtos += it }
+    BaseToolImpl("endCall", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun voiceMail(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithServer.() -> Unit,
-  ) = processFunctions(ToolType.VOICEMAIL, functions, obj) {
-    ToolWithServerImpl(it).apply(block)
+  override fun voiceMail(block: BaseTool.() -> Unit) {
+    val toolDto = ToolDto(ToolType.VOICEMAIL).also { model.toolDtos += it }
+    BaseToolImpl("voiceMail", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun ghl(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithMetaData.() -> Unit,
-  ) = processFunctions(ToolType.GHL, functions, obj) {
-    ToolWithMetaDataImpl(it).apply(block)
+  override fun ghl(block: ToolWithMetaData.() -> Unit) {
+    val toolDto = ToolDto(ToolType.GHL).also { model.toolDtos += it }
+    ToolWithMetaDataImpl("ghl", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun make(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithMetaData.() -> Unit,
-  ) = processFunctions(ToolType.MAKE, functions, obj) {
-    ToolWithMetaDataImpl(it).apply(block)
+  override fun make(block: ToolWithMetaData.() -> Unit) {
+    val toolDto = ToolDto(ToolType.MAKE).also { model.toolDtos += it }
+    ToolWithMetaDataImpl("make", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun transfer(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: TransferTool.() -> Unit,
-  ) = processFunctions(ToolType.TRANSFER_CALL, functions, obj) {
-    TransferToolImpl(it).apply(block)
+  override fun transfer(block: BaseTool.() -> Unit) {
+    val toolDto = ToolDto(ToolType.TRANSFER_CALL).also { model.toolDtos += it }
+    BaseToolImpl("transfer", toolDto).apply(block).checkIfServerCalled()
   }
 
   private fun processFunctions(
