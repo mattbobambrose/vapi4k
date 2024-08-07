@@ -51,7 +51,7 @@ interface Assistant : AssistantProperties {
   /**
   This determines whether the video is recorded during the call. Default is false. Only relevant for `webCall` type.
    */
-  var videoRecordingEnabled: Boolean?
+  var videoRecordingEnabled: Boolean
 
   fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection
 

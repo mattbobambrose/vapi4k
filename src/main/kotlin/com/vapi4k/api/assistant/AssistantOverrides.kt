@@ -43,7 +43,7 @@ import com.vapi4k.dsl.assistant.AssistantOverridesProperties
 
 @AssistantDslMarker
 interface AssistantOverrides : AssistantOverridesProperties {
-  var videoRecordingEnabled: Boolean?
+  var videoRecordingEnabled: Boolean
 
   fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection
 
