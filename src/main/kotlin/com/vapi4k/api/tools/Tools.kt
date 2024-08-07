@@ -27,41 +27,17 @@ interface Tools {
     block: Tool.() -> Unit = {},
   )
 
-  fun externalTool(block: ExternalTool.() -> Unit = {})
+  fun externalTool(block: ExternalTool.() -> Unit)
 
-  fun dtmf(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithServer.() -> Unit = {},
-  )
+  fun dtmf(block: BaseTool.() -> Unit)
 
-  fun endCall(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithServer.() -> Unit = {},
-  )
+  fun endCall(block: BaseTool.() -> Unit)
 
-  fun voiceMail(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithServer.() -> Unit = {},
-  )
+  fun voiceMail(block: BaseTool.() -> Unit)
 
-  fun ghl(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithMetaData.() -> Unit = {},
-  )
+  fun ghl(block: ToolWithMetaData.() -> Unit)
 
-  fun make(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: ToolWithMetaData.() -> Unit = {},
-  )
+  fun make(block: ToolWithMetaData.() -> Unit)
 
-  fun transfer(
-    obj: Any,
-    vararg functions: KFunction<*>,
-    block: TransferTool.() -> Unit = {},
-  )
+  fun transfer(block: BaseTool.() -> Unit)
 }

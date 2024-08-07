@@ -21,8 +21,9 @@ import com.vapi4k.api.tools.Parameters
 import com.vapi4k.dtos.tools.ToolDto
 
 open class ExternalToolImpl internal constructor(
+  callerName: String,
   toolDto: ToolDto,
-) : ToolWithServerImpl(toolDto),
+) : ToolWithServerImpl(callerName, toolDto),
   ExternalTool {
   override var name
     get() = toolDto.functionDto.name
