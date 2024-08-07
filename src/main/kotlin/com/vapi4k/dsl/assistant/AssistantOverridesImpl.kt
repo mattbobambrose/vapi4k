@@ -19,11 +19,8 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.api.assistant.AnalysisPlan
 import com.vapi4k.api.assistant.ArtifactPlan
 import com.vapi4k.api.assistant.AssistantOverrides
+import com.vapi4k.api.assistant.CommonAssistantProperties
 import com.vapi4k.api.assistant.VoicemailDetection
-import com.vapi4k.api.assistant.enums.AssistantClientMessageType
-import com.vapi4k.api.assistant.enums.AssistantServerMessageType
-import com.vapi4k.api.assistant.enums.BackgroundSoundType
-import com.vapi4k.api.assistant.enums.FirstMessageModeType
 import com.vapi4k.api.model.AnthropicModel
 import com.vapi4k.api.model.AnyscaleModel
 import com.vapi4k.api.model.CustomLLMModel
@@ -78,28 +75,28 @@ import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 
-interface AssistantOverridesProperties {
-  var backchannelingEnabled: Boolean?
-  var backgroundDenoisingEnabled: Boolean?
-  var backgroundSound: BackgroundSoundType
-  val clientMessages: MutableSet<AssistantClientMessageType>
-  var endCallMessage: String
-  var firstMessage: String
-  var firstMessageMode: FirstMessageModeType
-  var hipaaEnabled: Boolean?
-  var llmRequestDelaySeconds: Double
-  var llmRequestNonPunctuatedDelaySeconds: Double
-  var maxDurationSeconds: Int
-  var modelOutputInMessagesEnabled: Boolean?
-  var name: String
-  var numWordsToInterruptAssistant: Int
-  var recordingEnabled: Boolean?
-  var responseDelaySeconds: Double
-  val serverMessages: MutableSet<AssistantServerMessageType>
-  var serverUrl: String
-  var serverUrlSecret: String
-  var silenceTimeoutSeconds: Int
-  var voicemailMessage: String
+interface AssistantOverridesProperties : CommonAssistantProperties {
+//  var backchannelingEnabled: Boolean?
+//  var backgroundDenoisingEnabled: Boolean?
+//  var backgroundSound: BackgroundSoundType
+//  var endCallMessage: String
+//  var firstMessage: String
+//  var firstMessageMode: FirstMessageModeType
+//  var hipaaEnabled: Boolean?
+//  var llmRequestDelaySeconds: Double
+//  var llmRequestNonPunctuatedDelaySeconds: Double
+//  var maxDurationSeconds: Int
+//  var modelOutputInMessagesEnabled: Boolean?
+//  var name: String
+//  var numWordsToInterruptAssistant: Int
+//  var recordingEnabled: Boolean?
+//  var responseDelaySeconds: Double
+//  var serverUrl: String
+//  var serverUrlSecret: String
+//  var silenceTimeoutSeconds: Int
+//  var voicemailMessage: String
+//  val clientMessages: MutableSet<AssistantClientMessageType>
+//  val serverMessages: MutableSet<AssistantServerMessageType>
 
   // Used only in AssistantOverrides
   val variableValues: MutableMap<String, String>

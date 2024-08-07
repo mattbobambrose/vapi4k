@@ -41,8 +41,16 @@ import com.vapi4k.api.voice.RimeAIVoice
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantProperties
 
+/**
+<p>This is the assistant that will be used for the call. To use an existing assistant, use `assistantId` instead.
+<br><br>If you're unsure why you're getting an invalid assistant, try logging your response and send the JSON blob to POST /assistant which will return the validation errors.
+</p>
+ */
 @AssistantDslMarker
 interface Assistant : AssistantProperties {
+  /**
+  This determines whether the video is recorded during the call. Default is false. Only relevant for `webCall` type.
+   */
   var videoRecordingEnabled: Boolean?
 
   fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection

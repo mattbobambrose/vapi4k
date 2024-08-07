@@ -20,6 +20,12 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.VoicemailDetectionProperties
 import com.vapi4k.dtos.VoicemailDetectionDto
 
+/**
+These are the settings to configure or disable voicemail detection. Alternatively, voicemail detection can be configured
+using the model.tools=[VoicemailTool]. This uses Twilio's built-in detection while the VoicemailTool relies on the model
+to detect if a voicemail was reached. You can use neither of them, one of them, or both of them. By default, Twilio
+built-in detection is enabled while VoicemailTool is not.
+ */
 @AssistantDslMarker
 class VoicemailDetection internal constructor(
   private val dto: VoicemailDetectionDto,

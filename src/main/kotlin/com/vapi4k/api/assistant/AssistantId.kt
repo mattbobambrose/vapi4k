@@ -18,9 +18,15 @@ package com.vapi4k.api.assistant
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
+/**
+This is the assistant that will be used for the call. To use a transient assistant, use `assistant` instead.
+ */
 @AssistantDslMarker
 interface AssistantId {
   var id: String
 
+  /**
+  These are the overrides for the `assistant` or `assistantId`'s settings and template variables.
+   */
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }
