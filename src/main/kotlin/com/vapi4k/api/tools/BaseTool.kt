@@ -20,7 +20,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface BaseTool : ToolWithServer {
-  var async: Boolean?
+  var async: Boolean
 
   fun parameters(block: Parameters.() -> Unit)
 }

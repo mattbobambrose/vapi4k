@@ -18,6 +18,8 @@ package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.booleanValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.element
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
@@ -25,6 +27,7 @@ import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.tools
 import kotlinx.serialization.json.jsonObject
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -37,9 +40,9 @@ class ModelTests {
         assistant {
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
-
             tools {
               dtmf {
+                async = false
                 server {
                   url = "zzz"
                   secret = "123"
@@ -52,10 +55,12 @@ class ModelTests {
       }
 
     val je = response.toJsonElement()
-    val server = je.tools().first().jsonObject.get("server") ?: error("server not found")
+    // println(je.tools().first().toJsonString())
+    val server = je.tools().first().element("server") ?: error("server not found")
     assertEquals("zzz", server.stringValue("url"))
     assertEquals("123", server.stringValue("secret"))
     assertEquals("10", server.stringValue("timeoutSeconds"))
+    assertFalse(je.tools().first().booleanValue("async"))
   }
 
   @Test

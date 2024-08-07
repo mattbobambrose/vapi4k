@@ -34,7 +34,7 @@ open class ExternalToolImpl internal constructor(
     set(value) = run { toolDto.functionDto.description = value }
 
   override var async
-    get() = toolDto.async
+    get() = toolDto.async ?: true
     set(value) = run { toolDto.async = value }
 
   override fun parameters(block: Parameters.() -> Unit) {

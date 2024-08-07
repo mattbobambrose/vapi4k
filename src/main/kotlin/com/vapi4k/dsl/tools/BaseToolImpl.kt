@@ -26,7 +26,7 @@ open class BaseToolImpl internal constructor(
 ) : ToolWithServerImpl(callerName, toolDto),
   BaseTool {
   override var async
-    get() = toolDto.async
+    get() = toolDto.async ?: true
     set(value) = run { toolDto.async = value }
 
   override fun parameters(block: Parameters.() -> Unit) {
