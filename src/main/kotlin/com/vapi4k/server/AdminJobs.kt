@@ -48,7 +48,7 @@ internal object AdminJobs {
         runCatching {
           Thread.sleep(pause.inWholeMilliseconds)
           config.allApplications.forEach { application ->
-            logger.info { "Purging cache for ${application.serverPath}" }
+            logger.debug { "Purging cache for ${application.serverPath}" }
             application.toolCache.purgeToolCache(maxAge)
           }
         }.onFailure { e ->

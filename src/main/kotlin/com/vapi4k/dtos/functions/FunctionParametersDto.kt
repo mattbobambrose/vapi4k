@@ -26,6 +26,6 @@ data class FunctionParametersDto(
   var type: String = "object",
   @EncodeDefault
   val properties: MutableMap<String, FunctionPropertyDescDto> = mutableMapOf(),
-  @EncodeDefault
+  // @EncodeDefault
   val required: MutableList<String> = mutableListOf(),
 )

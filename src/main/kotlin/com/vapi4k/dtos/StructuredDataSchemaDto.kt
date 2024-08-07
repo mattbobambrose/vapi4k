@@ -29,6 +29,6 @@ data class StructuredDataSchemaDto(
   override val items: MutableMap<String, String> = mutableMapOf(),
   @EncodeDefault
   override val properties: MutableMap<String, String> = mutableMapOf(),
-  @EncodeDefault
+  // @EncodeDefault
   override val required: MutableList<String> = mutableListOf(),
 ) : StructuredDataSchemaProperties

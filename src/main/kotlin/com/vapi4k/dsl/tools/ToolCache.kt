@@ -90,11 +90,11 @@ internal class ToolCache(
       (funcInfo.age > maxAge).also { isOld ->
         if (isOld) {
           count++
-          logger.info { "Purging toolCall cache entry $sessionCacheId: $funcInfo" }
+          logger.debug { "Purging toolCall cache entry $sessionCacheId: $funcInfo" }
         }
       }
     }
-    logger.info { "Purged toolCall Cache ($count)" }
+    logger.debug { "Purged toolCall Cache ($count)" }
     return count
   }
 
