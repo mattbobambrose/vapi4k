@@ -146,7 +146,6 @@ class ModelTests {
       }
     val je = response.toJsonElement()
     val tool = je.tools().first()
-    //println(tool.toJsonString())
     assertEquals("wed", tool["function"].stringValue("name"))
     assertEquals("a description", tool["function"].stringValue("description"))
     assertEquals("true", tool.stringValue("async"))

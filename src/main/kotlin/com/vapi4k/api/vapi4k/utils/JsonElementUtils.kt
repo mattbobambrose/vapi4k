@@ -53,7 +53,6 @@ object JsonElementUtils {
 
   fun JsonElement.booleanValue(key: String) = get(key).booleanValue
 
-
   fun JsonElement.element(key: String) =
     jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
 

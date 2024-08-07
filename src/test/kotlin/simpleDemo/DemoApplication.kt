@@ -16,7 +16,6 @@
 
 package simpleDemo
 
-import com.vapi4k.common.EnvVar.PORT
 import com.vapi4k.server.Vapi4k
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -25,10 +24,16 @@ import io.ktor.server.engine.embeddedServer
 import simpleDemo.SimpleAssistant.simpleAssistantRequest
 
 fun main() {
-  embeddedServer(CIO, port = PORT.toInt(), host = "0.0.0.0", module = Application::module2).start(wait = true)
+  embeddedServer(
+    CIO,
+    port = 8080,
+    host = "0.0.0.0",
+    watchPaths = listOf("build/classes"),
+    module = Application::demoModule,
+  ).start(wait = true)
 }
 
-fun Application.module2() {
+fun Application.demoModule() {
   install(Vapi4k) {
     vapi4kApplication {
       serverPath = "/vapi4k"
