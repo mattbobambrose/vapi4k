@@ -20,7 +20,5 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface Parameters {
-  fun parameter(
-    block: Parameter.() -> Unit,
-  )
+  fun parameter(block: Parameter.() -> Unit)
 }

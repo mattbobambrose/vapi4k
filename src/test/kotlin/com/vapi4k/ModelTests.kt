@@ -29,7 +29,6 @@ import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-
 class ModelTests {
   @Test
   fun `tool server details`() {

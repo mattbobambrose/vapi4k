@@ -23,12 +23,16 @@ import com.vapi4k.dsl.functions.FunctionUtils.llmType
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto
 import com.vapi4k.dtos.tools.ToolDto
 
-class ParametersImpl internal constructor(val toolDto: ToolDto) : Parameters {
+class ParametersImpl internal constructor(
+  val toolDto: ToolDto,
+) : Parameters {
   override fun parameter(block: Parameter.() -> Unit) {
     val p = Parameter().apply(block)
     if (p.name.isBlank()) error("externalTool{} parameter name must not be blank")
     if (p.type !in FunctionUtils.allowedParamTypes)
-      error("externalTool{} parameter type must be one of these: String::class, Int::class, Double::class, Boolean::class")
+      error(
+        "externalTool{} parameter type must be one of these: String::class, Int::class, Double::class, Boolean::class",
+      )
 
     with(toolDto.functionDto.parametersDto) {
       if (properties.containsKey(p.name)) error("externalTool{} parameter ${p.name} already exists")

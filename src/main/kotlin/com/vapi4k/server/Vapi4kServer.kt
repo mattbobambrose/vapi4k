@@ -132,4 +132,3 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     }
   }
 }
-

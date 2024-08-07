@@ -36,9 +36,7 @@ open class ExternalToolImpl internal constructor(
     get() = toolDto.async
     set(value) = run { toolDto.async = value }
 
-  override fun parameters(
-    block: Parameters.() -> Unit,
-  ) {
+  override fun parameters(block: Parameters.() -> Unit) {
     ParametersImpl(toolDto).apply(block)
   }
 }

@@ -24,7 +24,5 @@ interface ExternalTool : ToolWithServer {
   var description: String
   var async: Boolean?
 
-  fun parameters(
-    block: Parameters.() -> Unit,
-  )
+  fun parameters(block: Parameters.() -> Unit)
 }
