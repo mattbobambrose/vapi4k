@@ -25,10 +25,9 @@ import simpleDemo.SimpleAssistant.simpleAssistantRequest
 
 fun main() {
   embeddedServer(
-    CIO,
+    factory = CIO,
     port = 8080,
     host = "0.0.0.0",
-    watchPaths = listOf("build/classes"),
     module = Application::demoModule,
   ).start(wait = true)
 }
@@ -36,7 +35,7 @@ fun main() {
 fun Application.demoModule() {
   install(Vapi4k) {
     vapi4kApplication {
-      serverPath = "/vapi4k"
+      serverPath = "vapi4k"
       serverSecret = "12345"
 
       onAssistantRequest {
