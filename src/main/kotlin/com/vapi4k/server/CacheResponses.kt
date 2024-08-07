@@ -1,0 +1,56 @@
+/*
+ * Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ */
+
+package com.vapi4k.server
+
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.common.Endpoints.CACHES_PATH
+import com.vapi4k.common.Version.Companion.versionDesc
+import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import io.ktor.http.ContentType
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.application.call
+import io.ktor.server.response.respond
+import io.ktor.server.response.respondRedirect
+import io.ktor.server.response.respondText
+import io.ktor.util.pipeline.PipelineContext
+import kotlinx.serialization.json.buildJsonObject
+
+internal object CacheResponses {
+  suspend fun PipelineContext<Unit, ApplicationCall>.clearCaches(config: Vapi4kConfigImpl) {
+    config.allApplications.forEach { application ->
+      application.toolCache.clearToolCache()
+    }
+    call.respondRedirect(CACHES_PATH)
+  }
+
+  suspend fun PipelineContext<Unit, ApplicationCall>.processCachesRequest(config: Vapi4kConfigImpl) {
+    call.respond(
+      buildJsonObject {
+        config.allApplications.forEach { application ->
+          put(
+            application.serverPathAsSegment,
+            application.toolCache.cacheAsJson().toJsonElement(),
+          )
+        }
+      },
+    )
+  }
+
+  suspend fun KtorCallContext.versionResponse() {
+    call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
+  }
+}
