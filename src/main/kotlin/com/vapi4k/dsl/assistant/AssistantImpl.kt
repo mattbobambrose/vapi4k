@@ -20,6 +20,7 @@ import com.vapi4k.api.assistant.AnalysisPlan
 import com.vapi4k.api.assistant.ArtifactPlan
 import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.api.assistant.AssistantOverrides
+import com.vapi4k.api.assistant.CommonAssistantProperties
 import com.vapi4k.api.assistant.VoicemailDetection
 import com.vapi4k.api.model.AnthropicModel
 import com.vapi4k.api.model.AnyscaleModel
@@ -76,6 +77,13 @@ import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
+
+interface AssistantProperties : CommonAssistantProperties {
+  // TODO: Not in the docs
+  var dialKeypadFunctionEnabled: Boolean?
+  var endCallFunctionEnabled: Boolean?
+  var forwardingPhoneNumber: String
+}
 
 data class AssistantImpl internal constructor(
   override val assistantRequestContext: AssistantRequestContext,

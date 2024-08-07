@@ -76,28 +76,6 @@ import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 
 interface AssistantOverridesProperties : CommonAssistantProperties {
-//  var backchannelingEnabled: Boolean?
-//  var backgroundDenoisingEnabled: Boolean?
-//  var backgroundSound: BackgroundSoundType
-//  var endCallMessage: String
-//  var firstMessage: String
-//  var firstMessageMode: FirstMessageModeType
-//  var hipaaEnabled: Boolean?
-//  var llmRequestDelaySeconds: Double
-//  var llmRequestNonPunctuatedDelaySeconds: Double
-//  var maxDurationSeconds: Int
-//  var modelOutputInMessagesEnabled: Boolean?
-//  var name: String
-//  var numWordsToInterruptAssistant: Int
-//  var recordingEnabled: Boolean?
-//  var responseDelaySeconds: Double
-//  var serverUrl: String
-//  var serverUrlSecret: String
-//  var silenceTimeoutSeconds: Int
-//  var voicemailMessage: String
-//  val clientMessages: MutableSet<AssistantClientMessageType>
-//  val serverMessages: MutableSet<AssistantServerMessageType>
-
   // Used only in AssistantOverrides
   val variableValues: MutableMap<String, String>
 }
