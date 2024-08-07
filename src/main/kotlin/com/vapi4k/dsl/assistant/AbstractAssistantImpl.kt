@@ -18,6 +18,7 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.AnalysisPlan
 import com.vapi4k.api.assistant.ArtifactPlan
+import com.vapi4k.api.assistant.VoicemailDetection
 import com.vapi4k.api.model.AnthropicModel
 import com.vapi4k.api.model.AnyscaleModel
 import com.vapi4k.api.model.CustomLLMModel
@@ -40,81 +41,227 @@ import com.vapi4k.api.voice.NeetsVoice
 import com.vapi4k.api.voice.OpenAIVoice
 import com.vapi4k.api.voice.PlayHTVoice
 import com.vapi4k.api.voice.RimeAIVoice
+import com.vapi4k.dsl.model.AnthropicModelImpl
+import com.vapi4k.dsl.model.AnyscaleModelImpl
+import com.vapi4k.dsl.model.CustomLLMModelImpl
+import com.vapi4k.dsl.model.DeepInfraModelImpl
+import com.vapi4k.dsl.model.GroqModelImpl
 import com.vapi4k.dsl.model.ModelUnion
-import com.vapi4k.dsl.model.analysisPlanUnion
-import com.vapi4k.dsl.model.anthropicModelUnion
-import com.vapi4k.dsl.model.anyscaleModelUnion
-import com.vapi4k.dsl.model.artifactPlanUnion
-import com.vapi4k.dsl.model.azureVoiceUnion
-import com.vapi4k.dsl.model.cartesiaVoiceUnion
-import com.vapi4k.dsl.model.customLLMModelUnion
-import com.vapi4k.dsl.model.deepInfraModelUnion
-import com.vapi4k.dsl.model.deepgramTranscriberUnion
-import com.vapi4k.dsl.model.deepgramVoiceUnion
-import com.vapi4k.dsl.model.elevenLabsVoiceUnion
-import com.vapi4k.dsl.model.gladiaTranscriberUnion
-import com.vapi4k.dsl.model.groqModelUnion
-import com.vapi4k.dsl.model.lmntVoiceUnion
-import com.vapi4k.dsl.model.neetsVoiceUnion
-import com.vapi4k.dsl.model.openAIModelUnion
-import com.vapi4k.dsl.model.openAIVoiceUnion
-import com.vapi4k.dsl.model.openRouterModelUnion
-import com.vapi4k.dsl.model.perplexityAIModelUnion
-import com.vapi4k.dsl.model.playHTVoiceUnion
-import com.vapi4k.dsl.model.rimeAIVoiceUnion
-import com.vapi4k.dsl.model.talkscriberTranscriberUnion
-import com.vapi4k.dsl.model.togetherAIModelUnion
-import com.vapi4k.dsl.model.vapiModelUnion
+import com.vapi4k.dsl.model.OpenAIModelImpl
+import com.vapi4k.dsl.model.OpenRouterModelImpl
+import com.vapi4k.dsl.model.PerplexityAIModelImpl
+import com.vapi4k.dsl.model.TogetherAIModelImpl
+import com.vapi4k.dsl.model.VapiModelImpl
+import com.vapi4k.dtos.model.AnthropicModelDto
+import com.vapi4k.dtos.model.AnyscaleModelDto
+import com.vapi4k.dtos.model.CustomLLMModelDto
+import com.vapi4k.dtos.model.DeepInfraModelDto
+import com.vapi4k.dtos.model.GroqModelDto
+import com.vapi4k.dtos.model.OpenAIModelDto
+import com.vapi4k.dtos.model.OpenRouterModelDto
+import com.vapi4k.dtos.model.PerplexityAIModelDto
+import com.vapi4k.dtos.model.TogetherAIModelDto
+import com.vapi4k.dtos.model.VapiModelDto
+import com.vapi4k.dtos.transcriber.DeepgramTranscriberDto
+import com.vapi4k.dtos.transcriber.GladiaTranscriberDto
+import com.vapi4k.dtos.transcriber.TalkscriberTranscriberDto
+import com.vapi4k.dtos.voice.AzureVoiceDto
+import com.vapi4k.dtos.voice.CartesiaVoiceDto
+import com.vapi4k.dtos.voice.DeepgramVoiceDto
+import com.vapi4k.dtos.voice.ElevenLabsVoiceDto
+import com.vapi4k.dtos.voice.LMNTVoiceDto
+import com.vapi4k.dtos.voice.NeetsVoiceDto
+import com.vapi4k.dtos.voice.OpenAIVoiceDto
+import com.vapi4k.dtos.voice.PlayHTVoiceDto
+import com.vapi4k.dtos.voice.RimeAIVoiceDto
 
 abstract class AbstractAssistantImpl : ModelUnion {
+  var videoRecordingEnabled: Boolean
+    get() = artifactPlanDto.videoRecordingEnabled ?: false
+    set(value) = run { artifactPlanDto.videoRecordingEnabled = value }
+
+  fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =
+    VoicemailDetection(voicemailDetectionDto).apply(block)
+
   // Transcribers
-  fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit) = deepgramTranscriberUnion(block)
+  fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {
+    transcriberChecker.check("deepGramTranscriber{} already called")
+    val transcriberDto = DeepgramTranscriberDto().also { modelDtoUnion.transcriberDto = it }
+    return DeepgramTranscriber(transcriberDto)
+      .apply(block)
+      .apply { transcriberDto.verifyValues() }
+  }
 
-  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit) = gladiaTranscriberUnion(block)
+  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber {
+    transcriberChecker.check("gladiaTranscriber{} already called")
+    val transcriberDto = GladiaTranscriberDto().also { modelDtoUnion.transcriberDto = it }
+    return GladiaTranscriber(transcriberDto)
+      .apply(block)
+      .apply { transcriberDto.verifyValues() }
+  }
 
-  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit) = talkscriberTranscriberUnion(block)
+  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber {
+    transcriberChecker.check("talkscriberTranscriber{} already called")
+    val transcriberDto = TalkscriberTranscriberDto().also { modelDtoUnion.transcriberDto = it }
+    return TalkscriberTranscriber(transcriberDto)
+      .apply(block)
+      .apply { transcriberDto.verifyValues() }
+  }
 
   // Models
-  fun anyscaleModel(block: AnyscaleModel.() -> Unit) = anyscaleModelUnion(block)
+  fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel {
+    modelChecker.check("anyscaleModel{} already called")
+    val modelDto = AnyscaleModelDto().also { modelDtoUnion.modelDto = it }
+    return AnyscaleModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun anthropicModel(block: AnthropicModel.() -> Unit) = anthropicModelUnion(block)
+  fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel {
+    modelChecker.check("anthropicModel{} already called")
+    val modelDto = AnthropicModelDto().also { modelDtoUnion.modelDto = it }
+    return AnthropicModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun customLLMModel(block: CustomLLMModel.() -> Unit) = customLLMModelUnion(block)
+  fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel {
+    modelChecker.check("customLLMModel{} already called")
+    val modelDto = CustomLLMModelDto().also { modelDtoUnion.modelDto = it }
+    return CustomLLMModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun deepInfraModel(block: DeepInfraModel.() -> Unit) = deepInfraModelUnion(block)
+  fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel {
+    modelChecker.check("deepInfraModel{} already called")
+    val modelDto = DeepInfraModelDto().also { modelDtoUnion.modelDto = it }
+    return DeepInfraModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun groqModel(block: GroqModel.() -> Unit) = groqModelUnion(block)
+  fun groqModel(block: GroqModel.() -> Unit): GroqModel {
+    modelChecker.check("groqModel{} already called")
+    val modelDto = GroqModelDto().also { modelDtoUnion.modelDto = it }
+    return GroqModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun openAIModel(block: OpenAIModel.() -> Unit) = openAIModelUnion(block)
+  fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel {
+    modelChecker.check("openAIModel{} already called")
+    val modelDto = OpenAIModelDto().also { modelDtoUnion.modelDto = it }
+    return OpenAIModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun openRouterModel(block: OpenRouterModel.() -> Unit) = openRouterModelUnion(block)
+  fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel {
+    modelChecker.check("openRouterModel{} already called")
+    val modelDto = OpenRouterModelDto().also { modelDtoUnion.modelDto = it }
+    return OpenRouterModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun perplexityAIModel(block: PerplexityAIModel.() -> Unit) = perplexityAIModelUnion(block)
+  fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel {
+    modelChecker.check("perplexityAIModel{} already called")
+    val modelDto = PerplexityAIModelDto().also { modelDtoUnion.modelDto = it }
+    return PerplexityAIModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun togetherAIModel(block: TogetherAIModel.() -> Unit) = togetherAIModelUnion(block)
+  fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel {
+    modelChecker.check("togetherAIModel{} already called")
+    val modelDto = TogetherAIModelDto().also { modelDtoUnion.modelDto = it }
+    return TogetherAIModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
-  fun vapiModel(block: VapiModel.() -> Unit) = vapiModelUnion(block)
+  fun vapiModel(block: VapiModel.() -> Unit): VapiModel {
+    modelChecker.check("vapiModel{} already called")
+    val modelDto = VapiModelDto().also { modelDtoUnion.modelDto = it }
+    return VapiModelImpl(this, modelDto)
+      .apply(block)
+      .apply { modelDto.verifyValues() }
+  }
 
   // Voices
-  fun azureVoice(block: AzureVoice.() -> Unit) = azureVoiceUnion(block)
+  fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice {
+    voiceChecker.check("azureVoice{} already called")
+    val voiceDto = AzureVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return AzureVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
 
-  fun cartesiaVoice(block: CartesiaVoice.() -> Unit) = cartesiaVoiceUnion(block)
+  fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice {
+    voiceChecker.check("cartesiaVoice{} already called")
+    val voiceDto = CartesiaVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return CartesiaVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
 
-  fun deepgramVoice(block: DeepgramVoice.() -> Unit) = deepgramVoiceUnion(block)
+  fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice {
+    voiceChecker.check("deepgramVoice{} already called")
+    val voiceDto = DeepgramVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return DeepgramVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
 
-  fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit) = elevenLabsVoiceUnion(block)
+  fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice {
+    voiceChecker.check("elevenLabsVoice{} already called")
+    val voiceDto = ElevenLabsVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return ElevenLabsVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
 
-  fun lmntVoice(block: LMNTVoice.() -> Unit) = lmntVoiceUnion(block)
+  fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice {
+    voiceChecker.check("lmntVoice{} already called")
+    val voiceDto = LMNTVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return LMNTVoice(voiceDto)
+      .apply(block)
+  }
 
-  fun neetsVoice(block: NeetsVoice.() -> Unit) = neetsVoiceUnion(block)
+  fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice {
+    voiceChecker.check("neetsVoice{} already called")
+    val voiceDto = NeetsVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return NeetsVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
 
-  fun openAIVoice(block: OpenAIVoice.() -> Unit) = openAIVoiceUnion(block)
+  fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice {
+    voiceChecker.check("openAIVoice{} already called")
+    val voiceDto = OpenAIVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return OpenAIVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
 
-  fun playHTVoice(block: PlayHTVoice.() -> Unit) = playHTVoiceUnion(block)
+  fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice {
+    voiceChecker.check("playHTVoice{} already called")
+    val voiceDto = PlayHTVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return PlayHTVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
 
-  fun rimeAIVoice(block: RimeAIVoice.() -> Unit) = rimeAIVoiceUnion(block)
+  fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice {
+    voiceChecker.check("rimeAIVoice{} already called")
+    val voiceDto = RimeAIVoiceDto().also { modelDtoUnion.voiceDto = it }
+    return RimeAIVoice(voiceDto)
+      .apply(block)
+      .apply { voiceDto.verifyValues() }
+  }
 
-  fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan = analysisPlanUnion(block)
+  fun analysisPlan(block: AnalysisPlan.() -> Unit) = AnalysisPlan(analysisPlanDto).apply(block)
 
-  fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan = artifactPlanUnion(block)
+  fun artifactPlan(block: ArtifactPlan.() -> Unit) = ArtifactPlan(artifactPlanDto).apply(block)
 }
