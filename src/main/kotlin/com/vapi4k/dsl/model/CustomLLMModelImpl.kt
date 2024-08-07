@@ -27,8 +27,9 @@ interface CustomLLMModelProperties {
   var model: String
 
   /**
-  This determines whether we detect user's emotion while they speak and send it as an additional info to model.
-  Default `false` because the model is usually good at understanding the user's emotion from text.
+  <p>This determines whether we detect user's emotion while they speak and send it as an additional info to model.
+  <br>Default `false` because the model is usually good at understanding the user's emotion from text.
+  </p>
    */
   val emotionRecognitionEnabled: Boolean?
 
@@ -39,11 +40,12 @@ interface CustomLLMModelProperties {
 
   /**
   <p>This determines whether metadata is sent in requests to the custom provider.
-  <li>`off` will not send any metadata. Payload will look like `{ messages }`</li>
-  <li>`variable` will send `assistant.metadata` as a variable on the payload. Payload will look like `{ messages, metadata }`</li>
-  <li>`destructured` will send `assistant.metadata` fields directly on the payload. Payload will look like `{ messages, ...metadata }`</li>
-  Further, `variable` and `destructured` will send `call`, `phoneNumber`, and `customer` objects in the payload.
-  <br>Default is `variable`.</p>
+  <li><code>off</code> will not send any metadata. Payload will look like <code>{ messages }</code>
+  <li><code>variable</code> will send <code>assistant.metadata</code> as a variable on the payload. Payload will look like <code>{ messages, metadata }</code>
+  <li><code>destructured</code> will send <code>assistant.metadata</code> fields directly on the payload. Payload will look like <code>{ messages, ...metadata }</code>
+  <br>Further, <code>variable</code> and <code>destructured</code> will send <code>call</code>, <code>phoneNumber</code>, and <code>customer</code> objects in the payload.
+  <br>Default is <code>variable</code>.
+  </p>
    */
   var metadataSendMode: MetaDataSendModeType
 

@@ -17,5 +17,8 @@
 package com.vapi4k.dsl.assistant
 
 interface ArtifactPlanProperties {
+  /**
+  This determines whether the video is recorded during the call. Default is false. Only relevant for `webCall` type.
+   */
   var videoRecordingEnabled: Boolean?
 }

@@ -20,6 +20,11 @@ import com.vapi4k.dsl.assistant.ArtifactPlanProperties
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dtos.ArtifactPlanDto
 
+/**
+<p>This is the plan for artifacts generated during assistant's calls. Stored in <code>call.artifact</code>.
+<br>Note: <code>recordingEnabled</code> is currently at the root level. It will be moved to <code>artifactPlan</code> in the future, but will remain backwards compatible.
+</p>
+ */
 @AssistantDslMarker
 class ArtifactPlan internal constructor(
   private val dto: ArtifactPlanDto,

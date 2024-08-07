@@ -33,7 +33,8 @@ interface CommonVoiceProperties {
   voice provider. On the other hand, increasing might be a good idea if you want to give voice provider bigger chunks,
   so it can pronounce them better.
   <br>Decreasing this value might decrease latency but might also decrease quality if the voice provider struggles to
-  pronounce the text correctly.</p>
+  pronounce the text correctly.
+  </p>
    */
   var inputMinCharacters: Int
 
