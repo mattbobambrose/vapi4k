@@ -41,7 +41,18 @@ object JsonElementUtils {
 
   val JsonElement.stringValue get() = jsonPrimitive.content
   val JsonElement.intValue get() = jsonPrimitive.content.toInt()
+  val JsonElement.doubleValue get() = jsonPrimitive.content.toDouble()
   val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
+  val JsonElement.keys get() = jsonObject.keys
+
+  fun JsonElement.stringValue(key: String) = get(key).stringValue
+
+  fun JsonElement.intValue(key: String) = get(key).intValue
+
+  fun JsonElement.doubleValue(key: String) = get(key).doubleValue
+
+  fun JsonElement.booleanValue(key: String) = get(key).booleanValue
+
 
   fun JsonElement.element(key: String) =
     jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
@@ -49,12 +60,6 @@ object JsonElementUtils {
   fun JsonElement.property(vararg keys: String): JsonElement =
     keys.flatMap { it.split(".") }
       .fold(this) { acc, key -> acc.element(key) }
-
-  fun JsonElement.stringValue(key: String) = get(key).stringValue
-
-  fun JsonElement.intValue(key: String) = get(key).intValue
-
-  fun JsonElement.booleanValue(key: String) = get(key).booleanValue
 
   fun JsonElement.toJsonElementList() = jsonArray.toList()
 
@@ -69,5 +74,5 @@ object JsonElementUtils {
 
   fun String.toJsonElement() = Json.parseToJsonElement(this)
 
-  fun String.toJsonString(prettyPrint: Boolean = true) = toJsonElement().toJsonString(prettyPrint)
+  fun String.toJsonString() = toJsonElement().toJsonString(true)
 }

@@ -20,6 +20,7 @@ import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
 import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
@@ -308,11 +309,11 @@ class VoiceTest {
         }
       }
     val jsonElement = squad.toJsonElement()
-    val members = jsonElement["squad.members"].jsonArray.toList()
+    val members = jsonElement["squad.members"].toJsonElementList()
     assertEquals("Hello!", members[0]["assistant.firstMessage"].stringValue)
     assertEquals("llama3-8b-8192", members[0]["assistant.model.model"].stringValue)
     assertEquals("jack", members[0]["assistant.voice.voiceId"].stringValue)
     assertEquals("male_angry", members[0]["assistant.voice.emotion"].stringValue)
-    assertEquals("10.0", members[0]["assistant.voice.temperature"].get().stringValue)
+    assertEquals("10.0", members[0]["assistant.voice.temperature"].stringValue)
   }
 }

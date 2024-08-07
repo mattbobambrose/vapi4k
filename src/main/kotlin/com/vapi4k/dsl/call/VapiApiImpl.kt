@@ -24,6 +24,7 @@ import com.vapi4k.api.call.VapiApi
 import com.vapi4k.api.call.enums.ApiObjectType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.containsKey
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.common.Constants.VAPI_API_URL
@@ -45,7 +46,6 @@ import io.ktor.http.contentType
 import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.jsonObject
 
 class VapiApiImpl private constructor(
   internal val config: ApplicationConfig,
@@ -70,7 +70,7 @@ class VapiApiImpl private constructor(
         .getOrThrow()
 
       val jsonElement = httpResponse.bodyAsText().toJsonElement()
-      val hasId = jsonElement.jsonObject.containsKey("id")
+      val hasId = jsonElement.containsKey("id")
       if (hasId) {
         logger.info { "Call ID: ${jsonElement.id}" }
         outboundApplication.toolCache.swapCacheKeys(phone.sessionCacheId, jsonElement.id.toSessionCacheId())

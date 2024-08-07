@@ -20,13 +20,12 @@ import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.booleanValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.element
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.keys
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.tools
-import kotlinx.serialization.json.jsonObject
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
@@ -146,10 +145,10 @@ class ModelTests {
         }
       }
     val je = response.toJsonElement()
-    val tool = je.tools().first().jsonObject
-    println(tool.toJsonString())
-    assertEquals("wed", tool["function"]?.stringValue("name"))
-    assertEquals("a description", tool["function"]?.stringValue("description"))
+    val tool = je.tools().first()
+    //println(tool.toJsonString())
+    assertEquals("wed", tool["function"].stringValue("name"))
+    assertEquals("a description", tool["function"].stringValue("description"))
     assertEquals("true", tool.stringValue("async"))
   }
 
@@ -310,7 +309,7 @@ class ModelTests {
       }
     val je = response.toJsonElement()
     val tool = je.tools().first()
-    assertEquals(3, tool["function.parameters.properties"].jsonObject.keys.size)
+    assertEquals(3, tool["function.parameters.properties"].keys.size)
   }
 
   @Test

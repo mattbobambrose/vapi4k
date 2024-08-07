@@ -175,12 +175,31 @@ tasks.withType<DokkaTask>().configureEach {
     }
 }
 
+tasks.withType<DokkaTask>().configureEach {
+//      "customAssets": ["${file("assets/my-image.png")}"],
+//      "customStyleSheets": ["${file("assets/my-styles.css")}"],
+//      "separateInheritedMembers": false,
+//      "templatesDir": "${file("dokka/templates")}",
+//      "mergeImplicitExpectActualDeclarations": false
+    val dokkaBaseConfiguration = """
+    {
+      "footerMessage": "Vapi4k"
+    }
+    """
+    pluginsMapConfiguration.set(
+        mapOf(
+            // fully qualified plugin name to json configuration
+            "org.jetbrains.dokka.base.DokkaBase" to dokkaBaseConfiguration
+        )
+    )
+}
+
 tasks.dokkaHtml.configure {
 //    outputDirectory.set(buildDir.resolve("dokka"))
 
     dokkaSourceSets {
         named("main") {
-            displayName.set("Vapi4k")
+            //displayName.set("Vapi4k")
             noStdlibLink.set(true)
             noJdkLink.set(true)
 

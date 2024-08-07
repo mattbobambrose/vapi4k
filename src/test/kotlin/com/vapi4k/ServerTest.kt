@@ -19,6 +19,7 @@ package com.vapi4k
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.keys
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.common.Endpoints.CACHES_PATH
@@ -35,7 +36,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
-import kotlinx.serialization.json.jsonObject
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -132,7 +132,7 @@ class ServerTest {
       if (i == 2) {
         assertEquals(
           1,
-          jsonElement["${DEFAULT_SERVER_PATH.value.removePrefix("/")}.toolCallCache"].jsonObject.keys.size,
+          jsonElement["${DEFAULT_SERVER_PATH.value.removePrefix("/")}.toolCallCache"].keys.size,
         )
       }
     }
