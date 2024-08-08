@@ -17,15 +17,16 @@
 package com.vapi4k
 
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
+import com.vapi4k.api.model.enums.GroqModelType
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.keys
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.common.Endpoints.CACHES_PATH
-import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.dsl.tools.ToolCache.Companion.clearToolCache
+import com.vapi4k.common.EnvVar.DEFAULT_SERVER_PATH
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
-import com.vapi4k.utils.firstInList
-import com.vapi4k.utils.get
-import com.vapi4k.utils.intValue
-import com.vapi4k.utils.stringValue
+import com.vapi4k.utils.JsonUtils.firstInList
 import com.vapi4k.utils.withTestApplication
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
@@ -35,7 +36,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
-import kotlinx.serialization.json.jsonObject
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -75,7 +75,6 @@ class ServerTest {
 
   @Test
   fun `Tool requests arg ordering`() {
-    clearToolCache()
     val responses =
       withTestApplication(
         listOf(
@@ -109,7 +108,7 @@ class ServerTest {
       if (i == 6) {
         assertEquals(
           0,
-          jsonElement["toolCallCacheSize"].intValue,
+          jsonElement["${DEFAULT_SERVER_PATH.value.removePrefix("/")}.toolCallCacheSize"].intValue,
         )
       }
     }
@@ -117,7 +116,6 @@ class ServerTest {
 
   @Test
   fun `Check for EOCR cache removal`() {
-    clearToolCache()
     val responses =
       withTestApplication(
         listOf(
@@ -134,7 +132,7 @@ class ServerTest {
       if (i == 2) {
         assertEquals(
           1,
-          jsonElement["toolCallCache"].jsonObject.keys.size,
+          jsonElement["${DEFAULT_SERVER_PATH.value.removePrefix("/")}.toolCallCache"].keys.size,
         )
       }
     }

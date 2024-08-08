@@ -17,10 +17,17 @@
 package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
+import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.tools.enums.ToolMessageType
+import com.vapi4k.api.vapi4k.AssistantRequestContext
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.containsKey
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.common.EnvVar.Companion.defaultServerPath
-import com.vapi4k.dsl.assistant.AssistantResponse
-import com.vapi4k.dsl.tools.enums.ToolMessageType
-import com.vapi4k.dsl.vapi4k.RequestContext
+import com.vapi4k.dsl.assistant.AssistantResponseImpl
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.server.Vapi4k
@@ -37,17 +44,17 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
 
 fun assistantResponse(
-  requestContext: RequestContext,
+  assistantRequestContext: AssistantRequestContext,
   block: AssistantResponse.() -> Unit,
 ): AssistantRequestResponse {
-  val assistantResponse = AssistantResponse(requestContext).apply(block)
+  val assistantResponse = AssistantResponseImpl(assistantRequestContext).apply(block)
   return if (assistantResponse.isAssigned)
     assistantResponse.assistantRequestResponse
   else
     error("assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
 }
 
-fun JsonElement.tools() = get("assistant.model.tools").toJsonElementList()
+fun JsonElement.tools() = this.get("assistant.model.tools").toJsonElementList()
 
 fun JsonElement.firstTool() = tools().first()
 
@@ -81,15 +88,6 @@ fun withTestApplication(
           onAssistantRequest {
             block()
           }
-
-          toolCallEndpoints {
-            // Provide a default endpoint
-            endpoint {
-              serverUrl = "https://test/toolCall"
-              serverSecret = "456"
-              timeoutSeconds = 20
-            }
-          }
         }
       }
     }
@@ -120,19 +118,10 @@ fun withTestApplication(
     application {
       install(Vapi4k) {
         vapi4kApplication {
-          eocrCacheRemovalEnabled = cacheRemovalEnabled
+          (this as Vapi4kApplicationImpl).eocrCacheRemovalEnabled = cacheRemovalEnabled
 
           onAssistantRequest {
             block()
-          }
-
-          toolCallEndpoints {
-            // Provide a default endpoint
-            endpoint {
-              serverUrl = "https://test/toolCall"
-              serverSecret = "456"
-              timeoutSeconds = 20
-            }
           }
         }
       }

@@ -16,8 +16,8 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.AssistantResponse
-import com.vapi4k.dsl.model.enums.OpenAIModelType
+import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.model.enums.OpenAIModelType
 
 class AssistantIdWithOverride {
   fun AssistantResponse.getAssistantIdWithOverride() =

@@ -16,9 +16,9 @@
 
 package com.vapi4k.dtos.api.destination
 
-import com.vapi4k.dsl.destination.AssistantDestination
-import com.vapi4k.dsl.destination.enums.AssistantTransferMode
-import com.vapi4k.dsl.destination.enums.DestinationType
+import com.vapi4k.api.destination.AssistantDestination
+import com.vapi4k.api.destination.enums.AssistantTransferMode
+import com.vapi4k.api.destination.enums.DestinationType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 

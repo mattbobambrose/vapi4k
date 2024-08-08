@@ -31,10 +31,6 @@ object Utils {
 
   fun String.ensureEndsWith(s: String) = if (endsWith(s)) this else this + s
 
-  fun String.dropLeading(s: String = "/") = if (startsWith(s)) this.drop(s.length) else this
-
-  fun String.dropEnding(s: String = "/") = if (endsWith(s)) this.dropLast(s.length) else this
-
   fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }
 
   fun <T> lambda(block: T) = block
@@ -71,7 +67,7 @@ object Utils {
     }\t..."
 
   @OptIn(ExperimentalContracts::class)
-  internal fun Any?.isNotNull(): Boolean {
+  fun Any?.isNotNull(): Boolean {
     contract {
       returns(true) implies (this@isNotNull != null)
     }

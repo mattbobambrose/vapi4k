@@ -16,7 +16,7 @@
 
 package com.vapi4k.dtos.api
 
-import com.vapi4k.dsl.api.CustomerProperties
+import com.vapi4k.dsl.call.CustomerProperties
 import kotlinx.serialization.Serializable
 
 // TODO: Make polymorphic

@@ -16,7 +16,7 @@
 
 package com.vapi4k.dtos.model
 
-import com.vapi4k.dtos.RoleMessage
+import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.tools.ToolDto
 import kotlinx.serialization.SerialName
@@ -29,7 +29,7 @@ abstract class AbstractModelDto {
   var emotionRecognitionEnabled: Boolean? = null
   var numFastTurns: Int = -1
 
-  val messages: MutableList<RoleMessage> = mutableListOf()
+  val messages: MutableList<RoleMessageDto> = mutableListOf()
   val tools: MutableList<ToolDto> = mutableListOf()
   val toolIds: MutableSet<String> = mutableSetOf()
   val functions: MutableList<FunctionDto> = mutableListOf()

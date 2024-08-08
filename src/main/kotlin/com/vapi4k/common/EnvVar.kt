@@ -17,8 +17,6 @@
 package com.vapi4k.common
 
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.Utils.dropEnding
-import com.vapi4k.utils.Utils.dropLeading
 import com.vapi4k.utils.Utils.isNull
 import com.vapi4k.utils.Utils.obfuscate
 
@@ -28,6 +26,7 @@ enum class EnvVar(
   private val width: Int = 10,
 ) {
   // Server details
+  PORT({ PORT.getEnv(8080) }),
   SERVER_BASE_URL({ SERVER_BASE_URL.getEnv("http://localhost:8080") }),
   DEFAULT_SERVER_PATH({ DEFAULT_SERVER_PATH.getEnv("/vapi4k") }),
   IS_PRODUCTION({ IS_PRODUCTION.getEnv(false) }),
@@ -47,8 +46,8 @@ enum class EnvVar(
   TOOL_CACHE_MAX_AGE_MINS({ TOOL_CACHE_MAX_AGE_MINS.getEnv(60) }),
 
   // Resend details
-//  RESEND_API_KEY({ RESEND_API_KEY.getRequired() }, { it.obfuscate(1) }),
-//  RESEND_SENDER_EMAIL({ RESEND_SENDER_EMAIL.getRequired() })
+  // RESEND_API_KEY({ RESEND_API_KEY.getRequired() }, { it.obfuscate(1) }),
+  // RESEND_SENDER_EMAIL({ RESEND_SENDER_EMAIL.getRequired() })
   ;
 
   val value: String by lazy { src().toString() }
@@ -84,8 +83,8 @@ enum class EnvVar(
     }
 
     val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
-    val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.dropEnding("/") }
-    val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.dropLeading("/") }
+    val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.removeSuffix("/") }
+    val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removePrefix("/") }
 
 //    val envResendApiKey: String by lazy { RESEND_API_KEY.value }
 //    val envResendEmailSender: Email by lazy { RESEND_SENDER_EMAIL.value.toEmail() }

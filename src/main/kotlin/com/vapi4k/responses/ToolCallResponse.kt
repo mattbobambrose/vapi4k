@@ -16,14 +16,14 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallArguments
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallName
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
-import com.vapi4k.utils.JsonElementUtils.toolCallArguments
-import com.vapi4k.utils.JsonElementUtils.toolCallId
 import com.vapi4k.utils.JsonElementUtils.toolCallList
-import com.vapi4k.utils.JsonElementUtils.toolCallName
 import com.vapi4k.utils.Utils.errorMsg
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -34,14 +34,16 @@ data class ToolCallResponse(
   var error: String = "",
 ) {
   companion object {
-    fun getToolCallResponse(request: JsonElement) =
-      runCatching {
-        ToolCallResponse()
-          .also { response ->
-            var errorMessage = ""
-            val toolCallList = request.toolCallList
+    fun getToolCallResponse(
+      application: Vapi4kApplicationImpl,
+      request: JsonElement,
+    ) = runCatching {
+      ToolCallResponse()
+        .also { response ->
+          var errorMessage = ""
 
-            for (toolCall in toolCallList) {
+          request.toolCallList
+            .forEach { toolCall ->
               response.also { toolCallResponse ->
                 response.results +=
                   ToolCallResult()
@@ -49,14 +51,14 @@ data class ToolCallResponse(
                       val sessionCacheId = request.sessionCacheId
                       val funcName = toolCall.toolCallName
                       val args = toolCall.toolCallArguments
-                      toolCallResult.toolCallId = toolCall.toolCallId
+                      toolCallResult.toolCallId = toolCall.id
                       toolCallResult.name = funcName
                       val errorAction = { errorMsg: String ->
                         toolCallResult.error = errorMsg
                         errorMessage = errorMsg
                       }
                       runCatching {
-                        toolCallCache.getFromCache(sessionCacheId)
+                        application.toolCache.getFromCache(sessionCacheId)
                           .getFunction(funcName)
                           .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
                           .invokeToolMethod(
@@ -79,11 +81,11 @@ data class ToolCallResponse(
                 }
               }
             }
-          }
-      }.getOrElse { e ->
-        logger.error { "Error receiving tool call: ${e.errorMsg}" }
-        error("Error receiving tool call: ${e.errorMsg}")
-      }
+        }
+    }.getOrElse { e ->
+      logger.error { "Error receiving tool call: ${e.errorMsg}" }
+      error("Error receiving tool call: ${e.errorMsg}")
+    }
   }
 }
 

@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.dsl.model.enums.MessageRoleType
 import kotlin.reflect.KProperty
 
 internal class ModelMessageDelegate(

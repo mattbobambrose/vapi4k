@@ -16,12 +16,12 @@
 
 package simpleDemo
 
-import com.vapi4k.dsl.assistant.AssistantResponse
+import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.assistant.enums.AssistantServerMessageType
+import com.vapi4k.api.conditions.eq
+import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.assistant.ToolCall
-import com.vapi4k.dsl.assistant.enums.AssistantServerMessageType
-import com.vapi4k.dsl.assistant.eq
-import com.vapi4k.dsl.model.enums.OpenAIModelType
-import com.vapi4k.dsl.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.toolservice.ToolCallService
 import kotlinx.serialization.json.JsonElement
 
@@ -41,9 +41,38 @@ object SimpleAssistant {
             }
           }
 
-//          tool(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
+          externalTool {
+            name = "wed"
+            description = "a description"
+            async = true
+
+            parameters {
+              parameter {
+                name = "param1"
+                description = "a description"
+              }
+              parameter {
+                name = "param2"
+                description = "a description"
+              }
+            }
+
+            server {
+              url = "yyy"
+              secret = "456"
+              timeoutSeconds = 5
+            }
+          }
+
+//          dtmf(WeatherLookupService2(), WeatherLookupService2::getWeatherByCity2) {
 //            requestStartMessage {
 //              content = "Default request start weather lookup"
+//            }
+//
+//            server {
+//              url = "http://localhost:8080/toolCall"
+//              secret = "456"
+//              timeoutSeconds = 20
 //            }
 //          }
 
@@ -57,11 +86,11 @@ object SimpleAssistant {
 //            }
 //          }
 
-          transfer(WeatherLookupService2(), WeatherLookupService2::getWeatherByZipCode) {
-            assistantDestination {
-              description = "Transfer to assistant 2"
-            }
-          }
+//          transfer(WeatherLookupService2(), WeatherLookupService2::getWeatherByZipCode) {
+//            assistantDestination {
+//              description = "Transfer to assistant 2"
+//            }
+//          }
         }
       }
 

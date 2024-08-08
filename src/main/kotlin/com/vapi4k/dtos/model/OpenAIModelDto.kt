@@ -16,9 +16,9 @@
 
 package com.vapi4k.dtos.model
 
+import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.dsl.model.ModelType
 import com.vapi4k.dsl.model.OpenAIModelProperties
-import com.vapi4k.dsl.model.enums.ModelType
-import com.vapi4k.dsl.model.enums.OpenAIModelType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

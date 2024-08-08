@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos.model
 
+import com.vapi4k.dsl.model.ModelType
 import com.vapi4k.dsl.model.PerplexityAIModelProperties
-import com.vapi4k.dsl.model.enums.ModelType
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 

@@ -16,9 +16,10 @@
 
 package com.vapi4k
 
-import com.vapi4k.dsl.api.VapiApi.Companion.vapiApi
-import com.vapi4k.dsl.model.enums.OpenAIModelType
-import com.vapi4k.utils.toJsonElement
+import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.dsl.call.VapiApiImpl
+import com.vapi4k.dsl.call.VapiApiImpl.Companion.vapiApi
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -28,7 +29,7 @@ import org.junit.Test
 class ApiCalls {
   @Test
   fun `multiple Assistant Decls`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -47,7 +48,7 @@ class ApiCalls {
 
   @Test
   fun `multiple AssistantId Decls`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -66,7 +67,7 @@ class ApiCalls {
 
   @Test
   fun `combination of Assistant and AssistantId Decls`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -85,7 +86,7 @@ class ApiCalls {
 
   @Test
   fun `multiple AssistantOverrides Decls`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -104,7 +105,7 @@ class ApiCalls {
 
   @Test
   fun `declare AssistantOverrides without an Assistant or AssistantId Decl`() {
-    val api = vapiApi("123-445-666")
+    val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
         call {
@@ -121,7 +122,7 @@ class ApiCalls {
   companion object {
     @JvmStatic
     fun main(args: Array<String>) {
-      val api = vapiApi("123-445-666")
+      val api = vapiApi("123-445-666") as VapiApiImpl
       val callResp =
         api.phone {
           call {

@@ -16,6 +16,14 @@
 
 package com.vapi4k.client
 
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantIdResponse
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantResponse
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isSquadResponse
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
+import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
@@ -25,24 +33,16 @@ import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
-import com.vapi4k.dsl.vapi4k.Vapi4kApplication
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonElementUtils.isAssistantIdResponse
-import com.vapi4k.utils.JsonElementUtils.isAssistantResponse
-import com.vapi4k.utils.JsonElementUtils.isSquadResponse
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
+import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
 import com.vapi4k.utils.Utils.resourceFile
-import com.vapi4k.utils.get
-import com.vapi4k.utils.modifyObjectWith
-import com.vapi4k.utils.stringValue
-import com.vapi4k.utils.toJsonElement
-import com.vapi4k.utils.toJsonElementList
-import com.vapi4k.utils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -86,7 +86,7 @@ object ValidateAssistantResponse {
   }
 
   fun validateAssistantRequestResponse(
-    application: Vapi4kApplication,
+    application: Vapi4kApplicationImpl,
     secret: String,
   ): String {
     val request = getNewRequest()
@@ -173,7 +173,7 @@ object ValidateAssistantResponse {
     }.getOrElse { index.toString() }
 
   private fun BODY.processAssistantRequest(
-    application: Vapi4kApplication,
+    application: Vapi4kApplicationImpl,
     assistantElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
@@ -181,75 +181,79 @@ object ValidateAssistantResponse {
       assistantElement["assistant.model.tools"].toJsonElementList()
         .map { it.stringValue("function.name") }
 
-    h2 { +"Tools" }
+    logger.debug { "Checking toolCache: ${application.toolCache.name} [$sessionCacheId]" }
+    if (!application.toolCache.contains(sessionCacheId)) {
+      h2 { +"No Tools Declared" }
+    } else {
+      h2 { +"Tools" }
+      val functionInfo = application.toolCache.getFromCache(sessionCacheId)
+      functions.forEach { function ->
+        // Skip external tools
+        if (functionInfo.hasFunction(function)) {
+          div {
+            style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            val functionDetails = functionInfo.getFunction(function)
+            val divid = getRandomSecret()
+            h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
+            form {
+              attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
+              attributes["hx-trigger"] = "submit"
+              attributes["hx-target"] = "#result-$divid"
 
-    val functionInfo = toolCallCache.getFromCache(sessionCacheId)
-
-    functions.forEach { function ->
-      div {
-        style = "border: 1px solid black; padding: 10px; margin: 10px;"
-        val functionDetails = functionInfo.getFunction(function)
-        val divid = getRandomSecret()
-        h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
-        form {
-          attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
-          attributes["hx-trigger"] = "submit"
-          attributes["hx-target"] = "#result-$divid"
-
-          hiddenInput {
-            name = APPLICATION_ID
-            value = application.applicationId.value
-          }
-          hiddenInput {
-            name = SESSION_CACHE_ID
-            value = sessionCacheId.value
-          }
-          hiddenInput {
-            name = FUNCTION_NAME
-            value = function
-          }
-          table {
-            tbody {
-              functionDetails.params.forEach { functionDetail ->
-                tr {
-                  td { +"${functionDetail.first}:" }
-                  td {
-                    style = "width: 325px;"
-                    input {
-                      style = "width: 325px;"
-                      type =
-                        when (functionDetail.second.asKClass()) {
-                          String::class -> InputType.text
-                          Int::class -> InputType.number
-                          Boolean::class -> InputType.checkBox
-                          else -> InputType.text
+              hiddenInput {
+                name = APPLICATION_ID
+                value = application.applicationId.value
+              }
+              hiddenInput {
+                name = SESSION_CACHE_ID
+                value = sessionCacheId.value
+              }
+              hiddenInput {
+                name = FUNCTION_NAME
+                value = function
+              }
+              table {
+                tbody {
+                  functionDetails.params.forEach { functionDetail ->
+                    tr {
+                      td { +"${functionDetail.first}:" }
+                      td {
+                        style = "width: 325px;"
+                        input {
+                          style = "width: 325px;"
+                          type =
+                            when (functionDetail.second.asKClass()) {
+                              String::class -> InputType.text
+                              Int::class -> InputType.number
+                              Boolean::class -> InputType.checkBox
+                              else -> InputType.text
+                            }
+                          name = functionDetail.first
                         }
-                      name = functionDetail.first
+                      }
+                      td {
+                        +"[${functionDetail.second.paramAnnotationWithDefault}]"
+                      }
                     }
                   }
-                  td {
-                    +"[${functionDetail.second.paramAnnotationWithDefault}]"
+                  tr {
+                    td {
+                      input {
+                        style = "margin-top: 10px;"
+                        type = InputType.submit
+                        value = "Invoke Tool"
+                      }
+                    }
+                    td {}
+                    td {}
                   }
                 }
-              }
-              tr {
-                td {
-                  input {
-                    style = "margin-top: 10px;"
-                    type = InputType.submit
-                    value = "Invoke Tool"
-                  }
-                }
-                td {}
-                td {}
               }
             }
-          }
-        }
 
-        script {
-          rawHtml(
-            """
+            script {
+              rawHtml(
+                """
               document.body.addEventListener('htmx:afterOnLoad', function(event) {
                 if (event.detail.target.id === 'result-$divid') {
                   // Highlight the json result
@@ -264,14 +268,16 @@ object ValidateAssistantResponse {
                 }
               });
             """,
-          )
-        }
+              )
+            }
 
-        pre {
-          style = "display: none;"
-          id = "display-$divid"
-          code(classes = "language-json line-numbers match-braces") {
-            id = "result-$divid"
+            pre {
+              style = "display: none;"
+              id = "display-$divid"
+              code(classes = "language-json line-numbers match-braces") {
+                id = "result-$divid"
+              }
+            }
           }
         }
       }

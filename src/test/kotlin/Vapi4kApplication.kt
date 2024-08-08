@@ -14,18 +14,18 @@
  *
  */
 
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.STATUS_UPDATE
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.requestType
 import com.vapi4k.dbms.Messages.insertRequest
 import com.vapi4k.dbms.Messages.insertResponse
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.STATUS_UPDATE
-import com.vapi4k.dsl.vapi4k.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.utils.DslUtils.logObject
 import com.vapi4k.utils.DslUtils.printObject
-import com.vapi4k.utils.JsonElementUtils.requestType
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.micrometer.prometheusmetrics.PrometheusConfig
@@ -36,26 +36,9 @@ fun Application.module() {
   defaultKtorConfig(appMicrometerRegistry)
 
   install(Vapi4k) {
-    val baseUrl = "https://eocare-app-fiqm5.ondigitalocean.app"
     vapi4kApplication {
-      serverPath = "$baseUrl/inboundRequest"
+      serverPath = "/inboundRequest"
       serverSecret = "12345"
-
-      toolCallEndpoints {
-        endpoint {
-          name = "endpoint1"
-          serverUrl = "$baseUrl/toolCall"
-          serverSecret = "456"
-          timeoutSeconds = 20
-        }
-
-        endpoint {
-          name = "endpoint2"
-          serverUrl = "$baseUrl/TC2"
-          serverSecret = "456"
-          timeoutSeconds = 20
-        }
-      }
 
       onAssistantRequest {
         myAssistantRequest()

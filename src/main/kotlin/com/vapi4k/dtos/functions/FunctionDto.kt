@@ -16,11 +16,13 @@
 
 package com.vapi4k.dtos.functions
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FunctionDto(
   var name: String = "",
   var description: String = "",
-  val parameters: FunctionParametersDto = FunctionParametersDto(),
+  @SerialName("parameters")
+  val parametersDto: FunctionParametersDto = FunctionParametersDto(),
 )

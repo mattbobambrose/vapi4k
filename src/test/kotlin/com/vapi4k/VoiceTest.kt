@@ -16,16 +16,17 @@
 
 package com.vapi4k
 
-import com.vapi4k.AssistantTest.Companion.REQUEST_CONTEXT
-import com.vapi4k.dsl.model.enums.GroqModelType
-import com.vapi4k.dsl.voice.enums.CartesiaVoiceLanguageType
-import com.vapi4k.dsl.voice.enums.CartesiaVoiceModelType
-import com.vapi4k.dsl.voice.enums.PlayHTVoiceEmotionType
-import com.vapi4k.dsl.voice.enums.PlayHTVoiceIdType
+import com.vapi4k.AssistantTest.Companion.newRequestContext
+import com.vapi4k.api.model.enums.GroqModelType
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
+import com.vapi4k.api.vapi4k.utils.get
+import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
+import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
+import com.vapi4k.api.voice.enums.PlayHTVoiceEmotionType
+import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.utils.assistantResponse
-import com.vapi4k.utils.get
-import com.vapi4k.utils.stringValue
-import com.vapi4k.utils.toJsonElement
 import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -35,7 +36,7 @@ class VoiceTest {
   @Test
   fun `playHt voice basic test`() {
     val squad =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -70,7 +71,7 @@ class VoiceTest {
   @Test
   fun `playHt voice two or no voiceId error test`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -97,7 +98,7 @@ class VoiceTest {
     }
 
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -125,7 +126,7 @@ class VoiceTest {
   @Test
   fun `cartesia voice two or no models error test`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -152,7 +153,7 @@ class VoiceTest {
     }
 
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -180,7 +181,7 @@ class VoiceTest {
   @Test
   fun `cartesia voice two languages error test`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -211,7 +212,7 @@ class VoiceTest {
   @Test
   fun `cartesia voice double model error test`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -245,7 +246,7 @@ class VoiceTest {
   @Test
   fun `cartesia voice double voice error test`() {
     assertThrows(IllegalStateException::class.java) {
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -279,7 +280,7 @@ class VoiceTest {
   @Test
   fun `double values test`() {
     val squad =
-      assistantResponse(REQUEST_CONTEXT) {
+      assistantResponse(newRequestContext()) {
         squad {
           members {
             member {
@@ -308,11 +309,11 @@ class VoiceTest {
         }
       }
     val jsonElement = squad.toJsonElement()
-    val members = jsonElement["squad.members"].jsonArray.toList()
+    val members = jsonElement["squad.members"].toJsonElementList()
     assertEquals("Hello!", members[0]["assistant.firstMessage"].stringValue)
     assertEquals("llama3-8b-8192", members[0]["assistant.model.model"].stringValue)
     assertEquals("jack", members[0]["assistant.voice.voiceId"].stringValue)
     assertEquals("male_angry", members[0]["assistant.voice.emotion"].stringValue)
-    assertEquals("10.0", members[0]["assistant.voice.temperature"].get().stringValue)
+    assertEquals("10.0", members[0]["assistant.voice.temperature"].stringValue)
   }
 }

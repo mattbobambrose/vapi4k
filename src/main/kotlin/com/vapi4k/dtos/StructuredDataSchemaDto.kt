@@ -16,15 +16,19 @@
 
 package com.vapi4k.dtos
 
+import com.vapi4k.api.assistant.enums.StructureDataSchemeType
 import com.vapi4k.dsl.assistant.StructuredDataSchemaProperties
-import com.vapi4k.dsl.assistant.enums.StructureDataSchemeType
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class StructuredDataSchemaDto(
   override var type: StructureDataSchemeType = StructureDataSchemeType.UNSPECIFIED,
   override var description: String = "",
+  @EncodeDefault
   override val items: MutableMap<String, String> = mutableMapOf(),
+  @EncodeDefault
   override val properties: MutableMap<String, String> = mutableMapOf(),
+  // @EncodeDefault
   override val required: MutableList<String> = mutableListOf(),
 ) : StructuredDataSchemaProperties

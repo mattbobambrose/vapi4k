@@ -13,7 +13,10 @@ clean:
 compile: build
 
 build:
-	./gradlew build -xtest
+	./gradlew build -x test
+
+cont-build:
+	./gradlew -t build -x test -x shadowJar -i
 
 tests:
 	./gradlew --rerun-tasks check
@@ -31,7 +34,7 @@ versioncheck:
 	./gradlew dependencyUpdates
 
 kdocs:
-	./gradlew dokkaHtml dokkaGfm
+	./gradlew dokkaHtml
 
 publish:
 	./gradlew publishToMavenLocal

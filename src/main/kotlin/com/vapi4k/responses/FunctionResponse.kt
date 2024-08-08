@@ -16,10 +16,10 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.dsl.tools.ToolCache.Companion.toolCallCache
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.functionName
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.functionParameters
+import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.JsonElementUtils.functionName
-import com.vapi4k.utils.JsonElementUtils.functionParameters
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -29,27 +29,29 @@ class FunctionResponse(
   var result: String = "",
 ) {
   companion object {
-    fun getFunctionCallResponse(request: JsonElement) =
-      FunctionResponse()
-        .also { response ->
-          val sessionCacheId = request.sessionCacheId
-          val funcName = request.functionName
-          val args = request.functionParameters
-          runCatching {
-            toolCallCache.getFromCache(sessionCacheId)
-              .getFunction(funcName)
-              .invokeToolMethod(
-                isTool = false,
-                args = args,
-                request = request,
-                message = mutableListOf(),
-                successAction = { result -> response.result = result },
-                errorAction = { result -> response.result = "Error invoking function" },
-              )
-          }.getOrElse { e ->
-            val errorMsg = e.message ?: "Error invoking function"
-            logger.error { errorMsg }
-          }
+    fun getFunctionCallResponse(
+      application: Vapi4kApplicationImpl,
+      request: JsonElement,
+    ) = FunctionResponse()
+      .also { response ->
+        val sessionCacheId = request.sessionCacheId
+        val funcName = request.functionName
+        val args = request.functionParameters
+        runCatching {
+          application.toolCache.getFromCache(sessionCacheId)
+            .getFunction(funcName)
+            .invokeToolMethod(
+              isTool = false,
+              args = args,
+              request = request,
+              message = mutableListOf(),
+              successAction = { result -> response.result = result },
+              errorAction = { result -> response.result = "Error invoking function" },
+            )
+        }.getOrElse { e ->
+          val errorMsg = e.message ?: "Error invoking function"
+          logger.error { errorMsg }
         }
+      }
   }
 }

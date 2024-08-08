@@ -16,7 +16,10 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.dsl.tools.enums.ToolType
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.booleanValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.keys
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
@@ -28,18 +31,13 @@ import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.valueParameters
 import com.vapi4k.utils.Utils.errorMsg
 import com.vapi4k.utils.Utils.findFunction
-import com.vapi4k.utils.booleanValue
-import com.vapi4k.utils.intValue
-import com.vapi4k.utils.stringValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.jsonObject
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 
-class FunctionDetails(
-  val toolType: ToolType,
+class FunctionDetails internal constructor(
   val obj: Any,
   val function: KFunction<*>,
 ) {
@@ -99,15 +97,15 @@ class FunctionDetails(
     argName: String,
     argType: KType,
   ) = when (argType.asKClass()) {
-      String::class -> args.jsonObject.stringValue(argName)
-      Int::class -> args.jsonObject.intValue(argName)
-      Boolean::class -> args.jsonObject.booleanValue(argName)
-      else -> error("Unsupported parameter type: $argType")
-    }
+    String::class -> args.stringValue(argName)
+    Int::class -> args.intValue(argName)
+    Boolean::class -> args.booleanValue(argName)
+    else -> error("Unsupported parameter type: $argType")
+  }
 
   private fun invokeMethod(args: JsonElement): String {
     val function = obj.findFunction(functionName)
-    val argNames = args.jsonObject.keys
+    val argNames = args.keys
     logger.info { "Invoking method $fqName with args $argNames" }
     val paramMap = function.valueParameters.toMap()
     val valueMap =

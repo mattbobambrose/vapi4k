@@ -18,6 +18,12 @@ package com.vapi4k.utils
 
 class DuplicateChecker {
   private var errorMsg = ""
+  private var timesCalled = 0
 
-  fun check(newStr: String) = if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
+  val wasCalled get() = timesCalled > 0
+
+  fun check(newStr: String) {
+    timesCalled++
+    if (errorMsg.isNotEmpty()) error(errorMsg) else errorMsg = newStr
+  }
 }

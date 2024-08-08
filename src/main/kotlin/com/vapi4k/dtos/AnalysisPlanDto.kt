@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos
 
+import com.vapi4k.api.assistant.enums.SuccessEvaluationRubricType
 import com.vapi4k.dsl.assistant.AnalysisPlanProperties
-import com.vapi4k.dsl.assistant.enums.SuccessEvaluationRubricType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -29,5 +29,5 @@ data class AnalysisPlanDto(
   override var successEvaluationRubric: SuccessEvaluationRubricType = SuccessEvaluationRubricType.UNSPECIFIED,
   override var successEvaluationRequestTimeoutSeconds: Double = -1.0,
   override var structuredDataPrompt: String = "",
-  override val structuredDataSchema: StructuredDataSchemaDto = StructuredDataSchemaDto(),
+  val structuredDataSchema: StructuredDataSchemaDto = StructuredDataSchemaDto(),
 ) : AnalysisPlanProperties

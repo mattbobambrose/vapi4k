@@ -23,12 +23,14 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.time.DurationUnit
 
-class FunctionInfo {
+class FunctionInfo internal constructor() {
   val created: Instant = Clock.System.now()
   val functions = mutableMapOf<String, FunctionDetails>()
 
   val age get() = Clock.System.now() - created
   val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
+
+  fun hasFunction(funcName: String) = functions.contains(funcName)
 
   fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
 

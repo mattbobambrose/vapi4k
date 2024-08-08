@@ -19,9 +19,7 @@ package com.vapi4k.dsl.model
 import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.common.MessageCallId
 import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.assistant.ModelUnion
-import com.vapi4k.dsl.model.enums.MessageRoleType
-import com.vapi4k.dtos.RoleMessage
+import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.tools.ToolDto
 
@@ -30,7 +28,7 @@ interface AbstractModelProperties {
   val sessionCacheId: SessionCacheId
   val assistantCacheId: AssistantCacheId
   val messageCallId: MessageCallId
-  val messages: MutableList<RoleMessage>
+  val messages: MutableList<RoleMessageDto>
   val toolDtos: MutableList<ToolDto>
   val functionDtos: MutableList<FunctionDto>
 
@@ -39,5 +37,5 @@ interface AbstractModelProperties {
     content: String,
   )
 
-  val application get() = modelUnion.requestContext.application
+  val application get() = modelUnion.assistantRequestContext.application
 }

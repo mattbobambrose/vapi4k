@@ -70,7 +70,6 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
@@ -85,9 +84,9 @@ dependencies {
     implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-metrics-micrometer:$ktorVersion")
 
-    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
-
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
+
+    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("com.impossibl.pgjdbc-ng:pgjdbc-ng-all:$pgjdbcVersion")
@@ -174,6 +173,53 @@ tasks.withType<DokkaTask>().configureEach {
         }
     }
 }
+
+tasks.withType<DokkaTask>().configureEach {
+//      "customAssets": ["${file("assets/my-image.png")}"],
+//      "customStyleSheets": ["${file("assets/my-styles.css")}"],
+//      "separateInheritedMembers": false,
+//      "templatesDir": "${file("dokka/templates")}",
+//      "mergeImplicitExpectActualDeclarations": false
+    val dokkaBaseConfiguration = """
+    {
+      "footerMessage": "Vapi4k"
+    }
+    """
+    pluginsMapConfiguration.set(
+        mapOf(
+            // fully qualified plugin name to json configuration
+            "org.jetbrains.dokka.base.DokkaBase" to dokkaBaseConfiguration
+        )
+    )
+}
+
+tasks.dokkaHtml.configure {
+//    outputDirectory.set(buildDir.resolve("dokka"))
+
+    dokkaSourceSets {
+        named("main") {
+            //displayName.set("Vapi4k")
+            noStdlibLink.set(true)
+            noJdkLink.set(true)
+
+            // Exclude everything first
+            perPackageOption {
+                matchingRegex.set("com.vapi4k.*") // will match kotlin and all sub-packages of it
+                suppress.set(true)
+            }
+
+            // Include specific packages
+            perPackageOption {
+                matchingRegex.set("com.vapi4k.api.*") // will match kotlin and all sub-packages of it
+                includeNonPublic.set(false)
+                reportUndocumented.set(false)
+                skipDeprecated.set(false)
+                suppress.set(false)
+            }
+        }
+    }
+}
+
 
 
 //tasks.findByName("lintKotlinCommonMain")?.apply {

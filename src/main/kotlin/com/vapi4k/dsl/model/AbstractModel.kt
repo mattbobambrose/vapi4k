@@ -16,24 +16,23 @@
 
 package com.vapi4k.dsl.model
 
+import com.vapi4k.api.functions.Functions
+import com.vapi4k.api.model.KnowledgeBase
+import com.vapi4k.api.tools.Tools
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
 import com.vapi4k.common.MessageCallId.Companion.toMessageCallId
-import com.vapi4k.dsl.assistant.ModelUnion
-import com.vapi4k.dsl.functions.Functions
 import com.vapi4k.dsl.functions.FunctionsImpl
-import com.vapi4k.dsl.model.enums.MessageRoleType
-import com.vapi4k.dsl.tools.Tools
 import com.vapi4k.dsl.tools.ToolsImpl
-import com.vapi4k.dtos.RoleMessage
+import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
-import com.vapi4k.utils.JsonElementUtils.messageCallId
 import com.vapi4k.utils.Utils.trimLeadingSpaces
 
 abstract class AbstractModel(
   override val modelUnion: ModelUnion,
   private val dto: CommonModelDto,
 ) : AbstractModelProperties {
-  internal val request get() = modelUnion.requestContext.assistantRequest
+  internal val request get() = modelUnion.assistantRequestContext.assistantRequest
   override val sessionCacheId get() = modelUnion.sessionCacheId
   override val assistantCacheId get() = modelUnion.assistantCacheId
   override val messageCallId get() = request.messageCallId.toMessageCallId()
@@ -68,6 +67,6 @@ abstract class AbstractModel(
     // Remove any existing messages with the same role
     messages.removeAll { it.role == role.desc }
     // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
-    messages += RoleMessage(role.desc, content.trimLeadingSpaces())
+    messages += RoleMessageDto(role.desc, content.trimLeadingSpaces())
   }
 }

@@ -23,7 +23,6 @@ import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
-import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.Utils.isNull
 import kotlinx.datetime.Clock
@@ -32,20 +31,20 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KFunction
 import kotlin.time.Duration
 
-internal class ToolCache {
+internal class ToolCache(
+  val nameBlock: () -> String,
+) {
   private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
   private var lastCacheCleanInstant = Clock.System.now()
 
   val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
     get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
 
-  fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
-    cacheMap[sessionCacheId] ?: error("Session cache id not found: $sessionCacheId")
+  val name get() = nameBlock()
 
   fun addToCache(
     sessionCacheId: SessionCacheId,
     assistantCacheId: AssistantCacheId,
-    toolType: ToolType,
     obj: Any,
     function: KFunction<*>,
   ) {
@@ -53,15 +52,21 @@ internal class ToolCache {
     val toolFuncName = toolCallInfo.llmName
     val funcInfo = cacheMap.computeIfAbsent(sessionCacheId) { FunctionInfo() }
     val funcDetails = funcInfo.functions[toolFuncName]
+    logger.debug { "Added to toolCache: $name [$sessionCacheId] [$cacheMap]" }
 
     if (funcDetails.isNull()) {
-      val newFuncDetails = FunctionDetails(toolType, obj, function)
+      val newFuncDetails = FunctionDetails(obj, function)
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
     } else {
       error("\"$toolFuncName\" already declared in cache at ${funcDetails.fqName} [$sessionCacheId]")
     }
   }
+
+  fun contains(sessionCacheId: SessionCacheId) = cacheMap.containsKey(sessionCacheId)
+
+  fun getFromCache(sessionCacheId: SessionCacheId): FunctionInfo =
+    cacheMap[sessionCacheId] ?: error("Session cache id not found: $sessionCacheId")
 
   fun removeFromCache(
     sessionCacheId: SessionCacheId,
@@ -74,7 +79,7 @@ internal class ToolCache {
           logger.debug { "Entry not found in cache: $sessionCacheId" }
       }
 
-  private fun clearCache() {
+  internal fun clearToolCache() {
     cacheMap.clear()
   }
 
@@ -85,11 +90,11 @@ internal class ToolCache {
       (funcInfo.age > maxAge).also { isOld ->
         if (isOld) {
           count++
-          logger.info { "Purging toolCall cache entry $sessionCacheId: $funcInfo" }
+          logger.debug { "Purging toolCall cache entry $sessionCacheId: $funcInfo" }
         }
       }
     }
-    logger.info { "Purged toolCall Cache ($count)" }
+    logger.debug { "Purged toolCall Cache ($count)" }
     return count
   }
 
@@ -101,27 +106,17 @@ internal class ToolCache {
     cacheMap.remove(oldSessionCacheId)?.also { cacheMap[newSessionCacheKey] = it }
   }
 
-  companion object {
-    val toolCallCache = ToolCache()
+  fun cacheAsJson() =
+    CacheInfoDto(
+      lastCacheCleanInstant.toString(),
+      asDtoMap.size,
+      asDtoMap,
+    )
 
-    fun clearToolCache() {
-      toolCallCache.clearCache()
-    }
-
-    fun swapCacheKeys(
-      oldSessionCacheId: SessionCacheId,
-      newSessionCacheKey: SessionCacheId,
-    ) {
-      toolCallCache.swapKeys(oldSessionCacheId, newSessionCacheKey)
-    }
-
-    fun cacheAsJson() =
-      CacheInfoDto(
-        toolCallCache.lastCacheCleanInstant.toString(),
-        toolCallCache.asDtoMap.size,
-        toolCallCache.asDtoMap,
-      )
-  }
+  fun swapCacheKeys(
+    oldSessionCacheId: SessionCacheId,
+    newSessionCacheKey: SessionCacheId,
+  ) = swapKeys(oldSessionCacheId, newSessionCacheKey)
 }
 
 @Serializable

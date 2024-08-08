@@ -18,18 +18,18 @@ package com.vapi4k.dsl.functions
 
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
-import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
 internal object FunctionUtils {
-  private val allowedParamTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
+  internal val allowedParamTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
   private val allowedReturnTypes = setOf(String::class, Unit::class)
   private val tcName by lazy { ToolCall::class.simpleName.orEmpty() }
 
@@ -63,46 +63,40 @@ internal object FunctionUtils {
   }
 
   fun populateFunctionDto(
-    toolType: ToolType,
     model: AbstractModelProperties,
     obj: Any,
     function: KFunction<*>,
-    functionDto: FunctionDto,
+    dto: FunctionDto,
   ) {
     ToolCallInfo(model.assistantCacheId, function).also { toolCallInfo ->
-      functionDto.name = toolCallInfo.llmName
-      functionDto.description = toolCallInfo.llmDescription
-      // TODO: This might always be object
-      functionDto.parameters.type = "object" // llmReturnType
+      dto.name = toolCallInfo.llmName
+      dto.description = toolCallInfo.llmDescription
 
-      val params = function.parameters.filter { it.kind == KParameter.Kind.VALUE }
-
-      params.forEach { param ->
-        val kclass = param.asKClass()
-        if (kclass !in allowedParamTypes) {
-          val fqName = FunctionDetails(toolType, obj, function).fqName
-          val simpleName = kclass.simpleName
-          error(
-            "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, and Boolean",
-          )
-        }
-      }
-
-      params
+      function.parameters
+        .filter { it.kind == KParameter.Kind.VALUE }
         .forEach { param ->
+          val kclass = param.asKClass()
+          if (kclass !in allowedParamTypes) {
+            val fqName = FunctionDetails(obj, function).fqName
+            val simpleName = kclass.simpleName
+            error(
+              "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, and Boolean",
+            )
+          }
+
           val name = param.name ?: error("Parameter name is null")
           if (!param.isOptional)
-            functionDto.parameters.required += name
-          functionDto.parameters.properties[name] = FunctionPropertyDescDto(
-            type = param.llmType,
+            dto.parametersDto.required += name
+          dto.parametersDto.properties[name] = FunctionPropertyDescDto(
+            type = param.type.asKClass().llmType,
             description = param.paramAnnotationWithDefault,
           )
         }
     }
   }
 
-  private val KParameter.llmType: String
-    get() = when (type.asKClass()) {
+  internal val KClass<*>.llmType: String
+    get() = when (this) {
       String::class -> "string"
       Int::class -> "integer"
       Double::class -> "double"
