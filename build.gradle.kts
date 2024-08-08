@@ -70,7 +70,6 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
@@ -85,9 +84,9 @@ dependencies {
     implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-metrics-micrometer:$ktorVersion")
 
-    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
-
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
+
+    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("com.impossibl.pgjdbc-ng:pgjdbc-ng-all:$pgjdbcVersion")
