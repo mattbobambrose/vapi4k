@@ -48,53 +48,128 @@ interface CommonAssistantFunctions {
    */
   var videoRecordingEnabled: Boolean
 
+  /**
+  These are the settings to configure or disable voicemail detection. Alternatively, voicemail detection can be
+  configured using the model.tools=[VoicemailTool]. This uses Twilio's built-in detection while the VoicemailTool
+  relies on the model to detect if a voicemail was reached. You can use neither of them, one of them, or both of them.
+  By default, Twilio built-in detection is enabled while VoicemailTool is not.
+   */
   fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection
 
   // Transcribers
+
+  /**
+  Builder for the Deepgram transcriber.
+   */
   fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber
 
+  /**
+  Builder for the Gladia transcriber.
+   */
   fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber
 
+  /**
+  Builder for the Talkscriber transcriber.
+   */
   fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber
 
   // Models
+
+  /**
+  Builder for the Anyscale model.
+   */
   fun anyscaleModel(block: AnyscaleModel.() -> Unit): AnyscaleModel
 
+  /**
+  Builder for the Anthropic model.
+   */
   fun anthropicModel(block: AnthropicModel.() -> Unit): AnthropicModel
 
+  /**
+  Builder for the CustomLLM model.
+   */
   fun customLLMModel(block: CustomLLMModel.() -> Unit): CustomLLMModel
 
+  /**
+  Builder for the DeepInfra model.
+   */
   fun deepInfraModel(block: DeepInfraModel.() -> Unit): DeepInfraModel
 
+  /**
+  Builder for the Groq model.
+   */
   fun groqModel(block: GroqModel.() -> Unit): GroqModel
 
+  /**
+  Builder for the OpenAI model.
+   */
   fun openAIModel(block: OpenAIModel.() -> Unit): OpenAIModel
 
+  /**
+  Builder for the OpenRouter model.
+   */
   fun openRouterModel(block: OpenRouterModel.() -> Unit): OpenRouterModel
 
+  /**
+  Builder for the PerplexityAI model.
+   */
   fun perplexityAIModel(block: PerplexityAIModel.() -> Unit): PerplexityAIModel
 
+  /**
+  Builder for the TogetherAI model.
+   */
   fun togetherAIModel(block: TogetherAIModel.() -> Unit): TogetherAIModel
 
+  /**
+  Builder for the Vapi model.
+   */
   fun vapiModel(block: VapiModel.() -> Unit): VapiModel
 
   // Voices
+
+  /**
+  Builder for the Azure voice.
+   */
   fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice
 
+  /**
+  Builder for the Cartesia voice.
+   */
   fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice
 
+  /**
+  Builder for the Deepgram voice.
+   */
   fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice
 
+  /**
+  Builder for the ElevenLabs voice.
+   */
   fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice
 
+  /**
+  Builder for the LMNT voice.
+   */
   fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice
 
+  /**
+  Builder for the Neets voice.
+   */
   fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice
 
+  /**
+  Builder for the OpenAI voice.
+   */
   fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice
 
+  /**
+  Builder for the PlayHT voice.
+   */
   fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice
 
+  /**
+  Builder for the RimeAI voice.
+   */
   fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice
 
   fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan
