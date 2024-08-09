@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.common.AssistantCacheId
+import com.vapi4k.dsl.functions.FunctionUtils.llmType
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import kotlin.reflect.KFunction
@@ -40,12 +41,5 @@ class ToolCallInfo(
         else -> function.name
       }
 
-  val llmReturnType
-    get() = when (function.returnType.asKClass()) {
-      String::class -> "string"
-      Int::class -> "integer"
-      Double::class -> "double"
-      Boolean::class -> "boolean"
-      else -> "object"
-    }
+  val llmReturnType get() = function.returnType.asKClass().llmType
 }

@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.booleanValue
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.doubleValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.keys
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
@@ -99,6 +100,7 @@ class FunctionDetails internal constructor(
   ) = when (argType.asKClass()) {
     String::class -> args.stringValue(argName)
     Int::class -> args.intValue(argName)
+    Double::class -> args.doubleValue(argName)
     Boolean::class -> args.booleanValue(argName)
     else -> error("Unsupported parameter type: $argType")
   }

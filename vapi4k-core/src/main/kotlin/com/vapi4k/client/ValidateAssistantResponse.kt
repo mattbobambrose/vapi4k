@@ -243,6 +243,7 @@ object ValidateAssistantResponse {
                             when (functionDetail.second.asKClass()) {
                               String::class -> InputType.text
                               Int::class -> InputType.number
+                              Double::class -> InputType.number
                               Boolean::class -> InputType.checkBox
                               else -> InputType.text
                             }
