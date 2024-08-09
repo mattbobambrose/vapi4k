@@ -57,7 +57,7 @@ object AssistantRequestUtils {
     else
       error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
 
-  val JsonElement.hasStatusUpdateError: Boolean get() = statusUpdateError.isNotEmpty()
+  fun JsonElement.hasStatusUpdateError(): Boolean = statusUpdateError.isNotEmpty()
 
   val JsonElement.functionName
     get() = if (isFunctionCall)

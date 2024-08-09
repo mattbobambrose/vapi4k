@@ -24,6 +24,8 @@ object Constants {
   const val UNKNOWN = "unknown"
   const val STYLES_CSS = "/assets/css/styles.css"
 
+  const val OUTBOUND_SERVER_PATH = "__outboundCalls"
+
   const val APPLICATION_ID = "applicationId"
   const val SESSION_CACHE_ID = "sessionCacheId"
   const val FUNCTION_NAME = "functionName"

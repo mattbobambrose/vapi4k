@@ -1,24 +1,13 @@
 plugins {
     alias(libs.plugins.jvm)
     alias(libs.plugins.serialization)
-//    alias(libs.plugins.kotlinter)
-    //alias(libs.plugins.config)
-//    id("maven-publish")
     `java-library`
 }
 
-repositories {
-    google()
-    mavenCentral()
-    mavenLocal()
-}
-
 val versionStr: String by extra
-val groupStr: String by extra
 val releaseDate: String by extra
 
 description = project.name
-version = versionStr
 
 publishing {
     publications {
@@ -32,6 +21,8 @@ publishing {
 }
 
 dependencies {
+    implementation(project(":vapi4k-core"))
+
     api(libs.kotlin.reflect)
 
     api(libs.ktor.client.core)

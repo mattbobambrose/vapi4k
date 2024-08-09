@@ -20,14 +20,22 @@ plugins {
     alias(libs.plugins.kotlinter) apply false
 }
 
+val versionStr: String by extra
+val kotlinLib = libs.plugins.jvm.get().toString().split(":").first()
+val ktlinterLib = libs.plugins.kotlinter.get().toString().split(":").first()
+
 allprojects {
     extra["versionStr"] = "1.3.2"
     extra["releaseDate"] = "08/09/2024"
     group = "com.github.mattbobambrose.vapi4k"
-}
+    version = versionStr
 
-val kotlinLib = libs.plugins.jvm.get().toString().split(":").first()
-val ktlinterLib = libs.plugins.kotlinter.get().toString().split(":").first()
+    repositories {
+        google()
+        mavenCentral()
+        mavenLocal()
+    }
+}
 
 subprojects {
     apply {

@@ -2,14 +2,9 @@ plugins {
     kotlin("jvm") version "2.0.10"
 }
 
-repositories {
-    google()
-    mavenCentral()
-    maven(url = "https://jitpack.io")
-}
-
 dependencies {
-    implementation("com.github.mattbobambrose.vapi4k:vapi4k-core:1.3.2")
+    implementation(project(":vapi4k-core"))
+    // implementation("com.github.mattbobambrose.vapi4k:vapi4k-core:1.3.2")
 }
 
 kotlin {

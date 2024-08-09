@@ -27,6 +27,7 @@ import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.containsKey
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
+import com.vapi4k.common.Constants.OUTBOUND_SERVER_PATH
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
@@ -130,7 +131,7 @@ class VapiApiImpl private constructor(
     }.getOrThrow()
 
   companion object {
-    internal val outboundApplication = Vapi4kApplicationImpl().also { it.serverPath = "__outboundCalls" }
+    internal val outboundApplication = Vapi4kApplicationImpl().also { it.serverPath = OUTBOUND_SERVER_PATH }
     internal val outboundRequestContext = AssistantRequestContext(outboundApplication, emptyJsonElement())
 
     internal fun HttpRequestBuilder.configCall(authString: String) {

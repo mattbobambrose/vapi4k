@@ -17,9 +17,11 @@
 package com.vapi4k.server
 
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
+import com.vapi4k.common.Constants.OUTBOUND_SERVER_PATH
 import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.utils.Utils.ensureStartsWith
 import io.ktor.http.ContentType
 import io.ktor.server.application.call
 import io.ktor.server.response.respondRedirect
@@ -33,6 +35,7 @@ import kotlinx.html.li
 import kotlinx.html.link
 import kotlinx.html.script
 import kotlinx.html.stream.createHTML
+import kotlinx.html.style
 import kotlinx.html.title
 import kotlinx.html.ul
 
@@ -40,7 +43,10 @@ internal object ValidateRoot {
   suspend fun KtorCallContext.validateRoot(config: Vapi4kConfigImpl) {
     if (config.applications.size == 1) {
       val application = config.applications.first()
-      call.respondRedirect("$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}")
+      val secretStr = application.serverSecret.let {
+        if (it.isBlank()) "" else "?secret=$it"
+      }
+      call.respondRedirect("$VALIDATE_PATH/${application.serverPathAsSegment}$secretStr")
     } else {
       val html = createHTML()
         .html {
@@ -57,14 +63,20 @@ internal object ValidateRoot {
               +"All Vapi4k Applications"
             }
             ul {
-              config.allApplications.forEach { application ->
-                li {
-                  a {
-                    href = "$VALIDATE_PATH/${application.serverPathAsSegment}?secret=${application.serverSecret}"
-                    +application.serverPath
+              config.allApplications
+                .filter { it.serverPath != OUTBOUND_SERVER_PATH }
+                .forEach { application ->
+                  li {
+                    style = "margin-bottom: 10px;"
+                    a {
+                      val secretStr = application.serverSecret.let {
+                        if (it.isBlank()) "" else "?secret=$it"
+                      }
+                      href = "$VALIDATE_PATH/${application.serverPathAsSegment}$secretStr"
+                      +application.serverPath.ensureStartsWith("/")
+                    }
                   }
                 }
-              }
             }
           }
         }

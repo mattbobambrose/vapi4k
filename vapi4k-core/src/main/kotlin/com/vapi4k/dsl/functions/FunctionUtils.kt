@@ -30,7 +30,7 @@ import kotlin.reflect.KParameter
 
 internal object FunctionUtils {
   internal val allowedParamTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
-  private val allowedReturnTypes = setOf(String::class, Unit::class)
+  private val allowedReturnTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
   private val tcName by lazy { ToolCall::class.simpleName.orEmpty() }
 
   fun verifyIsToolCall(

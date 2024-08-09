@@ -18,7 +18,11 @@ import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.STATUS_UPDATE
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.hasStatusUpdateError
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.requestType
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.statusUpdateError
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
+import com.vapi4k.common.EnvVar.Companion.isProduction
 import com.vapi4k.dbms.Messages.insertRequest
 import com.vapi4k.dbms.Messages.insertResponse
 import com.vapi4k.server.Vapi4k
@@ -28,14 +32,31 @@ import com.vapi4k.utils.DslUtils.logObject
 import com.vapi4k.utils.DslUtils.printObject
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
+import io.ktor.server.cio.CIO
+import io.ktor.server.engine.embeddedServer
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
+
+fun main() {
+  embeddedServer(
+    factory = CIO,
+    port = 8080,
+    host = "0.0.0.0",
+    module = Application::module,
+  ).start(wait = true)
+}
 
 fun Application.module() {
   val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
   defaultKtorConfig(appMicrometerRegistry)
 
   install(Vapi4k) {
+    vapi4kApplication {
+      onAssistantRequest {
+        myAssistantRequest()
+      }
+    }
+
     vapi4kApplication {
       serverPath = "/inboundRequest"
       serverSecret = "12345"
@@ -46,7 +67,8 @@ fun Application.module() {
 
       onAllRequests { request ->
         logger.info { "All requests: ${request.requestType}" }
-        insertRequest(request)
+        if (isProduction)
+          insertRequest(request)
         logObject(request)
         printObject(request)
       }
@@ -64,15 +86,16 @@ fun Application.module() {
       }
 
       onRequest(STATUS_UPDATE) { request ->
-//      if (request.hasStatusUpdateError) {
-//        logger.info { "Status update error: ${request.statusUpdateError}" }
-//      }
+        if (request.hasStatusUpdateError()) {
+          logger.info { "Status update error: ${request.statusUpdateError}" }
+        }
       }
 
       onAllResponses { requestType, response, elapsedTime ->
-//      logger.info { "All responses: $response" }
-//      logObject(response)
-//      printObject(response)
+        logger.info { "All responses: $response" }
+        logObject(response)
+        logger.info { response.toJsonString() }
+        if (isProduction)
         insertResponse(requestType, response, elapsedTime)
       }
 

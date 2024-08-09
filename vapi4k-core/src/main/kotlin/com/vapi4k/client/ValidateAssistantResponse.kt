@@ -31,8 +31,8 @@ import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
+import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
-import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_URL
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger
@@ -64,6 +64,7 @@ import kotlinx.html.html
 import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.link
+import kotlinx.html.p
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.stream.createHTML
@@ -88,11 +89,13 @@ object ValidateAssistantResponse {
 
   fun validateAssistantRequestResponse(
     application: Vapi4kApplicationImpl,
+    appName: String,
     secret: String,
   ): String {
     val request = getNewRequest()
     val (status, body) = runBlocking {
-      val response = httpClient.post(REQUEST_VALIDATION_URL.value) {
+      val url = "$serverBaseUrl/$appName"
+      val response = httpClient.post(url) {
         contentType(Application.Json)
         if (secret.isNotEmpty())
           headers.append("x-vapi-secret", secret)
@@ -119,6 +122,11 @@ object ValidateAssistantResponse {
         }
         body {
           script { src = "/assets/prism.js" }
+
+          p {
+            style = "text-align: right; margin-right: 10px;"
+            +"Home"
+          }
           h2 { +"Vapi4k Assistant Request Response" }
           if (status.value == 200) {
             div {

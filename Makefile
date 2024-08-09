@@ -16,7 +16,7 @@ build:
 	./gradlew build -x test
 
 cont-build:
-	./gradlew -t build -x test -x shadowJar -i
+	./gradlew -t build -x test
 
 tests:
 	./gradlew --rerun-tasks check

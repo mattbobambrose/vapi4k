@@ -5,25 +5,15 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     alias(libs.plugins.jvm)
     alias(libs.plugins.serialization)
-//    alias(libs.plugins.kotlinter)
     alias(libs.plugins.config)
     alias(libs.plugins.dokka)
-//    id("maven-publish")
     `java-library`
 }
 
-repositories {
-    google()
-    mavenCentral()
-    mavenLocal()
-}
-
 val versionStr: String by extra
-val groupStr: String by extra
 val releaseDate: String by extra
 
 description = project.name
-version = versionStr
 
 publishing {
     publications {
@@ -35,17 +25,6 @@ publishing {
         }
     }
 }
-
-//publishing {
-//    publications {
-//        create<MavenPublication>("maven") {
-//            groupId = "com.vapi4k"
-//            artifactId = "vapi4k-core"
-//            version = versionStr
-//            from(components["java"])
-//        }
-//    }
-//}
 
 buildConfig {
     useKotlinOutput()
@@ -75,6 +54,8 @@ dependencies {
 
     api(libs.ktor.serialization)
     api(libs.micrometer.registry.prometheus)
+
+    api(libs.hoplite.core)
 
     api(libs.hikari)
     api(libs.pgjdbc.ng)
