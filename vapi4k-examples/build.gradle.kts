@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.mattbobambrose.vapi4k:vapi4k-core:1.3.1")
+    implementation("com.github.mattbobambrose.vapi4k:vapi4k-core:1.3.2")
 }
 
 kotlin {

@@ -21,8 +21,8 @@ plugins {
 }
 
 allprojects {
-    extra["versionStr"] = "1.3.1"
-    extra["releaseDate"] = "08/08/2024"
+    extra["versionStr"] = "1.3.2"
+    extra["releaseDate"] = "08/09/2024"
     group = "com.github.mattbobambrose.vapi4k"
 }
 
