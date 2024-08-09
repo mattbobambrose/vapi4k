@@ -54,8 +54,7 @@ class ModelTests {
       }
 
     val je = response.toJsonElement()
-    // println(je.tools().first().toJsonString())
-    val server = je.tools().first().element("server") ?: error("server not found")
+    val server = je.tools().first().element("server")
     assertEquals("zzz", server.stringValue("url"))
     assertEquals("123", server.stringValue("secret"))
     assertEquals("10", server.stringValue("timeoutSeconds"))

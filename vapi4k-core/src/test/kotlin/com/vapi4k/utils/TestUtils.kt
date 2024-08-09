@@ -54,7 +54,7 @@ fun assistantResponse(
     error("assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
 }
 
-fun JsonElement.tools() = this.get("assistant.model.tools").toJsonElementList()
+fun JsonElement.tools() = this["assistant.model.tools"].toJsonElementList()
 
 fun JsonElement.firstTool() = tools().first()
 

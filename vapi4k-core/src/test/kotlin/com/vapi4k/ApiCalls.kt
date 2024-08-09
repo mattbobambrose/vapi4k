@@ -24,7 +24,7 @@ import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
-import org.junit.Test
+import kotlin.test.Test
 
 class ApiCalls {
   @Test

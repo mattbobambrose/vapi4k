@@ -37,7 +37,7 @@ import io.ktor.http.contentType
 import io.ktor.server.application.install
 import io.ktor.server.testing.testApplication
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import kotlin.test.Test
 
 class ServerTest {
   companion object {

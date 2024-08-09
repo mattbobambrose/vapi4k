@@ -29,7 +29,7 @@ import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.utils.assistantResponse
 import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertThrows
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class VoiceTest {

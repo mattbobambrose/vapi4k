@@ -23,7 +23,7 @@ import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.tools
 import com.vapi4k.utils.withTestApplication
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ToolMessageTest {

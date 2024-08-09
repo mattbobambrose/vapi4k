@@ -22,7 +22,7 @@ import com.vapi4k.api.model.enums.DeepgramModelType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.utils.assistantResponse
-import org.junit.Test
+import kotlin.test.Test
 
 class ResponseTest {
   @Test
