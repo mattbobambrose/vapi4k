@@ -19,6 +19,7 @@ package com.vapi4k.client
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantIdResponse
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantResponse
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isSquadResponse
+import com.vapi4k.api.vapi4k.utils.JsonElementUtils.containsKey
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
@@ -177,9 +178,14 @@ object ValidateAssistantResponse {
     assistantElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
+
     val functions =
-      assistantElement["assistant.model.tools"].toJsonElementList()
-        .map { it.stringValue("function.name") }
+      if (assistantElement["assistant.model"].containsKey("tools"))
+        assistantElement["assistant.model.tools"]
+          .toJsonElementList()
+          .map { it.stringValue("function.name") }
+      else
+        emptyList()
 
     logger.debug { "Checking toolCache: ${application.toolCache.name} [$sessionCacheId]" }
     if (!application.toolCache.contains(sessionCacheId)) {
