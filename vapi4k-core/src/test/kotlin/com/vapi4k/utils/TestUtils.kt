@@ -25,7 +25,7 @@ import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
 import com.vapi4k.api.vapi4k.utils.get
-import com.vapi4k.common.EnvVar.Companion.defaultServerPath
+import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition

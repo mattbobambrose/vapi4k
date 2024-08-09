@@ -55,8 +55,6 @@ dependencies {
     api(libs.ktor.serialization)
     api(libs.micrometer.registry.prometheus)
 
-    api(libs.hoplite.core)
-
     api(libs.hikari)
     api(libs.pgjdbc.ng)
     api(libs.postgres)

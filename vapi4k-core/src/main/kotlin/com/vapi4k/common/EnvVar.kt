@@ -16,39 +16,20 @@
 
 package com.vapi4k.common
 
-import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.Utils.isNull
 import com.vapi4k.utils.Utils.obfuscate
 
-enum class EnvVar(
-  private val src: () -> Any,
+
+class EnvVar(
+  val name: String,
+  private val src: EnvVar.() -> Any,
   private val maskFunc: ((str: String) -> String)? = null,
   private val width: Int = 10,
+  val reportOnBoot: Boolean = true,
 ) {
-  // Server details
-  PORT({ PORT.getEnv(8080) }),
-  SERVER_BASE_URL({ SERVER_BASE_URL.getEnv("http://localhost:8080") }),
-  DEFAULT_SERVER_PATH({ DEFAULT_SERVER_PATH.getEnv("/vapi4k") }),
-  IS_PRODUCTION({ IS_PRODUCTION.getEnv(false) }),
-
-  // Database details
-  DBMS_DRIVER_CLASSNAME({ DBMS_DRIVER_CLASSNAME.getEnv("com.impossibl.postgres.jdbc.PGDriver") }),
-  DBMS_URL({ DBMS_URL.getEnv("jdbc:pgsql://localhost:5432/postgres") }),
-  DBMS_USERNAME({ DBMS_USERNAME.getEnv("postgres") }),
-  DBMS_PASSWORD({ DBMS_PASSWORD.getEnv("docker") }, { it.obfuscate(1) }),
-  DBMS_MAX_POOL_SIZE({ DBMS_MAX_POOL_SIZE.getEnv(10) }),
-  DBMS_MAX_LIFETIME_MINS({ DBMS_MAX_LIFETIME_MINS.getEnv(30) }),
-
-  //  REQUEST_VALIDATION_URL({ REQUEST_VALIDATION_URL.getEnv("http://localhost:8080/vapi4k") }),
-  REQUEST_VALIDATION_FILENAME({ REQUEST_VALIDATION_FILENAME.getEnv("/json/AssistantRequestValidation.json") }),
-
-  TOOL_CACHE_CLEAN_PAUSE_MINS({ TOOL_CACHE_CLEAN_PAUSE_MINS.getEnv(30) }),
-  TOOL_CACHE_MAX_AGE_MINS({ TOOL_CACHE_MAX_AGE_MINS.getEnv(60) }),
-
-  // Resend details
-  // RESEND_API_KEY({ RESEND_API_KEY.getRequired() }, { it.obfuscate(1) }),
-  // RESEND_SENDER_EMAIL({ RESEND_SENDER_EMAIL.getRequired() })
-  ;
+  init {
+    evars[name] = this
+  }
 
   val value: String by lazy { src().toString() }
 
@@ -82,13 +63,38 @@ enum class EnvVar(
       System.setProperty("kotlin-logging.throwOnMessageError", "true")
     }
 
-    val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
-    val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.removeSuffix("/") }
-    val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removePrefix("/") }
+    val evars = mutableMapOf<String, EnvVar>()
 
-//    val envResendApiKey: String by lazy { RESEND_API_KEY.value }
-//    val envResendEmailSender: Email by lazy { RESEND_SENDER_EMAIL.value.toEmail() }
-
-    fun logEnvVarValues() = entries.sortedBy { it.name }.forEach { logger.info { it.logReport } }
+    fun logEnvVarValues(block: (String) -> Unit) =
+      evars.values.filter { it.reportOnBoot }.sortedBy { it.name }.map { it.logReport }.forEach(block)
   }
+}
+
+object CoreEnvVars {
+  val PORT = EnvVar("PORT", { System.getenv(name) ?: "8080" })
+  val SERVER_BASE_URL = EnvVar("SERVER_BASE_URL", { System.getenv(name) ?: "http://localhost:8080" })
+  val DEFAULT_SERVER_PATH = EnvVar("DEFAULT_SERVER_PATH", { System.getenv(name) ?: "/vapi4k" })
+  val IS_PRODUCTION = EnvVar("IS_PRODUCTION", { System.getenv(name) ?: "false" })
+
+  val DBMS_DRIVER_CLASSNAME =
+    EnvVar("DBMS_DRIVER_CLASSNAME", { System.getenv(name) ?: "com.impossibl.postgres.jdbc.PGDriver" })
+  val DBMS_URL = EnvVar("DBMS_URL", { System.getenv(name) ?: "jdbc:pgsql://localhost:5432/postgres" })
+  val DBMS_USERNAME = EnvVar("DBMS_USERNAME", { System.getenv(name) ?: "postgres" })
+  val DBMS_PASSWORD = EnvVar("DBMS_PASSWORD", { System.getenv(name) ?: "docker" }, { it.obfuscate(1) })
+  val DBMS_MAX_POOL_SIZE = EnvVar("DBMS_MAX_POOL_SIZE", { System.getenv(name) ?: "10" })
+  val DBMS_MAX_LIFETIME_MINS = EnvVar("DBMS_MAX_LIFETIME_MINS", { System.getenv(name) ?: "30" })
+
+  val REQUEST_VALIDATION_FILENAME =
+    EnvVar(
+      name = "REQUEST_VALIDATION_FILENAME",
+      src = { System.getenv(name) ?: "/json/AssistantRequestValidation.json" },
+      reportOnBoot = false
+    )
+
+  val TOOL_CACHE_CLEAN_PAUSE_MINS = EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", { System.getenv(name) ?: "30" })
+  val TOOL_CACHE_MAX_AGE_MINS = EnvVar("TOOL_CACHE_MAX_AGE_MINS", { System.getenv(name) ?: "60" })
+
+  val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
+  val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.removeSuffix("/") }
+  val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removePrefix("/") }
 }

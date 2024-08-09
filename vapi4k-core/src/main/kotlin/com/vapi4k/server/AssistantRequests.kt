@@ -22,7 +22,7 @@ import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.requestType
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
-import com.vapi4k.common.EnvVar.Companion.isProduction
+import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse

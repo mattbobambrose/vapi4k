@@ -43,9 +43,7 @@ internal object ValidateRoot {
   suspend fun KtorCallContext.validateRoot(config: Vapi4kConfigImpl) {
     if (config.applications.size == 1) {
       val application = config.applications.first()
-      val secretStr = application.serverSecret.let {
-        if (it.isBlank()) "" else "?secret=$it"
-      }
+      val secretStr = application.serverSecret.let { if (it.isBlank()) "" else "?secret=$it" }
       call.respondRedirect("$VALIDATE_PATH/${application.serverPathAsSegment}$secretStr")
     } else {
       val html = createHTML()
@@ -69,9 +67,7 @@ internal object ValidateRoot {
                   li {
                     style = "margin-bottom: 10px;"
                     a {
-                      val secretStr = application.serverSecret.let {
-                        if (it.isBlank()) "" else "?secret=$it"
-                      }
+                      val secretStr = application.serverSecret.let { if (it.isBlank()) "" else "?secret=$it" }
                       href = "$VALIDATE_PATH/${application.serverPathAsSegment}$secretStr"
                       +application.serverPath.ensureStartsWith("/")
                     }

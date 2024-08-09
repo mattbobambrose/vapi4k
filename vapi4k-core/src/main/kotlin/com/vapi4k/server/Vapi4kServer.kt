@@ -18,6 +18,7 @@ package com.vapi4k.server
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
+import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
@@ -25,7 +26,6 @@ import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
-import com.vapi4k.common.EnvVar.Companion.isProduction
 import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
@@ -90,7 +90,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   val config = AssistantImpl.config
   config.applicationConfig = environment?.config ?: error("No environment config found")
 
-  logEnvVarValues()
+  logEnvVarValues { logger.info { it } }
 
   startCallbackThread(callbackChannel)
   startCacheCleaningThread(config)

@@ -30,10 +30,10 @@ import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
+import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
+import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
-import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
-import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger

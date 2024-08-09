@@ -22,7 +22,7 @@ import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.hasStatusUpdateError
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.requestType
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
-import com.vapi4k.common.EnvVar.Companion.isProduction
+import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.dbms.Messages.insertRequest
 import com.vapi4k.dbms.Messages.insertResponse
 import com.vapi4k.server.Vapi4k
@@ -96,7 +96,7 @@ fun Application.module() {
         logObject(response)
         logger.info { response.toJsonString() }
         if (isProduction)
-        insertResponse(requestType, response, elapsedTime)
+          insertResponse(requestType, response, elapsedTime)
       }
 
       onResponse(ASSISTANT_REQUEST) { requestType, response, elapsed ->

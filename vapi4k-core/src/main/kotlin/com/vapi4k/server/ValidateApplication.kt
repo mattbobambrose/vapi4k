@@ -22,7 +22,7 @@ import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
-import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
+import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret

@@ -21,7 +21,7 @@ import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
-import com.vapi4k.common.EnvVar
+import com.vapi4k.common.CoreEnvVars
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.responses.AssistantRequestResponse
@@ -42,7 +42,7 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal var eocrCacheRemovalEnabled = true
   internal val serverPathAsSegment get() = serverPath.removePrefix("/")
 
-  override var serverPath = EnvVar.defaultServerPath
+  override var serverPath = CoreEnvVars.defaultServerPath
   override var serverSecret = ""
 
   override fun onAssistantRequest(block: suspend AssistantResponse.() -> Unit) {

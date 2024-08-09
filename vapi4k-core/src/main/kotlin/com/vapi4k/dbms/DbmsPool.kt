@@ -16,7 +16,7 @@
 
 package com.vapi4k.dbms
 
-import com.vapi4k.common.EnvVar
+import com.vapi4k.common.CoreEnvVars
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
@@ -27,13 +27,13 @@ object DbmsPool {
     Database.connect(
       HikariDataSource(
         HikariConfig().apply {
-          driverClassName = EnvVar.DBMS_DRIVER_CLASSNAME.value
-          jdbcUrl = EnvVar.DBMS_URL.value
-          username = EnvVar.DBMS_USERNAME.value
-          password = EnvVar.DBMS_PASSWORD.value
-          maximumPoolSize = EnvVar.DBMS_MAX_POOL_SIZE.toInt()
+          driverClassName = CoreEnvVars.DBMS_DRIVER_CLASSNAME.value
+          jdbcUrl = CoreEnvVars.DBMS_URL.value
+          username = CoreEnvVars.DBMS_USERNAME.value
+          password = CoreEnvVars.DBMS_PASSWORD.value
+          maximumPoolSize = CoreEnvVars.DBMS_MAX_POOL_SIZE.toInt()
           transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-          maxLifetime = EnvVar.DBMS_MAX_LIFETIME_MINS.toInt().minutes.inWholeMilliseconds
+          maxLifetime = CoreEnvVars.DBMS_MAX_LIFETIME_MINS.toInt().minutes.inWholeMilliseconds
           validate()
         },
       ),
