@@ -13,7 +13,7 @@ repositories {
     mavenLocal()
 }
 
-val versionStr = "1.1.0"
+val versionStr = "1.2.0"
 val releaseDate = "08/08/2024"
 
 //description = "vapi4k-dbms"
