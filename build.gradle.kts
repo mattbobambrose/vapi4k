@@ -15,12 +15,25 @@
  */
 
 plugins {
-    alias(libs.plugins.jvm)
-    alias(libs.plugins.versions)
+    alias(libs.plugins.jvm) apply false
+    alias(libs.plugins.versions) apply false
+    alias(libs.plugins.kotlinter) apply false
 }
 
 allprojects {
     extra["versionStr"] = "1.3.1"
     extra["releaseDate"] = "08/08/2024"
     group = "com.github.mattbobambrose.vapi4k"
+}
+
+val kotlinLib = libs.plugins.jvm.get().toString().split(":").first()
+val ktlinterLib = libs.plugins.kotlinter.get().toString().split(":").first()
+
+subprojects {
+    apply {
+        plugin("java")
+        plugin("maven-publish")
+        plugin(kotlinLib)
+        plugin(ktlinterLib)
+    }
 }

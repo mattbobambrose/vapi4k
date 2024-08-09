@@ -17,6 +17,7 @@
 package com.vapi4k.com.vapi4k.examples
 
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import io.ktor.server.application.Application
@@ -25,25 +26,31 @@ import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
 
 fun main() {
-  embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::module)
+  // Start a ktor server on port 8080
+  embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::helloWorld)
     .start(wait = true)
 }
 
-fun Application.module() {
+fun Application.helloWorld() {
+  // Install the Vapi4k ktor plugin
   install(Vapi4k) {
-
+    // Define the Vapi4k application
     vapi4kApplication {
       onAssistantRequest {
-        logger.info { "Assistant request has been made: ${assistantRequestContext.assistantRequest}" }
+        logger.info { "Assistant request has been made: ${assistantRequestContext.phoneNumber}" }
 
         assistant {
-          firstMessage = "Hello, I am a simple Vapi assistant"
+          firstMessage = "Hello, I am a simple Vapi assistant that looks up the weather for a city and state."
 
           openAIModel {
             modelType = OpenAIModelType.GPT_4O_MINI
+            systemMessage = """
+              You're a weather lookup service. Take in state and country names as the two letter
+              abbreviations (e.g. Illinois is IL, California is CA, Vermont is VT)
+              """
 
             tools {
-              //tool()
+              vapi4kTool(WeatherLookupService())
             }
           }
         }
@@ -52,4 +59,12 @@ fun Application.module() {
   }
 }
 
-
+class WeatherLookupService {
+  @ToolCall("Look up the weather for a city and state")
+  fun getWeatherByCityAndState(
+    city: String,
+    state: String,
+  ): String {
+    return "The real weather in $city, $state is ${listOf("sunny", "cloudy", "humid", "rainy").random()}"
+  }
+}

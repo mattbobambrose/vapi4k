@@ -5,10 +5,10 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     alias(libs.plugins.jvm)
     alias(libs.plugins.serialization)
-    alias(libs.plugins.kotlinter)
+//    alias(libs.plugins.kotlinter)
     alias(libs.plugins.config)
     alias(libs.plugins.dokka)
-    id("maven-publish")
+//    id("maven-publish")
     `java-library`
 }
 
