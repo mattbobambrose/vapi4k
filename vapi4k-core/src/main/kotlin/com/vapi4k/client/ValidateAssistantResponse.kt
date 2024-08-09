@@ -31,6 +31,7 @@ import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
+import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.EnvVar.Companion.serverBaseUrl
 import com.vapi4k.common.EnvVar.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.SessionCacheId
@@ -52,6 +53,7 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.html.BODY
 import kotlinx.html.InputType
+import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.code
 import kotlinx.html.div
@@ -64,7 +66,6 @@ import kotlinx.html.html
 import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.link
-import kotlinx.html.p
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.stream.createHTML
@@ -122,10 +123,12 @@ object ValidateAssistantResponse {
         }
         body {
           script { src = "/assets/prism.js" }
-
-          p {
-            style = "text-align: right; margin-right: 10px;"
-            +"Home"
+          div {
+            style = "text-align: right; margin-top: 20px; margin-right: 15;"
+            a {
+              href = VALIDATE_PATH
+              +"Home"
+            }
           }
           h2 { +"Vapi4k Assistant Request Response" }
           if (status.value == 200) {
