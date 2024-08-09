@@ -44,6 +44,7 @@ import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
+import com.vapi4k.utils.Utils.ensureStartsWith
 import com.vapi4k.utils.Utils.resourceFile
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -134,7 +135,7 @@ object ValidateAssistantResponse {
           if (status.value == 200) {
             div {
               style = "border: 1px solid black; padding: 10px; margin: 10px;"
-              h3 { +"Path: ${application.serverPath}" }
+              h3 { +"Path: ${application.serverPath.ensureStartsWith("/")}" }
               h3 { +"Status: $status" }
               pre {
                 code(classes = "language-json line-numbers match-braces") {
@@ -159,7 +160,7 @@ object ValidateAssistantResponse {
               }
             }
           } else {
-            h3 { +"Path: ${application.serverPath}" }
+            h3 { +"Path: ${application.serverPath.ensureStartsWith("/")}" }
             h3 { +"Status: $status" }
             if (body.isNotEmpty()) {
               if (body.length < 80) {
@@ -175,6 +176,7 @@ object ValidateAssistantResponse {
         }
       }
   }
+
 
   private fun getAssistantName(
     assistantElement: JsonElement,
