@@ -68,8 +68,6 @@ object JsonElementUtils {
 
   val JsonElement.size get() = jsonObject.size
 
-  fun JsonElement.isEmpty() = jsonObject.isEmpty()
-
   inline fun <reified T> T.toJsonString(prettyPrint: Boolean = true) =
     (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)
 

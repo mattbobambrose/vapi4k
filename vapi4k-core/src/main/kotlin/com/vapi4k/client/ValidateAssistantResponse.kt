@@ -178,7 +178,6 @@ object ValidateAssistantResponse {
     assistantElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
-
     val functions =
       if (assistantElement["assistant.model"].containsKey("tools"))
         assistantElement["assistant.model.tools"]
