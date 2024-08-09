@@ -37,7 +37,7 @@ import kotlin.reflect.KFunction
 data class ToolsImpl internal constructor(
   internal val model: AbstractModelProperties,
 ) : Tools {
-  override fun tool(
+  override fun vapi4kTool(
     obj: Any,
     vararg functions: KFunction<*>,
     block: Tool.() -> Unit,

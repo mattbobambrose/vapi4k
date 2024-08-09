@@ -16,7 +16,7 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.BuildConfig
+import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH

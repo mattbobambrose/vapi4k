@@ -33,6 +33,9 @@ stage:
 versioncheck:
 	./gradlew dependencyUpdates
 
+buildconfig:
+	./gradlew generateBuildConfig
+
 kdocs:
 	./gradlew dokkaHtml
 

@@ -18,3 +18,9 @@ plugins {
     alias(libs.plugins.jvm)
     alias(libs.plugins.versions)
 }
+
+allprojects {
+    extra["versionStr"] = "1.3.1"
+    extra["releaseDate"] = "08/08/2024"
+    group = "com.github.mattbobambrose.vapi4k"
+}

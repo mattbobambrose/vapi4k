@@ -31,7 +31,7 @@ class AssistantWithOverrides {
       groqModel {
         modelType = GroqModelType.LLAMA3_70B
         tools {
-          tool(TimeLookupService(EAST))
+          vapi4kTool(TimeLookupService(EAST))
         }
       }
 
@@ -41,8 +41,8 @@ class AssistantWithOverrides {
         openAIModel {
           modelType = OpenAIModelType.GPT_4_TURBO
           tools {
-            tool(TimeLookupService(WEST))
-            tool(WeatherLookupService())
+            vapi4kTool(TimeLookupService(WEST))
+            vapi4kTool(WeatherLookupService())
           }
         }
       }

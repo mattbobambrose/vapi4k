@@ -21,7 +21,7 @@ import kotlin.reflect.KFunction
 
 @AssistantDslMarker
 interface Tools {
-  fun tool(
+  fun vapi4kTool(
     obj: Any,
     vararg functions: KFunction<*>,
     block: Tool.() -> Unit = {},

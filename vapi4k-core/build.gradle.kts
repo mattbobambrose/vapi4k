@@ -18,12 +18,11 @@ repositories {
     mavenLocal()
 }
 
-val versionStr = "1.2.0"
-val releaseDate = "08/08/2024"
+val versionStr: String by extra
+val groupStr: String by extra
+val releaseDate: String by extra
 
-//description = "vapi4k-core"
 description = project.name
-group = "com.vapi4k"
 version = versionStr
 
 publishing {
@@ -93,6 +92,12 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+sourceSets {
+    named("main") {
+        java.srcDir("build/generated/sources/buildConfig/main")
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
 }
@@ -107,6 +112,10 @@ kotlin {
     sourceSets.all {
         languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
     }
+}
+
+tasks.withType<Zip> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks {

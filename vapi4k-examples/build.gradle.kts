@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.jvm)
     alias(libs.plugins.serialization)
     alias(libs.plugins.kotlinter)
-    //alias(libs.plugins.config)
     id("maven-publish")
     `java-library`
 }

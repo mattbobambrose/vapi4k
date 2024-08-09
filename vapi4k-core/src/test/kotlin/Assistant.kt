@@ -122,7 +122,7 @@ fun AssistantResponse.getAssistant(callerName: String = "Bill") =
 //      }
 
       tools {
-        tool(WeatherLookupService1()) {
+        vapi4kTool(WeatherLookupService1()) {
           condition("city" eq "Chicago", "state" eq "Illinois") {
             requestStartMessage {
               content = "This is the Chicago Illinois start message"
@@ -165,7 +165,7 @@ fun AssistantResponse.getAssistant(callerName: String = "Bill") =
           }
         }
 
-        tool(WeatherLookupService2()) {
+        vapi4kTool(WeatherLookupService2()) {
           condition("city" eq "Chicago") {
             requestStartMessage {
               content = "This is the Chicago start message"
