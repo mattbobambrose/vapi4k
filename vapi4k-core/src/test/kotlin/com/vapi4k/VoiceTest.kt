@@ -60,12 +60,12 @@ class VoiceTest {
     val jsonElement = squad.toJsonElement()
     val members = jsonElement["squad.members"].jsonArray.toList()
     assertEquals(1, members.size)
-    assertEquals("Receptionist", members[0]["assistant.name"].stringValue)
-    assertEquals("Hi there!", members[0]["assistant.firstMessage"].stringValue)
-    assertEquals("mixtral-8x7b-32768", members[0]["assistant.model.model"].stringValue)
-    assertEquals("groq", members[0]["assistant.model.provider"].stringValue)
-    assertEquals("matt", members[0]["assistant.voice.voiceId"].stringValue)
-    assertEquals("male_sad", members[0]["assistant.voice.emotion"].stringValue)
+    assertEquals("Receptionist", members.first().stringValue("assistant.name"))
+    assertEquals("Hi there!", members.first().stringValue("assistant.firstMessage"))
+    assertEquals("mixtral-8x7b-32768", members.first().stringValue("assistant.model.model"))
+    assertEquals("groq", members.first().stringValue("assistant.model.provider"))
+    assertEquals("matt", members.first().stringValue("assistant.voice.voiceId"))
+    assertEquals("male_sad", members.first().stringValue("assistant.voice.emotion"))
   }
 
   @Test
@@ -311,9 +311,18 @@ class VoiceTest {
     val jsonElement = squad.toJsonElement()
     val members = jsonElement["squad.members"].toJsonElementList()
     assertEquals("Hello!", members[0]["assistant.firstMessage"].stringValue)
+    assertEquals("Hello!", members.first().stringValue("assistant.firstMessage"))
+
     assertEquals("llama3-8b-8192", members[0]["assistant.model.model"].stringValue)
+    assertEquals("llama3-8b-8192", members.first().stringValue("assistant.model.model"))
+
     assertEquals("jack", members[0]["assistant.voice.voiceId"].stringValue)
+    assertEquals("jack", members.first().stringValue("assistant.voice.voiceId"))
+
     assertEquals("male_angry", members[0]["assistant.voice.emotion"].stringValue)
+    assertEquals("male_angry", members.first().stringValue("assistant.voice.emotion"))
+
     assertEquals("10.0", members[0]["assistant.voice.temperature"].stringValue)
+    assertEquals("10.0", members.first().stringValue("assistant.voice.temperature"))
   }
 }

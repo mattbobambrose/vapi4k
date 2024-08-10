@@ -29,17 +29,17 @@ object AssistantRequestUtils {
   val JsonElement.isSquadResponse get() = containsKey("squad")
   val JsonElement.isSquadIdResponse get() = containsKey("squadId")
 
-  val JsonElement.id get() = this["id"].stringValue
-  val JsonElement.messageCallId get() = this["message.call.id"].stringValue
-  val JsonElement.phoneNumber get() = this["message.call.customer.number"].stringValue
+  val JsonElement.id get() = stringValue("id")
+  val JsonElement.messageCallId get() = stringValue("message.call.id")
+  val JsonElement.phoneNumber get() = stringValue("message.call.customer.number")
 
-  val JsonElement.toolCallName get() = this["function.name"].stringValue
+  val JsonElement.toolCallName get() = stringValue("function.name")
   val JsonElement.toolCallArguments get() = this["function.arguments"]
 
   val JsonElement.statusUpdateError: String
     get() = if (isStatusUpdate)
       runCatching {
-        this.get("dd")["message.inboundPhoneCallDebuggingArtifacts.assistantRequestError"].stringValue
+        stringValue("message.inboundPhoneCallDebuggingArtifacts.assistantRequestError")
       }.getOrElse { "" }
     else
       error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
@@ -48,7 +48,7 @@ object AssistantRequestUtils {
 
   val JsonElement.functionName
     get() = if (isFunctionCall)
-      this["message.functionCall.name"].stringValue
+      stringValue("message.functionCall.name")
     else
       error("JsonElement is not a function call")
 

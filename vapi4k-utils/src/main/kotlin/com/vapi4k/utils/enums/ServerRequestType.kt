@@ -17,7 +17,6 @@
 package com.vapi4k.utils.enums
 
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.json.get
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.json.JsonElement
 
@@ -43,7 +42,7 @@ enum class ServerRequestType(
     internal val logger = KotlinLogging.logger {}
     internal val ServerRequestType.isToolCall get() = this == TOOL_CALL
 
-    val JsonElement.requestType get() = ServerRequestType.fromString(this["message.type"].stringValue)
+    val JsonElement.requestType get() = ServerRequestType.fromString(stringValue("message.type"))
     val JsonElement.isAssistantRequest get() = requestType == ServerRequestType.ASSISTANT_REQUEST
     val JsonElement.isConversationUpdate get() = requestType == ServerRequestType.CONVERSATION_UPDATE
     val JsonElement.isEndOfCallReport get() = requestType == ServerRequestType.END_OF_CALL_REPORT
