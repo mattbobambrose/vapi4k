@@ -18,13 +18,13 @@ package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.booleanValue
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.element
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.keys
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
-import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.utils.assistantResponse
+import com.vapi4k.utils.json.JsonElementUtils.booleanValue
+import com.vapi4k.utils.json.JsonElementUtils.element
+import com.vapi4k.utils.json.JsonElementUtils.keys
+import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.json.get
 import com.vapi4k.utils.tools
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertThrows
@@ -40,7 +40,7 @@ class ModelTests {
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
             tools {
-              dtmf {
+              dtmfTool {
                 async = false
                 server {
                   url = "zzz"

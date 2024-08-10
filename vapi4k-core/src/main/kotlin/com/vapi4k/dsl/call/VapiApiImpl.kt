@@ -24,9 +24,6 @@ import com.vapi4k.api.call.VapiApi
 import com.vapi4k.api.call.enums.ApiObjectType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.containsKey
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.common.Constants.OUTBOUND_SERVER_PATH
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
@@ -34,7 +31,10 @@ import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
-import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.common.Utils.errorMsg
+import com.vapi4k.utils.json.JsonElementUtils.containsKey
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get

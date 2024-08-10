@@ -24,7 +24,7 @@ import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonElementUtils.toolCallList
-import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.common.Utils.errorMsg
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 

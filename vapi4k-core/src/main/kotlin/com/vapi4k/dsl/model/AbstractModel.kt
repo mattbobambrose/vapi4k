@@ -26,7 +26,7 @@ import com.vapi4k.dsl.tools.ToolsImpl
 import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
-import com.vapi4k.utils.Utils.trimLeadingSpaces
+import com.vapi4k.utils.common.Utils.trimLeadingSpaces
 
 abstract class AbstractModel(
   override val modelUnion: ModelUnion,

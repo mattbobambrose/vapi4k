@@ -18,7 +18,6 @@ package com.vapi4k.server
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
-import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
@@ -26,7 +25,6 @@ import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
-import com.vapi4k.common.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
@@ -42,7 +40,9 @@ import com.vapi4k.server.ValidateApplication.validateApplication
 import com.vapi4k.server.ValidateApplication.validateToolInvokeResponse
 import com.vapi4k.server.ValidateRoot.validateRoot
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.Utils.getBanner
+import com.vapi4k.utils.MiscUtils.getBanner
+import com.vapi4k.utils.envvar.CoreEnvVars.isProduction
+import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.server.application.ApplicationCall

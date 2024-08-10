@@ -16,21 +16,21 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
-import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
-import com.vapi4k.utils.Utils.isNotNull
-import com.vapi4k.utils.Utils.toErrorString
+import com.vapi4k.utils.common.Utils.isNotNull
+import com.vapi4k.utils.common.Utils.toErrorString
+import com.vapi4k.utils.envvar.CoreEnvVars.serverBaseUrl
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText

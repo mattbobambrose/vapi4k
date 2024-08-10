@@ -21,7 +21,7 @@ import com.vapi4k.common.Constants.OUTBOUND_SERVER_PATH
 import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.utils.Utils.ensureStartsWith
+import com.vapi4k.utils.common.Utils.ensureStartsWith
 import io.ktor.http.ContentType
 import io.ktor.server.application.call
 import io.ktor.server.response.respondRedirect

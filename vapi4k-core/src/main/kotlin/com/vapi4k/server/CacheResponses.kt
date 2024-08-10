@@ -16,10 +16,10 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.ktor.http.ContentType
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call

@@ -14,22 +14,19 @@
  *
  */
 
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.STATUS_UPDATE
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.hasStatusUpdateError
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.requestType
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.statusUpdateError
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
-import com.vapi4k.common.CoreEnvVars.isProduction
-import com.vapi4k.dbms.Messages.insertRequest
-import com.vapi4k.dbms.Messages.insertResponse
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.utils.DslUtils.logObject
 import com.vapi4k.utils.DslUtils.printObject
+import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
+import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.utils.enums.ServerRequestType.STATUS_UPDATE
+import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
@@ -67,8 +64,8 @@ fun Application.module() {
 
       onAllRequests { request ->
         logger.info { "All requests: ${request.requestType}" }
-        if (isProduction)
-          insertRequest(request)
+//        if (isProduction)
+//          insertRequest(request)
         logObject(request)
         printObject(request)
       }
@@ -95,8 +92,8 @@ fun Application.module() {
         logger.info { "All responses: $response" }
         logObject(response)
         logger.info { response.toJsonString() }
-        if (isProduction)
-          insertResponse(requestType, response, elapsedTime)
+//        if (isProduction)
+//          insertResponse(requestType, response, elapsedTime)
       }
 
       onResponse(ASSISTANT_REQUEST) { requestType, response, elapsed ->

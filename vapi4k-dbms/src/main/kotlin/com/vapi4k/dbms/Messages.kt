@@ -16,11 +16,9 @@
 
 package com.vapi4k.dbms
 
-import com.vapi4k.api.vapi4k.enums.ServerRequestType
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.requestType
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
-import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
-import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
+import com.vapi4k.utils.enums.ServerRequestType
+import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -31,7 +29,7 @@ object Messages {
     transaction {
       val str = request.toJsonString()
       MessagesTable.insert { rec ->
-        rec[messageType] = REQUEST.name
+        rec[messageType] = "REQUEST"
         rec[requestType] = request.requestType.desc
         rec[messageJsonb] = str
         rec[messageJson] = str
@@ -48,7 +46,7 @@ object Messages {
     transaction {
       val str = response.toJsonString()
       MessagesTable.insert { rec ->
-        rec[messageType] = RESPONSE.name
+        rec[messageType] = "RESPONSE"
         rec[requestType] = type.desc
         rec[messageJsonb] = str
         rec[messageJson] = str

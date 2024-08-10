@@ -16,13 +16,6 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.END_OF_CALL_REPORT
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.requestType
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
-import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
@@ -32,9 +25,16 @@ import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
-import com.vapi4k.utils.Utils.errorMsg
-import com.vapi4k.utils.Utils.lambda
-import com.vapi4k.utils.Utils.toErrorString
+import com.vapi4k.utils.common.Utils.errorMsg
+import com.vapi4k.utils.common.Utils.lambda
+import com.vapi4k.utils.common.Utils.toErrorString
+import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
+import com.vapi4k.utils.enums.ServerRequestType.END_OF_CALL_REPORT
+import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.utils.envvar.CoreEnvVars.isProduction
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive

@@ -19,14 +19,14 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.Vapi4kApplication
-import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
-import com.vapi4k.common.CoreEnvVars
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.responses.AssistantRequestResponse
 import com.vapi4k.utils.DslUtils
-import com.vapi4k.utils.Utils.isNull
+import com.vapi4k.utils.common.Utils.isNull
+import com.vapi4k.utils.enums.ServerRequestType
+import com.vapi4k.utils.envvar.CoreEnvVars
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 

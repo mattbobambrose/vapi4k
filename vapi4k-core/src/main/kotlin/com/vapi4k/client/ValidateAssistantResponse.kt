@@ -19,19 +19,11 @@ package com.vapi4k.client
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantIdResponse
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantResponse
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isSquadResponse
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.containsKey
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElementList
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonString
-import com.vapi4k.api.vapi4k.utils.get
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
-import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
-import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.SessionCacheId
@@ -44,8 +36,16 @@ import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
-import com.vapi4k.utils.Utils.ensureStartsWith
-import com.vapi4k.utils.Utils.resourceFile
+import com.vapi4k.utils.common.Utils.ensureStartsWith
+import com.vapi4k.utils.common.Utils.resourceFile
+import com.vapi4k.utils.envvar.CoreEnvVars.REQUEST_VALIDATION_FILENAME
+import com.vapi4k.utils.envvar.CoreEnvVars.serverBaseUrl
+import com.vapi4k.utils.json.JsonElementUtils.containsKey
+import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
+import com.vapi4k.utils.json.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -176,7 +176,6 @@ object ValidateAssistantResponse {
         }
       }
   }
-
 
   private fun getAssistantName(
     assistantElement: JsonElement,

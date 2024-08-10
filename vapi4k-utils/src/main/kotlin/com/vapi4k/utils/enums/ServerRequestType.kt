@@ -14,9 +14,12 @@
  *
  */
 
-package com.vapi4k.api.vapi4k.enums
+package com.vapi4k.utils.enums
 
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.json.get
+import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.serialization.json.JsonElement
 
 enum class ServerRequestType(
   val desc: String,
@@ -37,7 +40,21 @@ enum class ServerRequestType(
   ;
 
   companion object {
+    internal val logger = KotlinLogging.logger {}
     internal val ServerRequestType.isToolCall get() = this == TOOL_CALL
+
+    val JsonElement.requestType get() = ServerRequestType.fromString(this["message.type"].stringValue)
+    val JsonElement.isAssistantRequest get() = requestType == ServerRequestType.ASSISTANT_REQUEST
+    val JsonElement.isConversationUpdate get() = requestType == ServerRequestType.CONVERSATION_UPDATE
+    val JsonElement.isEndOfCallReport get() = requestType == ServerRequestType.END_OF_CALL_REPORT
+    val JsonElement.isFunctionCall get() = requestType == ServerRequestType.FUNCTION_CALL
+    val JsonElement.isHang get() = requestType == ServerRequestType.HANG
+    val JsonElement.isPhoneCallControl get() = requestType == ServerRequestType.PHONE_CALL_CONTROL
+    val JsonElement.isSpeechUpdate get() = requestType == ServerRequestType.SPEECH_UPDATE
+    val JsonElement.isStatusUpdate get() = requestType == ServerRequestType.STATUS_UPDATE
+    val JsonElement.isToolCall get() = requestType == ServerRequestType.TOOL_CALL
+    val JsonElement.isTransferDestinationRequest get() = requestType == ServerRequestType.TRANSFER_DESTINATION_REQUEST
+    val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
 
     internal fun fromString(desc: String) =
       try {

@@ -27,9 +27,6 @@ import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.toJsonElement
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
@@ -37,6 +34,9 @@ import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.firstMessageOfType
+import com.vapi4k.utils.json.JsonElementUtils.intValue
+import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.withTestApplication
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows

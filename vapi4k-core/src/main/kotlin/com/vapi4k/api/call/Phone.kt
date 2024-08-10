@@ -20,11 +20,11 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.CallImpl
 import com.vapi4k.dtos.api.CallRequestDto
 import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.Utils
+import com.vapi4k.utils.MiscUtils
 
 @AssistantDslMarker
 class Phone {
-  internal val sessionCacheId = Utils.nextSessionCacheId()
+  internal val sessionCacheId = MiscUtils.nextSessionCacheId()
   private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
 
   fun call(block: Call.() -> Unit): Call =

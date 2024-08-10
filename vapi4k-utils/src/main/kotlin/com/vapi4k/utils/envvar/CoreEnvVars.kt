@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.common
+package com.vapi4k.utils.envvar
 
 object CoreEnvVars {
   val PORT = EnvVar("PORT", { System.getenv(name) ?: "8080" })
@@ -26,7 +26,7 @@ object CoreEnvVars {
     EnvVar(
       name = "REQUEST_VALIDATION_FILENAME",
       src = { System.getenv(name) ?: "/json/AssistantRequestValidation.json" },
-      reportOnBoot = false
+      reportOnBoot = false,
     )
 
   val TOOL_CACHE_CLEAN_PAUSE_MINS = EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", { System.getenv(name) ?: "30" })

@@ -16,22 +16,22 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.booleanValue
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.doubleValue
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.intValue
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.keys
-import com.vapi4k.api.vapi4k.utils.JsonElementUtils.stringValue
 import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.MiscUtils.findFunction
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.instanceParameter
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.parameterSignature
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.valueParameters
-import com.vapi4k.utils.Utils.errorMsg
-import com.vapi4k.utils.Utils.findFunction
+import com.vapi4k.utils.common.Utils.errorMsg
+import com.vapi4k.utils.json.JsonElementUtils.booleanValue
+import com.vapi4k.utils.json.JsonElementUtils.doubleValue
+import com.vapi4k.utils.json.JsonElementUtils.intValue
+import com.vapi4k.utils.json.JsonElementUtils.keys
+import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import java.util.concurrent.atomic.AtomicInteger

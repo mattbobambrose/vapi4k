@@ -24,7 +24,7 @@ import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.Utils.isNull
+import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap

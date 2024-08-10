@@ -29,15 +29,15 @@ interface Tools {
 
   fun externalTool(block: ExternalTool.() -> Unit)
 
-  fun dtmf(block: BaseTool.() -> Unit)
+  fun dtmfTool(block: BaseTool.() -> Unit)
 
-  fun endCall(block: BaseTool.() -> Unit)
+  fun endCallTool(block: BaseTool.() -> Unit)
 
-  fun voiceMail(block: BaseTool.() -> Unit)
+  fun voiceMailTool(block: BaseTool.() -> Unit)
 
-  fun ghl(block: ToolWithMetaData.() -> Unit)
+  fun ghlTool(block: ToolWithMetaData.() -> Unit)
 
-  fun make(block: ToolWithMetaData.() -> Unit)
+  fun makeTool(block: ToolWithMetaData.() -> Unit)
 
-  fun transfer(block: BaseTool.() -> Unit)
+  fun transferTool(block: TransferTool.() -> Unit)
 }

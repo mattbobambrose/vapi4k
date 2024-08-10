@@ -16,9 +16,6 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.api.vapi4k.enums.ServerRequestType
-import com.vapi4k.common.CoreEnvVars.TOOL_CACHE_CLEAN_PAUSE_MINS
-import com.vapi4k.common.CoreEnvVars.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.RequestResponseType
 import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
@@ -29,7 +26,10 @@ import com.vapi4k.server.AdminJobs.RequestResponseCallback.Companion.requestCall
 import com.vapi4k.server.AdminJobs.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
-import com.vapi4k.utils.Utils.errorMsg
+import com.vapi4k.utils.common.Utils.errorMsg
+import com.vapi4k.utils.enums.ServerRequestType
+import com.vapi4k.utils.envvar.CoreEnvVars.TOOL_CACHE_CLEAN_PAUSE_MINS
+import com.vapi4k.utils.envvar.CoreEnvVars.TOOL_CACHE_MAX_AGE_MINS
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch

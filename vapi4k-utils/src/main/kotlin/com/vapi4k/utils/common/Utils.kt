@@ -14,18 +14,13 @@
  *
  */
 
-package com.vapi4k.utils
+package com.vapi4k.utils.common
 
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
-import com.vapi4k.utils.ReflectionUtils.functions
-import io.github.oshai.kotlinlogging.KLogger
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 object Utils {
-  internal val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
-
-  internal fun nextSessionCacheId() = "Outbound-${System.currentTimeMillis()}".toSessionCacheId()
+  fun <T> lambda(block: T) = block
 
   fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
 
@@ -33,31 +28,28 @@ object Utils {
 
   fun String.trimLeadingSpaces() = lines().joinToString(separator = "\n") { it.trimStart() }
 
-  fun <T> lambda(block: T) = block
-
-  fun Any.findFunction(methodName: String) =
-    functions.singleOrNull { it.name == methodName } ?: error("Method $methodName not found")
-
   fun resourceFile(filename: String): String =
     this::class.java.getResource(filename)?.readText() ?: error("File not found: $filename")
   // this.javaClass.classLoader.getResource(filename)?.readText() ?: error("File not found: $filename")
 
-  internal fun Int.lpad(
+  fun Int.lpad(
     width: Int,
     padChar: Char = '0',
   ): String = toString().padStart(width, padChar)
 
-  internal fun Int.rpad(
+  fun Int.rpad(
     width: Int,
     padChar: Char = '0',
   ): String = toString().padEnd(width, padChar)
 
-  internal fun String.capitalizeFirstChar(): String =
+  fun String.capitalizeFirstChar(): String =
     replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
-  internal fun String.obfuscate(freq: Int = 2) = mapIndexed { i, v -> if (i % freq == 0) '*' else v }.joinToString("")
+  fun String.obfuscate(freq: Int = 2) = mapIndexed { i, v -> if (i % freq == 0) '*' else v }.joinToString("")
 
-  internal fun Throwable.toErrorString() =
+  val Throwable.errorMsg get() = "${this::class.simpleName} - $message"
+
+  fun Throwable.toErrorString() =
     "${
       stackTraceToString()
         .lines()
@@ -80,40 +72,5 @@ object Utils {
       returns(false) implies (this@isNull != null)
     }
     return this == null
-  }
-
-  internal fun getBanner(
-    filename: String,
-    logger: KLogger,
-  ): String {
-    val banner = logger.javaClass.classLoader.getResource(filename)?.readText()
-      ?: throw IllegalArgumentException("Banner not found: \"$filename\"")
-
-    val lines = banner.lines()
-
-    // Trim initial and trailing blank lines, but preserve blank lines in middle;
-    var first = -1
-    var last = -1
-    var lineNum = 0
-    lines.forEach { arg1 ->
-      if (arg1.trim { arg2 -> arg2 <= ' ' }.isNotEmpty()) {
-        if (first == -1)
-          first = lineNum
-        last = lineNum
-      }
-      lineNum++
-    }
-
-    lineNum = 0
-
-    val vals =
-      lines
-        .filter {
-          val currLine = lineNum++
-          currLine in first..last
-        }
-        .map { arg -> "     $arg" }
-
-    return "\n\n${vals.joinToString("\n")}\n\n"
   }
 }

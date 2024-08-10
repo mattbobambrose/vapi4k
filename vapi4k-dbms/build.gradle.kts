@@ -21,24 +21,8 @@ publishing {
 }
 
 dependencies {
-    implementation(project(":vapi4k-core"))
+    api(project(":vapi4k-utils"))
 
-    api(libs.kotlin.reflect)
-
-    api(libs.ktor.client.core)
-    api(libs.ktor.client.cio)
-    api(libs.ktor.client.encoding)
-    api(libs.ktor.client.content.negotiation)
-
-    api(libs.ktor.server.core)
-    api(libs.ktor.server.cio)
-    api(libs.ktor.server.compression)
-    api(libs.ktor.server.content.negotiation)
-    api(libs.ktor.server.call.logging)
-    api(libs.ktor.server.html.builder)
-    api(libs.ktor.server.metrics.micrometer)
-
-    api(libs.ktor.serialization)
     api(libs.micrometer.registry.prometheus)
 
     api(libs.hikari)
@@ -52,7 +36,6 @@ dependencies {
     api(libs.kotlin.logging)
     api(libs.logback.classic)
 
-    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.ktor.server.tests)
     testImplementation(kotlin("test"))
 }

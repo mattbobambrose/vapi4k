@@ -14,10 +14,9 @@
  *
  */
 
-package com.vapi4k.common
+package com.vapi4k.utils.envvar
 
-import com.vapi4k.utils.Utils.isNull
-
+import com.vapi4k.utils.common.Utils.isNull
 
 class EnvVar(
   val name: String,

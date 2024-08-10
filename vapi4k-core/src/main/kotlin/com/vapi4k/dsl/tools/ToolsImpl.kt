@@ -21,6 +21,7 @@ import com.vapi4k.api.tools.ExternalTool
 import com.vapi4k.api.tools.Tool
 import com.vapi4k.api.tools.ToolWithMetaData
 import com.vapi4k.api.tools.Tools
+import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
@@ -51,34 +52,34 @@ data class ToolsImpl internal constructor(
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
   }
 
-  override fun dtmf(block: BaseTool.() -> Unit) {
+  override fun dtmfTool(block: BaseTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.DTMF).also { model.toolDtos += it }
     BaseToolImpl("dtmf", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun endCall(block: BaseTool.() -> Unit) {
+  override fun endCallTool(block: BaseTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.END_CALL).also { model.toolDtos += it }
     BaseToolImpl("endCall", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun voiceMail(block: BaseTool.() -> Unit) {
+  override fun voiceMailTool(block: BaseTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.VOICEMAIL).also { model.toolDtos += it }
     BaseToolImpl("voiceMail", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun ghl(block: ToolWithMetaData.() -> Unit) {
+  override fun ghlTool(block: ToolWithMetaData.() -> Unit) {
     val toolDto = ToolDto(ToolType.GHL).also { model.toolDtos += it }
     ToolWithMetaDataImpl("ghl", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun make(block: ToolWithMetaData.() -> Unit) {
+  override fun makeTool(block: ToolWithMetaData.() -> Unit) {
     val toolDto = ToolDto(ToolType.MAKE).also { model.toolDtos += it }
     ToolWithMetaDataImpl("make", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun transfer(block: BaseTool.() -> Unit) {
+  override fun transferTool(block: TransferTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.TRANSFER_CALL).also { model.toolDtos += it }
-    BaseToolImpl("transfer", toolDto).apply(block).checkIfServerCalled()
+    TransferToolImpl("transfer", toolDto).apply(block).checkIfServerCalled()
   }
 
   private fun processFunctions(
