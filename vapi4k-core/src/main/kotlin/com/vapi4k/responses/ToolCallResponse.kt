@@ -19,12 +19,15 @@ package com.vapi4k.responses
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallArguments
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallName
+import com.vapi4k.dsl.assistant.ExternalToolCallResponseImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonElementUtils.toolCallList
 import com.vapi4k.utils.common.Utils.errorMsg
+import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -58,17 +61,39 @@ data class ToolCallResponse(
                         errorMessage = errorMsg
                       }
                       runCatching {
-                        application.toolCache.getFromCache(sessionCacheId)
-                          .getFunction(funcName)
-                          .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
-                          .invokeToolMethod(
-                            isTool = true,
-                            args = args,
-                            request = request,
-                            message = toolCallResult.message,
-                            successAction = { result -> toolCallResult.result = result },
-                            errorAction = errorAction,
-                          )
+                        if (application.containsFunctionInCache(sessionCacheId, funcName)) {
+                          application.getFunctionInfoFromCache(sessionCacheId)
+                            .getFunction(funcName)
+                            .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
+                            .invokeToolMethod(
+                              isTool = true,
+                              args = args,
+                              request = request,
+                              messageDtoList = toolCallResult.message,
+                              successAction = { result -> toolCallResult.result = result },
+                              errorAction = errorAction,
+                            )
+                        } else {
+                          // Invoke external tool
+                          if (!application.externalToolCache.containsTool(funcName)) {
+                            error("Tool $funcName not found")
+                          } else {
+                            val func = application.externalToolCache.getTool(funcName)
+                            val toolCallId = toolCall.stringValue("id")
+
+                            if (!application.isToolCallRequestInitialized()) {
+                              error("onToolCallRequest{} not called")
+                            } else {
+                              runBlocking {
+                                val response = ExternalToolCallResponseImpl(toolCallResult)
+                                application.toolCallRequest.invoke(response, funcName, request)
+                                toolCallResult.apply {
+                                  toolCallId
+                                }
+                              }
+                            }
+                          }
+                        }
                       }.getOrElse { e ->
                         val errorMsg = e.message ?: "Error invoking tool $funcName"
                         logger.error { errorMsg }

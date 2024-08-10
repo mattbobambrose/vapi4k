@@ -53,6 +53,8 @@ object JsonElementUtils {
 
   fun JsonElement.booleanValue(key: String) = get(key).booleanValue
 
+  fun JsonElement.jsonElementList(key: String) = get(key).toJsonElementList()
+
   fun JsonElement.element(key: String) =
     jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
 
@@ -60,13 +62,13 @@ object JsonElementUtils {
     keys.flatMap { it.split(".") }
       .fold(this) { acc, key -> acc.element(key) }
 
-  fun JsonElement.toJsonElementList() = jsonArray.toList()
-
-  val JsonElement.isEmpty get() = jsonObject.isEmpty()
-
   fun JsonElement.containsKey(key: String) = jsonObject.containsKey(key)
 
   val JsonElement.size get() = jsonObject.size
+
+  val JsonElement.isEmpty get() = jsonObject.isEmpty()
+
+  fun JsonElement.toJsonElementList() = jsonArray.toList()
 
   inline fun <reified T> T.toJsonString(prettyPrint: Boolean = true) =
     (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)

@@ -23,9 +23,9 @@ import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
 import com.vapi4k.api.voice.enums.PlayHTVoiceEmotionType
 import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.utils.assistantResponse
+import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.utils.json.get
 import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertThrows
@@ -309,7 +309,7 @@ class VoiceTest {
         }
       }
     val jsonElement = squad.toJsonElement()
-    val members = jsonElement["squad.members"].toJsonElementList()
+    val members = jsonElement.jsonElementList("squad.members")
     assertEquals("Hello!", members.first().stringValue("assistant.firstMessage"))
     assertEquals("llama3-8b-8192", members.first().stringValue("assistant.model.model"))
     assertEquals("jack", members.first().stringValue("assistant.voice.voiceId"))

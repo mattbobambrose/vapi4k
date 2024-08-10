@@ -17,9 +17,9 @@
 package com.vapi4k
 
 import com.vapi4k.utils.JsonUtils.toObjectList
+import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.utils.json.get
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
@@ -326,7 +326,7 @@ class JsonExtensionTest {
   @Test
   fun testArrayValues() {
     val obj = json.toJsonElement()
-    assert(obj["message.toolWithToolCallList"].toJsonElementList().size == 1)
+    assert(obj.jsonElementList("message.toolWithToolCallList").size == 1)
   }
 
   @Test

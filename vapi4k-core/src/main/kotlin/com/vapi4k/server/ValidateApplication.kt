@@ -16,7 +16,7 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestResponse
+import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestPage
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
@@ -58,7 +58,7 @@ internal object ValidateApplication {
     appName: String,
   ) {
     val secret = call.request.queryParameters["secret"].orEmpty()
-    val resp = validateAssistantRequestResponse(application, appName, secret)
+    val resp = validateAssistantRequestPage(application, appName, secret)
     call.respondText(resp, ContentType.Text.Html)
   }
 

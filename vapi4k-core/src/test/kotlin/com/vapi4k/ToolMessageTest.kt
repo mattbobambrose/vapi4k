@@ -18,9 +18,8 @@ package com.vapi4k
 
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.utils.JsonFilenames
+import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
-import com.vapi4k.utils.json.get
 import com.vapi4k.utils.tools
 import com.vapi4k.utils.withTestApplication
 import kotlin.test.Test
@@ -59,10 +58,10 @@ class ToolMessageTest {
       }
 
     assertEquals(200, response.status.value)
-    val assistantTools = jsonElement["squad.members"].toJsonElementList().first().tools()
+    val assistantTools = jsonElement.jsonElementList("squad.members").first().tools()
     assertEquals(
       "tool 1 start message",
-      assistantTools.first()["messages"].toJsonElementList().first().stringValue("content"),
+      assistantTools.first().jsonElementList("messages").first().stringValue("content"),
     )
   }
 }

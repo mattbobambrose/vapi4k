@@ -38,7 +38,7 @@ import com.vapi4k.server.CacheResponses.processCachesRequest
 import com.vapi4k.server.CacheResponses.versionResponse
 import com.vapi4k.server.ValidateApplication.validateApplication
 import com.vapi4k.server.ValidateApplication.validateToolInvokeResponse
-import com.vapi4k.server.ValidateRoot.validateRoot
+import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.envvar.CoreEnvVars.isProduction
@@ -118,7 +118,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
         get(CACHES_PATH) { processCachesRequest(config) }
         get(CLEAR_CACHES_PATH) { clearCaches(config) }
-        get(VALIDATE_PATH) { validateRoot(config) }
+        get(VALIDATE_PATH) { validateRootPage(config) }
         get("$VALIDATE_PATH/{appName}") { validateApplication(config) }
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeResponse(config) }
       }

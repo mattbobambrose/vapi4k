@@ -28,7 +28,7 @@ import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
-import com.vapi4k.dsl.model.AbstractModelProperties
+import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
@@ -36,7 +36,7 @@ import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import kotlin.reflect.KFunction
 
 data class ToolsImpl internal constructor(
-  internal val model: AbstractModelProperties,
+  internal val model: AbstractModel,
 ) : Tools {
   override fun vapi4kTool(
     obj: Any,
@@ -48,8 +48,14 @@ data class ToolsImpl internal constructor(
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
-    ExternalToolImpl("externalTool", toolDto).apply(block).checkIfServerCalled()
+    val toolImpl =
+      ExternalToolImpl("externalTool", toolDto)
+        .apply(block)
+        .apply { checkIfServerCalled() }
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
+    val application = model.application as Vapi4kApplicationImpl
+
+    application.externalToolCache.addToCache(toolDto.functionDto.name, toolImpl)
   }
 
   override fun dtmfTool(block: BaseTool.() -> Unit) {
@@ -84,17 +90,17 @@ data class ToolsImpl internal constructor(
 
   private fun processFunctions(
     toolType: ToolType,
-    functions: Array<out KFunction<*>>,
+    functionRefs: Array<out KFunction<*>>,
     obj: Any,
     block: (ToolDto) -> Unit,
   ) {
-    if (functions.isEmpty()) {
+    if (functionRefs.isEmpty()) {
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(true, function)
       addTool(toolType, obj, function) { block(it) }
     } else {
-      functions.forEach { function ->
+      functionRefs.forEach { function ->
         verifyIsToolCall(true, function)
         verifyIsValidReturnType(true, function)
         addTool(toolType, obj, function) { block(it) }

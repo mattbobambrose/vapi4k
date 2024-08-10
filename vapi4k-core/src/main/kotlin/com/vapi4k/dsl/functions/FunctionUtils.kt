@@ -30,7 +30,7 @@ import kotlin.reflect.KParameter
 
 internal object FunctionUtils {
   internal val allowedParamTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
-  private val allowedReturnTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
+  private val allowedReturnTypes = setOf(String::class, Int::class, Double::class, Boolean::class, Unit::class)
   private val tcName by lazy { ToolCall::class.simpleName.orEmpty() }
 
   fun verifyIsToolCall(
@@ -58,7 +58,10 @@ internal object FunctionUtils {
     val returnClass = function.returnType.asKClass()
     if (returnClass !in allowedReturnTypes) {
       val str = if (isTool) "Tool" else "Function"
-      error("$str ${function.name} returns a ${returnClass.qualifiedName}. Allowed return types are String or Unit")
+      error(
+        "$str ${function.name} returns a ${returnClass.qualifiedName}. " +
+          "Allowed return types are String, Int, Double, Boolean or Unit"
+      )
     }
   }
 
@@ -80,7 +83,7 @@ internal object FunctionUtils {
             val fqName = FunctionDetails(obj, function).fqName
             val simpleName = kclass.simpleName
             error(
-              "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, and Boolean",
+              "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, Double and Boolean",
             )
           }
 

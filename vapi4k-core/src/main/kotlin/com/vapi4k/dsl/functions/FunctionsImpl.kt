@@ -22,14 +22,14 @@ import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
-import com.vapi4k.dsl.model.AbstractModelProperties
+import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import kotlin.reflect.KFunction
 
 data class FunctionsImpl internal constructor(
-  internal val model: AbstractModelProperties,
+  internal val model: AbstractModel,
 ) : Functions {
   override fun function(
     obj: Any,

@@ -29,10 +29,9 @@ import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.envvar.CoreEnvVars.defaultServerPath
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
+import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
-import com.vapi4k.utils.json.get
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -54,11 +53,9 @@ fun assistantResponse(
     error("assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
 }
 
-fun JsonElement.tools() = this["assistant.model.tools"].toJsonElementList()
+fun JsonElement.tools() = jsonElementList("assistant.model.tools")
 
-fun JsonElement.firstTool() = tools().first()
-
-fun JsonElement.firstToolMessages() = firstTool()["messages"].toJsonElementList()
+fun JsonElement.firstToolMessages() = tools().first().jsonElementList("messages")
 
 fun JsonElement.firstMessageOfType(
   type: ToolMessageType,
@@ -71,7 +68,7 @@ else
   firstToolMessages()
     .filter { it.containsKey("conditions") }
     .filter {
-      conditions.all { c -> it["conditions"].toJsonElementList().contains(c.toJsonElement()) }
+      conditions.all { c -> it.jsonElementList("conditions").contains(c.toJsonElement()) }
     }
     .first { it.stringValue("type") == type.desc }
 

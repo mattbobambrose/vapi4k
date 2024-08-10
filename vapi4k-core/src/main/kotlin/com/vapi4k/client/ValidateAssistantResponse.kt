@@ -41,9 +41,9 @@ import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.envvar.CoreEnvVars.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.utils.envvar.CoreEnvVars.serverBaseUrl
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
+import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
 import io.ktor.client.request.post
@@ -89,7 +89,7 @@ object ValidateAssistantResponse {
     return copyWithNewCallId(request.toJsonElement())
   }
 
-  fun validateAssistantRequestResponse(
+  fun validateAssistantRequestPage(
     application: Vapi4kApplicationImpl,
     appName: String,
     secret: String,
@@ -147,12 +147,12 @@ object ValidateAssistantResponse {
 
             with(jsonElement) {
               when {
-                isAssistantResponse -> processAssistantRequest(application, jsonElement, sessionCacheId)
+                isAssistantResponse -> assistantRequestToolsBody(application, jsonElement, sessionCacheId)
                 isSquadResponse -> {
-                  val assistants = jsonElement["squad.members"].toJsonElementList()
+                  val assistants = jsonElement.jsonElementList("squad.members")
                   assistants.forEachIndexed { i, assistant ->
                     h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
-                    processAssistantRequest(application, assistant, sessionCacheId)
+                    assistantRequestToolsBody(application, assistant, sessionCacheId)
                   }
                 }
                 // TODO - Add support for assistantId responses
@@ -185,7 +185,7 @@ object ValidateAssistantResponse {
       assistantElement["assistant"].stringValue("name")
     }.getOrElse { index.toString() }
 
-  private fun BODY.processAssistantRequest(
+  private fun BODY.assistantRequestToolsBody(
     application: Vapi4kApplicationImpl,
     jsonElement: JsonElement,
     sessionCacheId: SessionCacheId,
@@ -193,26 +193,21 @@ object ValidateAssistantResponse {
     logger.debug { jsonElement.toJsonString() }
     val functions =
       if (jsonElement["assistant.model"].containsKey("tools"))
-        jsonElement["assistant.model.tools"]
-          .toJsonElementList()
-          .mapNotNull {
-            if (!it.containsKey("function.name"))
-              null
-            else
-              it.stringValue("function.name")
-          }
+        jsonElement
+          .jsonElementList("assistant.model.tools")
+          .mapNotNull { if (!it.containsKey("function.name")) null else it.stringValue("function.name") }
       else
         emptyList()
 
     logger.debug { "Checking toolCache: ${application.toolCache.name} [$sessionCacheId]" }
-    if (!application.toolCache.contains(sessionCacheId)) {
+    if (!application.toolCache.containsSessionCacheId(sessionCacheId)) {
       h2 { +"No Tools Declared" }
     } else {
       h2 { +"Tools" }
       val functionInfo = application.toolCache.getFromCache(sessionCacheId)
       functions.forEach { function ->
         // Skip external tools
-        if (functionInfo.hasFunction(function)) {
+        if (functionInfo.containsFunction(function)) {
           div {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
             val functionDetails = functionInfo.getFunction(function)

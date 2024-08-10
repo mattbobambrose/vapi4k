@@ -51,7 +51,6 @@ class FunctionDetails internal constructor(
   val fqName get() = "$className.$functionName()"
   val fqNameWithParams get() = "$className.$functionName(${function.parameterSignature})"
   val methodWithParams get() = "$functionName(${function.parameterSignature})"
-  val isAsync get() = function.isUnitReturnType
   val params get() = function.valueParameters
 
   override fun toString() = fqNameWithParams
@@ -60,7 +59,7 @@ class FunctionDetails internal constructor(
     isTool: Boolean,
     args: JsonElement,
     request: JsonElement,
-    message: MutableList<CommonToolMessageDto> = mutableListOf(),
+    messageDtoList: MutableList<CommonToolMessageDto> = mutableListOf(),
     successAction: (String) -> Unit,
     errorAction: (String) -> Unit,
   ) {
@@ -69,14 +68,13 @@ class FunctionDetails internal constructor(
       val result = invokeMethod(args).also { logger.info { "Tool call result: $it" } }
       successAction(result)
       if (isTool && obj is ToolCallService)
-        message.addAll(obj.onToolCallComplete(request, result).map { it.dto }).also {
-          logger.info { "Adding tool request messages $it" }
-        }
+        messageDtoList.addAll(obj.onToolCallComplete(request, result).map { it.dto })
+          .also { logger.info { "Adding tool request messages $it" } }
     }.onFailure { e ->
       val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
       errorAction(errorMsg)
       if (isTool && obj is ToolCallService)
-        message.addAll(obj.onToolCallFailed(request, errorMsg).map { it.dto })
+        messageDtoList.addAll(obj.onToolCallFailed(request, errorMsg).map { it.dto })
       logger.error { errorMsg }
     }
   }
@@ -120,7 +118,6 @@ class FunctionDetails internal constructor(
     val callMap =
       function.instanceParameter?.let { param -> valueMap.toMutableMap().also { it[param] = obj } } ?: valueMap
     val result = function.callBy(callMap)
-
     return if (function.isUnitReturnType) "" else result?.toString().orEmpty()
   }
 }

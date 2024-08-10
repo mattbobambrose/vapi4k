@@ -30,7 +30,7 @@ class FunctionInfo internal constructor() {
   val age get() = Clock.System.now() - created
   val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
 
-  fun hasFunction(funcName: String) = functions.contains(funcName)
+  fun containsFunction(funcName: String) = functions.contains(funcName)
 
   fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
 

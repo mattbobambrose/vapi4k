@@ -19,8 +19,8 @@ package com.vapi4k.utils
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
+import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.utils.json.get
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
@@ -30,7 +30,7 @@ object JsonElementUtils {
 
   val JsonElement.toolCallList
     get() = if (isToolCall)
-      this["message.toolCallList"].toJsonElementList()
+      jsonElementList("message.toolCallList")
     else
       error("JsonElement is not a tool call request")
 
