@@ -79,7 +79,7 @@ data class ToolsImpl internal constructor(
 
   override fun transferTool(block: TransferTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.TRANSFER_CALL).also { model.toolDtos += it }
-    TransferToolImpl("transfer", toolDto).apply(block).checkIfServerCalled()
+    TransferToolImpl("transfer", toolDto).apply(block) //.checkIfServerCalled()
   }
 
   private fun processFunctions(

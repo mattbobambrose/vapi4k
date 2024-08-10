@@ -190,7 +190,7 @@ object ValidateAssistantResponse {
     jsonElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
-    logger.info { jsonElement.toJsonString() }
+    logger.debug { jsonElement.toJsonString() }
     val functions =
       if (jsonElement["assistant.model"].containsKey("tools"))
         jsonElement["assistant.model.tools"]

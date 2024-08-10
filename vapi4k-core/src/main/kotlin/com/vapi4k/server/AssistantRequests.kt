@@ -33,6 +33,7 @@ import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import com.vapi4k.utils.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.utils.enums.ServerRequestType.TRANSFER_DESTINATION_REQUEST
 import com.vapi4k.utils.envvar.CoreEnvVars.isProduction
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.ktor.http.HttpStatusCode
@@ -86,6 +87,12 @@ internal object AssistantRequests {
           }
 
           TOOL_CALL -> {
+            val response = getToolCallResponse(application, request)
+            call.respond(response)
+            lambda { response.toJsonElement() }
+          }
+
+          TRANSFER_DESTINATION_REQUEST -> {
             val response = getToolCallResponse(application, request)
             call.respond(response)
             lambda { response.toJsonElement() }
