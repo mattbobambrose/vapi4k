@@ -44,6 +44,9 @@ class TransferToolImpl internal constructor(
     AssistantRequestResponse().apply {
       val assistantDto = AssistantDestinationDto().also { destinations += it }
       AssistantDestinationImpl(assistantDto).apply(block)
+      if (assistantDto.assistantName.isEmpty()) {
+        error("Assistant name is required in transferTool{}")
+      }
     }
   }
 

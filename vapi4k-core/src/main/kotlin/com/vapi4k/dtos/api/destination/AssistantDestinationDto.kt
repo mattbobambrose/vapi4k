@@ -24,6 +24,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class AssistantDestinationDto(
+  override var assistantName: String = "",
   override var transferMode: AssistantTransferMode = AssistantTransferMode.UNSPECIFIED,
 ) : AbstractDestinationDto(),
   CommonDestinationDto,

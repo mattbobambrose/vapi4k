@@ -21,6 +21,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface AssistantDestination {
+  var assistantName: String
   var transferMode: AssistantTransferMode
   var message: String
   var description: String

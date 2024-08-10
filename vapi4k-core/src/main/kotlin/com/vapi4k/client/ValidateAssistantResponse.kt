@@ -187,14 +187,20 @@ object ValidateAssistantResponse {
 
   private fun BODY.processAssistantRequest(
     application: Vapi4kApplicationImpl,
-    assistantElement: JsonElement,
+    jsonElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
+    logger.info { jsonElement.toJsonString() }
     val functions =
-      if (assistantElement["assistant.model"].containsKey("tools"))
-        assistantElement["assistant.model.tools"]
+      if (jsonElement["assistant.model"].containsKey("tools"))
+        jsonElement["assistant.model.tools"]
           .toJsonElementList()
-          .map { it.stringValue("function.name") }
+          .mapNotNull {
+            if (!it.containsKey("function.name"))
+              null
+            else
+              it.stringValue("function.name")
+          }
       else
         emptyList()
 
