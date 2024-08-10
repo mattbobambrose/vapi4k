@@ -62,7 +62,6 @@ class ToolMessageTest {
     val assistantTools = jsonElement["squad.members"].toJsonElementList().first().tools()
     assertEquals(
       "tool 1 start message",
-      assistantTools.first()["messages"].toJsonElementList()[0]["content"].stringValue,
       assistantTools.first()["messages"].toJsonElementList().first().stringValue("content"),
     )
   }

@@ -307,7 +307,6 @@ class JsonExtensionTest {
   fun testStringValue() {
     val obj = json.toJsonElement()
     assert(obj["message"]["type"].stringValue == "tool-calls")
-    assert(obj["message.type"].stringValue == "tool-calls")
     assert(obj.stringValue("message.type") == "tool-calls")
   }
 
@@ -315,14 +314,12 @@ class JsonExtensionTest {
   fun testPathVarargs() {
     val obj = json.toJsonElement()
     assert(obj["message", "type"].stringValue == "tool-calls")
-    assert(obj["message.type"].stringValue == "tool-calls")
     assert(obj.stringValue("message.type") == "tool-calls")
   }
 
   @Test
   fun testPathString() {
     val obj = json.toJsonElement()
-    assert(obj["message.type"].stringValue == "tool-calls")
     assert(obj.stringValue("message.type") == "tool-calls")
   }
 
