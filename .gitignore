@@ -2,7 +2,6 @@
 build/
 .kotlin
 TTD.txt
-json
 secrets
 http-client.private.env.json
 vapi2.conf
