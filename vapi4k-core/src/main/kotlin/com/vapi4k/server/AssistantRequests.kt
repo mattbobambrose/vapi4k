@@ -36,6 +36,7 @@ import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TRANSFER_DESTINATION_REQUEST
 import com.vapi4k.utils.envvar.CoreEnvVars.isProduction
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
@@ -93,6 +94,7 @@ internal object AssistantRequests {
           }
 
           TRANSFER_DESTINATION_REQUEST -> {
+            logger.info { "Transfer destination request received: ${request.toJsonString()}" }
             val response = getToolCallResponse(application, request)
             call.respond(response)
             lambda { response.toJsonElement() }
