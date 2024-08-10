@@ -62,6 +62,9 @@ fun Application.module() {
         myAssistantRequest()
       }
 
+      onTransferDestinationRequest {
+      }
+
       onAllRequests { request ->
         logger.info { "All requests: ${request.requestType}" }
 //        if (isProduction)

@@ -95,7 +95,7 @@ internal object AssistantRequests {
 
           TRANSFER_DESTINATION_REQUEST -> {
             logger.info { "Transfer destination request received: ${request.toJsonString()}" }
-            val response = getToolCallResponse(application, request)
+            val response = application.getTransferDestinationResponse(request)
             call.respond(response)
             lambda { response.toJsonElement() }
           }

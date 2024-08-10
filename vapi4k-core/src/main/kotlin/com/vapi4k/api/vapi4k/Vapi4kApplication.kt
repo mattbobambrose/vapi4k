@@ -17,6 +17,7 @@
 package com.vapi4k.api.vapi4k
 
 import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.utils.enums.ServerRequestType
 import kotlinx.serialization.json.JsonElement
@@ -28,6 +29,8 @@ interface Vapi4kApplication {
   var serverSecret: String
 
   fun onAssistantRequest(block: suspend AssistantResponse.() -> Unit)
+
+  fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.() -> Unit)
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit)
 

@@ -43,7 +43,7 @@ data class ToolsImpl internal constructor(
     vararg functions: KFunction<*>,
     block: Tool.() -> Unit,
   ) = processFunctions(ToolType.FUNCTION, functions, obj) {
-    ToolImpl("tool", it).apply(block)
+    ToolImpl("vapi4kTool", it).apply(block)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
@@ -54,32 +54,32 @@ data class ToolsImpl internal constructor(
 
   override fun dtmfTool(block: BaseTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.DTMF).also { model.toolDtos += it }
-    BaseToolImpl("dtmf", toolDto).apply(block).checkIfServerCalled()
+    BaseToolImpl("dtmfTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun endCallTool(block: BaseTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.END_CALL).also { model.toolDtos += it }
-    BaseToolImpl("endCall", toolDto).apply(block).checkIfServerCalled()
+    BaseToolImpl("endCallTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun voiceMailTool(block: BaseTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.VOICEMAIL).also { model.toolDtos += it }
-    BaseToolImpl("voiceMail", toolDto).apply(block).checkIfServerCalled()
+    BaseToolImpl("voiceMailTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun ghlTool(block: ToolWithMetaData.() -> Unit) {
     val toolDto = ToolDto(ToolType.GHL).also { model.toolDtos += it }
-    ToolWithMetaDataImpl("ghl", toolDto).apply(block).checkIfServerCalled()
+    ToolWithMetaDataImpl("ghlTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun makeTool(block: ToolWithMetaData.() -> Unit) {
     val toolDto = ToolDto(ToolType.MAKE).also { model.toolDtos += it }
-    ToolWithMetaDataImpl("make", toolDto).apply(block).checkIfServerCalled()
+    ToolWithMetaDataImpl("makeTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun transferTool(block: TransferTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.TRANSFER_CALL).also { model.toolDtos += it }
-    TransferToolImpl("transfer", toolDto).apply(block) //.checkIfServerCalled()
+    TransferToolImpl("transferTool", toolDto).apply(block)
   }
 
   private fun processFunctions(

@@ -17,12 +17,17 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.tools.TransferDestinationResponse
+import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
+import com.vapi4k.api.vapi4k.TransferDestinationRequestContext
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ToolCache
-import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.dsl.tools.TransferToolImpl
+import com.vapi4k.dtos.tools.ToolDto
+import com.vapi4k.responses.AssistantRequestResponseDto
 import com.vapi4k.utils.DslUtils
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
@@ -34,6 +39,7 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
   internal val toolCache = ToolCache { serverPath }
   internal var assistantRequest: (suspend AssistantResponse.() -> Unit)? = null
+  internal var transferDestinationRequest: (suspend TransferDestinationResponse.() -> Unit)? = null
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
@@ -50,6 +56,13 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
       assistantRequest = block
     else
       error("onAssistantRequest{} can be called only once per vapi4kApplication{}")
+  }
+
+  override fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.() -> Unit) {
+    if (transferDestinationRequest.isNull())
+      transferDestinationRequest = block
+    else
+      error("onTransferDestinationRequest{} can be called only once per vapi4kApplication{}")
   }
 
   override fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
@@ -84,7 +97,7 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
     requestTypes.forEach { applicationPerResponses += it to block }
   }
 
-  internal suspend fun getAssistantResponse(request: JsonElement): AssistantRequestResponse {
+  internal suspend fun getAssistantResponse(request: JsonElement): AssistantRequestResponseDto {
     val assistantRequestContext = AssistantRequestContext(this, request)
     val assistantResponse = AssistantResponseImpl(assistantRequestContext)
     assistantRequest?.invoke(assistantResponse) ?: error("onAssistantRequest{} not called")
@@ -92,5 +105,14 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
       assistantResponse.assistantRequestResponse
     else
       error("onAssistantRequest{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
+  }
+
+  internal suspend fun getTransferDestinationResponse(request: JsonElement): ToolDto {
+    val toolDto = ToolDto(ToolType.TRANSFER_CALL)
+    val transferTool = TransferToolImpl("onTransferDestinationRequest", toolDto).also {
+      it.transferDestinationRequest = TransferDestinationRequestContext(this, request)
+    }
+    transferDestinationRequest?.invoke(transferTool) ?: error("onTransferDestinationRequest{} not called")
+    return toolDto
   }
 }

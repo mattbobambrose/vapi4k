@@ -19,7 +19,9 @@ package com.vapi4k.dsl.tools
 import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
+import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.api.tools.TransferTool
+import com.vapi4k.api.vapi4k.TransferDestinationRequestContext
 import com.vapi4k.dsl.destination.AssistantDestinationImpl
 import com.vapi4k.dsl.destination.NumberDestinationImpl
 import com.vapi4k.dsl.destination.SipDestinationImpl
@@ -28,7 +30,7 @@ import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.dtos.tools.ToolDto
-import com.vapi4k.responses.AssistantRequestResponse
+import com.vapi4k.responses.AssistantRequestResponseDto
 
 interface TransferToolProperties {
   val destinations: MutableList<CommonDestinationDto>
@@ -39,26 +41,29 @@ class TransferToolImpl internal constructor(
   val dto: ToolDto,
 ) : ToolWithServerImpl(callerName, dto),
   TransferToolProperties by dto,
-  TransferTool {
+  TransferTool,
+  TransferDestinationResponse {
+  override lateinit var transferDestinationRequest: TransferDestinationRequestContext
+
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {
-    AssistantRequestResponse().apply {
+    AssistantRequestResponseDto().apply {
       val assistantDto = AssistantDestinationDto().also { destinations += it }
       AssistantDestinationImpl(assistantDto).apply(block)
       if (assistantDto.assistantName.isEmpty()) {
-        error("Assistant name is required in transferTool{}")
+        error("assistantDestination{} requires an assistantName value")
       }
     }
   }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
-    AssistantRequestResponse().apply {
+    AssistantRequestResponseDto().apply {
       val numDto = NumberDestinationDto().also { destinations += it }
       NumberDestinationImpl(numDto).apply(block)
     }
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
-    AssistantRequestResponse().apply {
+    AssistantRequestResponseDto().apply {
       val sipDto = SipDestinationDto().also { destinations += it }
       SipDestinationImpl(sipDto).apply(block)
     }
