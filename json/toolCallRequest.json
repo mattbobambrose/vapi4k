@@ -1,0 +1,363 @@
+{
+  "message": {
+    "type": "tool-calls",
+    "toolCalls": [
+      {
+        "id": "call_sxo6DlgmPSuBupSZ9brATZ23",
+        "type": "function",
+        "function": {
+          "name": "saveName",
+          "arguments": {
+            "firstName": "Matthew",
+            "lastName": "Ambrose"
+          }
+        }
+      }
+    ],
+    "toolCallList": [
+      {
+        "id": "call_sxo6DlgmPSuBupSZ9brATZ23",
+        "type": "function",
+        "function": {
+          "name": "saveName",
+          "arguments": {
+            "firstName": "Matthew",
+            "lastName": "Ambrose"
+          }
+        }
+      }
+    ],
+    "toolWithToolCallList": [
+      {
+        "type": "function",
+        "function": {
+          "name": "saveName",
+          "description": "Save the name of the user",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "description": "The firstName parameter",
+                "type": "string"
+              },
+              "lastName": {
+                "description": "The lastName parameter",
+                "type": "string"
+              }
+            },
+            "required": [
+              "firstName",
+              "lastName"
+            ]
+          }
+        },
+        "async": true,
+        "server": {
+          "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+          "secret": "12345"
+        },
+        "messages": [],
+        "toolCall": {
+          "id": "call_sxo6DlgmPSuBupSZ9brATZ23",
+          "type": "function",
+          "function": {
+            "name": "saveName",
+            "arguments": {
+              "firstName": "Matthew",
+              "lastName": "Ambrose"
+            }
+          }
+        }
+      }
+    ],
+    "call": {
+      "id": "57ffd0f4-b542-4203-adc9-f3a9fe69ce0f",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "createdAt": "2024-07-16T06:27:27.668Z",
+      "updatedAt": "2024-07-16T06:27:27.668Z",
+      "type": "inboundPhoneCall",
+      "status": "ringing",
+      "phoneCallProvider": "twilio",
+      "phoneCallProviderId": "CA12de9370ef91caa44a39bdab502f70d7",
+      "phoneCallTransport": "pstn",
+      "phoneNumberId": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "customer": {
+        "number": "+19256836490"
+      },
+      "assistant": {
+        "model": {
+          "model": "gpt-4-turbo",
+          "messages": [
+            {
+              "content": "\n[Identity]\nYou are the friendly and helpful voice of EO Care. Your goal is to collect information\nfrom the user.\n\n[Style]\n- Be friendly and concise.\n- Talk slowly and clearly.\n- Use simple language.\n\n[Response Guideline]\n- Present dates in a clear format (e.g., 01/01/2024 or mm/dd/yyyy).\n- After the user responds to each question, wait for their response before proceeding.\n- If the user says they don't want to answer a question, tell them they have to until they do.\n- Whenever the relevant information is given, immediately call the corresponding service to save it.\n\n[Task]\n- Ask for the user's first and last name. If they only give one, ask which name that was and\nask for the other as well.\n\n- Ask for the user's date of birth in any format.\n\n- Ask whether the user is male or female.\n\n- Ask for the state the user lives in and their zip code. If they give one but not\nthe others, keep asking for the missing information.\n\n- Ask for the user's experience with cannabis. Suggest the phrases \"first timer\",\n\"somewhat familiar\", and \"experienced\".\n\n- Ask whether the user would like further information and ask for their email.\n- Confirm the user's information and thank them for their time.\n",
+              "role": "system"
+            }
+          ],
+          "tools": [
+            {
+              "async": true,
+              "function": {
+                "name": "saveName",
+                "description": "Save the name of the user",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "firstName": {
+                      "description": "The firstName parameter",
+                      "type": "string"
+                    },
+                    "lastName": {
+                      "description": "The lastName parameter",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "firstName",
+                    "lastName"
+                  ]
+                }
+              },
+              "server": {
+                "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+                "secret": "12345"
+              },
+              "type": "function"
+            },
+            {
+              "async": true,
+              "function": {
+                "name": "saveBirthday",
+                "description": "Save the birthday of the user",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "birthday": {
+                      "description": "The birthday parameter",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "birthday"
+                  ]
+                }
+              },
+              "server": {
+                "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+                "secret": "12345"
+              },
+              "type": "function"
+            },
+            {
+              "async": true,
+              "function": {
+                "name": "saveGender",
+                "description": "Save the gender of the user",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "gender": {
+                      "description": "The gender parameter",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "gender"
+                  ]
+                }
+              },
+              "server": {
+                "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+                "secret": "12345"
+              },
+              "type": "function"
+            },
+            {
+              "async": true,
+              "function": {
+                "name": "saveStateAndZipCode",
+                "description": "Save the state of the user",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "state": {
+                      "description": "The state parameter",
+                      "type": "string"
+                    },
+                    "zipCode": {
+                      "description": "The zipCode parameter",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "state",
+                    "zipCode"
+                  ]
+                }
+              },
+              "server": {
+                "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+                "secret": "12345"
+              },
+              "type": "function"
+            },
+            {
+              "async": true,
+              "function": {
+                "name": "saveExperience",
+                "description": "Save the experience of the user",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "experience": {
+                      "description": "The experience parameter",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "experience"
+                  ]
+                }
+              },
+              "server": {
+                "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+                "secret": "12345"
+              },
+              "type": "function"
+            },
+            {
+              "async": true,
+              "function": {
+                "name": "saveEmail",
+                "description": "Save whether the user wants further information and their contact information",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "description": "The email parameter",
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "server": {
+                "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+                "secret": "12345"
+              },
+              "type": "function"
+            }
+          ],
+          "provider": "openai"
+        },
+        "firstMessage": "\n                Welcome to EO Care! My name is Julie, your EO Care assistant. I'd like to collect some information from you\n                today. Is that alright?\n                ",
+        "serverMessages": [
+          "end-of-call-report",
+          "function-call",
+          "hang",
+          "status-update",
+          "tool-calls",
+          "transfer-destination-request",
+          "user-interrupted"
+        ]
+      }
+    },
+    "phoneNumber": {
+      "id": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "number": "+19254207621",
+      "createdAt": "2024-06-29T03:03:00.576Z",
+      "updatedAt": "2024-06-29T03:04:32.131Z",
+      "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33cFxM9B7",
+      "stripeSubscriptionStatus": "active",
+      "stripeSubscriptionCurrentPeriodStart": "2024-06-29T03:02:56.000Z",
+      "provider": "twilio"
+    },
+    "customer": {
+      "number": "+19256836490"
+    },
+    "artifact": {
+      "messages": [
+        {
+          "role": "bot",
+          "message": "Welcome to eOcare. My name is Julie, your eOcare assistant. I'd like to collect some information from you today. Is that alright?",
+          "time": 1721111252218,
+          "endTime": 1721111257888,
+          "secondsFromStart": 1.68,
+          "source": ""
+        },
+        {
+          "role": "user",
+          "message": "Sure.",
+          "time": 1721111259138,
+          "endTime": 1721111259638,
+          "secondsFromStart": 8.6,
+          "duration": 3.2600002
+        },
+        {
+          "role": "bot",
+          "message": "Great. Let's start with your name. Could you please tell me your first and last name?",
+          "time": 1721111261568,
+          "endTime": 1721111267098,
+          "secondsFromStart": 11.03,
+          "source": ""
+        },
+        {
+          "role": "user",
+          "message": "Matthew Ambrose.",
+          "time": 1721111268538,
+          "endTime": 1721111269758,
+          "secondsFromStart": 18,
+          "duration": 2.5900002
+        },
+        {
+          "toolCalls": [
+            {
+              "id": "call_sxo6DlgmPSuBupSZ9brATZ23",
+              "type": "function",
+              "function": {
+                "name": "saveName",
+                "arguments": "{\"firstName\": \"Matthew\", \"lastName\": \"Ambrose\"}"
+              }
+            }
+          ],
+          "role": "tool_calls",
+          "message": "",
+          "time": 1721111270215,
+          "secondsFromStart": 19.787
+        }
+      ],
+      "messagesOpenAIFormatted": [
+        {
+          "role": "assistant",
+          "content": "Welcome to eOcare. My name is Julie, your eOcare assistant. I'd like to collect some information from you today. Is that alright?"
+        },
+        {
+          "role": "user",
+          "content": "Sure."
+        },
+        {
+          "role": "assistant",
+          "content": "Great. Let's start with your name. Could you please tell me your first and last name?"
+        },
+        {
+          "role": "user",
+          "content": "Matthew Ambrose."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "type": "function",
+              "id": "call_sxo6DlgmPSuBupSZ9brATZ23",
+              "function": {
+                "name": "saveName",
+                "arguments": "{\"firstName\": \"Matthew\", \"lastName\": \"Ambrose\"}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "timestamp": "2024-07-16T06:27:50.223Z"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "assistant": {
+    "model": {
+      "model": "gpt-4-turbo",
+      "tools": [
+        {
+          "type": "function",
+          "async": false,
+          "server": {
+            "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+            "secret": "12345"
+          },
+          "function": {
+            "name": "NameService--recordName",
+            "parameters": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name parameter"
+                }
+              }
+            },
+            "description": "Save the name of the user"
+          }
+        }
+      ],
+      "messages": [
+        {
+          "role": "system",
+          "content": "\n[Identity]\nYou are the friendly and helpful voice of EO Care. Your goal is to collect the name of \nthe user.\n\n[Style]\n- Be matter of fact and concise.\n\n[Response Guideline]\n- Present dates in a clear format (e.g., January 15, 2024).\n\n[Task]\n1. Ask for the user's name.\n<wait for user response>\n2. Confirm the user's name.\n"
+        }
+      ],
+      "provider": "openai"
+    },
+    "firstMessage": "\n            Hi there. My name is Roger. I'd like to collect some information from you \n            today. Is that alright?\n            "
+  }
+}

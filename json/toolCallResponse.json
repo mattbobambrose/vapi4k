@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "toolCallId": "call_0DzZIopMbA5wP1YPTd2AW5TT",
+      "name": "getWeatherByCity_001",
+      "result": "The weather in city Danville and state California is windy",
+      "message": [
+        {
+          "type": "request-complete",
+          "content": "The Chicago override request complete weather lookup",
+          "conditions": [
+            {
+              "param": "city",
+              "operator": "eq",
+              "value": "Chicago"
+            },
+            {
+              "param": "state",
+              "operator": "eq",
+              "value": "Illinois"
+            }
+          ]
+        },
+        {
+          "type": "request-complete",
+          "content": "The override request Complete Message weather has arrived",
+          "role": "assistant"
+        }
+      ]
+    }
+  ]
+}

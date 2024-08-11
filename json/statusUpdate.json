@@ -1,0 +1,160 @@
+{
+  "message": {
+    "type": "status-update",
+    "status": "ended",
+    "endedReason": "assistant-request-returned-invalid-assistant",
+    "inboundPhoneCallDebuggingArtifacts": {
+      "error": "Couldn't Get Assistant. Either Set The Assistant I D On The Phone Number. Or, To Debug Your Assistant Request, Check The Debugging Artifacts That Were Just Sent To Your Server.",
+      "assistantRequestError": "Invalid Assistant. Errors: assistantOverrides.analysisPlan.structuredDataSchema.type must be one of the following values: string, number, integer, boolean, array, object,assistantOverrides.analysisPlan.structuredDataSchema.type must be a string,assistantOverrides.analysisPlan.structuredDataSchema.items.type must be one of the following values: string, number, integer, boolean, array, object,assistantOverrides.analysisPlan.structuredDataSchema.items.type must be a string,squad.members must be an array,squad.membersOverrides.analysisPlan.structuredDataSchema.type must be one of the following values: string, number, integer, boolean, array, object,squad.membersOverrides.analysisPlan.structuredDataSchema.type must be a string,squad.membersOverrides.analysisPlan.structuredDataSchema.items.type must be one of the following values: string, number, integer, boolean, array, object,squad.membersOverrides.analysisPlan.structuredDataSchema.items.type must be a string",
+      "assistantRequestResponse": {
+        "assistant": {
+          "firstMessage": "\n            Hi there. My name is Ellen. I'd like to collect some information from you \n            today. Is that alright?\n            ",
+          "model": {
+            "provider": "openai",
+            "model": "gpt-4-turbo",
+            "messages": [
+              {
+                "role": "system",
+                "content": "\n[Identity]\nYou are the friendly and helpful voice of EO Care. Your goal is to collect the name of \nthe user.\n\n[Style]\n- Be friendly and concise.\n\n[Response Guideline]\n- Present dates in a clear format (e.g., January 15, 2024).\n\n[Task]\n1. Ask for the user's first and last name. If they only give one, ask which name that was\nand ask for the other as well.\n<wait for user response>\n2. Confirm the user's name.\n3. Ask for the user's age, favorite color, and favorite food.\n<wait for user response>\n4. If they do not give all three, ask for the missing information. Keep asking until \nthey give all of the information.\n"
+              }
+            ],
+            "tools": [
+              {
+                "type": "function",
+                "async": true,
+                "function": {
+                  "name": "NameService--saveNameOfUser",
+                  "description": "Save the name of the user",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "firstName": {
+                        "type": "string",
+                        "description": "The firstName parameter"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "The lastName parameter"
+                      }
+                    },
+                    "required": [
+                      "firstName",
+                      "lastName"
+                    ]
+                  }
+                },
+                "server": {
+                  "url": "https://eocare-app-fiqm5.ondigitalocean.app/inboundRequest",
+                  "secret": "12345"
+                }
+              }
+            ],
+            "functions": [
+              {
+                "name": "ManyInfoService--saveManyInfo",
+                "description": "Save the age, favorite color, and favorite food of the user",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "age": {
+                      "type": "string",
+                      "description": "The age parameter"
+                    },
+                    "favoriteColor": {
+                      "type": "string",
+                      "description": "The favoriteColor parameter"
+                    },
+                    "favoriteFood": {
+                      "type": "string",
+                      "description": "The favoriteFood parameter"
+                    }
+                  },
+                  "required": [
+                    "age",
+                    "favoriteColor",
+                    "favoriteFood"
+                  ]
+                }
+              }
+            ]
+          },
+          "serverMessages": [
+            "end-of-call-report",
+            "function-call",
+            "hang",
+            "status-update",
+            "tool-calls",
+            "transfer-destination-request",
+            "user-interrupted"
+          ]
+        },
+        "assistantOverrides": {
+          "variableValues": {},
+          "metadata": {},
+          "analysisPlan": {
+            "structuredDataSchema": {
+              "items": {},
+              "properties": {}
+            }
+          }
+        },
+        "squad": {
+          "membersOverrides": {
+            "variableValues": {},
+            "metadata": {},
+            "analysisPlan": {
+              "structuredDataSchema": {
+                "items": {},
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "call": {
+      "id": "00dbe917-37fd-4d3f-8cc0-ac6be0923f40",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "createdAt": "2024-07-13T21:27:59.738Z",
+      "updatedAt": "2024-07-13T21:27:59.738Z",
+      "type": "inboundPhoneCall",
+      "status": "ringing",
+      "phoneCallProvider": "twilio",
+      "phoneCallProviderId": "CAb8744933aa71c2f53f91258c46c24f41",
+      "phoneCallTransport": "pstn",
+      "phoneNumberId": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "assistantId": null,
+      "squadId": null,
+      "customer": {
+        "number": "+19256836490"
+      }
+    },
+    "phoneNumber": {
+      "id": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "assistantId": null,
+      "number": "+19254207621",
+      "createdAt": "2024-06-29T03:03:00.576Z",
+      "updatedAt": "2024-06-29T03:04:32.131Z",
+      "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33cFxM9B7",
+      "twilioAccountSid": null,
+      "twilioAuthToken": null,
+      "stripeSubscriptionStatus": "active",
+      "stripeSubscriptionCurrentPeriodStart": "2024-06-29T03:02:56.000Z",
+      "name": null,
+      "credentialId": null,
+      "serverUrl": null,
+      "serverUrlSecret": null,
+      "twilioOutgoingCallerId": null,
+      "sipUri": null,
+      "provider": "twilio",
+      "fallbackForwardingPhoneNumber": null,
+      "fallbackDestination": null,
+      "squadId": null
+    },
+    "customer": {
+      "number": "+19256836490"
+    },
+    "timestamp": "2024-07-13T21:28:01.344Z"
+  }
+}
