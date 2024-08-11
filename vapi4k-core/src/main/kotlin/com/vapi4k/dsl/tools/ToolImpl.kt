@@ -29,6 +29,7 @@ import com.vapi4k.dtos.tools.ToolMessageDelayedDto
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.dtos.tools.ToolMessageStartDto
 import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.common.Utils.capitalizeFirstChar
 
 open class ToolImpl internal constructor(
   internal val callerName: String,
@@ -40,6 +41,13 @@ open class ToolImpl internal constructor(
   private val delayedChecker = DuplicateChecker()
 
   internal val messages get() = toolDto.messages
+  internal val properties get() = toolDto.functionDto.parametersDto.properties
+
+  internal val signature
+    get() = properties
+      .map { (k, v) -> "$k: ${v.type.capitalizeFirstChar()}" }
+      .joinToString(", ")
+
   private val dtoConditions
     get() = messages.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
 

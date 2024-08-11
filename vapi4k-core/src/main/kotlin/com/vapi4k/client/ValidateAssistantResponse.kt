@@ -56,7 +56,9 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.html.BODY
 import kotlinx.html.DIV
+import kotlinx.html.FORM
 import kotlinx.html.InputType
+import kotlinx.html.TBODY
 import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.code
@@ -223,18 +225,8 @@ object ValidateAssistantResponse {
               attributes["hx-trigger"] = "submit"
               attributes["hx-target"] = "#result-$divId"
 
-              hiddenInput {
-                name = APPLICATION_ID
-                value = application.applicationId.value
-              }
-              hiddenInput {
-                name = SESSION_CACHE_ID
-                value = sessionCacheId.value
-              }
-              hiddenInput {
-                name = FUNCTION_NAME
-                value = funcName
-              }
+              addHiddenFields(application, sessionCacheId, funcName)
+
               table {
                 tbody {
                   functionDetails.params.forEach { functionDetail ->
@@ -260,17 +252,7 @@ object ValidateAssistantResponse {
                       }
                     }
                   }
-                  tr {
-                    td {
-                      input {
-                        style = "margin-top: 10px;"
-                        type = InputType.submit
-                        value = "Invoke Tool"
-                      }
-                    }
-                    td {}
-                    td {}
-                  }
+                  addInvokeToolOption()
                 }
               }
             }
@@ -289,29 +271,19 @@ object ValidateAssistantResponse {
         .forEach { funcName ->
           div {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            val manualToolImpl = application.manualToolCache.getTool(funcName)
             val divId = getRandomSecret()
-            h3 { +funcName }
+            h3 { +"$funcName (${manualToolImpl.signature})" }
             form {
               attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
               attributes["hx-trigger"] = "submit"
               attributes["hx-target"] = "#result-$divId"
 
-              hiddenInput {
-                name = APPLICATION_ID
-                value = application.applicationId.value
-              }
-              hiddenInput {
-                name = SESSION_CACHE_ID
-                value = sessionCacheId.value
-              }
-              hiddenInput {
-                name = FUNCTION_NAME
-                value = funcName
-              }
+              addHiddenFields(application, sessionCacheId, funcName)
+
               table {
                 tbody {
-                  val manualToolImpl = application.manualToolCache.getTool(funcName)
-                  manualToolImpl.toolDto.functionDto.parametersDto.properties.forEach { propertyName, propertyDesc ->
+                  manualToolImpl.properties.forEach { propertyName, propertyDesc ->
                     tr {
                       td { +"$propertyName:" }
                       td {
@@ -334,17 +306,7 @@ object ValidateAssistantResponse {
                       }
                     }
                   }
-                  tr {
-                    td {
-                      input {
-                        style = "margin-top: 10px;"
-                        type = InputType.submit
-                        value = "Invoke Tool"
-                      }
-                    }
-                    td {}
-                    td {}
-                  }
+                  addInvokeToolOption()
                 }
               }
             }
@@ -352,6 +314,39 @@ object ValidateAssistantResponse {
             displayResponse(divId)
           }
         }
+    }
+  }
+
+  private fun FORM.addHiddenFields(
+    application: Vapi4kApplicationImpl,
+    sessionCacheId: SessionCacheId,
+    funcName: String,
+  ) {
+    hiddenInput {
+      name = APPLICATION_ID
+      value = application.applicationId.value
+    }
+    hiddenInput {
+      name = SESSION_CACHE_ID
+      value = sessionCacheId.value
+    }
+    hiddenInput {
+      name = FUNCTION_NAME
+      value = funcName
+    }
+  }
+
+  private fun TBODY.addInvokeToolOption() {
+    tr {
+      td {
+        input {
+          style = "margin-top: 10px;"
+          type = InputType.submit
+          value = "Invoke Tool"
+        }
+      }
+      td {}
+      td {}
     }
   }
 

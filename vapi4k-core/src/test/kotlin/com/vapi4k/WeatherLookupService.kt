@@ -34,8 +34,8 @@ class WeatherLookupService1 : ToolCallService() {
     @Param(description = "The city name") city: String,
     state: String,
   ): String {
-    if (city.isNotEmpty())
-      error("I found an error")
+//    if (city.isNotEmpty())
+//      error("I found an error")
     return "The weather in city $city and state $state is windy"
   }
 
