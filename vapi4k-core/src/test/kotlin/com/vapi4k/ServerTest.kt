@@ -96,13 +96,13 @@ class ServerTest {
       if (i in listOf(1, 2))
         assertEquals(
           "The weather in Danville, California is windy",
-          jsonElement["results"].firstInList().stringValue("result"),
+          jsonElement["messageResponse.results"].firstInList().stringValue("result"),
         )
 
       if (i in listOf(3, 4))
         assertEquals(
           "The weather in Boston, Massachusetts is rainy",
-          jsonElement["results"].firstInList().stringValue("result"),
+          jsonElement["messageResponse.results"].firstInList().stringValue("result"),
         )
 
       if (i == 6) {

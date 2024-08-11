@@ -36,6 +36,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
+data class ToolCallMessageResponse(
+  @SerialName("messageResponse")
+  val toolCallResponse: ToolCallResponse = ToolCallResponse(),
+)
+
+@Serializable
 data class ToolCallResponse(
   var results: MutableList<ToolCallResult> = mutableListOf(),
   var error: String = "",
@@ -45,8 +51,9 @@ data class ToolCallResponse(
       application: Vapi4kApplicationImpl,
       request: JsonElement,
     ) = runCatching {
-      ToolCallResponse()
-        .also { response ->
+      ToolCallMessageResponse()
+        .also { tcmr ->
+          val response = tcmr.toolCallResponse
           var errorMessage = ""
 
           request.toolCallList
