@@ -51,7 +51,7 @@ data class ToolsImpl internal constructor(
     val manualToolImpl = ManualToolImpl("manualTool", toolDto).apply(block)
     val paramName = toolDto.functionDto.name
     if (paramName.isBlank()) error("manualTool{} parameter name is required")
-    if (!manualToolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onToolCallRequest{} declared")
+    if (!manualToolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onInvoke{} declared")
 
     val application = model.application as Vapi4kApplicationImpl
     application.manualToolCache.addToCache(model.sessionCacheId, paramName, manualToolImpl)

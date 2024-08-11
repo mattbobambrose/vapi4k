@@ -47,10 +47,10 @@ class ManualToolImpl internal constructor(
     ParametersImpl(toolDto).apply(block)
   }
 
-  override fun onToolCallRequest(block: suspend ManualToolCallResponse.(JsonElement) -> Unit) {
+  override fun onInvoke(block: suspend ManualToolCallResponse.(JsonElement) -> Unit) {
     if (!::toolCallRequest.isInitialized)
       toolCallRequest = block
     else
-      error("onToolCallRequest{} can be called only once per externalTool{}")
+      error("onInvoke{} can be called only once per manualTool{}")
   }
 }

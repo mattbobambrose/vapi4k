@@ -91,7 +91,7 @@ data class ToolCallResponse(
                             val manualToolImpl: ManualToolImpl = application.manualToolCache.getTool(funcName)
 
                             if (!manualToolImpl.isToolCallRequestInitialized()) {
-                              error("onToolCallRequest{} not declared in $funcName")
+                              error("onInvoke{} not declared in $funcName")
                             } else {
                               runBlocking {
                                 val completeMsgs = RequestCompleteMessagesImpl()

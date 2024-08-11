@@ -143,7 +143,7 @@ fun AssistantResponse.getAssistant() =
             content = "This is the manual weather lookup start message"
           }
 
-          onToolCallRequest { args ->
+          onInvoke { args ->
             val city = args.stringValue("city")
             val state = args.stringValue("state")
             result = "The weather in $city, $state is sunny"

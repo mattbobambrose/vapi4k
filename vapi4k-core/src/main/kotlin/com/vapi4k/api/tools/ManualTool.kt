@@ -25,5 +25,5 @@ interface ManualTool : BaseTool {
   var name: String
   var description: String
 
-  fun onToolCallRequest(block: suspend ManualToolCallResponse.(JsonElement) -> Unit)
+  fun onInvoke(block: suspend ManualToolCallResponse.(JsonElement) -> Unit)
 }
