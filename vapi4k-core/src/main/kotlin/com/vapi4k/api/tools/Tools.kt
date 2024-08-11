@@ -21,11 +21,13 @@ import kotlin.reflect.KFunction
 
 @AssistantDslMarker
 interface Tools {
-  fun vapi4kTool(
+  fun serviceTool(
     obj: Any,
     vararg functions: KFunction<*>,
     block: Tool.() -> Unit = {},
   )
+
+  fun manualTool(block: ManualTool.() -> Unit)
 
   fun externalTool(block: ExternalTool.() -> Unit)
 

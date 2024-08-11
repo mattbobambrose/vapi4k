@@ -14,6 +14,7 @@
  *
  */
 
+import com.vapi4k.api.destination.enums.AssistantTransferMode
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.hasStatusUpdateError
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.server.Vapi4k
@@ -49,8 +50,8 @@ fun Application.module() {
 
   install(Vapi4k) {
     vapi4kApplication {
-      onAssistantRequest {
-        myAssistantRequest()
+      onAssistantRequest { request ->
+        myAssistantRequest(request)
       }
     }
 
@@ -58,11 +59,17 @@ fun Application.module() {
       serverPath = "/inboundRequest"
       serverSecret = "12345"
 
-      onAssistantRequest {
-        myAssistantRequest()
+      onAssistantRequest { request ->
+        myAssistantRequest(request)
       }
 
-      onTransferDestinationRequest {
+      onTransferDestinationRequest { request ->
+        assistantDestination {
+          assistantName = "Assistant"
+          transferMode = AssistantTransferMode.ROLLING_HISTORY
+          message = "Message"
+          description = "Description"
+        }
       }
 
       onAllRequests { request ->

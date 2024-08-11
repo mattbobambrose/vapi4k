@@ -69,7 +69,6 @@ class ApplicationTest {
   fun `test for duplicate serverPaths`() {
     val str = "/something_else"
     assertThrows(IllegalStateException::class.java) {
-      val application =
         with(Vapi4kConfigImpl()) {
           vapi4kApplication {
             serverPath = str

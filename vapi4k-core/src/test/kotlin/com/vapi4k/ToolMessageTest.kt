@@ -40,7 +40,7 @@ class ToolMessageTest {
                 openAIModel {
                   modelType = OpenAIModelType.GPT_4_TURBO
                   tools {
-                    vapi4kTool(WeatherLookupService1()) {
+                    serviceTool(WeatherLookupService1()) {
                       requestStartMessage {
                         content = "tool 1 start message"
                         dto

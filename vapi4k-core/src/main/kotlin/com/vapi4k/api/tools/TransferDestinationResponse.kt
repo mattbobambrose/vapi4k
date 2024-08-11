@@ -19,13 +19,10 @@ package com.vapi4k.api.tools
 import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
-import com.vapi4k.api.vapi4k.TransferDestinationRequestContext
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface TransferDestinationResponse {
-  val transferDestinationRequest: TransferDestinationRequestContext
-
   fun assistantDestination(block: AssistantDestination.() -> Unit)
 
   fun numberDestination(block: NumberDestination.() -> Unit)

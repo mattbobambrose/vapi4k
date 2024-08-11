@@ -35,7 +35,7 @@ object SimpleAssistant {
         systemMessage = "You're a weather lookup service"
 
         tools {
-          vapi4kTool(WeatherLookupService1()) {
+          serviceTool(WeatherLookupService1()) {
             requestStartMessage {
               content = "Default request start weather lookup"
             }

@@ -33,7 +33,7 @@ object SimpleSquad {
             groqModel {
               modelType = GroqModelType.LLAMA3_70B
               tools {
-                vapi4kTool(TestWeatherLookupService("windy"))
+                serviceTool(TestWeatherLookupService("windy"))
               }
             }
           }
@@ -54,7 +54,7 @@ object SimpleSquad {
             groqModel {
               modelType = GroqModelType.LLAMA3_70B
               tools {
-                vapi4kTool(TestWeatherLookupService("rainy"))
+                serviceTool(TestWeatherLookupService("rainy"))
               }
             }
           }

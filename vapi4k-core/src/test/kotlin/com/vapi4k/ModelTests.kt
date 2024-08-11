@@ -132,7 +132,9 @@ class ModelTests {
                 name = "wed"
                 description = "a description"
                 async = true
-
+//                onToolCallRequest { args ->
+//
+//                }
                 server {
                   url = "yyy"
                   secret = "456"

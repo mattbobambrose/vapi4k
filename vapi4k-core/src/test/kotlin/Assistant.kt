@@ -23,9 +23,11 @@ import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.phoneNumber
+import kotlinx.serialization.json.JsonElement
 
-fun AssistantResponse.myAssistantRequest() =
-  when (assistantRequestContext.phoneNumber) {
+fun AssistantResponse.myAssistantRequest(request: JsonElement) =
+  when (request.phoneNumber) {
     "+14156721042" ->
       assistantId {
         id = "44792a91-d7f9-4915-9445-0991aeef97bc"
@@ -122,7 +124,7 @@ fun AssistantResponse.getAssistant(callerName: String = "Bill") =
 //      }
 
       tools {
-        vapi4kTool(WeatherLookupService1()) {
+        serviceTool(WeatherLookupService1()) {
           condition("city" eq "Chicago", "state" eq "Illinois") {
             requestStartMessage {
               content = "This is the Chicago Illinois start message"
@@ -165,7 +167,7 @@ fun AssistantResponse.getAssistant(callerName: String = "Bill") =
           }
         }
 
-        vapi4kTool(WeatherLookupService2()) {
+        serviceTool(WeatherLookupService2()) {
           condition("city" eq "Chicago") {
             requestStartMessage {
               content = "This is the Chicago start message"

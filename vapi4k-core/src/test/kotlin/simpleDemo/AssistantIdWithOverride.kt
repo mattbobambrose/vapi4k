@@ -26,7 +26,7 @@ class AssistantIdWithOverride {
         openAIModel {
           modelType = OpenAIModelType.GPT_4_TURBO
           tools {
-            vapi4kTool(WeatherLookupService())
+            serviceTool(WeatherLookupService())
           }
         }
       }

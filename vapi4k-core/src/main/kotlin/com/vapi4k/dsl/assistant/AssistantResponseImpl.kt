@@ -36,7 +36,7 @@ import com.vapi4k.utils.DuplicateChecker
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 
 class AssistantResponseImpl(
-  override val assistantRequestContext: AssistantRequestContext,
+  val assistantRequestContext: AssistantRequestContext,
 ) : AssistantResponse {
   private val checker = DuplicateChecker()
   internal lateinit var assistantRequestResponse: AssistantRequestResponseDto

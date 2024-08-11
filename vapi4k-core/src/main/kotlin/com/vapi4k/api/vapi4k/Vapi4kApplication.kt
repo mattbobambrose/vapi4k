@@ -17,7 +17,6 @@
 package com.vapi4k.api.vapi4k
 
 import com.vapi4k.api.assistant.AssistantResponse
-import com.vapi4k.api.assistant.ExternalToolCallResponse
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.utils.enums.ServerRequestType
@@ -29,11 +28,9 @@ interface Vapi4kApplication {
   var serverPath: String
   var serverSecret: String
 
-  fun onAssistantRequest(block: suspend AssistantResponse.() -> Unit)
+  fun onAssistantRequest(block: suspend AssistantResponse.(JsonElement) -> Unit)
 
-  fun onToolCallRequest(block: suspend ExternalToolCallResponse.(String, JsonElement) -> Unit)
-
-  fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.() -> Unit)
+  fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.(JsonElement) -> Unit)
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit)
 

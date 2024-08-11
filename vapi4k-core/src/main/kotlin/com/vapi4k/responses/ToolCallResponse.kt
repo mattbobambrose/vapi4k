@@ -79,12 +79,12 @@ data class ToolCallResponse(
                             )
                         } else {
                           // Invoke external tool
-                          if (!application.externalToolCache.containsTool(funcName)) {
+                          if (!application.manualToolCache.containsTool(funcName)) {
                             error("Tool $funcName not found")
                           } else {
-                            val func: ExternalToolImpl = application.externalToolCache.getTool(funcName)
+                            val func: ExternalToolImpl = application.manualToolCache.getTool(funcName)
 
-                            if (!application.isToolCallRequestInitialized()) {
+                            if (!func.isToolCallRequestInitialized()) {
                               error("onToolCallRequest{} not called")
                             } else {
                               runBlocking {
@@ -93,8 +93,7 @@ data class ToolCallResponse(
                                 val resp =
                                   ExternalToolCallResponseImpl(completeMessages, failedMessages, toolCallResult)
                                 runCatching {
-                                  application.toolCallRequest.invoke(resp, funcName, request)
-
+                                  func.toolCallRequest.invoke(resp, request)
                                   toolCallResult.messageDtos.addAll(completeMessages.messageList.map { it.dto })
                                 }.onFailure {
                                   toolCallResult.messageDtos.addAll(failedMessages.messageList.map { it.dto })

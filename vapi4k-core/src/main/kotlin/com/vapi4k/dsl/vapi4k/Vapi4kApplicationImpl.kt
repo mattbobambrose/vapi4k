@@ -17,18 +17,16 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.AssistantResponse
-import com.vapi4k.api.assistant.ExternalToolCallResponse
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
-import com.vapi4k.api.vapi4k.TransferDestinationRequestContext
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
-import com.vapi4k.dsl.tools.ExternalToolCache
+import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ToolCache
-import com.vapi4k.dsl.tools.TransferToolImpl
+import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.DslUtils
 import com.vapi4k.utils.enums.ServerRequestType
@@ -39,11 +37,10 @@ import kotlin.time.Duration
 class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
   internal val toolCache = ToolCache { serverPath }
-  internal val externalToolCache = ExternalToolCache { serverPath }
+  internal val manualToolCache = ManualToolCache { serverPath }
 
-  private lateinit var assistantRequest: (suspend AssistantResponse.() -> Unit)
-  internal lateinit var toolCallRequest: (suspend ExternalToolCallResponse.(String, JsonElement) -> Unit)
-  private lateinit var transferDestinationRequest: (suspend TransferDestinationResponse.() -> Unit)
+  private lateinit var assistantRequest: (suspend AssistantResponse.(JsonElement) -> Unit)
+  private lateinit var transferDestinationRequest: (suspend TransferDestinationResponse.(JsonElement) -> Unit)
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
@@ -55,8 +52,6 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   override var serverPath = CoreEnvVars.defaultServerPath
   override var serverSecret = ""
 
-  internal fun isToolCallRequestInitialized() = ::toolCallRequest.isInitialized
-
   internal fun containsFunctionInCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
@@ -65,21 +60,14 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
 
   internal fun getFunctionInfoFromCache(sessionCacheId: SessionCacheId) = toolCache.getFromCache(sessionCacheId)
 
-  override fun onAssistantRequest(block: suspend AssistantResponse.() -> Unit) {
+  override fun onAssistantRequest(block: suspend AssistantResponse.(JsonElement) -> Unit) {
     if (!::assistantRequest.isInitialized)
       assistantRequest = block
     else
       error("onAssistantRequest{} can be called only once per vapi4kApplication{}")
   }
 
-  override fun onToolCallRequest(block: suspend ExternalToolCallResponse.(String, JsonElement) -> Unit) {
-    if (!::toolCallRequest.isInitialized)
-      toolCallRequest = block
-    else
-      error("onToolCallRequest{} can be called only once per vapi4kApplication{}")
-  }
-
-  override fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.() -> Unit) {
+  override fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.(JsonElement) -> Unit) {
     if (!::transferDestinationRequest.isInitialized)
       transferDestinationRequest = block
     else
@@ -124,7 +112,7 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
     } else {
       val assistantRequestContext = AssistantRequestContext(this, request)
       val assistantResponse = AssistantResponseImpl(assistantRequestContext)
-      assistantRequest.invoke(assistantResponse)
+      assistantRequest.invoke(assistantResponse, request)
       if (!assistantResponse.isAssigned)
         error("onAssistantRequest{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
       else
@@ -136,11 +124,8 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
       error("onTransferDestinationRequest{} not called")
     } else {
       val toolDto = ToolDto(ToolType.TRANSFER_CALL)
-      val transferTool =
-        TransferToolImpl("onTransferDestinationRequest", toolDto).also {
-          it.transferDestinationRequest = TransferDestinationRequestContext(this, request)
-        }
-      transferDestinationRequest.invoke(transferTool)
+      val transferTool = TransferDestinationImpl("onTransferDestinationRequest", toolDto)
+      transferDestinationRequest.invoke(transferTool, request)
       toolDto
     }
 }

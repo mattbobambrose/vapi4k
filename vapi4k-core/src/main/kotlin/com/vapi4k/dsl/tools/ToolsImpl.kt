@@ -18,6 +18,7 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.api.tools.BaseTool
 import com.vapi4k.api.tools.ExternalTool
+import com.vapi4k.api.tools.ManualTool
 import com.vapi4k.api.tools.Tool
 import com.vapi4k.api.tools.ToolWithMetaData
 import com.vapi4k.api.tools.Tools
@@ -38,12 +39,24 @@ import kotlin.reflect.KFunction
 data class ToolsImpl internal constructor(
   internal val model: AbstractModel,
 ) : Tools {
-  override fun vapi4kTool(
+  override fun serviceTool(
     obj: Any,
     vararg functions: KFunction<*>,
     block: Tool.() -> Unit,
   ) = processFunctions(ToolType.FUNCTION, functions, obj) {
-    ToolImpl("vapi4kTool", it).apply(block)
+    ToolImpl("serviceTool", it).apply(block)
+  }
+
+  override fun manualTool(block: ManualTool.() -> Unit) {
+    val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
+//    val toolImpl =
+//      ManualToolImpl("manualTool", toolDto)
+//        .apply(block)
+    if (toolDto.functionDto.name.isBlank()) error("manualTool{} parameter name is required")
+//    if (!toolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onToolCallRequest{}")
+
+    val application = model.application as Vapi4kApplicationImpl
+//    application.externalToolCache.addToCache(toolDto.functionDto.name, toolImpl)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
@@ -53,9 +66,6 @@ data class ToolsImpl internal constructor(
         .apply(block)
         .apply { checkIfServerCalled() }
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
-    val application = model.application as Vapi4kApplicationImpl
-
-    application.externalToolCache.addToCache(toolDto.functionDto.name, toolImpl)
   }
 
   override fun dtmfTool(block: BaseTool.() -> Unit) {

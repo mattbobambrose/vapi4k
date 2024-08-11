@@ -14,25 +14,22 @@
  *
  */
 
-package com.vapi4k.api.assistant
+package com.vapi4k.dsl.tools
 
-import com.vapi4k.api.destination.NumberDestination
-import com.vapi4k.api.destination.SipDestination
-import com.vapi4k.api.squad.Squad
-import com.vapi4k.api.squad.SquadId
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+class ManualToolCache(
+  val nameBlock: () -> String,
+) {
+  private val externalTools = mutableMapOf<String, ExternalToolImpl>()
 
-@AssistantDslMarker
-interface AssistantResponse {
-  fun assistant(block: Assistant.() -> Unit)
+  fun addToCache(
+    toolName: String,
+    externalToolImpl: ExternalToolImpl,
+  ) {
+    externalTools[toolName] = externalToolImpl
+  }
 
-  fun assistantId(block: AssistantId.() -> Unit)
+  fun containsTool(toolName: String) = externalTools.containsKey(toolName)
 
-  fun squad(block: Squad.() -> Unit)
-
-  fun squadId(block: SquadId.() -> Unit)
-
-  fun numberDestination(block: NumberDestination.() -> Unit)
-
-  fun sipDestination(block: SipDestination.() -> Unit)
+  fun getTool(toolName: String): ExternalToolImpl =
+    externalTools[toolName] ?: error("External tool name found: $toolName")
 }

@@ -14,22 +14,16 @@
  *
  */
 
-package com.vapi4k.dsl.tools
+package com.vapi4k.api.tools
 
-class ExternalToolCache(
-  val nameBlock: () -> String,
-) {
-  private val externalTools = mutableMapOf<String, ExternalToolImpl>()
+import com.vapi4k.api.assistant.ExternalToolCallResponse
+import com.vapi4k.dsl.assistant.AssistantDslMarker
+import kotlinx.serialization.json.JsonElement
 
-  fun addToCache(
-    toolName: String,
-    externalToolImpl: ExternalToolImpl,
-  ) {
-    externalTools[toolName] = externalToolImpl
-  }
+@AssistantDslMarker
+interface ManualTool : BaseTool {
+  var name: String
+  var description: String
 
-  fun containsTool(toolName: String) = externalTools.containsKey(toolName)
-
-  fun getTool(toolName: String): ExternalToolImpl =
-    externalTools[toolName] ?: error("External tool name found: $toolName")
+  fun onToolCallRequest(block: suspend ExternalToolCallResponse.(JsonElement) -> Unit)
 }

@@ -79,7 +79,7 @@ class AssistantTest {
 
             systemMessage = sysMessage
             tools {
-              vapi4kTool(WeatherLookupService0()) {
+              serviceTool(WeatherLookupService0()) {
                 requestStartMessage {
                   content = startMessage
                 }
@@ -99,8 +99,6 @@ class AssistantTest {
         }
       }
 
-//    println(jsonElement.toJsonString())
-//    println("This is the first message: ${jsonElement.firstToolMessages().toJsonString()}")
     assertEquals(
       "This is the test request start message",
       jsonElement.firstMessageOfType(ToolMessageType.REQUEST_START).stringValue("content"),
@@ -172,7 +170,7 @@ class AssistantTest {
 
             systemMessage = sysMessage
             tools {
-              vapi4kTool(WeatherLookupService0()) {
+              serviceTool(WeatherLookupService0()) {
                 requestStartMessage {
                   content = startMessage
                 }
@@ -207,7 +205,7 @@ class AssistantTest {
             modelType = OpenAIModelType.GPT_3_5_TURBO
             systemMessage = sysMessage
             tools {
-              vapi4kTool(WeatherLookupService0()) {
+              serviceTool(WeatherLookupService0()) {
                 requestStartMessage {
                   content = startMessage
                 }
@@ -245,7 +243,7 @@ class AssistantTest {
 
             systemMessage = sysMessage
             tools {
-              vapi4kTool(WeatherLookupService0()) {
+              serviceTool(WeatherLookupService0()) {
                 requestStartMessage {
                   content = startMessage
                 }
@@ -282,7 +280,7 @@ class AssistantTest {
 
           systemMessage = sysMessage
           tools {
-            vapi4kTool(WeatherLookupService0()) {
+            serviceTool(WeatherLookupService0()) {
               requestStartMessage {
                 content = startMessage
               }
@@ -320,7 +318,7 @@ class AssistantTest {
           modelType = OpenAIModelType.GPT_3_5_TURBO
           systemMessage = sysMessage
           tools {
-            vapi4kTool(WeatherLookupService0()) {
+            serviceTool(WeatherLookupService0()) {
               requestStartMessage {
                 content = startMessage
               }
@@ -356,7 +354,7 @@ class AssistantTest {
           modelType = OpenAIModelType.GPT_3_5_TURBO
           systemMessage = sysMessage
           tools {
-            vapi4kTool(WeatherLookupService0()) {
+            serviceTool(WeatherLookupService0()) {
               condition("city" eq "Chicago", "state" eq "Illinois") {
                 requestStartMessage {
                   content = chicagoIllinoisStartMessage
@@ -433,7 +431,7 @@ class AssistantTest {
             modelType = OpenAIModelType.GPT_3_5_TURBO
             systemMessage = sysMessage
             tools {
-              vapi4kTool(WeatherLookupService0()) {
+              serviceTool(WeatherLookupService0()) {
                 condition("city" eq "Chicago", "state" eq "Illinois") {
                 }
               }
@@ -457,7 +455,7 @@ class AssistantTest {
 
             systemMessage = sysMessage
             tools {
-              vapi4kTool(WeatherLookupService0()) {
+              serviceTool(WeatherLookupService0()) {
                 condition("city" eq "Chicago", "state" eq "Illinois") {
                   requestStartMessage {
                     content = chicagoIllinoisStartMessage
