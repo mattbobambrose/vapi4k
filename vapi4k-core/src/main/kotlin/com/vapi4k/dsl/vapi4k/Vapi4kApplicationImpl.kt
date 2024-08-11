@@ -121,11 +121,13 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
 
   internal suspend fun getTransferDestinationResponse(request: JsonElement) =
     if (!::transferDestinationRequest.isInitialized) {
-      error("onTransferDestinationRequest{} not called")
+      error("onTransferDestinationRequest{} not declared")
     } else {
       val toolDto = ToolDto(ToolType.TRANSFER_CALL)
-      val destinationImpl = TransferDestinationImpl("onTransferDestinationRequest", toolDto)
-      transferDestinationRequest.invoke(destinationImpl, request)
+      val destImpl = TransferDestinationImpl("onTransferDestinationRequest", toolDto)
+      transferDestinationRequest.invoke(destImpl, request)
+      if (!destImpl.checker.wasCalled)
+        error("onTransferDestinationRequest{} is missing a numberDestination{}, sipDestination{}, or assistantDestination{} declaration")
       toolDto
     }
 }

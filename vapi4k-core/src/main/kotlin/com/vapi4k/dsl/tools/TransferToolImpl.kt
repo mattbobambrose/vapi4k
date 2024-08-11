@@ -25,14 +25,9 @@ import com.vapi4k.dsl.destination.AssistantDestinationImpl
 import com.vapi4k.dsl.destination.NumberDestinationImpl
 import com.vapi4k.dsl.destination.SipDestinationImpl
 import com.vapi4k.dtos.api.destination.AssistantDestinationDto
-import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.dtos.tools.ToolDto
-
-interface TransferToolProperties {
-  val destinations: MutableList<CommonDestinationDto>
-}
 
 class TransferToolImpl internal constructor(
   callerName: String,

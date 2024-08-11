@@ -50,15 +50,15 @@ fun Application.module() {
 
   install(Vapi4k) {
     vapi4kApplication {
+      serverPath = "/inboundRequest"
+      serverSecret = "12345"
+
       onAssistantRequest { request ->
         myAssistantRequest(request)
       }
     }
 
     vapi4kApplication {
-      serverPath = "/inboundRequest"
-      serverSecret = "12345"
-
       onAssistantRequest { request ->
         myAssistantRequest(request)
       }

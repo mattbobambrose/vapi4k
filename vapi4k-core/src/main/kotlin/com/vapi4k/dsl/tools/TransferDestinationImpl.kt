@@ -27,24 +27,28 @@ import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.dtos.tools.ToolDto
+import com.vapi4k.utils.DuplicateChecker
 
 class TransferDestinationImpl internal constructor(
   val callerName: String,
   val dto: ToolDto,
-) : TransferToolProperties by dto,
-  TransferDestinationResponse {
+) : TransferDestinationResponse {
+  internal val checker = DuplicateChecker()
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {
-    val assistantDto = AssistantDestinationDto().also { destinations += it }
+    checker.check("assistantDestination{} already declared in $callerName{}")
+    val assistantDto = AssistantDestinationDto().also { dto.destinations += it }
     AssistantDestinationImpl(assistantDto).apply(block).checkForRequiredFields()
   }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
-    val numDto = NumberDestinationDto().also { destinations += it }
+    checker.check("numberDestination{} already declared in $callerName{}")
+    val numDto = NumberDestinationDto().also { dto.destinations += it }
     NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
-    val sipDto = SipDestinationDto().also { destinations += it }
+    checker.check("sipDestination{} already declared in $callerName{}")
+    val sipDto = SipDestinationDto().also { dto.destinations += it }
     SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
   }
 }
