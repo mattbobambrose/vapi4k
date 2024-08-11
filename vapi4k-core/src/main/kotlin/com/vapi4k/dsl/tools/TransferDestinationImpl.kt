@@ -34,6 +34,7 @@ class TransferDestinationImpl internal constructor(
   val dto: TransferMessageResponseDto,
 ) : TransferDestinationResponse {
   internal val checker = DuplicateChecker()
+
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {
     checker.check("assistantDestination{} already declared in $callerName{}")
     val assistantDto = AssistantDestinationDto().also { dto.messageResponse.destination = it }

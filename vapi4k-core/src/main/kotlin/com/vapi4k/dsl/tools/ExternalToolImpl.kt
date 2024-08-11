@@ -28,7 +28,6 @@ open class ExternalToolImpl internal constructor(
   toolDto: ToolDto,
 ) : ToolWithServerImpl(callerName, toolDto),
   ExternalTool {
-
   override var name
     get() = toolDto.functionDto.name
     set(value) = run { toolDto.functionDto.name = value }

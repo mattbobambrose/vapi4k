@@ -127,7 +127,10 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
       val destImpl = TransferDestinationImpl("onTransferDestinationRequest", responseDto)
       transferDestinationRequest.invoke(destImpl, request)
       if (responseDto.messageResponse.destination.isNull())
-        error("onTransferDestinationRequest{} is missing a numberDestination{}, sipDestination{}, or assistantDestination{} declaration")
+        error(
+          "onTransferDestinationRequest{} is missing a numberDestination{}, sipDestination{}, " +
+            "or assistantDestination{} declaration",
+        )
       responseDto
     }
 }

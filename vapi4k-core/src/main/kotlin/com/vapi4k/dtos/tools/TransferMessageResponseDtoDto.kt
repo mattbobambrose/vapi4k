@@ -14,21 +14,18 @@
  *
  */
 
-package com.vapi4k.dsl.tools
+package com.vapi4k.dtos.tools
 
-class ManualToolCache(
-  val nameBlock: () -> String,
-) {
-  private val manualTools = mutableMapOf<String, ManualToolImpl>()
+import com.vapi4k.dtos.api.destination.CommonDestinationDto
+import kotlinx.serialization.Serializable
 
-  fun addToCache(
-    toolName: String,
-    toolImpl: ManualToolImpl,
-  ) {
-    manualTools[toolName] = toolImpl
-  }
+@Serializable
+data class TransferMessageResponseDto(
+  val messageResponse: TransferDestinationDto = TransferDestinationDto(),
+)
 
-  fun containsTool(toolName: String) = manualTools.containsKey(toolName)
-
-  fun getTool(toolName: String): ManualToolImpl = manualTools[toolName] ?: error("Manual tool name found: $toolName")
-}
+@Serializable
+data class TransferDestinationDto(
+  var destination: CommonDestinationDto? = null,
+  var error: String = "",
+)
