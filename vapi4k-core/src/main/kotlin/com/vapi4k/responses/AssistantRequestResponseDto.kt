@@ -26,7 +26,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssistantMessageResponse(
+data class AssistantMessageResponseDto(
   val messageResponse: AssistantRequestResponseDto = AssistantRequestResponseDto(),
 )
 

@@ -24,6 +24,8 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface AssistantResponse {
+  var error: String
+
   fun assistant(block: Assistant.() -> Unit)
 
   fun assistantId(block: AssistantId.() -> Unit)

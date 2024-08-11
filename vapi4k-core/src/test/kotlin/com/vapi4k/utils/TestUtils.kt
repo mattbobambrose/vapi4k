@@ -23,7 +23,7 @@ import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
-import com.vapi4k.responses.AssistantMessageResponse
+import com.vapi4k.responses.AssistantMessageResponseDto
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.resourceFile
@@ -45,7 +45,7 @@ import kotlinx.serialization.json.JsonElement
 fun assistantResponse(
   assistantRequestContext: AssistantRequestContext,
   block: AssistantResponse.() -> Unit,
-): AssistantMessageResponse {
+): AssistantMessageResponseDto {
   val assistantResponse = AssistantResponseImpl(assistantRequestContext).apply(block)
   return if (assistantResponse.isAssigned)
     assistantResponse.assistantRequestResponse
