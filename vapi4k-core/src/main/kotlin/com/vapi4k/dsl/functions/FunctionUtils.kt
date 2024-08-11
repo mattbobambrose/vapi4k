@@ -60,7 +60,7 @@ internal object FunctionUtils {
       val str = if (isTool) "Tool" else "Function"
       error(
         "$str ${function.name} returns a ${returnClass.qualifiedName}. " +
-          "Allowed return types are String, Int, Double, Boolean or Unit"
+          "Allowed return types are String, Int, Double, Boolean or Unit",
       )
     }
   }
