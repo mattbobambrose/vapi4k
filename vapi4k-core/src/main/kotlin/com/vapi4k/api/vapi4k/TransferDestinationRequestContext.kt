@@ -22,10 +22,10 @@ import kotlinx.serialization.json.JsonElement
 
 class TransferDestinationRequestContext(
   val application: Vapi4kApplication,
-  val transferDestinationRequest: JsonElement,
+  val request: JsonElement,
 ) {
   val phoneNumber: String
-    get() = transferDestinationRequest.phoneNumber
+    get() = request.phoneNumber
   val messageCallId: String
-    get() = transferDestinationRequest.messageCallId
+    get() = request.messageCallId
 }

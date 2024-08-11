@@ -20,6 +20,9 @@ import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallArguments
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallName
 import com.vapi4k.dsl.assistant.ExternalToolCallResponseImpl
+import com.vapi4k.dsl.tools.ExternalToolImpl
+import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
+import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
@@ -28,6 +31,7 @@ import com.vapi4k.utils.JsonElementUtils.toolCallList
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -69,7 +73,7 @@ data class ToolCallResponse(
                               isTool = true,
                               args = args,
                               request = request,
-                              messageDtoList = toolCallResult.message,
+                              messageDtos = toolCallResult.messageDtos,
                               successAction = { result -> toolCallResult.result = result },
                               errorAction = errorAction,
                             )
@@ -78,17 +82,25 @@ data class ToolCallResponse(
                           if (!application.externalToolCache.containsTool(funcName)) {
                             error("Tool $funcName not found")
                           } else {
-                            val func = application.externalToolCache.getTool(funcName)
-                            val toolCallId = toolCall.stringValue("id")
+                            val func: ExternalToolImpl = application.externalToolCache.getTool(funcName)
 
                             if (!application.isToolCallRequestInitialized()) {
                               error("onToolCallRequest{} not called")
                             } else {
                               runBlocking {
-                                val response = ExternalToolCallResponseImpl(toolCallResult)
-                                application.toolCallRequest.invoke(response, funcName, request)
+                                val completeMessages = RequestCompleteMessagesImpl()
+                                val failedMessages = RequestFailedMessagesImpl()
+                                val resp =
+                                  ExternalToolCallResponseImpl(completeMessages, failedMessages, toolCallResult)
+                                runCatching {
+                                  application.toolCallRequest.invoke(resp, funcName, request)
+
+                                  toolCallResult.messageDtos.addAll(completeMessages.messageList.map { it.dto })
+                                }.onFailure {
+                                  toolCallResult.messageDtos.addAll(failedMessages.messageList.map { it.dto })
+                                }
                                 toolCallResult.apply {
-                                  toolCallId
+                                  toolCallId = toolCall.stringValue("id")
                                 }
                               }
                             }
@@ -121,5 +133,6 @@ data class ToolCallResult(
   var result: String = "",
   // TODO: Ask Vapi if this should be messages (plural)
   var error: String = "",
-  val message: MutableList<CommonToolMessageDto> = mutableListOf(),
+  @SerialName("message")
+  val messageDtos: MutableList<CommonToolMessageDto> = mutableListOf(),
 )

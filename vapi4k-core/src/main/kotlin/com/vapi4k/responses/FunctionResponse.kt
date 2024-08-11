@@ -44,7 +44,7 @@ class FunctionResponse(
               isTool = false,
               args = args,
               request = request,
-              messageDtoList = mutableListOf(),
+              messageDtos = mutableListOf(),
               successAction = { result -> response.result = result },
               errorAction = { result -> response.result = "Error invoking function" },
             )

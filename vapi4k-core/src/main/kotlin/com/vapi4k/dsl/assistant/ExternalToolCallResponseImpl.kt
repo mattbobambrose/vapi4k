@@ -23,7 +23,11 @@ import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
 import com.vapi4k.responses.ToolCallResult
 
-class ExternalToolCallResponseImpl(val toolCallResult: ToolCallResult) : ExternalToolCallResponse {
+class ExternalToolCallResponseImpl(
+  val completeMessages: RequestCompleteMessagesImpl,
+  val failedMessages: RequestFailedMessagesImpl,
+  val toolCallResult: ToolCallResult,
+) : ExternalToolCallResponse {
   override var result: String
     get() = toolCallResult.result
     set(value) {
@@ -37,10 +41,10 @@ class ExternalToolCallResponseImpl(val toolCallResult: ToolCallResult) : Externa
     }
 
   override fun requestCompleteMessages(block: RequestCompleteMessages.() -> Unit) {
-    RequestCompleteMessagesImpl().apply(block).messageList
+    completeMessages.apply(block).messageList
   }
 
   override fun requestFailedMessages(block: RequestFailedMessages.() -> Unit) {
-    RequestFailedMessagesImpl().apply(block).messageList
+    failedMessages.apply(block).messageList
   }
 }

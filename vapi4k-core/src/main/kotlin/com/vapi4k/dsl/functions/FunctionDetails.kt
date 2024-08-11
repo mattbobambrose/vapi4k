@@ -59,7 +59,7 @@ class FunctionDetails internal constructor(
     isTool: Boolean,
     args: JsonElement,
     request: JsonElement,
-    messageDtoList: MutableList<CommonToolMessageDto> = mutableListOf(),
+    messageDtos: MutableList<CommonToolMessageDto> = mutableListOf(),
     successAction: (String) -> Unit,
     errorAction: (String) -> Unit,
   ) {
@@ -68,13 +68,13 @@ class FunctionDetails internal constructor(
       val result = invokeMethod(args).also { logger.info { "Tool call result: $it" } }
       successAction(result)
       if (isTool && obj is ToolCallService)
-        messageDtoList.addAll(obj.onToolCallComplete(request, result).map { it.dto })
+        messageDtos.addAll(obj.onToolCallComplete(request, result).map { it.dto })
           .also { logger.info { "Adding tool request messages $it" } }
     }.onFailure { e ->
       val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
       errorAction(errorMsg)
       if (isTool && obj is ToolCallService)
-        messageDtoList.addAll(obj.onToolCallFailed(request, errorMsg).map { it.dto })
+        messageDtos.addAll(obj.onToolCallFailed(request, errorMsg).map { it.dto })
       logger.error { errorMsg }
     }
   }
