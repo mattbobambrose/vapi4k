@@ -36,3 +36,15 @@ data class ToolDto(
   val destinations: MutableList<CommonDestinationDto> = mutableListOf(),
   override val metadata: MutableMap<String, String> = mutableMapOf(),
 ) : ToolWithMetaDataProperties
+
+
+@Serializable
+data class TransferMessageResponseDto(
+  val messageResponse: TransferDestinationDto = TransferDestinationDto(),
+)
+
+@Serializable
+data class TransferDestinationDto(
+  var destination: CommonDestinationDto? = null,
+  var error: String = "",
+)

@@ -60,10 +60,8 @@ data class ToolsImpl internal constructor(
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
-    val toolImpl =
-      ExternalToolImpl("externalTool", toolDto)
-        .apply(block)
-        .apply { checkIfServerCalled() }
+    ExternalToolImpl("externalTool", toolDto)
+      .apply(block).checkIfServerCalled()
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
   }
 

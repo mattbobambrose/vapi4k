@@ -18,7 +18,6 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.TransferDestinationResponse
-import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
@@ -27,8 +26,9 @@ import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ToolCache
 import com.vapi4k.dsl.tools.TransferDestinationImpl
-import com.vapi4k.dtos.tools.ToolDto
+import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils
+import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.envvar.CoreEnvVars
 import kotlinx.serialization.json.JsonElement
@@ -123,11 +123,11 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
     if (!::transferDestinationRequest.isInitialized) {
       error("onTransferDestinationRequest{} not declared")
     } else {
-      val toolDto = ToolDto(ToolType.TRANSFER_CALL)
-      val destImpl = TransferDestinationImpl("onTransferDestinationRequest", toolDto)
+      val responseDto = TransferMessageResponseDto()
+      val destImpl = TransferDestinationImpl("onTransferDestinationRequest", responseDto)
       transferDestinationRequest.invoke(destImpl, request)
-      if (!destImpl.checker.wasCalled)
+      if (responseDto.messageResponse.destination.isNull())
         error("onTransferDestinationRequest{} is missing a numberDestination{}, sipDestination{}, or assistantDestination{} declaration")
-      toolDto
+      responseDto
     }
 }
