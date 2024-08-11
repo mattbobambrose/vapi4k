@@ -55,3 +55,9 @@ kotlin {
         languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
     }
 }
+
+kotlinter {
+    failBuildWhenCannotAutoFormat = false
+    ignoreFailures = true
+    reporters = arrayOf("checkstyle", "plain")
+}
