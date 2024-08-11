@@ -22,7 +22,6 @@ import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.phoneNumber
 import kotlinx.serialization.json.JsonElement
 
@@ -44,7 +43,7 @@ fun AssistantResponse.myAssistantRequest(request: JsonElement) =
     else -> getAssistant("")
   }
 
-fun AssistantResponse.getSquad(assistantRequestContext: AssistantRequestContext) =
+fun AssistantResponse.getSquad(request: JsonElement) =
   squad {
     name = "Squad Name"
     members {

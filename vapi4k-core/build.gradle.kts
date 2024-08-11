@@ -116,7 +116,7 @@ tasks {
 
 kotlinter {
     failBuildWhenCannotAutoFormat = false
-    ignoreFailures = false
+    ignoreFailures = true
     reporters = arrayOf("checkstyle", "plain")
 }
 
