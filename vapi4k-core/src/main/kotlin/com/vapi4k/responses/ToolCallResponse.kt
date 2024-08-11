@@ -19,7 +19,7 @@ package com.vapi4k.responses
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallArguments
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallName
-import com.vapi4k.dsl.assistant.ExternalToolCallResponseImpl
+import com.vapi4k.dsl.assistant.ManualToolCallResponseImpl
 import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
@@ -96,13 +96,16 @@ data class ToolCallResponse(
                               runBlocking {
                                 val completeMsgs = RequestCompleteMessagesImpl()
                                 val failedMsgs = RequestFailedMessagesImpl()
-                                val resp = ExternalToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
+                                val resp = ManualToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
                                 runCatching {
                                   manualToolImpl.toolCallRequest.invoke(resp, args)
                                   toolCallResult.messageDtos.addAll(completeMsgs.messageList.map { it.dto })
                                 }.onFailure {
-                                  toolCallResult.error = it.errorMsg
-                                  toolCallResult.messageDtos.addAll(failedMsgs.messageList.map { it.dto })
+                                  with(toolCallResult) {
+                                    result = ""
+                                    error = it.errorMsg
+                                    messageDtos.addAll(failedMsgs.messageList.map { it.dto })
+                                  }
                                 }
                                 toolCallResult.apply {
                                   toolCallId = toolCall.stringValue("id")
@@ -112,8 +115,8 @@ data class ToolCallResponse(
                           }
                         }
                       }.getOrElse { e ->
-                        val errorMsg = e.message ?: "Error invoking tool $funcName"
-                        logger.error { errorMsg }
+                        val errorMsg = "Error invoking tool $funcName ${e.errorMsg}"
+                        logger.info { errorMsg }
                         errorAction(errorMsg)
                       }
                     }

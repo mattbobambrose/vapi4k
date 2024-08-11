@@ -16,7 +16,7 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.api.assistant.ExternalToolCallResponse
+import com.vapi4k.api.assistant.ManualToolCallResponse
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import kotlinx.serialization.json.JsonElement
 
@@ -25,5 +25,5 @@ interface ManualTool : BaseTool {
   var name: String
   var description: String
 
-  fun onToolCallRequest(block: suspend ExternalToolCallResponse.(JsonElement) -> Unit)
+  fun onToolCallRequest(block: suspend ManualToolCallResponse.(JsonElement) -> Unit)
 }

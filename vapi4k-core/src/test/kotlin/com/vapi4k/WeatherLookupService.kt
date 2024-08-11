@@ -33,7 +33,11 @@ class WeatherLookupService1 : ToolCallService() {
   fun getWeatherByCity(
     @Param(description = "The city name") city: String,
     state: String,
-  ) = "The weather in city $city and state $state is windy"
+  ): String {
+    if (city.isNotEmpty())
+      error("I found an error")
+    return "The weather in city $city and state $state is windy"
+  }
 
   override fun onToolCallComplete(
     toolCallRequest: JsonElement,

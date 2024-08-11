@@ -16,18 +16,18 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.api.assistant.ExternalToolCallResponse
+import com.vapi4k.api.assistant.ManualToolCallResponse
 import com.vapi4k.api.toolservice.RequestCompleteMessages
 import com.vapi4k.api.toolservice.RequestFailedMessages
 import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
 import com.vapi4k.responses.ToolCallResult
 
-class ExternalToolCallResponseImpl(
+class ManualToolCallResponseImpl(
   val completeMessages: RequestCompleteMessagesImpl,
   val failedMessages: RequestFailedMessagesImpl,
   val toolCallResult: ToolCallResult,
-) : ExternalToolCallResponse {
+) : ManualToolCallResponse {
   override var result: String
     get() = toolCallResult.result
     set(value) {

@@ -21,7 +21,7 @@ import com.vapi4k.api.toolservice.RequestFailedMessages
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
-interface ExternalToolCallResponse {
+interface ManualToolCallResponse {
   var result: String
   var error: String
 

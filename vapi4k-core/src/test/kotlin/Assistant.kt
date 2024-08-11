@@ -127,6 +127,7 @@ fun AssistantResponse.getAssistant() =
         manualTool {
           name = "manualWeatherLookup"
           description = "Look up the weather for a city and state"
+
           parameters {
             parameter {
               name = "city"
@@ -137,10 +138,26 @@ fun AssistantResponse.getAssistant() =
               description = "The state to look up"
             }
           }
+
+          requestStartMessage {
+            content = "This is the manual weather lookup start message"
+          }
+
           onToolCallRequest { args ->
             val city = args.stringValue("city")
             val state = args.stringValue("state")
             result = "The weather in $city, $state is sunny"
+            requestCompleteMessages {
+              requestCompleteMessage {
+                content = "This is the manual weather lookup complete message"
+              }
+            }
+
+            requestFailedMessages {
+              requestFailedMessage {
+                content = "This is the manual weather lookup failed message"
+              }
+            }
           }
         }
 

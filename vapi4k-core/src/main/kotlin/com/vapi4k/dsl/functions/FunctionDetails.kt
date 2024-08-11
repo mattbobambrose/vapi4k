@@ -34,6 +34,7 @@ import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
+import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType
@@ -69,13 +70,15 @@ class FunctionDetails internal constructor(
       successAction(result)
       if (isTool && obj is ToolCallService)
         messageDtos.addAll(obj.onToolCallComplete(request, result).map { it.dto })
-          .also { logger.info { "Adding tool request messages $it" } }
+          .also { logger.debug { "Adding onToolCallComplete messages $it" } }
     }.onFailure { e ->
-      val errorMsg = "Error invoking method $fqName: ${e.errorMsg}"
+      val eMsg = if (e is InvocationTargetException) e.cause?.errorMsg ?: e.errorMsg else e.errorMsg
+      val errorMsg = "Error invoking method $fqName: $eMsg"
       errorAction(errorMsg)
       if (isTool && obj is ToolCallService)
         messageDtos.addAll(obj.onToolCallFailed(request, errorMsg).map { it.dto })
-      logger.error { errorMsg }
+          .also { logger.debug { "Adding onToolCallFailed messages $it" } }
+      logger.info { errorMsg }
     }
   }
 
