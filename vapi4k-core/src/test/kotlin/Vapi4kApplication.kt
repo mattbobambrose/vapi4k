@@ -15,8 +15,8 @@
  */
 
 import com.vapi4k.api.destination.enums.AssistantTransferMode
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.hasStatusUpdateError
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.statusUpdateError
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig

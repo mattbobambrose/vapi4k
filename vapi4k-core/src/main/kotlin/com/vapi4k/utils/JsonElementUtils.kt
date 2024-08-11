@@ -16,7 +16,7 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.messageCallId
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList

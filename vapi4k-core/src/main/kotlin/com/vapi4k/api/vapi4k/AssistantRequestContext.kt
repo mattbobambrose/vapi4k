@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.vapi4k
 
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.messageCallId
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.phoneNumber
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.messageCallId
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
 import kotlinx.serialization.json.JsonElement
 
 class AssistantRequestContext(

@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.api.vapi4k.utils
+package com.vapi4k.api.vapi4k
 
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isFunctionCall
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isStatusUpdate

@@ -16,9 +16,9 @@
 
 package com.vapi4k.responses
 
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallArguments
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallName
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.id
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.toolCallArguments
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.toolCallName
 import com.vapi4k.dsl.assistant.ManualToolCallResponseImpl
 import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl

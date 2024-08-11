@@ -17,7 +17,7 @@
 package com.vapi4k.com.vapi4k.examples
 
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.phoneNumber
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
