@@ -19,17 +19,17 @@ package com.vapi4k.dsl.tools
 class ManualToolCache(
   val nameBlock: () -> String,
 ) {
-  private val externalTools = mutableMapOf<String, ExternalToolImpl>()
+  private val manualTools = mutableMapOf<String, ManualToolImpl>()
 
   fun addToCache(
     toolName: String,
-    externalToolImpl: ExternalToolImpl,
+    toolImpl: ManualToolImpl,
   ) {
-    externalTools[toolName] = externalToolImpl
+    manualTools[toolName] = toolImpl
   }
 
-  fun containsTool(toolName: String) = externalTools.containsKey(toolName)
+  fun containsTool(toolName: String) = manualTools.containsKey(toolName)
 
-  fun getTool(toolName: String): ExternalToolImpl =
-    externalTools[toolName] ?: error("External tool name found: $toolName")
+  fun getTool(toolName: String): ManualToolImpl =
+    manualTools[toolName] ?: error("Manual tool name found: $toolName")
 }

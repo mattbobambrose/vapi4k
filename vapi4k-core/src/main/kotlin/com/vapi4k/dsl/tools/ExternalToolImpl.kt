@@ -18,6 +18,7 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.api.assistant.ExternalToolCallResponse
 import com.vapi4k.api.tools.ExternalTool
+import com.vapi4k.api.tools.ManualTool
 import com.vapi4k.api.tools.Parameters
 import com.vapi4k.dtos.tools.ToolDto
 import kotlinx.serialization.json.JsonElement
@@ -27,6 +28,29 @@ open class ExternalToolImpl internal constructor(
   toolDto: ToolDto,
 ) : ToolWithServerImpl(callerName, toolDto),
   ExternalTool {
+
+  override var name
+    get() = toolDto.functionDto.name
+    set(value) = run { toolDto.functionDto.name = value }
+
+  override var description
+    get() = toolDto.functionDto.description
+    set(value) = run { toolDto.functionDto.description = value }
+
+  override var async
+    get() = toolDto.async ?: true
+    set(value) = run { toolDto.async = value }
+
+  override fun parameters(block: Parameters.() -> Unit) {
+    ParametersImpl(toolDto).apply(block)
+  }
+}
+
+class ManualToolImpl internal constructor(
+  callerName: String,
+  toolDto: ToolDto,
+) : ToolWithServerImpl(callerName, toolDto),
+  ManualTool {
   internal lateinit var toolCallRequest: (suspend ExternalToolCallResponse.(JsonElement) -> Unit)
 
   internal fun isToolCallRequestInitialized() = ::toolCallRequest.isInitialized
@@ -47,10 +71,10 @@ open class ExternalToolImpl internal constructor(
     ParametersImpl(toolDto).apply(block)
   }
 
-//  override fun onToolCallRequest(block: suspend ExternalToolCallResponse.(JsonElement) -> Unit) {
-//    if (!::toolCallRequest.isInitialized)
-//      toolCallRequest = block
-//    else
-//      error("onToolCallRequest{} can be called only once per externalTool{}")
-//  }
+  override fun onToolCallRequest(block: suspend ExternalToolCallResponse.(JsonElement) -> Unit) {
+    if (!::toolCallRequest.isInitialized)
+      toolCallRequest = block
+    else
+      error("onToolCallRequest{} can be called only once per externalTool{}")
+  }
 }

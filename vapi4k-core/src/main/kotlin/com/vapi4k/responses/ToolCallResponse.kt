@@ -20,7 +20,7 @@ import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallArguments
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.toolCallName
 import com.vapi4k.dsl.assistant.ExternalToolCallResponseImpl
-import com.vapi4k.dsl.tools.ExternalToolImpl
+import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
@@ -82,10 +82,10 @@ data class ToolCallResponse(
                           if (!application.manualToolCache.containsTool(funcName)) {
                             error("Tool $funcName not found")
                           } else {
-                            val func: ExternalToolImpl = application.manualToolCache.getTool(funcName)
+                            val func: ManualToolImpl = application.manualToolCache.getTool(funcName)
 
                             if (!func.isToolCallRequestInitialized()) {
-                              error("onToolCallRequest{} not called")
+                              error("onToolCallRequest{} not declared in $funcName")
                             } else {
                               runBlocking {
                                 val completeMessages = RequestCompleteMessagesImpl()

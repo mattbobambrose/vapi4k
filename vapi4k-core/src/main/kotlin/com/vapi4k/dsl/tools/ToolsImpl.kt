@@ -49,14 +49,13 @@ data class ToolsImpl internal constructor(
 
   override fun manualTool(block: ManualTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
-//    val toolImpl =
-//      ManualToolImpl("manualTool", toolDto)
-//        .apply(block)
+    val toolImpl =
+      ManualToolImpl("manualTool", toolDto).apply(block)
     if (toolDto.functionDto.name.isBlank()) error("manualTool{} parameter name is required")
-//    if (!toolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onToolCallRequest{}")
+    if (!toolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onToolCallRequest{}")
 
     val application = model.application as Vapi4kApplicationImpl
-//    application.externalToolCache.addToCache(toolDto.functionDto.name, toolImpl)
+    application.manualToolCache.addToCache(toolDto.functionDto.name, toolImpl)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
