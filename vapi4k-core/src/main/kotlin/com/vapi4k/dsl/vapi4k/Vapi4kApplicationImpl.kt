@@ -24,7 +24,7 @@ import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ManualToolCache
-import com.vapi4k.dsl.tools.ToolCache
+import com.vapi4k.dsl.tools.ServiceToolCache
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils
@@ -36,7 +36,7 @@ import kotlin.time.Duration
 
 class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
-  internal val toolCache = ToolCache { serverPath }
+  internal val serviceToolCache = ServiceToolCache { serverPath }
   internal val manualToolCache = ManualToolCache { serverPath }
 
   private lateinit var assistantRequest: (suspend AssistantResponse.(JsonElement) -> Unit)
@@ -55,10 +55,10 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal fun containsFunctionInCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
-  ) = toolCache.containsSessionCacheId(sessionCacheId) &&
-    toolCache.getFromCache(sessionCacheId).containsFunction(funcName)
+  ) = serviceToolCache.containsSessionCacheId(sessionCacheId) &&
+    serviceToolCache.getFromCache(sessionCacheId).containsFunction(funcName)
 
-  internal fun getFunctionInfoFromCache(sessionCacheId: SessionCacheId) = toolCache.getFromCache(sessionCacheId)
+  internal fun getFunctionInfoFromCache(sessionCacheId: SessionCacheId) = serviceToolCache.getFromCache(sessionCacheId)
 
   override fun onAssistantRequest(block: suspend AssistantResponse.(JsonElement) -> Unit) {
     if (!::assistantRequest.isInitialized)

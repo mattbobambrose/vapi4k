@@ -103,7 +103,7 @@ internal object AssistantRequests {
           END_OF_CALL_REPORT -> {
             if (application.eocrCacheRemovalEnabled) {
               val sessionCacheId = request.sessionCacheId
-              application.toolCache.removeFromCache(sessionCacheId) { funcInfo ->
+              application.serviceToolCache.removeFromCache(sessionCacheId) { funcInfo ->
                 logger.info { "EOCR removed ${funcInfo.functions.size} cache entries [${funcInfo.ageSecs}] " }
               } ?: logger.warn { "EOCR unable to find and remove cache entry [$sessionCacheId]" }
             }

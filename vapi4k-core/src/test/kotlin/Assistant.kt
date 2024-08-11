@@ -23,6 +23,7 @@ import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.phoneNumber
+import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 
 fun AssistantResponse.myAssistantRequest(request: JsonElement) =
@@ -123,6 +124,26 @@ fun AssistantResponse.getAssistant(callerName: String = "Bill") =
 //      }
 
       tools {
+        manualTool {
+          name = "manualWeatherLookup"
+          description = "Look up the weather for a city and state"
+          parameters {
+            parameter {
+              name = "city"
+              description = "The city to look up"
+            }
+            parameter {
+              name = "state"
+              description = "The state to look up"
+            }
+          }
+          onToolCallRequest { args ->
+            val city = args.stringValue("city")
+            val state = args.stringValue("state")
+            result = "The weather in $city, $state is sunny"
+          }
+        }
+
         serviceTool(WeatherLookupService1()) {
           condition("city" eq "Chicago", "state" eq "Illinois") {
             requestStartMessage {

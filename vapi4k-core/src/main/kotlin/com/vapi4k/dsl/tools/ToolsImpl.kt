@@ -49,19 +49,17 @@ data class ToolsImpl internal constructor(
 
   override fun manualTool(block: ManualTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
-    val toolImpl =
-      ManualToolImpl("manualTool", toolDto).apply(block)
+    val manualToolImpl = ManualToolImpl("manualTool", toolDto).apply(block)
     if (toolDto.functionDto.name.isBlank()) error("manualTool{} parameter name is required")
-    if (!toolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onToolCallRequest{}")
+    if (!manualToolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onToolCallRequest{} declared")
 
     val application = model.application as Vapi4kApplicationImpl
-    application.manualToolCache.addToCache(toolDto.functionDto.name, toolImpl)
+    application.manualToolCache.addToCache(toolDto.functionDto.name, manualToolImpl)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
-    ExternalToolImpl("externalTool", toolDto)
-      .apply(block).checkIfServerCalled()
+    ExternalToolImpl("externalTool", toolDto).apply(block).checkIfServerCalled()
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
   }
 
@@ -131,7 +129,7 @@ data class ToolsImpl internal constructor(
       populateFunctionDto(model, obj, function, toolDto.functionDto)
       val sessionCacheId = getSessionCacheId()
       val application = (model.application as Vapi4kApplicationImpl)
-      application.toolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
+      application.serviceToolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
 
       with(toolDto) {
         type = toolType

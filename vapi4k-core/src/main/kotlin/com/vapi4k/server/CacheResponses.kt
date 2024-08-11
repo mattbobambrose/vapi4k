@@ -32,7 +32,7 @@ import kotlinx.serialization.json.buildJsonObject
 internal object CacheResponses {
   suspend fun PipelineContext<Unit, ApplicationCall>.clearCaches(config: Vapi4kConfigImpl) {
     config.allApplications.forEach { application ->
-      application.toolCache.clearToolCache()
+      application.serviceToolCache.clearToolCache()
     }
     call.respondRedirect(CACHES_PATH)
   }
@@ -43,7 +43,7 @@ internal object CacheResponses {
         config.allApplications.forEach { application ->
           put(
             application.serverPathAsSegment,
-            application.toolCache.cacheAsJson().toJsonElement(),
+            application.serviceToolCache.cacheAsJson().toJsonElement(),
           )
         }
       },

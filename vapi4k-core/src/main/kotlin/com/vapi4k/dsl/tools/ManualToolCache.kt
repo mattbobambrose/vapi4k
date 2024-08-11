@@ -20,6 +20,8 @@ class ManualToolCache(
   val nameBlock: () -> String,
 ) {
   private val manualTools = mutableMapOf<String, ManualToolImpl>()
+  val functionNames get() = manualTools.keys
+  val functions get() = manualTools.values
 
   fun addToCache(
     toolName: String,

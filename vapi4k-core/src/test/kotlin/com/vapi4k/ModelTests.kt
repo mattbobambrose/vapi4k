@@ -20,7 +20,6 @@ import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.json.JsonElementUtils.booleanValue
-import com.vapi4k.utils.json.JsonElementUtils.element
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
@@ -54,7 +53,7 @@ class ModelTests {
       }
 
     val je = response.toJsonElement()
-    val server = je.tools().first().element("server")
+    val server = je.tools().first()["server"]
     assertEquals("zzz", server.stringValue("url"))
     assertEquals("123", server.stringValue("secret"))
     assertEquals("10", server.stringValue("timeoutSeconds"))

@@ -74,7 +74,7 @@ class VapiApiImpl private constructor(
       val hasId = jsonElement.containsKey("id")
       if (hasId) {
         logger.info { "Call ID: ${jsonElement.id}" }
-        outboundApplication.toolCache.swapCacheKeys(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
+        outboundApplication.serviceToolCache.swapCacheKeys(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
       } else {
         logger.warn { "No call ID found in response" }
       }

@@ -24,10 +24,10 @@ import com.vapi4k.utils.json.get
 import kotlinx.serialization.json.JsonElement
 
 object AssistantRequestUtils {
-  val JsonElement.isAssistantResponse get() = containsKey("assistant")
-  val JsonElement.isAssistantIdResponse get() = containsKey("assistantId")
-  val JsonElement.isSquadResponse get() = containsKey("squad")
-  val JsonElement.isSquadIdResponse get() = containsKey("squadId")
+  val JsonElement.isAssistantResponse get() = containsKey("messageResponse.assistant")
+  val JsonElement.isAssistantIdResponse get() = containsKey("messageResponse.assistantId")
+  val JsonElement.isSquadResponse get() = containsKey("messageResponse.squad")
+  val JsonElement.isSquadIdResponse get() = containsKey("messageResponse.squadId")
 
   val JsonElement.id get() = stringValue("id")
   val JsonElement.messageCallId get() = stringValue("message.call.id")

@@ -18,6 +18,7 @@ package com.vapi4k.client
 
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantIdResponse
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isAssistantResponse
+import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isSquadIdResponse
 import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.isSquadResponse
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
@@ -42,6 +43,7 @@ import com.vapi4k.utils.envvar.CoreEnvVars.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.utils.envvar.CoreEnvVars.serverBaseUrl
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
+import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
@@ -95,7 +97,7 @@ object ValidateAssistantResponse {
     secret: String,
   ): String {
     val request = getNewRequest()
-    val (status, body) = runBlocking {
+    val (status, responseBody) = runBlocking {
       val url = "$serverBaseUrl/$appName"
       val response = httpClient.post(url) {
         contentType(Application.Json)
@@ -139,35 +141,38 @@ object ValidateAssistantResponse {
               h3 { +"Status: $status" }
               pre {
                 code(classes = "language-json line-numbers match-braces") {
-                  +body.toJsonString()
+                  +responseBody.toJsonString()
                 }
               }
             }
-            val jsonElement = body.toJsonElement()
 
-            with(jsonElement) {
+            with(responseBody.toJsonElement()) {
               when {
-                isAssistantResponse -> assistantRequestToolsBody(application, jsonElement, sessionCacheId)
+                isAssistantResponse -> assistantRequestToolsBody(application, this, sessionCacheId)
                 isSquadResponse -> {
-                  val assistants = jsonElement.jsonElementList("squad.members")
+                  val assistants = jsonElementList("squad.members")
                   assistants.forEachIndexed { i, assistant ->
                     h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
                     assistantRequestToolsBody(application, assistant, sessionCacheId)
                   }
                 }
-                // TODO - Add support for assistantId responses
+                // TODO - Add support for assistantId and squadId responses
                 isAssistantIdResponse -> {}
+                isSquadIdResponse -> {}
+                else -> {
+                  error("Unknown response type: ${responseBody.toJsonElement().keys}")
+                }
               }
             }
           } else {
             h3 { +"Path: ${application.serverPath.ensureStartsWith("/")}" }
             h3 { +"Status: $status" }
-            if (body.isNotEmpty()) {
-              if (body.length < 80) {
-                h3 { +"Error: $body" }
+            if (responseBody.isNotEmpty()) {
+              if (responseBody.length < 80) {
+                h3 { +"Error: $responseBody" }
               } else {
                 h3 { +"Error:" }
-                pre { +body }
+                pre { +responseBody }
               }
             } else {
               h3 { +"Check the ktor log for error information." }
@@ -182,7 +187,7 @@ object ValidateAssistantResponse {
     index: Int,
   ): String =
     runCatching {
-      assistantElement["assistant"].stringValue("name")
+      assistantElement.stringValue("assistant.name")
     }.getOrElse { index.toString() }
 
   private fun BODY.assistantRequestToolsBody(
@@ -190,8 +195,8 @@ object ValidateAssistantResponse {
     jsonElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
-    logger.debug { jsonElement.toJsonString() }
-    val functions =
+    logger.info { jsonElement.toJsonString() }
+    val funcNames =
       if (jsonElement["messageResponse.assistant.model"].containsKey("tools"))
         jsonElement
           .jsonElementList("messageResponse.assistant.model.tools")
@@ -199,24 +204,24 @@ object ValidateAssistantResponse {
       else
         emptyList()
 
-    logger.debug { "Checking toolCache: ${application.toolCache.name} [$sessionCacheId]" }
-    if (!application.toolCache.containsSessionCacheId(sessionCacheId)) {
-      h2 { +"No Tools Declared" }
+    logger.debug { "Checking toolCache: ${application.serviceToolCache.name} [$sessionCacheId]" }
+    if (!application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
+      h2 { +"No Service Tools Declared" }
     } else {
-      h2 { +"Tools" }
-      val functionInfo = application.toolCache.getFromCache(sessionCacheId)
-      functions.forEach { function ->
-        // Skip external tools
-        if (functionInfo.containsFunction(function)) {
+      h2 { +"Service Tools" }
+      val functionInfo = application.serviceToolCache.getFromCache(sessionCacheId)
+      funcNames
+        .filter { functionInfo.containsFunction(it) }
+        .forEach { funcName ->
           div {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
-            val functionDetails = functionInfo.getFunction(function)
-            val divid = getRandomSecret()
+            val functionDetails = functionInfo.getFunction(funcName)
+            val divId = getRandomSecret()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
             form {
               attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
               attributes["hx-trigger"] = "submit"
-              attributes["hx-target"] = "#result-$divid"
+              attributes["hx-target"] = "#result-$divId"
 
               hiddenInput {
                 name = APPLICATION_ID
@@ -228,7 +233,7 @@ object ValidateAssistantResponse {
               }
               hiddenInput {
                 name = FUNCTION_NAME
-                value = function
+                value = funcName
               }
               table {
                 tbody {
@@ -274,15 +279,15 @@ object ValidateAssistantResponse {
               rawHtml(
                 """
                 document.body.addEventListener('htmx:afterOnLoad', function(event) {
-                  if (event.detail.target.id === 'result-$divid') {
+                  if (event.detail.target.id === 'result-$divId') {
                     // Highlight the json result
                     let responseData = event.detail.target.innerHTML;
-                    const codeElement = document.querySelector('#result-$divid');
+                    const codeElement = document.querySelector('#result-$divId');
                     codeElement.textContent = responseData;
                     Prism.highlightElement(codeElement);
 
                     // Make the jsosn result visible
-                    const preElement = document.querySelector('#display-$divid');
+                    const preElement = document.querySelector('#display-$divId');
                     preElement.style.display = 'block';
                   }
                 });
@@ -292,14 +297,114 @@ object ValidateAssistantResponse {
 
             pre {
               style = "display: none;"
-              id = "display-$divid"
+              id = "display-$divId"
               code(classes = "language-json line-numbers match-braces") {
-                id = "result-$divid"
+                id = "result-$divId"
               }
             }
           }
         }
-      }
+    }
+
+    if (application.manualToolCache.functions.isEmpty()) {
+      h2 { +"No Manual Tools Declared" }
+    } else {
+      h2 { +"Manual Tools" }
+      val manualFunctions = application.manualToolCache.functions
+      funcNames
+        .filter { application.manualToolCache.containsTool(it) }
+        .forEach { funcName ->
+          div {
+            style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            val divId = getRandomSecret()
+            h3 { +funcName }
+            form {
+              attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
+              attributes["hx-trigger"] = "submit"
+              attributes["hx-target"] = "#result-$divId"
+
+              hiddenInput {
+                name = APPLICATION_ID
+                value = application.applicationId.value
+              }
+              hiddenInput {
+                name = SESSION_CACHE_ID
+                value = sessionCacheId.value
+              }
+              hiddenInput {
+                name = FUNCTION_NAME
+                value = funcName
+              }
+              table {
+                tbody {
+                  val manualToolImpl = application.manualToolCache.getTool(funcName)
+                  manualToolImpl.toolDto.functionDto.parametersDto.properties.forEach { propertyName, propertyDesc ->
+                    tr {
+                      td { +"$propertyName:" }
+                      td {
+                        style = "width: 325px;"
+                        input {
+                          style = "width: 325px;"
+                          type =
+                            when (propertyDesc.type) {
+                              "string" -> InputType.text
+                              "int" -> InputType.number
+                              "double" -> InputType.number
+                              "boolean" -> InputType.checkBox
+                              else -> InputType.text
+                            }
+                          name = propertyName
+                        }
+                      }
+                      td {
+                        +"[${propertyDesc.description}]"
+                      }
+                    }
+                  }
+                  tr {
+                    td {
+                      input {
+                        style = "margin-top: 10px;"
+                        type = InputType.submit
+                        value = "Invoke Tool"
+                      }
+                    }
+                    td {}
+                    td {}
+                  }
+                }
+              }
+            }
+
+            script {
+              rawHtml(
+                """
+                document.body.addEventListener('htmx:afterOnLoad', function(event) {
+                  if (event.detail.target.id === 'result-$divId') {
+                    // Highlight the json result
+                    let responseData = event.detail.target.innerHTML;
+                    const codeElement = document.querySelector('#result-$divId');
+                    codeElement.textContent = responseData;
+                    Prism.highlightElement(codeElement);
+
+                    // Make the jsosn result visible
+                    const preElement = document.querySelector('#display-$divId');
+                    preElement.style.display = 'block';
+                  }
+                });
+              """,
+              )
+            }
+
+            pre {
+              style = "display: none;"
+              id = "display-$divId"
+              code(classes = "language-json line-numbers match-braces") {
+                id = "result-$divId"
+              }
+            }
+          }
+        }
     }
   }
 

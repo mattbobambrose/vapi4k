@@ -49,7 +49,7 @@ internal object AdminJobs {
           Thread.sleep(pause.inWholeMilliseconds)
           config.allApplications.forEach { application ->
             logger.debug { "Purging cache for ${application.serverPath}" }
-            application.toolCache.purgeToolCache(maxAge)
+            application.serviceToolCache.purgeToolCache(maxAge)
           }
         }.onFailure { e ->
           logger.error(e) { "Error clearing cache: ${e.errorMsg}" }

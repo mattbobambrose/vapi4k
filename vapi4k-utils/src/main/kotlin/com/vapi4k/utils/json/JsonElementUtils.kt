@@ -55,14 +55,24 @@ object JsonElementUtils {
 
   fun JsonElement.jsonElementList(key: String) = get(key).toJsonElementList()
 
-  fun JsonElement.element(key: String) =
+  internal fun JsonElement.element(key: String) =
     jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
 
   fun JsonElement.property(vararg keys: String): JsonElement =
     keys.flatMap { it.split(".") }
       .fold(this) { acc, key -> acc.element(key) }
 
-  fun JsonElement.containsKey(key: String) = jsonObject.containsKey(key)
+  fun JsonElement.containsKey(vararg keys: String): Boolean {
+    val ks = keys.flatMap { it.split(".") }
+    var currElement = this
+    for (k in ks) {
+      if (k !in currElement.keys)
+        return false
+      else
+        currElement = currElement[k]
+    }
+    return true
+  }
 
   val JsonElement.size get() = jsonObject.size
 
