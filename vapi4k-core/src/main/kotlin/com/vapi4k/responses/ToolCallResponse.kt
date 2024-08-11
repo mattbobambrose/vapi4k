@@ -88,21 +88,21 @@ data class ToolCallResponse(
                           if (!application.manualToolCache.containsTool(funcName)) {
                             error("Tool $funcName not found")
                           } else {
-                            val func: ManualToolImpl = application.manualToolCache.getTool(funcName)
+                            val manualToolImpl: ManualToolImpl = application.manualToolCache.getTool(funcName)
 
-                            if (!func.isToolCallRequestInitialized()) {
+                            if (!manualToolImpl.isToolCallRequestInitialized()) {
                               error("onToolCallRequest{} not declared in $funcName")
                             } else {
                               runBlocking {
-                                val completeMessages = RequestCompleteMessagesImpl()
-                                val failedMessages = RequestFailedMessagesImpl()
-                                val resp =
-                                  ExternalToolCallResponseImpl(completeMessages, failedMessages, toolCallResult)
+                                val completeMsgs = RequestCompleteMessagesImpl()
+                                val failedMsgs = RequestFailedMessagesImpl()
+                                val resp = ExternalToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
                                 runCatching {
-                                  func.toolCallRequest.invoke(resp, request)
-                                  toolCallResult.messageDtos.addAll(completeMessages.messageList.map { it.dto })
+                                  manualToolImpl.toolCallRequest.invoke(resp, args)
+                                  toolCallResult.messageDtos.addAll(completeMsgs.messageList.map { it.dto })
                                 }.onFailure {
-                                  toolCallResult.messageDtos.addAll(failedMessages.messageList.map { it.dto })
+                                  toolCallResult.error = it.errorMsg
+                                  toolCallResult.messageDtos.addAll(failedMsgs.messageList.map { it.dto })
                                 }
                                 toolCallResult.apply {
                                   toolCallId = toolCall.stringValue("id")
