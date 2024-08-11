@@ -124,8 +124,8 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
       error("onTransferDestinationRequest{} not called")
     } else {
       val toolDto = ToolDto(ToolType.TRANSFER_CALL)
-      val transferTool = TransferDestinationImpl("onTransferDestinationRequest", toolDto)
-      transferDestinationRequest.invoke(transferTool, request)
+      val destinationImpl = TransferDestinationImpl("onTransferDestinationRequest", toolDto)
+      transferDestinationRequest.invoke(destinationImpl, request)
       toolDto
     }
 }

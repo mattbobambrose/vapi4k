@@ -91,18 +91,16 @@ class AssistantResponseImpl(
   override fun numberDestination(block: NumberDestination.() -> Unit) {
     checker.check("numberDestination{} already declared")
     assistantRequestResponse = AssistantRequestResponseDto().apply {
-      val numDto = NumberDestinationDto()
-      destination = numDto
-      NumberDestinationImpl(numDto).apply(block)
+      val numDto = NumberDestinationDto().also { destination = it }
+      NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
     }
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
     checker.check("sipDestination{} already declared")
     assistantRequestResponse = AssistantRequestResponseDto().apply {
-      val sipDto = SipDestinationDto()
-      destination = sipDto
-      SipDestinationImpl(sipDto).apply(block)
+      val sipDto = SipDestinationDto().also { destination = it }
+      SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
     }
   }
 }

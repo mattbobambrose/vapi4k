@@ -21,4 +21,10 @@ import com.vapi4k.dtos.api.destination.SipDestinationDto
 
 class SipDestinationImpl internal constructor(
   private val dto: SipDestinationDto,
-) : SipDestination by dto
+) : SipDestination by dto {
+  fun checkForRequiredFields() {
+    if (dto.sipUri.isEmpty()) {
+      error("sipDestination{} requires a sipUri value")
+    }
+  }
+}

@@ -35,19 +35,16 @@ class TransferDestinationImpl internal constructor(
   TransferDestinationResponse {
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {
     val assistantDto = AssistantDestinationDto().also { destinations += it }
-    AssistantDestinationImpl(assistantDto).apply(block)
-    if (assistantDto.assistantName.isEmpty()) {
-      error("assistantDestination{} requires an assistantName value")
-    }
+    AssistantDestinationImpl(assistantDto).apply(block).checkForRequiredFields()
   }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
     val numDto = NumberDestinationDto().also { destinations += it }
-    NumberDestinationImpl(numDto).apply(block)
+    NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
     val sipDto = SipDestinationDto().also { destinations += it }
-    SipDestinationImpl(sipDto).apply(block)
+    SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
   }
 }

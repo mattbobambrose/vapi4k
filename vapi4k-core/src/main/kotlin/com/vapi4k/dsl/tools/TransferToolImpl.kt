@@ -38,24 +38,20 @@ class TransferToolImpl internal constructor(
   callerName: String,
   val dto: ToolDto,
 ) : ToolWithServerImpl(callerName, dto),
-  TransferToolProperties by dto,
   TransferTool,
   TransferDestinationResponse {
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {
-    val assistantDto = AssistantDestinationDto().also { destinations += it }
-    AssistantDestinationImpl(assistantDto).apply(block)
-    if (assistantDto.assistantName.isEmpty()) {
-      error("assistantDestination{} requires an assistantName value")
-    }
+    val assistantDto = AssistantDestinationDto().also { dto.destinations += it }
+    AssistantDestinationImpl(assistantDto).apply(block).checkForRequiredFields()
   }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
-    val numDto = NumberDestinationDto().also { destinations += it }
-    NumberDestinationImpl(numDto).apply(block)
+    val numDto = NumberDestinationDto().also { dto.destinations += it }
+    NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
-    val sipDto = SipDestinationDto().also { destinations += it }
-    SipDestinationImpl(sipDto).apply(block)
+    val sipDto = SipDestinationDto().also { dto.destinations += it }
+    SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
   }
 }

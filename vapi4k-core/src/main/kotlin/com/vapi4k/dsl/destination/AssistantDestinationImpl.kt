@@ -21,4 +21,10 @@ import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 
 class AssistantDestinationImpl internal constructor(
   private val dto: AssistantDestinationDto,
-) : AssistantDestination by dto
+) : AssistantDestination by dto {
+  fun checkForRequiredFields() {
+    if (dto.assistantName.isEmpty()) {
+      error("assistantDestination{} requires an assistantName value")
+    }
+  }
+}

@@ -21,4 +21,10 @@ import com.vapi4k.dtos.api.destination.NumberDestinationDto
 
 class NumberDestinationImpl internal constructor(
   private val dto: NumberDestinationDto,
-) : NumberDestination by dto
+) : NumberDestination by dto {
+  fun checkForRequiredFields() {
+    if (dto.number.isEmpty()) {
+      error("numberDestination{} requires a number value")
+    }
+  }
+}
