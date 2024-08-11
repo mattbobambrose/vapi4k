@@ -70,7 +70,7 @@ class ServerTest {
       }
 
     assertEquals(HttpStatusCode.OK, response.status)
-    assertEquals(GroqModelType.LLAMA3_70B.desc, jsonElement.stringValue("assistant.model.model"))
+    assertEquals(GroqModelType.LLAMA3_70B.desc, jsonElement.stringValue("messageResponse.assistant.model.model"))
   }
 
   @Test

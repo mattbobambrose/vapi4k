@@ -21,9 +21,7 @@ import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.get
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.jsonArray
 
 object JsonElementUtils {
   val JsonElement.sessionCacheId get() = messageCallId.toSessionCacheId()
@@ -34,8 +32,8 @@ object JsonElementUtils {
     else
       error("JsonElement is not a tool call request")
 
-  val JsonElement.assistantClientMessages get() = this["assistant.clientMessages"].jsonArray
-  val JsonElement.assistantServerMessages get() = this["assistant.serverMessages"].jsonArray
+  val JsonElement.assistantClientMessages get() = jsonElementList("messageResponse.assistant.clientMessages")
+  val JsonElement.assistantServerMessages get() = jsonElementList("messageResponse.assistant.serverMessages")
 
   private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
 

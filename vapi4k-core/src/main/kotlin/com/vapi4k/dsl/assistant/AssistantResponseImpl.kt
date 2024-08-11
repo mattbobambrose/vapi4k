@@ -30,7 +30,7 @@ import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
-import com.vapi4k.responses.AssistantRequestResponseDto
+import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
@@ -39,67 +39,67 @@ class AssistantResponseImpl(
   val assistantRequestContext: AssistantRequestContext,
 ) : AssistantResponse {
   private val checker = DuplicateChecker()
-  internal lateinit var assistantRequestResponse: AssistantRequestResponseDto
+  internal lateinit var assistantRequestResponse: AssistantMessageResponse
   internal val isAssigned: Boolean
     get() = this::assistantRequestResponse.isInitialized
 
   override fun assistant(block: Assistant.() -> Unit) {
     checker.check("An assistant{} is already declared")
-    assistantRequestResponse = AssistantRequestResponseDto().apply {
+    assistantRequestResponse = AssistantMessageResponse().apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
       AssistantImpl(
         assistantRequestContext,
         sessionCacheId,
         assistantCacheIdSource,
-        assistantDto,
-        assistantOverridesDto,
+        messageResponse.assistantDto,
+        messageResponse.assistantOverridesDto,
       )
         .apply(block)
         .apply {
-          assistantDto.updated = true
-          assistantDto.verifyValues()
+          messageResponse.assistantDto.updated = true
+          messageResponse.assistantDto.verifyValues()
         }
     }
   }
 
   override fun assistantId(block: AssistantId.() -> Unit) {
     checker.check("An assistantId{} is already declared")
-    assistantRequestResponse = AssistantRequestResponseDto().apply {
+    assistantRequestResponse = AssistantMessageResponse().apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
-      AssistantIdImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, this).apply(block)
+      AssistantIdImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, messageResponse).apply(block)
     }
   }
 
   override fun squad(block: Squad.() -> Unit) {
     checker.check("An squad{} is already declared")
-    assistantRequestResponse = AssistantRequestResponseDto().apply {
+    assistantRequestResponse = AssistantMessageResponse().apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
-      SquadImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
+      SquadImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, messageResponse.squadDto).apply(block)
     }
   }
 
   override fun squadId(block: SquadId.() -> Unit) {
     checker.check("An squadId{} is already declared")
-    assistantRequestResponse = AssistantRequestResponseDto().apply {
-      SquadIdImpl(assistantRequestContext, this).apply(block)
+    assistantRequestResponse = AssistantMessageResponse().apply {
+      SquadIdImpl(assistantRequestContext, messageResponse).apply(block)
     }
   }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
     checker.check("numberDestination{} already declared")
-    assistantRequestResponse = AssistantRequestResponseDto().apply {
-      val numDto = NumberDestinationDto().also { destination = it }
+    assistantRequestResponse = AssistantMessageResponse().apply {
+      val numDto = NumberDestinationDto().also { messageResponse.destination = it }
       NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
     }
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
     checker.check("sipDestination{} already declared")
-    assistantRequestResponse = AssistantRequestResponseDto().apply {
-      val sipDto = SipDestinationDto().also { destination = it }
+    assistantRequestResponse = AssistantMessageResponse().apply {
+      val sipDto = SipDestinationDto().also { messageResponse.destination = it }
       SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
     }
   }

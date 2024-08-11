@@ -192,9 +192,9 @@ object ValidateAssistantResponse {
   ) {
     logger.debug { jsonElement.toJsonString() }
     val functions =
-      if (jsonElement["assistant.model"].containsKey("tools"))
+      if (jsonElement["messageResponse.assistant.model"].containsKey("tools"))
         jsonElement
-          .jsonElementList("assistant.model.tools")
+          .jsonElementList("messageResponse.assistant.model.tools")
           .mapNotNull { if (!it.containsKey("function.name")) null else it.stringValue("function.name") }
       else
         emptyList()

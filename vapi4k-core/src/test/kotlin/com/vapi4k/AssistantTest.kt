@@ -524,7 +524,7 @@ class AssistantTest {
     val element = assistant.toJsonElement()
     assertEquals(
       ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL.desc,
-      element.stringValue("assistant.firstMessageMode"),
+      element.stringValue("messageResponse.assistant.firstMessageMode"),
     )
   }
 
@@ -686,7 +686,7 @@ class AssistantTest {
     val je = assistant.toJsonElement()
     assertEquals(
       DeepgramLanguageType.GERMAN.desc,
-      je.stringValue("assistant.transcriber.language"),
+      je.stringValue("messageResponse.assistant.transcriber.language"),
     )
   }
 
@@ -708,7 +708,7 @@ class AssistantTest {
     val jsonElement = assistant.toJsonElement()
     assertEquals(
       "zzz",
-      jsonElement.stringValue("assistant.transcriber.language"),
+      jsonElement.stringValue("messageResponse.assistant.transcriber.language"),
     )
   }
 

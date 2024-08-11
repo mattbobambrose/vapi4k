@@ -60,6 +60,6 @@ class ResponseTest {
         }
       }
 
-    println((dest.destination as SipDestinationDto).toJsonString())
+    println((dest.messageResponse.destination as SipDestinationDto).toJsonString())
   }
 }

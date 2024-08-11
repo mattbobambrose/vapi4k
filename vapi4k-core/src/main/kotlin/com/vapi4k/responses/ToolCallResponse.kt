@@ -37,8 +37,7 @@ import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class ToolCallMessageResponse(
-  @SerialName("messageResponse")
-  val toolCallResponse: ToolCallResponse = ToolCallResponse(),
+  val messageResponse: ToolCallResponse = ToolCallResponse(),
 )
 
 @Serializable
@@ -53,7 +52,7 @@ data class ToolCallResponse(
     ) = runCatching {
       ToolCallMessageResponse()
         .also { tcmr ->
-          val response = tcmr.toolCallResponse
+          val response = tcmr.messageResponse
           var errorMessage = ""
 
           request.toolCallList

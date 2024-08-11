@@ -58,7 +58,7 @@ class VoiceTest {
         }
       }
     val jsonElement = squad.toJsonElement()
-    val members = jsonElement["squad.members"].jsonArray.toList()
+    val members = jsonElement["messageResponse.squad.members"].jsonArray.toList()
     assertEquals(1, members.size)
     assertEquals("Receptionist", members.first().stringValue("assistant.name"))
     assertEquals("Hi there!", members.first().stringValue("assistant.firstMessage"))
@@ -309,7 +309,7 @@ class VoiceTest {
         }
       }
     val jsonElement = squad.toJsonElement()
-    val members = jsonElement.jsonElementList("squad.members")
+    val members = jsonElement.jsonElementList("messageResponse.squad.members")
     assertEquals("Hello!", members.first().stringValue("assistant.firstMessage"))
     assertEquals("llama3-8b-8192", members.first().stringValue("assistant.model.model"))
     assertEquals("jack", members.first().stringValue("assistant.voice.voiceId"))
