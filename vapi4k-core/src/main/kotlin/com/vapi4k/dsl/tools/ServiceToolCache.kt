@@ -38,10 +38,7 @@ internal class ServiceToolCache(
   private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
   private var lastCacheCleanInstant = Clock.System.now()
 
-  val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
-    get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
-
-  internal val path get() = pathBlock().ensureStartsWith("/")
+  val path get() = pathBlock().ensureStartsWith("/")
 
   fun addToCache(
     sessionCacheId: SessionCacheId,
@@ -106,17 +103,15 @@ internal class ServiceToolCache(
     cacheMap.remove(oldSessionCacheId)?.also { cacheMap[newSessionCacheKey] = it }
   }
 
-  fun cacheAsJson() =
-    CacheInfoDto(
-      lastCacheCleanInstant.toString(),
-      asDtoMap.size,
-      asDtoMap,
-    )
-
   fun swapCacheKeys(
     oldSessionCacheId: SessionCacheId,
     newSessionCacheKey: SessionCacheId,
   ) = swapKeys(oldSessionCacheId, newSessionCacheKey)
+
+  private val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
+    get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
+
+  fun cacheAsJson() = CacheInfoDto(lastCacheCleanInstant.toString(), asDtoMap.size, asDtoMap)
 }
 
 @Serializable

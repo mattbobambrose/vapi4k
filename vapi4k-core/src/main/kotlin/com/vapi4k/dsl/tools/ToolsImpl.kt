@@ -24,7 +24,6 @@ import com.vapi4k.api.tools.ToolWithMetaData
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.enums.ToolType
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
@@ -54,7 +53,7 @@ data class ToolsImpl internal constructor(
     if (!manualToolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onToolCallRequest{} declared")
 
     val application = model.application as Vapi4kApplicationImpl
-    application.manualToolCache.addToCache(toolDto.functionDto.name, manualToolImpl)
+    application.manualToolCache.addToCache(model.sessionCacheId, toolDto.functionDto.name, manualToolImpl)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
@@ -113,12 +112,6 @@ data class ToolsImpl internal constructor(
     }
   }
 
-  private fun getSessionCacheId() =
-    if (model.sessionCacheId.isNotSpecified())
-      model.sessionCacheId
-    else
-      model.messageCallId.toSessionCacheId()
-
   private fun addTool(
     toolType: ToolType,
     obj: Any,
@@ -127,7 +120,7 @@ data class ToolsImpl internal constructor(
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
       populateFunctionDto(model, obj, function, toolDto.functionDto)
-      val sessionCacheId = getSessionCacheId()
+      val sessionCacheId = model.getSessionCacheId()
       val application = (model.application as Vapi4kApplicationImpl)
       application.serviceToolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
 
