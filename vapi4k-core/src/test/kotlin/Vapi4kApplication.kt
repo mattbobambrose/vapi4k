@@ -20,14 +20,11 @@ import com.vapi4k.api.vapi4k.utils.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
-import com.vapi4k.utils.DslUtils.logObject
-import com.vapi4k.utils.DslUtils.printObject
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.STATUS_UPDATE
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
-import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
@@ -76,16 +73,16 @@ fun Application.module() {
         logger.info { "All requests: ${request.requestType}" }
 //        if (isProduction)
 //          insertRequest(request)
-        logObject(request)
-        printObject(request)
+//        logObject(request)
+//        printObject(request)
       }
 
       onRequest(TOOL_CALL) { request ->
-        logger.info { "Tool call: $request" }
+//        logger.info { "Tool call: $request" }
       }
 
       onRequest(FUNCTION_CALL) { request ->
-        logger.info { "Function call: $request" }
+//        logger.info { "Function call: $request" }
       }
 
       onRequest(STATUS_UPDATE) { request ->
@@ -99,9 +96,9 @@ fun Application.module() {
       }
 
       onAllResponses { requestType, response, elapsedTime ->
-        logger.info { "All responses: $response" }
-        logObject(response)
-        logger.info { response.toJsonString() }
+//        logger.info { "All responses: $response" }
+//        logObject(response)
+//        logger.info { response.toJsonString() }
 //        if (isProduction)
 //          insertResponse(requestType, response, elapsedTime)
       }

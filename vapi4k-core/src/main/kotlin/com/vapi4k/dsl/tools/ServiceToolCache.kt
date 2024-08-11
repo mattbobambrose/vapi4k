@@ -24,6 +24,7 @@ import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
@@ -32,7 +33,7 @@ import kotlin.reflect.KFunction
 import kotlin.time.Duration
 
 internal class ServiceToolCache(
-  val nameBlock: () -> String,
+  private val pathBlock: () -> String,
 ) {
   private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()
   private var lastCacheCleanInstant = Clock.System.now()
@@ -40,7 +41,7 @@ internal class ServiceToolCache(
   val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
     get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
 
-  val name get() = nameBlock()
+  internal val path get() = pathBlock().ensureStartsWith("/")
 
   fun addToCache(
     sessionCacheId: SessionCacheId,
@@ -52,12 +53,11 @@ internal class ServiceToolCache(
     val toolFuncName = toolCallInfo.llmName
     val funcInfo = cacheMap.computeIfAbsent(sessionCacheId) { FunctionInfo() }
     val funcDetails = funcInfo.functions[toolFuncName]
-    logger.debug { "Added to toolCache: $name [$sessionCacheId] [$cacheMap]" }
 
     if (funcDetails.isNull()) {
       val newFuncDetails = FunctionDetails(obj, function)
       funcInfo.functions[toolFuncName] = newFuncDetails
-      logger.info { "Added \"$toolFuncName\" (${newFuncDetails.fqName}) to cache [$sessionCacheId]" }
+      logger.info { "Added \"$toolFuncName\" (${newFuncDetails.fqName}) to $path serviceTool cache [$sessionCacheId]" }
     } else {
       error("\"$toolFuncName\" already declared in cache at ${funcDetails.fqName} [$sessionCacheId]")
     }
@@ -76,7 +76,7 @@ internal class ServiceToolCache(
       ?.also { block(it) }
       .also {
         if (it.isNull())
-          logger.debug { "Entry not found in cache: $sessionCacheId" }
+          logger.debug { "Entry not found in serviceTool cache: $sessionCacheId" }
       }
 
   internal fun clearToolCache() {
@@ -90,11 +90,11 @@ internal class ServiceToolCache(
       (funcInfo.age > maxAge).also { isOld ->
         if (isOld) {
           count++
-          logger.debug { "Purging toolCall cache entry $sessionCacheId: $funcInfo" }
+          logger.debug { "Purging serviceTool cache entry $sessionCacheId: $funcInfo" }
         }
       }
     }
-    logger.debug { "Purged toolCall Cache ($count)" }
+    logger.debug { "Purged serviceTool cache ($count)" }
     return count
   }
 
@@ -102,7 +102,7 @@ internal class ServiceToolCache(
     oldSessionCacheId: SessionCacheId,
     newSessionCacheKey: SessionCacheId,
   ) {
-    logger.info { "Swapping cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
+    logger.info { "Swapping serviceTool cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
     cacheMap.remove(oldSessionCacheId)?.also { cacheMap[newSessionCacheKey] = it }
   }
 

@@ -28,7 +28,7 @@ import kotlinx.serialization.json.JsonElement
 
 fun AssistantResponse.myAssistantRequest(request: JsonElement) =
   when (request.phoneNumber) {
-    "+14156721042" ->
+    "+14156721022" ->
       assistantId {
         id = "44792a91-d7f9-4915-9445-0991aeef97bc"
 
@@ -41,7 +41,7 @@ fun AssistantResponse.myAssistantRequest(request: JsonElement) =
         }
       }
 
-    else -> getAssistant("")
+    else -> getAssistant()
   }
 
 fun AssistantResponse.getSquad(request: JsonElement) =
@@ -70,7 +70,7 @@ fun AssistantResponse.getSquad(request: JsonElement) =
     }
   }
 
-fun AssistantResponse.getAssistant(callerName: String = "Bill") =
+fun AssistantResponse.getAssistant() =
   assistant {
     assistantOverrides {
       firstMessage = "This is the first message override"

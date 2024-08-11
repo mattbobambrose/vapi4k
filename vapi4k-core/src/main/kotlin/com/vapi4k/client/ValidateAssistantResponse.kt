@@ -55,6 +55,7 @@ import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.html.BODY
+import kotlinx.html.DIV
 import kotlinx.html.InputType
 import kotlinx.html.a
 import kotlinx.html.body
@@ -195,7 +196,7 @@ object ValidateAssistantResponse {
     jsonElement: JsonElement,
     sessionCacheId: SessionCacheId,
   ) {
-    logger.info { jsonElement.toJsonString() }
+    logger.debug { jsonElement.toJsonString() }
     val funcNames =
       if (jsonElement["messageResponse.assistant.model"].containsKey("tools"))
         jsonElement
@@ -204,7 +205,6 @@ object ValidateAssistantResponse {
       else
         emptyList()
 
-    logger.debug { "Checking toolCache: ${application.serviceToolCache.name} [$sessionCacheId]" }
     if (!application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
       h2 { +"No Service Tools Declared" }
     } else {
@@ -275,33 +275,7 @@ object ValidateAssistantResponse {
               }
             }
 
-            script {
-              rawHtml(
-                """
-                document.body.addEventListener('htmx:afterOnLoad', function(event) {
-                  if (event.detail.target.id === 'result-$divId') {
-                    // Highlight the json result
-                    let responseData = event.detail.target.innerHTML;
-                    const codeElement = document.querySelector('#result-$divId');
-                    codeElement.textContent = responseData;
-                    Prism.highlightElement(codeElement);
-
-                    // Make the jsosn result visible
-                    const preElement = document.querySelector('#display-$divId');
-                    preElement.style.display = 'block';
-                  }
-                });
-              """,
-              )
-            }
-
-            pre {
-              style = "display: none;"
-              id = "display-$divId"
-              code(classes = "language-json line-numbers match-braces") {
-                id = "result-$divId"
-              }
-            }
+            displayResponse(divId)
           }
         }
     }
@@ -310,7 +284,6 @@ object ValidateAssistantResponse {
       h2 { +"No Manual Tools Declared" }
     } else {
       h2 { +"Manual Tools" }
-      val manualFunctions = application.manualToolCache.functions
       funcNames
         .filter { application.manualToolCache.containsTool(it) }
         .forEach { funcName ->
@@ -376,35 +349,39 @@ object ValidateAssistantResponse {
               }
             }
 
-            script {
-              rawHtml(
-                """
-                document.body.addEventListener('htmx:afterOnLoad', function(event) {
-                  if (event.detail.target.id === 'result-$divId') {
-                    // Highlight the json result
-                    let responseData = event.detail.target.innerHTML;
-                    const codeElement = document.querySelector('#result-$divId');
-                    codeElement.textContent = responseData;
-                    Prism.highlightElement(codeElement);
-
-                    // Make the jsosn result visible
-                    const preElement = document.querySelector('#display-$divId');
-                    preElement.style.display = 'block';
-                  }
-                });
-              """,
-              )
-            }
-
-            pre {
-              style = "display: none;"
-              id = "display-$divId"
-              code(classes = "language-json line-numbers match-braces") {
-                id = "result-$divId"
-              }
-            }
+            displayResponse(divId)
           }
         }
+    }
+  }
+
+  private fun DIV.displayResponse(divId: String) {
+    script {
+      rawHtml(
+        """
+              document.body.addEventListener('htmx:afterOnLoad', function(event) {
+                if (event.detail.target.id === 'result-$divId') {
+                  // Highlight the json result
+                  let responseData = event.detail.target.innerHTML;
+                  const codeElement = document.querySelector('#result-$divId');
+                  codeElement.textContent = responseData;
+                  Prism.highlightElement(codeElement);
+
+                  // Make the jsosn result visible
+                  const preElement = document.querySelector('#display-$divId');
+                  preElement.style.display = 'block';
+                }
+              });
+            """,
+      )
+    }
+
+    pre {
+      style = "display: none;"
+      id = "display-$divId"
+      code(classes = "language-json line-numbers match-braces") {
+        id = "result-$divId"
+      }
     }
   }
 
