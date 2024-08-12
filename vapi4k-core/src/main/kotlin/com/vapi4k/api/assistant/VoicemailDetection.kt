@@ -18,7 +18,6 @@ package com.vapi4k.api.assistant
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.VoicemailDetectionProperties
-import com.vapi4k.dtos.VoicemailDetectionDto
 
 /**
 These are the settings to configure or disable voicemail detection. Alternatively, voicemail detection can be configured
@@ -27,6 +26,4 @@ to detect if a voicemail was reached. You can use neither of them, one of them, 
 built-in detection is enabled while VoicemailTool is not.
  */
 @AssistantDslMarker
-class VoicemailDetection internal constructor(
-  private val dto: VoicemailDetectionDto,
-) : VoicemailDetectionProperties by dto
+interface VoicemailDetection : VoicemailDetectionProperties

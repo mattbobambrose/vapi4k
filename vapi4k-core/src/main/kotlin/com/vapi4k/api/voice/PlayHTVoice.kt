@@ -20,5 +20,4 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.PlayHTVoiceProperties
 
 @AssistantDslMarker
-interface PlayHTVoice :
-  PlayHTVoiceProperties
+interface PlayHTVoice : PlayHTVoiceProperties

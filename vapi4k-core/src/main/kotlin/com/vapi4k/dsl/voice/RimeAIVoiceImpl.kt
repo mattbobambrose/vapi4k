@@ -21,4 +21,5 @@ import com.vapi4k.dtos.voice.RimeAIVoiceDto
 
 class RimeAIVoiceImpl internal constructor(
   private val dto: RimeAIVoiceDto,
-) : RimeAIVoiceProperties by dto, RimeAIVoice
+) : RimeAIVoiceProperties by dto,
+  RimeAIVoice

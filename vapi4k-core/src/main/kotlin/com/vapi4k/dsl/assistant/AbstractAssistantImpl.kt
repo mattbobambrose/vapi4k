@@ -93,7 +93,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
     set(value) = run { artifactPlanDto.videoRecordingEnabled = value }
 
   fun voicemailDetection(block: VoicemailDetection.() -> Unit): VoicemailDetection =
-    VoicemailDetection(voicemailDetectionDto).apply(block)
+    VoicemailDetectionImpl(voicemailDetectionDto).apply(block)
 
   // Transcribers
   fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {

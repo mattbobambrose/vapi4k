@@ -21,4 +21,5 @@ import com.vapi4k.dtos.voice.PlayHTVoiceDto
 
 class PlayHTVoiceImpl internal constructor(
   private val dto: PlayHTVoiceDto,
-) : PlayHTVoiceProperties by dto, PlayHTVoice
+) : PlayHTVoiceProperties by dto,
+  PlayHTVoice

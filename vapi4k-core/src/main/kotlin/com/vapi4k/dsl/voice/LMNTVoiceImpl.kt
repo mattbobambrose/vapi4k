@@ -21,4 +21,5 @@ import com.vapi4k.dtos.voice.LMNTVoiceDto
 
 class LMNTVoiceImpl internal constructor(
   private val dto: LMNTVoiceDto,
-) : LMNTVoiceProperties by dto, LMNTVoice
+) : LMNTVoiceProperties by dto,
+  LMNTVoice

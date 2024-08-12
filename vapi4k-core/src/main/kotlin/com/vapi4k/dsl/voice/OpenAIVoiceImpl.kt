@@ -21,4 +21,5 @@ import com.vapi4k.dtos.voice.OpenAIVoiceDto
 
 class OpenAIVoiceImpl internal constructor(
   private val dto: OpenAIVoiceDto,
-) : OpenAIVoiceProperties by dto, OpenAIVoice
+) : OpenAIVoiceProperties by dto,
+  OpenAIVoice

@@ -14,12 +14,12 @@
  *
  */
 
-package com.vapi4k.dsl.voice
+package com.vapi4k.dsl.assistant
 
-import com.vapi4k.api.voice.CartesiaVoice
-import com.vapi4k.dtos.voice.CartesiaVoiceDto
+import com.vapi4k.api.assistant.VoicemailDetection
+import com.vapi4k.dtos.VoicemailDetectionDto
 
-class CartesiaVoiceImpl internal constructor(
-  private val dto: CartesiaVoiceDto,
-) : CartesiaVoiceProperties by dto,
-  CartesiaVoice
+class VoicemailDetectionImpl internal constructor(
+  private val dto: VoicemailDetectionDto,
+) : VoicemailDetectionProperties by dto,
+  VoicemailDetection
