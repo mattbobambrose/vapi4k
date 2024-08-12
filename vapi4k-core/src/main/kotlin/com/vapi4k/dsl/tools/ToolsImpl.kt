@@ -41,7 +41,7 @@ data class ToolsImpl internal constructor(
     obj: Any,
     vararg functions: KFunction<*>,
     block: BaseTool.() -> Unit,
-  ) = processFunctions(ToolType.FUNCTION, functions, obj) {
+  ) = processFunctions(functions, obj) {
     BaseToolImpl("serviceTool", it).apply(block)
   }
 
@@ -93,7 +93,6 @@ data class ToolsImpl internal constructor(
   }
 
   private fun processFunctions(
-    toolType: ToolType,
     functionRefs: Array<out KFunction<*>>,
     obj: Any,
     block: (ToolDto) -> Unit,
@@ -102,18 +101,17 @@ data class ToolsImpl internal constructor(
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(true, function)
-      addTool(toolType, obj, function) { block(it) }
+      addTool(obj, function) { block(it) }
     } else {
       functionRefs.forEach { function ->
         verifyIsToolCall(true, function)
         verifyIsValidReturnType(true, function)
-        addTool(toolType, obj, function) { block(it) }
+        addTool(obj, function) { block(it) }
       }
     }
   }
 
   private fun addTool(
-    toolType: ToolType,
     obj: Any,
     function: KFunction<*>,
     implInitBlock: (ToolDto) -> Unit,
@@ -125,7 +123,7 @@ data class ToolsImpl internal constructor(
       application.serviceToolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
 
       with(toolDto) {
-        type = toolType
+        type = ToolType.FUNCTION
         async = function.isUnitReturnType
       }
 

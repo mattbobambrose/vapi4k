@@ -42,5 +42,5 @@ interface Tools {
 
   fun makeTool(block: ToolWithMetaData.() -> Unit)
 
-  fun transferTool(block: TransferTool.() -> Unit)
+  fun transferTool(block: TransferTool.() -> Unit = {})
 }
