@@ -16,9 +16,9 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
 import com.vapi4k.dtos.VoicemailDetectionDto

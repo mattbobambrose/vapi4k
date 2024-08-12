@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker

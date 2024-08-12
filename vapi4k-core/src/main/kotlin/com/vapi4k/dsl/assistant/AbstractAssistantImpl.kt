@@ -52,6 +52,9 @@ import com.vapi4k.dsl.model.OpenRouterModelImpl
 import com.vapi4k.dsl.model.PerplexityAIModelImpl
 import com.vapi4k.dsl.model.TogetherAIModelImpl
 import com.vapi4k.dsl.model.VapiModelImpl
+import com.vapi4k.dsl.transcriber.DeepgramTranscriberImpl
+import com.vapi4k.dsl.transcriber.GladiaTranscriberImpl
+import com.vapi4k.dsl.transcriber.TalkscriberTranscriberImpl
 import com.vapi4k.dtos.model.AnthropicModelDto
 import com.vapi4k.dtos.model.AnyscaleModelDto
 import com.vapi4k.dtos.model.CustomLLMModelDto
@@ -87,7 +90,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber {
     transcriberChecker.check("deepGramTranscriber{} already called")
     val transcriberDto = DeepgramTranscriberDto().also { modelDtoUnion.transcriberDto = it }
-    return DeepgramTranscriber(transcriberDto)
+    return DeepgramTranscriberImpl(transcriberDto)
       .apply(block)
       .apply { transcriberDto.verifyValues() }
   }
@@ -95,7 +98,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber {
     transcriberChecker.check("gladiaTranscriber{} already called")
     val transcriberDto = GladiaTranscriberDto().also { modelDtoUnion.transcriberDto = it }
-    return GladiaTranscriber(transcriberDto)
+    return GladiaTranscriberImpl(transcriberDto)
       .apply(block)
       .apply { transcriberDto.verifyValues() }
   }
@@ -103,7 +106,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber {
     transcriberChecker.check("talkscriberTranscriber{} already called")
     val transcriberDto = TalkscriberTranscriberDto().also { modelDtoUnion.transcriberDto = it }
-    return TalkscriberTranscriber(transcriberDto)
+    return TalkscriberTranscriberImpl(transcriberDto)
       .apply(block)
       .apply { transcriberDto.verifyValues() }
   }

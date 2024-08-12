@@ -19,8 +19,8 @@ package com.vapi4k.utils
 import com.vapi4k.ServerTest.Companion.configPost
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
-import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
+import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantMessageResponseDto

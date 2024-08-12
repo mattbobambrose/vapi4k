@@ -14,10 +14,12 @@
  *
  */
 
-package com.vapi4k.api.transcriber
+package com.vapi4k.dsl.transcriber
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.transcriber.DeepgramTranscriberProperties
+import com.vapi4k.api.transcriber.GladiaTranscriber
+import com.vapi4k.dtos.transcriber.GladiaTranscriberDto
 
-@AssistantDslMarker
-interface DeepgramTranscriber : DeepgramTranscriberProperties
+class GladiaTranscriberImpl internal constructor(
+  private val dto: GladiaTranscriberDto,
+) : GladiaTranscriberProperties by dto,
+  GladiaTranscriber

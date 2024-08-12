@@ -26,7 +26,7 @@ import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
-import com.vapi4k.api.vapi4k.AssistantRequestContext
+import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages

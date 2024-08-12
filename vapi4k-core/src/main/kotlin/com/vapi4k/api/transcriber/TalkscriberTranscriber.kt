@@ -18,9 +18,6 @@ package com.vapi4k.api.transcriber
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriberProperties
-import com.vapi4k.dtos.transcriber.TalkscriberTranscriberDto
 
 @AssistantDslMarker
-class TalkscriberTranscriber internal constructor(
-  private val dto: TalkscriberTranscriberDto,
-) : TalkscriberTranscriberProperties by dto
+interface TalkscriberTranscriber : TalkscriberTranscriberProperties

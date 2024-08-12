@@ -18,7 +18,6 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.TransferDestinationResponse
-import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.SessionCacheId

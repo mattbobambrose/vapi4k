@@ -14,18 +14,12 @@
  *
  */
 
-package com.vapi4k.api.vapi4k
+package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.messageCallId
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
+import com.vapi4k.api.vapi4k.Vapi4kApplication
 import kotlinx.serialization.json.JsonElement
 
 class AssistantRequestContext(
   val application: Vapi4kApplication,
   val request: JsonElement,
-) {
-  val phoneNumber: String
-    get() = request.phoneNumber
-  val messageCallId: String
-    get() = request.messageCallId
-}
+)

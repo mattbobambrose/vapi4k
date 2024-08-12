@@ -22,11 +22,11 @@ import com.vapi4k.api.call.Phone
 import com.vapi4k.api.call.Save
 import com.vapi4k.api.call.VapiApi
 import com.vapi4k.api.call.enums.ApiObjectType
-import com.vapi4k.api.vapi4k.AssistantRequestContext
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.id
 import com.vapi4k.common.Constants.OUTBOUND_SERVER_PATH
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient

@@ -14,10 +14,12 @@
  *
  */
 
-package com.vapi4k.api.transcriber
+package com.vapi4k.dsl.transcriber
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.transcriber.DeepgramTranscriberProperties
+import com.vapi4k.api.transcriber.TalkscriberTranscriber
+import com.vapi4k.dtos.transcriber.TalkscriberTranscriberDto
 
-@AssistantDslMarker
-interface DeepgramTranscriber : DeepgramTranscriberProperties
+class TalkscriberTranscriberImpl internal constructor(
+  private val dto: TalkscriberTranscriberDto,
+) : TalkscriberTranscriberProperties by dto,
+  TalkscriberTranscriber
