@@ -27,4 +27,6 @@ object DbmsEnvVars {
   val DBMS_PASSWORD = EnvVar("DBMS_PASSWORD", { System.getenv(name) ?: "docker" }, { it.obfuscate(1) })
   val DBMS_MAX_POOL_SIZE = EnvVar("DBMS_MAX_POOL_SIZE", { System.getenv(name) ?: "10" })
   val DBMS_MAX_LIFETIME_MINS = EnvVar("DBMS_MAX_LIFETIME_MINS", { System.getenv(name) ?: "30" })
+
+  fun loadDbmsEnvVars() = Unit
 }

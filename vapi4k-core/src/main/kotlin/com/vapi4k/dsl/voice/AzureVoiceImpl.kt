@@ -14,11 +14,11 @@
  *
  */
 
-package com.vapi4k.api.voice
+package com.vapi4k.dsl.voice
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.voice.DeepgramVoiceProperties
+import com.vapi4k.api.voice.AzureVoice
+import com.vapi4k.dtos.voice.AzureVoiceDto
 
-@AssistantDslMarker
-interface DeepgramVoice :
-  DeepgramVoiceProperties
+class AzureVoiceImpl internal constructor(
+  private val dto: AzureVoiceDto,
+) : AzureVoiceProperties by dto, AzureVoice

@@ -59,6 +59,7 @@ import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.util.pipeline.PipelineContext
 import io.micrometer.prometheusmetrics.PrometheusConfig
@@ -115,19 +116,30 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       if (!isProduction) {
         get("/") { call.respondRedirect(VALIDATE_PATH) }
-        get(METRICS_PATH) { call.respond(appMicrometerRegistry.scrape()) }
-        get(CACHES_PATH) { processCachesRequest(config) }
-        get(CLEAR_CACHES_PATH) { clearCaches(config) }
+        route(METRICS_PATH) {
+          installContentNegotiation()
+          get { call.respond(appMicrometerRegistry.scrape()) }
+        }
+        route(CACHES_PATH) {
+          installContentNegotiation()
+          get { processCachesRequest(config) }
+        }
+        route(CLEAR_CACHES_PATH) {
+          installContentNegotiation()
+          get { clearCaches(config) }
+        }
         get(VALIDATE_PATH) { validateRootPage(config) }
         get("$VALIDATE_PATH/{appName}") { validateApplication(config) }
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeResponse(config) }
       }
 
       config.applications.forEach { application ->
-        val serverPath = application.serverPath
-        logger.info { "Adding POST serverPath endpoint: \"$serverPath\"" }
-        get(serverPath) { call.respondText("$serverPath requires a post request", status = MethodNotAllowed) }
-        post(serverPath) { assistantRequests(application, callbackChannel) }
+        route(application.serverPath) {
+          logger.info { "Adding POST serverPath endpoint: \"$parent\"" }
+          installContentNegotiation()
+          get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
+          post { assistantRequests(application, callbackChannel) }
+        }
       }
     }
   }

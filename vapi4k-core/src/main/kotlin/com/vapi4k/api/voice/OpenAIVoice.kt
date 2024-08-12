@@ -18,9 +18,7 @@ package com.vapi4k.api.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.OpenAIVoiceProperties
-import com.vapi4k.dtos.voice.OpenAIVoiceDto
 
 @AssistantDslMarker
-class OpenAIVoice internal constructor(
-  private val dto: OpenAIVoiceDto,
-) : OpenAIVoiceProperties by dto
+interface OpenAIVoice :
+  OpenAIVoiceProperties

@@ -18,9 +18,7 @@ package com.vapi4k.api.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.AzureVoiceProperties
-import com.vapi4k.dtos.voice.AzureVoiceDto
 
 @AssistantDslMarker
-class AzureVoice internal constructor(
-  private val dto: AzureVoiceDto,
-) : AzureVoiceProperties by dto
+interface AzureVoice :
+  AzureVoiceProperties

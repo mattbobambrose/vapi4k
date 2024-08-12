@@ -14,11 +14,11 @@
  *
  */
 
-package com.vapi4k.api.voice
+package com.vapi4k.dsl.voice
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.voice.DeepgramVoiceProperties
+import com.vapi4k.api.voice.OpenAIVoice
+import com.vapi4k.dtos.voice.OpenAIVoiceDto
 
-@AssistantDslMarker
-interface DeepgramVoice :
-  DeepgramVoiceProperties
+class OpenAIVoiceImpl internal constructor(
+  private val dto: OpenAIVoiceDto,
+) : OpenAIVoiceProperties by dto, OpenAIVoice

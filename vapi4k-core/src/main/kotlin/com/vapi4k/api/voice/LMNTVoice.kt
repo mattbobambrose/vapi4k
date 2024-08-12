@@ -18,9 +18,7 @@ package com.vapi4k.api.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.LMNTVoiceProperties
-import com.vapi4k.dtos.voice.LMNTVoiceDto
 
 @AssistantDslMarker
-class LMNTVoice internal constructor(
-  private val dto: LMNTVoiceDto,
-) : LMNTVoiceProperties by dto
+interface LMNTVoice :
+  LMNTVoiceProperties

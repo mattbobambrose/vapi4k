@@ -14,11 +14,11 @@
  *
  */
 
-package com.vapi4k.api.voice
+package com.vapi4k.dsl.voice
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.voice.DeepgramVoiceProperties
+import com.vapi4k.api.voice.CartesiaVoice
+import com.vapi4k.dtos.voice.CartesiaVoiceDto
 
-@AssistantDslMarker
-interface DeepgramVoice :
-  DeepgramVoiceProperties
+class CartesiaVoiceImpl internal constructor(
+  private val dto: CartesiaVoiceDto,
+) : CartesiaVoiceProperties by dto, CartesiaVoice

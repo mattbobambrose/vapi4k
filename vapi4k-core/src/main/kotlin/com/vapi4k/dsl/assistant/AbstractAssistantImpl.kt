@@ -55,6 +55,15 @@ import com.vapi4k.dsl.model.VapiModelImpl
 import com.vapi4k.dsl.transcriber.DeepgramTranscriberImpl
 import com.vapi4k.dsl.transcriber.GladiaTranscriberImpl
 import com.vapi4k.dsl.transcriber.TalkscriberTranscriberImpl
+import com.vapi4k.dsl.voice.AzureVoiceImpl
+import com.vapi4k.dsl.voice.CartesiaVoiceImpl
+import com.vapi4k.dsl.voice.DeepgramVoiceImpl
+import com.vapi4k.dsl.voice.ElevenLabsVoiceImpl
+import com.vapi4k.dsl.voice.LMNTVoiceImpl
+import com.vapi4k.dsl.voice.NeetsVoiceImpl
+import com.vapi4k.dsl.voice.OpenAIVoiceImpl
+import com.vapi4k.dsl.voice.PlayHTVoiceImpl
+import com.vapi4k.dsl.voice.RimeAIVoiceImpl
 import com.vapi4k.dtos.model.AnthropicModelDto
 import com.vapi4k.dtos.model.AnyscaleModelDto
 import com.vapi4k.dtos.model.CustomLLMModelDto
@@ -196,7 +205,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun azureVoice(block: AzureVoice.() -> Unit): AzureVoice {
     voiceChecker.check("azureVoice{} already called")
     val voiceDto = AzureVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return AzureVoice(voiceDto)
+    return AzureVoiceImpl(voiceDto)
       .apply(block)
       .apply { voiceDto.verifyValues() }
   }
@@ -204,7 +213,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun cartesiaVoice(block: CartesiaVoice.() -> Unit): CartesiaVoice {
     voiceChecker.check("cartesiaVoice{} already called")
     val voiceDto = CartesiaVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return CartesiaVoice(voiceDto)
+    return CartesiaVoiceImpl(voiceDto)
       .apply(block)
       .apply { voiceDto.verifyValues() }
   }
@@ -212,7 +221,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun deepgramVoice(block: DeepgramVoice.() -> Unit): DeepgramVoice {
     voiceChecker.check("deepgramVoice{} already called")
     val voiceDto = DeepgramVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return DeepgramVoice(voiceDto)
+    return DeepgramVoiceImpl(voiceDto)
       .apply(block)
       .apply { voiceDto.verifyValues() }
   }
@@ -220,7 +229,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun elevenLabsVoice(block: ElevenLabsVoice.() -> Unit): ElevenLabsVoice {
     voiceChecker.check("elevenLabsVoice{} already called")
     val voiceDto = ElevenLabsVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return ElevenLabsVoice(voiceDto)
+    return ElevenLabsVoiceImpl(voiceDto)
       .apply(block)
       .apply { voiceDto.verifyValues() }
   }
@@ -228,14 +237,14 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun lmntVoice(block: LMNTVoice.() -> Unit): LMNTVoice {
     voiceChecker.check("lmntVoice{} already called")
     val voiceDto = LMNTVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return LMNTVoice(voiceDto)
+    return LMNTVoiceImpl(voiceDto)
       .apply(block)
   }
 
   fun neetsVoice(block: NeetsVoice.() -> Unit): NeetsVoice {
     voiceChecker.check("neetsVoice{} already called")
     val voiceDto = NeetsVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return NeetsVoice(voiceDto)
+    return NeetsVoiceImpl(voiceDto)
       .apply(block)
       .apply { voiceDto.verifyValues() }
   }
@@ -243,7 +252,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun openAIVoice(block: OpenAIVoice.() -> Unit): OpenAIVoice {
     voiceChecker.check("openAIVoice{} already called")
     val voiceDto = OpenAIVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return OpenAIVoice(voiceDto)
+    return OpenAIVoiceImpl(voiceDto)
       .apply(block)
       .apply { voiceDto.verifyValues() }
   }
@@ -251,7 +260,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun playHTVoice(block: PlayHTVoice.() -> Unit): PlayHTVoice {
     voiceChecker.check("playHTVoice{} already called")
     val voiceDto = PlayHTVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return PlayHTVoice(voiceDto)
+    return PlayHTVoiceImpl(voiceDto)
       .apply(block)
       .apply { voiceDto.verifyValues() }
   }
@@ -259,7 +268,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
   fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice {
     voiceChecker.check("rimeAIVoice{} already called")
     val voiceDto = RimeAIVoiceDto().also { modelDtoUnion.voiceDto = it }
-    return RimeAIVoice(voiceDto)
+    return RimeAIVoiceImpl(voiceDto)
       .apply(block)
       .apply { voiceDto.verifyValues() }
   }

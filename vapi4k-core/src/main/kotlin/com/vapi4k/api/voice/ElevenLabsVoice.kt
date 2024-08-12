@@ -18,9 +18,7 @@ package com.vapi4k.api.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.ElevenLabsVoiceProperties
-import com.vapi4k.dtos.voice.ElevenLabsVoiceDto
 
 @AssistantDslMarker
-class ElevenLabsVoice internal constructor(
-  private val dto: ElevenLabsVoiceDto,
-) : ElevenLabsVoiceProperties by dto
+interface ElevenLabsVoice :
+  ElevenLabsVoiceProperties

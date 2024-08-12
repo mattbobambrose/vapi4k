@@ -27,6 +27,7 @@ import io.ktor.server.plugins.compression.gzip
 import io.ktor.server.plugins.compression.minimumSize
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.path
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.serialization.json.Json
@@ -35,11 +36,11 @@ import org.slf4j.event.Level
 fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry) {
   val pregistry = pluginRegistry
 
-  if (!pregistry.contains(ContentNegotiation.key)) {
-    install(ContentNegotiation) {
-      json(Json { ignoreUnknownKeys = true })
-    }
-  }
+//  if (!pregistry.contains(ContentNegotiation.key)) {
+//    install(ContentNegotiation) {
+//      json(Json { ignoreUnknownKeys = true })
+//    }
+//  }
 
   if (!pregistry.contains(Compression.key)) {
     install(Compression) {
@@ -70,4 +71,10 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
 //      meterBinders = emptyList()
 //    }
 //  }
+}
+
+internal fun Route.installContentNegotiation() {
+  install(ContentNegotiation) {
+    json(Json { ignoreUnknownKeys = true })
+  }
 }

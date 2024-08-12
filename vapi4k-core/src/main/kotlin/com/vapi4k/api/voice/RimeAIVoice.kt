@@ -18,9 +18,7 @@ package com.vapi4k.api.voice
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.voice.RimeAIVoiceProperties
-import com.vapi4k.dtos.voice.RimeAIVoiceDto
 
 @AssistantDslMarker
-class RimeAIVoice internal constructor(
-  private val dto: RimeAIVoiceDto,
-) : RimeAIVoiceProperties by dto
+interface RimeAIVoice :
+  RimeAIVoiceProperties
