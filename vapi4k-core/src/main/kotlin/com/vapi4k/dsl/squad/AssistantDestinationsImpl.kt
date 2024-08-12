@@ -16,9 +16,10 @@
 
 package com.vapi4k.dsl.squad
 
-import com.vapi4k.api.squad.AssistantDestination
+import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.squad.AssistantDestinations
-import com.vapi4k.dtos.assistant.AssistantDestinationDto
+import com.vapi4k.dsl.destination.AssistantDestinationImpl
+import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 import com.vapi4k.dtos.squad.MemberDto
 
 data class AssistantDestinationsImpl internal constructor(
@@ -27,8 +28,9 @@ data class AssistantDestinationsImpl internal constructor(
 ) : AssistantDestinations {
   override fun destination(block: AssistantDestination.() -> Unit) {
     dto.assistantDestinations +=
-      AssistantDestinationImpl(
-        AssistantDestinationDto().apply { type = "assistant" },
-      ).apply(block).dto
+      AssistantDestinationImpl(AssistantDestinationDto())
+        .apply(block)
+        .apply { checkForRequiredFields() }
+        .dto
   }
 }

@@ -29,5 +29,8 @@ import com.vapi4k.dsl.assistant.CommonAssistantFunctions
 interface Assistant :
   AssistantProperties,
   CommonAssistantFunctions {
+  /**
+   * These are the overrides for the `assistant`'s settings and template variables.
+   */
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }

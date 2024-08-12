@@ -16,6 +16,7 @@
 
 package com.vapi4k.api.squad
 
+import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker

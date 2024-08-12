@@ -20,6 +20,10 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
 import com.vapi4k.dsl.assistant.CommonAssistantFunctions
 
+/**
+These are the overrides for the `assistant` or `assistantId`'s settings and template variables.
+ */
+
 @AssistantDslMarker
 interface AssistantOverrides :
   AssistantOverridesProperties,

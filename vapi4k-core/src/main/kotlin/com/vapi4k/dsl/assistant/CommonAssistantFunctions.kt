@@ -172,7 +172,15 @@ interface CommonAssistantFunctions {
    */
   fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice
 
+  /**
+  This is the plan for analysis of assistant's calls. Stored in `call.analysis`.
+   */
   fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlanImpl
 
+  /**
+  <p>This is the plan for artifacts generated during assistant's calls. Stored in <code>call.artifact</code>.
+  <br>Note: <code>recordingEnabled</code> is currently at the root level. It will be moved to <code>artifactPlan</code> in the future, but will remain backwards compatible.
+  </p>
+   */
   fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlanImpl
 }

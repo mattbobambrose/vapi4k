@@ -16,7 +16,7 @@
 
 package com.vapi4k.dtos.squad
 
-import com.vapi4k.dtos.assistant.AssistantDestinationDto
+import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import kotlinx.serialization.Serializable

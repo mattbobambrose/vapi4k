@@ -23,10 +23,13 @@ This is the assistant that will be used for the call. To use a transient assista
  */
 @AssistantDslMarker
 interface AssistantId {
+  /**
+  This is the id of the assistant that will be used for the call.
+   */
   var id: String
 
   /**
-  These are the overrides for the `assistant` or `assistantId`'s settings and template variables.
+  These are the overrides for the `assistantId`'s settings and template variables.
    */
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }
