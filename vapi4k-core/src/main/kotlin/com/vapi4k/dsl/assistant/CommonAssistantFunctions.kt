@@ -172,7 +172,7 @@ interface CommonAssistantFunctions {
    */
   fun rimeAIVoice(block: RimeAIVoice.() -> Unit): RimeAIVoice
 
-  fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlan
+  fun analysisPlan(block: AnalysisPlan.() -> Unit): AnalysisPlanImpl
 
-  fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlan
+  fun artifactPlan(block: ArtifactPlan.() -> Unit): ArtifactPlanImpl
 }

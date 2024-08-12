@@ -18,6 +18,7 @@ package com.vapi4k.dsl.toolservice
 
 import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.api.toolservice.RequestCompleteCondition
+import com.vapi4k.dsl.assistant.ToolMessageCompleteImpl
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.utils.DuplicateChecker
@@ -32,7 +33,7 @@ class RequestCompleteConditionImpl internal constructor(
     duplicateChecker.check("condition${conditionSet.joinToString()}{} already has a requestCompleteMessage{}")
     return ToolMessageCompleteDto().let { dto ->
       dto.conditions.addAll(conditionSet)
-      ToolMessageComplete(dto).apply(block).also { completeMessages.messageList += it }
+      ToolMessageCompleteImpl(dto).apply(block).also { completeMessages.messageList += it }
     }
   }
 }

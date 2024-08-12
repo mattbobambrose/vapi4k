@@ -18,9 +18,6 @@ package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageCompleteProperties
-import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 
 @AssistantDslMarker
-class ToolMessageComplete internal constructor(
-  internal val dto: ToolMessageCompleteDto,
-) : ToolMessageCompleteProperties by dto
+interface ToolMessageComplete : ToolMessageCompleteProperties

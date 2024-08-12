@@ -18,9 +18,6 @@ package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageFailedProperties
-import com.vapi4k.dtos.tools.ToolMessageFailedDto
 
 @AssistantDslMarker
-class ToolMessageFailed internal constructor(
-  internal val dto: ToolMessageFailedDto,
-) : ToolMessageFailedProperties by dto
+interface ToolMessageFailed : ToolMessageFailedProperties

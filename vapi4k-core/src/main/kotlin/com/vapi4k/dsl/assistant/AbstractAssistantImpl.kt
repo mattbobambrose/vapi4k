@@ -261,7 +261,7 @@ abstract class AbstractAssistantImpl : ModelUnion {
       .apply { voiceDto.verifyValues() }
   }
 
-  fun analysisPlan(block: AnalysisPlan.() -> Unit) = AnalysisPlan(analysisPlanDto).apply(block)
+  fun analysisPlan(block: AnalysisPlan.() -> Unit) = AnalysisPlanImpl(analysisPlanDto).apply(block)
 
-  fun artifactPlan(block: ArtifactPlan.() -> Unit) = ArtifactPlan(artifactPlanDto).apply(block)
+  fun artifactPlan(block: ArtifactPlan.() -> Unit) = ArtifactPlanImpl(artifactPlanDto).apply(block)
 }

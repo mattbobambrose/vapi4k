@@ -21,6 +21,10 @@ import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.api.tools.ToolMessageDelayed
 import com.vapi4k.api.tools.ToolMessageFailed
 import com.vapi4k.api.tools.ToolMessageStart
+import com.vapi4k.dsl.assistant.ToolMessageCompleteImpl
+import com.vapi4k.dsl.assistant.ToolMessageDelayedImpl
+import com.vapi4k.dsl.assistant.ToolMessageFailedImpl
+import com.vapi4k.dsl.assistant.ToolMessageStartImpl
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageDelayedDto
@@ -44,7 +48,7 @@ class ToolConditionImpl internal constructor(
     return ToolMessageStartDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       messages.add(dto)
-      ToolMessageStart(dto).apply(block)
+      ToolMessageStartImpl(dto).apply(block)
     }
   }
 
@@ -53,7 +57,7 @@ class ToolConditionImpl internal constructor(
     return ToolMessageCompleteDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       messages.add(dto)
-      ToolMessageComplete(dto).apply(block)
+      ToolMessageCompleteImpl(dto).apply(block)
     }
   }
 
@@ -62,7 +66,7 @@ class ToolConditionImpl internal constructor(
     return ToolMessageFailedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       messages.add(dto)
-      ToolMessageFailed(dto).apply(block)
+      ToolMessageFailedImpl(dto).apply(block)
     }
   }
 
@@ -71,7 +75,7 @@ class ToolConditionImpl internal constructor(
     return ToolMessageDelayedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
       messages.add(dto)
-      ToolMessageDelayed(dto).apply(block)
+      ToolMessageDelayedImpl(dto).apply(block)
     }
   }
 }

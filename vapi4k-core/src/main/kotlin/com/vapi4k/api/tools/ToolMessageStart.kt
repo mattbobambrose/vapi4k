@@ -18,9 +18,6 @@ package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageStartProperties
-import com.vapi4k.dtos.tools.ToolMessageStartDto
 
 @AssistantDslMarker
-class ToolMessageStart internal constructor(
-  internal val dto: ToolMessageStartDto,
-) : ToolMessageStartProperties by dto
+interface ToolMessageStart : ToolMessageStartProperties

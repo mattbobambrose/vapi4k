@@ -29,6 +29,5 @@ import com.vapi4k.dsl.assistant.CommonAssistantFunctions
 interface Assistant :
   AssistantProperties,
   CommonAssistantFunctions {
-  // AssistantOverrides
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }

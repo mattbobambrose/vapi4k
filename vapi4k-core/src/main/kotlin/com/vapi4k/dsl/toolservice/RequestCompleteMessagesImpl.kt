@@ -19,13 +19,14 @@ package com.vapi4k.dsl.toolservice
 import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.api.toolservice.RequestCompleteCondition
 import com.vapi4k.api.toolservice.RequestCompleteMessages
+import com.vapi4k.dsl.assistant.ToolMessageCompleteImpl
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.utils.DuplicateChecker
 
 class RequestCompleteMessagesImpl internal constructor() : RequestCompleteMessages {
   private val duplicateChecker = DuplicateChecker()
-  internal val messageList = mutableListOf<ToolMessageComplete>()
+  internal val messageList = mutableListOf<ToolMessageCompleteImpl>()
 
   private val dtoConditions
     get() = messageList.map { it.dto }.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
@@ -33,7 +34,7 @@ class RequestCompleteMessagesImpl internal constructor() : RequestCompleteMessag
   override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
     duplicateChecker.check("tool{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
-      ToolMessageComplete(dto).apply(block).also { messageList += it }
+      ToolMessageCompleteImpl(dto).apply(block).also { messageList += it }
     }
   }
 

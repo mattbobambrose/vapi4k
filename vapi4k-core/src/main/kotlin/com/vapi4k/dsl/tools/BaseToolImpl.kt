@@ -21,6 +21,10 @@ import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.api.tools.ToolMessageDelayed
 import com.vapi4k.api.tools.ToolMessageFailed
 import com.vapi4k.api.tools.ToolMessageStart
+import com.vapi4k.dsl.assistant.ToolMessageCompleteImpl
+import com.vapi4k.dsl.assistant.ToolMessageDelayedImpl
+import com.vapi4k.dsl.assistant.ToolMessageFailedImpl
+import com.vapi4k.dsl.assistant.ToolMessageStartImpl
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
@@ -54,7 +58,7 @@ open class BaseToolImpl internal constructor(
     startChecker.check("$callerName{} already has a request start message")
     return ToolMessageStartDto().let { dto ->
       toolDto.messages.add(dto)
-      ToolMessageStart(dto).apply(block)
+      ToolMessageStartImpl(dto).apply(block)
     }
   }
 
@@ -62,7 +66,7 @@ open class BaseToolImpl internal constructor(
     completeChecker.check("$callerName{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       toolDto.messages.add(dto)
-      ToolMessageComplete(dto).apply(block)
+      ToolMessageCompleteImpl(dto).apply(block)
     }
   }
 
@@ -70,7 +74,7 @@ open class BaseToolImpl internal constructor(
     failedChecker.check("$callerName{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       toolDto.messages.add(dto)
-      ToolMessageFailed(dto).apply(block)
+      ToolMessageFailedImpl(dto).apply(block)
     }
   }
 
@@ -78,7 +82,7 @@ open class BaseToolImpl internal constructor(
     delayedChecker.check("$callerName{} already has a request delayed message")
     return ToolMessageDelayedDto().let { dto ->
       toolDto.messages.add(dto)
-      ToolMessageDelayed(dto).apply(block)
+      ToolMessageDelayedImpl(dto).apply(block)
     }
   }
 

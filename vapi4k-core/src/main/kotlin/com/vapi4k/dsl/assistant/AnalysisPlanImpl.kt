@@ -14,15 +14,16 @@
  *
  */
 
-package com.vapi4k.api.assistant
+package com.vapi4k.dsl.assistant
 
-import com.vapi4k.dsl.assistant.ArtifactPlanProperties
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.api.assistant.AnalysisPlan
+import com.vapi4k.dtos.AnalysisPlanDto
 
-/**
-<p>This is the plan for artifacts generated during assistant's calls. Stored in <code>call.artifact</code>.
-<br><br>Note: <code>recordingEnabled</code> is currently at the root level. It will be moved to <code>artifactPlan</code> in the future, but will remain backwards compatible.
-</p>
- */
-@AssistantDslMarker
-interface ArtifactPlan : ArtifactPlanProperties
+class AnalysisPlanImpl internal constructor(
+  private val dto: AnalysisPlanDto,
+) : AnalysisPlanProperties by dto,
+  AnalysisPlan {
+  override fun structuredDataSchema(block: StructuredDataSchema.() -> Unit) {
+    StructuredDataSchema(dto.structuredDataSchema).apply(block)
+  }
+}

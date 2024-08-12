@@ -39,6 +39,9 @@ buildconfig:
 kdocs:
 	./gradlew dokkaHtml
 
+mddocs:
+	./gradlew dokkaGfm
+
 publish:
 	./gradlew publishToMavenLocal
 

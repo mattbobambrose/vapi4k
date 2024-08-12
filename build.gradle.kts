@@ -16,7 +16,7 @@
 
 plugins {
     alias(libs.plugins.jvm) apply false
-    alias(libs.plugins.versions) apply false
+    alias(libs.plugins.versions) apply true
     alias(libs.plugins.kotlinter) apply false
 }
 

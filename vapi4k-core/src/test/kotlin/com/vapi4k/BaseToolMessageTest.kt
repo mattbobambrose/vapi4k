@@ -42,7 +42,6 @@ class BaseToolMessageTest {
                     serviceTool(WeatherLookupService1()) {
                       requestStartMessage {
                         content = "tool 1 start message"
-                        dto
                       }
                       requestCompleteMessage {
                         content = "tool 1 complete message"

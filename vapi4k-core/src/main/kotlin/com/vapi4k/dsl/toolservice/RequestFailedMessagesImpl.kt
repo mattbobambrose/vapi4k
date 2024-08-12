@@ -19,13 +19,14 @@ package com.vapi4k.dsl.toolservice
 import com.vapi4k.api.tools.ToolMessageFailed
 import com.vapi4k.api.toolservice.RequestFailedCondition
 import com.vapi4k.api.toolservice.RequestFailedMessages
+import com.vapi4k.dsl.assistant.ToolMessageFailedImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.utils.DuplicateChecker
 
 class RequestFailedMessagesImpl internal constructor() : RequestFailedMessages {
   private val duplicateChecker = DuplicateChecker()
-  internal val messageList = mutableListOf<ToolMessageFailed>()
+  internal val messageList = mutableListOf<ToolMessageFailedImpl>()
 
   private val dtoConditions
     get() = messageList.map { it.dto }.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
@@ -33,7 +34,7 @@ class RequestFailedMessagesImpl internal constructor() : RequestFailedMessages {
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
     duplicateChecker.check("tool{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
-      ToolMessageFailed(dto).apply(block).also { messageList += it }
+      ToolMessageFailedImpl(dto).apply(block).also { messageList += it }
     }
   }
 

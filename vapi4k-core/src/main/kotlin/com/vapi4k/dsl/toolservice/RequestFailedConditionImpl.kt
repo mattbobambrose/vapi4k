@@ -18,6 +18,7 @@ package com.vapi4k.dsl.toolservice
 
 import com.vapi4k.api.tools.ToolMessageFailed
 import com.vapi4k.api.toolservice.RequestFailedCondition
+import com.vapi4k.dsl.assistant.ToolMessageFailedImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.utils.DuplicateChecker
@@ -32,7 +33,7 @@ class RequestFailedConditionImpl internal constructor(
     duplicateChecker.check("condition${conditionSet.joinToString()}{} already has a requestFailedMessage{}")
     return ToolMessageFailedDto().let { dto ->
       dto.conditions.addAll(conditionSet)
-      ToolMessageFailed(dto).apply(block).also { failedMessages.messageList += it }
+      ToolMessageFailedImpl(dto).apply(block).also { failedMessages.messageList += it }
     }
   }
 }
