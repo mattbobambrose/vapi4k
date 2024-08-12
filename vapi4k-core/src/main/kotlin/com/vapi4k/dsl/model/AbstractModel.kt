@@ -59,7 +59,7 @@ abstract class AbstractModel(
 
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {
     val kbDto = KnowledgeBaseDto().also { dto.knowledgeBaseDto = it }
-    return KnowledgeBase(request, kbDto)
+    return KnowledgeBaseImpl(request, kbDto)
       .apply(block)
       .apply {
         if (kbDto.fileIds.isEmpty())

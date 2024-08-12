@@ -14,10 +14,17 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.squad
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.model.KnowledgeBaseProperties
+import com.vapi4k.api.squad.AssistantId
+import com.vapi4k.dtos.squad.MemberDto
 
-@AssistantDslMarker
-interface KnowledgeBase : KnowledgeBaseProperties
+class AssistantIdImpl internal constructor(
+  private val dto: MemberDto,
+) : AssistantId {
+  override var id
+    get() = dto.assistantId
+    set(value) {
+      dto.assistantId = value
+    }
+}

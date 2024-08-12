@@ -14,10 +14,14 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.model
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.model.KnowledgeBaseProperties
+import com.vapi4k.api.model.KnowledgeBase
+import com.vapi4k.dtos.model.KnowledgeBaseDto
+import kotlinx.serialization.json.JsonElement
 
-@AssistantDslMarker
-interface KnowledgeBase : KnowledgeBaseProperties
+class KnowledgeBaseImpl internal constructor(
+  internal val request: JsonElement,
+  private val dto: KnowledgeBaseDto,
+) : KnowledgeBaseProperties by dto,
+  KnowledgeBase

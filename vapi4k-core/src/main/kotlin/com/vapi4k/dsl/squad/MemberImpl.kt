@@ -32,7 +32,7 @@ data class MemberImpl(
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     memberChecker.check("Member already has an assistantId assigned")
-    return AssistantId(dto).apply(block)
+    return AssistantIdImpl(dto).apply(block)
   }
 
   override fun assistant(block: Assistant.() -> Unit): Assistant {

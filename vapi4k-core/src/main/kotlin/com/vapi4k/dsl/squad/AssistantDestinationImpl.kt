@@ -14,10 +14,12 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.squad
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.model.KnowledgeBaseProperties
+import com.vapi4k.api.squad.AssistantDestination
+import com.vapi4k.dtos.assistant.AssistantDestinationDto
 
-@AssistantDslMarker
-interface KnowledgeBase : KnowledgeBaseProperties
+class AssistantDestinationImpl internal constructor(
+  internal val dto: AssistantDestinationDto,
+) : AssistantDestinationProperties by dto,
+  AssistantDestination

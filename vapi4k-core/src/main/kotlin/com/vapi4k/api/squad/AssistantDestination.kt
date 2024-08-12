@@ -18,9 +18,6 @@ package com.vapi4k.api.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.squad.AssistantDestinationProperties
-import com.vapi4k.dtos.assistant.AssistantDestinationDto
 
 @AssistantDslMarker
-class AssistantDestination internal constructor(
-  internal val dto: AssistantDestinationDto,
-) : AssistantDestinationProperties by dto
+interface AssistantDestination : AssistantDestinationProperties
