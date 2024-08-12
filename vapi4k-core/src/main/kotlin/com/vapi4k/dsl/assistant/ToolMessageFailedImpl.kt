@@ -22,4 +22,5 @@ import com.vapi4k.dtos.tools.ToolMessageFailedDto
 
 class ToolMessageFailedImpl internal constructor(
   internal val dto: ToolMessageFailedDto,
-) : ToolMessageFailedProperties by dto, ToolMessageFailed
+) : ToolMessageFailedProperties by dto,
+  ToolMessageFailed

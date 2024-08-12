@@ -22,4 +22,5 @@ import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 
 class ToolMessageCompleteImpl internal constructor(
   internal val dto: ToolMessageCompleteDto,
-) : ToolMessageCompleteProperties by dto, ToolMessageComplete
+) : ToolMessageCompleteProperties by dto,
+  ToolMessageComplete

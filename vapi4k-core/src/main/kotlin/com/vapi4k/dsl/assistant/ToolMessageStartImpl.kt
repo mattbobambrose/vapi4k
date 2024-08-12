@@ -22,4 +22,5 @@ import com.vapi4k.dtos.tools.ToolMessageStartDto
 
 class ToolMessageStartImpl internal constructor(
   internal val dto: ToolMessageStartDto,
-) : ToolMessageStartProperties by dto, ToolMessageStart
+) : ToolMessageStartProperties by dto,
+  ToolMessageStart

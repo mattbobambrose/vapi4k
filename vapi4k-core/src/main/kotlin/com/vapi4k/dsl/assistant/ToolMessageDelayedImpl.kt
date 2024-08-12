@@ -22,4 +22,5 @@ import com.vapi4k.dtos.tools.ToolMessageDelayedDto
 
 class ToolMessageDelayedImpl internal constructor(
   private val dto: ToolMessageDelayedDto,
-) : ToolMessageDelayedProperties by dto, ToolMessageDelayed
+) : ToolMessageDelayedProperties by dto,
+  ToolMessageDelayed
