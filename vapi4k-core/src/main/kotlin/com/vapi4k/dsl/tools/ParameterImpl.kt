@@ -14,15 +14,14 @@
  *
  */
 
-package com.vapi4k.api.tools
+package com.vapi4k.dsl.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.api.tools.Parameter
 import kotlin.reflect.KClass
 
-@AssistantDslMarker
-interface Parameter {
-  var name: String
-  var description: String
-  var type: KClass<*>
-  var required: Boolean
+class ParameterImpl internal constructor() : Parameter {
+  override var name = ""
+  override var description = ""
+  override var type: KClass<*> = String::class
+  override var required = true
 }

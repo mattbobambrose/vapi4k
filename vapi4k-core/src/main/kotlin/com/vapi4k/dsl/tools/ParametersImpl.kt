@@ -27,7 +27,7 @@ class ParametersImpl internal constructor(
   val toolDto: ToolDto,
 ) : Parameters {
   override fun parameter(block: Parameter.() -> Unit) {
-    val p = Parameter().apply(block)
+    val p = ParameterImpl().apply(block)
     if (p.name.isBlank()) error("externalTool{} parameter name must not be blank")
     if (p.type !in FunctionUtils.allowedParamTypes)
       error(
