@@ -29,7 +29,7 @@ import com.vapi4k.dtos.tools.ToolMessageStartDto
 import com.vapi4k.utils.DuplicateChecker
 
 class ToolConditionImpl internal constructor(
-  internal val tool: ToolImpl,
+  internal val tool: BaseToolImpl,
   private val conditionSet: Set<ToolMessageCondition>,
 ) : ToolCondition {
   private val startChecker = DuplicateChecker()

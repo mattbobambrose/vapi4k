@@ -14,24 +14,12 @@
  *
  */
 
-package com.vapi4k.api.tools
+package com.vapi4k.dsl.tools
 
+import com.vapi4k.api.vapi4k.Server
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dtos.tools.ToolMessageCondition
 
 @AssistantDslMarker
-interface Tool {
-  fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart
-
-  fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
-
-  fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed
-
-  fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed
-
-  fun condition(
-    requiredCondition: ToolMessageCondition,
-    vararg additionalConditions: ToolMessageCondition,
-    block: ToolCondition.() -> Unit,
-  )
+interface ToolWithServer : BaseTool {
+  fun server(block: Server.() -> Unit): Server
 }

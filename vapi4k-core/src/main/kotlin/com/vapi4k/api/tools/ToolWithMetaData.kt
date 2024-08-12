@@ -17,6 +17,7 @@
 package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.ToolWithServer
 
 @AssistantDslMarker
 interface ToolWithMetaData : ToolWithServer {

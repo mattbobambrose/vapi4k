@@ -14,13 +14,22 @@
  *
  */
 
-package com.vapi4k.api.tools
+package com.vapi4k.dsl.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.api.tools.Parameters
+import com.vapi4k.api.tools.ToolWithParameters
+import com.vapi4k.dtos.tools.ToolDto
 
-@AssistantDslMarker
-interface BaseTool : ToolWithServer {
-  var async: Boolean
+open class ToolWitParametersImpl internal constructor(
+  callerName: String,
+  toolDto: ToolDto,
+) : ToolWithServerImpl(callerName, toolDto),
+  ToolWithParameters {
+  override var async
+    get() = toolDto.async ?: true
+    set(value) = run { toolDto.async = value }
 
-  fun parameters(block: Parameters.() -> Unit)
+  override fun parameters(block: Parameters.() -> Unit) {
+    ParametersImpl(toolDto).apply(block)
+  }
 }

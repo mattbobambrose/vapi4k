@@ -16,11 +16,10 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.api.tools.BaseTool
 import com.vapi4k.api.tools.ExternalTool
 import com.vapi4k.api.tools.ManualTool
-import com.vapi4k.api.tools.Tool
 import com.vapi4k.api.tools.ToolWithMetaData
+import com.vapi4k.api.tools.ToolWithParameters
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.enums.ToolType
@@ -41,9 +40,9 @@ data class ToolsImpl internal constructor(
   override fun serviceTool(
     obj: Any,
     vararg functions: KFunction<*>,
-    block: Tool.() -> Unit,
+    block: BaseTool.() -> Unit,
   ) = processFunctions(ToolType.FUNCTION, functions, obj) {
-    ToolImpl("serviceTool", it).apply(block)
+    BaseToolImpl("serviceTool", it).apply(block)
   }
 
   override fun manualTool(block: ManualTool.() -> Unit) {
@@ -63,19 +62,19 @@ data class ToolsImpl internal constructor(
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
   }
 
-  override fun dtmfTool(block: BaseTool.() -> Unit) {
+  override fun dtmfTool(block: ToolWithParameters.() -> Unit) {
     val toolDto = ToolDto(ToolType.DTMF).also { model.toolDtos += it }
-    BaseToolImpl("dtmfTool", toolDto).apply(block).checkIfServerCalled()
+    ToolWitParametersImpl("dtmfTool", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun endCallTool(block: BaseTool.() -> Unit) {
+  override fun endCallTool(block: ToolWithParameters.() -> Unit) {
     val toolDto = ToolDto(ToolType.END_CALL).also { model.toolDtos += it }
-    BaseToolImpl("endCallTool", toolDto).apply(block).checkIfServerCalled()
+    ToolWitParametersImpl("endCallTool", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun voiceMailTool(block: BaseTool.() -> Unit) {
+  override fun voiceMailTool(block: ToolWithParameters.() -> Unit) {
     val toolDto = ToolDto(ToolType.VOICEMAIL).also { model.toolDtos += it }
-    BaseToolImpl("voiceMailTool", toolDto).apply(block).checkIfServerCalled()
+    ToolWitParametersImpl("voiceMailTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun ghlTool(block: ToolWithMetaData.() -> Unit) {

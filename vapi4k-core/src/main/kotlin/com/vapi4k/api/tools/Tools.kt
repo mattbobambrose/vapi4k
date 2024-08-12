@@ -17,6 +17,7 @@
 package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.BaseTool
 import kotlin.reflect.KFunction
 
 @AssistantDslMarker
@@ -24,18 +25,18 @@ interface Tools {
   fun serviceTool(
     obj: Any,
     vararg functions: KFunction<*>,
-    block: Tool.() -> Unit = {},
+    block: BaseTool.() -> Unit = {},
   )
 
   fun manualTool(block: ManualTool.() -> Unit)
 
   fun externalTool(block: ExternalTool.() -> Unit)
 
-  fun dtmfTool(block: BaseTool.() -> Unit)
+  fun dtmfTool(block: ToolWithParameters.() -> Unit)
 
-  fun endCallTool(block: BaseTool.() -> Unit)
+  fun endCallTool(block: ToolWithParameters.() -> Unit)
 
-  fun voiceMailTool(block: BaseTool.() -> Unit)
+  fun voiceMailTool(block: ToolWithParameters.() -> Unit)
 
   fun ghlTool(block: ToolWithMetaData.() -> Unit)
 

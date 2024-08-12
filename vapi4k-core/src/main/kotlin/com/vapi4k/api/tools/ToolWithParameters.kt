@@ -16,10 +16,12 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.api.vapi4k.Server
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.ToolWithServer
 
 @AssistantDslMarker
-interface ToolWithServer : Tool {
-  fun server(block: Server.() -> Unit): Server
+interface ToolWithParameters : ToolWithServer {
+  var async: Boolean
+
+  fun parameters(block: Parameters.() -> Unit)
 }

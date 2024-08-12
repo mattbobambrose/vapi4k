@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.api.tools.ToolWithServer
 import com.vapi4k.api.vapi4k.Server
 import com.vapi4k.dsl.vapi4k.ServerImpl
 import com.vapi4k.dtos.tools.ToolDto
@@ -25,7 +24,7 @@ import com.vapi4k.utils.DuplicateChecker
 open class ToolWithServerImpl internal constructor(
   callerName: String,
   toolDto: ToolDto,
-) : ToolImpl(callerName, toolDto),
+) : BaseToolImpl(callerName, toolDto),
   ToolWithServer {
   internal val serverChecker = DuplicateChecker()
 

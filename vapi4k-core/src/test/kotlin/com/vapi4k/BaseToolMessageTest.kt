@@ -24,7 +24,7 @@ import com.vapi4k.utils.withTestApplication
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ToolMessageTest {
+class BaseToolMessageTest {
   @Test
   fun `toolMessageStart test`() {
     val (response, jsonElement) =

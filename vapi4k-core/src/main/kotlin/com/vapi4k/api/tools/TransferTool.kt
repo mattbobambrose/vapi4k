@@ -20,6 +20,7 @@ import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.tools.ToolWithServer
 
 @AssistantDslMarker
 interface TransferTool : ToolWithServer {

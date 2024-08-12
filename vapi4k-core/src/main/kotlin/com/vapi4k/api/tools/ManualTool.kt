@@ -21,7 +21,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 import kotlinx.serialization.json.JsonElement
 
 @AssistantDslMarker
-interface ManualTool : BaseTool {
+interface ManualTool : ToolWithParameters {
   var name: String
   var description: String
 
