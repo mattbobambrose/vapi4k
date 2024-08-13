@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     implementation(project(":vapi4k-core"))
-    // implementation("com.github.mattbobambrose.vapi4k:vapi4k-core:1.3.2")
 }
 
 kotlin {
