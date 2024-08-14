@@ -101,16 +101,17 @@ object ValidateAssistantResponse {
     secret: String,
   ): String {
     val request = getNewRequest()
-    val (status, responseBody) = runBlocking {
-      val url = "$serverBaseUrl/$appName"
-      val response = httpClient.post(url) {
-        contentType(Application.Json)
-        if (secret.isNotEmpty())
-          headers.append("x-vapi-secret", secret)
-        setBody(request)
+    val (status, responseBody) =
+      runBlocking {
+        val url = "$serverBaseUrl/$appName"
+        val response = httpClient.post(url) {
+          contentType(Application.Json)
+          if (secret.isNotEmpty())
+            headers.append("x-vapi-secret", secret)
+          setBody(request)
+        }
+        response.status to response.bodyAsText()
       }
-      response.status to response.bodyAsText()
-    }
 
     val sessionCacheId = request.sessionCacheId
 

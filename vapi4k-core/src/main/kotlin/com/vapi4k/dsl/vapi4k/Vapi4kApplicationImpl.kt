@@ -20,8 +20,8 @@ import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
-import com.vapi4k.common.CoreEnvVars.defaultServerBaseUrl
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
+import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ManualToolCache
@@ -52,7 +52,7 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   override var serverPath = defaultServerPath
   override var serverSecret = ""
 
-  internal val fqServerPath get() = "$defaultServerBaseUrl/$serverPathAsSegment"
+  internal val fqServerPath get() = "$serverBaseUrl/$serverPathAsSegment"
 
   internal fun containsFunctionInCache(
     sessionCacheId: SessionCacheId,

@@ -16,6 +16,7 @@
 
 package com.vapi4k.common
 
+import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.envvar.EnvVar
 
 object CoreEnvVars {
@@ -37,12 +38,11 @@ object CoreEnvVars {
     EnvVar("TOOL_CACHE_MAX_AGE_MINS", { System.getenv(name) ?: "60" }, reportOnBoot = false)
 
   val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
-  val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.removeSuffix("/") }
   val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removePrefix("/").removeSuffix("/") }
-  val defaultServerBaseUrl: String by lazy {
+  val serverBaseUrl: String by lazy {
     val herokuAppName = System.getenv("HEROKU_APP_NAME").orEmpty()
     if (herokuAppName.isNotEmpty())
-      "https://$herokuAppName.herokuapp.com"
+      "https://$herokuAppName.herokuapp.com".also { logger.info { "Heroku app name: $herokuAppName" } }
     else
       SERVER_BASE_URL.value.removeSuffix("/")
   }
