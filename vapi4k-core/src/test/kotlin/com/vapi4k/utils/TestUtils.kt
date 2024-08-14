@@ -19,6 +19,7 @@ package com.vapi4k.utils
 import com.vapi4k.ServerTest.Companion.configPost
 import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
+import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
@@ -27,7 +28,6 @@ import com.vapi4k.responses.AssistantMessageResponseDto
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.resourceFile
-import com.vapi4k.utils.envvar.CoreEnvVars.defaultServerPath
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue

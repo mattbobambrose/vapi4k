@@ -25,6 +25,8 @@ import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STYLES_CSS
+import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
+import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.SessionCacheId
@@ -39,8 +41,6 @@ import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
 import com.vapi4k.utils.common.Utils.resourceFile
-import com.vapi4k.utils.envvar.CoreEnvVars.REQUEST_VALIDATION_FILENAME
-import com.vapi4k.utils.envvar.CoreEnvVars.serverBaseUrl
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.keys
@@ -132,13 +132,13 @@ object ValidateAssistantResponse {
           script { src = "/assets/prism.js" }
 
           if (config.applications.size > 1) {
-          div {
-            style = "text-align: right; margin-top: 20px; margin-right: 15;"
-            a {
-              href = VALIDATE_PATH
-              +"Home"
+            div {
+              style = "text-align: right; margin-top: 20px; margin-right: 15;"
+              a {
+                href = VALIDATE_PATH
+                +"Home"
+              }
             }
-          }
           }
           h2 { +"Vapi4k Assistant Request Response" }
           if (status.value == 200) {

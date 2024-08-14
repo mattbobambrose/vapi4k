@@ -20,6 +20,8 @@ import com.vapi4k.api.assistant.AssistantResponse
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.api.vapi4k.Vapi4kApplication
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
+import com.vapi4k.common.CoreEnvVars.defaultServerBaseUrl
+import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ManualToolCache
@@ -29,8 +31,6 @@ import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
-import com.vapi4k.utils.envvar.CoreEnvVars.defaultServerBaseUrl
-import com.vapi4k.utils.envvar.CoreEnvVars.defaultServerPath
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 

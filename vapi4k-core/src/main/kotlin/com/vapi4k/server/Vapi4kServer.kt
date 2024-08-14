@@ -18,6 +18,8 @@ package com.vapi4k.server
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
+import com.vapi4k.common.CoreEnvVars.isProduction
+import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
@@ -41,7 +43,6 @@ import com.vapi4k.server.ValidateApplication.validateToolInvokeResponse
 import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.MiscUtils.getBanner
-import com.vapi4k.utils.envvar.CoreEnvVars.isProduction
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
@@ -82,6 +83,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   createConfiguration = { Vapi4kConfigImpl() },
 ) {
   val callbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
+
+  loadCoreEnvVars()
 
   with(logger) {
     info { getBanner("banners/vapi4k-server.banner", logger) }
