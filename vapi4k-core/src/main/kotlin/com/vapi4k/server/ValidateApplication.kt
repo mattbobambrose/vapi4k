@@ -23,6 +23,7 @@ import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonUtils.toJsonArray
@@ -44,14 +45,18 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
 internal object ValidateApplication {
-  suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl) {
-    val appName = call.parameters["appName"].orEmpty()
-    val application = config.applications.firstOrNull { it.serverPathAsSegment == appName }
-    if (application.isNotNull())
-      processValidateRequest(config, application, appName)
-    else
-      call.respondText("Application for /$appName found", status = HttpStatusCode.NotFound)
-  }
+  suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl) =
+    runCatching {
+      val appName = call.parameters["appName"].orEmpty()
+      val application = config.applications.firstOrNull { it.serverPathAsSegment == appName }
+      if (application.isNotNull())
+        processValidateRequest(config, application, appName)
+      else
+        call.respondText("Application for /$appName found", status = HttpStatusCode.NotFound)
+    }.getOrElse {
+      logger.error(it) { "Error validating application" }
+      call.respondText(it.toErrorString(), status = HttpStatusCode.InternalServerError)
+    }
 
   suspend fun KtorCallContext.processValidateRequest(
     config: Vapi4kConfigImpl,
