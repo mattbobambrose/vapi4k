@@ -36,5 +36,6 @@ object CoreEnvVars {
 
   val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
   val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.removeSuffix("/") }
-  val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removePrefix("/") }
+  val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removePrefix("/").removeSuffix("/") }
+  val defaultServerBaseUrl: String by lazy { SERVER_BASE_URL.value.removeSuffix("/") }
 }

@@ -48,17 +48,18 @@ internal object ValidateApplication {
     val appName = call.parameters["appName"].orEmpty()
     val application = config.applications.firstOrNull { it.serverPathAsSegment == appName }
     if (application.isNotNull())
-      processValidateRequest(application, appName)
+      processValidateRequest(config, application, appName)
     else
       call.respondText("Application for /$appName found", status = HttpStatusCode.NotFound)
   }
 
   suspend fun KtorCallContext.processValidateRequest(
+    config: Vapi4kConfigImpl,
     application: Vapi4kApplicationImpl,
     appName: String,
   ) {
     val secret = call.request.queryParameters["secret"].orEmpty()
-    val resp = validateAssistantRequestPage(application, appName, secret)
+    val resp = validateAssistantRequestPage(config, application, appName, secret)
     call.respondText(resp, ContentType.Text.Html)
   }
 

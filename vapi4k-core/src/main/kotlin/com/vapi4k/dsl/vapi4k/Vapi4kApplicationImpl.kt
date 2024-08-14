@@ -29,7 +29,8 @@ import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
-import com.vapi4k.utils.envvar.CoreEnvVars
+import com.vapi4k.utils.envvar.CoreEnvVars.defaultServerBaseUrl
+import com.vapi4k.utils.envvar.CoreEnvVars.defaultServerPath
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
@@ -46,10 +47,12 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
   internal var eocrCacheRemovalEnabled = true
-  internal val serverPathAsSegment get() = serverPath.removePrefix("/")
+  internal val serverPathAsSegment get() = serverPath.removePrefix("/").removeSuffix("/")
 
-  override var serverPath = CoreEnvVars.defaultServerPath
+  override var serverPath = defaultServerPath
   override var serverSecret = ""
+
+  internal val fqServerPath get() = "$defaultServerBaseUrl/$serverPathAsSegment"
 
   internal fun containsFunctionInCache(
     sessionCacheId: SessionCacheId,

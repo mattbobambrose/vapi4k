@@ -30,6 +30,6 @@ open class ToolWitParametersImpl internal constructor(
     set(value) = run { toolDto.async = value }
 
   override fun parameters(block: Parameters.() -> Unit) {
-    ParametersImpl(toolDto).apply(block)
+    ParametersImpl(callerName, toolDto).apply(block)
   }
 }

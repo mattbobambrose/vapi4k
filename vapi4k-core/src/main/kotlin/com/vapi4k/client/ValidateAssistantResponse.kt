@@ -29,6 +29,7 @@ import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HtmlUtils.rawHtml
@@ -37,7 +38,6 @@ import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
-import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.envvar.CoreEnvVars.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.utils.envvar.CoreEnvVars.serverBaseUrl
@@ -95,6 +95,7 @@ object ValidateAssistantResponse {
   }
 
   fun validateAssistantRequestPage(
+    config: Vapi4kConfigImpl,
     application: Vapi4kApplicationImpl,
     appName: String,
     secret: String,
@@ -129,6 +130,8 @@ object ValidateAssistantResponse {
         }
         body {
           script { src = "/assets/prism.js" }
+
+          if (config.applications.size > 1) {
           div {
             style = "text-align: right; margin-top: 20px; margin-right: 15;"
             a {
@@ -136,11 +139,12 @@ object ValidateAssistantResponse {
               +"Home"
             }
           }
+          }
           h2 { +"Vapi4k Assistant Request Response" }
           if (status.value == 200) {
             div {
               style = "border: 1px solid black; padding: 10px; margin: 10px;"
-              h3 { +"Path: ${application.serverPath.ensureStartsWith("/")}" }
+              h3 { +"Vapi Server URL: ${application.fqServerPath}" }
               h3 { +"Status: $status" }
               pre {
                 code(classes = "language-json line-numbers match-braces") {
@@ -168,7 +172,7 @@ object ValidateAssistantResponse {
               }
             }
           } else {
-            h3 { +"Path: ${application.serverPath.ensureStartsWith("/")}" }
+            h3 { +"Vapi Server URL: ${application.fqServerPath}" }
             h3 { +"Status: $status" }
             if (responseBody.isNotEmpty()) {
               if (responseBody.length < 80) {
