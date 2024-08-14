@@ -32,7 +32,7 @@ internal object CacheResponses {
     call.respondRedirect(CACHES_PATH)
   }
 
-  suspend fun KtorCallContext.processCachesRequest(config: Vapi4kConfigImpl) {
+  suspend fun KtorCallContext.cachesRequest(config: Vapi4kConfigImpl) {
     call.respond(
       buildJsonObject {
         config.allApplications.forEach { application ->

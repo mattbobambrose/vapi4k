@@ -30,7 +30,6 @@ import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.enums.ServerRequestType
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -58,13 +57,13 @@ internal object AdminJobs {
     }
   }
 
-  fun startCallbackThread(callbackChannel: Channel<RequestResponseCallback>) {
+  fun startCallbackThread(config: Vapi4kConfigImpl) {
     thread {
       val config = AssistantImpl.config
       while (true) {
         runCatching {
           runBlocking {
-            for (callback in callbackChannel) {
+            for (callback in config.callbackChannel) {
               coroutineScope {
                 when (callback.type) {
                   REQUEST -> {
@@ -150,19 +149,19 @@ internal object AdminJobs {
   }
 
   suspend fun invokeRequestCallbacks(
+    config: Vapi4kConfigImpl,
     application: Vapi4kApplicationImpl,
-    channel: Channel<RequestResponseCallback>,
     requestType: ServerRequestType,
     request: JsonElement,
-  ) = channel.send(requestCallback(application, requestType, request))
+  ) = config.callbackChannel.send(requestCallback(application, requestType, request))
 
   suspend fun invokeResponseCallbacks(
+    config: Vapi4kConfigImpl,
     application: Vapi4kApplicationImpl,
-    channel: Channel<RequestResponseCallback>,
     requestType: ServerRequestType,
     response: () -> JsonElement,
     elapsed: Duration,
-  ) = channel.send(responseCallback(application, requestType, response, elapsed))
+  ) = config.callbackChannel.send(responseCallback(application, requestType, response, elapsed))
 
   data class RequestResponseCallback(
     val application: Vapi4kApplicationImpl,

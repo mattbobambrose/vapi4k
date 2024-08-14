@@ -21,8 +21,10 @@ import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.outboundApplication
+import com.vapi4k.server.AdminJobs.RequestResponseCallback
 import com.vapi4k.utils.enums.ServerRequestType
 import io.ktor.server.config.ApplicationConfig
+import kotlinx.coroutines.channels.Channel
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
@@ -35,6 +37,8 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   }
 
   internal lateinit var applicationConfig: ApplicationConfig
+  internal lateinit var callbackChannel: Channel<RequestResponseCallback>
+
   internal val globalAllRequests = mutableListOf<(RequestArgs)>()
   internal val globalPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val globalAllResponses = mutableListOf<ResponseArgs>()

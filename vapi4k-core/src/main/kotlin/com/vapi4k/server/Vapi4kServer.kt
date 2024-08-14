@@ -36,10 +36,10 @@ import com.vapi4k.server.AdminJobs.RequestResponseCallback
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
 import com.vapi4k.server.AssistantRequests.assistantRequests
+import com.vapi4k.server.CacheResponses.cachesRequest
 import com.vapi4k.server.CacheResponses.clearCaches
-import com.vapi4k.server.CacheResponses.processCachesRequest
 import com.vapi4k.server.ValidateApplication.validateApplication
-import com.vapi4k.server.ValidateApplication.validateToolInvokeResponse
+import com.vapi4k.server.ValidateApplication.validateToolInvokeRequest
 import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.MiscUtils.getBanner
@@ -85,7 +85,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",
   createConfiguration = { Vapi4kConfigImpl() },
 ) {
-  val callbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
 
   loadCoreEnvVars()
 
@@ -96,10 +95,11 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
   val config = AssistantImpl.config
   config.applicationConfig = environment?.config ?: error("No environment config found")
+  config.callbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
 
   logEnvVarValues { logger.info { it } }
 
-  startCallbackThread(callbackChannel)
+  startCallbackThread(config)
   startCacheCleaningThread(config)
 
   environment?.monitor?.apply {
@@ -140,7 +140,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
         route(CACHES_PATH) {
           installContentNegotiation()
-          get { processCachesRequest(config) }
+          get { cachesRequest(config) }
         }
         route(CLEAR_CACHES_PATH) {
           installContentNegotiation()
@@ -148,7 +148,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
         get(VALIDATE_PATH) { validateRootPage(config) }
         get("$VALIDATE_PATH/{appName}") { validateApplication(config) }
-        get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeResponse(config) }
+        get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeRequest(config) }
       }
 
       config.applications.forEach { application ->
@@ -156,7 +156,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           logger.info { "Adding POST serverPath endpoint: \"$parent\"" }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
-          post { assistantRequests(application, callbackChannel) }
+          post { assistantRequests(config, application) }
         }
       }
     }

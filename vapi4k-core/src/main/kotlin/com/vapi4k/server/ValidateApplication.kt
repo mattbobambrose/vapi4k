@@ -68,7 +68,7 @@ internal object ValidateApplication {
     call.respondText(resp, ContentType.Text.Html)
   }
 
-  suspend fun KtorCallContext.validateToolInvokeResponse(config: Vapi4kConfigImpl) =
+  suspend fun KtorCallContext.validateToolInvokeRequest(config: Vapi4kConfigImpl) =
     runCatching {
       val params = call.request.queryParameters
       val applicationId = params[APPLICATION_ID]?.toApplicationId() ?: error("No $APPLICATION_ID found")
