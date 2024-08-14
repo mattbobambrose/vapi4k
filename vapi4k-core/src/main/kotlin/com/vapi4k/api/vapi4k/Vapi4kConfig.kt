@@ -16,28 +16,10 @@
 
 package com.vapi4k.api.vapi4k
 
+import com.vapi4k.dsl.vapi4k.CommonCallbacks
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
-import com.vapi4k.utils.enums.ServerRequestType
-import kotlinx.serialization.json.JsonElement
-import kotlin.time.Duration
 
 @Vapi4KDslMarker
-interface Vapi4kConfig {
+interface Vapi4kConfig : CommonCallbacks {
   fun vapi4kApplication(block: Vapi4kApplication.() -> Unit): Vapi4kApplication
-
-  fun onAllRequests(block: suspend (request: JsonElement) -> Unit)
-
-  fun onRequest(
-    requestType: ServerRequestType,
-    vararg requestTypes: ServerRequestType,
-    block: suspend (request: JsonElement) -> Unit,
-  )
-
-  fun onAllResponses(block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit)
-
-  fun onResponse(
-    requestType: ServerRequestType,
-    vararg requestTypes: ServerRequestType,
-    block: suspend (requestType: ServerRequestType, request: JsonElement, elapsed: Duration) -> Unit,
-  )
 }
