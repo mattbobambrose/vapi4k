@@ -26,6 +26,9 @@ import com.vapi4k.dtos.squad.SquadDto
 import com.vapi4k.utils.AssistantCacheIdSource
 
 interface SquadProperties {
+  /**
+  This is the name of the squad.
+   */
   var name: String
 }
 

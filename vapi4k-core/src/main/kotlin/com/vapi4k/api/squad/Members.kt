@@ -18,7 +18,15 @@ package com.vapi4k.api.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
+/**
+<p>This is the list of assistants that make up the squad.
+<br>The call will start with the first assistant in the list.
+</p>
+ */
 @AssistantDslMarker
 interface Members {
+  /**
+  Adds a member to the squad.
+   */
   fun member(block: Member.() -> Unit)
 }

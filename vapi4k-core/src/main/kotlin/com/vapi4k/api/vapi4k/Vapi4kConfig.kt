@@ -21,5 +21,8 @@ import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 @Vapi4KDslMarker
 interface Vapi4kConfig : CommonCallbacks {
+  /**
+  Creates a context for the Vapi4k application.
+   */
   fun vapi4kApplication(block: Vapi4kApplication.() -> Unit): Vapi4kApplication
 }

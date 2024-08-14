@@ -21,7 +21,17 @@ import com.vapi4k.dsl.tools.ToolWithServer
 
 @AssistantDslMarker
 interface ToolWithParameters : ToolWithServer {
+  /**
+  <p>This determines if the tool is async.
+  <br>If async, the assistant will move forward without waiting for your server to respond. This is useful if you just want to trigger something on your server.
+  <br>If sync, the assistant will wait for your server to respond. This is useful if want assistant to respond with the result from your server.
+  <br>Defaults to synchronous (<code>false</code>).
+  </p>
+   */
   var async: Boolean
 
+  /**
+  Add a parameter to the tool.
+   */
   fun parameters(block: Parameters.() -> Unit)
 }

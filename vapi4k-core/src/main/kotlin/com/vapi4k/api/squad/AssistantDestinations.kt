@@ -19,7 +19,13 @@ package com.vapi4k.api.squad
 import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
+/**
+Possible assistants to transfer to from an assistant in a squad.
+ */
 @AssistantDslMarker
 interface AssistantDestinations {
+  /**
+  Adds a destination to the squad.
+   */
   fun destination(block: AssistantDestination.() -> Unit)
 }

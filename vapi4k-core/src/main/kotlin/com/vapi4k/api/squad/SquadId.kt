@@ -18,7 +18,13 @@ package com.vapi4k.api.squad
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
+/**
+This is the squad that will be used for the call. To use a transient squad, use `squad` instead.
+ */
 @AssistantDslMarker
 interface SquadId {
+  /**
+  The id of the existing squad to referred to from the dashboard
+   */
   var id: String
 }

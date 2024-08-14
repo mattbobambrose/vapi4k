@@ -19,11 +19,25 @@ package com.vapi4k.api.squad
 import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
+/**
+A member of the squad.
+ */
 @AssistantDslMarker
 interface Member {
+  /**
+  This is the assistant that will be used for the call. To use a transient assistant, use `assistant` instead.
+   */
   fun assistantId(block: AssistantId.() -> Unit): AssistantId
 
+  /**
+  This is the assistant that will be used for the call. To use an existing assistant, use `assistantId` instead.
+   */
   fun assistant(block: Assistant.() -> Unit): Assistant
 
+  /**
+  <p>These are the others assistants that this assistant can transfer to.
+  <br>If the assistant already has transfer call tool, these destinations are just appended to existing ones.
+  </p>
+   */
   fun destinations(block: AssistantDestinations.() -> Unit): AssistantDestinations
 }

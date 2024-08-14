@@ -19,7 +19,13 @@ package com.vapi4k.api.toolservice
 import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
+/**
+This is a condition that the tool call arguments must meet in order for this message to be triggered.
+ */
 @AssistantDslMarker
 interface RequestCompleteCondition {
+  /**
+  This is the content that the assistant says when this message is triggered.
+   */
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
 }

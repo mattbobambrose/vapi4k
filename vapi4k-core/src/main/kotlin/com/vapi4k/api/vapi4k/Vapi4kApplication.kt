@@ -24,10 +24,23 @@ import kotlinx.serialization.json.JsonElement
 
 @Vapi4KDslMarker
 interface Vapi4kApplication : CommonCallbacks {
+  /**
+  Defaults to "/vapi4k", but can be overriden with the environment variable DEFAULT_SERVER_PATH.
+   */
   var serverPath: String
+
+  /**
+  The server secret in Vapi is a security feature that allows you to authenticate requests sent from Vapi to your server. It will be sent with every request from Vapi to your server.
+   */
   var serverSecret: String
 
+  /**
+  Whenever an AssistantRequest is made, the contents of the onAssistantRequest{} block will be executed.
+   */
   fun onAssistantRequest(block: suspend AssistantResponse.(JsonElement) -> Unit)
 
+  /**
+  Whenever a TransferDestinationRequest is made, the contents of the onTransferDestinationRequest{} block will be executed.
+   */
   fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.(JsonElement) -> Unit)
 }

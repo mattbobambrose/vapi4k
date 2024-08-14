@@ -26,12 +26,47 @@ import com.vapi4k.dtos.tools.ToolMessageCondition
 
 @AssistantDslMarker
 interface BaseTool {
+  /**
+  <p>Adds a ToolMessageStart to the tool.
+  <br>This message is triggered when the tool call starts.
+  <br>This message is never triggered for async tools.
+  <br>If this message is not provided, one of the default filler messages "Hold on a sec", "One moment", "Just a sec", "Give me a moment" or "This'll just take a sec" will be used.
+  </p>
+   */
   fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart
 
+  /**
+  <p>Adds a ToolMessageComplete to the tool.
+  <br>This message is triggered when the tool call is complete.
+  <br>This message is triggered immediately without waiting for your server to respond for async tool calls.
+  <br>If this message is not provided, the model will be requested to respond.
+  <br>If this message is provided, only this message will be spoken and the model will not be requested to come up with a response. It's an exclusive OR.
+  </p>
+   */
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
 
+  /**
+  <p>Adds a ToolMessageFailed to the tool.
+  <br>This message is triggered when the tool call fails.
+  <br>This message is never triggered for async tool calls.
+  <br>If this message is not provided, the model will be requested to respond.
+  <br>If this message is provided, only this message will be spoken and the model will not be requested to come up with a response. It's an exclusive OR.
+  </p>
+   */
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed
 
+  /**
+  <p>Adds a ToolMessageDelayed to the tool.
+  This message is triggered when the tool call is delayed.
+
+  There are the two things that can trigger this message:
+  <ol>
+  <li>The user talks with the assistant while your server is processing the request. Default is "Sorry, a few more seconds."
+  <li>The server doesn't respond within timingMilliseconds.
+  <li>This message is never triggered for async tool calls.
+  </ol>
+  </p>
+   */
   fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed
 
   fun condition(

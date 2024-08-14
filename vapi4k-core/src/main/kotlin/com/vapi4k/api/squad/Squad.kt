@@ -20,9 +20,22 @@ import com.vapi4k.api.assistant.AssistantOverrides
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.squad.SquadProperties
 
+/**
+This is a squad that will be used for the call. To use an existing squad, use `squadId` instead.
+ */
 @AssistantDslMarker
 interface Squad : SquadProperties {
+  /**
+  <p>This is the list of assistants that make up the squad.
+  <br>The call will start with the first assistant in the list.
+  </p>
+   */
   fun members(block: Members.() -> Unit): Members
 
+  /**
+  <p>This can be used to override all the assistants' settings and provide values for their template variables.
+  <br>Both <code>membersOverrides</code> and <code>members[n].assistantOverrides</code> can be used together. First, <code>members[n].assistantOverrides</code> is applied. Then, <code>membersOverrides</code> is applied as a global override.
+  </p>
+   */
   fun memberOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }
