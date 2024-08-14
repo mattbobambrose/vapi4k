@@ -65,6 +65,8 @@ class EnvVar(
 
     private val envVars = mutableMapOf<String, EnvVar>()
 
+    fun String.isDefined() = System.getenv(this).orEmpty().isNotBlank()
+
     fun logEnvVarValues(block: (String) -> Unit) =
       envVars.values.filter { it.reportOnBoot }.sortedBy { it.name }.map { it.logReport }.forEach(block)
 

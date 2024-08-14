@@ -127,7 +127,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get("/") { call.respondRedirect(VALIDATE_PATH) }
 
         route(ENV_PATH) {
-          installContentNegotiation() {
+          installContentNegotiation {
             prettyPrint = true
           }
           get {

@@ -16,13 +16,16 @@
 
 package com.vapi4k.common
 
-import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.envvar.EnvVar
+import com.vapi4k.utils.envvar.EnvVar.Companion.isDefined
 
 object CoreEnvVars {
   val PORT = EnvVar("PORT", { System.getenv(name) ?: "8080" })
+  val HOST = EnvVar("HOST", { System.getenv(name) ?: "unknown" })
   private val IS_PRODUCTION = EnvVar("IS_PRODUCTION", { System.getenv(name) ?: "false" })
-  private val SERVER_BASE_URL = EnvVar("SERVER_BASE_URL", { System.getenv(name) ?: "http://localhost:8080" })
+  private val SERVER_BASE_URL = EnvVar("SERVER_BASE_URL", {
+    System.getenv(name) ?: (if ("PORT".isDefined()) "s" else "").let { suffix -> "http$suffix://localhost:$PORT" }
+  })
   private val DEFAULT_SERVER_PATH = EnvVar("DEFAULT_SERVER_PATH", { System.getenv(name) ?: "/vapi4k" })
 
   val REQUEST_VALIDATION_FILENAME =
@@ -40,11 +43,11 @@ object CoreEnvVars {
   val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
   val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removePrefix("/").removeSuffix("/") }
   val serverBaseUrl: String by lazy {
-    val herokuAppName = System.getenv("HEROKU_APP_NAME").orEmpty()
-    if (herokuAppName.isNotEmpty())
-      "https://$herokuAppName.herokuapp.com".also { logger.info { "Heroku app name: $herokuAppName" } }
-    else
-      SERVER_BASE_URL.value.removeSuffix("/")
+//    val herokuAppName = System.getenv("HEROKU_APP_NAME").orEmpty()
+//    if (herokuAppName.isNotEmpty())
+//      "https://$herokuAppName.herokuapp.com".also { logger.info { "Heroku app name: $herokuAppName" } }
+//    else
+    SERVER_BASE_URL.value.removeSuffix("/")
   }
 
   fun loadCoreEnvVars() = Unit

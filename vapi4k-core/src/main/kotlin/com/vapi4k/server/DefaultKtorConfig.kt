@@ -76,9 +76,11 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
 
 internal fun Route.installContentNegotiation(block: JsonBuilder.() -> Unit = {}) {
   install(ContentNegotiation) {
-    json(Json {
-      ignoreUnknownKeys = true
-      block()
-    })
+    json(
+      Json {
+        ignoreUnknownKeys = true
+        block()
+      },
+    )
   }
 }
