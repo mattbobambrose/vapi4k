@@ -34,6 +34,7 @@ object Constants {
 object Endpoints {
   const val PING_PATH = "/ping"
   const val VERSION_PATH = "/version"
+  const val ENV_PATH = "/env"
   const val METRICS_PATH = "/metrics"
   const val CACHES_PATH = "/caches"
   const val CLEAR_CACHES_PATH = "/clear-caches"

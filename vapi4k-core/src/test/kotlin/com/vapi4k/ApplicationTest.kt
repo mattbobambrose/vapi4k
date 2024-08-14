@@ -16,7 +16,7 @@
 
 package com.vapi4k
 
-import com.vapi4k.common.CoreEnvVars.DEFAULT_SERVER_PATH
+import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -45,7 +45,7 @@ class ApplicationTest {
         vapi4kApplication {
         }
       }
-    assertEquals(DEFAULT_SERVER_PATH.value.removePrefix("/"), application.serverPath)
+    assertEquals(defaultServerPath.removePrefix("/"), application.serverPath)
     assertEquals("", application.serverSecret)
   }
 

@@ -22,6 +22,7 @@ import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
+import com.vapi4k.common.Endpoints.ENV_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
@@ -37,14 +38,15 @@ import com.vapi4k.server.AdminJobs.startCallbackThread
 import com.vapi4k.server.AssistantRequests.assistantRequests
 import com.vapi4k.server.CacheResponses.clearCaches
 import com.vapi4k.server.CacheResponses.processCachesRequest
-import com.vapi4k.server.CacheResponses.versionResponse
 import com.vapi4k.server.ValidateApplication.validateApplication
 import com.vapi4k.server.ValidateApplication.validateToolInvokeResponse
 import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.MiscUtils.getBanner
+import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationPlugin
@@ -66,6 +68,7 @@ import io.ktor.util.pipeline.PipelineContext
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.coroutines.channels.Channel
+import kotlinx.serialization.json.JsonObject
 
 @Version(
   version = BuildConfig.VERSION,
@@ -115,10 +118,22 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       staticResources("/assets", "static")
 
       get(PING_PATH) { call.respondText("pong") }
-      get(VERSION_PATH) { versionResponse() }
+
+      get(VERSION_PATH) {
+        call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
+      }
 
       if (!isProduction) {
         get("/") { call.respondRedirect(VALIDATE_PATH) }
+
+        route(ENV_PATH) {
+          installContentNegotiation() {
+            prettyPrint = true
+          }
+          get {
+            call.respond<JsonObject>(jsonEnvVarValues())
+          }
+        }
         route(METRICS_PATH) {
           installContentNegotiation()
           get { call.respond(appMicrometerRegistry.scrape()) }

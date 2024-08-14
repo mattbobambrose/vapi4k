@@ -18,7 +18,7 @@ package com.vapi4k
 
 import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.api.model.enums.GroqModelType
-import com.vapi4k.common.CoreEnvVars.DEFAULT_SERVER_PATH
+import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
@@ -108,7 +108,7 @@ class ServerTest {
       if (i == 6) {
         assertEquals(
           0,
-          jsonElement["${DEFAULT_SERVER_PATH.value.removePrefix("/")}.toolCallCacheSize"].intValue,
+          jsonElement["${defaultServerPath.removePrefix("/")}.toolCallCacheSize"].intValue,
         )
       }
     }
@@ -132,7 +132,7 @@ class ServerTest {
       if (i == 2) {
         assertEquals(
           1,
-          jsonElement["${DEFAULT_SERVER_PATH.value.removePrefix("/")}.toolCallCache"].keys.size,
+          jsonElement["${defaultServerPath.removePrefix("/")}.toolCallCache"].keys.size,
         )
       }
     }

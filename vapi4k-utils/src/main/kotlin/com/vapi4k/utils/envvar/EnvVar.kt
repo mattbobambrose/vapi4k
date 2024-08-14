@@ -17,6 +17,8 @@
 package com.vapi4k.utils.envvar
 
 import com.vapi4k.utils.common.Utils.isNull
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 
 class EnvVar(
   val name: String,
@@ -26,7 +28,7 @@ class EnvVar(
   val reportOnBoot: Boolean = true,
 ) {
   init {
-    evars[name] = this
+    envVars[name] = this
   }
 
   val value: String by lazy { src().toString() }
@@ -61,9 +63,17 @@ class EnvVar(
       System.setProperty("kotlin-logging.throwOnMessageError", "true")
     }
 
-    val evars = mutableMapOf<String, EnvVar>()
+    private val envVars = mutableMapOf<String, EnvVar>()
 
     fun logEnvVarValues(block: (String) -> Unit) =
-      evars.values.filter { it.reportOnBoot }.sortedBy { it.name }.map { it.logReport }.forEach(block)
+      envVars.values.filter { it.reportOnBoot }.sortedBy { it.name }.map { it.logReport }.forEach(block)
+
+    fun jsonEnvVarValues() =
+      buildJsonObject {
+        envVars.values
+          .filter { it.reportOnBoot }
+          .sortedBy { it.name }
+          .forEach { put(it.name, JsonPrimitive(it.logValue)) }
+      }
   }
 }

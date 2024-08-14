@@ -31,6 +31,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonBuilder
 import org.slf4j.event.Level
 
 fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry) {
@@ -73,8 +74,11 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
 //  }
 }
 
-internal fun Route.installContentNegotiation() {
+internal fun Route.installContentNegotiation(block: JsonBuilder.() -> Unit = {}) {
   install(ContentNegotiation) {
-    json(Json { ignoreUnknownKeys = true })
+    json(Json {
+      ignoreUnknownKeys = true
+      block()
+    })
   }
 }

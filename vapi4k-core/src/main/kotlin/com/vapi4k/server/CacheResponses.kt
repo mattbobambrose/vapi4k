@@ -17,27 +17,22 @@
 package com.vapi4k.server
 
 import com.vapi4k.common.Endpoints.CACHES_PATH
-import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import io.ktor.http.ContentType
-import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
-import io.ktor.server.response.respondText
-import io.ktor.util.pipeline.PipelineContext
 import kotlinx.serialization.json.buildJsonObject
 
 internal object CacheResponses {
-  suspend fun PipelineContext<Unit, ApplicationCall>.clearCaches(config: Vapi4kConfigImpl) {
+  suspend fun KtorCallContext.clearCaches(config: Vapi4kConfigImpl) {
     config.allApplications.forEach { application ->
       application.serviceToolCache.clearToolCache()
     }
     call.respondRedirect(CACHES_PATH)
   }
 
-  suspend fun PipelineContext<Unit, ApplicationCall>.processCachesRequest(config: Vapi4kConfigImpl) {
+  suspend fun KtorCallContext.processCachesRequest(config: Vapi4kConfigImpl) {
     call.respond(
       buildJsonObject {
         config.allApplications.forEach { application ->
@@ -48,9 +43,5 @@ internal object CacheResponses {
         }
       },
     )
-  }
-
-  suspend fun KtorCallContext.versionResponse() {
-    call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
   }
 }
