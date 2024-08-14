@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.api.vapi4k
+package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.vapi4k.ServerProperties
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker

@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.api.vapi4k.Server
+import com.vapi4k.api.tools.Server
 import com.vapi4k.dtos.tools.ServerDto
 
 interface ServerProperties {

@@ -18,9 +18,9 @@ package com.vapi4k.utils.envvar
 
 object CoreEnvVars {
   val PORT = EnvVar("PORT", { System.getenv(name) ?: "8080" })
+  val IS_PRODUCTION = EnvVar("IS_PRODUCTION", { System.getenv(name) ?: "false" })
   val SERVER_BASE_URL = EnvVar("SERVER_BASE_URL", { System.getenv(name) ?: "http://localhost:8080" })
   val DEFAULT_SERVER_PATH = EnvVar("DEFAULT_SERVER_PATH", { System.getenv(name) ?: "/vapi4k" })
-  val IS_PRODUCTION = EnvVar("IS_PRODUCTION", { System.getenv(name) ?: "false" })
 
   val REQUEST_VALIDATION_FILENAME =
     EnvVar(
@@ -29,8 +29,10 @@ object CoreEnvVars {
       reportOnBoot = false,
     )
 
-  val TOOL_CACHE_CLEAN_PAUSE_MINS = EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", { System.getenv(name) ?: "30" })
-  val TOOL_CACHE_MAX_AGE_MINS = EnvVar("TOOL_CACHE_MAX_AGE_MINS", { System.getenv(name) ?: "60" })
+  val TOOL_CACHE_CLEAN_PAUSE_MINS =
+    EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", { System.getenv(name) ?: "30" }, reportOnBoot = false)
+  val TOOL_CACHE_MAX_AGE_MINS =
+    EnvVar("TOOL_CACHE_MAX_AGE_MINS", { System.getenv(name) ?: "60" }, reportOnBoot = false)
 
   val isProduction: Boolean by lazy { IS_PRODUCTION.toBoolean() }
   val serverBaseUrl: String by lazy { SERVER_BASE_URL.value.removeSuffix("/") }
