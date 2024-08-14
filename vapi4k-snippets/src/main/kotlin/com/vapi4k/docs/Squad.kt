@@ -7,7 +7,7 @@ import kotlinx.serialization.json.JsonElement
 object Squad {
   fun AssistantResponse.getSquad(request: JsonElement) =
     squad {
-      name = "Squad Name3"
+      name = "Squad Name-31"
       members {
         member {
           assistantId {
