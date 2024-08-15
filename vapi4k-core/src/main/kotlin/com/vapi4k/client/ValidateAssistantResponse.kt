@@ -156,12 +156,12 @@ object ValidateAssistantResponse {
 
             with(responseBody.toJsonElement()) {
               when {
-                isAssistantResponse -> assistantRequestToolsBody(application, this, sessionCacheId)
+                isAssistantResponse -> assistantRequestToolsBody(application, this, sessionCacheId, false)
                 isSquadResponse -> {
                   val assistants = jsonElementList("messageResponse.squad.members")
                   assistants.forEachIndexed { i, assistant ->
                     h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
-                    assistantRequestToolsBody(application, assistant, sessionCacheId)
+                    assistantRequestToolsBody(application, assistant, sessionCacheId, true)
                   }
                 }
                 // TODO - Add support for assistantId and squadId responses
@@ -202,12 +202,14 @@ object ValidateAssistantResponse {
     application: Vapi4kApplicationImpl,
     jsonElement: JsonElement,
     sessionCacheId: SessionCacheId,
+    isSquad: Boolean,
   ) {
     logger.debug { jsonElement.toJsonString() }
+    val key = if (isSquad) "assistant.model" else "messageResponse.assistant.model"
     val funcNames =
-      if (jsonElement["assistant.model"].containsKey("tools"))
+      if (jsonElement[key].containsKey("tools"))
         jsonElement
-          .jsonElementList("assistant.model.tools")
+          .jsonElementList(key + ".tools")
           .mapNotNull { if (!it.containsKey("function.name")) null else it.stringValue("function.name") }
       else
         emptyList()
@@ -237,28 +239,28 @@ object ValidateAssistantResponse {
                   functionDetails.params
                     .filter { it.second.asKClass() != JsonElement::class }
                     .forEach { functionDetail ->
-                    tr {
-                      td { +"${functionDetail.first}:" }
-                      td {
-                        style = "width: 325px;"
-                        input {
+                      tr {
+                        td { +"${functionDetail.first}:" }
+                        td {
                           style = "width: 325px;"
-                          type =
-                            when (functionDetail.second.asKClass()) {
-                              String::class -> InputType.text
-                              Int::class -> InputType.number
-                              Double::class -> InputType.number
-                              Boolean::class -> InputType.checkBox
-                              else -> InputType.text
-                            }
-                          name = functionDetail.first
+                          input {
+                            style = "width: 325px;"
+                            type =
+                              when (functionDetail.second.asKClass()) {
+                                String::class -> InputType.text
+                                Int::class -> InputType.number
+                                Double::class -> InputType.number
+                                Boolean::class -> InputType.checkBox
+                                else -> InputType.text
+                              }
+                            name = functionDetail.first
+                          }
+                        }
+                        td {
+                          +"[${functionDetail.second.paramAnnotationWithDefault}]"
                         }
                       }
-                      td {
-                        +"[${functionDetail.second.paramAnnotationWithDefault}]"
-                      }
                     }
-                  }
                   addInvokeToolOption()
                 }
               }
