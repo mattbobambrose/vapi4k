@@ -23,7 +23,7 @@ jobs:
       - name: Save artifact with build results
         uses: actions/upload-artifact@v4
         with:
-          name: kdocs
+          name: docs
           path: |
             artifacts/${{ env.ARTIFACT }}
           retention-days: 7
@@ -40,7 +40,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: kdocs
+          name: docs
 
       - name: Deploy to GitHub Pages
         id: deployment
