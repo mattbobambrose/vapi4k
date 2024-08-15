@@ -234,7 +234,9 @@ object ValidateAssistantResponse {
 
               table {
                 tbody {
-                  functionDetails.params.forEach { functionDetail ->
+                  functionDetails.params
+                    .filter { it.second.asKClass() != JsonElement::class }
+                    .forEach { functionDetail ->
                     tr {
                       td { +"${functionDetail.first}:" }
                       td {

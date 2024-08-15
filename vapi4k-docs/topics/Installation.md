@@ -3,13 +3,6 @@
 <!--Writerside adds this topic when you create a new documentation project.
 You can use it as a sandbox to play with Writerside features, and remove it from the TOC when you don't need it anymore.-->
 
-## Add new topics
-
-You can create empty topics, or choose a template for different types of content that contains some boilerplate
-structure to help you get started:
-
-![Create new topic options](new_topic_options.png){ width=290 }{border-effect=line}
-
 ## Write content
 
 %product% supports two types of markup: Markdown and XML.
@@ -77,7 +70,7 @@ You are welcome to join our
 Before you do, please read our [Code of conduct](https://plugins.jetbrains.com/plugin/20158-writerside/docs/writerside-code-of-conduct.html).
 We assume that you’ve read and acknowledged it before joining.
 
-You can also always email us at [writerside@jetbrains.com](mailto:writerside@jetbrains.com).
+You can also always email us at [support@vapi4k.com](mailto:writerside@jetbrains.com).
 
 <seealso>
     <category ref="wrs">
