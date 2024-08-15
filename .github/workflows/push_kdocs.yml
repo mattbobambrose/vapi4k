@@ -10,8 +10,9 @@ permissions:
   pages: write
   id-token: write
 
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,6 +21,13 @@ jobs:
       - name: Build kdocs
         run: ./gradlew dokkaHtml
 
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Requires build job results
+    needs: build
+    runs-on: ubuntu-latest
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
