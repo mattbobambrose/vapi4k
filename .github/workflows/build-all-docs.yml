@@ -77,7 +77,6 @@ jobs:
       - name: Mpve kdocs into wsdocs
         run: mv ./html wsdocs/
 
-
       - name: Setup Pages
         uses: actions/configure-pages@v4.0.0
 
