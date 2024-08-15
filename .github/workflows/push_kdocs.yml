@@ -44,10 +44,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4.0.0
 
-      #      - name: Upload artifact
-      #        uses: actions/upload-pages-artifact@v3.0.1
-      #        with:
-      #          path: dir
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: html
 
       - name: Deploy to GitHub Pages
         id: deployment
