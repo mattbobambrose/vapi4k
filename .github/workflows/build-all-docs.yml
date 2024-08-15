@@ -66,13 +66,17 @@ jobs:
         with:
           name: docs
 
+      - name: Unzip artifact
+        run: unzip -O UTF-8 -qq ${{ env.ARTIFACT }} -d wsdocs
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: kdocs
 
-      - name: Unzip artifact
-        run: unzip -O UTF-8 -qq ${{ env.ARTIFACT }} -d dir
+      - name: Mpve kdocs into wsdocs
+        run: mv ./html wsdocs/
+
 
       - name: Setup Pages
         uses: actions/configure-pages@v4.0.0
@@ -80,12 +84,12 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
-          path: dir
+          path: wsdocs
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3.0.1
-        with:
-          path: .
+      #      - name: Upload artifact
+      #        uses: actions/upload-pages-artifact@v3.0.1
+      #        with:
+      #          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
