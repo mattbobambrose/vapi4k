@@ -6,6 +6,9 @@
 
 ## Something anything
 
+[//]: # (<a href="static/test.html"> Click herer </a>)
+
+
 <chapter title="Example" id="some_chapter" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/com/vapi4k/docs/Squad.kt" include-lines="9-32"/>
 </chapter>
