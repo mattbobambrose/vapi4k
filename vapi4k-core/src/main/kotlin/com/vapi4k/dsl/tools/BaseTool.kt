@@ -27,7 +27,7 @@ import com.vapi4k.dtos.tools.ToolMessageCondition
 @AssistantDslMarker
 interface BaseTool {
   /**
-  <p>Adds a ToolMessageStart to the tool.
+  <p>Adds a ToolMessageStart to the messages in the tool.
   <br>This message is triggered when the tool call starts.
   <br>This message is never triggered for async tools.
   <br>If this message is not provided, one of the default filler messages "Hold on a sec", "One moment", "Just a sec", "Give me a moment" or "This'll just take a sec" will be used.
@@ -36,7 +36,7 @@ interface BaseTool {
   fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart
 
   /**
-  <p>Adds a ToolMessageComplete to the tool.
+  <p>Adds a ToolMessageComplete to the messages in the tool.
   <br>This message is triggered when the tool call is complete.
   <br>This message is triggered immediately without waiting for your server to respond for async tool calls.
   <br>If this message is not provided, the model will be requested to respond.
@@ -46,7 +46,7 @@ interface BaseTool {
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
 
   /**
-  <p>Adds a ToolMessageFailed to the tool.
+  <p>Adds a ToolMessageFailed to the messages in the tool.
   <br>This message is triggered when the tool call fails.
   <br>This message is never triggered for async tool calls.
   <br>If this message is not provided, the model will be requested to respond.
@@ -56,10 +56,9 @@ interface BaseTool {
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed
 
   /**
-  <p>Adds a ToolMessageDelayed to the tool.
-  This message is triggered when the tool call is delayed.
-
-  There are the two things that can trigger this message:
+  <p>Adds a ToolMessageDelayed to the messages in the tool.
+  <br>This message is triggered when the tool call is delayed.
+  <br>There are the two things that can trigger this message:
   <ol>
   <li>The user talks with the assistant while your server is processing the request. Default is "Sorry, a few more seconds."
   <li>The server doesn't respond within timingMilliseconds.
@@ -69,6 +68,9 @@ interface BaseTool {
    */
   fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed
 
+  /**
+  Adds a ToolCondition to the optional array of conditions that the tool call arguments must meet in order for this message to be triggered.
+   */
   fun condition(
     requiredCondition: ToolMessageCondition,
     vararg additionalConditions: ToolMessageCondition,

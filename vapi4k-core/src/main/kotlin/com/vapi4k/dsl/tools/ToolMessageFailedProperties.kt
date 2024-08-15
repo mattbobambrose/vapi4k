@@ -17,6 +17,13 @@
 package com.vapi4k.dsl.tools
 
 interface ToolMessageFailedProperties {
+  /**
+  This is an optional boolean that if true, the call will end after the message is spoken. Default is false.
+   */
   var endCallAfterSpokenEnabled: Boolean?
+
+  /**
+  This is the content that the assistant says when this message is triggered.
+   */
   var content: String
 }

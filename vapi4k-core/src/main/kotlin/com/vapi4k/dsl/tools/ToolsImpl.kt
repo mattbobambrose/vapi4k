@@ -16,12 +16,15 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.api.tools.DtmfTool
+import com.vapi4k.api.tools.EndCallTool
 import com.vapi4k.api.tools.ExternalTool
+import com.vapi4k.api.tools.GhlTool
+import com.vapi4k.api.tools.MakeTool
 import com.vapi4k.api.tools.ManualTool
-import com.vapi4k.api.tools.ToolWithMetaData
-import com.vapi4k.api.tools.ToolWithParameters
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.api.tools.TransferTool
+import com.vapi4k.api.tools.VoiceMailTool
 import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
@@ -62,27 +65,27 @@ data class ToolsImpl internal constructor(
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
   }
 
-  override fun dtmfTool(block: ToolWithParameters.() -> Unit) {
+  override fun dtmfTool(block: DtmfTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.DTMF).also { model.toolDtos += it }
     ToolWitParametersImpl("dtmfTool", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun endCallTool(block: ToolWithParameters.() -> Unit) {
+  override fun endCallTool(block: EndCallTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.END_CALL).also { model.toolDtos += it }
     ToolWitParametersImpl("endCallTool", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun voiceMailTool(block: ToolWithParameters.() -> Unit) {
+  override fun voiceMailTool(block: VoiceMailTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.VOICEMAIL).also { model.toolDtos += it }
     ToolWitParametersImpl("voiceMailTool", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun ghlTool(block: ToolWithMetaData.() -> Unit) {
+  override fun ghlTool(block: GhlTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.GHL).also { model.toolDtos += it }
     ToolWithMetaDataImpl("ghlTool", toolDto).apply(block).checkIfServerCalled()
   }
 
-  override fun makeTool(block: ToolWithMetaData.() -> Unit) {
+  override fun makeTool(block: MakeTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.MAKE).also { model.toolDtos += it }
     ToolWithMetaDataImpl("makeTool", toolDto).apply(block).checkIfServerCalled()
   }

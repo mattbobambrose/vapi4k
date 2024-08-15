@@ -24,9 +24,18 @@ import com.vapi4k.dsl.tools.ToolWithServer
 
 @AssistantDslMarker
 interface TransferTool : ToolWithServer {
+  /**
+  Transfers the call to an assistant.
+   */
   fun assistantDestination(block: AssistantDestination.() -> Unit)
 
+  /**
+  Transfers the call to a number.
+   */
   fun numberDestination(block: NumberDestination.() -> Unit)
 
+  /**
+  Transfers the call to a sip.
+   */
   fun sipDestination(block: SipDestination.() -> Unit)
 }

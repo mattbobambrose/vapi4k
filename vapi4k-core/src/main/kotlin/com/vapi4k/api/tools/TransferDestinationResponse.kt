@@ -19,13 +19,31 @@ package com.vapi4k.api.tools
 import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
+import com.vapi4k.api.destination.StepDestination
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
+/**
+This is the destination you'd like the call to be transferred to.
+ */
 @AssistantDslMarker
 interface TransferDestinationResponse {
+  /**
+  Transfers the call to an assistant.
+   */
   fun assistantDestination(block: AssistantDestination.() -> Unit)
 
+  /**
+  Transfers the call to a number.
+   */
   fun numberDestination(block: NumberDestination.() -> Unit)
 
+  /**
+  Transfers the call to a sip.
+   */
   fun sipDestination(block: SipDestination.() -> Unit)
+
+  /**
+  Transfers the call to a step.
+   */
+  fun stepDestination(block: StepDestination.() -> Unit)
 }

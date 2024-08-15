@@ -14,12 +14,10 @@
  *
  */
 
-package com.vapi4k.api.tools
+package com.vapi4k.dsl.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.tools.ToolWithServer
+import com.vapi4k.api.tools.Parameters
 
-@AssistantDslMarker
 interface ToolWithParameters : ToolWithServer {
   /**
   <p>This determines if the tool is async.
@@ -31,7 +29,10 @@ interface ToolWithParameters : ToolWithServer {
   var async: Boolean
 
   /**
-  Add a parameter to the tool.
+  <p>These are the parameters the functions accepts, described as a JSON Schema object.
+  <br>See the <a href="https://platform.openai.com/docs/guides/function-calling" target="_blank">OpenAI guide</a> for examples, and the <a href="https://json-schema.org/understanding-json-schema" target="_blank">JSON Schema reference</a> for documentation about the format.
+  <br>Omitting parameters defines a function with an empty parameter list.
+  </p>
    */
   fun parameters(block: Parameters.() -> Unit)
 }

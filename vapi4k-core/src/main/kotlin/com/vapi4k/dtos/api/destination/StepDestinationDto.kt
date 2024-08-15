@@ -14,20 +14,17 @@
  *
  */
 
-package com.vapi4k.api.tools
+package com.vapi4k.dtos.api.destination
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.tools.ToolMessageDelayedProperties
+import com.vapi4k.api.destination.StepDestination
+import com.vapi4k.api.destination.enums.DestinationType
+import kotlinx.serialization.EncodeDefault
 
-/**
-<p>This message is triggered when the tool call is delayed.
-<brThere are the two things that can trigger this message:
-<ol>
-<li>The user talks with the assistant while your server is processing the request. Default is "Sorry, a few more seconds."
-<li>The server doesn't respond within timingMilliseconds.
-<li>This message is never triggered for async tool calls.
-</ol>
-</p>
- */
-@AssistantDslMarker
-interface ToolMessageDelayed : ToolMessageDelayedProperties
+class StepDestinationDto(
+  override var stepName: String = "",
+) : AbstractDestinationDto(),
+  CommonDestinationDto,
+  StepDestination {
+  @EncodeDefault
+  val type: DestinationType = DestinationType.NUMBER
+}

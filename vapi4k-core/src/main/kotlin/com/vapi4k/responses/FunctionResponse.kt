@@ -42,8 +42,8 @@ class FunctionResponse(
             .getFunction(funcName)
             .invokeToolMethod(
               isTool = false,
-              args = args,
               request = request,
+              args = args,
               messageDtos = mutableListOf(),
               successAction = { result -> response.result = result },
               errorAction = { result -> response.result = "Error invoking function" },

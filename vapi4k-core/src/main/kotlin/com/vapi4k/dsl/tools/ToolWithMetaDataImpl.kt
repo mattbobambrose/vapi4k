@@ -16,7 +16,8 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.api.tools.ToolWithMetaData
+import com.vapi4k.api.tools.GhlTool
+import com.vapi4k.api.tools.MakeTool
 import com.vapi4k.dtos.tools.ToolDto
 
 interface ToolWithMetaDataProperties {
@@ -28,4 +29,6 @@ class ToolWithMetaDataImpl internal constructor(
   val dto: ToolDto,
 ) : ToolWithServerImpl(callerName, dto),
   ToolWithMetaDataProperties by dto,
-  ToolWithMetaData
+  ToolWithMetaData,
+  GhlTool,
+  MakeTool

@@ -22,25 +22,37 @@ import kotlin.reflect.KFunction
 
 @AssistantDslMarker
 interface Tools {
+  /**
+  Uses kotlin methods for implementing tool actions.
+   */
   fun serviceTool(
     obj: Any,
     vararg functions: KFunction<*>,
     block: BaseTool.() -> Unit = {},
   )
 
+  /**
+  The tool action is defined in the block with the onInvoke{} function.
+   */
   fun manualTool(block: ManualTool.() -> Unit)
 
+  /**
+  Defines a tool implemented on a remote server.
+   */
   fun externalTool(block: ExternalTool.() -> Unit)
 
-  fun dtmfTool(block: ToolWithParameters.() -> Unit)
+  fun dtmfTool(block: DtmfTool.() -> Unit)
 
-  fun endCallTool(block: ToolWithParameters.() -> Unit)
+  fun endCallTool(block: EndCallTool.() -> Unit)
 
-  fun voiceMailTool(block: ToolWithParameters.() -> Unit)
+  fun voiceMailTool(block: VoiceMailTool.() -> Unit)
 
-  fun ghlTool(block: ToolWithMetaData.() -> Unit)
+  fun ghlTool(block: GhlTool.() -> Unit)
 
-  fun makeTool(block: ToolWithMetaData.() -> Unit)
+  fun makeTool(block: MakeTool.() -> Unit)
 
+  /**
+  Transfers the call to another destination.
+   */
   fun transferTool(block: TransferTool.() -> Unit = {})
 }

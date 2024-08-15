@@ -22,7 +22,7 @@ object CoreEnvVars {
   val PORT = EnvVar("PORT", { System.getenv(name) ?: "8080" })
   val HOST = EnvVar("HOST", { System.getenv(name) ?: "unknown" })
   private val IS_PRODUCTION = EnvVar("IS_PRODUCTION", { System.getenv(name) ?: "false" })
-  private val SERVER_BASE_URL = EnvVar("SERVER_BASE_URL", { System.getenv(name) ?: "http://localhost:$8080" })
+  private val SERVER_BASE_URL = EnvVar("SERVER_BASE_URL", { System.getenv(name) ?: "http://localhost:8080" })
   private val DEFAULT_SERVER_PATH = EnvVar("DEFAULT_SERVER_PATH", { System.getenv(name) ?: "/vapi4k" })
 
   val REQUEST_VALIDATION_FILENAME =

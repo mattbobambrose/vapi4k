@@ -18,13 +18,28 @@ package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 
+/**
+This is a condition that the tool call arguments must meet in order for a message to be triggered.
+ */
 @AssistantDslMarker
 interface ToolCondition {
+  /**
+  Creates a request start message and adds it to the messages in the tool.
+   */
   fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart
 
+  /**
+  Creates a request complete message and adds it to the messages in the tool.
+   */
   fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete
 
+  /**
+  Creates a request failed message and adds it to the messages in the tool.
+   */
   fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed
 
+  /**
+  Creates a request delayed message and adds it to the messages in the tool.
+   */
   fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed
 }

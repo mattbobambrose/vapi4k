@@ -21,5 +21,11 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 
 @AssistantDslMarker
 interface ToolWithServer : BaseTool {
+  /**
+  <p>This is the server that will be hit when this tool is requested by the model.
+  <br>All requests will be sent with the call object among other things. You can find more details in the Server URL documentation.
+  <br>his overrides the serverUrl set on the org and the phoneNumber. Order of precedence: highest tool.server.url, then assistant.serverUrl, then phoneNumber.serverUrl, then org.serverUrl.
+  </p>
+   */
   fun server(block: Server.() -> Unit): Server
 }

@@ -24,12 +24,15 @@ import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
+import kotlinx.serialization.json.JsonElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
 internal object FunctionUtils {
   internal val allowedParamTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
+  internal val allowedToolParamTypes =
+    setOf(String::class, Int::class, Double::class, Boolean::class, JsonElement::class)
   private val allowedReturnTypes = setOf(String::class, Int::class, Double::class, Boolean::class, Unit::class)
   private val tcName by lazy { ToolCall::class.simpleName.orEmpty() }
 
@@ -79,11 +82,11 @@ internal object FunctionUtils {
         .filter { it.kind == KParameter.Kind.VALUE }
         .forEach { param ->
           val kclass = param.asKClass()
-          if (kclass !in allowedParamTypes) {
+          if (kclass !in allowedToolParamTypes) {
             val fqName = FunctionDetails(obj, function).fqName
             val simpleName = kclass.simpleName
             error(
-              "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, Double and Boolean",
+              "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, Double, Boolean, and JsonElement",
             )
           }
 

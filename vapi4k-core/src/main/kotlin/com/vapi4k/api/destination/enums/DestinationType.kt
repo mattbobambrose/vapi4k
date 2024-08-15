@@ -31,6 +31,7 @@ enum class DestinationType(
   ASSISTANT("assistant"),
   NUMBER("number"),
   SIP("sip"),
+  STEP("step"),
 }
 
 private object DestinationTypeSerializer : KSerializer<DestinationType> {

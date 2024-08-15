@@ -158,7 +158,7 @@ object ValidateAssistantResponse {
               when {
                 isAssistantResponse -> assistantRequestToolsBody(application, this, sessionCacheId)
                 isSquadResponse -> {
-                  val assistants = jsonElementList("squad.members")
+                  val assistants = jsonElementList("messageResponse.squad.members")
                   assistants.forEachIndexed { i, assistant ->
                     h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
                     assistantRequestToolsBody(application, assistant, sessionCacheId)
@@ -205,9 +205,9 @@ object ValidateAssistantResponse {
   ) {
     logger.debug { jsonElement.toJsonString() }
     val funcNames =
-      if (jsonElement["messageResponse.assistant.model"].containsKey("tools"))
+      if (jsonElement["assistant.model"].containsKey("tools"))
         jsonElement
-          .jsonElementList("messageResponse.assistant.model.tools")
+          .jsonElementList("assistant.model.tools")
           .mapNotNull { if (!it.containsKey("function.name")) null else it.stringValue("function.name") }
       else
         emptyList()

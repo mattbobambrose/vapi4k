@@ -19,10 +19,28 @@ package com.vapi4k.api.tools
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import kotlin.reflect.KClass
 
+/**
+This is a parameter that the function accepts.
+ */
 @AssistantDslMarker
 interface Parameter {
+  /**
+  This is the name of the parameter
+   */
   var name: String
+
+  /**
+  This is the description to help the model understand what it needs to output.
+   */
   var description: String
+
+  /**
+  This is the type of the parameter.
+   */
   var type: KClass<*>
+
+  /**
+  This determines if the parameter is required or not.
+   */
   var required: Boolean
 }

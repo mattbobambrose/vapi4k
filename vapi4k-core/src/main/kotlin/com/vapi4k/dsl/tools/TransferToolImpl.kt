@@ -19,14 +19,17 @@ package com.vapi4k.dsl.tools
 import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
+import com.vapi4k.api.destination.StepDestination
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.dsl.destination.AssistantDestinationImpl
 import com.vapi4k.dsl.destination.NumberDestinationImpl
 import com.vapi4k.dsl.destination.SipDestinationImpl
+import com.vapi4k.dsl.destination.StepDestinationImpl
 import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
+import com.vapi4k.dtos.api.destination.StepDestinationDto
 import com.vapi4k.dtos.tools.ToolDto
 
 class TransferToolImpl internal constructor(
@@ -48,5 +51,10 @@ class TransferToolImpl internal constructor(
   override fun sipDestination(block: SipDestination.() -> Unit) {
     val sipDto = SipDestinationDto().also { dto.destinations += it }
     SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
+  }
+
+  override fun stepDestination(block: StepDestination.() -> Unit) {
+    val stepDto = StepDestinationDto().also { dto.destinations += it }
+    StepDestinationImpl(stepDto).apply(block).checkForRequiredFields()
   }
 }

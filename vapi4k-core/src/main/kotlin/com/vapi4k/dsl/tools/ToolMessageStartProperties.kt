@@ -17,5 +17,8 @@
 package com.vapi4k.dsl.tools
 
 interface ToolMessageStartProperties {
+  /**
+  This is the content that the assistant says when this message is triggered.
+   */
   var content: String
 }

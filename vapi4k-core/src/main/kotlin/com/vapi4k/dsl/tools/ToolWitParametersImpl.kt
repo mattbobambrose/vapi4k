@@ -16,15 +16,20 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.api.tools.DtmfTool
+import com.vapi4k.api.tools.EndCallTool
 import com.vapi4k.api.tools.Parameters
-import com.vapi4k.api.tools.ToolWithParameters
+import com.vapi4k.api.tools.VoiceMailTool
 import com.vapi4k.dtos.tools.ToolDto
 
 open class ToolWitParametersImpl internal constructor(
   callerName: String,
   toolDto: ToolDto,
 ) : ToolWithServerImpl(callerName, toolDto),
-  ToolWithParameters {
+  ToolWithParameters,
+  DtmfTool,
+  EndCallTool,
+  VoiceMailTool {
   override var async
     get() = toolDto.async ?: true
     set(value) = run { toolDto.async = value }

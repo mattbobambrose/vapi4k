@@ -17,10 +17,12 @@
 package com.vapi4k.api.destination
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.destination.CommonDestination
 
 @AssistantDslMarker
-interface SipDestination {
+interface SipDestination : CommonDestination {
+  /**
+  This is the SIP URI to transfer the call to.
+   */
   var sipUri: String
-  var message: String
-  var description: String
 }

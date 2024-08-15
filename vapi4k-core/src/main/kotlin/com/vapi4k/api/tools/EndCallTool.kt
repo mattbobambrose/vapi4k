@@ -17,17 +17,7 @@
 package com.vapi4k.api.tools
 
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.tools.ToolMessageDelayedProperties
+import com.vapi4k.dsl.tools.ToolWithParameters
 
-/**
-<p>This message is triggered when the tool call is delayed.
-<brThere are the two things that can trigger this message:
-<ol>
-<li>The user talks with the assistant while your server is processing the request. Default is "Sorry, a few more seconds."
-<li>The server doesn't respond within timingMilliseconds.
-<li>This message is never triggered for async tool calls.
-</ol>
-</p>
- */
 @AssistantDslMarker
-interface ToolMessageDelayed : ToolMessageDelayedProperties
+interface EndCallTool : ToolWithParameters

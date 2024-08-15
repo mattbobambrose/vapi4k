@@ -19,5 +19,12 @@ package com.vapi4k.api.tools
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageCompleteProperties
 
+/**
+<p>This message is triggered when the tool call is complete.
+<br>This message is triggered immediately without waiting for your server to respond for async tool calls.
+<br>If this message is not provided, the model will be requested to respond.
+<br>If this message is provided, only this message will be spoken and the model will not be requested to come up with a response. It's an exclusive OR
+</p>
+ */
 @AssistantDslMarker
 interface ToolMessageComplete : ToolMessageCompleteProperties

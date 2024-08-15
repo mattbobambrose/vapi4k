@@ -17,6 +17,13 @@
 package com.vapi4k.dsl.tools
 
 interface ToolMessageDelayedProperties {
+  /**
+  The number of milliseconds to wait for the server response before saying this message.
+   */
   var timingMilliseconds: Int
+
+  /**
+  This is the content that the assistant says when this message is triggered.
+   */
   var content: String
 }

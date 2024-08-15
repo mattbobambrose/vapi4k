@@ -19,5 +19,12 @@ package com.vapi4k.api.tools
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageFailedProperties
 
+/**
+<p>This message is triggered when the tool call fails.
+<br>This message is never triggered for async tool calls.
+<br>If this message is not provided, the model will be requested to respond.
+<br>If this message is provided, only this message will be spoken and the model will not be requested to come up with a response. It's an exclusive OR.
+</p>
+ */
 @AssistantDslMarker
 interface ToolMessageFailed : ToolMessageFailedProperties

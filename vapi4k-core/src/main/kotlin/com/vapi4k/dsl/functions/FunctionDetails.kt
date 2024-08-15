@@ -58,15 +58,15 @@ class FunctionDetails internal constructor(
 
   fun invokeToolMethod(
     isTool: Boolean,
-    args: JsonElement,
     request: JsonElement,
+    args: JsonElement,
     messageDtos: MutableList<CommonToolMessageDto> = mutableListOf(),
     successAction: (String) -> Unit,
     errorAction: (String) -> Unit,
   ) {
     runCatching {
       invokeCounter.incrementAndGet()
-      val result = invokeMethod(args).also { logger.info { "Tool call result: $it" } }
+      val result = invokeMethod(request, args).also { logger.info { "Tool call result: $it" } }
       successAction(result)
       if (isTool && obj is ToolCallService)
         messageDtos.addAll(obj.onToolCallComplete(request, result).map { it.dto })
@@ -106,7 +106,10 @@ class FunctionDetails internal constructor(
     else -> error("Unsupported parameter type: $argType")
   }
 
-  private fun invokeMethod(args: JsonElement): String {
+  private fun invokeMethod(
+    request: JsonElement,
+    args: JsonElement,
+  ): String {
     val function = obj.findFunction(functionName)
     val argNames = args.keys
     logger.info { "Invoking method $fqName with args $argNames" }
@@ -117,9 +120,20 @@ class FunctionDetails internal constructor(
         param to getArgValue(args, argName, param.type)
       }
 
-    logger.info { "valueMap: $valueMap" }
+    // Check if the function has a request JsonElement parameter
+    val requestParam = function.valueParameters.firstOrNull { it.second.asKClass() == JsonElement::class }?.second
+
+    // If the function has a request parameter, add it to the valueMap
+    val valueMapWithRequest =
+      requestParam?.let { param -> valueMap.toMutableMap().also { it[param] = request } } ?: valueMap
+
+    logger.info { "valueMapWithRequest: $valueMapWithRequest" }
     val callMap =
-      function.instanceParameter?.let { param -> valueMap.toMutableMap().also { it[param] = obj } } ?: valueMap
+      function.instanceParameter?.let { param ->
+        valueMapWithRequest.toMutableMap().also { it[param] = obj }
+      } ?: valueMapWithRequest
+
+    // Call the function with the arguments
     val result = function.callBy(callMap)
     return if (function.isUnitReturnType) "" else result?.toString().orEmpty()
   }
