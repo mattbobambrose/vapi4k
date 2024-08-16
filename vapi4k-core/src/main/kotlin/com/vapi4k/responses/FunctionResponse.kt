@@ -21,6 +21,7 @@ import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionParameters
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
+import com.vapi4k.utils.common.Utils.errorMsg
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -38,18 +39,21 @@ class FunctionResponse(
         val funcName = request.functionName
         val args = request.functionParameters
         runCatching {
-          application.serviceToolCache.getFromCache(sessionCacheId)
-            .getFunction(funcName)
-            .invokeToolMethod(
-              isTool = false,
-              request = request,
-              args = args,
-              messageDtos = mutableListOf(),
-              successAction = { result -> response.result = result },
-              errorAction = { result -> response.result = "Error invoking function" },
-            )
+          if (application.containsFunctionInCache(sessionCacheId, funcName)) {
+            application.getFunctionFromCache(sessionCacheId, funcName)
+              .invokeToolMethod(
+                isTool = false,
+                request = request,
+                args = args,
+                messageDtos = mutableListOf(),
+                successAction = { result -> response.result = result },
+                errorAction = { result -> response.result = "Error invoking function" },
+              )
+          } else {
+            error("Function not found: $funcName")
+          }
         }.getOrElse { e ->
-          val errorMsg = e.message ?: "Error invoking function"
+          val errorMsg = e.message ?: "Error invoking function: $funcName ${e.errorMsg}"
           logger.info { errorMsg }
         }
       }

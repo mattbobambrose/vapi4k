@@ -27,7 +27,10 @@ import kotlinx.serialization.json.buildJsonObject
 internal object CacheResponses {
   suspend fun KtorCallContext.clearCaches(config: Vapi4kConfigImpl) {
     config.allApplications.forEach { application ->
-      application.serviceToolCache.clearToolCache()
+      with(application) {
+        serviceToolCache.clearToolCache()
+        functionCache.clearToolCache()
+      }
     }
     call.respondRedirect(CACHES_PATH)
   }
@@ -38,7 +41,16 @@ internal object CacheResponses {
         config.allApplications.forEach { application ->
           put(
             application.serverPathAsSegment,
-            application.serviceToolCache.cacheAsJson().toJsonElement(),
+            buildJsonObject {
+              put(
+                "toolServices",
+                application.serviceToolCache.cacheAsJson().toJsonElement(),
+              )
+              put(
+                "functions",
+                application.functionCache.cacheAsJson().toJsonElement(),
+              )
+            }
           )
         }
       },

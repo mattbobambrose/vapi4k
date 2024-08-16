@@ -356,11 +356,11 @@ object ValidateAssistantResponse {
     sessionCacheId: SessionCacheId,
     funcNames: List<String>,
   ) {
-    if (!application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
+    if (!application.functionCache.containsSessionCacheId(sessionCacheId)) {
       h2 { +"No Functions Declared" }
     } else {
       h2 { +"Functions" }
-      val functionInfo = application.serviceToolCache.getFromCache(sessionCacheId)
+      val functionInfo = application.functionCache.getFromCache(sessionCacheId)
       funcNames
         .filter { functionInfo.containsFunction(it) }
         .forEach { funcName ->

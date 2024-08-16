@@ -111,9 +111,14 @@ internal object AssistantRequests {
         END_OF_CALL_REPORT -> {
           if (application.eocrCacheRemovalEnabled) {
             val sessionCacheId = request.sessionCacheId
-            application.serviceToolCache.removeFromCache(sessionCacheId) { funcInfo ->
-              logger.info { "EOCR removed ${funcInfo.functions.size} cache entries [${funcInfo.ageSecs}] " }
-            } ?: logger.warn { "EOCR unable to find and remove cache entry [$sessionCacheId]" }
+            with(application) {
+              serviceToolCache.removeFromCache(sessionCacheId) { funcInfo ->
+                logger.info { "EOCR removed ${funcInfo.functions.size} serviceTool cache items [${funcInfo.ageSecs}] " }
+              } ?: logger.warn { "EOCR unable to find and remove serviceTool cache entry [$sessionCacheId]" }
+              functionCache.removeFromCache(sessionCacheId) { funcInfo ->
+                logger.info { "EOCR removed ${funcInfo.functions.size} function cache items [${funcInfo.ageSecs}] " }
+              } ?: logger.warn { "EOCR unable to find and remove function cache entry [$sessionCacheId]" }
+            }
           }
 
           val response = SimpleMessageResponse("End of call report received")

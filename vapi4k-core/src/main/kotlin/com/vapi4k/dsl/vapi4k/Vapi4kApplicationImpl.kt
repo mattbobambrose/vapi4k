@@ -25,7 +25,7 @@ import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantResponseImpl
 import com.vapi4k.dsl.tools.ManualToolCache
-import com.vapi4k.dsl.tools.ServiceToolCache
+import com.vapi4k.dsl.tools.ServiceCache
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils
@@ -36,7 +36,8 @@ import kotlin.time.Duration
 
 class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal val applicationId = DslUtils.getRandomSecret(10).toApplicationId()
-  internal val serviceToolCache = ServiceToolCache { serverPath }
+  internal val serviceToolCache = ServiceCache { serverPath }
+  internal val functionCache = ServiceCache { serverPath }
   internal val manualToolCache = ManualToolCache { serverPath }
 
   private lateinit var assistantRequest: (suspend AssistantResponse.(JsonElement) -> Unit)
@@ -54,13 +55,29 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
 
   internal val fqServerPath get() = "$serverBaseUrl/$serverPathAsSegment"
 
-  internal fun containsFunctionInCache(
+  internal fun containsServiceToolInCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
   ) = serviceToolCache.containsSessionCacheId(sessionCacheId) &&
     serviceToolCache.getFromCache(sessionCacheId).containsFunction(funcName)
 
-  internal fun getFunctionInfoFromCache(sessionCacheId: SessionCacheId) = serviceToolCache.getFromCache(sessionCacheId)
+  internal fun containsFunctionInCache(
+    sessionCacheId: SessionCacheId,
+    funcName: String,
+  ) = functionCache.containsSessionCacheId(sessionCacheId) &&
+    functionCache.getFromCache(sessionCacheId).containsFunction(funcName)
+
+  internal fun getServiceToolFromCache(
+    sessionCacheId: SessionCacheId,
+    funcName: String,
+  ) =
+    serviceToolCache.getFromCache(sessionCacheId).getFunction(funcName)
+
+  internal fun getFunctionFromCache(
+    sessionCacheId: SessionCacheId,
+    funcName: String,
+  ) =
+    functionCache.getFromCache(sessionCacheId).getFunction(funcName)
 
   override fun onAssistantRequest(block: suspend AssistantResponse.(JsonElement) -> Unit) {
     if (!::assistantRequest.isInitialized)

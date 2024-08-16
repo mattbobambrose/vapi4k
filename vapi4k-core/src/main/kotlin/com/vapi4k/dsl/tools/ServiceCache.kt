@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KFunction
 import kotlin.time.Duration
 
-internal class ServiceToolCache(
+internal class ServiceCache(
   private val pathBlock: () -> String,
 ) {
   private val cacheMap = ConcurrentHashMap<SessionCacheId, FunctionInfo>()

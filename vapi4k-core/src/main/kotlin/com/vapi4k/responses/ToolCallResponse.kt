@@ -71,25 +71,25 @@ data class ToolCallResponse(
                         errorMessage = errorMsg
                       }
                       runCatching {
-                        if (application.containsFunctionInCache(sessionCacheId, funcName)) {
-                          application.getFunctionInfoFromCache(sessionCacheId)
-                            .getFunction(funcName)
-                            .also { func -> logger.info { "Invoking $funcName on method ${func.fqName}" } }
-                            .invokeToolMethod(
-                              isTool = true,
-                              request = request,
-                              args = args,
-                              messageDtos = toolCallResult.messageDtos,
-                              successAction = { result -> toolCallResult.result = result },
-                              errorAction = errorAction,
-                            )
-                        } else {
-                          // Invoke external tool
-                          if (!application.manualToolCache.containsTool(funcName)) {
-                            error("Tool $funcName not found")
-                          } else {
-                            val manualToolImpl: ManualToolImpl = application.manualToolCache.getTool(funcName)
+                        when {
+                          application.containsServiceToolInCache(sessionCacheId, funcName) -> {
+                            application.getServiceToolFromCache(sessionCacheId, funcName)
+                              .also { func ->
+                                logger.info { "Invoking $funcName on serviceTool method ${func.fqName}" }
+                              }
+                              .invokeToolMethod(
+                                isTool = true,
+                                request = request,
+                                args = args,
+                                messageDtos = toolCallResult.messageDtos,
+                                successAction = { result -> toolCallResult.result = result },
+                                errorAction = errorAction,
+                              )
+                          }
 
+                          application.manualToolCache.containsTool(funcName) -> {
+                            // Invoke external tool
+                            val manualToolImpl: ManualToolImpl = application.manualToolCache.getTool(funcName)
                             if (!manualToolImpl.isToolCallRequestInitialized()) {
                               error("onInvoke{} not declared in $funcName")
                             } else {
@@ -113,9 +113,11 @@ data class ToolCallResponse(
                               }
                             }
                           }
+
+                          else -> error("Tool not found: $funcName")
                         }
                       }.getOrElse { e ->
-                        val errorMsg = "Error invoking tool $funcName ${e.errorMsg}"
+                        val errorMsg = "Error invoking tool: $funcName ${e.errorMsg}"
                         logger.info { errorMsg }
                         errorAction(errorMsg)
                       }

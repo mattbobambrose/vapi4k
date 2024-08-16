@@ -108,7 +108,11 @@ class ServerTest {
       if (i == 6) {
         assertEquals(
           0,
-          jsonElement["${defaultServerPath.removePrefix("/")}.toolCallCacheSize"].intValue,
+          jsonElement["${defaultServerPath.removePrefix("/")}.toolServices.toolCallCacheSize"].intValue,
+        )
+        assertEquals(
+          0,
+          jsonElement["${defaultServerPath.removePrefix("/")}.functions.toolCallCacheSize"].intValue,
         )
       }
     }
@@ -132,7 +136,11 @@ class ServerTest {
       if (i == 2) {
         assertEquals(
           1,
-          jsonElement["${defaultServerPath.removePrefix("/")}.toolCallCache"].keys.size,
+          jsonElement["${defaultServerPath.removePrefix("/")}.toolServices.toolCallCache"].keys.size,
+        )
+        assertEquals(
+          0,
+          jsonElement["${defaultServerPath.removePrefix("/")}.functions.toolCallCache"].keys.size,
         )
       }
     }
