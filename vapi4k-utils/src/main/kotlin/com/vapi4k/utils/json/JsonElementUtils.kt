@@ -45,15 +45,15 @@ object JsonElementUtils {
   val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
   val JsonElement.keys get() = jsonObject.keys
 
-  fun JsonElement.stringValue(key: String) = get(key).stringValue
+  fun JsonElement.stringValue(vararg keys: String) = get(*keys).stringValue
 
-  fun JsonElement.intValue(key: String) = get(key).intValue
+  fun JsonElement.intValue(vararg keys: String) = get(*keys).intValue
 
-  fun JsonElement.doubleValue(key: String) = get(key).doubleValue
+  fun JsonElement.doubleValue(vararg keys: String) = get(*keys).doubleValue
 
-  fun JsonElement.booleanValue(key: String) = get(key).booleanValue
+  fun JsonElement.booleanValue(vararg keys: String) = get(*keys).booleanValue
 
-  fun JsonElement.jsonElementList(key: String) = get(key).toJsonElementList()
+  fun JsonElement.jsonElementList(vararg keys: String) = get(*keys).toJsonElementList()
 
   internal fun JsonElement.element(key: String) =
     jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")

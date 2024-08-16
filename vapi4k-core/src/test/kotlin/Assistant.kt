@@ -115,14 +115,6 @@ fun AssistantResponse.getAssistant() =
         function(WeatherLookupService3())
       }
 
-//      tools {
-//        tool(NameService())
-//      }
-//
-//      functions {
-//        function(ManyInfoService())
-//      }
-
       tools {
         manualTool {
           name = "manualWeatherLookup"

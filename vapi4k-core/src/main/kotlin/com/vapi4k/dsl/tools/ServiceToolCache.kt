@@ -23,6 +23,7 @@ import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
+import com.vapi4k.dsl.functions.ToolCallType
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.isNull
@@ -52,7 +53,7 @@ internal class ServiceToolCache(
     val funcDetails = funcInfo.functions[toolFuncName]
 
     if (funcDetails.isNull()) {
-      val newFuncDetails = FunctionDetails(obj, function)
+      val newFuncDetails = FunctionDetails(ToolCallType.TOOL, obj, function)
       funcInfo.functions[toolFuncName] = newFuncDetails
       logger.info { "Added \"$toolFuncName\" (${newFuncDetails.fqName}) to $path serviceTool cache [$sessionCacheId]" }
     } else {

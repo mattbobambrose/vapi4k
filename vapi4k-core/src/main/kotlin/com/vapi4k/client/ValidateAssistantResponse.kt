@@ -206,18 +206,160 @@ object ValidateAssistantResponse {
   ) {
     logger.debug { jsonElement.toJsonString() }
     val key = if (isSquad) "assistant.model" else "messageResponse.assistant.model"
-    val funcNames =
+    val toolNames =
       if (jsonElement[key].containsKey("tools"))
         jsonElement
-          .jsonElementList(key + ".tools")
+          .jsonElementList(key, "tools")
           .mapNotNull { if (!it.containsKey("function.name")) null else it.stringValue("function.name") }
       else
         emptyList()
+    val funcNames =
+      if (jsonElement[key].containsKey("functions"))
+        jsonElement
+          .jsonElementList(key, "functions")
+          .mapNotNull { if (!it.containsKey("name")) null else it.stringValue("name") }
+      else
+        emptyList()
 
+    displayServiceTools(application, sessionCacheId, toolNames)
+
+    displayManualTools(application, sessionCacheId, toolNames)
+
+    displayFunctions(application, sessionCacheId, funcNames)
+  }
+
+  private fun BODY.displayServiceTools(
+    application: Vapi4kApplicationImpl,
+    sessionCacheId: SessionCacheId,
+    toolNames: List<String>,
+  ) {
     if (!application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
       h2 { +"No Service Tools Declared" }
     } else {
       h2 { +"Service Tools" }
+      val functionInfo = application.serviceToolCache.getFromCache(sessionCacheId)
+      toolNames
+        .filter { functionInfo.containsFunction(it) }
+        .forEach { toolName ->
+          div {
+            style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            val functionDetails = functionInfo.getFunction(toolName)
+            val divId = getRandomSecret()
+            h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
+            form {
+              attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
+              attributes["hx-trigger"] = "submit"
+              attributes["hx-target"] = "#result-$divId"
+
+              addHiddenFields(application, sessionCacheId, toolName)
+
+              table {
+                tbody {
+                  functionDetails.params
+                    .filter { it.second.asKClass() != JsonElement::class }
+                    .forEach { functionDetail ->
+                      tr {
+                        td { +"${functionDetail.first}:" }
+                        td {
+                          style = "width: 325px;"
+                          input {
+                            style = "width: 325px;"
+                            type =
+                              when (functionDetail.second.asKClass()) {
+                                String::class -> InputType.text
+                                Int::class -> InputType.number
+                                Double::class -> InputType.number
+                                Boolean::class -> InputType.checkBox
+                                else -> InputType.text
+                              }
+                            name = functionDetail.first
+                          }
+                        }
+                        td {
+                          +"[${functionDetail.second.paramAnnotationWithDefault}]"
+                        }
+                      }
+                    }
+                  addInvokeToolOption("Tool")
+                }
+              }
+            }
+
+            displayResponse(divId)
+          }
+        }
+    }
+  }
+
+  private fun BODY.displayManualTools(
+    application: Vapi4kApplicationImpl,
+    sessionCacheId: SessionCacheId,
+    toolNames: List<String>,
+  ) {
+    if (application.manualToolCache.functions.isEmpty()) {
+      h2 { +"No Manual Tools Declared" }
+    } else {
+      h2 { +"Manual Tools" }
+      toolNames
+        .filter { application.manualToolCache.containsTool(it) }
+        .forEach { funcName ->
+          div {
+            style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            val manualToolImpl = application.manualToolCache.getTool(funcName)
+            val divId = getRandomSecret()
+            h3 { +"$funcName (${manualToolImpl.signature})" }
+            form {
+              attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
+              attributes["hx-trigger"] = "submit"
+              attributes["hx-target"] = "#result-$divId"
+
+              addHiddenFields(application, sessionCacheId, funcName)
+
+              table {
+                tbody {
+                  manualToolImpl.properties.forEach { propertyName, propertyDesc ->
+                    tr {
+                      td { +"$propertyName:" }
+                      td {
+                        style = "width: 325px;"
+                        input {
+                          style = "width: 325px;"
+                          type =
+                            when (propertyDesc.type) {
+                              "string" -> InputType.text
+                              "int" -> InputType.number
+                              "double" -> InputType.number
+                              "boolean" -> InputType.checkBox
+                              else -> InputType.text
+                            }
+                          name = propertyName
+                        }
+                      }
+                      td {
+                        +"[${propertyDesc.description}]"
+                      }
+                    }
+                  }
+                  addInvokeToolOption("Tool")
+                }
+              }
+            }
+
+            displayResponse(divId)
+          }
+        }
+    }
+  }
+
+  private fun BODY.displayFunctions(
+    application: Vapi4kApplicationImpl,
+    sessionCacheId: SessionCacheId,
+    funcNames: List<String>,
+  ) {
+    if (!application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
+      h2 { +"No Functions Declared" }
+    } else {
+      h2 { +"Functions" }
       val functionInfo = application.serviceToolCache.getFromCache(sessionCacheId)
       funcNames
         .filter { functionInfo.containsFunction(it) }
@@ -261,61 +403,7 @@ object ValidateAssistantResponse {
                         }
                       }
                     }
-                  addInvokeToolOption()
-                }
-              }
-            }
-
-            displayResponse(divId)
-          }
-        }
-    }
-
-    if (application.manualToolCache.functions.isEmpty()) {
-      h2 { +"No Manual Tools Declared" }
-    } else {
-      h2 { +"Manual Tools" }
-      funcNames
-        .filter { application.manualToolCache.containsTool(it) }
-        .forEach { funcName ->
-          div {
-            style = "border: 1px solid black; padding: 10px; margin: 10px;"
-            val manualToolImpl = application.manualToolCache.getTool(funcName)
-            val divId = getRandomSecret()
-            h3 { +"$funcName (${manualToolImpl.signature})" }
-            form {
-              attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
-              attributes["hx-trigger"] = "submit"
-              attributes["hx-target"] = "#result-$divId"
-
-              addHiddenFields(application, sessionCacheId, funcName)
-
-              table {
-                tbody {
-                  manualToolImpl.properties.forEach { propertyName, propertyDesc ->
-                    tr {
-                      td { +"$propertyName:" }
-                      td {
-                        style = "width: 325px;"
-                        input {
-                          style = "width: 325px;"
-                          type =
-                            when (propertyDesc.type) {
-                              "string" -> InputType.text
-                              "int" -> InputType.number
-                              "double" -> InputType.number
-                              "boolean" -> InputType.checkBox
-                              else -> InputType.text
-                            }
-                          name = propertyName
-                        }
-                      }
-                      td {
-                        +"[${propertyDesc.description}]"
-                      }
-                    }
-                  }
-                  addInvokeToolOption()
+                  addInvokeToolOption("Function")
                 }
               }
             }
@@ -345,13 +433,13 @@ object ValidateAssistantResponse {
     }
   }
 
-  private fun TBODY.addInvokeToolOption() {
+  private fun TBODY.addInvokeToolOption(name: String) {
     tr {
       td {
         input {
           style = "margin-top: 10px;"
           type = InputType.submit
-          value = "Invoke Tool"
+          value = "Invoke $name"
         }
       }
       td {}

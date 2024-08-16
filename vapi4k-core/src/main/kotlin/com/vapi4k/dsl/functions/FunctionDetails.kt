@@ -39,7 +39,13 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 
+enum class ToolCallType {
+  TOOL,
+  FUNCTION,
+}
+
 class FunctionDetails internal constructor(
+  val toolCallType: ToolCallType,
   val obj: Any,
   val function: KFunction<*>,
 ) {

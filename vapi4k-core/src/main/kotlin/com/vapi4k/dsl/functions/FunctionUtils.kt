@@ -83,10 +83,11 @@ internal object FunctionUtils {
         .forEach { param ->
           val kclass = param.asKClass()
           if (kclass !in allowedToolParamTypes) {
-            val fqName = FunctionDetails(obj, function).fqName
+            val fqName = FunctionDetails(ToolCallType.FUNCTION, obj, function).fqName
             val simpleName = kclass.simpleName
             error(
-              "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are String, Int, Double, Boolean, and JsonElement",
+              "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are " +
+                "String, Int, Double, Boolean, and JsonElement",
             )
           }
 
