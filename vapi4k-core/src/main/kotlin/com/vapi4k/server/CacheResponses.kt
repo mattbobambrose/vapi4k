@@ -50,7 +50,7 @@ internal object CacheResponses {
                 "functions",
                 application.functionCache.cacheAsJson().toJsonElement(),
               )
-            }
+            },
           )
         }
       },

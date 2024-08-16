@@ -70,14 +70,12 @@ class Vapi4kApplicationImpl internal constructor() : Vapi4kApplication {
   internal fun getServiceToolFromCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
-  ) =
-    serviceToolCache.getFromCache(sessionCacheId).getFunction(funcName)
+  ) = serviceToolCache.getFromCache(sessionCacheId).getFunction(funcName)
 
   internal fun getFunctionFromCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
-  ) =
-    functionCache.getFromCache(sessionCacheId).getFunction(funcName)
+  ) = functionCache.getFromCache(sessionCacheId).getFunction(funcName)
 
   override fun onAssistantRequest(block: suspend AssistantResponse.(JsonElement) -> Unit) {
     if (!::assistantRequest.isInitialized)

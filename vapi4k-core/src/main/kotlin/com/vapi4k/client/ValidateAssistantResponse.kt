@@ -233,9 +233,7 @@ object ValidateAssistantResponse {
     sessionCacheId: SessionCacheId,
     toolNames: List<String>,
   ) {
-    if (!application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
-      h2 { +"No Service Tools Declared" }
-    } else {
+    if (application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
       h2 { +"Service Tools" }
       val functionInfo = application.serviceToolCache.getFromCache(sessionCacheId)
       toolNames
@@ -296,9 +294,7 @@ object ValidateAssistantResponse {
     sessionCacheId: SessionCacheId,
     toolNames: List<String>,
   ) {
-    if (application.manualToolCache.functions.isEmpty()) {
-      h2 { +"No Manual Tools Declared" }
-    } else {
+    if (application.manualToolCache.functions.isNotEmpty()) {
       h2 { +"Manual Tools" }
       toolNames
         .filter { application.manualToolCache.containsTool(it) }
@@ -356,9 +352,7 @@ object ValidateAssistantResponse {
     sessionCacheId: SessionCacheId,
     funcNames: List<String>,
   ) {
-    if (!application.functionCache.containsSessionCacheId(sessionCacheId)) {
-      h2 { +"No Functions Declared" }
-    } else {
+    if (application.functionCache.containsSessionCacheId(sessionCacheId)) {
       h2 { +"Functions" }
       val functionInfo = application.functionCache.getFromCache(sessionCacheId)
       funcNames
