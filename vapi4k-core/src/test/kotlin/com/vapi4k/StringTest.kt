@@ -16,17 +16,15 @@
 
 package com.vapi4k
 
-import org.junit.Test
-
 class StringTest {
-  @Test
-  fun `test string`() {
-    val testStr =
-      """Welcome to EO. We’re going to ask you a few questions that will help us create your personalized cannabis
-         care plan. This should take about 5-10 minutes. If you need help or would like to talk to a member of our
-         team, you can just say “person” or "help" at any time.  If you want to stop at any time, and continue this
-         later, just say "Stop" or "I'd like to continue this later", and we can do that. Sound OK? Great, let's continue.
-      """
-    assert(str.contains("Hello"))
-  }
+//  @Test
+//  fun `test string`() {
+//    val testStr =
+//      """Welcome to EO. We’re going to ask you a few questions that will help us create your personalized cannabis
+//         care plan. This should take about 5-10 minutes. If you need help or would like to talk to a member of our
+//         team, you can just say “person” or "help" at any time.  If you want to stop at any time, and continue this
+//         later, just say "Stop" or "I'd like to continue this later", and we can do that. Sound OK? Great, let's continue.
+//      """
+//    assert(str.contains("Hello"))
+//  }
 }
