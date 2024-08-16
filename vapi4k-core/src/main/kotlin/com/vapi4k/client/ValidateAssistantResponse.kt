@@ -243,12 +243,9 @@ object ValidateAssistantResponse {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
             val functionDetails = functionInfo.getFunction(toolName)
             val divId = getRandomSecret()
-            h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
+            h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
             form {
-              attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
-              attributes["hx-trigger"] = "submit"
-              attributes["hx-target"] = "#result-$divId"
-
+              setupHtmxTags(divId)
               addHiddenFields(application, sessionCacheId, toolName)
 
               table {
@@ -305,10 +302,7 @@ object ValidateAssistantResponse {
             val divId = getRandomSecret()
             h3 { +"$funcName (${manualToolImpl.signature})" }
             form {
-              attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
-              attributes["hx-trigger"] = "submit"
-              attributes["hx-target"] = "#result-$divId"
-
+              setupHtmxTags(divId)
               addHiddenFields(application, sessionCacheId, funcName)
 
               table {
@@ -362,12 +356,9 @@ object ValidateAssistantResponse {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
             val functionDetails = functionInfo.getFunction(funcName)
             val divId = getRandomSecret()
-            h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCall?.description.orEmpty()}]" }
+            h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
             form {
-              attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
-              attributes["hx-trigger"] = "submit"
-              attributes["hx-target"] = "#result-$divId"
-
+              setupHtmxTags(divId)
               addHiddenFields(application, sessionCacheId, funcName)
 
               table {
@@ -406,6 +397,12 @@ object ValidateAssistantResponse {
           }
         }
     }
+  }
+
+  private fun FORM.setupHtmxTags(divId: String) {
+    attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
+    attributes["hx-trigger"] = "submit"
+    attributes["hx-target"] = "#result-$divId"
   }
 
   private fun FORM.addHiddenFields(
