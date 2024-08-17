@@ -13,6 +13,7 @@ clean:
 compile: build
 
 build:
+	rm -rf build/
 	./gradlew build -x test
 
 cont-build:

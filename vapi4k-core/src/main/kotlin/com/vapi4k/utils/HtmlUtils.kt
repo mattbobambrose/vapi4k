@@ -17,8 +17,16 @@
 package com.vapi4k.utils
 
 import kotlinx.html.HTMLTag
+import kotlinx.html.TagConsumer
+import kotlinx.html.stream.appendHTML
 import kotlinx.html.unsafe
 
 object HtmlUtils {
   fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
+
+  fun html(block: TagConsumer<StringBuilder>.() -> Unit): String {
+    return buildString {
+      appendHTML().apply(block)
+    }
+  }
 }

@@ -18,6 +18,7 @@ package com.vapi4k.server
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
+import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.Endpoints.CACHES_PATH
@@ -115,7 +116,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     defaultKtorConfig(appMicrometerRegistry)
 
     routing {
-      staticResources("/assets", "static")
+      staticResources(STATIC_BASE, "core_static")
 
       get(PING_PATH) { call.respondText("pong") }
 

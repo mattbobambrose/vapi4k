@@ -24,6 +24,7 @@ import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
+import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
@@ -124,13 +125,13 @@ object ValidateAssistantResponse {
           }
           link {
             rel = "stylesheet"
-            href = "/assets/prism.css"
+            href = "$STATIC_BASE/prism.css"
           }
           title { +"Assistant Request Validation" }
           script { src = HTMX_SOURCE_URL }
         }
         body {
-          script { src = "/assets/prism.js" }
+          script { src = "$STATIC_BASE/prism.js" }
 
           if (config.applications.size > 1) {
             div {
