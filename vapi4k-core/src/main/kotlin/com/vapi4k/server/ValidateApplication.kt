@@ -25,7 +25,7 @@ import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.DslUtils.getRandomSecret
+import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
@@ -96,7 +96,7 @@ internal object ValidateApplication {
           "toolCallList" to
             listOf(
               mapOf(
-                "id" to JsonPrimitive("call_${getRandomSecret(24)}"),
+                "id" to JsonPrimitive("call_${getRandomString(24)}"),
                 "type" to JsonPrimitive("function"),
                 "function" to mapOf(
                   "name" to JsonPrimitive(params[FUNCTION_NAME] ?: error("No $FUNCTION_NAME found")),

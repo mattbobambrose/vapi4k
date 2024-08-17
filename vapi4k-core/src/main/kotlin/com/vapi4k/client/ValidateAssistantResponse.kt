@@ -35,6 +35,7 @@ import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
+import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
@@ -243,7 +244,7 @@ object ValidateAssistantResponse {
           div {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
             val functionDetails = functionInfo.getFunction(toolName)
-            val divId = getRandomSecret()
+            val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
             form {
               setupHtmxTags(divId)
@@ -300,7 +301,7 @@ object ValidateAssistantResponse {
           div {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
             val manualToolImpl = application.manualToolCache.getTool(funcName)
-            val divId = getRandomSecret()
+            val divId = getRandomString()
             h3 { +"$funcName (${manualToolImpl.signature})" }
             form {
               setupHtmxTags(divId)
@@ -356,7 +357,7 @@ object ValidateAssistantResponse {
           div {
             style = "border: 1px solid black; padding: 10px; margin: 10px;"
             val functionDetails = functionInfo.getFunction(funcName)
-            val divId = getRandomSecret()
+            val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
             form {
               setupHtmxTags(divId)
