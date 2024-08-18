@@ -158,6 +158,37 @@ team later"""
   }
 
   @Test
+  fun `singleLine varargs multi with cr test`() {
+    val str =
+      prompt {
+        singleLine(
+          """Welcome
+            everyone
+
+         team
+         later
+      """,
+          """Welcome
+            everyone
+
+         team
+         later
+      """
+        )
+      }
+
+    val goal = """Welcome everyone
+
+team later
+
+Welcome everyone
+
+team later"""
+
+    assertEquals(goal, str)
+  }
+
+  @Test
   fun `trimPrefix single line test`() {
     val str =
       prompt {
@@ -209,5 +240,26 @@ later"""
     assertEquals(goal, str)
   }
 
+  @Test
+  fun `trimPrefix varargs multi line test`() {
+    val str =
+      prompt {
+        trimPrefix(
+          """Welcome
+         team
+         later""",
+          """Welcome
+         team
+         later"""
+        )
+      }
+    val goal = """Welcome
+team
+later
 
+Welcome
+team
+later"""
+    assertEquals(goal, str)
+  }
 }

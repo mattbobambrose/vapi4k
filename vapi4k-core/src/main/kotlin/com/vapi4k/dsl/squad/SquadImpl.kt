@@ -24,6 +24,18 @@ import com.vapi4k.dsl.assistant.AssistantOverridesImpl
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.squad.SquadDto
 import com.vapi4k.utils.AssistantCacheIdSource
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 interface SquadProperties {
   /**
@@ -44,4 +56,67 @@ data class SquadImpl internal constructor(
   override fun memberOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
     AssistantOverridesImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, dto.membersOverrides)
       .apply(block)
+}
+
+@Serializable(with = ChildSerializer::class)
+sealed interface Child
+
+private object ChildSerializer : KSerializer<Child> {
+  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Child")
+
+  override fun serialize(
+    encoder: Encoder,
+    value: Child,
+  ) {
+    encoder.encodeSerializableValue(DataChild.serializer(), value as DataChild)
+  }
+
+  override fun deserialize(decoder: Decoder): Child =
+    throw NotImplementedError("Deserialization is not supported")
+}
+
+val module = SerializersModule {
+  polymorphic(Parent::class) {
+    subclass(DataChild::class)
+  }
+}
+
+val format = Json { serializersModule = module }
+
+@Serializable
+sealed class Parent(var name: String = "")
+
+@Serializable
+data class DataChild(var street: String = "") : Parent()
+
+@Serializable
+class NonDataChild(var street: String = "") : Parent()
+
+@Serializable
+class Family(
+  val dataChild: DataChild = DataChild(),
+  val nonDataChild: NonDataChild = NonDataChild(),
+)
+
+inline fun <reified T> T.toJsonElement2() = format.encodeToJsonElement(this)
+
+fun main() {
+  val c = Family().apply {
+    dataChild.name = "Bill"
+    nonDataChild.name = "Bob"
+  }
+
+  println(c.toJsonElement2().toJsonString())
+
+  val d = DataChild().apply {
+    name = "Bill"
+  }
+
+  println(d.toJsonElement2().toJsonString())
+
+  val e = NonDataChild().apply {
+    name = "Bob"
+  }
+
+  println(e.toJsonElement2().toJsonString())
 }

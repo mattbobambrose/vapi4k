@@ -25,7 +25,15 @@ class Prompt {
     stringBuilder.append(this).append("\n\n")
   }
 
-  fun singleLine(str: String) {
+  fun singleLine(
+    str: String,
+    vararg strs: String,
+  ) {
+    processSingleLine(str)
+    strs.forEach { processSingleLine(it) }
+  }
+
+  private fun processSingleLine(str: String) {
     var firstInSection = true
     val newStr =
       buildString {
@@ -48,7 +56,15 @@ class Prompt {
     stringBuilder.append(newStr.trim()).append("\n\n")
   }
 
-  fun trimPrefix(str: String) {
+  fun trimPrefix(
+    str: String,
+    vararg strs: String,
+  ) {
+    processTrimPrefix(str)
+    strs.forEach { processTrimPrefix(it) }
+  }
+
+  private fun processTrimPrefix(str: String) {
     stringBuilder.append(str.trimLeadingSpaces().trim()).append("\n\n")
   }
 
