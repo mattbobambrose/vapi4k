@@ -17,6 +17,7 @@
 package com.vapi4k.dtos.voice
 
 import com.vapi4k.api.voice.enums.LMNTVoiceIdType
+import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.api.voice.enums.VoiceProviderType
 import com.vapi4k.dsl.voice.LMNTVoiceProperties
 import kotlinx.serialization.EncodeDefault
@@ -24,15 +25,19 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-class LMNTVoiceDto(
+data class LMNTVoiceDto(
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
+  override val inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
+  override var fillerInjectionEnabled: Boolean? = null,
   var voiceId: String = "",
   @Transient
   override var voiceIdType: LMNTVoiceIdType = LMNTVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
   override var speed: Double = -1.0,
-) : AbstractVoiceDto(),
-  LMNTVoiceProperties,
+) : LMNTVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.LMNT

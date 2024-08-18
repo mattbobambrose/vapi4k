@@ -25,6 +25,7 @@ import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.squad.SquadDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -83,9 +84,10 @@ val module = SerializersModule {
 }
 
 @Serializable
-abstract class Parent(
-  var name: String = "",
-)
+abstract class Parent {
+  @EncodeDefault
+  var name: String = ""
+}
 
 @Serializable
 data class DataChild(
@@ -110,8 +112,8 @@ fun main() {
   val c = Family().apply {
     dataChild.name = "Bill"
     nonDataChild.name = "Bob"
-    dataChild.street = "Bill Street"
-    nonDataChild.street = "Bob Street"
+//    dataChild.street = "Bill Street"
+//    nonDataChild.street = "Bob Street"
   }
 
   println(c.toJsonElement2().toJsonString())

@@ -22,12 +22,13 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-class NumberDestinationDto(
+data class NumberDestinationDto(
+  override var message: String = "",
+  override var description: String = "",
   override var number: String = "",
   override var extension: String = "",
   override var numberE164CheckEnabled: Boolean? = null,
-) : AbstractDestinationDto(),
-  CommonDestinationDto,
+) : CommonDestinationDto,
   NumberDestination {
   @EncodeDefault
   val type: DestinationType = DestinationType.NUMBER

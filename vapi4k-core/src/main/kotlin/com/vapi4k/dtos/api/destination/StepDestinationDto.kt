@@ -22,10 +22,11 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-class StepDestinationDto(
+data class StepDestinationDto(
+  override var message: String = "",
+  override var description: String = "",
   override var stepName: String = "",
-) : AbstractDestinationDto(),
-  CommonDestinationDto,
+) : CommonDestinationDto,
   StepDestination {
   @EncodeDefault
   val type: DestinationType = DestinationType.NUMBER

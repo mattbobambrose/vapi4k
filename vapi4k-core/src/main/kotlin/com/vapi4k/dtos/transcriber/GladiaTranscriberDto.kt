@@ -26,6 +26,8 @@ import kotlinx.serialization.Transient
 
 @Serializable
 class GladiaTranscriberDto(
+  override var model: String = "",
+  override var language: String = "",
   @Transient
   override var transcriberModel: GladiaModelType = GladiaModelType.UNSPECIFIED,
   @Transient

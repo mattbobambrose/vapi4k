@@ -16,6 +16,7 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.api.voice.enums.RimeAIVoiceIdType
 import com.vapi4k.api.voice.enums.RimeAIVoiceModelType
 import com.vapi4k.api.voice.enums.VoiceProviderType
@@ -25,7 +26,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-class RimeAIVoiceDto(
+data class RimeAIVoiceDto(
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
+  override val inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
+  override var fillerInjectionEnabled: Boolean? = null,
   var voiceId: String = "",
   @Transient
   override var voiceIdType: RimeAIVoiceIdType = RimeAIVoiceIdType.UNSPECIFIED,
@@ -37,8 +43,7 @@ class RimeAIVoiceDto(
   @Transient
   override var customModel: String = "",
   override var speed: Double = -1.0,
-) : AbstractVoiceDto(),
-  RimeAIVoiceProperties,
+) : RimeAIVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.RIME_AI

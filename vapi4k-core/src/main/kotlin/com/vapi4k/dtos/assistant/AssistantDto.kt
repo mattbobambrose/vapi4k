@@ -16,11 +16,16 @@
 
 package com.vapi4k.dtos.assistant
 
+import com.vapi4k.api.assistant.enums.AssistantClientMessageType
+import com.vapi4k.api.assistant.enums.AssistantServerMessageType
+import com.vapi4k.api.assistant.enums.BackgroundSoundType
+import com.vapi4k.api.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.model.ModelDtoUnion
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
 import com.vapi4k.dtos.MessagePlanDto
+import com.vapi4k.dtos.TransportConfigurationDto
 import com.vapi4k.dtos.VoicemailDetectionDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.transcriber.CommonTranscriberDto
@@ -31,7 +36,41 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-class AssistantDto(
+data class AssistantDto(
+  override var backchannelingEnabled: Boolean? = null,
+  override var backgroundDenoisingEnabled: Boolean? = null,
+  override var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
+  override var endCallMessage: String = "",
+  override val endCallPhrases: MutableSet<String> = mutableSetOf(),
+  override var firstMessage: String = "",
+  override var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
+  override var hipaaEnabled: Boolean? = null,
+  override var llmRequestDelaySeconds: Double = -1.0,
+  override var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
+  override var maxDurationSeconds: Int = -1,
+  override val metadata: MutableMap<String, String> = mutableMapOf(),
+  override var modelOutputInMessagesEnabled: Boolean? = null,
+  override var name: String = "",
+  override var numWordsToInterruptAssistant: Int = -1,
+  override var recordingEnabled: Boolean? = null,
+  override var responseDelaySeconds: Double = -1.0,
+  override var serverUrl: String = "",
+  override var serverUrlSecret: String = "",
+  override var silenceTimeoutSeconds: Int = -1,
+  override var voicemailMessage: String = "",
+  // Need a copy of DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES here, so call toMutableSet()
+  override var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
+  override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
+  // TODO: Came from squad assistant
+  override val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
+
+  // TODO: This needs to be added to docs - https://docs.vapi.ai/assistants/function-calling
+  override var forwardingPhoneNumber: String = "",
+  // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
+  override var endCallFunctionEnabled: Boolean? = null,
+  // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
+  override var dialKeypadFunctionEnabled: Boolean? = null,
+
   @SerialName("transcriber")
   override var transcriberDto: CommonTranscriberDto? = null,
   @SerialName("model")
@@ -46,8 +85,7 @@ class AssistantDto(
   val artifactPlanDto: ArtifactPlanDto = ArtifactPlanDto(),
   @SerialName("messagePlan")
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
-) : AbstractAssistantDto(),
-  AssistantProperties,
+) : AssistantProperties,
   ModelDtoUnion {
   @Transient
   var updated = false

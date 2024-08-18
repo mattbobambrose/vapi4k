@@ -27,10 +27,6 @@ import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 
 interface AssistantProperties : CommonAssistantProperties {
-  // TODO: Not in the docs
-  var dialKeypadFunctionEnabled: Boolean?
-  var endCallFunctionEnabled: Boolean?
-  var forwardingPhoneNumber: String
 }
 
 data class AssistantImpl internal constructor(

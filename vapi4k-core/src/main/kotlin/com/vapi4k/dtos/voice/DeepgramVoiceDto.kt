@@ -17,6 +17,7 @@
 package com.vapi4k.dtos.voice
 
 import com.vapi4k.api.voice.enums.DeepGramVoiceIdType
+import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.api.voice.enums.VoiceProviderType
 import com.vapi4k.dsl.voice.DeepgramVoiceProperties
 import kotlinx.serialization.EncodeDefault
@@ -24,14 +25,18 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-class DeepgramVoiceDto(
+data class DeepgramVoiceDto(
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
+  override val inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
+  override var fillerInjectionEnabled: Boolean? = null,
   var voiceId: String = "",
   @Transient
   override var voiceIdType: DeepGramVoiceIdType = DeepGramVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-) : AbstractVoiceDto(),
-  DeepgramVoiceProperties,
+) : DeepgramVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.DEEPGRAM

@@ -18,14 +18,29 @@ package com.vapi4k.dtos.model
 
 import com.vapi4k.dsl.model.AnyscaleModelProperties
 import com.vapi4k.dsl.model.ModelType
+import com.vapi4k.dtos.RoleMessageDto
+import com.vapi4k.dtos.functions.FunctionDto
+import com.vapi4k.dtos.tools.ToolDto
 import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class AnyscaleModelDto(
+data class AnyscaleModelDto(
+  override var temperature: Int = -1,
+  override var maxTokens: Int = -1,
+  override var emotionRecognitionEnabled: Boolean? = null,
+  override var numFastTurns: Int = -1,
+  @SerialName("knowledgeBase")
+  override var knowledgeBaseDto: KnowledgeBaseDto? = null,
+
+  override val messages: MutableList<RoleMessageDto> = mutableListOf(),
+  override val tools: MutableList<ToolDto> = mutableListOf(),
+  override val toolIds: MutableSet<String> = mutableSetOf(),
+  override val functions: MutableList<FunctionDto> = mutableListOf(),
+
   override var model: String = "",
-) : AbstractModelDto(),
-  AnyscaleModelProperties,
+) : AnyscaleModelProperties,
   CommonModelDto {
   @EncodeDefault
   override val provider: ModelType = ModelType.ANYSCALE

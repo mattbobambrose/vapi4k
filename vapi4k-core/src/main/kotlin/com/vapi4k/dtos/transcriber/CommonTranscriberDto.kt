@@ -27,12 +27,12 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 abstract class AbstractTranscriberDto {
-  var model: String = ""
+  abstract var model: String
+
+  abstract var language: String
 
   @Transient
   var customModel: String = ""
-
-  var language: String = ""
 
   @Transient
   var customLanguage: String = ""
