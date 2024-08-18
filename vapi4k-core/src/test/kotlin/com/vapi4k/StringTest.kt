@@ -16,15 +16,77 @@
 
 package com.vapi4k
 
+import com.vapi4k.api.prompt.Prompt.Companion.prompt
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
 class StringTest {
-//  @Test
-//  fun `test string`() {
-//    val testStr =
-//      """Welcome to EO. We’re going to ask you a few questions that will help us create your personalized cannabis
-//         care plan. This should take about 5-10 minutes. If you need help or would like to talk to a member of our
-//         team, you can just say “person” or "help" at any time.  If you want to stop at any time, and continue this
-//         later, just say "Stop" or "I'd like to continue this later", and we can do that. Sound OK? Great, let's continue.
-//      """
-//    assert(str.contains("Hello"))
-//  }
+  @Test
+  fun `unaryPlus single test`() {
+    val str =
+      prompt {
+        +"test text"
+      }
+
+    assertEquals("test text\n", str)
+  }
+
+  @Test
+  fun `unaryPlus multi test`() {
+    val str =
+      prompt {
+        +"test text"
+        +"test text"
+      }
+
+    val goal =
+      """test text
+test text
+"""
+
+    assertEquals(goal, str)
+  }
+
+  @Test
+  fun `singleLine test`() {
+    val str =
+      prompt {
+        singleLine(
+          """Welcome
+         team
+         later
+      """
+        )
+      }
+
+    assertEquals("Welcome team later", str)
+  }
+
+  @Test
+  fun `trimPrefix single line test`() {
+    val str =
+      prompt {
+        trimPrefix("    test text")
+      }
+
+    assertEquals("test text", str)
+  }
+
+  @Test
+  fun `trimPrefix multi line test`() {
+    val str =
+      prompt {
+        trimPrefix(
+          """Welcome
+         team
+         later"""
+        )
+      }
+    val goal = """Welcome
+team
+later"""
+    assertEquals(goal, str)
+  }
+
+
 }
