@@ -16,8 +16,11 @@
 
 package com.vapi4k.utils.common
 
+import java.net.URLDecoder
+import java.net.URLEncoder
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import kotlin.text.Charsets.UTF_8
 
 object Utils {
   fun <T> lambda(block: T) = block
@@ -73,4 +76,8 @@ object Utils {
     }
     return this == null
   }
+
+  fun String.encode() = URLEncoder.encode(this, UTF_8.toString()) ?: this
+
+  fun String.decode() = URLDecoder.decode(this, UTF_8.toString()) ?: this
 }
