@@ -19,8 +19,10 @@ package com.vapi4k.dtos.api.destination
 import com.vapi4k.api.destination.StepDestination
 import com.vapi4k.api.destination.enums.DestinationType
 import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.Serializable
 
-class StepDestinationDto(
+@Serializable
+data class StepDestinationDto(
   override var stepName: String = "",
 ) : AbstractDestinationDto(),
   CommonDestinationDto,

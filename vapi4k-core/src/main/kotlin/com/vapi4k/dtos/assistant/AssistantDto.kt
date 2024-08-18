@@ -16,16 +16,11 @@
 
 package com.vapi4k.dtos.assistant
 
-import com.vapi4k.api.assistant.enums.AssistantClientMessageType
-import com.vapi4k.api.assistant.enums.AssistantServerMessageType
-import com.vapi4k.api.assistant.enums.BackgroundSoundType
-import com.vapi4k.api.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.model.ModelDtoUnion
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
 import com.vapi4k.dtos.MessagePlanDto
-import com.vapi4k.dtos.TransportConfigurationDto
 import com.vapi4k.dtos.VoicemailDetectionDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.transcriber.CommonTranscriberDto
@@ -34,42 +29,6 @@ import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-
-@Serializable
-abstract class AbstractAssistantDto(
-  var backchannelingEnabled: Boolean? = null,
-  var backgroundDenoisingEnabled: Boolean? = null,
-  var backgroundSound: BackgroundSoundType = BackgroundSoundType.UNSPECIFIED,
-  var endCallMessage: String = "",
-  val endCallPhrases: MutableSet<String> = mutableSetOf(),
-  var firstMessage: String = "",
-  var firstMessageMode: FirstMessageModeType = FirstMessageModeType.UNSPECIFIED,
-  var hipaaEnabled: Boolean? = null,
-  var llmRequestDelaySeconds: Double = -1.0,
-  var llmRequestNonPunctuatedDelaySeconds: Double = -1.0,
-  var maxDurationSeconds: Int = -1,
-  val metadata: MutableMap<String, String> = mutableMapOf(),
-  var modelOutputInMessagesEnabled: Boolean? = null,
-  var name: String = "",
-  var numWordsToInterruptAssistant: Int = -1,
-  var recordingEnabled: Boolean? = null,
-  var responseDelaySeconds: Double = -1.0,
-  var serverUrl: String = "",
-  var serverUrlSecret: String = "",
-  var silenceTimeoutSeconds: Int = -1,
-  var voicemailMessage: String = "",
-  // Need a copy of DEFAULT_CLIENT_MESSAGES and DEFAULT_SERVER_MESSAGES here, so call toMutableSet()
-  var clientMessages: MutableSet<AssistantClientMessageType> = DEFAULT_CLIENT_MESSAGES.toMutableSet(),
-  var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
-  // TODO: Came from squad assistant
-  val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
-  // TODO: This needs to be added to docs - https://docs.vapi.ai/assistants/function-calling
-  var forwardingPhoneNumber: String = "",
-  // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
-  var endCallFunctionEnabled: Boolean? = null,
-  // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
-  var dialKeypadFunctionEnabled: Boolean? = null,
-)
 
 @Serializable
 data class AssistantDto(
@@ -99,29 +58,3 @@ data class AssistantDto(
   }
 }
 
-private val DEFAULT_CLIENT_MESSAGES =
-  mutableSetOf(
-    AssistantClientMessageType.CONVERSATION_UPDATE,
-    AssistantClientMessageType.FUNCTION_CALL,
-    AssistantClientMessageType.HANG,
-    AssistantClientMessageType.MODEL_OUTPUT,
-    AssistantClientMessageType.SPEECH_UPDATE,
-    AssistantClientMessageType.STATUS_UPDATE,
-    AssistantClientMessageType.TRANSCRIPT,
-    AssistantClientMessageType.TOOL_CALLS,
-    AssistantClientMessageType.USER_INTERRUPTED,
-    AssistantClientMessageType.VOICE_INPUT,
-  )
-
-private val DEFAULT_SERVER_MESSAGES =
-  mutableSetOf(
-    AssistantServerMessageType.CONVERSATION_UPDATE,
-    AssistantServerMessageType.END_OF_CALL_REPORT,
-    AssistantServerMessageType.FUNCTION_CALL,
-    AssistantServerMessageType.HANG,
-    AssistantServerMessageType.SPEECH_UPDATE,
-    AssistantServerMessageType.STATUS_UPDATE,
-    AssistantServerMessageType.TOOL_CALLS,
-    AssistantServerMessageType.TRANSFER_DESTINATION_REQUEST,
-    AssistantServerMessageType.USER_INTERRUPTED,
-  )

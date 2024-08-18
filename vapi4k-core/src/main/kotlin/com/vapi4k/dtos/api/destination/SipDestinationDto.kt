@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SipDestinationDto(
+data class SipDestinationDto(
   override var sipUri: String = "",
 ) : AbstractDestinationDto(),
   CommonDestinationDto,
