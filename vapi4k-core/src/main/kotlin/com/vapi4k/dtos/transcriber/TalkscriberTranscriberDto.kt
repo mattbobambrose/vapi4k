@@ -25,7 +25,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class TalkscriberTranscriberDto(
+class TalkscriberTranscriberDto(
   @Transient
   override var transcriberModel: TalkscriberModelType = TalkscriberModelType.UNSPECIFIED,
   @Transient

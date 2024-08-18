@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StepDestinationDto(
+class StepDestinationDto(
   override var stepName: String = "",
 ) : AbstractDestinationDto(),
   CommonDestinationDto,

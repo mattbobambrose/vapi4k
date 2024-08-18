@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PerplexityAIModelDto(
+class PerplexityAIModelDto(
   override var model: String = "",
 ) : AbstractModelDto(),
   PerplexityAIModelProperties,

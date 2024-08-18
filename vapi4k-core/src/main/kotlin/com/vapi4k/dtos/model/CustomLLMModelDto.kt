@@ -23,7 +23,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CustomLLMModelDto(
+class CustomLLMModelDto(
   override var model: String = "",
   override var url: String = "",
   override var metadataSendMode: MetaDataSendModeType = MetaDataSendModeType.UNSPECIFIED,

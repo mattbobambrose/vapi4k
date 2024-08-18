@@ -25,7 +25,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class PlayHTVoiceDto(
+class PlayHTVoiceDto(
   var voiceId: String = "",
   @Transient
   override var voiceIdType: PlayHTVoiceIdType = PlayHTVoiceIdType.UNSPECIFIED,

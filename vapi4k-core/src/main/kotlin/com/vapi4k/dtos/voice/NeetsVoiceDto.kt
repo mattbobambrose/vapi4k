@@ -24,7 +24,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class NeetsVoiceDto(
+class NeetsVoiceDto(
   var voiceId: String = "",
   @Transient
   override var voiceIdType: NeetsVoiceIdType = NeetsVoiceIdType.UNSPECIFIED,

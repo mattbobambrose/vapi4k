@@ -29,7 +29,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssistantOverridesDto(
+class AssistantOverridesDto(
   // Used only with AssistantOverrides
   override val variableValues: MutableMap<String, String> = mutableMapOf(),
   @SerialName("transcriber")

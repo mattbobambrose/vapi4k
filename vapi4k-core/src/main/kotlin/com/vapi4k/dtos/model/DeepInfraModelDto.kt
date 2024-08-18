@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DeepInfraModelDto(
+class DeepInfraModelDto(
   override var model: String = "",
 ) : AbstractModelDto(),
   DeepInfraModelProperties,

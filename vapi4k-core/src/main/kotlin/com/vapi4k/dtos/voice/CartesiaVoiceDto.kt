@@ -25,7 +25,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class CartesiaVoiceDto(
+class CartesiaVoiceDto(
   var model: String = "",
   @Transient
   override var modelType: CartesiaVoiceModelType = CartesiaVoiceModelType.UNSPECIFIED,

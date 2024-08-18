@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NumberDestinationDto(
+class NumberDestinationDto(
   override var number: String = "",
   override var extension: String = "",
   override var numberE164CheckEnabled: Boolean? = null,

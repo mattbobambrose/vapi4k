@@ -24,7 +24,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class LMNTVoiceDto(
+class LMNTVoiceDto(
   var voiceId: String = "",
   @Transient
   override var voiceIdType: LMNTVoiceIdType = LMNTVoiceIdType.UNSPECIFIED,

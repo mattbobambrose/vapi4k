@@ -24,7 +24,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class OpenAIVoiceDto(
+class OpenAIVoiceDto(
   var voiceId: String = "",
   @Transient
   override var voiceIdType: OpenAIVoiceIdType = OpenAIVoiceIdType.UNSPECIFIED,

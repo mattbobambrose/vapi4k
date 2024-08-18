@@ -24,7 +24,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class AnthropicModelDto(
+class AnthropicModelDto(
   var model: String = "",
   @Transient
   override var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED,

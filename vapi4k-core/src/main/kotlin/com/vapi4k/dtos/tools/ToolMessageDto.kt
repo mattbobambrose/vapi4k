@@ -73,7 +73,7 @@ class ToolMessageStartDto :
   CommonToolMessageDto
 
 @Serializable
-data class ToolMessageCompleteDto(
+class ToolMessageCompleteDto(
   override var role: ToolMessageRoleType = ToolMessageRoleType.UNSPECIFIED,
   override var endCallAfterSpokenEnabled: Boolean? = null,
 ) : AbstractToolMessageDto(ToolMessageType.REQUEST_COMPLETE),
@@ -81,14 +81,14 @@ data class ToolMessageCompleteDto(
   CommonToolMessageDto
 
 @Serializable
-data class ToolMessageFailedDto(
+class ToolMessageFailedDto(
   override var endCallAfterSpokenEnabled: Boolean? = null,
 ) : AbstractToolMessageDto(ToolMessageType.REQUEST_FAILED),
   ToolMessageFailedProperties,
   CommonToolMessageDto
 
 @Serializable
-data class ToolMessageDelayedDto(
+class ToolMessageDelayedDto(
   override var timingMilliseconds: Int = -1,
 ) : AbstractToolMessageDto(ToolMessageType.REQUEST_RESPONSE_DELAYED),
   ToolMessageDelayedProperties,

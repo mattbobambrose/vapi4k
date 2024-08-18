@@ -24,7 +24,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class GroqModelDto(
+class GroqModelDto(
   var model: String = "",
   @Transient
   override var modelType: GroqModelType = GroqModelType.UNSPECIFIED,

@@ -31,7 +31,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class AssistantDto(
+class AssistantDto(
   @SerialName("transcriber")
   override var transcriberDto: CommonTranscriberDto? = null,
   @SerialName("model")

@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VapiModelDto(
+class VapiModelDto(
   override var model: String = "",
 ) : AbstractModelDto(),
   VapiModelProperties,

@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TogetherAIModelDto(
+class TogetherAIModelDto(
   override var model: String = "",
 ) : AbstractModelDto(),
   TogetherAIModelProperties,

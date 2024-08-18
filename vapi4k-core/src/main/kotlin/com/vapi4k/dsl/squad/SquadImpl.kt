@@ -78,19 +78,24 @@ private object ChildSerializer : KSerializer<Child> {
 val module = SerializersModule {
   polymorphic(Parent::class) {
     subclass(DataChild::class)
+    subclass(NonDataChild::class)
   }
 }
 
-val format = Json { serializersModule = module }
+@Serializable
+abstract class Parent(
+  var name: String = "",
+)
 
 @Serializable
-sealed class Parent(var name: String = "")
+data class DataChild(
+  var street: String = "",
+) : Parent()
 
 @Serializable
-data class DataChild(var street: String = "") : Parent()
-
-@Serializable
-class NonDataChild(var street: String = "") : Parent()
+class NonDataChild(
+  var street: String = "",
+) : Parent()
 
 @Serializable
 class Family(
@@ -98,12 +103,15 @@ class Family(
   val nonDataChild: NonDataChild = NonDataChild(),
 )
 
+val format = Json { serializersModule = module }
 inline fun <reified T> T.toJsonElement2() = format.encodeToJsonElement(this)
 
 fun main() {
   val c = Family().apply {
     dataChild.name = "Bill"
     nonDataChild.name = "Bob"
+    dataChild.street = "Bill Street"
+    nonDataChild.street = "Bob Street"
   }
 
   println(c.toJsonElement2().toJsonString())

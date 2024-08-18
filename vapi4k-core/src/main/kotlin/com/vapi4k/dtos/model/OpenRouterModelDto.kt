@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OpenRouterModelDto(
+class OpenRouterModelDto(
   override var model: String = "",
 ) : AbstractModelDto(),
   OpenRouterModelProperties,

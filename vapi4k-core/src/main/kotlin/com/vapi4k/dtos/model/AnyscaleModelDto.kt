@@ -22,7 +22,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AnyscaleModelDto(
+class AnyscaleModelDto(
   override var model: String = "",
 ) : AbstractModelDto(),
   AnyscaleModelProperties,

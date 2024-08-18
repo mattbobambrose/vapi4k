@@ -25,7 +25,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class DeepgramTranscriberDto(
+class DeepgramTranscriberDto(
   @Transient
   override var transcriberModel: DeepgramModelType = DeepgramModelType.UNSPECIFIED,
   @Transient
