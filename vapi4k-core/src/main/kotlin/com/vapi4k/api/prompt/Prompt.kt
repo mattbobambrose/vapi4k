@@ -22,18 +22,37 @@ class Prompt {
   val stringBuilder = StringBuilder()
 
   operator fun String.unaryPlus() {
-    stringBuilder.append(this).append("\n")
+    stringBuilder.append(this).append("\n\n")
   }
 
   fun singleLine(str: String) {
-    stringBuilder.append(str.lines().map { it.trim() }.joinToString(" ").trim())
+    var firstInSection = true
+    val newStr =
+      buildString {
+        str
+          .lines()
+          .map { it.trim() }
+          .forEach { s ->
+            if (s.isNotEmpty()) {
+              if (firstInSection)
+                firstInSection = false
+              else
+                append(" ")
+              append(s)
+            } else {
+              append("\n\n")
+              firstInSection = true
+            }
+          }
+      }
+    stringBuilder.append(newStr.trim()).append("\n\n")
   }
 
   fun trimPrefix(str: String) {
-    stringBuilder.append(str.trimLeadingSpaces())
+    stringBuilder.append(str.trimLeadingSpaces().trim()).append("\n\n")
   }
 
   companion object {
-    fun prompt(block: Prompt.() -> Unit): String = Prompt().apply(block).stringBuilder.toString()
+    fun prompt(block: Prompt.() -> Unit): String = Prompt().apply(block).stringBuilder.toString().trim()
   }
 }

@@ -28,11 +28,11 @@ class StringTest {
         +"test text"
       }
 
-    assertEquals("test text\n", str)
+    assertEquals("test text", str)
   }
 
   @Test
-  fun `unaryPlus multi test`() {
+  fun `unaryPlus multi2a test`() {
     val str =
       prompt {
         +"test text"
@@ -41,25 +41,120 @@ class StringTest {
 
     val goal =
       """test text
-test text
-"""
+
+test text"""
 
     assertEquals(goal, str)
   }
 
   @Test
-  fun `singleLine test`() {
+  fun `unaryPlus multi2b test`() {
+    val str =
+      prompt {
+        +"""test
+text"""
+        +"""test
+text""".trimMargin()
+      }
+
+    val goal =
+      """test
+text
+
+test
+text"""
+
+    assertEquals(goal, str)
+  }
+
+  @Test
+  fun `unaryPlus multi3 test`() {
+    val str =
+      prompt {
+        +"test text"
+        +"test text"
+        +"test text"
+      }
+
+    val goal =
+      """test text
+
+test text
+
+test text"""
+
+    assertEquals(goal, str)
+  }
+
+  @Test
+  fun `singleLine no cr test`() {
     val str =
       prompt {
         singleLine(
-          """Welcome
+          """Hello
          team
          later
       """
         )
       }
 
-    assertEquals("Welcome team later", str)
+    val goal = "Hello team later"
+
+    assertEquals(goal, str)
+  }
+
+  @Test
+  fun `singleLine single with cr test`() {
+    val str =
+      prompt {
+        singleLine(
+          """Welcome
+            everyone
+
+         team
+         later
+      """
+        )
+      }
+
+    val goal = """Welcome everyone
+
+team later"""
+    assertEquals(goal, str)
+  }
+
+  @Test
+  fun `singleLine multi with cr test`() {
+    val str =
+      prompt {
+        singleLine(
+          """Welcome
+            everyone
+
+         team
+         later
+      """
+        )
+
+        singleLine(
+          """Welcome
+            everyone
+
+         team
+         later
+      """
+        )
+      }
+
+    val goal = """Welcome everyone
+
+team later
+
+Welcome everyone
+
+team later"""
+
+    assertEquals(goal, str)
   }
 
   @Test
@@ -73,7 +168,7 @@ test text
   }
 
   @Test
-  fun `trimPrefix multi line test`() {
+  fun `trimPrefix single multi line test`() {
     val str =
       prompt {
         trimPrefix(
@@ -83,6 +178,32 @@ test text
         )
       }
     val goal = """Welcome
+team
+later"""
+    assertEquals(goal, str)
+  }
+
+  @Test
+  fun `trimPrefix multi multi line test`() {
+    val str =
+      prompt {
+        trimPrefix(
+          """Welcome
+         team
+         later"""
+        )
+
+        trimPrefix(
+          """Welcome
+         team
+         later"""
+        )
+      }
+    val goal = """Welcome
+team
+later
+
+Welcome
 team
 later"""
     assertEquals(goal, str)
