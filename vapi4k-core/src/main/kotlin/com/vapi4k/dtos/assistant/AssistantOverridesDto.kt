@@ -61,14 +61,12 @@ data class AssistantOverridesDto(
   override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
   // TODO: Came from squad assistant
   override val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
-
   // TODO: This needs to be added to docs - https://docs.vapi.ai/assistants/function-calling
   override var forwardingPhoneNumber: String = "",
   // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
   override var endCallFunctionEnabled: Boolean? = null,
   // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
   override var dialKeypadFunctionEnabled: Boolean? = null,
-
   // Used only with AssistantOverrides
   override val variableValues: MutableMap<String, String> = mutableMapOf(),
   @SerialName("transcriber")

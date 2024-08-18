@@ -63,14 +63,12 @@ data class AssistantDto(
   override var serverMessages: MutableSet<AssistantServerMessageType> = DEFAULT_SERVER_MESSAGES.toMutableSet(),
   // TODO: Came from squad assistant
   override val transportConfigurations: MutableList<TransportConfigurationDto> = mutableListOf(),
-
   // TODO: This needs to be added to docs - https://docs.vapi.ai/assistants/function-calling
   override var forwardingPhoneNumber: String = "",
   // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
   override var endCallFunctionEnabled: Boolean? = null,
   // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
   override var dialKeypadFunctionEnabled: Boolean? = null,
-
   @SerialName("transcriber")
   override var transcriberDto: CommonTranscriberDto? = null,
   @SerialName("model")
@@ -95,4 +93,3 @@ data class AssistantDto(
       error("An assistant{} requires a model{} decl")
   }
 }
-

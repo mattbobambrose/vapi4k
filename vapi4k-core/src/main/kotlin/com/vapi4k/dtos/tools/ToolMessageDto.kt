@@ -55,41 +55,58 @@ private object ToolMessageSerializer : KSerializer<CommonToolMessageDto> {
 }
 
 @Serializable
-abstract class AbstractToolMessageDto(
-  @EncodeDefault
-  val type: ToolMessageType,
-  var content: String = "",
-  val conditions: MutableSet<ToolMessageCondition> = mutableSetOf(),
-) {
+abstract class AbstractToolMessageDto {
+  abstract var content: String
+
   fun verifyValues() {
     if (content.isEmpty()) error("Content is required for ToolMessage")
   }
 }
 
 @Serializable
-class ToolMessageStartDto :
-  AbstractToolMessageDto(ToolMessageType.REQUEST_START),
+class ToolMessageStartDto(
+  override var content: String = "",
+  override val conditions: MutableSet<ToolMessageCondition> = mutableSetOf(),
+) : AbstractToolMessageDto(),
   ToolMessageStartProperties,
-  CommonToolMessageDto
+  CommonToolMessageDto {
+  @EncodeDefault
+  val type: ToolMessageType = ToolMessageType.REQUEST_START
+}
 
 @Serializable
 class ToolMessageCompleteDto(
+  override var content: String = "",
+  override val conditions: MutableSet<ToolMessageCondition> = mutableSetOf(),
   override var role: ToolMessageRoleType = ToolMessageRoleType.UNSPECIFIED,
   override var endCallAfterSpokenEnabled: Boolean? = null,
-) : AbstractToolMessageDto(ToolMessageType.REQUEST_COMPLETE),
+) : AbstractToolMessageDto(),
   ToolMessageCompleteProperties,
-  CommonToolMessageDto
+  CommonToolMessageDto {
+  @EncodeDefault
+  val type: ToolMessageType = ToolMessageType.REQUEST_COMPLETE
+}
 
 @Serializable
 class ToolMessageFailedDto(
+  override var content: String = "",
+  override val conditions: MutableSet<ToolMessageCondition> = mutableSetOf(),
   override var endCallAfterSpokenEnabled: Boolean? = null,
-) : AbstractToolMessageDto(ToolMessageType.REQUEST_FAILED),
+) : AbstractToolMessageDto(),
   ToolMessageFailedProperties,
-  CommonToolMessageDto
+  CommonToolMessageDto {
+  @EncodeDefault
+  val type: ToolMessageType = ToolMessageType.REQUEST_FAILED
+}
 
 @Serializable
 class ToolMessageDelayedDto(
+  override var content: String = "",
+  override val conditions: MutableSet<ToolMessageCondition> = mutableSetOf(),
   override var timingMilliseconds: Int = -1,
-) : AbstractToolMessageDto(ToolMessageType.REQUEST_RESPONSE_DELAYED),
+) : AbstractToolMessageDto(),
   ToolMessageDelayedProperties,
-  CommonToolMessageDto
+  CommonToolMessageDto {
+  @EncodeDefault
+  val type: ToolMessageType = ToolMessageType.REQUEST_RESPONSE_DELAYED
+}

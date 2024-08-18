@@ -94,7 +94,7 @@ test text"""
           """Hello
          team
          later
-      """
+      """,
         )
       }
 
@@ -250,7 +250,7 @@ later"""
          later""",
           """Welcome
          team
-         later"""
+         later""",
         )
       }
     val goal = """Welcome

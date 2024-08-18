@@ -72,8 +72,7 @@ private object ChildSerializer : KSerializer<Child> {
     encoder.encodeSerializableValue(DataChild.serializer(), value as DataChild)
   }
 
-  override fun deserialize(decoder: Decoder): Child =
-    throw NotImplementedError("Deserialization is not supported")
+  override fun deserialize(decoder: Decoder): Child = throw NotImplementedError("Deserialization is not supported")
 }
 
 val module = SerializersModule {
@@ -106,6 +105,7 @@ class Family(
 )
 
 val format = Json { serializersModule = module }
+
 inline fun <reified T> T.toJsonElement2() = format.encodeToJsonElement(this)
 
 fun main() {

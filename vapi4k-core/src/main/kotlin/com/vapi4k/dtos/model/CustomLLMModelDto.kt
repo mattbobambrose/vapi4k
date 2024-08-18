@@ -34,12 +34,10 @@ data class CustomLLMModelDto(
   override var numFastTurns: Int = -1,
   @SerialName("knowledgeBase")
   override var knowledgeBaseDto: KnowledgeBaseDto? = null,
-
   override val messages: MutableList<RoleMessageDto> = mutableListOf(),
   override val tools: MutableList<ToolDto> = mutableListOf(),
   override val toolIds: MutableSet<String> = mutableSetOf(),
   override val functions: MutableList<FunctionDto> = mutableListOf(),
-
   override var model: String = "",
   override var url: String = "",
   override var metadataSendMode: MetaDataSendModeType = MetaDataSendModeType.UNSPECIFIED,
