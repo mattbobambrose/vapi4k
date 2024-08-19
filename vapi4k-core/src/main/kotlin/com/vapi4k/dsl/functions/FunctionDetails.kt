@@ -32,12 +32,14 @@ import com.vapi4k.utils.json.JsonElementUtils.doubleValue
 import com.vapi4k.utils.json.JsonElementUtils.intValue
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType
+import kotlin.reflect.full.callSuspendBy
 
 class FunctionDetails internal constructor(
   val obj: Any,
@@ -135,7 +137,14 @@ class FunctionDetails internal constructor(
       } ?: valueMapWithRequest
 
     // Call the function with the arguments
-    val result = function.callBy(callMap)
+    val result =
+      if (function.isSuspend) {
+        runBlocking {
+          function.callSuspendBy(callMap)
+        }
+      } else {
+        function.callBy(callMap)
+      }
     return if (function.isUnitReturnType) "" else result?.toString().orEmpty()
   }
 }
