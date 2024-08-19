@@ -137,11 +137,10 @@ class FunctionDetails internal constructor(
 
     // Call the function with the arguments
     val result =
-      if (function.isSuspend) {
-          function.callSuspendBy(callMap)
-      } else {
+      if (function.isSuspend)
+        function.callSuspendBy(callMap)
+      else
         function.callBy(callMap)
-      }
     return if (function.isUnitReturnType) "" else result?.toString().orEmpty()
   }
 }
