@@ -46,7 +46,7 @@ data class ToolCallResponse(
   var error: String = "",
 ) {
   companion object {
-    fun getToolCallResponse(
+    suspend fun getToolCallResponse(
       application: Vapi4kApplicationImpl,
       request: JsonElement,
     ) = runCatching {

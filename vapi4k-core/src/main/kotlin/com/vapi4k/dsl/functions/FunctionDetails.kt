@@ -32,7 +32,6 @@ import com.vapi4k.utils.json.JsonElementUtils.doubleValue
 import com.vapi4k.utils.json.JsonElementUtils.intValue
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import java.lang.reflect.InvocationTargetException
@@ -59,7 +58,7 @@ class FunctionDetails internal constructor(
 
   override fun toString() = fqNameWithParams
 
-  fun invokeToolMethod(
+  suspend fun invokeToolMethod(
     isTool: Boolean,
     request: JsonElement,
     args: JsonElement,
@@ -109,7 +108,7 @@ class FunctionDetails internal constructor(
     else -> error("Unsupported parameter type: $argType")
   }
 
-  private fun invokeMethod(
+  private suspend fun invokeMethod(
     request: JsonElement,
     args: JsonElement,
   ): String {
@@ -139,9 +138,7 @@ class FunctionDetails internal constructor(
     // Call the function with the arguments
     val result =
       if (function.isSuspend) {
-        runBlocking {
           function.callSuspendBy(callMap)
-        }
       } else {
         function.callBy(callMap)
       }
