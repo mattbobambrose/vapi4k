@@ -137,9 +137,19 @@ class FunctionDetails internal constructor(
     val args = if (valueMapWithRequest.isEmpty()) {
       "with no args"
     } else {
-      "with args: ${valueMapWithRequest}"
+      valueMapWithRequest
+        .mapNotNull { (param, value) ->
+          when (param.type.asKClass()) {
+            JsonElement::class -> "${param.name}: Request Value"
+            String::class -> "${param.name}: \"$value\""
+            Int::class -> "${param.name}: $value"
+            Double::class -> "${param.name}: $value"
+            Boolean::class -> "${param.name}: $value"
+            else -> null
+          }
+        }.joinToString(", ")
     }
-    logger.info { "Calling tool service: (\"${toolCall?.description.orEmpty()}\") ${functionName}  " }
+    logger.info { "Calling \"${toolCall?.description.orEmpty()}\" tool service: ${functionName}($args)" }
 
     // Invoke the function with the arguments
     val result =
