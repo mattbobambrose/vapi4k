@@ -129,13 +129,19 @@ class FunctionDetails internal constructor(
     val valueMapWithRequest =
       requestParam?.let { param -> valueMap.toMutableMap().also { it[param] = request } } ?: valueMap
 
-    logger.info { "valueMapWithRequest: $valueMapWithRequest" }
     val callMap =
       function.instanceParameter?.let { param ->
         valueMapWithRequest.toMutableMap().also { it[param] = obj }
       } ?: valueMapWithRequest
 
-    // Call the function with the arguments
+    val args = if (valueMapWithRequest.isEmpty()) {
+      "with no args"
+    } else {
+      "with args: ${valueMapWithRequest}"
+    }
+    logger.info { "Calling tool service: (\"${toolCall?.description.orEmpty()}\") ${functionName}  " }
+
+    // Invoke the function with the arguments
     val result =
       if (function.isSuspend)
         function.callSuspendBy(callMap)
