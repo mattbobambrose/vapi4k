@@ -45,7 +45,7 @@ interface SquadProperties {
   var name: String
 }
 
-data class SquadImpl internal constructor(
+class SquadImpl internal constructor(
   internal val assistantRequestContext: AssistantRequestContext,
   internal val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,

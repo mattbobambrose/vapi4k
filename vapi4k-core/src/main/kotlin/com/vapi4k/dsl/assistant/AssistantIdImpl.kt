@@ -30,7 +30,7 @@ interface AssistantIdProperties {
   val assistantOverridesDto: AssistantOverridesDto
 }
 
-data class AssistantIdImpl internal constructor(
+class AssistantIdImpl internal constructor(
   internal val assistantRequestContext: AssistantRequestContext,
   private val sessionCacheId: SessionCacheId,
   private val assistantCacheIdSource: AssistantCacheIdSource,

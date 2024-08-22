@@ -149,7 +149,7 @@ class FunctionDetails internal constructor(
           }
         }.joinToString(", ")
     }
-    logger.info { "Calling \"${toolCall?.description.orEmpty()}\" tool service: ${functionName}($args)" }
+    logger.info { "Calling \"${toolCall?.description.orEmpty()}\" tool service: $functionName($args)" }
 
     // Invoke the function with the arguments
     val result =

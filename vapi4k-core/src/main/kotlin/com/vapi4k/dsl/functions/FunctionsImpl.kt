@@ -28,7 +28,7 @@ import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import kotlin.reflect.KFunction
 
-data class FunctionsImpl internal constructor(
+class FunctionsImpl internal constructor(
   internal val model: AbstractModel,
 ) : Functions {
   override fun function(

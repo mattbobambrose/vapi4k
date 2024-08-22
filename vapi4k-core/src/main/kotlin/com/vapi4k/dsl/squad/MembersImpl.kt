@@ -20,7 +20,7 @@ import com.vapi4k.api.squad.Member
 import com.vapi4k.api.squad.Members
 import com.vapi4k.dtos.squad.MemberDto
 
-data class MembersImpl internal constructor(
+class MembersImpl internal constructor(
   internal val squad: SquadImpl,
 ) : Members {
   override fun member(block: Member.() -> Unit) {

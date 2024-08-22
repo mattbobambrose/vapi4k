@@ -28,7 +28,7 @@ import com.vapi4k.utils.DuplicateChecker
 
 interface AssistantProperties : CommonAssistantProperties
 
-data class AssistantImpl internal constructor(
+class AssistantImpl internal constructor(
   override val assistantRequestContext: AssistantRequestContext,
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,

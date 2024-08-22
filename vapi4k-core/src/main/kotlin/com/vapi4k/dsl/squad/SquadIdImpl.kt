@@ -23,7 +23,7 @@ internal interface SquadIdSource {
   var squadId: String
 }
 
-data class SquadIdImpl internal constructor(
+class SquadIdImpl internal constructor(
   internal val assistantRequestContext: AssistantRequestContext,
   private val squadIdSource: SquadIdSource,
 ) : SquadId {
