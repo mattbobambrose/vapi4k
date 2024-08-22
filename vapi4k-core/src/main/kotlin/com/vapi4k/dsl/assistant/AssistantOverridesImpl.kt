@@ -28,7 +28,7 @@ interface AssistantOverridesProperties : CommonAssistantProperties {
   val variableValues: MutableMap<String, String>
 }
 
-data class AssistantOverridesImpl internal constructor(
+class AssistantOverridesImpl internal constructor(
   override val assistantRequestContext: AssistantRequestContext,
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,

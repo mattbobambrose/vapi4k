@@ -20,6 +20,7 @@ import com.vapi4k.api.assistant.enums.AssistantClientMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.BackgroundSoundType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType
+import com.vapi4k.dtos.TransportConfigurationDto
 
 interface CommonAssistantProperties {
   /**
@@ -47,6 +48,16 @@ interface CommonAssistantProperties {
   </p>
    */
   var endCallMessage: String
+
+  // TODO Needs docs
+  val endCallPhrases: MutableSet<String>
+  val metadata: MutableMap<String, String>
+  val transportConfigurations: MutableList<TransportConfigurationDto>
+
+  // TODO: Not in the docs
+  var dialKeypadFunctionEnabled: Boolean?
+  var endCallFunctionEnabled: Boolean?
+  var forwardingPhoneNumber: String
 
   /**
   <p>This is the first message that the assistant will say. This can also be a URL to a containerized audio file (mp3, wav, etc.).

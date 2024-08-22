@@ -18,6 +18,7 @@ package com.vapi4k.dtos.voice
 
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
+import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.api.voice.enums.VoiceProviderType
 import com.vapi4k.dsl.voice.ElevenLabsVoiceProperties
 import kotlinx.serialization.EncodeDefault
@@ -25,7 +26,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-class ElevenLabsVoiceDto(
+data class ElevenLabsVoiceDto(
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
+  override val inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
+  override var fillerInjectionEnabled: Boolean? = null,
   var voiceId: String = "",
   @Transient
   override var voiceIdType: ElevenLabsVoiceIdType = ElevenLabsVoiceIdType.UNSPECIFIED,
@@ -42,8 +48,7 @@ class ElevenLabsVoiceDto(
   override var useSpeakerBoost: Boolean? = null,
   override var optimizeStreaming: Double = -1.0,
   override var enableSsmlParsing: Boolean? = null,
-) : AbstractVoiceDto(),
-  ElevenLabsVoiceProperties,
+) : ElevenLabsVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.ELEVEN_LABS

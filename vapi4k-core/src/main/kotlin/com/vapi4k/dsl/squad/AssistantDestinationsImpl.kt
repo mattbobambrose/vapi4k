@@ -22,7 +22,7 @@ import com.vapi4k.dsl.destination.AssistantDestinationImpl
 import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 import com.vapi4k.dtos.squad.MemberDto
 
-data class AssistantDestinationsImpl internal constructor(
+class AssistantDestinationsImpl internal constructor(
   private val member: MemberImpl,
   private val dto: MemberDto,
 ) : AssistantDestinations {

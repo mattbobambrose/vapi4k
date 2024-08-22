@@ -30,7 +30,7 @@ class FunctionResponse(
   var result: String = "",
 ) {
   companion object {
-    fun getFunctionCallResponse(
+    suspend fun getFunctionCallResponse(
       application: Vapi4kApplicationImpl,
       request: JsonElement,
     ) = FunctionResponse()

@@ -23,6 +23,33 @@ import com.vapi4k.api.assistant.enums.FirstMessageModeType
 import com.vapi4k.dtos.TransportConfigurationDto
 import kotlinx.serialization.Serializable
 
+internal val DEFAULT_CLIENT_MESSAGES =
+  mutableSetOf(
+    AssistantClientMessageType.CONVERSATION_UPDATE,
+    AssistantClientMessageType.FUNCTION_CALL,
+    AssistantClientMessageType.HANG,
+    AssistantClientMessageType.MODEL_OUTPUT,
+    AssistantClientMessageType.SPEECH_UPDATE,
+    AssistantClientMessageType.STATUS_UPDATE,
+    AssistantClientMessageType.TRANSCRIPT,
+    AssistantClientMessageType.TOOL_CALLS,
+    AssistantClientMessageType.USER_INTERRUPTED,
+    AssistantClientMessageType.VOICE_INPUT,
+  )
+internal val DEFAULT_SERVER_MESSAGES =
+  mutableSetOf(
+    AssistantServerMessageType.CONVERSATION_UPDATE,
+    AssistantServerMessageType.END_OF_CALL_REPORT,
+    AssistantServerMessageType.FUNCTION_CALL,
+    AssistantServerMessageType.HANG,
+    AssistantServerMessageType.SPEECH_UPDATE,
+    AssistantServerMessageType.STATUS_UPDATE,
+    AssistantServerMessageType.TOOL_CALLS,
+    AssistantServerMessageType.TRANSFER_DESTINATION_REQUEST,
+    AssistantServerMessageType.USER_INTERRUPTED,
+  )
+
+// Not used for now
 @Serializable
 abstract class AbstractAssistantDto(
   var backchannelingEnabled: Boolean? = null,
@@ -58,29 +85,3 @@ abstract class AbstractAssistantDto(
   // TODO: Not in docs or squad - https://docs.vapi.ai/assistants/function-calling
   var dialKeypadFunctionEnabled: Boolean? = null,
 )
-
-private val DEFAULT_CLIENT_MESSAGES =
-  mutableSetOf(
-    AssistantClientMessageType.CONVERSATION_UPDATE,
-    AssistantClientMessageType.FUNCTION_CALL,
-    AssistantClientMessageType.HANG,
-    AssistantClientMessageType.MODEL_OUTPUT,
-    AssistantClientMessageType.SPEECH_UPDATE,
-    AssistantClientMessageType.STATUS_UPDATE,
-    AssistantClientMessageType.TRANSCRIPT,
-    AssistantClientMessageType.TOOL_CALLS,
-    AssistantClientMessageType.USER_INTERRUPTED,
-    AssistantClientMessageType.VOICE_INPUT,
-  )
-private val DEFAULT_SERVER_MESSAGES =
-  mutableSetOf(
-    AssistantServerMessageType.CONVERSATION_UPDATE,
-    AssistantServerMessageType.END_OF_CALL_REPORT,
-    AssistantServerMessageType.FUNCTION_CALL,
-    AssistantServerMessageType.HANG,
-    AssistantServerMessageType.SPEECH_UPDATE,
-    AssistantServerMessageType.STATUS_UPDATE,
-    AssistantServerMessageType.TOOL_CALLS,
-    AssistantServerMessageType.TRANSFER_DESTINATION_REQUEST,
-    AssistantServerMessageType.USER_INTERRUPTED,
-  )

@@ -38,6 +38,7 @@ import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType
+import kotlin.reflect.full.callSuspendBy
 
 class FunctionDetails internal constructor(
   val obj: Any,
@@ -57,7 +58,7 @@ class FunctionDetails internal constructor(
 
   override fun toString() = fqNameWithParams
 
-  fun invokeToolMethod(
+  suspend fun invokeToolMethod(
     isTool: Boolean,
     request: JsonElement,
     args: JsonElement,
@@ -107,7 +108,7 @@ class FunctionDetails internal constructor(
     else -> error("Unsupported parameter type: $argType")
   }
 
-  private fun invokeMethod(
+  private suspend fun invokeMethod(
     request: JsonElement,
     args: JsonElement,
   ): String {
@@ -128,14 +129,34 @@ class FunctionDetails internal constructor(
     val valueMapWithRequest =
       requestParam?.let { param -> valueMap.toMutableMap().also { it[param] = request } } ?: valueMap
 
-    logger.info { "valueMapWithRequest: $valueMapWithRequest" }
     val callMap =
       function.instanceParameter?.let { param ->
         valueMapWithRequest.toMutableMap().also { it[param] = obj }
       } ?: valueMapWithRequest
 
-    // Call the function with the arguments
-    val result = function.callBy(callMap)
+    val args = if (valueMapWithRequest.isEmpty()) {
+      "with no args"
+    } else {
+      valueMapWithRequest
+        .mapNotNull { (param, value) ->
+          when (param.type.asKClass()) {
+            JsonElement::class -> "${param.name}: Request Value"
+            String::class -> "${param.name}: \"$value\""
+            Int::class -> "${param.name}: $value"
+            Double::class -> "${param.name}: $value"
+            Boolean::class -> "${param.name}: $value"
+            else -> null
+          }
+        }.joinToString(", ")
+    }
+    logger.info { "Calling \"${toolCall?.description.orEmpty()}\" tool service: $functionName($args)" }
+
+    // Invoke the function with the arguments
+    val result =
+      if (function.isSuspend)
+        function.callSuspendBy(callMap)
+      else
+        function.callBy(callMap)
     return if (function.isUnitReturnType) "" else result?.toString().orEmpty()
   }
 }

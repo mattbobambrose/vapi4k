@@ -26,14 +26,9 @@ import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 
-interface AssistantProperties : CommonAssistantProperties {
-  // TODO: Not in the docs
-  var dialKeypadFunctionEnabled: Boolean?
-  var endCallFunctionEnabled: Boolean?
-  var forwardingPhoneNumber: String
-}
+interface AssistantProperties : CommonAssistantProperties
 
-data class AssistantImpl internal constructor(
+class AssistantImpl internal constructor(
   override val assistantRequestContext: AssistantRequestContext,
   override val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
@@ -46,7 +41,6 @@ data class AssistantImpl internal constructor(
   override val modelChecker = DuplicateChecker()
   override val voiceChecker = DuplicateChecker()
   override val assistantCacheId = assistantCacheIdSource.nextAssistantCacheId()
-
   override val modelDtoUnion get() = assistantDto
   override val voicemailDetectionDto get() = modelDtoUnion.voicemailDetectionDto
   override val analysisPlanDto get() = modelDtoUnion.analysisPlanDto

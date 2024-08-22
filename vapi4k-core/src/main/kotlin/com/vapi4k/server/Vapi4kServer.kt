@@ -154,7 +154,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       config.applications.forEach { application ->
         route(application.serverPath) {
-          logger.info { "Adding POST serverPath endpoint: \"$parent\"" }
+          logger.info { "Adding POST serverPath endpoint: \"/${application.serverPath}\"" }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
           post { assistantRequests(config, application) }

@@ -17,6 +17,7 @@
 package com.vapi4k.dtos.voice
 
 import com.vapi4k.api.voice.enums.NeetsVoiceIdType
+import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.api.voice.enums.VoiceProviderType
 import com.vapi4k.dsl.voice.NeetsVoiceProperties
 import kotlinx.serialization.EncodeDefault
@@ -24,14 +25,18 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-class NeetsVoiceDto(
+data class NeetsVoiceDto(
+  override var inputPreprocessingEnabled: Boolean? = null,
+  override var inputReformattingEnabled: Boolean? = null,
+  override var inputMinCharacters: Int = -1,
+  override val inputPunctuationBoundaries: MutableSet<PunctuationType> = mutableSetOf(),
+  override var fillerInjectionEnabled: Boolean? = null,
   var voiceId: String = "",
   @Transient
   override var voiceIdType: NeetsVoiceIdType = NeetsVoiceIdType.UNSPECIFIED,
   @Transient
   override var customVoiceId: String = "",
-) : AbstractVoiceDto(),
-  NeetsVoiceProperties,
+) : NeetsVoiceProperties,
   CommonVoiceDto {
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.NEETS

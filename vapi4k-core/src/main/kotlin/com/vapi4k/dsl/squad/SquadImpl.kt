@@ -25,6 +25,7 @@ import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.squad.SquadDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -44,7 +45,7 @@ interface SquadProperties {
   var name: String
 }
 
-data class SquadImpl internal constructor(
+class SquadImpl internal constructor(
   internal val assistantRequestContext: AssistantRequestContext,
   internal val sessionCacheId: SessionCacheId,
   internal val assistantCacheIdSource: AssistantCacheIdSource,
@@ -71,8 +72,7 @@ private object ChildSerializer : KSerializer<Child> {
     encoder.encodeSerializableValue(DataChild.serializer(), value as DataChild)
   }
 
-  override fun deserialize(decoder: Decoder): Child =
-    throw NotImplementedError("Deserialization is not supported")
+  override fun deserialize(decoder: Decoder): Child = throw NotImplementedError("Deserialization is not supported")
 }
 
 val module = SerializersModule {
@@ -83,9 +83,10 @@ val module = SerializersModule {
 }
 
 @Serializable
-abstract class Parent(
-  var name: String = "",
-)
+abstract class Parent {
+  @EncodeDefault
+  var name: String = ""
+}
 
 @Serializable
 data class DataChild(
@@ -104,14 +105,15 @@ class Family(
 )
 
 val format = Json { serializersModule = module }
+
 inline fun <reified T> T.toJsonElement2() = format.encodeToJsonElement(this)
 
 fun main() {
   val c = Family().apply {
     dataChild.name = "Bill"
     nonDataChild.name = "Bob"
-    dataChild.street = "Bill Street"
-    nonDataChild.street = "Bob Street"
+//    dataChild.street = "Bill Street"
+//    nonDataChild.street = "Bob Street"
   }
 
   println(c.toJsonElement2().toJsonString())

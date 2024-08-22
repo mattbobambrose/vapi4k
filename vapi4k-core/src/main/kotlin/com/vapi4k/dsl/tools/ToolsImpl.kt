@@ -37,7 +37,7 @@ import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
 import kotlin.reflect.KFunction
 
-data class ToolsImpl internal constructor(
+class ToolsImpl internal constructor(
   internal val model: AbstractModel,
 ) : Tools {
   override fun serviceTool(

@@ -18,6 +18,7 @@ package com.vapi4k.dtos.api.destination
 
 import kotlinx.serialization.Serializable
 
+// Not used for now
 @Serializable
 abstract class AbstractDestinationDto {
   var message: String = ""

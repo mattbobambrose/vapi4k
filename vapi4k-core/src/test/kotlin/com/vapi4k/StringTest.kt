@@ -54,7 +54,7 @@ test text"""
         +"""test
 text"""
         +"""test
-text""".trimMargin()
+text"""
       }
 
     val goal =
@@ -94,7 +94,7 @@ test text"""
           """Hello
          team
          later
-      """
+      """,
         )
       }
 
@@ -113,7 +113,7 @@ test text"""
 
          team
          later
-      """
+      """,
         )
       }
 
@@ -133,7 +133,7 @@ team later"""
 
          team
          later
-      """
+      """,
         )
 
         singleLine(
@@ -142,7 +142,7 @@ team later"""
 
          team
          later
-      """
+      """,
         )
       }
 
@@ -173,7 +173,7 @@ team later"""
 
          team
          later
-      """
+      """,
         )
       }
 
@@ -205,7 +205,7 @@ team later"""
         trimPrefix(
           """Welcome
          team
-         later"""
+         later""",
         )
       }
     val goal = """Welcome
@@ -221,13 +221,13 @@ later"""
         trimPrefix(
           """Welcome
          team
-         later"""
+         later""",
         )
 
         trimPrefix(
           """Welcome
          team
-         later"""
+         later""",
         )
       }
     val goal = """Welcome
@@ -250,7 +250,7 @@ later"""
          later""",
           """Welcome
          team
-         later"""
+         later""",
         )
       }
     val goal = """Welcome

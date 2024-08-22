@@ -19,6 +19,6 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.dtos.StructuredDataSchemaDto
 
 @AssistantDslMarker
-data class StructuredDataSchema internal constructor(
+class StructuredDataSchema internal constructor(
   private val dto: StructuredDataSchemaDto,
 ) : StructuredDataSchemaProperties by dto

@@ -17,7 +17,9 @@
 package com.vapi4k.dtos.voice
 
 import com.vapi4k.api.voice.enums.PunctuationType
+import kotlinx.serialization.Serializable
 
+@Serializable
 abstract class AbstractVoiceDto {
   var inputPreprocessingEnabled: Boolean? = null
   var inputReformattingEnabled: Boolean? = null

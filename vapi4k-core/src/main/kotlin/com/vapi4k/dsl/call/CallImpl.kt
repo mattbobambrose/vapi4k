@@ -38,7 +38,7 @@ interface CallProperties {
   var phoneNumberId: String
 }
 
-data class CallImpl internal constructor(
+class CallImpl internal constructor(
   private val sessionCacheId: SessionCacheId,
   private val assistantCacheIdSource: AssistantCacheIdSource,
   private val dto: CallRequestDto,
