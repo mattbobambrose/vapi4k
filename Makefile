@@ -8,6 +8,7 @@ stop:
 	./gradlew --stop
 
 clean:
+	rm -rf build/
 	./gradlew clean
 
 compile: build
