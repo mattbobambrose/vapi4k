@@ -32,7 +32,7 @@ enum class VoiceProviderType(
   AZURE("azure"),
   CARTESIA("cartesia"),
   DEEPGRAM("deepgram"),
-  ELEVEN_LABS("elevenlabs"),
+  ELEVEN_LABS("11labs"),
   LMNT("lmnt"),
   NEETS("neets"),
   OPEN_AI("openai"),
