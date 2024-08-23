@@ -21,6 +21,7 @@ import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
+import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -40,9 +41,20 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.server.application.call
 import io.ktor.server.response.respondText
+import kotlinx.html.body
+import kotlinx.html.h2
+import kotlinx.html.head
+import kotlinx.html.html
+import kotlinx.html.id
+import kotlinx.html.p
+import kotlinx.html.script
+import kotlinx.html.span
+import kotlinx.html.stream.createHTML
+import kotlinx.html.title
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import java.net.ConnectException
 
 internal object ValidateApplication {
   suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl) =
@@ -54,8 +66,30 @@ internal object ValidateApplication {
       else
         call.respondText("Application for /$appName found", status = HttpStatusCode.NotFound)
     }.getOrElse {
-      logger.error(it) { "Error validating application" }
-      call.respondText(it.toErrorString(), status = HttpStatusCode.InternalServerError)
+      if (it is ConnectException) {
+        val html = serverBasePage()
+        call.respondText(html, ContentType.Text.Html)
+      } else {
+        logger.error(it) { "Error validating application" }
+        call.respondText(it.toErrorString(), status = HttpStatusCode.InternalServerError)
+      }
+    }
+
+  private fun serverBasePage() = createHTML()
+    .html {
+      head {
+        title { +"Assistant Request Validation" }
+      }
+      body {
+        h2 { +"Configuration Error" }
+        p {
+          +"Please set the env var SERVER_BASE_URL =  "
+          span {
+            id = "serverBaseUrl"
+          }
+        }
+        script { src = "$STATIC_BASE/js/server-base.js" }
+      }
     }
 
   suspend fun KtorCallContext.processValidateRequest(
@@ -64,8 +98,8 @@ internal object ValidateApplication {
     appName: String,
   ) {
     val secret = call.request.queryParameters["secret"].orEmpty()
-    val resp = validateAssistantRequestPage(config, application, appName, secret)
-    call.respondText(resp, ContentType.Text.Html)
+    val html = validateAssistantRequestPage(config, application, appName, secret)
+    call.respondText(html, ContentType.Text.Html)
   }
 
   suspend fun KtorCallContext.validateToolInvokeRequest(config: Vapi4kConfigImpl) =
