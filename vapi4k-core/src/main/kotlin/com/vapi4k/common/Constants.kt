@@ -23,7 +23,6 @@ object Constants {
   const val UNSPECIFIED_DEFAULT = "unspecified"
   const val UNKNOWN = "unknown"
   const val STATIC_BASE = "/core_assets"
-  const val STYLES_CSS = "$STATIC_BASE/css/styles.css"
 
   const val OUTBOUND_SERVER_PATH = "__outboundCalls"
 
