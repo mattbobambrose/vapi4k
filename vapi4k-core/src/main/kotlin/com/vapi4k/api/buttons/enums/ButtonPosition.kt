@@ -26,7 +26,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ButtonPositionSerializer::class)
-enum class ButtonPosition(val desc: String) {
+enum class ButtonPosition(
+  val desc: String,
+) {
   TOP("top"),
   BOTTOM_("bottom"),
   LEFT("left"),

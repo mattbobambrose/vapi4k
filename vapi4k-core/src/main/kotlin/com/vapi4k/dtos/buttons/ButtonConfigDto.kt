@@ -30,5 +30,3 @@ data class ButtonConfigDto(
   override var loading: ButtonStateDto = ButtonStateDto(),
   override var active: ButtonStateDto = ButtonStateDto(),
 ) : ButtonConfigProperties
-
-

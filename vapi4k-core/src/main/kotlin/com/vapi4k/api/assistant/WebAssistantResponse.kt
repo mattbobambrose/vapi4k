@@ -47,7 +47,6 @@ interface WebAssistantResponse {
    */
   fun squadId(block: SquadId.() -> Unit)
 
-
   /**
   This is the button config block used by browser clients.
    */
