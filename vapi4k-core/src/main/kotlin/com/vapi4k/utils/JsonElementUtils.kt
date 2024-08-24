@@ -49,7 +49,7 @@ object JsonElementUtils {
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
 
   internal fun JsonObjectBuilder.addArgsAndMessage(parameters: Parameters) {
-    put("query-args", queryParametersAsArgs(parameters))
+    put("queryArgs", queryParametersAsArgs(parameters))
     put(
       "message",
       buildJsonObject {

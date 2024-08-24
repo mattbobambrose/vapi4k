@@ -25,28 +25,22 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = ButtonPositionSerializer::class)
-enum class ButtonPosition(
+@Serializable(with = ButtonTypeSerializer::class)
+enum class ButtonType(
   val desc: String,
 ) {
-  TOP("top"),
-  BOTTOM_("bottom"),
-  LEFT("left"),
-  RIGHT("right"),
-  TOP_LEFT("top-left"),
-  TOP_RIGHT("top-right"),
-  BOTTOM_LEFT("bottom-left"),
-  BOTTOM_RIGHT("bottom-right"),
+  PILL("pill"),
+  ROUND("round"),
   UNSPECIFIED(UNSPECIFIED_DEFAULT),
 }
 
-private object ButtonPositionSerializer : KSerializer<ButtonPosition> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ButtonPosition", STRING)
+private object ButtonTypeSerializer : KSerializer<ButtonType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ButtonType", STRING)
 
   override fun serialize(
     encoder: Encoder,
-    value: ButtonPosition,
+    value: ButtonType,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = ButtonPosition.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = ButtonType.entries.first { it.desc == decoder.decodeString() }
 }

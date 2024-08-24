@@ -17,12 +17,13 @@
 package com.vapi4k.dtos.buttons
 
 import com.vapi4k.api.buttons.ButtonStateProperties
+import com.vapi4k.api.buttons.enums.ButtonType
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ButtonStateDto(
   override var color: String = "",
-  override var type: String = "",
+  override var type: ButtonType = ButtonType.UNSPECIFIED,
   override var title: String = "",
   override var subtitle: String = "",
   override var icon: String = "",

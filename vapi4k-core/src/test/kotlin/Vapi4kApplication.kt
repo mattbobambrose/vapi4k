@@ -15,6 +15,7 @@
  */
 
 import com.vapi4k.api.buttons.enums.ButtonPosition
+import com.vapi4k.api.buttons.enums.ButtonType
 import com.vapi4k.api.destination.enums.AssistantTransferMode
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
@@ -75,7 +76,7 @@ fun Application.module() {
 
           idle {
             color = "rgb(93, 254, 202)"
-            type = "pill"
+            type = ButtonType.PILL
             title = "Have a quick question?"
             subtitle = "Talk with our AI assistant"
             icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg"
@@ -83,7 +84,7 @@ fun Application.module() {
 
           loading {
             color = "rgb(93, 124, 202)"
-            type = "pill"
+            type = ButtonType.PILL
             title = "Connecting..."
             subtitle = "Please wait"
             icon = "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg"
@@ -91,7 +92,7 @@ fun Application.module() {
 
           active {
             color = "rgb(255, 0, 0)"
-            type = "pill"
+            type = ButtonType.PILL
             title = "Call is in progress..."
             subtitle = "End the call."
             icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg"

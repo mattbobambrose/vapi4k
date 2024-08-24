@@ -189,11 +189,12 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               } else {
                 buildJsonObject {
                   // Add values from the JSON object passed in with the POST request
-                  json.keys.forEach { key ->
-                    if (key in setOf("query-args", "message"))
-                      error("Arg key \"$key\" is reserved and cannot be used in the JSON object")
-                    put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
-                  }
+                  put("postArgs",
+                    buildJsonObject {
+                      json.keys.forEach { key ->
+                        put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
+                      }
+                    })
                   addArgsAndMessage(call.request.queryParameters)
                 }
               }
