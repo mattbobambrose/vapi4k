@@ -17,6 +17,9 @@
 package com.vapi4k.server
 
 import com.vapi4k.common.CoreEnvVars.isProduction
+import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
+import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
+import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
@@ -52,7 +55,8 @@ internal object InboundCallAssistantRequest {
     if (!isValidSecret(application.serverSecret)) {
       call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
-      if (isProduction) {
+      val validateCall = call.request.headers[VAPI4K_VALIDATE_HEADER].orEmpty()
+      if (isProduction || validateCall != VAPI4K_VALIDATE_VALUE) {
         processInboundCallAssistantRequest(config, application, request)
       } else {
         runCatching {
@@ -129,7 +133,7 @@ internal object InboundCallAssistantRequest {
   }
 
   internal suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
-    val secret = call.request.headers["x-vapi-secret"].orEmpty()
+    val secret = call.request.headers[VAPI_SECRET_HEADER].orEmpty()
     return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
       logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
       false

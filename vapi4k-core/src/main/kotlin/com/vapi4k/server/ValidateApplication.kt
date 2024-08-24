@@ -23,6 +23,8 @@ import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
+import com.vapi4k.common.Headers.SECRET_HEADER
+import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
@@ -99,7 +101,7 @@ internal object ValidateApplication {
     application: AbstractApplicationImpl,
     appName: String,
   ) {
-    val secret = call.request.queryParameters["secret"].orEmpty()
+    val secret = call.request.queryParameters[SECRET_HEADER].orEmpty()
     val html = validateAssistantRequestPage(config, application, appName, secret)
     call.respondText(html, ContentType.Text.Html)
   }
@@ -112,7 +114,7 @@ internal object ValidateApplication {
       val toolRequest = getToolRequest(params)
 
       httpClient.post("$serverBaseUrl/${application.serverPathAsSegment}") {
-        headers.append("x-vapi-secret", application.serverSecret)
+        headers.append(VAPI_SECRET_HEADER, application.serverSecret)
         setBody(toolRequest.toJsonString<JsonObject>())
       }
     }.onSuccess { response ->

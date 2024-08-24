@@ -31,6 +31,13 @@ object Constants {
   const val FUNCTION_NAME = "functionName"
 }
 
+object Headers {
+  const val SECRET_HEADER = "secret"
+  const val VAPI_SECRET_HEADER = "x-vapi-secret"
+  const val VAPI4K_VALIDATE_HEADER = "x-vapi4k-validate"
+  const val VAPI4K_VALIDATE_VALUE = "true"
+}
+
 object Endpoints {
   const val PING_PATH = "/ping"
   const val VERSION_PATH = "/version"

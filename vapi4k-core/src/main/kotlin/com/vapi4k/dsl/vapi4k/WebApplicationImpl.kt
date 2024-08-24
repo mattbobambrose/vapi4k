@@ -19,6 +19,9 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.api.assistant.WebAssistantResponse
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
+import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
+import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
+import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.assistant.WebAssistantResponseImpl
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
@@ -49,9 +52,12 @@ class WebApplicationImpl internal constructor() :
     secret: String,
   ): Pair<HttpStatusCode, String> =
     runBlocking {
-      val url = "$serverBaseUrl/$appName?x=1&y=2"
+      val url = "$serverBaseUrl/$appName"
       val response = httpClient.post(url) {
         contentType(Application.Json)
+        headers.append(VAPI4K_VALIDATE_HEADER, VAPI4K_VALIDATE_VALUE)
+        if (secret.isNotEmpty())
+          headers.append(VAPI_SECRET_HEADER, secret)
         setBody("{}".toJsonElement())
       }
       response.status to response.bodyAsText()

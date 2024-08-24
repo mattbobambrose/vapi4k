@@ -20,6 +20,9 @@ import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.api.vapi4k.InboundCallApplication
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
+import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
+import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
+import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
@@ -58,8 +61,9 @@ class InboundCallApplicationImpl internal constructor() :
       val url = "$serverBaseUrl/$appName"
       val response = httpClient.post(url) {
         contentType(Application.Json)
+        headers.append(VAPI4K_VALIDATE_HEADER, VAPI4K_VALIDATE_VALUE)
         if (secret.isNotEmpty())
-          headers.append("x-vapi-secret", secret)
+          headers.append(VAPI_SECRET_HEADER, secret)
         setBody(request)
       }
       response.status to response.bodyAsText()
@@ -95,7 +99,7 @@ class InboundCallApplicationImpl internal constructor() :
       if (responseDto.messageResponse.destination.isNull())
         error(
           "onTransferDestinationRequest{} is missing a numberDestination{}, sipDestination{}, " +
-              "or assistantDestination{} declaration",
+            "or assistantDestination{} declaration",
         )
       responseDto
     }

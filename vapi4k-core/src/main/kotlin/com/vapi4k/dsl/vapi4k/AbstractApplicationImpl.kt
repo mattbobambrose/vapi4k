@@ -19,6 +19,7 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
+import com.vapi4k.common.Headers.SECRET_HEADER
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ServiceCache
@@ -47,23 +48,19 @@ abstract class AbstractApplicationImpl(
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  internal val serverPathAsSegment get() = serverPath.removePrefix("/").removeSuffix("/")
-  internal val fqServerPath get() = "$serverBaseUrl/$serverPathAsSegment"
-
   var serverPath = defaultServerPath
   var serverSecret = ""
+
+  internal val fqServerPath get() = "$serverBaseUrl/$serverPathAsSegment"
+  internal val serverPathAsSegment get() = serverPath.removePrefix("/").removeSuffix("/")
+  internal val serverPathWithSecret: String
+    get() = "$serverPathAsSegment${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_HEADER=$it" }}"
 
   abstract fun fetchContent(
     request: JsonElement,
     appName: String,
     secret: String,
   ): Pair<HttpStatusCode, String>
-
-  internal val serverPathWithSecret: String
-    get() {
-      val secretStr = serverSecret.let { if (it.isBlank()) "" else "?secret=$it" }
-      return "$serverPathAsSegment$secretStr"
-    }
 
   internal fun containsServiceToolInCache(
     sessionCacheId: SessionCacheId,
