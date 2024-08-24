@@ -25,7 +25,6 @@ import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
-import com.vapi4k.common.Constants.STYLES_CSS
 import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
@@ -77,7 +76,6 @@ import kotlinx.html.link
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.stream.createHTML
-import kotlinx.html.style
 import kotlinx.html.table
 import kotlinx.html.tbody
 import kotlinx.html.td
@@ -122,21 +120,25 @@ object ValidateAssistantResponse {
         head {
           link {
             rel = "stylesheet"
-            href = STYLES_CSS
+            href = "$STATIC_BASE/css/styles.css"
           }
           link {
             rel = "stylesheet"
-            href = "$STATIC_BASE/prism.css"
+            href = "$STATIC_BASE/css/prism.css"
+          }
+          link {
+            rel = "stylesheet"
+            href = "$STATIC_BASE/css/validator.css"
           }
           title { +"Assistant Request Validation" }
           script { src = HTMX_SOURCE_URL }
         }
         body {
-          script { src = "$STATIC_BASE/prism.js" }
+          script { src = "$STATIC_BASE/js/prism.js" }
 
           if (config.applications.size > 1) {
             div {
-              style = "text-align: right; margin-top: 20px; margin-right: 15;"
+              id = "home-div"
               a {
                 href = VALIDATE_PATH
                 +"Home"
@@ -146,7 +148,7 @@ object ValidateAssistantResponse {
           h2 { +"Vapi4k Assistant Request Response" }
           if (status.value == 200) {
             div {
-              style = "border: 1px solid black; padding: 10px; margin: 10px;"
+              id = "status-div"
               h3 { +"Vapi Server URL: ${application.fqServerPath}" }
               h3 { +"Status: $status" }
               pre {
@@ -242,7 +244,7 @@ object ValidateAssistantResponse {
         .filter { functionInfo.containsFunction(it) }
         .forEach { toolName ->
           div {
-            style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            id = "tools-div"
             val functionDetails = functionInfo.getFunction(toolName)
             val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
@@ -258,9 +260,8 @@ object ValidateAssistantResponse {
                       tr {
                         td { +"${functionDetail.first}:" }
                         td {
-                          style = "width: 325px;"
                           input {
-                            style = "width: 325px;"
+                            id = "tools-input"
                             type =
                               when (functionDetail.second.asKClass()) {
                                 String::class -> InputType.text
@@ -299,7 +300,7 @@ object ValidateAssistantResponse {
         .filter { application.manualToolCache.containsTool(it) }
         .forEach { funcName ->
           div {
-            style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            id = "tools-div"
             val manualToolImpl = application.manualToolCache.getTool(funcName)
             val divId = getRandomString()
             h3 { +"$funcName (${manualToolImpl.signature})" }
@@ -313,9 +314,8 @@ object ValidateAssistantResponse {
                     tr {
                       td { +"$propertyName:" }
                       td {
-                        style = "width: 325px;"
                         input {
-                          style = "width: 325px;"
+                          id = "tools-input"
                           type =
                             when (propertyDesc.type) {
                               "string" -> InputType.text
@@ -355,7 +355,7 @@ object ValidateAssistantResponse {
         .filter { functionInfo.containsFunction(it) }
         .forEach { funcName ->
           div {
-            style = "border: 1px solid black; padding: 10px; margin: 10px;"
+            id = "tools-div"
             val functionDetails = functionInfo.getFunction(funcName)
             val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
@@ -371,9 +371,8 @@ object ValidateAssistantResponse {
                       tr {
                         td { +"${functionDetail.first}:" }
                         td {
-                          style = "width: 325px;"
                           input {
-                            style = "width: 325px;"
+                            id = "tools-input"
                             type =
                               when (functionDetail.second.asKClass()) {
                                 String::class -> InputType.text
@@ -430,7 +429,7 @@ object ValidateAssistantResponse {
     tr {
       td {
         input {
-          style = "margin-top: 10px;"
+          id = "invoke-input"
           type = InputType.submit
           value = "Invoke $name"
         }
@@ -461,8 +460,7 @@ object ValidateAssistantResponse {
       )
     }
 
-    pre {
-      style = "display: none;"
+    pre(classes = "code-pre") {
       id = "display-$divId"
       code(classes = "language-json line-numbers match-braces") {
         id = "result-$divId"

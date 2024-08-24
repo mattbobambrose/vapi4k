@@ -18,7 +18,7 @@ package com.vapi4k.server
 
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.OUTBOUND_SERVER_PATH
-import com.vapi4k.common.Constants.STYLES_CSS
+import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.common.Utils.ensureStartsWith
@@ -31,11 +31,11 @@ import kotlinx.html.body
 import kotlinx.html.h2
 import kotlinx.html.head
 import kotlinx.html.html
+import kotlinx.html.id
 import kotlinx.html.li
 import kotlinx.html.link
 import kotlinx.html.script
 import kotlinx.html.stream.createHTML
-import kotlinx.html.style
 import kotlinx.html.title
 import kotlinx.html.ul
 
@@ -51,7 +51,11 @@ internal object ValidateRoot {
           head {
             link {
               rel = "stylesheet"
-              href = STYLES_CSS
+              href = "$STATIC_BASE/css/styles.css"
+            }
+            link {
+              rel = "stylesheet"
+              href = "$STATIC_BASE/css/validator.css"
             }
             title { +"Assistant Request Validation" }
             script { src = HTMX_SOURCE_URL }
@@ -65,7 +69,7 @@ internal object ValidateRoot {
                 .filter { it.serverPath != OUTBOUND_SERVER_PATH }
                 .forEach { application ->
                   li {
-                    style = "margin-bottom: 10px;"
+                    id = "all-li"
                     a {
                       val secretStr = application.serverSecret.let { if (it.isBlank()) "" else "?secret=$it" }
                       href = "$VALIDATE_PATH/${application.serverPathAsSegment}$secretStr"
