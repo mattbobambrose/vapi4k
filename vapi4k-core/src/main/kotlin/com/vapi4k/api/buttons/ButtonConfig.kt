@@ -14,19 +14,12 @@
  *
  */
 
-package com.vapi4k.api.call
+package com.vapi4k.api.buttons
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.call.OutboundCallImpl
-import com.vapi4k.dtos.api.OutboundCallRequestDto
-import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.MiscUtils
+interface ButtonConfig : ButtonConfigProperties {
+  fun idle(block: ButtonState.() -> Unit)
 
-@AssistantDslMarker
-class Phone {
-  internal val sessionCacheId = MiscUtils.nextSessionCacheId()
-  private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
+  fun loading(block: ButtonState.() -> Unit)
 
-  fun outboundCallApplication(block: OutboundCall.() -> Unit): OutboundCall =
-    OutboundCallRequestDto().let { OutboundCallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
+  fun active(block: ButtonState.() -> Unit)
 }

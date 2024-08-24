@@ -22,7 +22,6 @@ import com.vapi4k.dtos.tools.ToolDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 // Not used for now
 @Serializable
 abstract class AbstractModelDto {

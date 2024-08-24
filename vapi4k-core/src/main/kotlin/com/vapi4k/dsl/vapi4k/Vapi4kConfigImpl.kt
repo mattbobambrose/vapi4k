@@ -16,8 +16,9 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.api.vapi4k.Vapi4kApplication
+import com.vapi4k.api.vapi4k.InboundCallApplication
 import com.vapi4k.api.vapi4k.Vapi4kConfig
+import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.outboundApplication
@@ -44,16 +45,32 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   internal val globalAllResponses = mutableListOf<ResponseArgs>()
   internal val globalPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  internal val applications = mutableListOf<Vapi4kApplicationImpl>()
-  internal val allApplications get() = applications + outboundApplication
+  internal val inboundCallApplications = mutableListOf<InboundCallApplicationImpl>()
+  internal val allApplications get() = inboundCallApplications + outboundApplication
+  internal val webApplications = mutableListOf<WebApplicationImpl>()
 
-  override fun vapi4kApplication(block: Vapi4kApplication.() -> Unit): Vapi4kApplication {
-    val application = Vapi4kApplicationImpl().apply(block)
-    if (allApplications.any { it.serverPath == application.serverPath })
-      error("vapi4kApplication{} with serverPath \"${application.serverPath}\" already exists")
-    applications += application
-    return application
+  private fun verifyServerPath(serverPath: String) {
+    if (allApplications.any { it.serverPath == serverPath })
+      error("inboundCallApplication{} with serverPath \"${serverPath}\" already exists")
+    if (webApplications.any { it.serverPath == serverPath })
+      error("webApplication{} with serverPath \"${serverPath}\" already exists")
   }
+
+  override fun inboundCallApplication(block: InboundCallApplication.() -> Unit): InboundCallApplication =
+    InboundCallApplicationImpl()
+      .apply(block)
+      .also { ica ->
+        verifyServerPath(ica.serverPath)
+        inboundCallApplications += ica
+      }
+
+  override fun webApplication(block: WebApplication.() -> Unit): WebApplication =
+    WebApplicationImpl()
+      .apply(block)
+      .also { wa ->
+        verifyServerPath(wa.serverPath)
+        webApplications += wa
+      }
 
   override fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
     globalAllRequests += block
@@ -83,11 +100,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     requestTypes.forEach { globalPerResponses += it to block }
   }
 
-  internal fun getApplication(applicationId: ApplicationId): Vapi4kApplicationImpl =
-    applications.firstOrNull { it.applicationId == applicationId }
+  internal fun getApplication(applicationId: ApplicationId): InboundCallApplicationImpl =
+    inboundCallApplications.firstOrNull { it.applicationId == applicationId }
       ?: error("Application not found for applicationId: $applicationId")
-
-  internal fun getApplication(serverPath: String): Vapi4kApplicationImpl =
-    applications.firstOrNull { it.serverPath == serverPath }
-      ?: error("Application with serverPath=$serverPath not found")
 }

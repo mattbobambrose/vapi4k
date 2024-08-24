@@ -17,7 +17,7 @@
 package com.vapi4k.server
 
 import com.vapi4k.common.CoreEnvVars.isProduction
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
@@ -28,7 +28,6 @@ import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.common.Utils.lambda
-import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import com.vapi4k.utils.enums.ServerRequestType.END_OF_CALL_REPORT
@@ -41,45 +40,35 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
-import kotlinx.serialization.json.JsonElement
 import kotlin.time.measureTimedValue
 
-internal object AssistantRequests {
-  suspend fun KtorCallContext.assistantRequests(
+internal object InboundCallAssistantRequests {
+  suspend fun KtorCallContext.inboundCallAssistantRequests(
     config: Vapi4kConfigImpl,
-    application: Vapi4kApplicationImpl,
+    application: InboundCallApplicationImpl,
   ) {
-    if (isProduction) {
-      assistantRequestResponse(config, application)
+    if (!isValidSecret(application.serverSecret)) {
+      call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
-      runCatching {
-        assistantRequestResponse(config, application)
-      }.onFailure { e ->
-        logger.error(e) { "Error processing serverUrl POST request: ${e.errorMsg}" }
+      if (isProduction) {
+        processInboundCallAssistantRequest(config, application)
+      } else {
+        runCatching {
+          processInboundCallAssistantRequest(config, application)
+        }.onFailure { e ->
+          logger.error(e) { "Error processing POST request: ${e.errorMsg}" }
+        }
       }
     }
   }
 
-  private suspend fun KtorCallContext.assistantRequestResponse(
+  private suspend fun KtorCallContext.processInboundCallAssistantRequest(
     config: Vapi4kConfigImpl,
-    application: Vapi4kApplicationImpl,
+    application: InboundCallApplicationImpl,
   ) {
-    if (isValidSecret(application.serverSecret)) {
-      val request = call.receive<String>().toJsonElement()
-      val requestType = request.requestType
-      processAssistantRequest(config, application, requestType, request)
-    } else {
-      call.respond(HttpStatusCode.Forbidden, "Invalid secret")
-    }
-  }
-
-  private suspend fun KtorCallContext.processAssistantRequest(
-    config: Vapi4kConfigImpl,
-    application: Vapi4kApplicationImpl,
-    requestType: ServerRequestType,
-    request: JsonElement,
-  ) {
-    invokeRequestCallbacks(config, application, requestType, request)
+    val request = call.receive<String>().toJsonElement()
+    val requestType = request.requestType
+    invokeRequestCallbacks(config, application.applicationId, requestType, request)
 
     val (response, duration) = measureTimedValue {
       when (requestType) {
@@ -134,7 +123,7 @@ internal object AssistantRequests {
       }
     }
 
-    invokeResponseCallbacks(config, application, requestType, response, duration)
+    invokeResponseCallbacks(config, application.applicationId, requestType, response, duration)
   }
 
   private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {

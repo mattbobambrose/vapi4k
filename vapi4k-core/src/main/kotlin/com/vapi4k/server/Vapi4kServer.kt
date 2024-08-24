@@ -36,16 +36,22 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.AdminJobs.RequestResponseCallback
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
-import com.vapi4k.server.AssistantRequests.assistantRequests
 import com.vapi4k.server.CacheResponses.cachesRequest
 import com.vapi4k.server.CacheResponses.clearCaches
+import com.vapi4k.server.InboundCallAssistantRequests.inboundCallAssistantRequests
 import com.vapi4k.server.ValidateApplication.validateApplication
 import com.vapi4k.server.ValidateApplication.validateToolInvokeRequest
 import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.server.WebAssistantRequests.webAssistantRequests
+import com.vapi4k.utils.JsonElementUtils.addArgsAndMessage
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
+import com.vapi4k.utils.json.JsonElementUtils.containsKey
+import com.vapi4k.utils.json.JsonElementUtils.getOrNull
+import com.vapi4k.utils.json.JsonElementUtils.keys
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
@@ -58,6 +64,7 @@ import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.http.content.staticResources
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondText
@@ -70,6 +77,8 @@ import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.coroutines.channels.Channel
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 
 @Version(
   version = BuildConfig.VERSION,
@@ -86,7 +95,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",
   createConfiguration = { Vapi4kConfigImpl() },
 ) {
-
   loadCoreEnvVars()
 
   with(logger) {
@@ -152,12 +160,42 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeRequest(config) }
       }
 
-      config.applications.forEach { application ->
+      config.inboundCallApplications.forEach { application ->
         route(application.serverPath) {
-          logger.info { "Adding POST serverPath endpoint: \"/${application.serverPath}\"" }
+          logger.info { "Adding inboundCallAssistantRequest POST serverPath endpoint: \"/${application.serverPath}\"" }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
-          post { assistantRequests(config, application) }
+          post { inboundCallAssistantRequests(config, application) }
+        }
+      }
+
+      config.webApplications.forEach { application ->
+        route(application.serverPath) {
+          installContentNegotiation()
+          logger.info { "Adding webAssistantRequest GET serverPath endpoint: \"/${application.serverPath}\"" }
+          get {
+            val request = buildJsonObject { addArgsAndMessage(call.request.queryParameters) }
+            webAssistantRequests(config, application, request)
+          }
+          logger.info { "Adding webAssistantRequest POST serverPath endpoint: \"/${application.serverPath}\"" }
+          post {
+            val json = call.receive<String>().toJsonElement()
+            val request =
+              if (json.containsKey("message.type")) {
+                json
+              } else {
+                buildJsonObject {
+                  // Add values from the JSON object passed in with the POST request
+                  json.keys.forEach { key ->
+                    if (key in setOf("query-args", "message"))
+                      error("Arg key \"$key\" is reserved and cannot be used in the JSON object")
+                    put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
+                  }
+                  addArgsAndMessage(call.request.queryParameters)
+                }
+              }
+            webAssistantRequests(config, application, request)
+          }
         }
       }
     }

@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.call
 
 import com.typesafe.config.ConfigFactory
-import com.vapi4k.api.call.Call
+import com.vapi4k.api.call.OutboundCall
 import com.vapi4k.api.call.Phone
 import com.vapi4k.api.call.Save
 import com.vapi4k.api.call.VapiApi
@@ -27,7 +27,7 @@ import com.vapi4k.common.Constants.OUTBOUND_SERVER_PATH
 import com.vapi4k.common.Constants.VAPI_API_URL
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
@@ -52,7 +52,7 @@ class VapiApiImpl private constructor(
   internal val config: ApplicationConfig,
   private val authString: String,
 ) : VapiApi {
-  override fun phone(block: Phone.() -> Call): HttpResponse =
+  override fun phone(block: Phone.() -> OutboundCall): HttpResponse =
     runBlocking {
       val phone = Phone()
       val callRequest =
@@ -85,7 +85,7 @@ class VapiApiImpl private constructor(
       httpResponse
     }
 
-  internal fun test(block: Phone.() -> Call) =
+  internal fun test(block: Phone.() -> OutboundCall) =
     runBlocking {
       Phone().runCatching(block)
         .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
@@ -93,7 +93,7 @@ class VapiApiImpl private constructor(
         .getOrThrow()
     }
 
-  override fun save(block: Save.() -> Call) =
+  override fun save(block: Save.() -> OutboundCall) =
     runBlocking {
       val callRequest =
         Save().runCatching(block)
@@ -134,7 +134,7 @@ class VapiApiImpl private constructor(
     }.getOrThrow()
 
   companion object {
-    internal val outboundApplication = Vapi4kApplicationImpl().also { it.serverPath = OUTBOUND_SERVER_PATH }
+    internal val outboundApplication = InboundCallApplicationImpl().also { it.serverPath = OUTBOUND_SERVER_PATH }
     internal val outboundRequestContext = AssistantRequestContext(outboundApplication, emptyJsonElement())
 
     internal fun HttpRequestBuilder.configCall(authString: String) {

@@ -32,7 +32,7 @@ class ApiCalls {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
-        call {
+        outboundCallApplication {
           assistantId {
             id = "123-445-666"
           }
@@ -51,7 +51,7 @@ class ApiCalls {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
-        call {
+        outboundCallApplication {
           assistant {
             firstMessage = "Hi there. I am here to help."
           }
@@ -70,7 +70,7 @@ class ApiCalls {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
-        call {
+        outboundCallApplication {
           assistantId {
             id = "123-445-666"
           }
@@ -89,7 +89,7 @@ class ApiCalls {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
-        call {
+        outboundCallApplication {
           assistantOverrides {
             firstMessage = "Hi there. I am here to help."
           }
@@ -108,7 +108,7 @@ class ApiCalls {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
-        call {
+        outboundCallApplication {
           assistantOverrides {
             firstMessage = "Hi there. I am here to help."
           }
@@ -125,7 +125,7 @@ class ApiCalls {
       val api = vapiApi("123-445-666") as VapiApiImpl
       val callResp =
         api.phone {
-          call {
+          outboundCallApplication {
             assistant {
               firstMessage = "Hi there. I am here to help."
               openAIModel {

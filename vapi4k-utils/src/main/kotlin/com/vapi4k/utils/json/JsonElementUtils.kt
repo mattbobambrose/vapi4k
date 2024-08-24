@@ -19,7 +19,11 @@ package com.vapi4k.utils.json
 import com.vapi4k.utils.json.JsonElementUtils.element
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -39,6 +43,8 @@ object JsonElementUtils {
   }
   val rawFormat by lazy { Json { prettyPrint = false } }
 
+  fun JsonElement.getOrNull(vararg keys: String): JsonElement? = if (containsKey(*keys)) get(*keys) else null
+
   val JsonElement.stringValue get() = jsonPrimitive.content
   val JsonElement.intValue get() = jsonPrimitive.content.toInt()
   val JsonElement.doubleValue get() = jsonPrimitive.content.toDouble()
@@ -46,13 +52,9 @@ object JsonElementUtils {
   val JsonElement.keys get() = jsonObject.keys
 
   fun JsonElement.stringValue(vararg keys: String) = get(*keys).stringValue
-
   fun JsonElement.intValue(vararg keys: String) = get(*keys).intValue
-
   fun JsonElement.doubleValue(vararg keys: String) = get(*keys).doubleValue
-
   fun JsonElement.booleanValue(vararg keys: String) = get(*keys).booleanValue
-
   fun JsonElement.jsonElementList(vararg keys: String) = get(*keys).toJsonElementList()
 
   internal fun JsonElement.element(key: String) =
@@ -79,6 +81,21 @@ object JsonElementUtils {
   val JsonElement.isEmpty get() = jsonObject.isEmpty()
 
   fun JsonElement.toJsonElementList() = jsonArray.toList()
+
+  fun JsonElement.toMap(): Map<String, Any?> {
+    if (this !is JsonObject) {
+      throw IllegalArgumentException("Can only convert JsonObject to Map")
+    }
+
+    return entries.associate { (key, value) ->
+      key to when (value) {
+        is JsonPrimitive -> value.content
+        is JsonArray -> value.map { it.toMap() }
+        is JsonObject -> value.toMap()
+        JsonNull -> null
+      }
+    }
+  }
 
   inline fun <reified T> T.toJsonString(prettyPrint: Boolean = true) =
     (if (prettyPrint) prettyFormat else rawFormat).encodeToString(this)

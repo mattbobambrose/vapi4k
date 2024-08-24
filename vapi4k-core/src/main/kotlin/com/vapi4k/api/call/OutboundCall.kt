@@ -22,10 +22,10 @@ import com.vapi4k.api.assistant.AssistantOverrides
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
 import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.call.CallProperties
+import com.vapi4k.dsl.call.OutboundCallProperties
 
 @AssistantDslMarker
-interface Call : CallProperties {
+interface OutboundCall : OutboundCallProperties {
   fun assistantId(block: AssistantId.() -> Unit): AssistantId
 
   fun assistant(block: Assistant.() -> Unit): Assistant

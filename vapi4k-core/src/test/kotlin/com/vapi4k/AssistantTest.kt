@@ -27,7 +27,7 @@ import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
 import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
@@ -763,6 +763,6 @@ class AssistantTest {
     }
     """
 
-    fun newRequestContext() = AssistantRequestContext(Vapi4kApplicationImpl(), ASSISTANT_REQUEST.toJsonElement())
+    fun newRequestContext() = AssistantRequestContext(InboundCallApplicationImpl(), ASSISTANT_REQUEST.toJsonElement())
   }
 }

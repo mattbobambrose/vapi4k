@@ -18,7 +18,7 @@ import com.vapi4k.WeatherLookupService0
 import com.vapi4k.WeatherLookupService1
 import com.vapi4k.WeatherLookupService2
 import com.vapi4k.WeatherLookupService3
-import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.OpenAIModelType
@@ -26,7 +26,7 @@ import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 
-fun AssistantResponse.myAssistantRequest(request: JsonElement) =
+fun InboundCallAssistantResponse.myAssistantRequest(request: JsonElement) =
   when (request.phoneNumber) {
     "+14156721022" ->
       assistantId {
@@ -44,7 +44,7 @@ fun AssistantResponse.myAssistantRequest(request: JsonElement) =
     else -> getAssistant()
   }
 
-fun AssistantResponse.getSquad(request: JsonElement) =
+fun InboundCallAssistantResponse.getSquad(request: JsonElement) =
   squad {
     name = "Squad Name"
     members {
@@ -70,7 +70,7 @@ fun AssistantResponse.getSquad(request: JsonElement) =
     }
   }
 
-fun AssistantResponse.getAssistant() =
+fun InboundCallAssistantResponse.getAssistant() =
   assistant {
     assistantOverrides {
       firstMessage = "This is the first message override"

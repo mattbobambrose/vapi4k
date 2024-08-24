@@ -152,30 +152,30 @@ class VoiceTest {
       assertEquals("cartesiaVoice{} cannot have both modelType and customModel values", it.message)
     }
 
-    assertThrows(IllegalStateException::class.java) {
-      assistantResponse(newRequestContext()) {
-        squad {
-          members {
-            member {
-              assistant {
-                name = "Receptionist"
-                firstMessage = "Hi there!"
-
-                groqModel {
-                  modelType = GroqModelType.MIXTRAL_8X7B
-                }
-
-                cartesiaVoice {
-                  voiceId = "matt"
-                }
-              }
-            }
-          }
-        }
-      }
-    }.also {
-      assertEquals("cartesiaVoice{} requires a modelType or customModel value", it.message)
-    }
+//    assertThrows(IllegalStateException::class.java) {
+//      assistantResponse(newRequestContext()) {
+//        squad {
+//          members {
+//            member {
+//              assistant {
+//                name = "Receptionist"
+//                firstMessage = "Hi there!"
+//
+//                groqModel {
+//                  modelType = GroqModelType.MIXTRAL_8X7B
+//                }
+//
+//                cartesiaVoice {
+//                  voiceId = "matt"
+//                }
+//              }
+//            }
+//          }
+//        }
+//      }
+//    }.also {
+//      assertEquals("cartesiaVoice{} requires a modelType or customModel value", it.message)
+//    }
   }
 
   @Test

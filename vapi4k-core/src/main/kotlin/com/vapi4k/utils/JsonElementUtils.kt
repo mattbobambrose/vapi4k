@@ -18,10 +18,19 @@ package com.vapi4k.utils
 
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.messageCallId
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.utils.DslUtils.getRandomSecret
+import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import io.ktor.http.Parameters
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonObjectBuilder
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 object JsonElementUtils {
   val JsonElement.sessionCacheId get() = messageCallId.toSessionCacheId()
@@ -38,4 +47,35 @@ object JsonElementUtils {
   private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
 
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
+
+  internal fun JsonObjectBuilder.addArgsAndMessage(parameters: Parameters) {
+    put("query-args", queryParametersAsArgs(parameters))
+    put(
+      "message",
+      buildJsonObject {
+        put("type", ASSISTANT_REQUEST.desc)
+        put(
+          "call",
+          buildJsonObject {
+            put("id", getRandomSecret(8, 4, 4, 12))
+          },
+        )
+      },
+    )
+  }
+
+  internal fun queryParametersAsArgs(parameters: Parameters): JsonObject =
+    buildJsonObject {
+      parameters.forEach { key, value ->
+        put(
+          key,
+          if (value.size > 1)
+            buildJsonArray { value.forEach { add(JsonPrimitive(it)) } }
+          else
+            JsonPrimitive(
+              value.firstOrNull().orEmpty(),
+            ),
+        )
+      }
+    }
 }

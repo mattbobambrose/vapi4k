@@ -26,17 +26,15 @@ import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
-import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
-import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -49,12 +47,6 @@ import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType.Application
-import io.ktor.http.contentType
-import kotlinx.coroutines.runBlocking
 import kotlinx.html.BODY
 import kotlinx.html.DIV
 import kotlinx.html.FORM
@@ -87,7 +79,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlin.collections.set
 
 object ValidateAssistantResponse {
-  private fun getNewRequest(): JsonElement {
+  internal fun getNewRequest(): JsonElement {
     val request = runCatching {
       resourceFile(REQUEST_VALIDATION_FILENAME.value)
     }.getOrElse { ASSISTANT_REQUEST_JSON }
@@ -96,23 +88,12 @@ object ValidateAssistantResponse {
 
   fun validateAssistantRequestPage(
     config: Vapi4kConfigImpl,
-    application: Vapi4kApplicationImpl,
+    application: AbstractApplicationImpl,
     appName: String,
     secret: String,
   ): String {
     val request = getNewRequest()
-    val (status, responseBody) =
-      runBlocking {
-        val url = "$serverBaseUrl/$appName"
-        val response = httpClient.post(url) {
-          contentType(Application.Json)
-          if (secret.isNotEmpty())
-            headers.append("x-vapi-secret", secret)
-          setBody(request)
-        }
-        response.status to response.bodyAsText()
-      }
-
+    val (status, responseBody) = application.fetchContent(request, appName, secret)
     val sessionCacheId = request.sessionCacheId
 
     return createHTML()
@@ -136,16 +117,16 @@ object ValidateAssistantResponse {
         body {
           script { src = "$STATIC_BASE/js/prism.js" }
 
-          if (config.applications.size > 1) {
+          if (config.inboundCallApplications.size > 1) {
             div {
-              id = "home-div"
+              id = "back-div"
               a {
                 href = VALIDATE_PATH
-                +"Home"
+                +"⬅️ Back"
               }
             }
           }
-          h2 { +"Vapi4k Assistant Request Response" }
+          h2 { +"Assistant Request Response" }
           if (status.value == 200) {
             div {
               id = "status-div"
@@ -160,17 +141,22 @@ object ValidateAssistantResponse {
 
             with(responseBody.toJsonElement()) {
               when {
-                isAssistantResponse -> assistantRequestToolsBody(application, this, sessionCacheId, false)
-                isSquadResponse -> {
+                isAssistantResponse ->
+                  assistantRequestToolsBody(application, this, sessionCacheId, "messageResponse.assistant.model")
+
+                containsKey("assistant") ->
+                  assistantRequestToolsBody(application, this, sessionCacheId, "assistant.model")
+
+                isSquadResponse || containsKey("squad") -> {
                   val assistants = jsonElementList("messageResponse.squad.members")
                   assistants.forEachIndexed { i, assistant ->
                     h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
-                    assistantRequestToolsBody(application, assistant, sessionCacheId, true)
+                    assistantRequestToolsBody(application, assistant, sessionCacheId, "assistant.model")
                   }
                 }
                 // TODO - Add support for assistantId and squadId responses
-                isAssistantIdResponse -> {}
-                isSquadIdResponse -> {}
+                isAssistantIdResponse || containsKey("assistantId") -> {}
+                isSquadIdResponse || containsKey("squadId") -> {}
                 else -> {
                   error("Unknown response type: ${responseBody.toJsonElement().keys}")
                 }
@@ -203,13 +189,12 @@ object ValidateAssistantResponse {
     }.getOrElse { index.toString() }
 
   private fun BODY.assistantRequestToolsBody(
-    application: Vapi4kApplicationImpl,
+    application: AbstractApplicationImpl,
     jsonElement: JsonElement,
     sessionCacheId: SessionCacheId,
-    isSquad: Boolean,
+    key: String,
   ) {
     logger.debug { jsonElement.toJsonString() }
-    val key = if (isSquad) "assistant.model" else "messageResponse.assistant.model"
     val toolNames =
       if (jsonElement[key].containsKey("tools"))
         jsonElement
@@ -233,7 +218,7 @@ object ValidateAssistantResponse {
   }
 
   private fun BODY.displayServiceTools(
-    application: Vapi4kApplicationImpl,
+    application: AbstractApplicationImpl,
     sessionCacheId: SessionCacheId,
     toolNames: List<String>,
   ) {
@@ -290,7 +275,7 @@ object ValidateAssistantResponse {
   }
 
   private fun BODY.displayManualTools(
-    application: Vapi4kApplicationImpl,
+    application: AbstractApplicationImpl,
     sessionCacheId: SessionCacheId,
     toolNames: List<String>,
   ) {
@@ -344,7 +329,7 @@ object ValidateAssistantResponse {
   }
 
   private fun BODY.displayFunctions(
-    application: Vapi4kApplicationImpl,
+    application: AbstractApplicationImpl,
     sessionCacheId: SessionCacheId,
     funcNames: List<String>,
   ) {
@@ -407,7 +392,7 @@ object ValidateAssistantResponse {
   }
 
   private fun FORM.addHiddenFields(
-    application: Vapi4kApplicationImpl,
+    application: AbstractApplicationImpl,
     sessionCacheId: SessionCacheId,
     funcName: String,
   ) {

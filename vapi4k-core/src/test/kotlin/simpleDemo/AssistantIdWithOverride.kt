@@ -16,11 +16,11 @@
 
 package simpleDemo
 
-import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.model.enums.OpenAIModelType
 
 class AssistantIdWithOverride {
-  fun AssistantResponse.getAssistantIdWithOverride() =
+  fun InboundCallAssistantResponse.getAssistantIdWithOverride() =
     assistantId {
       assistantOverrides {
         openAIModel {

@@ -23,7 +23,7 @@ import com.vapi4k.dsl.assistant.ManualToolCallResponseImpl
 import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
@@ -47,7 +47,7 @@ data class ToolCallResponse(
 ) {
   companion object {
     suspend fun getToolCallResponse(
-      application: Vapi4kApplicationImpl,
+      application: AbstractApplicationImpl,
       request: JsonElement,
     ) = runCatching {
       ToolCallMessageResponse()

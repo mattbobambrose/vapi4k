@@ -16,13 +16,12 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.common.ApplicationId
 import com.vapi4k.common.CoreEnvVars.TOOL_CACHE_CLEAN_PAUSE_MINS
 import com.vapi4k.common.CoreEnvVars.TOOL_CACHE_MAX_AGE_MINS
-import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.RequestResponseType
 import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
 import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.AdminJobs.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.server.AdminJobs.RequestResponseCallback.Companion.responseCallback
@@ -62,7 +61,6 @@ internal object AdminJobs {
 
   fun startCallbackThread(config: Vapi4kConfigImpl) {
     thread {
-      val config = AssistantImpl.config
       while (true) {
         runCatching {
           runBlocking {
@@ -71,7 +69,7 @@ internal object AdminJobs {
                 when (callback.type) {
                   REQUEST -> {
                     config.allApplications
-                      .filter { it == callback.application }
+                      .filter { it.applicationId == callback.applicationId }
                       .forEach { application ->
                         with(application) {
                           applicationAllRequests.forEach { launch { it.invoke(callback.request) } }
@@ -153,21 +151,21 @@ internal object AdminJobs {
 
   suspend fun invokeRequestCallbacks(
     config: Vapi4kConfigImpl,
-    application: Vapi4kApplicationImpl,
+    applicationId: ApplicationId,
     requestType: ServerRequestType,
     request: JsonElement,
-  ) = config.callbackChannel.send(requestCallback(application, requestType, request))
+  ) = config.callbackChannel.send(requestCallback(applicationId, requestType, request))
 
   suspend fun invokeResponseCallbacks(
     config: Vapi4kConfigImpl,
-    application: Vapi4kApplicationImpl,
+    applicationId: ApplicationId,
     requestType: ServerRequestType,
     response: () -> JsonElement,
     elapsed: Duration,
-  ) = config.callbackChannel.send(responseCallback(application, requestType, response, elapsed))
+  ) = config.callbackChannel.send(responseCallback(applicationId, requestType, response, elapsed))
 
   data class RequestResponseCallback(
-    val application: Vapi4kApplicationImpl,
+    val applicationId: ApplicationId,
     val type: RequestResponseType,
     val requestType: ServerRequestType,
     val request: JsonElement = emptyJsonElement(),
@@ -176,17 +174,17 @@ internal object AdminJobs {
   ) {
     companion object {
       fun requestCallback(
-        application: Vapi4kApplicationImpl,
+        applicationId: ApplicationId,
         requestType: ServerRequestType,
         request: JsonElement,
-      ) = RequestResponseCallback(application, REQUEST, requestType, request)
+      ) = RequestResponseCallback(applicationId, REQUEST, requestType, request)
 
       fun responseCallback(
-        application: Vapi4kApplicationImpl,
+        applicationId: ApplicationId,
         requestType: ServerRequestType,
         response: () -> JsonElement,
         elapsed: Duration,
-      ) = RequestResponseCallback(application, RESPONSE, requestType, response = response, elapsed = elapsed)
+      ) = RequestResponseCallback(applicationId, RESPONSE, requestType, response = response, elapsed = elapsed)
     }
   }
 }

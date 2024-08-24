@@ -21,6 +21,7 @@ import com.vapi4k.dsl.squad.SquadIdSource
 import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
+import com.vapi4k.dtos.buttons.ButtonConfigDto
 import com.vapi4k.dtos.squad.SquadDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -41,6 +42,8 @@ data class AssistantRequestResponseDto(
   override var squadId: String = "",
   @SerialName("squad")
   val squadDto: SquadDto = SquadDto(),
+  @SerialName("buttonConfig")
+  val buttonConfigDto: ButtonConfigDto = ButtonConfigDto(),
   var error: String = "",
 ) : AssistantIdProperties,
   SquadIdSource

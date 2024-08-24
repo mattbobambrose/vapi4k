@@ -106,7 +106,7 @@ class Family(
 
 val format = Json { serializersModule = module }
 
-inline fun <reified T> T.toJsonElement2() = format.encodeToJsonElement(this)
+private inline fun <reified T> T.toJsonElement2() = format.encodeToJsonElement(this)
 
 fun main() {
   val c = Family().apply {

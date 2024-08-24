@@ -14,20 +14,21 @@
  *
  */
 
-package com.vapi4k.api.vapi4k
+package com.vapi4k.dtos.buttons
 
-import com.vapi4k.dsl.vapi4k.CommonCallbacks
-import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
+import com.vapi4k.api.buttons.ButtonConfigProperties
+import com.vapi4k.api.buttons.enums.ButtonPosition
+import kotlinx.serialization.Serializable
 
-@Vapi4KDslMarker
-interface Vapi4kConfig : CommonCallbacks {
-  /**
-  Creates a context for an InboundCall application.
-   */
-  fun inboundCallApplication(block: InboundCallApplication.() -> Unit): InboundCallApplication
+@Serializable
+data class ButtonConfigDto(
+  override var position: ButtonPosition = ButtonPosition.UNSPECIFIED,
+  override var offset: String = "",
+  override var width: String = "",
+  override var height: String = "",
+  override var idle: ButtonStateDto = ButtonStateDto(),
+  override var loading: ButtonStateDto = ButtonStateDto(),
+  override var active: ButtonStateDto = ButtonStateDto(),
+) : ButtonConfigProperties
 
-  /**
-  Creates a context for an InboundCall application.
-   */
-  fun webApplication(block: WebApplication.() -> Unit): WebApplication
-}
+

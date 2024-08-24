@@ -29,7 +29,7 @@ class ApplicationTest {
     val str = "/something_else"
     val application =
       with(Vapi4kConfigImpl()) {
-        vapi4kApplication {
+        inboundCallApplication {
           serverPath = str
           serverSecret = "12345"
         }
@@ -42,7 +42,7 @@ class ApplicationTest {
   fun `test for default serverPath`() {
     val application =
       with(Vapi4kConfigImpl()) {
-        vapi4kApplication {
+        inboundCallApplication {
         }
       }
     assertEquals(defaultServerPath.removePrefix("/"), application.serverPath)
@@ -55,9 +55,9 @@ class ApplicationTest {
     assertThrows(IllegalStateException::class.java) {
       val application =
         with(Vapi4kConfigImpl()) {
-          vapi4kApplication {
+          inboundCallApplication {
           }
-          vapi4kApplication {
+          inboundCallApplication {
           }
         }
     }.also {
@@ -70,10 +70,10 @@ class ApplicationTest {
     val str = "/something_else"
     assertThrows(IllegalStateException::class.java) {
       with(Vapi4kConfigImpl()) {
-        vapi4kApplication {
+        inboundCallApplication {
           serverPath = str
         }
-        vapi4kApplication {
+        inboundCallApplication {
           serverPath = str
         }
       }

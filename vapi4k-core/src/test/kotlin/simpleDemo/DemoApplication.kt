@@ -34,7 +34,7 @@ fun main() {
 
 fun Application.demoModule() {
   install(Vapi4k) {
-    vapi4kApplication {
+    inboundCallApplication {
       serverPath = "vapi4k"
       serverSecret = "12345"
 

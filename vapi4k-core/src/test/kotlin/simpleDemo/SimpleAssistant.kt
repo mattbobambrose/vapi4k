@@ -16,7 +16,7 @@
 
 package simpleDemo
 
-import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.OpenAIModelType
@@ -26,7 +26,7 @@ import com.vapi4k.dsl.toolservice.ToolCallService
 import kotlinx.serialization.json.JsonElement
 
 object SimpleAssistant {
-  fun AssistantResponse.simpleAssistantRequest() {
+  fun InboundCallAssistantResponse.simpleAssistantRequest() {
     assistant {
       firstMessage = "Hi there!"
 

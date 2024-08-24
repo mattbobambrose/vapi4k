@@ -16,10 +16,9 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.api.vapi4k.Vapi4kApplication
 import kotlinx.serialization.json.JsonElement
 
 class AssistantRequestContext(
-  val application: Vapi4kApplication,
+  val application: AbstractApplicationImpl,
   val request: JsonElement,
 )

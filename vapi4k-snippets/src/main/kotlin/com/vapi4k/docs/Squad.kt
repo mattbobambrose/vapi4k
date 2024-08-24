@@ -1,11 +1,11 @@
 package com.github.mattbobambrose.vapi4k.com.vapi4k.docs
 
-import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.model.enums.OpenAIModelType
 import kotlinx.serialization.json.JsonElement
 
 object Squad {
-  fun AssistantResponse.getSquad(request: JsonElement) =
+  fun InboundCallAssistantResponse.getSquad(request: JsonElement) =
     squad {
       name = "Squad Name-31"
       members {

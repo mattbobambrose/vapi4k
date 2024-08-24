@@ -23,7 +23,7 @@ import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomString
@@ -60,7 +60,8 @@ internal object ValidateApplication {
   suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl) =
     runCatching {
       val appName = call.parameters["appName"].orEmpty()
-      val application = config.applications.firstOrNull { it.serverPathAsSegment == appName }
+      val application =
+        (config.inboundCallApplications + config.webApplications).firstOrNull { it.serverPathAsSegment == appName }
       if (application.isNotNull())
         processValidateRequest(config, application, appName)
       else
@@ -75,26 +76,27 @@ internal object ValidateApplication {
       }
     }
 
-  private fun serverBasePage() = createHTML()
-    .html {
-      head {
-        title { +"Assistant Request Validation" }
-      }
-      body {
-        h2 { +"Configuration Error" }
-        p {
-          +"Please set the environment variable SERVER_BASE_URL =  "
-          span {
-            id = "serverBaseUrl"
-          }
+  private fun serverBasePage() =
+    createHTML()
+      .html {
+        head {
+          title { +"Assistant Request Validation" }
         }
-        script { src = "$STATIC_BASE/js/server-base.js" }
+        body {
+          h2 { +"Configuration Error" }
+          p {
+            +"Please set the environment variable SERVER_BASE_URL =  "
+            span {
+              id = "serverBaseUrl"
+            }
+          }
+          script { src = "$STATIC_BASE/js/server-base.js" }
+        }
       }
-    }
 
   suspend fun KtorCallContext.processValidateRequest(
     config: Vapi4kConfigImpl,
-    application: Vapi4kApplicationImpl,
+    application: AbstractApplicationImpl,
     appName: String,
   ) {
     val secret = call.request.queryParameters["secret"].orEmpty()

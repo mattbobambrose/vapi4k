@@ -26,7 +26,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 This is the `assistant` response that is expected from the server to the message.
  */
 @AssistantDslMarker
-interface AssistantResponse {
+interface InboundCallAssistantResponse {
   /**
   <p>This is the error if the call shouldn't be accepted. This is spoken to the customer.
   <br>If this is sent, <code>assistantId</code>, <code>assistant</code>, <code>squadId</code>, <code>squad</code>, and <code>destination</code> are ignored.

@@ -36,7 +36,7 @@ fun Application.helloWorld() {
   // Install the Vapi4k ktor plugin
   install(Vapi4k) {
     // Define the Vapi4k application
-    vapi4kApplication {
+    inboundCallApplication {
       onAssistantRequest { request ->
         logger.info { "Assistant request has been made: ${request.phoneNumber}" }
 

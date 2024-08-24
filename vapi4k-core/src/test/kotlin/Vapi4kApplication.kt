@@ -14,9 +14,12 @@
  *
  */
 
+import com.vapi4k.api.buttons.enums.ButtonPosition
 import com.vapi4k.api.destination.enums.AssistantTransferMode
+import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError
+import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
@@ -46,8 +49,57 @@ fun Application.module() {
   defaultKtorConfig(appMicrometerRegistry)
 
   install(Vapi4k) {
-    vapi4kApplication {
-      serverPath = "/inboundRequest"
+    webApplication {
+      // serverPath = "/inboundRequest"
+
+      onAssistantRequest { args ->
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_4_TURBO
+            systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
+          }
+          elevenLabsVoice {
+            voiceIdType = ElevenLabsVoiceIdType.PAULA
+          }
+
+          firstMessage = "Hi, I am Beth how can I assist you today?"
+        }
+
+        buttonConfig {
+          position = ButtonPosition.BOTTOM_LEFT
+          offset = "40px"
+          width = "50px"
+          height = "50px"
+
+          idle {
+            color = "rgb(93, 254, 202)"
+            type = "pill"
+            title = "Have a quick question?"
+            subtitle = "Talk with our AI assistant"
+            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg"
+          }
+
+          loading {
+            color = "rgb(93, 124, 202)"
+            type = "pill"
+            title = "Connecting..."
+            subtitle = "Please wait"
+            icon = "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg"
+          }
+
+          active {
+            color = "rgb(255, 0, 0)"
+            type = "pill"
+            title = "Call is in progress..."
+            subtitle = "End the call."
+            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg"
+          }
+        }
+      }
+    }
+
+    inboundCallApplication {
+      serverPath = "/inboundRequest1"
       serverSecret = "12345"
 
       onAssistantRequest { request ->
@@ -55,7 +107,9 @@ fun Application.module() {
       }
     }
 
-    vapi4kApplication {
+    inboundCallApplication {
+      serverPath = "/inboundRequest2"
+
       onAssistantRequest { request ->
         myAssistantRequest(request)
       }

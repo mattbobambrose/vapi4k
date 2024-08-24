@@ -22,9 +22,9 @@ import io.ktor.client.statement.HttpResponse
 
 @AssistantDslMarker
 interface VapiApi {
-  fun phone(block: Phone.() -> Call): HttpResponse
+  fun phone(block: Phone.() -> OutboundCall): HttpResponse
 
-  fun save(block: Save.() -> Call): HttpResponse
+  fun save(block: Save.() -> OutboundCall): HttpResponse
 
   fun list(objectType: ApiObjectType): HttpResponse
 

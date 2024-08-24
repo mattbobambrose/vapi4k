@@ -18,7 +18,7 @@ package com.vapi4k.responses
 
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionName
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionParameters
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.common.Utils.errorMsg
@@ -31,7 +31,7 @@ class FunctionResponse(
 ) {
   companion object {
     suspend fun getFunctionCallResponse(
-      application: Vapi4kApplicationImpl,
+      application: AbstractApplicationImpl,
       request: JsonElement,
     ) = FunctionResponse()
       .also { response ->

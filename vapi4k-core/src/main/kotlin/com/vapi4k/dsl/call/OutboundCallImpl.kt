@@ -19,8 +19,8 @@ package com.vapi4k.dsl.call
 import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.api.assistant.AssistantId
 import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.api.call.Call
 import com.vapi4k.api.call.Customer
+import com.vapi4k.api.call.OutboundCall
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
 import com.vapi4k.common.SessionCacheId
@@ -30,20 +30,20 @@ import com.vapi4k.dsl.assistant.AssistantOverridesImpl
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.outboundRequestContext
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
-import com.vapi4k.dtos.api.CallRequestDto
+import com.vapi4k.dtos.api.OutboundCallRequestDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateChecker
 
-interface CallProperties {
+interface OutboundCallProperties {
   var phoneNumberId: String
 }
 
-class CallImpl internal constructor(
+class OutboundCallImpl internal constructor(
   private val sessionCacheId: SessionCacheId,
   private val assistantCacheIdSource: AssistantCacheIdSource,
-  private val dto: CallRequestDto,
-) : CallProperties by dto,
-  Call {
+  private val dto: OutboundCallRequestDto,
+) : OutboundCallProperties by dto,
+  OutboundCall {
   private val assistantChecker = DuplicateChecker()
   private val overridesChecker = DuplicateChecker()
 

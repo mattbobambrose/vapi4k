@@ -17,12 +17,12 @@
 package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
-import com.vapi4k.api.assistant.AssistantResponse
+import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
-import com.vapi4k.dsl.assistant.AssistantResponseImpl
+import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
-import com.vapi4k.dsl.vapi4k.Vapi4kApplicationImpl
+import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantMessageResponseDto
 import com.vapi4k.server.Vapi4k
@@ -44,9 +44,9 @@ import kotlinx.serialization.json.JsonElement
 
 fun assistantResponse(
   assistantRequestContext: AssistantRequestContext,
-  block: AssistantResponse.() -> Unit,
+  block: InboundCallAssistantResponse.() -> Unit,
 ): AssistantMessageResponseDto {
-  val assistantResponse = AssistantResponseImpl(assistantRequestContext).apply(block)
+  val assistantResponse = InboundCallAssistantResponseImpl(assistantRequestContext).apply(block)
   return if (assistantResponse.isAssigned)
     assistantResponse.assistantRequestResponse
   else
@@ -74,14 +74,14 @@ else
 
 fun withTestApplication(
   fileName: String,
-  block: AssistantResponse.() -> Unit,
+  block: InboundCallAssistantResponse.() -> Unit,
 ): Pair<HttpResponse, JsonElement> {
   var response: HttpResponse? = null
   var je: JsonElement? = null
   testApplication {
     application {
       install(Vapi4k) {
-        vapi4kApplication {
+        inboundCallApplication {
           onAssistantRequest {
             block()
           }
@@ -108,14 +108,14 @@ fun withTestApplication(
   fileNames: List<String>,
   getArg: String = "",
   cacheRemovalEnabled: Boolean = true,
-  block: AssistantResponse.() -> Unit,
+  block: InboundCallAssistantResponse.() -> Unit,
 ): List<Pair<HttpResponse, JsonElement>> {
   val responses: MutableList<Pair<HttpResponse, JsonElement>> = mutableListOf()
   testApplication {
     application {
       install(Vapi4k) {
-        vapi4kApplication {
-          (this as Vapi4kApplicationImpl).eocrCacheRemovalEnabled = cacheRemovalEnabled
+        inboundCallApplication {
+          (this as InboundCallApplicationImpl).eocrCacheRemovalEnabled = cacheRemovalEnabled
 
           onAssistantRequest {
             block()
