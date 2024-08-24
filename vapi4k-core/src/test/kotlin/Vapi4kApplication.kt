@@ -63,10 +63,6 @@ fun Application.module() {
             voiceIdType = ElevenLabsVoiceIdType.PAULA
             modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
           }
-          elevenLabsVoice {
-            voiceIdType = ElevenLabsVoiceIdType.PAULA
-            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
-          }
 
           firstMessage = "Hi, I am Beth how can I assist you today?"
         }
