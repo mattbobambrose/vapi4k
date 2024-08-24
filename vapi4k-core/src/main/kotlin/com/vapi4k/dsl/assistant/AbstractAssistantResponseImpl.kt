@@ -25,19 +25,19 @@ import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.responses.AssistantMessageResponseDto
 import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 
 abstract class AbstractAssistantResponseImpl(
   internal val assistantRequestContext: AssistantRequestContext,
 ) {
-  internal val checker = DuplicateChecker()
+  internal val duplicateChecker = DuplicateInvokeChecker()
   internal val assistantRequestResponse = AssistantMessageResponseDto()
 
-  internal val isAssigned get() = checker.wasCalled
+  internal val isAssigned get() = duplicateChecker.wasCalled
 
   fun assistant(block: Assistant.() -> Unit) {
-    checker.check("An assistant{} is already declared")
+    duplicateChecker.check("An assistant{} is already declared")
     assistantRequestResponse.apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -56,7 +56,7 @@ abstract class AbstractAssistantResponseImpl(
   }
 
   fun assistantId(block: AssistantId.() -> Unit) {
-    checker.check("An assistantId{} is already declared")
+    duplicateChecker.check("An assistantId{} is already declared")
     assistantRequestResponse.apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -65,7 +65,7 @@ abstract class AbstractAssistantResponseImpl(
   }
 
   fun squad(block: Squad.() -> Unit) {
-    checker.check("An squad{} is already declared")
+    duplicateChecker.check("An squad{} is already declared")
     assistantRequestResponse.apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -74,7 +74,7 @@ abstract class AbstractAssistantResponseImpl(
   }
 
   fun squadId(block: SquadId.() -> Unit) {
-    checker.check("An squadId{} is already declared")
+    duplicateChecker.check("An squadId{} is already declared")
     assistantRequestResponse.apply {
       SquadIdImpl(assistantRequestContext, messageResponse).apply(block)
     }

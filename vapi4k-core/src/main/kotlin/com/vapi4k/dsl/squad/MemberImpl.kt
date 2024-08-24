@@ -22,13 +22,13 @@ import com.vapi4k.api.squad.AssistantId
 import com.vapi4k.api.squad.Member
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dtos.squad.MemberDto
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 data class MemberImpl(
   internal val members: MembersImpl,
   private val dto: MemberDto,
 ) : Member {
-  private val memberChecker = DuplicateChecker()
+  private val memberChecker = DuplicateInvokeChecker()
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     memberChecker.check("Member already has an assistantId assigned")

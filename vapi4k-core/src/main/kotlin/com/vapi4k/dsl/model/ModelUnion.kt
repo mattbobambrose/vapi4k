@@ -25,7 +25,7 @@ import com.vapi4k.dtos.VoicemailDetectionDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.transcriber.CommonTranscriberDto
 import com.vapi4k.dtos.voice.CommonVoiceDto
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 interface ModelDtoUnion {
   var transcriberDto: CommonTranscriberDto?
@@ -38,10 +38,10 @@ interface ModelUnion {
   val analysisPlanDto: AnalysisPlanDto
   val artifactPlanDto: ArtifactPlanDto
   val assistantCacheId: AssistantCacheId
-  val modelChecker: DuplicateChecker
+  val modelChecker: DuplicateInvokeChecker
   val modelDtoUnion: ModelDtoUnion
   val sessionCacheId: SessionCacheId
-  val transcriberChecker: DuplicateChecker
-  val voiceChecker: DuplicateChecker
+  val transcriberChecker: DuplicateInvokeChecker
+  val voiceChecker: DuplicateInvokeChecker
   val voicemailDetectionDto: VoicemailDetectionDto
 }

@@ -22,10 +22,10 @@ import com.vapi4k.api.toolservice.RequestCompleteMessages
 import com.vapi4k.dsl.assistant.ToolMessageCompleteImpl
 import com.vapi4k.dtos.tools.ToolMessageCompleteDto
 import com.vapi4k.dtos.tools.ToolMessageCondition
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 class RequestCompleteMessagesImpl internal constructor() : RequestCompleteMessages {
-  private val duplicateChecker = DuplicateChecker()
+  private val duplicateChecker = DuplicateInvokeChecker()
   internal val messageList = mutableListOf<ToolMessageCompleteImpl>()
 
   private val dtoConditions

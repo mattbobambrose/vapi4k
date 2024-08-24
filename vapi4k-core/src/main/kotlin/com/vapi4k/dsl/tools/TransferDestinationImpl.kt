@@ -30,34 +30,34 @@ import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.dtos.api.destination.StepDestinationDto
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 class TransferDestinationImpl internal constructor(
   val callerName: String,
   val dto: TransferMessageResponseDto,
 ) : TransferDestinationResponse {
-  internal val checker = DuplicateChecker()
+  internal val duplicateChecker = DuplicateInvokeChecker()
 
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {
-    checker.check("assistantDestination{} already declared in $callerName{}")
+    duplicateChecker.check("assistantDestination{} already declared in $callerName{}")
     val assistantDto = AssistantDestinationDto().also { dto.messageResponse.destination = it }
     AssistantDestinationImpl(assistantDto).apply(block).checkForRequiredFields()
   }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
-    checker.check("numberDestination{} already declared in $callerName{}")
+    duplicateChecker.check("numberDestination{} already declared in $callerName{}")
     val numDto = NumberDestinationDto().also { dto.messageResponse.destination = it }
     NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
-    checker.check("sipDestination{} already declared in $callerName{}")
+    duplicateChecker.check("sipDestination{} already declared in $callerName{}")
     val sipDto = SipDestinationDto().also { dto.messageResponse.destination = it }
     SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
   }
 
   override fun stepDestination(block: StepDestination.() -> Unit) {
-    checker.check("stepDestination{} already declared in $callerName{}")
+    duplicateChecker.check("stepDestination{} already declared in $callerName{}")
     val stepDto = StepDestinationDto().also { dto.messageResponse.destination = it }
     StepDestinationImpl(stepDto).apply(block).checkForRequiredFields()
   }

@@ -17,64 +17,62 @@
 package com.vapi4k.server
 
 import com.vapi4k.common.CoreEnvVars.isProduction
-import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.dsl.vapi4k.WebApplicationImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
-import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.JsonElementUtils.sessionCacheId
-import com.vapi4k.utils.common.Utils.errorMsg
+import com.vapi4k.server.InboundCallAssistantRequest.isValidSecret
 import com.vapi4k.utils.common.Utils.lambda
+import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
-import com.vapi4k.utils.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
-import com.vapi4k.utils.enums.ServerRequestType.TRANSFER_DESTINATION_REQUEST
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
-import io.ktor.server.request.receive
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondText
+import kotlinx.serialization.json.JsonElement
 import kotlin.time.measureTimedValue
 
-internal object InboundCallAssistantRequests {
-  suspend fun KtorCallContext.inboundCallAssistantRequests(
+internal object WebAssistantRequest {
+  suspend fun KtorCallContext.webAssistantRequest(
     config: Vapi4kConfigImpl,
-    application: InboundCallApplicationImpl,
+    application: WebApplicationImpl,
+    request: JsonElement,
   ) {
     if (!isValidSecret(application.serverSecret)) {
       call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
       if (isProduction) {
-        processInboundCallAssistantRequest(config, application)
+        processWebAssistantRequest(config, application, request)
       } else {
         runCatching {
-          processInboundCallAssistantRequest(config, application)
+          processWebAssistantRequest(config, application, request)
         }.onFailure { e ->
-          logger.error(e) { "Error processing POST request: ${e.errorMsg}" }
+          call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
         }
       }
     }
   }
 
-  private suspend fun KtorCallContext.processInboundCallAssistantRequest(
+  private suspend fun KtorCallContext.processWebAssistantRequest(
     config: Vapi4kConfigImpl,
-    application: InboundCallApplicationImpl,
+    application: WebApplicationImpl,
+    request: JsonElement,
   ) {
-    val request = call.receive<String>().toJsonElement()
     val requestType = request.requestType
     invokeRequestCallbacks(config, application.applicationId, requestType, request)
 
     val (response, duration) = measureTimedValue {
-      when (requestType) {
+      when (request.requestType) {
         ASSISTANT_REQUEST -> {
           val response = application.getAssistantResponse(request)
-          call.respond(response)
+          call.respond(response.messageResponse)
           lambda { response.toJsonElement() }
         }
 
@@ -90,31 +88,6 @@ internal object InboundCallAssistantRequests {
           lambda { response.toJsonElement() }
         }
 
-        TRANSFER_DESTINATION_REQUEST -> {
-          logger.info { "Transfer destination request received: ${request.toJsonString()}" }
-          val response = application.getTransferDestinationResponse(request)
-          call.respond(response)
-          lambda { response.toJsonElement() }
-        }
-
-        END_OF_CALL_REPORT -> {
-          if (application.eocrCacheRemovalEnabled) {
-            val sessionCacheId = request.sessionCacheId
-            with(application) {
-              serviceToolCache.removeFromCache(sessionCacheId) { funcInfo ->
-                logger.info { "EOCR removed ${funcInfo.functions.size} serviceTool cache items [${funcInfo.ageSecs}] " }
-              } ?: logger.warn { "EOCR unable to find and remove serviceTool cache entry [$sessionCacheId]" }
-              functionCache.removeFromCache(sessionCacheId) { funcInfo ->
-                logger.info { "EOCR removed ${funcInfo.functions.size} function cache items [${funcInfo.ageSecs}] " }
-              } ?: logger.warn { "EOCR unable to find and remove function cache entry [$sessionCacheId]" }
-            }
-          }
-
-          val response = SimpleMessageResponse("End of call report received")
-          call.respond(response)
-          lambda { response.toJsonElement() }
-        }
-
         else -> {
           val response = SimpleMessageResponse("$requestType received")
           call.respond(response)
@@ -124,15 +97,5 @@ internal object InboundCallAssistantRequests {
     }
 
     invokeResponseCallbacks(config, application.applicationId, requestType, response, duration)
-  }
-
-  private suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
-    val secret = call.request.headers["x-vapi-secret"].orEmpty()
-    return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
-      logger.info { "Invalid secret: [$secret] [$configPropertiesSecret]" }
-      false
-    } else {
-      true
-    }
   }
 }

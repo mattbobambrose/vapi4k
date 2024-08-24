@@ -20,6 +20,7 @@ import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
+import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
@@ -60,6 +61,11 @@ fun Application.module() {
           }
           elevenLabsVoice {
             voiceIdType = ElevenLabsVoiceIdType.PAULA
+            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
+          }
+          elevenLabsVoice {
+            voiceIdType = ElevenLabsVoiceIdType.PAULA
+            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
           }
 
           firstMessage = "Hi, I am Beth how can I assist you today?"

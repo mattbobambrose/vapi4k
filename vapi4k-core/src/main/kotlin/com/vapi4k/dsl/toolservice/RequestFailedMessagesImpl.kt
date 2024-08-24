@@ -22,10 +22,10 @@ import com.vapi4k.api.toolservice.RequestFailedMessages
 import com.vapi4k.dsl.assistant.ToolMessageFailedImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 class RequestFailedMessagesImpl internal constructor() : RequestFailedMessages {
-  private val duplicateChecker = DuplicateChecker()
+  private val duplicateChecker = DuplicateInvokeChecker()
   internal val messageList = mutableListOf<ToolMessageFailedImpl>()
 
   private val dtoConditions

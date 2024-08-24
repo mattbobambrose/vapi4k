@@ -32,7 +32,7 @@ import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dtos.api.OutboundCallRequestDto
 import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 interface OutboundCallProperties {
   var phoneNumberId: String
@@ -44,8 +44,8 @@ class OutboundCallImpl internal constructor(
   private val dto: OutboundCallRequestDto,
 ) : OutboundCallProperties by dto,
   OutboundCall {
-  private val assistantChecker = DuplicateChecker()
-  private val overridesChecker = DuplicateChecker()
+  private val assistantChecker = DuplicateInvokeChecker()
+  private val overridesChecker = DuplicateInvokeChecker()
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     assistantChecker.check("assistantId{} already called")

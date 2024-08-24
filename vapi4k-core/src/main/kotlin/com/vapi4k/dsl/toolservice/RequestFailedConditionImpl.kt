@@ -21,14 +21,14 @@ import com.vapi4k.api.toolservice.RequestFailedCondition
 import com.vapi4k.dsl.assistant.ToolMessageFailedImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
+
+private val duplicateChecker = DuplicateInvokeChecker()
 
 class RequestFailedConditionImpl internal constructor(
   private val failedMessages: RequestFailedMessagesImpl,
   private val conditionSet: Set<ToolMessageCondition>,
 ) : RequestFailedCondition {
-  private val duplicateChecker = DuplicateChecker()
-
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
     duplicateChecker.check("condition${conditionSet.joinToString()}{} already has a requestFailedMessage{}")
     return ToolMessageFailedDto().let { dto ->

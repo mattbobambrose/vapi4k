@@ -29,6 +29,11 @@ interface WebApplication : CommonCallbacks {
   var serverPath: String
 
   /**
+  The server secret in Vapi is a security feature that allows you to authenticate requests sent from Vapi to your server. It will be sent with every request from Vapi to your server.
+   */
+  var serverSecret: String
+
+  /**
   Whenever an AssistantRequest is made, the contents of the onAssistantRequest{} block will be executed.
    */
   fun onAssistantRequest(block: suspend WebAssistantResponse.(JsonElement) -> Unit)

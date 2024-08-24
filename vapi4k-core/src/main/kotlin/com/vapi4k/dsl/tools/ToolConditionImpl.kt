@@ -30,16 +30,16 @@ import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.dtos.tools.ToolMessageDelayedDto
 import com.vapi4k.dtos.tools.ToolMessageFailedDto
 import com.vapi4k.dtos.tools.ToolMessageStartDto
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 class ToolConditionImpl internal constructor(
   internal val tool: BaseToolImpl,
   private val conditionSet: Set<ToolMessageCondition>,
 ) : ToolCondition {
-  private val startChecker = DuplicateChecker()
-  private val completeChecker = DuplicateChecker()
-  private val failedChecker = DuplicateChecker()
-  private val delayedChecker = DuplicateChecker()
+  private val startChecker = DuplicateInvokeChecker()
+  private val completeChecker = DuplicateInvokeChecker()
+  private val failedChecker = DuplicateInvokeChecker()
+  private val delayedChecker = DuplicateInvokeChecker()
 
   private val messages get() = tool.toolDto.messages
 

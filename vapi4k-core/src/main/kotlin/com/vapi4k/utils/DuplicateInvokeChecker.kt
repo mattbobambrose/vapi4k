@@ -16,7 +16,7 @@
 
 package com.vapi4k.utils
 
-class DuplicateChecker {
+class DuplicateInvokeChecker {
   private var errorMsg = ""
   private var timesCalled = 0
 

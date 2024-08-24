@@ -42,14 +42,6 @@ class InboundCallApplicationImpl internal constructor() :
 
   internal var eocrCacheRemovalEnabled = true
 
-  internal val serverPathWithSecret: String
-    get() {
-      val secretStr = serverSecret.let { if (it.isBlank()) "" else "?secret=$it" }
-      return "$serverPathAsSegment$secretStr"
-    }
-
-  override var serverSecret = ""
-
   override fun onAssistantRequest(block: suspend InboundCallAssistantResponse.(JsonElement) -> Unit) {
     if (!::assistantRequest.isInitialized)
       assistantRequest = block

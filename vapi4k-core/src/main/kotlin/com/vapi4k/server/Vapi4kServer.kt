@@ -38,12 +38,12 @@ import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
 import com.vapi4k.server.CacheResponses.cachesRequest
 import com.vapi4k.server.CacheResponses.clearCaches
-import com.vapi4k.server.InboundCallAssistantRequests.inboundCallAssistantRequests
+import com.vapi4k.server.InboundCallAssistantRequest.inboundCallAssistantRequest
 import com.vapi4k.server.ValidateApplication.validateApplication
 import com.vapi4k.server.ValidateApplication.validateToolInvokeRequest
 import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.server.WebAssistantRequests.webAssistantRequests
+import com.vapi4k.server.WebAssistantRequest.webAssistantRequest
 import com.vapi4k.utils.JsonElementUtils.addArgsAndMessage
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
@@ -165,19 +165,22 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           logger.info { "Adding inboundCallAssistantRequest POST serverPath endpoint: \"/${application.serverPath}\"" }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
-          post { inboundCallAssistantRequests(config, application) }
+          post {
+            val request = call.receive<String>().toJsonElement()
+            inboundCallAssistantRequest(config, application, request)
+          }
         }
       }
 
       config.webApplications.forEach { application ->
         route(application.serverPath) {
           installContentNegotiation()
-          logger.info { "Adding webAssistantRequest GET serverPath endpoint: \"/${application.serverPath}\"" }
+          logger.info { """Adding webAssistantRequest GET serverPath endpoint: "/${application.serverPath}"""" }
           get {
             val request = buildJsonObject { addArgsAndMessage(call.request.queryParameters) }
-            webAssistantRequests(config, application, request)
+            webAssistantRequest(config, application, request)
           }
-          logger.info { "Adding webAssistantRequest POST serverPath endpoint: \"/${application.serverPath}\"" }
+          logger.info { """Adding webAssistantRequest POST serverPath endpoint: "/${application.serverPath}"""" }
           post {
             val json = call.receive<String>().toJsonElement()
             val request =
@@ -194,7 +197,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                   addArgsAndMessage(call.request.queryParameters)
                 }
               }
-            webAssistantRequests(config, application, request)
+            webAssistantRequest(config, application, request)
           }
         }
       }

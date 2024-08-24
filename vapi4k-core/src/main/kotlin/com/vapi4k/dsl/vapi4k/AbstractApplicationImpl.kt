@@ -51,6 +51,7 @@ abstract class AbstractApplicationImpl(
   internal val fqServerPath get() = "$serverBaseUrl/$serverPathAsSegment"
 
   var serverPath = defaultServerPath
+  var serverSecret = ""
 
   abstract fun fetchContent(
     request: JsonElement,
@@ -58,26 +59,32 @@ abstract class AbstractApplicationImpl(
     secret: String,
   ): Pair<HttpStatusCode, String>
 
-  fun containsServiceToolInCache(
+  internal val serverPathWithSecret: String
+    get() {
+      val secretStr = serverSecret.let { if (it.isBlank()) "" else "?secret=$it" }
+      return "$serverPathAsSegment$secretStr"
+    }
+
+  internal fun containsServiceToolInCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
   ) = serviceToolCache.containsSessionCacheId(sessionCacheId) &&
     serviceToolCache.getFromCache(sessionCacheId).containsFunction(funcName)
 
-  fun containsManualToolInCache(funcName: String): Boolean = manualToolCache.containsTool(funcName)
+  internal fun containsManualToolInCache(funcName: String): Boolean = manualToolCache.containsTool(funcName)
 
-  fun containsFunctionInCache(
+  internal fun containsFunctionInCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
   ) = functionCache.containsSessionCacheId(sessionCacheId) &&
     functionCache.getFromCache(sessionCacheId).containsFunction(funcName)
 
-  fun getServiceToolFromCache(
+  internal fun getServiceToolFromCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
   ) = serviceToolCache.getFromCache(sessionCacheId).getFunction(funcName)
 
-  fun getFunctionFromCache(
+  internal fun getFunctionFromCache(
     sessionCacheId: SessionCacheId,
     funcName: String,
   ) = functionCache.getFromCache(sessionCacheId).getFunction(funcName)

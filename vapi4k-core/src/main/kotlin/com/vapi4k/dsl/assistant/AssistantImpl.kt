@@ -24,7 +24,7 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.DuplicateChecker
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 interface AssistantProperties : CommonAssistantProperties
 
@@ -37,9 +37,9 @@ class AssistantImpl internal constructor(
 ) : AbstractAssistantImpl(),
   AssistantProperties by assistantDto,
   Assistant {
-  override val transcriberChecker = DuplicateChecker()
-  override val modelChecker = DuplicateChecker()
-  override val voiceChecker = DuplicateChecker()
+  override val transcriberChecker = DuplicateInvokeChecker()
+  override val modelChecker = DuplicateInvokeChecker()
+  override val voiceChecker = DuplicateInvokeChecker()
   override val assistantCacheId = assistantCacheIdSource.nextAssistantCacheId()
   override val modelDtoUnion get() = assistantDto
   override val voicemailDetectionDto get() = modelDtoUnion.voicemailDetectionDto
