@@ -61,7 +61,7 @@ class ModelTests {
   }
 
   @Test
-  fun `missing external tool name decls`() {
+  fun `missing external tool name blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -89,7 +89,7 @@ class ModelTests {
   }
 
   @Test
-  fun `blank external tool name decls`() {
+  fun `blank external tool name blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -340,7 +340,7 @@ class ModelTests {
       }
     }.also {
       assertEquals(
-        "externalTool{} contains multiple server{} decls",
+        "externalTool{} contains multiple server{} blocks",
         it.message,
       )
     }

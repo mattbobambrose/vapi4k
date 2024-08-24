@@ -30,7 +30,7 @@ enum class ButtonPosition(
   val desc: String,
 ) {
   TOP("top"),
-  BOTTOM_("bottom"),
+  BOTTOM("bottom"),
   LEFT("left"),
   RIGHT("right"),
   TOP_LEFT("top-left"),
@@ -48,6 +48,5 @@ private object ButtonPositionSerializer : KSerializer<ButtonPosition> {
     value: ButtonPosition,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) =
-    ButtonPosition.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) = ButtonPosition.entries.first { it.desc == decoder.decodeString() }
 }

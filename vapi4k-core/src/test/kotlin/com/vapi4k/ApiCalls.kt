@@ -28,7 +28,7 @@ import kotlin.test.Test
 
 class ApiCalls {
   @Test
-  fun `multiple Assistant Decls`() {
+  fun `multiple Assistant blocks`() {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
@@ -47,7 +47,7 @@ class ApiCalls {
   }
 
   @Test
-  fun `multiple AssistantId Decls`() {
+  fun `multiple AssistantId blocks`() {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
@@ -66,7 +66,7 @@ class ApiCalls {
   }
 
   @Test
-  fun `combination of Assistant and AssistantId Decls`() {
+  fun `combination of Assistant and AssistantId blocks`() {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {
@@ -85,7 +85,7 @@ class ApiCalls {
   }
 
   @Test
-  fun `multiple AssistantOverrides Decls`() {
+  fun `multiple AssistantOverrides blocks`() {
     val api = vapiApi("123-445-666") as VapiApiImpl
     assertThrows(IllegalStateException::class.java) {
       api.test {

@@ -44,7 +44,7 @@ class ButtonColor {
   constructor(hex: Int) : this(
     red = (hex shr 16) and 0xFF,
     green = (hex shr 8) and 0xFF,
-    blue = hex and 0xFF
+    blue = hex and 0xFF,
   )
 
   constructor(hex: String) {
@@ -56,7 +56,6 @@ class ButtonColor {
     this.green = hexColor.substring(2, 4).toInt(16)
     this.blue = hexColor.substring(4, 6).toInt(16)
   }
-
 
   private fun validateRGB() {
     require(red in 0..255) { "Red value should be in the range 0-255" }
@@ -79,19 +78,3 @@ private object ButtonColorSerializer : KSerializer<ButtonColor> {
 
   override fun deserialize(decoder: Decoder) = throw NotImplementedError("Deserialization is not supported")
 }
-
-//fun main() {
-//  val color = ButtonColor(255, 0, 0)
-//  println(color)
-//  val hexColor = ButtonColor("#FF0000")
-//  println(hexColor)
-//
-//  @Serializable
-//  class Test {
-//    val color1: ButtonColor = ButtonColor(255, 0, 0)
-//    val color2: ButtonColor = ButtonColor("#FF0000")
-//  }
-//
-//  val t = Test()
-//  println(t.toJsonString())
-//}

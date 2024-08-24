@@ -27,6 +27,7 @@ import com.vapi4k.dsl.tools.ToolsImpl
 import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
+import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.common.Utils.trimLeadingSpaces
 
 abstract class AbstractModel(
@@ -47,6 +48,8 @@ abstract class AbstractModel(
   var toolMessage by ModelMessageDelegate(MessageRoleType.TOOL)
   var userMessage by ModelMessageDelegate(MessageRoleType.USER)
 
+  internal val duplicateChecker = DuplicateInvokeChecker()
+
   internal fun getSessionCacheId() =
     if (sessionCacheId.isNotSpecified())
       sessionCacheId
@@ -58,6 +61,8 @@ abstract class AbstractModel(
   fun functions(block: Functions.() -> Unit): Functions = FunctionsImpl(this).apply(block)
 
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {
+    val caller = this::class.simpleName.orEmpty().removeSuffix("Impl").replaceFirstChar { it.lowercaseChar() }
+    duplicateChecker.check("$caller{} contains multiple knowledgeBase{} blocks")
     val kbDto = KnowledgeBaseDto().also { dto.knowledgeBaseDto = it }
     return KnowledgeBaseImpl(request, kbDto)
       .apply(block)

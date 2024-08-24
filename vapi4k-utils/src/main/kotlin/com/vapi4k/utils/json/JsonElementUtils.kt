@@ -45,10 +45,15 @@ object JsonElementUtils {
 
   fun JsonElement.getOrNull(vararg keys: String): JsonElement? = if (containsKey(*keys)) get(*keys) else null
 
+  fun JsonElement.property(vararg keys: String): JsonElement =
+    keys.flatMap { it.split(".") }
+      .fold(this) { acc, key -> acc.element(key) }
+
   val JsonElement.stringValue get() = jsonPrimitive.content
   val JsonElement.intValue get() = jsonPrimitive.content.toInt()
   val JsonElement.doubleValue get() = jsonPrimitive.content.toDouble()
   val JsonElement.booleanValue get() = jsonPrimitive.content.toBoolean()
+
   val JsonElement.keys get() = jsonObject.keys
 
   fun JsonElement.stringValue(vararg keys: String) = get(*keys).stringValue
@@ -57,12 +62,16 @@ object JsonElementUtils {
   fun JsonElement.booleanValue(vararg keys: String) = get(*keys).booleanValue
   fun JsonElement.jsonElementList(vararg keys: String) = get(*keys).toJsonElementList()
 
-  internal fun JsonElement.element(key: String) =
-    jsonObject[key] ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
+  fun JsonElement.stringValueOrNull(vararg keys: String) = getOrNull(*keys)?.stringValue
+  fun JsonElement.intValueOrNull(vararg keys: String) = getOrNull(*keys)?.intValue
+  fun JsonElement.doubleValueOrNull(vararg keys: String) = getOrNull(*keys)?.doubleValue
+  fun JsonElement.booleanValueOrNull(vararg keys: String) = getOrNull(*keys)?.booleanValue
+  fun JsonElement.jsonElementListOrNull(vararg keys: String) = getOrNull(*keys)?.toJsonElementList()
 
-  fun JsonElement.property(vararg keys: String): JsonElement =
-    keys.flatMap { it.split(".") }
-      .fold(this) { acc, key -> acc.element(key) }
+  internal fun JsonElement.elementOrNull(key: String) = jsonObject[key]
+
+  internal fun JsonElement.element(key: String) =
+    elementOrNull(key) ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
 
   fun JsonElement.containsKey(vararg keys: String): Boolean {
     val ks = keys.flatMap { it.split(".") }

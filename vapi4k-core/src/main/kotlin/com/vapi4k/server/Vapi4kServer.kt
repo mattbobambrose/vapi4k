@@ -189,12 +189,14 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               } else {
                 buildJsonObject {
                   // Add values from the JSON object passed in with the POST request
-                  put("postArgs",
+                  put(
+                    "postArgs",
                     buildJsonObject {
                       json.keys.forEach { key ->
                         put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
                       }
-                    })
+                    },
+                  )
                   addArgsAndMessage(call.request.queryParameters)
                 }
               }

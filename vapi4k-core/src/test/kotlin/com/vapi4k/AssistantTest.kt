@@ -106,7 +106,7 @@ class AssistantTest {
   }
 
   @Test
-  fun `multiple application{} decls`() {
+  fun `multiple application{} blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -128,7 +128,7 @@ class AssistantTest {
   }
 
   @Test
-  fun `application{} and squad{} decls`() {
+  fun `application{} and squad{} blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -147,7 +147,7 @@ class AssistantTest {
   }
 
   @Test
-  fun `Missing application{} decls`() {
+  fun `Missing application{} blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
       }
@@ -594,7 +594,7 @@ class AssistantTest {
   }
 
   @Test
-  fun `multiple deepgram transcriber decls`() {
+  fun `multiple deepgram transcriber blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -613,7 +613,7 @@ class AssistantTest {
   }
 
   @Test
-  fun `multiple gladia transcriber decls`() {
+  fun `multiple gladia transcriber blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -632,7 +632,7 @@ class AssistantTest {
   }
 
   @Test
-  fun `multiple talkscriber transcriber decls`() {
+  fun `multiple talkscriber transcriber blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
@@ -651,7 +651,7 @@ class AssistantTest {
   }
 
   @Test
-  fun `multiple transcriber decls`() {
+  fun `multiple transcriber blocks`() {
     assertThrows(IllegalStateException::class.java) {
       assistantResponse(newRequestContext()) {
         assistant {
