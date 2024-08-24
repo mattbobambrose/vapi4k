@@ -54,8 +54,6 @@ data class CartesiaVoiceDto(
   }
 
   override fun verifyValues() {
-    if (modelType.isNotSpecified() && customModel.isEmpty())
-      error("cartesiaVoice{} requires a modelType or customModel value")
     if (modelType.isSpecified() && customModel.isNotEmpty())
       error("cartesiaVoice{} cannot have both modelType and customModel values")
     if (languageType.isSpecified() && customLanguage.isNotEmpty())
