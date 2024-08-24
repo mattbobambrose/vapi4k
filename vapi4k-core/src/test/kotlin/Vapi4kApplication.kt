@@ -14,6 +14,7 @@
  *
  */
 
+import com.vapi4k.api.buttons.ButtonColor
 import com.vapi4k.api.buttons.enums.ButtonPosition
 import com.vapi4k.api.buttons.enums.ButtonType
 import com.vapi4k.api.destination.enums.AssistantTransferMode
@@ -75,7 +76,7 @@ fun Application.module() {
           height = "50px"
 
           idle {
-            color = "rgb(93, 254, 202)"
+            color = ButtonColor(93, 254, 202)
             type = ButtonType.PILL
             title = "Have a quick question?"
             subtitle = "Talk with our AI assistant"
@@ -83,7 +84,7 @@ fun Application.module() {
           }
 
           loading {
-            color = "rgb(93, 124, 202)"
+            color = ButtonColor(93, 124, 202)
             type = ButtonType.PILL
             title = "Connecting..."
             subtitle = "Please wait"
@@ -91,7 +92,7 @@ fun Application.module() {
           }
 
           active {
-            color = "rgb(255, 0, 0)"
+            color = ButtonColor(255, 0, 0)
             type = ButtonType.PILL
             title = "Call is in progress..."
             subtitle = "End the call."

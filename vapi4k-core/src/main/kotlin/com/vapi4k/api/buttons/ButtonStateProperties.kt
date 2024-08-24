@@ -19,7 +19,7 @@ package com.vapi4k.api.buttons
 import com.vapi4k.api.buttons.enums.ButtonType
 
 interface ButtonStateProperties {
-  var color: String
+  var color: ButtonColor?
   var type: ButtonType
   var title: String
   var subtitle: String

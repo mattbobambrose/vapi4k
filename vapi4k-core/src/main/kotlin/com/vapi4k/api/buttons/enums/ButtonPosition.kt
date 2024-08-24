@@ -48,5 +48,6 @@ private object ButtonPositionSerializer : KSerializer<ButtonPosition> {
     value: ButtonPosition,
   ) = encoder.encodeString(value.desc)
 
-  override fun deserialize(decoder: Decoder) = ButtonPosition.entries.first { it.desc == decoder.decodeString() }
+  override fun deserialize(decoder: Decoder) =
+    ButtonPosition.entries.first { it.desc == decoder.decodeString() }
 }
