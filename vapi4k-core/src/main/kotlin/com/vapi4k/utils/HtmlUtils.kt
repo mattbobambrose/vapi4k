@@ -16,17 +16,45 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.common.Constants.STATIC_BASE
+import com.vapi4k.utils.JsonElementUtils.EMPTY_JSON_ELEMENT
+import io.ktor.util.toUpperCasePreservingASCIIRules
+import kotlinx.html.BODY
 import kotlinx.html.HTMLTag
 import kotlinx.html.TagConsumer
+import kotlinx.html.script
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.unsafe
+import kotlinx.serialization.json.JsonElement
 
 object HtmlUtils {
   fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
 
-  fun html(block: TagConsumer<StringBuilder>.() -> Unit): String {
-    return buildString {
+  // Creates snippets of HTML for use with HTMX
+  fun html(block: TagConsumer<StringBuilder>.() -> Unit): String =
+    buildString {
       appendHTML().apply(block)
     }
+
+  fun BODY.vapiTalkButton(
+    vapi4kUrl: String,
+    vapiApiKey: String,
+    serverSecret: String = "",
+    method: String = "POST",
+    postArgs: JsonElement = EMPTY_JSON_ELEMENT,
+  ) {
+    script {
+      val args = buildString {
+        appendLine("const vapi4kUrl = '$vapi4kUrl';")
+        appendLine("const serverSecret = '$serverSecret';")
+        appendLine("const vapiApiKey = '$vapiApiKey';")
+        appendLine("const method = '${method.toUpperCasePreservingASCIIRules()}';")
+        appendLine("const postArgs = '$postArgs';")
+      }
+      rawHtml(args)
+    }
+    script { src = "$STATIC_BASE/js/vapi-call.js" }
+
   }
+
 }
