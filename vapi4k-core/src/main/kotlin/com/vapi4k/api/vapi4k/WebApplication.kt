@@ -43,5 +43,4 @@ interface WebApplication : CommonCallbacks {
   Whenever a TransferDestinationRequest is made, the contents of the onTransferDestinationRequest{} block will be executed.
    */
   fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.(JsonElement) -> Unit)
-
 }
