@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.transcriber
 
-import com.vapi4k.api.model.enums.GladiaModelType
 import com.vapi4k.api.transcriber.enums.GladiaLanguageType
+import com.vapi4k.api.transcriber.enums.GladiaModelType
 
 interface GladiaTranscriberProperties {
   /**

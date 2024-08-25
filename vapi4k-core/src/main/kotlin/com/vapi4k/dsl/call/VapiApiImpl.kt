@@ -74,7 +74,7 @@ class VapiApiImpl private constructor(
       val hasId = jsonElement.containsKey("id")
       if (hasId) {
         logger.info { "Call ID: ${jsonElement.id}" }
-        with(outboundApplication) {
+        with(outboundCallApplication) {
           serviceToolCache.swapCacheKeys(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
           functionCache.swapCacheKeys(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
         }
@@ -134,8 +134,8 @@ class VapiApiImpl private constructor(
     }.getOrThrow()
 
   companion object {
-    internal val outboundApplication = InboundCallApplicationImpl().also { it.serverPath = OUTBOUND_SERVER_PATH }
-    internal val outboundRequestContext = AssistantRequestContext(outboundApplication, emptyJsonElement())
+    internal val outboundCallApplication = InboundCallApplicationImpl().also { it.serverPath = OUTBOUND_SERVER_PATH }
+    internal val outboundRequestContext = AssistantRequestContext(outboundCallApplication, emptyJsonElement())
 
     internal fun HttpRequestBuilder.configCall(authString: String) {
       contentType(ContentType.Application.Json)

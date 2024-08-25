@@ -44,7 +44,7 @@ internal object ValidateRoot {
     when {
       config.inboundCallApplications.size == 1 && config.webApplications.isEmpty() -> {
         val application = config.inboundCallApplications.first()
-        call.respondRedirect("$VALIDATE_PATH/${application.serverPathWithSecret}")
+        call.respondRedirect("$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}")
       }
 
       config.webApplications.size == 1 && config.inboundCallApplications.isEmpty() -> {
@@ -76,7 +76,7 @@ internal object ValidateRoot {
                     li {
                       id = "all-li"
                       a {
-                        href = "$VALIDATE_PATH/${application.serverPathWithSecret}"
+                        href = "$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}"
                         +application.serverPath.ensureStartsWith("/")
                       }
                     }
@@ -89,7 +89,7 @@ internal object ValidateRoot {
                     li {
                       id = "all-li"
                       a {
-                        href = "$VALIDATE_PATH/${application.serverPathWithSecret}"
+                        href = "$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}"
                         +application.serverPath.ensureStartsWith("/")
                       }
                     }

@@ -20,11 +20,11 @@ import com.vapi4k.api.assistant.enums.AssistantClientMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.api.conditions.eq
-import com.vapi4k.api.model.enums.DeepgramModelType
-import com.vapi4k.api.model.enums.GladiaModelType
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
+import com.vapi4k.api.transcriber.enums.DeepgramModelType
+import com.vapi4k.api.transcriber.enums.GladiaModelType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl

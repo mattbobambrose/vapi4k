@@ -31,9 +31,11 @@ import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import io.github.oshai.kotlinlogging.KLogger
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -72,7 +74,7 @@ abstract class AbstractApplicationImpl(
 
   internal val serverUrl get() = "$serverBaseUrl/$serverPathAsSegment"
   internal val serverPathAsSegment get() = serverPath.removePrefix("/").removeSuffix("/")
-  internal val serverPathWithSecret: String
+  internal val serverPathWithSecretAsQueryParam: String
     get() = "$serverPathAsSegment${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_QUERY_PARAM=$it" }}"
 
   fun fetchContent(
@@ -177,4 +179,25 @@ abstract class AbstractApplicationImpl(
     else
       error("onTransferDestinationRequest{} can be called only once per inboundCallApplication{}")
   }
+
+  fun processEOCRMessage(
+    request: JsonElement,
+    logger: KLogger,
+    logger0: KLogger,
+    logger1: KLogger,
+    logger2: KLogger,
+  ) {
+    if (eocrCacheRemovalEnabled) {
+      val sessionCacheId = request.sessionCacheId
+      with(this) {
+        serviceToolCache.removeFromCache(sessionCacheId) { funcInfo ->
+          logger.info { "EOCR removed ${funcInfo.functions.size} serviceTool cache items [${funcInfo.ageSecs}] " }
+        } ?: logger0.warn { "EOCR unable to find and remove serviceTool cache entry [$sessionCacheId]" }
+        functionCache.removeFromCache(sessionCacheId) { funcInfo ->
+          logger1.info { "EOCR removed ${funcInfo.functions.size} function cache items [${funcInfo.ageSecs}] " }
+        } ?: logger2.warn { "EOCR unable to find and remove function cache entry [$sessionCacheId]" }
+      }
+    }
+  }
+
 }

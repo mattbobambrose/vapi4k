@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.transcriber
 
-import com.vapi4k.api.model.enums.DeepgramModelType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
+import com.vapi4k.api.transcriber.enums.DeepgramModelType
 
 interface DeepgramTranscriberProperties {
   /**

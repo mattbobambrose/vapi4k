@@ -14,6 +14,7 @@
  *
  */
 
+import TalkPage.talkPage
 import com.vapi4k.api.buttons.ButtonColor
 import com.vapi4k.api.buttons.enums.ButtonPosition
 import com.vapi4k.api.buttons.enums.ButtonType
@@ -31,10 +32,15 @@ import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.STATUS_UPDATE
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
+import io.ktor.http.ContentType
 import io.ktor.server.application.Application
+import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 
@@ -51,9 +57,21 @@ fun Application.module() {
   val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
   defaultKtorConfig(appMicrometerRegistry)
 
+  routing {
+    get("/talk") {
+      call.respondText(talkPage(), contentType = ContentType.Text.Html)
+    }
+
+  }
   install(Vapi4k) {
+
     webApplication {
-      serverPath = "/inboundRequest"
+      serverPath = "/talkapp"
+      serverSecret = "12345"
+
+      onAllRequests { request ->
+        logger.info { "All requests 1: ${request}" }
+      }
 
       onAssistantRequest { args ->
         assistant {

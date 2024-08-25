@@ -21,8 +21,8 @@ import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.call.VapiApiImpl.Companion.outboundApplication
-import com.vapi4k.server.AdminJobs.RequestResponseCallback
+import com.vapi4k.dsl.call.VapiApiImpl.Companion.outboundCallApplication
+import com.vapi4k.server.RequestResponseCallback
 import com.vapi4k.utils.enums.ServerRequestType
 import io.ktor.server.config.ApplicationConfig
 import kotlinx.coroutines.channels.Channel
@@ -46,11 +46,11 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   internal val globalPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
   internal val inboundCallApplications = mutableListOf<InboundCallApplicationImpl>()
-  internal val allApplications get() = inboundCallApplications + outboundApplication
+  internal val allCallApplications get() = inboundCallApplications + outboundCallApplication
   internal val webApplications = mutableListOf<WebApplicationImpl>()
 
   private fun verifyServerPath(serverPath: String) {
-    if (allApplications.any { it.serverPath == serverPath })
+    if (allCallApplications.any { it.serverPath == serverPath })
       error("inboundCallApplication{} with serverPath \"${serverPath}\" already exists")
     if (webApplications.any { it.serverPath == serverPath })
       error("webApplication{} with serverPath \"${serverPath}\" already exists")
@@ -100,7 +100,8 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     requestTypes.forEach { globalPerResponses += it to block }
   }
 
-  internal fun getApplication(applicationId: ApplicationId): InboundCallApplicationImpl =
+  internal fun getApplication(applicationId: ApplicationId): AbstractApplicationImpl =
     inboundCallApplications.firstOrNull { it.applicationId == applicationId }
+      ?: webApplications.firstOrNull { it.applicationId == applicationId }
       ?: error("Application not found for applicationId: $applicationId")
 }

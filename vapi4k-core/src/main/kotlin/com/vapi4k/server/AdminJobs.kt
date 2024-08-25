@@ -19,14 +19,12 @@ package com.vapi4k.server
 import com.vapi4k.common.ApplicationId
 import com.vapi4k.common.CoreEnvVars.TOOL_CACHE_CLEAN_PAUSE_MINS
 import com.vapi4k.common.CoreEnvVars.TOOL_CACHE_MAX_AGE_MINS
-import com.vapi4k.dsl.vapi4k.RequestResponseType
 import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
 import com.vapi4k.dsl.vapi4k.RequestResponseType.RESPONSE
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.server.AdminJobs.RequestResponseCallback.Companion.requestCallback
-import com.vapi4k.server.AdminJobs.RequestResponseCallback.Companion.responseCallback
+import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
+import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.enums.ServerRequestType
 import kotlinx.coroutines.coroutineScope
@@ -45,7 +43,14 @@ internal object AdminJobs {
       while (true) {
         runCatching {
           Thread.sleep(pause.inWholeMilliseconds)
-          config.allApplications.forEach { application ->
+          config.allCallApplications.forEach { application ->
+            logger.debug { "Purging cache for ${application.serverPath}" }
+            with(application) {
+              serviceToolCache.purgeToolCache(maxAge)
+              functionCache.purgeToolCache(maxAge)
+            }
+          }
+          config.webApplications.forEach { application ->
             logger.debug { "Purging cache for ${application.serverPath}" }
             with(application) {
               serviceToolCache.purgeToolCache(maxAge)
@@ -68,7 +73,7 @@ internal object AdminJobs {
               coroutineScope {
                 when (callback.type) {
                   REQUEST -> {
-                    config.allApplications
+                    config.allCallApplications
                       .filter { it.applicationId == callback.applicationId }
                       .forEach { application ->
                         with(application) {
@@ -78,6 +83,18 @@ internal object AdminJobs {
                             .forEach { (_, block) -> launch { block(callback.request) } }
                         }
                       }
+
+                    config.webApplications
+                      .filter { it.applicationId == callback.applicationId }
+                      .forEach { application ->
+                        with(application) {
+                          applicationAllRequests.forEach { launch { it.invoke(callback.request) } }
+                          applicationPerRequests
+                            .filter { it.first == callback.requestType }
+                            .forEach { (_, block) -> launch { block(callback.request) } }
+                        }
+                      }
+
                     with(config) {
                       globalAllRequests.forEach { launch { it.invoke(callback.request) } }
                       globalPerRequests
@@ -87,7 +104,7 @@ internal object AdminJobs {
                   }
 
                   RESPONSE -> {
-                    config.allApplications.forEach { application ->
+                    config.allCallApplications.forEach { application ->
                       with(application) {
                         if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
                           val resp =
@@ -99,9 +116,7 @@ internal object AdminJobs {
                             }.getOrThrow()
 
                           applicationAllResponses.forEach {
-                            launch {
-                              it.invoke(callback.requestType, resp, callback.elapsed)
-                            }
+                            launch { it.invoke(callback.requestType, resp, callback.elapsed) }
                           }
                           applicationPerResponses
                             .filter { it.first == callback.requestType }
@@ -111,6 +126,30 @@ internal object AdminJobs {
                         }
                       }
                     }
+
+                    config.webApplications.forEach { application ->
+                      with(application) {
+                        if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
+                          val resp =
+                            runCatching {
+                              callback.response.invoke()
+                            }.onFailure { e ->
+                              logger.error { "Error creating response" }
+                              error("Error creating response")
+                            }.getOrThrow()
+
+                          applicationAllResponses.forEach {
+                            launch { it.invoke(callback.requestType, resp, callback.elapsed) }
+                          }
+                          applicationPerResponses
+                            .filter { it.first == callback.requestType }
+                            .forEach { (reqType, block) ->
+                              launch { block(reqType, resp, callback.elapsed) }
+                            }
+                        }
+                      }
+                    }
+
                     with(config) {
                       if (globalAllResponses.isNotEmpty() || globalPerResponses.isNotEmpty()) {
                         val resp =
@@ -164,27 +203,4 @@ internal object AdminJobs {
     elapsed: Duration,
   ) = config.callbackChannel.send(responseCallback(applicationId, requestType, response, elapsed))
 
-  data class RequestResponseCallback(
-    val applicationId: ApplicationId,
-    val type: RequestResponseType,
-    val requestType: ServerRequestType,
-    val request: JsonElement = emptyJsonElement(),
-    val response: (() -> JsonElement) = { emptyJsonElement() },
-    val elapsed: Duration = Duration.ZERO,
-  ) {
-    companion object {
-      fun requestCallback(
-        applicationId: ApplicationId,
-        requestType: ServerRequestType,
-        request: JsonElement,
-      ) = RequestResponseCallback(applicationId, REQUEST, requestType, request)
-
-      fun responseCallback(
-        applicationId: ApplicationId,
-        requestType: ServerRequestType,
-        response: () -> JsonElement,
-        elapsed: Duration,
-      ) = RequestResponseCallback(applicationId, RESPONSE, requestType, response = response, elapsed = elapsed)
-    }
-  }
 }
