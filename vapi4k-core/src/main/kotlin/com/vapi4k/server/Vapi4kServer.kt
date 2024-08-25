@@ -33,7 +33,6 @@ import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.server.AdminJobs.RequestResponseCallback
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
 import com.vapi4k.server.CacheResponses.cachesRequest
@@ -104,7 +103,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
   val config = AssistantImpl.config
   config.applicationConfig = environment?.config ?: error("No environment config found")
-  config.callbackChannel = Channel<RequestResponseCallback>(Channel.UNLIMITED)
+  config.callbackChannel = Channel(Channel.UNLIMITED)
 
   logEnvVarValues { logger.info { it } }
 

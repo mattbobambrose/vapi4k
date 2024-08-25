@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.com.vapi4k.examples
+package com.vapi4k.examples
 
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber

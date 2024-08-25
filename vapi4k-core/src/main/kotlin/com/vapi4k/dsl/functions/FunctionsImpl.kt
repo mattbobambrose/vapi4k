@@ -35,7 +35,7 @@ class FunctionsImpl internal constructor(
     obj: Any,
     vararg functions: KFunction<*>,
   ) {
-    val application = model.application as AbstractApplicationImpl
+    val application = model.application
     if (functions.isEmpty()) {
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction

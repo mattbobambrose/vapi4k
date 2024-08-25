@@ -17,15 +17,12 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.InboundCallAssistantResponse
-import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.api.vapi4k.InboundCallApplication
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
 import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
-import com.vapi4k.dsl.tools.TransferDestinationImpl
-import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.common.Utils.isNull
 import io.ktor.client.request.post
@@ -40,17 +37,7 @@ import kotlinx.serialization.json.JsonElement
 class InboundCallApplicationImpl internal constructor() :
   AbstractApplicationImpl(ApplicationType.INBOUND_CALL),
   InboundCallApplication {
-  private lateinit var assistantRequest: (suspend InboundCallAssistantResponse.(JsonElement) -> Unit)
-  private lateinit var transferDestinationRequest: (suspend TransferDestinationResponse.(JsonElement) -> Unit)
-
-  internal var eocrCacheRemovalEnabled = true
-
-  override fun onAssistantRequest(block: suspend InboundCallAssistantResponse.(JsonElement) -> Unit) {
-    if (!::assistantRequest.isInitialized)
-      assistantRequest = block
-    else
-      error("onAssistantRequest{} can be called only once per inboundCallApplication{}")
-  }
+  private var assistantRequest: (suspend InboundCallAssistantResponse.(JsonElement) -> Unit)? = null
 
   override fun fetchContent(
     request: JsonElement,
@@ -69,38 +56,25 @@ class InboundCallApplicationImpl internal constructor() :
       response.status to response.bodyAsText()
     }
 
-  override fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.(JsonElement) -> Unit) {
-    if (!::transferDestinationRequest.isInitialized)
-      transferDestinationRequest = block
+  override fun onAssistantRequest(block: suspend InboundCallAssistantResponse.(JsonElement) -> Unit) {
+    if (assistantRequest.isNull())
+      assistantRequest = block
     else
-      error("onTransferDestinationRequest{} can be called only once per inboundCallApplication{}")
+      error("onAssistantRequest{} can be called only once per inboundCallApplication{}")
   }
 
   internal suspend fun getAssistantResponse(request: JsonElement) =
-    if (!::assistantRequest.isInitialized) {
-      error("onAssistantRequest{} not called")
-    } else {
-      val assistantRequestContext = AssistantRequestContext(this, request)
-      val assistantResponse = InboundCallAssistantResponseImpl(assistantRequestContext)
-      assistantRequest.invoke(assistantResponse, request)
-      if (!assistantResponse.isAssigned)
-        error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
-      else
-        assistantResponse.assistantRequestResponse
-    }
-
-  internal suspend fun getTransferDestinationResponse(request: JsonElement) =
-    if (!::transferDestinationRequest.isInitialized) {
-      error("onTransferDestinationRequest{} not called")
-    } else {
-      val responseDto = TransferMessageResponseDto()
-      val destImpl = TransferDestinationImpl("onTransferDestinationRequest", responseDto)
-      transferDestinationRequest.invoke(destImpl, request)
-      if (responseDto.messageResponse.destination.isNull())
-        error(
-          "onTransferDestinationRequest{} is missing a call to numberDestination{}, sipDestination{}, " +
-            "or assistantDestination{}",
-        )
-      responseDto
+    assistantRequest.let { func ->
+      if (func.isNull()) {
+        error("onAssistantRequest{} not called")
+      } else {
+        val assistantRequestContext = AssistantRequestContext(this, request)
+        val assistantResponse = InboundCallAssistantResponseImpl(assistantRequestContext)
+        func.invoke(assistantResponse, request)
+        if (!assistantResponse.isAssigned)
+          error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
+        else
+          assistantResponse.assistantRequestResponse
+      }
     }
 }

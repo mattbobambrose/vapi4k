@@ -132,7 +132,7 @@ internal object InboundCallAssistantRequest {
     invokeResponseCallbacks(config, application.applicationId, requestType, response, duration)
   }
 
-  internal suspend fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
+  internal fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
     val secret = call.request.headers[VAPI_SECRET_HEADER].orEmpty()
     return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
       logger.info { """Invalid secret. Found: "$secret" Expected: "$configPropertiesSecret""" }

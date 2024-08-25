@@ -1,4 +1,4 @@
-package com.github.mattbobambrose.vapi4k.com.vapi4k.docs
+package com.vapi4k.docs
 
 import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.model.enums.OpenAIModelType

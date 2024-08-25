@@ -30,7 +30,6 @@ import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonElementUtils.toolCallList
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -93,23 +92,21 @@ data class ToolCallResponse(
                             if (!manualToolImpl.isToolCallRequestInitialized()) {
                               error("onInvoke{} not declared in $funcName")
                             } else {
-                              runBlocking {
-                                val completeMsgs = RequestCompleteMessagesImpl()
-                                val failedMsgs = RequestFailedMessagesImpl()
-                                val resp = ManualToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
-                                runCatching {
-                                  manualToolImpl.toolCallRequest.invoke(resp, args)
-                                  toolCallResult.messageDtos.addAll(completeMsgs.messageList.map { it.dto })
-                                }.onFailure {
-                                  with(toolCallResult) {
-                                    result = ""
-                                    error = it.errorMsg
-                                    messageDtos.addAll(failedMsgs.messageList.map { it.dto })
-                                  }
+                              val completeMsgs = RequestCompleteMessagesImpl()
+                              val failedMsgs = RequestFailedMessagesImpl()
+                              val resp = ManualToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
+                              runCatching {
+                                manualToolImpl.toolCallRequest.invoke(resp, args)
+                                toolCallResult.messageDtos.addAll(completeMsgs.messageList.map { it.dto })
+                              }.onFailure {
+                                with(toolCallResult) {
+                                  result = ""
+                                  error = it.errorMsg
+                                  messageDtos.addAll(failedMsgs.messageList.map { it.dto })
                                 }
-                                toolCallResult.apply {
-                                  toolCallId = toolCall.stringValue("id")
-                                }
+                              }
+                              toolCallResult.apply {
+                                toolCallId = toolCall.stringValue("id")
                               }
                             }
                           }

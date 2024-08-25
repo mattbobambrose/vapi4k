@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
@@ -23,7 +24,10 @@ import com.vapi4k.common.Headers.SECRET_HEADER
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ServiceCache
+import com.vapi4k.dsl.tools.TransferDestinationImpl
+import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils.getRandomSecret
+import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.JsonElement
@@ -47,6 +51,10 @@ abstract class AbstractApplicationImpl(
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
+
+  internal var eocrCacheRemovalEnabled = true
+
+  private var transferDestinationRequest: (suspend TransferDestinationResponse.(JsonElement) -> Unit)? = null
 
   internal val serverUrl get() = "$serverBaseUrl/$serverPathAsSegment"
 
@@ -118,5 +126,29 @@ abstract class AbstractApplicationImpl(
   ) {
     applicationPerResponses += requestType to block
     requestTypes.forEach { applicationPerResponses += it to block }
+  }
+
+  internal suspend fun getTransferDestinationResponse(request: JsonElement) =
+    transferDestinationRequest.let { func ->
+      if (func.isNull()) {
+        error("onTransferDestinationRequest{} not called")
+      } else {
+        val responseDto = TransferMessageResponseDto()
+        val destImpl = TransferDestinationImpl("onTransferDestinationRequest", responseDto)
+        func.invoke(destImpl, request)
+        if (responseDto.messageResponse.destination.isNull())
+          error(
+            "onTransferDestinationRequest{} is missing a call to numberDestination{}, sipDestination{}, " +
+              "or assistantDestination{}",
+          )
+        responseDto
+      }
+    }
+
+  fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.(JsonElement) -> Unit) {
+    if (transferDestinationRequest.isNull())
+      transferDestinationRequest = block
+    else
+      error("onTransferDestinationRequest{} can be called only once per inboundCallApplication{}")
   }
 }

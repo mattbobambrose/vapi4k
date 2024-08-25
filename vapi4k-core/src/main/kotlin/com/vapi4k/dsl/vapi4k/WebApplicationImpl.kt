@@ -24,6 +24,7 @@ import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.assistant.WebAssistantResponseImpl
 import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -37,14 +38,7 @@ import kotlinx.serialization.json.JsonElement
 class WebApplicationImpl internal constructor() :
   AbstractApplicationImpl(ApplicationType.WEB),
   WebApplication {
-  private lateinit var assistantRequest: (suspend WebAssistantResponse.(JsonElement) -> Unit)
-
-  override fun onAssistantRequest(block: suspend WebAssistantResponse.(JsonElement) -> Unit) {
-    if (!::assistantRequest.isInitialized)
-      assistantRequest = block
-    else
-      error("onAssistantRequest{} can be called only once per inboundCallApplication{}")
-  }
+  private var assistantRequest: (suspend WebAssistantResponse.(JsonElement) -> Unit)? = null
 
   override fun fetchContent(
     request: JsonElement,
@@ -63,16 +57,25 @@ class WebApplicationImpl internal constructor() :
       response.status to response.bodyAsText()
     }
 
+  override fun onAssistantRequest(block: suspend WebAssistantResponse.(JsonElement) -> Unit) {
+    if (assistantRequest.isNull())
+      assistantRequest = block
+    else
+      error("onAssistantRequest{} can be called only once per inboundCallApplication{}")
+  }
+
   internal suspend fun getAssistantResponse(request: JsonElement) =
-    if (!::assistantRequest.isInitialized) {
-      error("onAssistantRequest{} not called")
-    } else {
-      val assistantRequestContext = AssistantRequestContext(this, request)
-      val assistantResponse = WebAssistantResponseImpl(assistantRequestContext)
-      assistantRequest.invoke(assistantResponse, request)
-      if (!assistantResponse.isAssigned)
-        error("onAssistantRequest{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
-      else
-        assistantResponse.assistantRequestResponse
+    assistantRequest.let { func ->
+      if (func.isNull()) {
+        error("onAssistantRequest{} not called")
+      } else {
+        val assistantRequestContext = AssistantRequestContext(this, request)
+        val assistantResponse = WebAssistantResponseImpl(assistantRequestContext)
+        func.invoke(assistantResponse, request)
+        if (!assistantResponse.isAssigned)
+          error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
+        else
+          assistantResponse.assistantRequestResponse
+      }
     }
 }

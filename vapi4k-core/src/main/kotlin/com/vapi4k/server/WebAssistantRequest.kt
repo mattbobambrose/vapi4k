@@ -27,13 +27,18 @@ import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
 import com.vapi4k.server.InboundCallAssistantRequest.isValidSecret
+import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.common.Utils.lambda
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
+import com.vapi4k.utils.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.utils.enums.ServerRequestType.TRANSFER_DESTINATION_REQUEST
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
@@ -87,6 +92,31 @@ internal object WebAssistantRequest {
 
         TOOL_CALL -> {
           val response = getToolCallResponse(application, request)
+          call.respond(response)
+          lambda { response.toJsonElement() }
+        }
+
+        TRANSFER_DESTINATION_REQUEST -> {
+          logger.info { "Transfer destination request received: ${request.toJsonString()}" }
+          val response = application.getTransferDestinationResponse(request)
+          call.respond(response)
+          lambda { response.toJsonElement() }
+        }
+
+        END_OF_CALL_REPORT -> {
+          if (application.eocrCacheRemovalEnabled) {
+            val sessionCacheId = request.sessionCacheId
+            with(application) {
+              serviceToolCache.removeFromCache(sessionCacheId) { funcInfo ->
+                logger.info { "EOCR removed ${funcInfo.functions.size} serviceTool cache items [${funcInfo.ageSecs}] " }
+              } ?: logger.warn { "EOCR unable to find and remove serviceTool cache entry [$sessionCacheId]" }
+              functionCache.removeFromCache(sessionCacheId) { funcInfo ->
+                logger.info { "EOCR removed ${funcInfo.functions.size} function cache items [${funcInfo.ageSecs}] " }
+              } ?: logger.warn { "EOCR unable to find and remove function cache entry [$sessionCacheId]" }
+            }
+          }
+
+          val response = SimpleMessageResponse("End of call report received")
           call.respond(response)
           lambda { response.toJsonElement() }
         }
