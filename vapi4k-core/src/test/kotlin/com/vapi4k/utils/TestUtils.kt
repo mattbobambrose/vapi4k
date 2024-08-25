@@ -21,8 +21,8 @@ import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
-import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantMessageResponseDto
 import com.vapi4k.server.Vapi4k
@@ -115,7 +115,7 @@ fun withTestApplication(
     application {
       install(Vapi4k) {
         inboundCallApplication {
-          (this as InboundCallApplicationImpl).eocrCacheRemovalEnabled = cacheRemovalEnabled
+          (this as AbstractApplicationImpl).eocrCacheRemovalEnabled = cacheRemovalEnabled
 
           onAssistantRequest {
             block()

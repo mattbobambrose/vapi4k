@@ -45,16 +45,16 @@ object HtmlUtils {
   ) {
     script {
       val args = buildString {
-        appendLine("const vapi4kUrl = '$vapi4kUrl';")
-        appendLine("const serverSecret = '$serverSecret';")
-        appendLine("const vapiApiKey = '$vapiApiKey';")
-        appendLine("const method = '${method.toUpperCasePreservingASCIIRules()}';")
-        appendLine("const postArgs = '$postArgs';")
+        appendLine()
+        appendLine("\tconst vapi4kUrl = '$vapi4kUrl';")
+        appendLine("\tconst serverSecret = '$serverSecret';")
+        appendLine("\tconst vapiApiKey = '$vapiApiKey';")
+        appendLine("\tconst method = '${method.toUpperCasePreservingASCIIRules()}';")
+        appendLine("\tconst postArgs = JSON.parse('$postArgs');")
       }
       rawHtml(args)
     }
+
     script { src = "$STATIC_BASE/js/vapi-call.js" }
-
   }
-
 }

@@ -22,7 +22,12 @@ object TalkPage {
             vapi4kUrl = "$serverBaseUrl/talkapp?a=1&b=2",
             serverSecret = "12345",
             vapiApiKey = "c1492df9-e59f-4e06-a9ab-54f44df44f66",
-            postArgs = """{"x": "1", "y": "2", "position": "BOTTOM", "name": "Ellen"}""".toJsonElement(),
+            postArgs = """
+              {"x": "1",
+               "y": "2",
+               "position": "BOTTOM",
+               "name": "Ellen"
+               }""".toJsonElement(),
           )
         }
       }

@@ -31,7 +31,6 @@ import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.model.AbstractModel
-import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
@@ -55,7 +54,7 @@ class ToolsImpl internal constructor(
     if (paramName.isBlank()) error("manualTool{} parameter name is required")
     if (!manualToolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onInvoke{} declared")
 
-    val application = model.application as InboundCallApplicationImpl
+    val application = model.application
     application.manualToolCache.addToCache(model.sessionCacheId, paramName, manualToolImpl)
   }
 
@@ -122,7 +121,7 @@ class ToolsImpl internal constructor(
     model.toolDtos += ToolDto().also { toolDto ->
       populateFunctionDto(model, obj, function, toolDto.functionDto)
       val sessionCacheId = model.getSessionCacheId()
-      val application = (model.application as InboundCallApplicationImpl)
+      val application = model.application
       application.serviceToolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
 
       with(toolDto) {

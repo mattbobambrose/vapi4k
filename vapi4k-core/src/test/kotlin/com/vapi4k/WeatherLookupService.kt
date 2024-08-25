@@ -23,7 +23,7 @@ import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.toolservice.ToolCallService
 import kotlinx.serialization.json.JsonElement
 
-class WeatherLookupService0 {
+class FavoriteFoodService {
   @ToolCall("Look up the favorite food in Chicago")
   fun getFavFoodInChicago() = "Pizza"
 }
@@ -73,7 +73,7 @@ class WeatherLookupService2 {
   fun lookupWeatherByZipCode(zipCode: String) = "The weather in zip code $zipCode is sunny"
 }
 
-class WeatherLookupService3 {
+class WeatherLookupByAreaCodeService {
   @ToolCall("Look up the weather for an area code", "weatherByAreaCode")
   fun lookupWeatherByAreaCode(areaCode: String) = "The weather in area code $areaCode is windy"
 }

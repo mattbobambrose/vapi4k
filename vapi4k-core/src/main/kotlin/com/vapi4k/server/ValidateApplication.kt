@@ -155,7 +155,7 @@ internal object ValidateApplication {
 
   internal fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
     val secret = call.request.headers[VAPI_SECRET_HEADER].orEmpty()
-    return (configPropertiesSecret.isNotEmpty() && secret == configPropertiesSecret).also {
+    return (secret.trim() == configPropertiesSecret.trim()).also {
       if (!it) {
         logger.info { """Invalid secret. Found: "$secret" Expected: "$configPropertiesSecret"""" }
       }

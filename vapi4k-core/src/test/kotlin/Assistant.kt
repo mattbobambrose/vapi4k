@@ -14,10 +14,10 @@
  *
  */
 
-import com.vapi4k.WeatherLookupService0
+import com.vapi4k.FavoriteFoodService
+import com.vapi4k.WeatherLookupByAreaCodeService
 import com.vapi4k.WeatherLookupService1
 import com.vapi4k.WeatherLookupService2
-import com.vapi4k.WeatherLookupService3
 import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
@@ -111,8 +111,8 @@ fun InboundCallAssistantResponse.getAssistant() =
         """
 
       functions {
-        function(WeatherLookupService0())
-        function(WeatherLookupService3())
+        function(FavoriteFoodService())
+        function(WeatherLookupByAreaCodeService())
       }
 
       tools {

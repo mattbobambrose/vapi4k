@@ -183,8 +183,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           logger.info { """Adding webAssistantRequest POST serverPath endpoint: "/${application.serverPath}"""" }
           post {
             val json = call.receive<String>().toJsonElement()
-            val prim = json is JsonPrimitive
-            println(prim)
             val request =
               if (json.isNotEmpty() && json.containsKey("message.type")) {
                 json
