@@ -39,25 +39,25 @@ class TransferDestinationImpl internal constructor(
   internal val duplicateChecker = DuplicateInvokeChecker()
 
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {
-    duplicateChecker.check("assistantDestination{} already declared in $callerName{}")
+    duplicateChecker.check("assistantDestination{} already called in $callerName{}")
     val assistantDto = AssistantDestinationDto().also { dto.messageResponse.destination = it }
     AssistantDestinationImpl(assistantDto).apply(block).checkForRequiredFields()
   }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
-    duplicateChecker.check("numberDestination{} already declared in $callerName{}")
+    duplicateChecker.check("numberDestination{} already called in $callerName{}")
     val numDto = NumberDestinationDto().also { dto.messageResponse.destination = it }
     NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
-    duplicateChecker.check("sipDestination{} already declared in $callerName{}")
+    duplicateChecker.check("sipDestination{} already called in $callerName{}")
     val sipDto = SipDestinationDto().also { dto.messageResponse.destination = it }
     SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
   }
 
   override fun stepDestination(block: StepDestination.() -> Unit) {
-    duplicateChecker.check("stepDestination{} already declared in $callerName{}")
+    duplicateChecker.check("stepDestination{} already called in $callerName{}")
     val stepDto = StepDestinationDto().also { dto.messageResponse.destination = it }
     StepDestinationImpl(stepDto).apply(block).checkForRequiredFields()
   }

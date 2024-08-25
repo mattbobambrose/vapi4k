@@ -27,7 +27,7 @@ class AssistantDestinationsImpl internal constructor(
   private val dto: MemberDto,
 ) : AssistantDestinations {
   override fun destination(block: AssistantDestination.() -> Unit) {
-    dto.assistantDestinations +=
+    dto.assistantDestinationsDto +=
       AssistantDestinationImpl(AssistantDestinationDto())
         .apply(block)
         .apply { checkForRequiredFields() }

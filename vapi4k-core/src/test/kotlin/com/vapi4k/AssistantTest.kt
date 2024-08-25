@@ -45,12 +45,6 @@ import kotlin.test.Test
 class AssistantTest {
   init {
     Vapi4kConfigImpl()
-//      .apply {
-//        configure {
-//          serverUrl = "HelloWorld"
-//          serverUrlSecret = "12345"
-//        }
-//      }
   }
 
   val messageOne = "Hi there test"
@@ -123,7 +117,7 @@ class AssistantTest {
         }
       }
     }.also {
-      assertEquals("An assistant{} is already declared", it.message)
+      assertEquals("assistant{} was already called", it.message)
     }
   }
 
@@ -142,7 +136,7 @@ class AssistantTest {
         }
       }
     }.also {
-      assertEquals("An assistant{} is already declared", it.message)
+      assertEquals("assistant{} was already called", it.message)
     }
   }
 
@@ -153,7 +147,7 @@ class AssistantTest {
       }
     }.also {
       assertEquals(
-        "assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration",
+        "assistantResponse{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}",
         it.message,
       )
     }

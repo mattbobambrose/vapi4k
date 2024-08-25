@@ -66,6 +66,8 @@ class OutboundCallImpl internal constructor(
         .apply {
           assistantDto.updated = true
           assistantDto.verifyValues()
+
+          assistantDto.serverUrl = assistantRequestContext.application.serverUrl
         }
     }
   }

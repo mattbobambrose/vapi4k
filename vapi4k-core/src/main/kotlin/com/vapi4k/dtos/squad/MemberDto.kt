@@ -19,12 +19,16 @@ package com.vapi4k.dtos.squad
 import com.vapi4k.dtos.api.destination.AssistantDestinationDto
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class MemberDto(
   var assistantId: String = "",
-  val assistant: AssistantDto = AssistantDto(),
-  val assistantOverrides: AssistantOverridesDto = AssistantOverridesDto(),
-  val assistantDestinations: MutableList<AssistantDestinationDto> = mutableListOf(),
+  @SerialName("assistant")
+  val assistantDto: AssistantDto = AssistantDto(),
+  @SerialName("assistantOverrides")
+  val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),
+  @SerialName("assistantDestinations")
+  val assistantDestinationsDto: MutableList<AssistantDestinationDto> = mutableListOf(),
 )

@@ -22,6 +22,7 @@ import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
+import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.responses.AssistantMessageResponseDto
 import com.vapi4k.utils.AssistantCacheIdSource
@@ -37,7 +38,7 @@ abstract class AbstractAssistantResponseImpl(
   internal val isAssigned get() = duplicateChecker.wasCalled
 
   fun assistant(block: Assistant.() -> Unit) {
-    duplicateChecker.check("An assistant{} is already declared")
+    duplicateChecker.check("assistant{} was already called")
     assistantRequestResponse.apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -51,12 +52,15 @@ abstract class AbstractAssistantResponseImpl(
         .apply {
           messageResponse.assistantDto.updated = true
           messageResponse.assistantDto.verifyValues()
+
+          if (assistantRequestContext.application.applicationType in assignUrlTypes)
+            messageResponse.assistantDto.serverUrl = assistantRequestContext.application.serverUrl
         }
     }
   }
 
   fun assistantId(block: AssistantId.() -> Unit) {
-    duplicateChecker.check("An assistantId{} is already declared")
+    duplicateChecker.check("assistantId{} was already called")
     assistantRequestResponse.apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -65,7 +69,7 @@ abstract class AbstractAssistantResponseImpl(
   }
 
   fun squad(block: Squad.() -> Unit) {
-    duplicateChecker.check("An squad{} is already declared")
+    duplicateChecker.check("squad{} was already called")
     assistantRequestResponse.apply {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
@@ -74,9 +78,13 @@ abstract class AbstractAssistantResponseImpl(
   }
 
   fun squadId(block: SquadId.() -> Unit) {
-    duplicateChecker.check("An squadId{} is already declared")
+    duplicateChecker.check("squadId{} was already called")
     assistantRequestResponse.apply {
       SquadIdImpl(assistantRequestContext, messageResponse).apply(block)
     }
+  }
+
+  companion object {
+    internal val assignUrlTypes = listOf(ApplicationType.WEB, ApplicationType.OUTBOUND_CALL)
   }
 }

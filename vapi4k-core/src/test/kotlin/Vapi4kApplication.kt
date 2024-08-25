@@ -53,7 +53,7 @@ fun Application.module() {
 
   install(Vapi4k) {
     webApplication {
-      // serverPath = "/inboundRequest"
+      serverPath = "/inboundRequest"
 
       onAssistantRequest { args ->
         assistant {

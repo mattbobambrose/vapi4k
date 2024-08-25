@@ -62,7 +62,7 @@ abstract class AbstractModel(
 
   fun knowledgeBase(block: KnowledgeBase.() -> Unit): KnowledgeBase {
     val caller = this::class.simpleName.orEmpty().removeSuffix("Impl").replaceFirstChar { it.lowercaseChar() }
-    duplicateChecker.check("$caller{} contains multiple knowledgeBase{} blocks")
+    duplicateChecker.check("$caller{} contains multiple calls to knowledgeBase{}")
     val kbDto = KnowledgeBaseDto().also { dto.knowledgeBaseDto = it }
     return KnowledgeBaseImpl(request, kbDto)
       .apply(block)

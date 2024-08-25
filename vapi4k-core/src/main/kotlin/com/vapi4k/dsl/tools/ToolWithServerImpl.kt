@@ -29,12 +29,12 @@ open class ToolWithServerImpl internal constructor(
   internal val serverChecker = DuplicateInvokeChecker()
 
   override fun server(block: Server.() -> Unit): Server {
-    serverChecker.check("$callerName{} contains multiple server{} blocks")
+    serverChecker.check("$callerName{} contains multiple calls to server{}")
     return ServerImpl(toolDto.server).apply(block)
   }
 
   internal fun checkIfServerCalled() {
     if (!serverChecker.wasCalled)
-      error("$callerName{} must contain a server{} decl")
+      error("$callerName{} must contain a call to server{}")
   }
 }

@@ -340,7 +340,7 @@ class ModelTests {
       }
     }.also {
       assertEquals(
-        "externalTool{} contains multiple server{} blocks",
+        "externalTool{} contains multiple calls to server{}",
         it.message,
       )
     }
@@ -364,7 +364,7 @@ class ModelTests {
       }
     }.also {
       assertEquals(
-        "externalTool{} must contain a server{} decl",
+        "externalTool{} must contain a call to server{}",
         it.message,
       )
     }

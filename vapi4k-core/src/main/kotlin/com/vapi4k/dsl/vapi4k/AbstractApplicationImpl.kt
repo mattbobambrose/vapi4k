@@ -48,6 +48,8 @@ abstract class AbstractApplicationImpl(
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
+  internal val serverUrl get() = "$serverBaseUrl/$serverPathAsSegment"
+
   var serverPath = defaultServerPath
   var serverSecret = ""
 

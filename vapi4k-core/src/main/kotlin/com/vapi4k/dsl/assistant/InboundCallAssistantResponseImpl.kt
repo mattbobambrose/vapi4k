@@ -32,12 +32,12 @@ class InboundCallAssistantResponseImpl(
   override var error: String
     get() = assistantRequestResponse.messageResponse.error
     set(value) {
-      duplicateChecker.check("error already declared")
+      duplicateChecker.check("error already assigned")
       assistantRequestResponse.messageResponse.error = value
     }
 
   override fun numberDestination(block: NumberDestination.() -> Unit) {
-    duplicateChecker.check("numberDestination{} already declared")
+    duplicateChecker.check("numberDestination{} already called")
     assistantRequestResponse.apply {
       val numDto = NumberDestinationDto().also { messageResponse.destination = it }
       NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
@@ -45,7 +45,7 @@ class InboundCallAssistantResponseImpl(
   }
 
   override fun sipDestination(block: SipDestination.() -> Unit) {
-    duplicateChecker.check("sipDestination{} already declared")
+    duplicateChecker.check("sipDestination{} already called")
     assistantRequestResponse.apply {
       val sipDto = SipDestinationDto().also { messageResponse.destination = it }
       SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()

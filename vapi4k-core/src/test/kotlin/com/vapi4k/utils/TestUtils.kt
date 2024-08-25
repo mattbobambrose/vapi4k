@@ -50,7 +50,7 @@ fun assistantResponse(
   return if (assistantResponse.isAssigned)
     assistantResponse.assistantRequestResponse
   else
-    error("assistantResponse{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
+    error("assistantResponse{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
 }
 
 fun JsonElement.tools() = jsonElementList("messageResponse.assistant.model.tools")

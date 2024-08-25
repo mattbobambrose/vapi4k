@@ -84,22 +84,22 @@ class InboundCallApplicationImpl internal constructor() :
       val assistantResponse = InboundCallAssistantResponseImpl(assistantRequestContext)
       assistantRequest.invoke(assistantResponse, request)
       if (!assistantResponse.isAssigned)
-        error("onAssistantRequest{} is missing an assistant{}, assistantId{}, squad{}, or squadId{} declaration")
+        error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
       else
         assistantResponse.assistantRequestResponse
     }
 
   internal suspend fun getTransferDestinationResponse(request: JsonElement) =
     if (!::transferDestinationRequest.isInitialized) {
-      error("onTransferDestinationRequest{} not declared")
+      error("onTransferDestinationRequest{} not called")
     } else {
       val responseDto = TransferMessageResponseDto()
       val destImpl = TransferDestinationImpl("onTransferDestinationRequest", responseDto)
       transferDestinationRequest.invoke(destImpl, request)
       if (responseDto.messageResponse.destination.isNull())
         error(
-          "onTransferDestinationRequest{} is missing a numberDestination{}, sipDestination{}, " +
-            "or assistantDestination{} declaration",
+          "onTransferDestinationRequest{} is missing a call to numberDestination{}, sipDestination{}, " +
+            "or assistantDestination{}",
         )
       responseDto
     }
