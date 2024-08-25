@@ -56,12 +56,10 @@ abstract class AbstractApplicationImpl(
 
   private var transferDestinationRequest: (suspend TransferDestinationResponse.(JsonElement) -> Unit)? = null
 
-  internal val serverUrl get() = "$serverBaseUrl/$serverPathAsSegment"
-
   var serverPath = defaultServerPath
   var serverSecret = ""
 
-  internal val fqServerPath get() = "$serverBaseUrl/$serverPathAsSegment"
+  internal val serverUrl get() = "$serverBaseUrl/$serverPathAsSegment"
   internal val serverPathAsSegment get() = serverPath.removePrefix("/").removeSuffix("/")
   internal val serverPathWithSecret: String
     get() = "$serverPathAsSegment${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_HEADER=$it" }}"

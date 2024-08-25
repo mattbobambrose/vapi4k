@@ -19,7 +19,6 @@ package com.vapi4k.server
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
 import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
-import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
@@ -27,6 +26,7 @@ import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
+import com.vapi4k.server.ValidateApplication.isValidSecret
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.common.Utils.lambda
@@ -62,6 +62,7 @@ internal object InboundCallAssistantRequest {
         runCatching {
           processInboundCallAssistantRequest(config, application, request)
         }.onFailure { e ->
+          logger.error(e) { "Error processing inbound call assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
         }
       }
@@ -130,15 +131,5 @@ internal object InboundCallAssistantRequest {
     }
 
     invokeResponseCallbacks(config, application.applicationId, requestType, response, duration)
-  }
-
-  internal fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
-    val secret = call.request.headers[VAPI_SECRET_HEADER].orEmpty()
-    return if (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret) {
-      logger.info { """Invalid secret. Found: "$secret" Expected: "$configPropertiesSecret""" }
-      false
-    } else {
-      true
-    }
   }
 }

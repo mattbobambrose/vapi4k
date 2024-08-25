@@ -130,7 +130,7 @@ object ValidateAssistantResponse {
           if (status.value == 200) {
             div {
               id = "status-div"
-              h3 { +"Vapi Server URL: ${application.fqServerPath}" }
+              h3 { +"Vapi Server URL: ${application.serverUrl}" }
               h3 { +"Status: $status" }
               pre {
                 code(classes = "language-json line-numbers match-braces") {
@@ -150,7 +150,7 @@ object ValidateAssistantResponse {
                 isSquadResponse || containsKey("squad") -> {
                   val assistants = jsonElementList("messageResponse.squad.members")
                   assistants.forEachIndexed { i, assistant ->
-                    h2 { +"Assistant \"${getAssistantName(assistant, i)}\"" }
+                    h2 { +"""Assistant "${getAssistantName(assistant, i)}"""" }
                     assistantRequestToolsBody(application, assistant, sessionCacheId, "assistant.model")
                   }
                 }
@@ -163,7 +163,7 @@ object ValidateAssistantResponse {
               }
             }
           } else {
-            h3 { +"Vapi Server URL: ${application.fqServerPath}" }
+            h3 { +"Vapi Server URL: ${application.serverUrl}" }
             h3 { +"Status: $status" }
             if (responseBody.isNotEmpty()) {
               if (responseBody.length < 80) {

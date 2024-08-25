@@ -26,7 +26,7 @@ import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
-import com.vapi4k.server.InboundCallAssistantRequest.isValidSecret
+import com.vapi4k.server.ValidateApplication.isValidSecret
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.common.Utils.lambda
@@ -62,6 +62,7 @@ internal object WebAssistantRequest {
         runCatching {
           processWebAssistantRequest(config, application, request)
         }.onFailure { e ->
+          logger.error(e) { "Error processing web assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
         }
       }

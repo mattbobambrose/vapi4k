@@ -22,7 +22,6 @@ import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
-import com.vapi4k.common.CoreEnvVars.serverBaseUrl
 import com.vapi4k.common.Headers.SECRET_HEADER
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
@@ -113,13 +112,16 @@ internal object ValidateApplication {
       val application = config.getApplication(applicationId)
       val toolRequest = getToolRequest(params)
 
-      httpClient.post("$serverBaseUrl/${application.serverPathAsSegment}") {
+      logger.info { "Calling: ${application.serverUrl}" }
+      httpClient.post(application.serverUrl) {
+        logger.info { "Assigning secret: ${application.serverSecret}" }
         headers.append(VAPI_SECRET_HEADER, application.serverSecret)
         setBody(toolRequest.toJsonString<JsonObject>())
       }
     }.onSuccess { response ->
       call.respondText(response.bodyAsText().toJsonString())
     }.onFailure { e ->
+      logger.error(e) { "Error validating tool invoke request" }
       call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
     }
 
@@ -151,4 +153,14 @@ internal object ValidateApplication {
       )
     }
   }
+
+  internal fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
+    val secret = call.request.headers[VAPI_SECRET_HEADER].orEmpty()
+    return (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret).also {
+      if (!it) {
+        logger.info { """Invalid secret. Found: "$secret" Expected: "$configPropertiesSecret"""" }
+      }
+    }
+  }
+
 }
