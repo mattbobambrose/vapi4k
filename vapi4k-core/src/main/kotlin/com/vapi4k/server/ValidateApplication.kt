@@ -22,8 +22,8 @@ import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
-import com.vapi4k.common.Headers.SECRET_HEADER
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
+import com.vapi4k.common.QueryParams.SECRET_QUERY_PARAM
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
@@ -100,7 +100,7 @@ internal object ValidateApplication {
     application: AbstractApplicationImpl,
     appName: String,
   ) {
-    val secret = call.request.queryParameters[SECRET_HEADER].orEmpty()
+    val secret = call.request.queryParameters[SECRET_QUERY_PARAM].orEmpty()
     val html = validateAssistantRequestPage(config, application, appName, secret)
     call.respondText(html, ContentType.Text.Html)
   }
@@ -112,9 +112,8 @@ internal object ValidateApplication {
       val application = config.getApplication(applicationId)
       val toolRequest = getToolRequest(params)
 
-      logger.info { "Calling: ${application.serverUrl}" }
       httpClient.post(application.serverUrl) {
-        logger.info { "Assigning secret: ${application.serverSecret}" }
+        // logger.info { "Assigning secret: ${application.serverSecret}" }
         headers.append(VAPI_SECRET_HEADER, application.serverSecret)
         setBody(toolRequest.toJsonString<JsonObject>())
       }
@@ -156,11 +155,10 @@ internal object ValidateApplication {
 
   internal fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
     val secret = call.request.headers[VAPI_SECRET_HEADER].orEmpty()
-    return (configPropertiesSecret.isNotEmpty() && secret != configPropertiesSecret).also {
+    return (configPropertiesSecret.isNotEmpty() && secret == configPropertiesSecret).also {
       if (!it) {
         logger.info { """Invalid secret. Found: "$secret" Expected: "$configPropertiesSecret"""" }
       }
     }
   }
-
 }

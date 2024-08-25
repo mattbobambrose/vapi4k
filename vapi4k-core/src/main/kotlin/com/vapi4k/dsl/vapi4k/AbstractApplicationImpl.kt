@@ -20,16 +20,27 @@ import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.CoreEnvVars.serverBaseUrl
-import com.vapi4k.common.Headers.SECRET_HEADER
+import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
+import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
+import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
+import com.vapi4k.common.QueryParams.SECRET_QUERY_PARAM
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ServiceCache
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils.getRandomSecret
+import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
@@ -62,13 +73,30 @@ abstract class AbstractApplicationImpl(
   internal val serverUrl get() = "$serverBaseUrl/$serverPathAsSegment"
   internal val serverPathAsSegment get() = serverPath.removePrefix("/").removeSuffix("/")
   internal val serverPathWithSecret: String
-    get() = "$serverPathAsSegment${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_HEADER=$it" }}"
+    get() = "$serverPathAsSegment${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_QUERY_PARAM=$it" }}"
 
-  abstract fun fetchContent(
+  fun fetchContent(
     request: JsonElement,
     appName: String,
     secret: String,
-  ): Pair<HttpStatusCode, String>
+  ): Pair<HttpStatusCode, String> =
+    runBlocking {
+      val url = "$serverBaseUrl/$appName"
+      val response = httpClient.post(url) {
+        contentType(Application.Json)
+        headers.append(VAPI4K_VALIDATE_HEADER, VAPI4K_VALIDATE_VALUE)
+        // logger.info { "Assigning secret from QP: $secret" }
+        if (secret.isNotEmpty())
+          headers.append(VAPI_SECRET_HEADER, secret)
+        val jsonBody =
+          if (applicationType == ApplicationType.INBOUND_CALL)
+            request
+          else
+            "{}".toJsonElement()
+        setBody(jsonBody)
+      }
+      response.status to response.bodyAsText()
+    }
 
   internal fun containsServiceToolInCache(
     sessionCacheId: SessionCacheId,

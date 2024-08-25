@@ -18,44 +18,14 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.WebAssistantResponse
 import com.vapi4k.api.vapi4k.WebApplication
-import com.vapi4k.common.CoreEnvVars.serverBaseUrl
-import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
-import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
-import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.assistant.WebAssistantResponseImpl
-import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.common.Utils.isNull
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType.Application
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
 
 class WebApplicationImpl internal constructor() :
   AbstractApplicationImpl(ApplicationType.WEB),
   WebApplication {
   private var assistantRequest: (suspend WebAssistantResponse.(JsonElement) -> Unit)? = null
-
-  override fun fetchContent(
-    request: JsonElement,
-    appName: String,
-    secret: String,
-  ): Pair<HttpStatusCode, String> =
-    runBlocking {
-      val url = "$serverBaseUrl/$appName"
-      val response = httpClient.post(url) {
-        contentType(Application.Json)
-        headers.append(VAPI4K_VALIDATE_HEADER, VAPI4K_VALIDATE_VALUE)
-        if (secret.isNotEmpty())
-          headers.append(VAPI_SECRET_HEADER, secret)
-        setBody("{}".toJsonElement())
-      }
-      response.status to response.bodyAsText()
-    }
 
   override fun onAssistantRequest(block: suspend WebAssistantResponse.(JsonElement) -> Unit) {
     if (assistantRequest.isNull())

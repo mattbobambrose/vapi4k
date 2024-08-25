@@ -31,8 +31,11 @@ object Constants {
   const val FUNCTION_NAME = "functionName"
 }
 
+object QueryParams {
+  const val SECRET_QUERY_PARAM = "secret"
+}
+
 object Headers {
-  const val SECRET_HEADER = "secret"
   const val VAPI_SECRET_HEADER = "x-vapi-secret"
   const val VAPI4K_VALIDATE_HEADER = "x-vapi4k-validate"
   const val VAPI4K_VALIDATE_VALUE = "true"

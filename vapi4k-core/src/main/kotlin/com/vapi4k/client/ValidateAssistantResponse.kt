@@ -94,8 +94,8 @@ object ValidateAssistantResponse {
   ): String {
     val request = getNewRequest()
     val (status, responseBody) = application.fetchContent(request, appName, secret)
-    val sessionCacheId = request.sessionCacheId
 
+    val sessionCacheId = request.sessionCacheId
     return createHTML()
       .html {
         head {

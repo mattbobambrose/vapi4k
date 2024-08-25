@@ -89,7 +89,7 @@ internal object ValidateRoot {
                     li {
                       id = "all-li"
                       a {
-                        href = "$VALIDATE_PATH/${application.serverPathAsSegment}"
+                        href = "$VALIDATE_PATH/${application.serverPathWithSecret}"
                         +application.serverPath.ensureStartsWith("/")
                       }
                     }
