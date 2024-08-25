@@ -70,11 +70,13 @@ fun Application.module() {
       serverSecret = "12345"
 
       onAllRequests { request ->
-        logger.info { "All requests 1: ${request}" }
+        logger.info { "All requests: $request" }
       }
 
       onAssistantRequest { args ->
         assistant {
+          name = "A web assistant 123"
+
           openAIModel {
             modelType = OpenAIModelType.GPT_4_TURBO
             systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."

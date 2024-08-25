@@ -87,7 +87,9 @@ object JsonElementUtils {
 
   val JsonElement.size get() = jsonObject.size
 
-  val JsonElement.isEmpty get() = jsonObject.isEmpty()
+  fun JsonElement.isEmpty() = if (this is JsonPrimitive) true else jsonObject.isEmpty()
+
+  fun JsonElement.isNotEmpty() = !isEmpty()
 
   fun JsonElement.toJsonElementList() = jsonArray.toList()
 

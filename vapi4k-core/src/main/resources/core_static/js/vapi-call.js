@@ -1,5 +1,5 @@
 const defaultHeaders = {
-    "Accept": "application/json"
+    Accept: "application/json"
 }
 
 async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
@@ -9,6 +9,7 @@ async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
             headers: {...defaultHeaders, ...userHeaders},
         }
 
+        // Add json body if one is present and it is a post request
         if (jsonBody && fetchMethod && fetchMethod.toUpperCase() === "POST") {
             initArg.body = JSON.stringify(jsonBody)
         }
@@ -25,7 +26,7 @@ async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
     }
 }
 
-fetchJson(method, vapi4kUrl, {"x-vapi-secret": serverSecret}, userArgs,)
+fetchJson(method, vapi4kUrl, {"x-vapi-secret": serverSecret}, postArgs,)
     .then((response) => {
         (function (document, t) {
             var elem = document.createElement(t);
@@ -44,7 +45,7 @@ fetchJson(method, vapi4kUrl, {"x-vapi-secret": serverSecret}, userArgs,)
 
 function buildVapiConfig(response) {
     var vapiConfig = {
-        apiKey: publicApiKey
+        apiKey: vapiApiKey
     }
 
     if (response.assistant) {

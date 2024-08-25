@@ -31,10 +31,10 @@ import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.JsonElementUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.github.oshai.kotlinlogging.KLogger
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -94,7 +94,7 @@ abstract class AbstractApplicationImpl(
           if (applicationType == ApplicationType.INBOUND_CALL)
             request
           else
-            "{}".toJsonElement()
+            EMPTY_JSON_ELEMENT
         setBody(jsonBody)
       }
       response.status to response.bodyAsText()

@@ -44,7 +44,7 @@ object JsonElementUtils {
   val JsonElement.assistantClientMessages get() = jsonElementList("messageResponse.assistant.clientMessages")
   val JsonElement.assistantServerMessages get() = jsonElementList("messageResponse.assistant.serverMessages")
 
-  private val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
+  val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
 
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
 

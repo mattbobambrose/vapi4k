@@ -49,6 +49,7 @@ import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
 import com.vapi4k.utils.json.JsonElementUtils.getOrNull
+import com.vapi4k.utils.json.JsonElementUtils.isNotEmpty
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -182,8 +183,10 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           logger.info { """Adding webAssistantRequest POST serverPath endpoint: "/${application.serverPath}"""" }
           post {
             val json = call.receive<String>().toJsonElement()
+            val prim = json is JsonPrimitive
+            println(prim)
             val request =
-              if (json.containsKey("message.type")) {
+              if (json.isNotEmpty() && json.containsKey("message.type")) {
                 json
               } else {
                 buildJsonObject {
@@ -191,8 +194,10 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                   put(
                     "postArgs",
                     buildJsonObject {
-                      json.keys.forEach { key ->
-                        put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
+                      if (json.isNotEmpty()) {
+                        json.keys.forEach { key ->
+                          put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
+                        }
                       }
                     },
                   )
