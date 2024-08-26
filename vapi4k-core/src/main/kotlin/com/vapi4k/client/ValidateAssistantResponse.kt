@@ -117,7 +117,7 @@ object ValidateAssistantResponse {
         body {
           script { src = "$STATIC_BASE/js/prism.js" }
 
-          if (config.inboundCallApplications.size > 1) {
+          if (config.allWebAndInboundApplications.size > 1) {
             div {
               id = "back-div"
               a {

@@ -35,6 +35,7 @@ import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.STATUS_UPDATE
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.http.ContentType
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -64,16 +65,19 @@ fun Application.module() {
     get("/talk") {
       call.respondText(talkPage(), contentType = ContentType.Text.Html)
     }
-
   }
+
   install(Vapi4k) {
 
     webApplication {
       serverPath = "/talkapp"
       serverSecret = "12345"
 
+//      onAllRequests { request ->
+//        logger.info { "Assistant requests: ${request.requestType}" }
+//      }
       onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
-        logger.info { "Assistant requests: $request" }
+        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
       }
 
       onAssistantRequest { args ->

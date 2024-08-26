@@ -42,14 +42,9 @@ import kotlinx.html.ul
 internal object ValidateRoot {
   suspend fun KtorCallContext.validateRootPage(config: Vapi4kConfigImpl) {
     when {
-      config.inboundCallApplications.size == 1 && config.webApplications.isEmpty() -> {
-        val application = config.inboundCallApplications.first()
+      config.allWebAndInboundApplications.size == 1 -> {
+        val application = config.allWebAndInboundApplications.first()
         call.respondRedirect("$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}")
-      }
-
-      config.webApplications.size == 1 && config.inboundCallApplications.isEmpty() -> {
-        val application = config.webApplications.first()
-        call.respondRedirect("$VALIDATE_PATH/${application.serverPathAsSegment}")
       }
 
       else -> {

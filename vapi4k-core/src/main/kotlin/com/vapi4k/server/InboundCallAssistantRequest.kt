@@ -19,6 +19,7 @@ package com.vapi4k.server
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
 import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
@@ -47,7 +48,7 @@ import kotlin.time.measureTimedValue
 internal object InboundCallAssistantRequest {
   suspend fun KtorCallContext.inboundCallAssistantRequest(
     config: Vapi4kConfigImpl,
-    application: InboundCallApplicationImpl,
+    application: AbstractApplicationImpl,
     request: JsonElement,
   ) {
     if (!isValidSecret(application.serverSecret)) {
@@ -69,7 +70,7 @@ internal object InboundCallAssistantRequest {
 
   private suspend fun KtorCallContext.processInboundCallAssistantRequest(
     config: Vapi4kConfigImpl,
-    application: InboundCallApplicationImpl,
+    application: AbstractApplicationImpl,
     request: JsonElement,
   ) {
     val requestType = request.requestType
@@ -78,7 +79,7 @@ internal object InboundCallAssistantRequest {
     val (response, duration) = measureTimedValue {
       when (requestType) {
         ASSISTANT_REQUEST -> {
-          val response = application.getAssistantResponse(request)
+          val response = (application as InboundCallApplicationImpl).getAssistantResponse(request)
           call.respond(response)
           lambda { response.toJsonElement() }
         }

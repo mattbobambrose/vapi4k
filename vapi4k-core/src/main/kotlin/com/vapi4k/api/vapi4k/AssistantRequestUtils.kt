@@ -58,6 +58,11 @@ object AssistantRequestUtils {
   val JsonElement.messageCallId get() = stringValue("message.call.id")
 
   /**
+  Extract the request type of a JsonElement.
+   */
+  val JsonElement.requestType get() = stringValue("message.type")
+
+  /**
   Extract the phone number from a JsonElement and throws an error if the JsonElement is not a phone number.
    */
   val JsonElement.phoneNumber get() = stringValue("message.call.customer.number")

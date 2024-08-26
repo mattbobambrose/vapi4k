@@ -43,14 +43,7 @@ internal object AdminJobs {
       while (true) {
         runCatching {
           Thread.sleep(pause.inWholeMilliseconds)
-          config.allCallApplications.forEach { application ->
-            logger.debug { "Purging cache for ${application.serverPath}" }
-            with(application) {
-              serviceToolCache.purgeToolCache(maxAge)
-              functionCache.purgeToolCache(maxAge)
-            }
-          }
-          config.webApplications.forEach { application ->
+          config.allApplications.forEach { application ->
             logger.debug { "Purging cache for ${application.serverPath}" }
             with(application) {
               serviceToolCache.purgeToolCache(maxAge)
@@ -73,18 +66,7 @@ internal object AdminJobs {
               coroutineScope {
                 when (callback.type) {
                   REQUEST -> {
-                    config.allCallApplications
-                      .filter { it.applicationId == callback.applicationId }
-                      .forEach { application ->
-                        with(application) {
-                          applicationAllRequests.forEach { launch { it.invoke(callback.request) } }
-                          applicationPerRequests
-                            .filter { it.first == callback.requestType }
-                            .forEach { (_, block) -> launch { block(callback.request) } }
-                        }
-                      }
-
-                    config.webApplications
+                    config.allApplications
                       .filter { it.applicationId == callback.applicationId }
                       .forEach { application ->
                         with(application) {
@@ -104,30 +86,7 @@ internal object AdminJobs {
                   }
 
                   RESPONSE -> {
-                    config.allCallApplications.forEach { application ->
-                      with(application) {
-                        if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
-                          val resp =
-                            runCatching {
-                              callback.response.invoke()
-                            }.onFailure { e ->
-                              logger.error { "Error creating response" }
-                              error("Error creating response")
-                            }.getOrThrow()
-
-                          applicationAllResponses.forEach {
-                            launch { it.invoke(callback.requestType, resp, callback.elapsed) }
-                          }
-                          applicationPerResponses
-                            .filter { it.first == callback.requestType }
-                            .forEach { (reqType, block) ->
-                              launch { block(reqType, resp, callback.elapsed) }
-                            }
-                        }
-                      }
-                    }
-
-                    config.webApplications.forEach { application ->
+                    config.allApplications.forEach { application ->
                       with(application) {
                         if (applicationAllResponses.isNotEmpty() || applicationPerResponses.isNotEmpty()) {
                           val resp =
@@ -202,5 +161,4 @@ internal object AdminJobs {
     response: () -> JsonElement,
     elapsed: Duration,
   ) = config.callbackChannel.send(responseCallback(applicationId, requestType, response, elapsed))
-
 }

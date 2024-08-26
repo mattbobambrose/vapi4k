@@ -45,15 +45,14 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   internal val globalAllResponses = mutableListOf<ResponseArgs>()
   internal val globalPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  internal val inboundCallApplications = mutableListOf<InboundCallApplicationImpl>()
-  internal val allCallApplications get() = inboundCallApplications + outboundCallApplication
-  internal val webApplications = mutableListOf<WebApplicationImpl>()
+  internal val webApplications = mutableListOf<AbstractApplicationImpl>()
+  internal val inboundCallApplications = mutableListOf<AbstractApplicationImpl>()
+  internal val allWebAndInboundApplications get() = webApplications + inboundCallApplications
+  internal val allApplications get() = webApplications + inboundCallApplications + outboundCallApplication
 
   private fun verifyServerPath(serverPath: String) {
-    if (allCallApplications.any { it.serverPath == serverPath })
-      error("inboundCallApplication{} with serverPath \"${serverPath}\" already exists")
-    if (webApplications.any { it.serverPath == serverPath })
-      error("webApplication{} with serverPath \"${serverPath}\" already exists")
+    if (allApplications.any { it.serverPath == serverPath })
+      error("Application with serverPath \"${serverPath}\" already exists")
   }
 
   override fun inboundCallApplication(block: InboundCallApplication.() -> Unit): InboundCallApplication =
@@ -101,7 +100,6 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   }
 
   internal fun getApplication(applicationId: ApplicationId): AbstractApplicationImpl =
-    inboundCallApplications.firstOrNull { it.applicationId == applicationId }
-      ?: webApplications.firstOrNull { it.applicationId == applicationId }
+    allApplications.firstOrNull { it.applicationId == applicationId }
       ?: error("Application not found for applicationId: $applicationId")
 }

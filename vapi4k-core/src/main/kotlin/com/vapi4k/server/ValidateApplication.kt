@@ -61,8 +61,7 @@ internal object ValidateApplication {
   suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl) =
     runCatching {
       val appName = call.parameters["appName"].orEmpty()
-      val application =
-        (config.inboundCallApplications + config.webApplications).firstOrNull { it.serverPathAsSegment == appName }
+      val application = config.allApplications.firstOrNull { it.serverPathAsSegment == appName }
       if (application.isNotNull())
         processValidateRequest(config, application, appName)
       else

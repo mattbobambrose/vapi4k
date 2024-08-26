@@ -57,15 +57,23 @@ object JsonElementUtils {
   val JsonElement.keys get() = jsonObject.keys
 
   fun JsonElement.stringValue(vararg keys: String) = get(*keys).stringValue
+
   fun JsonElement.intValue(vararg keys: String) = get(*keys).intValue
+
   fun JsonElement.doubleValue(vararg keys: String) = get(*keys).doubleValue
+
   fun JsonElement.booleanValue(vararg keys: String) = get(*keys).booleanValue
+
   fun JsonElement.jsonElementList(vararg keys: String) = get(*keys).toJsonElementList()
 
   fun JsonElement.stringValueOrNull(vararg keys: String) = getOrNull(*keys)?.stringValue
+
   fun JsonElement.intValueOrNull(vararg keys: String) = getOrNull(*keys)?.intValue
+
   fun JsonElement.doubleValueOrNull(vararg keys: String) = getOrNull(*keys)?.doubleValue
+
   fun JsonElement.booleanValueOrNull(vararg keys: String) = getOrNull(*keys)?.booleanValue
+
   fun JsonElement.jsonElementListOrNull(vararg keys: String) = getOrNull(*keys)?.toJsonElementList()
 
   internal fun JsonElement.elementOrNull(key: String) = jsonObject[key]

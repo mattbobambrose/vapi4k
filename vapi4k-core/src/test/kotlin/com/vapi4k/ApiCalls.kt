@@ -122,7 +122,7 @@ class ApiCalls {
   companion object {
     @JvmStatic
     fun main(args: Array<String>) {
-      val api = vapiApi("123-445-666") as VapiApiImpl
+      val api = vapiApi("123-445-666")
       val callResp =
         api.phone {
           outboundCallApplication {
@@ -138,7 +138,7 @@ class ApiCalls {
               number = "+14156721042"
             }
 
-            phoneNumberId = api.config.property("phoneNumberId").getString()
+            phoneNumberId = (api as VapiApiImpl).config.property("phoneNumberId").getString()
           }
         }
       println("Call status: ${callResp.status}")
