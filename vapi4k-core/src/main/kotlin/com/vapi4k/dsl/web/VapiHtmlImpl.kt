@@ -38,7 +38,7 @@ class VapiHtmlImpl(
           append("\t\taddVapiButton(\n$indent")
           appendLine(
             listOf(
-              "'${serverBaseUrl}/${props.serverPath.removePrefix("/").removeSuffix("/")}'",
+              "'$serverBaseUrl/${props.serverPath.removePrefix("/").removeSuffix("/")}'",
               "'${props.serverSecret}'",
               "'${props.vapiApiKey}'",
               "'${props.method.name}'",

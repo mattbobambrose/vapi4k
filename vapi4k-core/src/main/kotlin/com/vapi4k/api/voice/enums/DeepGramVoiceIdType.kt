@@ -19,7 +19,7 @@ package com.vapi4k.api.voice.enums
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class DeepGramVoiceIdType() {
+enum class DeepGramVoiceIdType {
   ANGUS,
   ARCAS,
   ASTERIA,
