@@ -14,19 +14,16 @@
  *
  */
 
-package com.vapi4k.utils
+package com.vapi4k.dsl.web
 
-import kotlinx.html.HTMLTag
-import kotlinx.html.TagConsumer
-import kotlinx.html.stream.appendHTML
-import kotlinx.html.unsafe
+import com.vapi4k.api.web.VapiHtml
+import com.vapi4k.common.Constants.STATIC_BASE
+import kotlinx.html.HtmlBlockTag
+import kotlinx.html.script
 
-object HtmlUtils {
-  fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
-
-  // Creates snippets of HTML for use with HTMX
-  fun html(block: TagConsumer<StringBuilder>.() -> Unit): String =
-    buildString {
-      appendHTML().apply(block)
-    }
+object VapiWeb {
+  fun HtmlBlockTag.vapi(block: VapiHtml.() -> Unit) {
+    script { src = "$STATIC_BASE/js/vapi-call.js" }
+    VapiHtmlImpl(this).apply(block)
+  }
 }

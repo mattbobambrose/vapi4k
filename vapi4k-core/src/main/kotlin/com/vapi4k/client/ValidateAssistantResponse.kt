@@ -130,7 +130,14 @@ object ValidateAssistantResponse {
           if (status.value == 200) {
             div {
               id = "status-div"
-              h3 { +"Vapi Server URL: ${application.serverUrl}" }
+              h3 {
+                +"Vapi Server URL: "
+                a {
+                  href = application.serverUrl
+                  target = "_blank"
+                  +application.serverUrl
+                }
+              }
               h3 { +"Status: $status" }
               pre {
                 code(classes = "language-json line-numbers match-braces") {
@@ -172,7 +179,14 @@ object ValidateAssistantResponse {
               }
             }
           } else {
-            h3 { +"Vapi Server URL: ${application.serverUrl}" }
+            h3 {
+              +"Vapi Server URL: "
+              a {
+                href = application.serverUrl
+                target = "_blank"
+                +application.serverUrl
+              }
+            }
             h3 { +"Status: $status" }
             if (responseBody.isNotEmpty()) {
               if (responseBody.length < 80) {

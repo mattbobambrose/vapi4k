@@ -26,24 +26,26 @@ async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
     }
 }
 
-fetchJson(method, vapi4kUrl, {"x-vapi-secret": serverSecret}, postArgs,)
-    .then((response) => {
-        (function (document, t) {
-            var elem = document.createElement(t);
-            elem.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-            elem.defer = true;
-            elem.async = true;
-            var scriptTag = document.getElementsByTagName(t)[0];
-            scriptTag.parentNode.insertBefore(elem, scriptTag);
-            elem.onload = function () {
-                const config = buildVapiConfig(response);
-                const vapi = window.vapiSDK.run(config);
-                logVapiEvents(vapi);
-            };
-        })(document, "script");
-    });
+function loadVapiButton(vapi4kUrl, serverSecret, vapiApiKey, method, postArgs) {
+    fetchJson(method, vapi4kUrl, {"x-vapi-secret": serverSecret}, postArgs,)
+        .then((response) => {
+            (function (document, t) {
+                var elem = document.createElement(t);
+                elem.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+                elem.defer = true;
+                elem.async = true;
+                var scriptTag = document.getElementsByTagName(t)[0];
+                scriptTag.parentNode.insertBefore(elem, scriptTag);
+                elem.onload = function () {
+                    const config = buildVapiConfig(response, vapiApiKey);
+                    const vapi = window.vapiSDK.run(config);
+                    logVapiEvents(vapi);
+                };
+            })(document, "script");
+        });
+}
 
-function buildVapiConfig(response) {
+function buildVapiConfig(response, vapiApiKey) {
     var vapiConfig = {
         apiKey: vapiApiKey
     }

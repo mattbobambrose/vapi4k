@@ -14,19 +14,11 @@
  *
  */
 
-package com.vapi4k.utils
+package com.vapi4k.api.web
 
-import kotlinx.html.HTMLTag
-import kotlinx.html.TagConsumer
-import kotlinx.html.stream.appendHTML
-import kotlinx.html.unsafe
+import kotlinx.html.HtmlTagMarker
 
-object HtmlUtils {
-  fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
-
-  // Creates snippets of HTML for use with HTMX
-  fun html(block: TagConsumer<StringBuilder>.() -> Unit): String =
-    buildString {
-      appendHTML().apply(block)
-    }
+@HtmlTagMarker
+interface VapiHtml {
+  fun talkButton(block: TalkButton.() -> Unit)
 }

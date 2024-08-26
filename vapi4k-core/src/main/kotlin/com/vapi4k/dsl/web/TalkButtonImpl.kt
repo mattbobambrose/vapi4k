@@ -14,19 +14,8 @@
  *
  */
 
-package com.vapi4k.utils
+package com.vapi4k.dsl.web
 
-import kotlinx.html.HTMLTag
-import kotlinx.html.TagConsumer
-import kotlinx.html.stream.appendHTML
-import kotlinx.html.unsafe
+import com.vapi4k.api.web.TalkButton
 
-object HtmlUtils {
-  fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
-
-  // Creates snippets of HTML for use with HTMX
-  fun html(block: TagConsumer<StringBuilder>.() -> Unit): String =
-    buildString {
-      appendHTML().apply(block)
-    }
-}
+class TalkButtonImpl internal constructor(private val dto: TalkButtonProperties) : TalkButton by dto
