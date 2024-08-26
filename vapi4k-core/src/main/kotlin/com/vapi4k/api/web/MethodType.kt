@@ -17,5 +17,6 @@
 package com.vapi4k.api.web
 
 enum class MethodType {
-  GET, POST;
+  GET,
+  POST,
 }

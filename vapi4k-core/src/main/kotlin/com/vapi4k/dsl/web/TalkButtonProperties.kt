@@ -33,5 +33,3 @@ class TalkButtonProperties(
     require(vapiApiKey.isNotBlank()) { "vapiApiKey must not be blank in talkButton{}" }
   }
 }
-
-

@@ -68,7 +68,6 @@ fun Application.module() {
   }
 
   install(Vapi4k) {
-
     webApplication {
       serverPath = "/talkapp"
       serverSecret = "12345"
