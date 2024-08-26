@@ -162,7 +162,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       config.inboundCallApplications.forEach { application ->
         route(application.serverPath) {
-          logger.info { "Adding inboundCallAssistantRequest POST serverPath endpoint: \"/${application.serverPath}\"" }
+          logger.info { "Adding inboundCallAssistantRequest POST serverPath endpoint: \"${application.serverPath}\"" }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
           post {
@@ -175,12 +175,12 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       config.webApplications.forEach { application ->
         route(application.serverPath) {
           installContentNegotiation()
-          logger.info { """Adding webAssistantRequest GET serverPath endpoint: "/${application.serverPath}"""" }
+          logger.info { """Adding webAssistantRequest GET serverPath endpoint: "${application.serverPath}"""" }
           get {
             val request = buildJsonObject { addArgsAndMessage(call.request.queryParameters) }
             webAssistantRequest(config, application, request)
           }
-          logger.info { """Adding webAssistantRequest POST serverPath endpoint: "/${application.serverPath}"""" }
+          logger.info { """Adding webAssistantRequest POST serverPath endpoint: "${application.serverPath}"""" }
           post {
             val json = call.receive<String>().toJsonElement()
             val request =

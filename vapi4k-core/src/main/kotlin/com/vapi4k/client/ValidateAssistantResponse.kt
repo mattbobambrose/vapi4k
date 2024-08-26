@@ -147,13 +147,22 @@ object ValidateAssistantResponse {
                 containsKey("assistant") ->
                   assistantRequestToolsBody(application, this, sessionCacheId, "assistant.model")
 
-                isSquadResponse || containsKey("squad") -> {
+                isSquadResponse -> {
                   val assistants = jsonElementList("messageResponse.squad.members")
                   assistants.forEachIndexed { i, assistant ->
                     h2 { +"""Assistant "${getAssistantName(assistant, i)}"""" }
                     assistantRequestToolsBody(application, assistant, sessionCacheId, "assistant.model")
                   }
                 }
+
+                containsKey("squad") -> {
+                  val assistants = jsonElementList("squad.members")
+                  assistants.forEachIndexed { i, assistant ->
+                    h2 { +"""Assistant "${getAssistantName(assistant, i)}"""" }
+                    assistantRequestToolsBody(application, assistant, sessionCacheId, "assistant.model")
+                  }
+                }
+
                 // TODO - Add support for assistantId and squadId responses
                 isAssistantIdResponse || containsKey("assistantId") -> {}
                 isSquadIdResponse || containsKey("squadId") -> {}
