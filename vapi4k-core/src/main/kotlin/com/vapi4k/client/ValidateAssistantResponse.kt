@@ -280,6 +280,8 @@ object ValidateAssistantResponse {
             displayResponse(divId)
           }
         }
+    } else {
+      h2 { +"No Service Tools" }
     }
   }
 
@@ -334,6 +336,8 @@ object ValidateAssistantResponse {
             displayResponse(divId)
           }
         }
+    } else {
+      h2 { +"No Manual Tools" }
     }
   }
 
@@ -391,6 +395,8 @@ object ValidateAssistantResponse {
             displayResponse(divId)
           }
         }
+    } else {
+      h2 { +"No Functions" }
     }
   }
 
