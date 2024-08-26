@@ -19,9 +19,9 @@ package com.vapi4k.api.web
 import kotlinx.serialization.json.JsonElement
 
 interface TalkButton {
-  var vapi4kUrl: String
-  var vapiApiKey: String
+  var serverPath: String
   var serverSecret: String
+  var vapiApiKey: String
   var method: MethodType
   var postArgs: JsonElement
 }

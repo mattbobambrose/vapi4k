@@ -81,8 +81,6 @@ fun Application.module() {
 
       onAssistantRequest { args ->
         assistant {
-          name = "A web assistant 123"
-
           firstMessage = "Hi, I am Beth how can I assist you today?"
 
           openAIModel {

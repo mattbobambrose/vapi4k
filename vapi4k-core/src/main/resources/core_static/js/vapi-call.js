@@ -26,7 +26,7 @@ async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
     }
 }
 
-function loadVapiButton(vapi4kUrl, serverSecret, vapiApiKey, method, postArgs) {
+function addVapiButton(vapi4kUrl, serverSecret, vapiApiKey, method, postArgs) {
     fetchJson(method, vapi4kUrl, {"x-vapi-secret": serverSecret}, postArgs,)
         .then((response) => {
             (function (document, t) {

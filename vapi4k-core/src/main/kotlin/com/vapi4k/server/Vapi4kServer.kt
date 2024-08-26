@@ -138,6 +138,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         route(ENV_PATH) {
           installContentNegotiation {
             prettyPrint = true
+            prettyPrintIndent = "  "
           }
           get {
             call.respond<JsonObject>(jsonEnvVarValues())

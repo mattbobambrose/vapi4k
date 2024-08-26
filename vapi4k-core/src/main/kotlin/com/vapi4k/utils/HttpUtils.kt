@@ -29,6 +29,7 @@ object HttpUtils {
         json(
           Json {
             prettyPrint = true
+            prettyPrintIndent = "  "
           },
         )
       }
