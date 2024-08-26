@@ -232,7 +232,7 @@ object ValidateAssistantResponse {
     toolNames: List<String>,
   ) {
     if (application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
-      h2 { +"Service Tools" }
+      h3 { +"Service Tools" }
       val functionInfo = application.serviceToolCache.getFromCache(sessionCacheId)
       toolNames
         .filter { functionInfo.containsFunction(it) }
@@ -281,7 +281,7 @@ object ValidateAssistantResponse {
           }
         }
     } else {
-      h2 { +"No Service Tools" }
+      h3 { +"No Service Tools" }
     }
   }
 
@@ -291,7 +291,7 @@ object ValidateAssistantResponse {
     toolNames: List<String>,
   ) {
     if (application.manualToolCache.functions.isNotEmpty()) {
-      h2 { +"Manual Tools" }
+      h3 { +"Manual Tools" }
       toolNames
         .filter { application.manualToolCache.containsTool(it) }
         .forEach { funcName ->
@@ -337,7 +337,7 @@ object ValidateAssistantResponse {
           }
         }
     } else {
-      h2 { +"No Manual Tools" }
+      h3 { +"No Manual Tools" }
     }
   }
 
@@ -347,7 +347,7 @@ object ValidateAssistantResponse {
     funcNames: List<String>,
   ) {
     if (application.functionCache.containsSessionCacheId(sessionCacheId)) {
-      h2 { +"Functions" }
+      h3 { +"Functions" }
       val functionInfo = application.functionCache.getFromCache(sessionCacheId)
       funcNames
         .filter { functionInfo.containsFunction(it) }
@@ -396,7 +396,7 @@ object ValidateAssistantResponse {
           }
         }
     } else {
-      h2 { +"No Functions" }
+      h3 { +"No Functions" }
     }
   }
 
