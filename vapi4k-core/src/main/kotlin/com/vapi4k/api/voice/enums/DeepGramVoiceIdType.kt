@@ -16,27 +16,26 @@
 
 package com.vapi4k.api.voice.enums
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class DeepGramVoiceIdType(
-  val desc: String,
-) {
-  ANGUS("angus"),
-  ARCAS("arcas"),
-  ASTERIA("asteria"),
-  ATHENA("athena"),
-  HELIOS("helios"),
-  HERA("hera"),
-  LUNA("luna"),
-  ORION("orion"),
-  ORPHEUS("orpheus"),
-  PERSEUS("perseus"),
-  STELLA("stella"),
-  ZEUS("zeus"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+enum class DeepGramVoiceIdType() {
+  ANGUS,
+  ARCAS,
+  ASTERIA,
+  ATHENA,
+  HELIOS,
+  HERA,
+  LUNA,
+  ORION,
+  ORPHEUS,
+  PERSEUS,
+  STELLA,
+  ZEUS,
+  UNSPECIFIED,
   ;
+
+  val desc get() = name.lowercase()
 
   fun isSpecified() = this != UNSPECIFIED
 
