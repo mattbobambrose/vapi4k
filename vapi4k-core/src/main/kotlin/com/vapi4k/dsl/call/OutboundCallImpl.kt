@@ -19,10 +19,10 @@ package com.vapi4k.dsl.call
 import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.api.assistant.AssistantId
 import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.api.call.Customer
 import com.vapi4k.api.call.OutboundCall
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
+import com.vapi4k.api.web.MethodType
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.AssistantIdImpl
 import com.vapi4k.dsl.assistant.AssistantImpl
@@ -33,10 +33,8 @@ import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dtos.api.OutboundCallRequestDto
 import com.vapi4k.utils.AssistantCacheIdSource
 import com.vapi4k.utils.DuplicateInvokeChecker
-
-interface OutboundCallProperties {
-  var phoneNumberId: String
-}
+import com.vapi4k.utils.JsonElementUtils
+import kotlinx.serialization.json.JsonElement
 
 class OutboundCallImpl internal constructor(
   private val sessionCacheId: SessionCacheId,
@@ -46,6 +44,23 @@ class OutboundCallImpl internal constructor(
   OutboundCall {
   private val assistantChecker = DuplicateInvokeChecker()
   private val overridesChecker = DuplicateInvokeChecker()
+
+  override var serverPath = ""
+  override var serverSecret = ""
+  override var method: MethodType = MethodType.POST
+  override var postArgs: JsonElement = JsonElementUtils.EMPTY_JSON_ELEMENT
+
+  override var number: String
+    get() = dto.customerDto.number
+    set(value) {
+      dto.customerDto.number = value
+    }
+
+  fun verifyValues() {
+    require(serverPath.isNotBlank()) { "serverPath must not be blank in outboundCall{}" }
+    require(number.isNotBlank()) { "number must not be blank in outboundCall{}" }
+    require(dto.phoneNumberId.isNotBlank()) { "phoneNumberId must not be blank in outboundCall{}" }
+  }
 
   override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     assistantChecker.check("assistantId{} already called")
@@ -97,5 +112,5 @@ class OutboundCallImpl internal constructor(
       error("assistant{} or assistantId{} must be called before assistantOverrides{}")
   }
 
-  override fun customer(block: Customer.() -> Unit): Customer = Customer(dto.customerDto).apply(block)
+  // override fun customer(block: Customer.() -> Unit): Customer = Customer(dto.customerDto).apply(block)
 }

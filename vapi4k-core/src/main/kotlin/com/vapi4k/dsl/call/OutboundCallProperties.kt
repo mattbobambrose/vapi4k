@@ -14,13 +14,8 @@
  *
  */
 
-package com.vapi4k.api.call
+package com.vapi4k.dsl.call
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.call.CustomerProperties
-import com.vapi4k.dtos.api.CustomerDto
-
-@AssistantDslMarker
-class Customer internal constructor(
-  private val dto: CustomerDto,
-) : CustomerProperties by dto
+interface OutboundCallProperties {
+  var phoneNumberId: String
+}

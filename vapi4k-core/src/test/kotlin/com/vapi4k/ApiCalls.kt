@@ -134,10 +134,7 @@ class ApiCalls {
               }
             }
 
-            customer {
-              number = "+14156721042"
-            }
-
+            number = "+14156721042"
             phoneNumberId = (api as VapiApiImpl).config.property("phoneNumberId").getString()
           }
         }

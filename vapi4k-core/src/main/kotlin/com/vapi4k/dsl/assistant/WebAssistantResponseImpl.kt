@@ -20,15 +20,18 @@ import com.vapi4k.api.assistant.WebAssistantResponse
 import com.vapi4k.api.buttons.ButtonConfig
 import com.vapi4k.dsl.buttons.ButtonConfigImpl
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
+import com.vapi4k.utils.DuplicateInvokeChecker
 
 class WebAssistantResponseImpl(
   assistantRequestContext: AssistantRequestContext,
 ) : AbstractAssistantResponseImpl(assistantRequestContext),
   WebAssistantResponse {
-  override fun buttonConfig(block: ButtonConfig.() -> Unit) {
-    assistantRequestResponse.apply {
-      val buttonConfig = ButtonConfigImpl(messageResponse.buttonConfigDto)
-      buttonConfig.block()
+  internal val buttonConfigDuplicateChecker = DuplicateInvokeChecker()
+
+  override fun buttonConfig(block: ButtonConfig.() -> Unit): ButtonConfig {
+    buttonConfigDuplicateChecker.check("buttonConfig{} was already called")
+    return assistantRequestResponse.run {
+      ButtonConfigImpl(messageResponse.buttonConfigDto).apply(block)
     }
   }
 }

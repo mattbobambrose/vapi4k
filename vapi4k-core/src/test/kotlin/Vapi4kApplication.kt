@@ -236,7 +236,6 @@ fun Application.module() {
       }
     }
 
-
     inboundCallApplication {
       serverPath = "/inboundRequest1"
       serverSecret = "12345"

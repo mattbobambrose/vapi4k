@@ -30,25 +30,25 @@ interface WebAssistantResponse {
   <p>This is the assistant that will be used for the call. To use an existing assistant, use <code>assistantId</code> instead.
   <br>If you're unsure why you're getting an invalid assistant, try logging your response and send the JSON blob to POST /assistant which will return the validation errors.
   </p> */
-  fun assistant(block: Assistant.() -> Unit)
+  fun assistant(block: Assistant.() -> Unit): Assistant
 
   /**
   This is the assistant that will be used for the call. To use a transient assistant, use `assistant` instead.
    */
-  fun assistantId(block: AssistantId.() -> Unit)
+  fun assistantId(block: AssistantId.() -> Unit): AssistantId
 
   /**
   This is a squad that will be used for the call. To use an existing squad, use `squadId` instead.
    */
-  fun squad(block: Squad.() -> Unit)
+  fun squad(block: Squad.() -> Unit): Squad
 
   /**
   This is the squad that will be used for the call. To use a transient squad, use `squad` instead.
    */
-  fun squadId(block: SquadId.() -> Unit)
+  fun squadId(block: SquadId.() -> Unit): SquadId
 
   /**
   This is the button config block used by browser clients.
    */
-  fun buttonConfig(block: ButtonConfig.() -> Unit)
+  fun buttonConfig(block: ButtonConfig.() -> Unit): ButtonConfig
 }

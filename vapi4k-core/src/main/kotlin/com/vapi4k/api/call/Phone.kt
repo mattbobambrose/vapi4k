@@ -28,5 +28,11 @@ class Phone {
   private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
 
   fun outboundCall(block: OutboundCall.() -> Unit): OutboundCall =
-    OutboundCallRequestDto().let { OutboundCallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
+    OutboundCallRequestDto().let {
+      OutboundCallImpl(sessionCacheId, assistantCacheIdSource, it)
+        .apply(block)
+        .apply {
+          verifyValues()
+        }
+    }
 }

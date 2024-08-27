@@ -36,19 +36,19 @@ class InboundCallAssistantResponseImpl(
       assistantRequestResponse.messageResponse.error = value
     }
 
-  override fun numberDestination(block: NumberDestination.() -> Unit) {
+  override fun numberDestination(block: NumberDestination.() -> Unit): NumberDestination {
     duplicateChecker.check("numberDestination{} already called")
-    assistantRequestResponse.apply {
+    return assistantRequestResponse.run {
       val numDto = NumberDestinationDto().also { messageResponse.destination = it }
-      NumberDestinationImpl(numDto).apply(block).checkForRequiredFields()
+      NumberDestinationImpl(numDto).apply(block).apply { checkForRequiredFields() }
     }
   }
 
-  override fun sipDestination(block: SipDestination.() -> Unit) {
+  override fun sipDestination(block: SipDestination.() -> Unit): SipDestination {
     duplicateChecker.check("sipDestination{} already called")
-    assistantRequestResponse.apply {
+    return assistantRequestResponse.run {
       val sipDto = SipDestinationDto().also { messageResponse.destination = it }
-      SipDestinationImpl(sipDto).apply(block).checkForRequiredFields()
+      SipDestinationImpl(sipDto).apply(block).apply { checkForRequiredFields() }
     }
   }
 }
