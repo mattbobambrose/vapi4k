@@ -18,6 +18,7 @@ package com.vapi4k.server
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
+import com.vapi4k.common.Constants.POST_ARGS
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
@@ -38,11 +39,11 @@ import com.vapi4k.server.AdminJobs.startCallbackThread
 import com.vapi4k.server.CacheResponses.cachesRequest
 import com.vapi4k.server.CacheResponses.clearCaches
 import com.vapi4k.server.InboundCallAssistantRequest.inboundCallAssistantRequest
+import com.vapi4k.server.OutboundCallAndWebAssistantRequest.outboundCallAndWebAssistantRequest
 import com.vapi4k.server.ValidateApplication.validateApplication
 import com.vapi4k.server.ValidateApplication.validateToolInvokeRequest
 import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.server.WebAssistantRequest.webAssistantRequest
 import com.vapi4k.utils.JsonElementUtils.addArgsAndMessage
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
@@ -161,9 +162,10 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeRequest(config) }
       }
 
+      // Process Inbound Call requests
       config.inboundCallApplications.forEach { application ->
         route(application.serverPath) {
-          logger.info { "Adding inboundCallAssistantRequest POST serverPath endpoint: \"${application.serverPath}\"" }
+          logger.info { "Adding ${application.applicationType.desc} POST endpoint: \"${application.serverPath}\"" }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
           post {
@@ -173,40 +175,42 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
       }
 
-      config.webApplications.forEach { application ->
-        route(application.serverPath) {
-          installContentNegotiation()
-          logger.info { """Adding webAssistantRequest GET serverPath endpoint: "${application.serverPath}"""" }
-          get {
-            val request = buildJsonObject { addArgsAndMessage(call.request.queryParameters) }
-            webAssistantRequest(config, application, request)
-          }
-          logger.info { """Adding webAssistantRequest POST serverPath endpoint: "${application.serverPath}"""" }
-          post {
-            val json = call.receive<String>().toJsonElement()
-            val request =
-              if (json.isNotEmpty() && json.containsKey("message.type")) {
-                json
-              } else {
-                buildJsonObject {
-                  // Add values from the JSON object passed in with the POST request
-                  put(
-                    "postArgs",
-                    buildJsonObject {
-                      if (json.isNotEmpty()) {
-                        json.keys.forEach { key ->
-                          put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
+      // Process Outbound Call and Web requests
+      (config.outboundCallApplications + config.webApplications)
+        .forEach { application ->
+          route(application.serverPath) {
+            installContentNegotiation()
+            logger.info { """Adding ${application.applicationType.desc} GET endpoint: "${application.serverPath}"""" }
+            get {
+              val request = buildJsonObject { addArgsAndMessage(call.request.queryParameters) }
+              outboundCallAndWebAssistantRequest(config, application, request)
+            }
+            logger.info { """Adding ${application.applicationType.desc} POST endpoint: "${application.serverPath}"""" }
+            post {
+              val json = call.receive<String>().toJsonElement()
+              val request =
+                if (json.isNotEmpty() && json.containsKey("message.type")) {
+                  json
+                } else {
+                  buildJsonObject {
+                    // Add values from the JSON object passed in with the POST request
+                    put(
+                      POST_ARGS,
+                      buildJsonObject {
+                        if (json.isNotEmpty()) {
+                          json.keys.forEach { key ->
+                            put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
+                          }
                         }
-                      }
-                    },
-                  )
-                  addArgsAndMessage(call.request.queryParameters)
+                      },
+                    )
+                    addArgsAndMessage(call.request.queryParameters)
+                  }
                 }
-              }
-            webAssistantRequest(config, application, request)
+              outboundCallAndWebAssistantRequest(config, application, request)
+            }
           }
         }
-      }
     }
   }
 }

@@ -14,19 +14,12 @@
  *
  */
 
-package com.vapi4k.api.call
+package com.vapi4k.dsl.assistant
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
-import com.vapi4k.dsl.call.OutboundCallImpl
-import com.vapi4k.dtos.api.OutboundCallRequestDto
-import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.MiscUtils
+import com.vapi4k.api.assistant.OutboundCallAssistantResponse
+import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 
-@AssistantDslMarker
-class Phone {
-  internal val sessionCacheId = MiscUtils.nextSessionCacheId()
-  private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
-
-  fun outboundCall(block: OutboundCall.() -> Unit): OutboundCall =
-    OutboundCallRequestDto().let { OutboundCallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
-}
+class OutboundCallAssistantResponseImpl(
+  assistantRequestContext: AssistantRequestContext,
+) : AbstractAssistantResponseImpl(assistantRequestContext),
+  OutboundCallAssistantResponse

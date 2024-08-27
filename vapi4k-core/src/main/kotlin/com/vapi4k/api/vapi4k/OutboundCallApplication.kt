@@ -16,23 +16,25 @@
 
 package com.vapi4k.api.vapi4k
 
+import com.vapi4k.api.assistant.OutboundCallAssistantResponse
 import com.vapi4k.dsl.vapi4k.CommonCallbacks
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
+import kotlinx.serialization.json.JsonElement
 
 @Vapi4KDslMarker
-interface Vapi4kConfig : CommonCallbacks {
+interface OutboundCallApplication : CommonCallbacks {
   /**
-  Creates a context for an InboundCall application.
+  Defaults to "/vapi4k"
    */
-  fun inboundCallApplication(block: InboundCallApplication.() -> Unit): InboundCallApplication
+  var serverPath: String
 
   /**
-  Creates a context for an InboundCall application.
+  The server secret in Vapi is a security feature that allows you to authenticate requests sent from Vapi to your server. It will be sent with every request from Vapi to your server.
    */
-  fun outboundCallApplication(block: OutboundCallApplication.() -> Unit): OutboundCallApplication
+  var serverSecret: String
 
   /**
-  Creates a context for an InboundCall application.
+  Whenever an AssistantRequest is made, the contents of the onAssistantRequest{} block will be executed.
    */
-  fun webApplication(block: WebApplication.() -> Unit): WebApplication
+  fun onAssistantRequest(block: suspend OutboundCallAssistantResponse.(JsonElement) -> Unit)
 }

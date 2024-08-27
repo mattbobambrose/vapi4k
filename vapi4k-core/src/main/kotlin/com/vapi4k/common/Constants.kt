@@ -29,6 +29,8 @@ object Constants {
   const val APPLICATION_ID = "applicationId"
   const val SESSION_CACHE_ID = "sessionCacheId"
   const val FUNCTION_NAME = "functionName"
+
+  const val POST_ARGS = "postArgs"
 }
 
 object QueryParams {

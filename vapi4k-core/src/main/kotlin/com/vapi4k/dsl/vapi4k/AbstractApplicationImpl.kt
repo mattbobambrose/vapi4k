@@ -46,10 +46,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
-enum class ApplicationType {
-  INBOUND_CALL,
-  OUTBOUND_CALL,
-  WEB,
+enum class ApplicationType(
+  val desc: String,
+) {
+  INBOUND_CALL("inboundCallApplication{}"),
+  OUTBOUND_CALL("outboundCallApplication{}"),
+  WEB("webApplication{}"),
 }
 
 abstract class AbstractApplicationImpl(

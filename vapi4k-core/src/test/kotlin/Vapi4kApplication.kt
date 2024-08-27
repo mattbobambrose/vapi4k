@@ -72,9 +72,6 @@ fun Application.module() {
       serverPath = "/talkapp"
       serverSecret = "12345"
 
-//      onAllRequests { request ->
-//        logger.info { "Assistant requests: ${request.requestType}" }
-//      }
       onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
         logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
       }
@@ -170,6 +167,75 @@ fun Application.module() {
         }
       }
     }
+
+    outboundCallApplication {
+      serverPath = "/outboundRequest"
+
+      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
+        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+      }
+
+      onAssistantRequest { args ->
+        assistant {
+          firstMessage = "Hi, I am Beth how can I assist you today?"
+
+          openAIModel {
+            modelType = OpenAIModelType.GPT_4_TURBO
+            systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
+
+            functions {
+              function(FavoriteFoodService())
+              function(WeatherLookupByAreaCodeService())
+            }
+
+            tools {
+              manualTool {
+                name = "manualWeatherLookup"
+                description = "Look up the weather for a city and state"
+
+                parameters {
+                  parameter {
+                    name = "city"
+                    description = "The city to look up"
+                  }
+                  parameter {
+                    name = "state"
+                    description = "The state to look up"
+                  }
+                }
+
+                requestStartMessage {
+                  content = "This is the manual weather lookup start message"
+                }
+
+                onInvoke { args ->
+                  val city = args.stringValue("city")
+                  val state = args.stringValue("state")
+                  result = "The weather in $city, $state is sunny"
+                  requestCompleteMessages {
+                    requestCompleteMessage {
+                      content = "This is the manual weather lookup complete message"
+                    }
+                  }
+
+                  requestFailedMessages {
+                    requestFailedMessage {
+                      content = "This is the manual weather lookup failed message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          elevenLabsVoice {
+            voiceIdType = ElevenLabsVoiceIdType.PAULA
+            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
+          }
+        }
+      }
+    }
+
 
     inboundCallApplication {
       serverPath = "/inboundRequest1"

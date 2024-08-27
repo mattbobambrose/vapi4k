@@ -20,6 +20,7 @@ import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
 import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dsl.vapi4k.WebApplicationImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
@@ -45,8 +46,8 @@ import io.ktor.server.response.respondText
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.measureTimedValue
 
-internal object WebAssistantRequest {
-  suspend fun KtorCallContext.webAssistantRequest(
+internal object OutboundCallAndWebAssistantRequest {
+  suspend fun KtorCallContext.outboundCallAndWebAssistantRequest(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,
@@ -56,10 +57,10 @@ internal object WebAssistantRequest {
     } else {
       val validateCall = call.request.headers[VAPI4K_VALIDATE_HEADER].orEmpty()
       if (isProduction || validateCall != VAPI4K_VALIDATE_VALUE) {
-        processWebAssistantRequest(config, application, request)
+        processOutboundCallAndWebAssistantRequest(config, application, request)
       } else {
         runCatching {
-          processWebAssistantRequest(config, application, request)
+          processOutboundCallAndWebAssistantRequest(config, application, request)
         }.onFailure { e ->
           logger.error(e) { "Error processing web assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -68,7 +69,7 @@ internal object WebAssistantRequest {
     }
   }
 
-  private suspend fun KtorCallContext.processWebAssistantRequest(
+  private suspend fun KtorCallContext.processOutboundCallAndWebAssistantRequest(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,
@@ -79,7 +80,13 @@ internal object WebAssistantRequest {
     val (response, duration) = measureTimedValue {
       when (requestType) {
         ASSISTANT_REQUEST -> {
-          val response = (application as WebApplicationImpl).getAssistantResponse(request)
+          val response =
+            when (application) {
+              is OutboundCallApplicationImpl -> application.getAssistantResponse(request)
+              is WebApplicationImpl -> application.getAssistantResponse(request)
+              else -> error("Invalid application type: ${application.applicationType}")
+            }
+
           // Drop the messageResponse prefix property
           call.respond(response.messageResponse)
           lambda { response.toJsonElement() }
