@@ -16,7 +16,6 @@
 
 package com.vapi4k.api.voice.enums
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -26,30 +25,38 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ElevenLabsVoiceIdTypeSerializer::class)
-enum class ElevenLabsVoiceIdType(
-  val desc: String,
-) {
-  ANDREA("andrea"),
-  BURT("burt"),
-  DREW("drew"),
-  JOSEPH("joseph"),
-  MARISSA("marissa"),
-  MARK("mark"),
-  MATILDA("matilda"),
-  MRB("mrb"),
-  MYRA("myra"),
-  PAUL("paul"),
-  PAULA("paula"),
-  PHILLIP("phillip"),
-  RYAN("ryan"),
-  SARAH("sarah"),
-  STEVE("steve"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+enum class ElevenLabsVoiceIdType {
+  ANDREA,
+  BURT,
+  DREW,
+  JOSEPH,
+  MARISSA,
+  MARK,
+  MATILDA,
+  MRB,
+  MYRA,
+  PAUL,
+  PAULA,
+  PHILLIP,
+  RYAN,
+  SARAH,
+  STEVE,
+  UNSPECIFIED,
   ;
 
-  fun isSpecified() = this != UNSPECIFIED
+  val desc get() = name.lowercase()
 
-  fun isNotSpecified() = this == UNSPECIFIED
+  fun next() = names[(ordinal + 1) % names.size]
+
+  fun previous() = names[(ordinal - 1 + names.size) % names.size]
+
+  internal fun isSpecified() = this != UNSPECIFIED
+
+  internal fun isNotSpecified() = this == UNSPECIFIED
+
+  companion object {
+    val names by lazy { entries.filterNot { it == UNSPECIFIED } }
+  }
 }
 
 private object ElevenLabsVoiceIdTypeSerializer : KSerializer<ElevenLabsVoiceIdType> {

@@ -16,7 +16,6 @@
 
 package com.vapi4k.api.voice.enums
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -26,16 +25,24 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = NeetsVoiceIdTypeSerializer::class)
-enum class NeetsVoiceIdType(
-  val desc: String,
-) {
-  VITS("vits"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+enum class NeetsVoiceIdType {
+  VITS,
+  UNSPECIFIED,
   ;
 
-  fun isSpecified() = this != UNSPECIFIED
+  val desc get() = name.lowercase()
 
-  fun isNotSpecified() = this == UNSPECIFIED
+  fun next() = names[(ordinal + 1) % names.size]
+
+  fun previous() = names[(ordinal - 1 + names.size) % names.size]
+
+  internal fun isSpecified() = this != UNSPECIFIED
+
+  internal fun isNotSpecified() = this == UNSPECIFIED
+
+  companion object {
+    val names by lazy { entries.filterNot { it == UNSPECIFIED } }
+  }
 }
 
 private object NeetsVoiceIdTypeSerializer : KSerializer<NeetsVoiceIdType> {

@@ -16,9 +16,15 @@
 
 package com.vapi4k.api.voice.enums
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
-@Serializable
+@Serializable(with = DeepGramVoiceIdTypeSerializer::class)
 enum class DeepGramVoiceIdType {
   ANGUS,
   ARCAS,
@@ -37,7 +43,26 @@ enum class DeepGramVoiceIdType {
 
   val desc get() = name.lowercase()
 
-  fun isSpecified() = this != UNSPECIFIED
+  fun next() = names[(ordinal + 1) % names.size]
 
-  fun isNotSpecified() = this == UNSPECIFIED
+  fun previous() = names[(ordinal - 1 + names.size) % names.size]
+
+  internal fun isSpecified() = this != UNSPECIFIED
+
+  internal fun isNotSpecified() = this == UNSPECIFIED
+
+  companion object {
+    val names by lazy { entries.filterNot { it == UNSPECIFIED } }
+  }
+}
+
+private object DeepGramVoiceIdTypeSerializer : KSerializer<DeepGramVoiceIdType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DeepGramVoiceIdType", STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: DeepGramVoiceIdType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = DeepGramVoiceIdType.entries.first { it.desc == decoder.decodeString() }
 }

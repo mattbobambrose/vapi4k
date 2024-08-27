@@ -16,20 +16,44 @@
 
 package com.vapi4k.api.voice.enums
 
-import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind.STRING
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
-@Serializable
-enum class AzureVoiceIdType(
-  val desc: String,
-) {
-  ANDREW("andrew"),
-  BRIAN("brian"),
-  EMMA("emma"),
-  UNSPECIFIED(UNSPECIFIED_DEFAULT),
+@Serializable(with = AzureVoiceIdTypeSerializer::class)
+enum class AzureVoiceIdType {
+  ANDREW,
+  BRIAN,
+  EMMA,
+  UNSPECIFIED,
   ;
 
-  fun isSpecified() = this != UNSPECIFIED
+  val desc get() = name.lowercase()
 
-  fun isNotSpecified() = this == UNSPECIFIED
+  fun next() = names[(ordinal + 1) % names.size]
+
+  fun previous() = names[(ordinal - 1 + names.size) % names.size]
+
+  internal fun isSpecified() = this != UNSPECIFIED
+
+  internal fun isNotSpecified() = this == UNSPECIFIED
+
+  companion object {
+    val names by lazy { entries.filterNot { it == UNSPECIFIED } }
+  }
+}
+
+private object AzureVoiceIdTypeSerializer : KSerializer<AzureVoiceIdType> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("AzureVoiceIdType", STRING)
+
+  override fun serialize(
+    encoder: Encoder,
+    value: AzureVoiceIdType,
+  ) = encoder.encodeString(value.desc)
+
+  override fun deserialize(decoder: Decoder) = AzureVoiceIdType.entries.first { it.desc == decoder.decodeString() }
 }
