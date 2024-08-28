@@ -68,12 +68,16 @@ class EnvVar(
     fun String.isDefined() = System.getenv(this).orEmpty().isNotBlank()
 
     fun logEnvVarValues(block: (String) -> Unit) =
-      envVars.values.filter { it.reportOnBoot }.sortedBy { it.name }.map { it.logReport }.forEach(block)
+      envVars.values
+        .filter { it.reportOnBoot && it.value.isNotBlank() }
+        .sortedBy { it.name }
+        .map { it.logReport }
+        .forEach(block)
 
     fun jsonEnvVarValues() =
       buildJsonObject {
         envVars.values
-          .filter { it.reportOnBoot }
+          .filter { it.reportOnBoot && it.value.isNotBlank() }
           .sortedBy { it.name }
           .forEach { put(it.name, JsonPrimitive(it.logValue)) }
       }

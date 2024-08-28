@@ -23,7 +23,7 @@ import kotlinx.html.script
 
 object VapiWeb {
   fun HtmlBlockTag.vapi(block: VapiHtml.() -> Unit) {
-    script { src = "$STATIC_BASE/js/vapi-call.js" }
+    script { src = "$STATIC_BASE/js/vapi-web-call.js" }
     VapiHtmlImpl(this).apply(block)
   }
 }
