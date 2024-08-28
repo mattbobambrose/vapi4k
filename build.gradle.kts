@@ -9,8 +9,8 @@ val kotlinLib = libs.plugins.jvm.get().toString().split(":").first()
 val ktlinterLib = libs.plugins.kotlinter.get().toString().split(":").first()
 
 allprojects {
-    extra["versionStr"] = "1.3.11"
-    extra["releaseDate"] = "08/22/2024"
+    extra["versionStr"] = "1.3.12"
+    extra["releaseDate"] = "08/28/2024"
     group = "com.github.mattbobambrose.vapi4k"
     version = versionStr
 
