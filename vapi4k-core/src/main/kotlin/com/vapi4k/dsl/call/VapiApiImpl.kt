@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.call
 
-import com.typesafe.config.ConfigFactory
 import com.vapi4k.api.call.OutboundCall
 import com.vapi4k.api.call.Phone
 import com.vapi4k.api.call.Save
@@ -30,6 +29,7 @@ import com.vapi4k.dsl.call.ProcessOutboundCall.processOutboundCall
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.common.Utils.errorMsg
+import com.vapi4k.utils.envvar.EnvVar.Companion.getSystemValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
@@ -39,13 +39,10 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
-import io.ktor.server.config.ApplicationConfig
-import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 
 class VapiApiImpl private constructor(
-  internal val config: ApplicationConfig,
   private val authString: String,
 ) : VapiApi {
   override fun phone(block: Phone.() -> OutboundCall): HttpResponse = processOutboundCall(authString, block)
@@ -107,12 +104,14 @@ class VapiApiImpl private constructor(
     fun vapiApi(authString: String = ""): VapiApi {
       val apiAuth =
         authString.ifBlank {
-          HoconApplicationConfig(ConfigFactory.load()).propertyOrNull(PRIVATE_KEY_PROPERTY)?.getString()
-            ?: vapiPrivateKey
-              .ifBlank { error("$PRIVATE_KEY_PROPERTY not found in application.conf and VAPI_PRIVATE_KEY not defined") }
+          getSystemValue(vapiPrivateKey, PRIVATE_KEY_PROPERTY) {
+            "VAPI private api key needs to be assigned with $PRIVATE_KEY_PROPERTY in application.conf, " +
+              "VAPI_PRIVATE_KEY, or passing an authString argument in vapiApi()"
+          }
         }
 
-      return VapiApiImpl(HoconApplicationConfig(ConfigFactory.load()), apiAuth)
+
+      return VapiApiImpl(apiAuth)
     }
   }
 }

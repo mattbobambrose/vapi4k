@@ -16,7 +16,9 @@
 
 package com.vapi4k.utils.envvar
 
+import com.typesafe.config.ConfigFactory
 import com.vapi4k.utils.common.Utils.isNull
+import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
@@ -81,5 +83,12 @@ class EnvVar(
           .sortedBy { it.name }
           .forEach { put(it.name, JsonPrimitive(it.logValue)) }
       }
+
+    private val config by lazy { HoconApplicationConfig(ConfigFactory.load()) }
+    fun getSystemValue(
+      envvarValue: String,
+      propertyName: String,
+      block: () -> String,
+    ) = envvarValue.ifBlank { config.propertyOrNull(propertyName)?.getString() ?: error(block()) }
   }
 }

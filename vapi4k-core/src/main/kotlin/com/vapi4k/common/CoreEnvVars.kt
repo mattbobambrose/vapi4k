@@ -63,4 +63,6 @@ object CoreEnvVars {
   val vapiPhoneNumberId: String = VAPI_PHONE_NUMBER_ID.value
 
   fun loadCoreEnvVars() = Unit
+
+
 }

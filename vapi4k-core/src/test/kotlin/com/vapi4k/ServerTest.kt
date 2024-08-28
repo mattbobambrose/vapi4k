@@ -27,6 +27,7 @@ import com.vapi4k.utils.JsonUtils.firstInList
 import com.vapi4k.utils.json.JsonElementUtils.intValue
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
 import com.vapi4k.utils.withTestApplication
 import io.ktor.client.request.HttpRequestBuilder
@@ -108,14 +109,11 @@ class ServerTest {
         )
 
       if (i == 6) {
-        assertEquals(
-          0,
-          jsonElement["${defaultServerPath.removePrefix("/")}.toolServices.toolCallCacheSize"].intValue,
-        )
-        assertEquals(
-          0,
-          jsonElement["${defaultServerPath.removePrefix("/")}.functions.toolCallCacheSize"].intValue,
-        )
+        val prefix = INBOUND_CALL.pathPrefix.removePrefix("/")
+        val path = "/$prefix/${defaultServerPath}"
+        println(jsonElement.toJsonString())
+        assertEquals(0, jsonElement.intValue("$path.toolServices.toolCallCacheSize"))
+        assertEquals(0, jsonElement.intValue("$path.functions.toolCallCacheSize"))
       }
     }
   }
@@ -137,14 +135,10 @@ class ServerTest {
     responses.forEachIndexed { i, (response, jsonElement) ->
       assertEquals(HttpStatusCode.OK, response.status)
       if (i == 2) {
-        assertEquals(
-          1,
-          jsonElement["${defaultServerPath.removePrefix("/")}.toolServices.toolCallCache"].keys.size,
-        )
-        assertEquals(
-          0,
-          jsonElement["${defaultServerPath.removePrefix("/")}.functions.toolCallCache"].keys.size,
-        )
+        val prefix = INBOUND_CALL.pathPrefix.removePrefix("/")
+        val path = "/$prefix/${defaultServerPath}"
+        assertEquals(1, jsonElement["$path.toolServices.toolCallCache"].keys.size)
+        assertEquals(0, jsonElement["$path.functions.toolCallCache"].keys.size)
       }
     }
   }

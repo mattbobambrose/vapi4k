@@ -26,7 +26,8 @@ publishing {
 }
 
 dependencies {
-    api(libs.kotlin.serialization)
+    implementation(libs.kotlin.serialization)
+    implementation(libs.ktor.server.core)
 
     implementation(libs.kotlin.logging)
     implementation(libs.logback.classic)

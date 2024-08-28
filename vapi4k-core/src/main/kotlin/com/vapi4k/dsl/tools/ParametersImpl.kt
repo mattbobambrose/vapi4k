@@ -29,7 +29,7 @@ class ParametersImpl internal constructor(
 ) : Parameters {
   override fun parameter(block: Parameter.() -> Unit) {
     val p = ParameterImpl().apply(block)
-    if (p.name.isBlank()) error("externalTool{} parameter name must not be blank")
+    if (p.name.isBlank()) error("Parameter name must be assigned in externalTool{}")
     if (p.type !in FunctionUtils.allowedParamTypes)
       error(
         "$callerName{} parameter type must be one of these: String::class, Int::class, Double::class, Boolean::class",

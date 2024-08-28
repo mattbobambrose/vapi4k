@@ -21,92 +21,82 @@ import com.vapi4k.dsl.call.VapiApiImpl.Companion.vapiApi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class ApiCalls {
   @Test
-  fun `multiple Assistant blocks`() {
-    val api = vapiApi("123-445-666") as VapiApiImpl
+  fun `Missing auth`() {
     assertThrows(IllegalStateException::class.java) {
+      val api = vapiApi() as VapiApiImpl
       api.test {
         outboundCall {
-//          assistantId {
-//            id = "123-445-666"
-//          }
-//          assistantId {
-//            id = "345-445-666"
-//          }
         }
       }
     }.also {
-      assertEquals("assistantId{} already called", it.message)
+      assertTrue(it.message.orEmpty().contains("VAPI_PRIVATE_KEY"))
     }
   }
 
   @Test
-  fun `multiple AssistantId blocks`() {
-    val api = vapiApi("123-445-666") as VapiApiImpl
-    assertThrows(IllegalStateException::class.java) {
+  fun `Missing serverPath`() {
+    assertThrows(IllegalArgumentException::class.java) {
+      val api = vapiApi("123-445-666") as VapiApiImpl
+      api.test {
+        outboundCall {
+        }
+      }
+    }.also {
+      assertEquals("serverPath must be assigned in outboundCall{}", it.message)
+    }
+  }
+
+  @Test
+  fun `Missing phoneNumber`() {
+    assertThrows(IllegalArgumentException::class.java) {
+      val api = vapiApi("123-445-666") as VapiApiImpl
       api.test {
         outboundCall {
           serverPath = "/outboundRequest"
         }
       }
     }.also {
-      assertEquals("An assistant{} requires a model{} decl", it.message)
+      assertEquals("phoneNumber must be assigned in outboundCall{}", it.message)
     }
   }
 
   @Test
-  fun `combination of Assistant and AssistantId blocks`() {
-    val api = vapiApi("123-445-666") as VapiApiImpl
+  fun `Missing phoneNumberId`() {
     assertThrows(IllegalStateException::class.java) {
+      val api = vapiApi("123-445-666") as VapiApiImpl
       api.test {
         outboundCall {
-//          assistantId {
-//            id = "123-445-666"
-//          }
-//          assistant {
-//            firstMessage = "Hi there. I am here to help."
-//          }
+          serverPath = "/outboundRequest"
+          phoneNumber = "+1123-456-7890"
         }
       }
     }.also {
-      assertEquals("assistantId{} already called", it.message)
+      assertTrue(it.message.orEmpty().contains("Missing phoneNumberId value"))
     }
   }
 
   @Test
-  fun `multiple AssistantOverrides blocks`() {
-    val api = vapiApi("123-445-666") as VapiApiImpl
+  fun `multiple outboundCall{} blocks`() {
     assertThrows(IllegalStateException::class.java) {
+      val api = vapiApi("123-445-666") as VapiApiImpl
       api.test {
         outboundCall {
-//          assistantOverrides {
-//            firstMessage = "Hi there. I am here to help."
-//          }
-//          assistantOverrides {
-//            firstMessage = "Hi there. I am here to help."
-//          }
+          serverPath = "/outboundRequest1"
+          phoneNumber = "+1123-456-7890"
+          phoneNumberId = "123-445-666"
+        }
+        outboundCall {
+          serverPath = "/outboundRequest2"
+          phoneNumber = "+1123-456-7890"
+          phoneNumberId = "123-445-666"
         }
       }
     }.also {
-      assertEquals("assistant{} or assistantId{} must be called before assistantOverrides{}", it.message)
-    }
-  }
-
-  @Test
-  fun `declare AssistantOverrides without an Assistant or AssistantId Decl`() {
-    val api = vapiApi("123-445-666") as VapiApiImpl
-    assertThrows(IllegalStateException::class.java) {
-      api.test {
-        outboundCall {
-//          assistantOverrides {
-//            firstMessage = "Hi there. I am here to help."
-//          }
-        }
-      }
-    }.also {
-      assertEquals("assistant{} or assistantId{} must be called before assistantOverrides{}", it.message)
+      assertEquals("outboundCall{} was already called", it.message)
     }
   }
 }

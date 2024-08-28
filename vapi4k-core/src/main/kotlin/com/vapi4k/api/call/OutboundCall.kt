@@ -27,5 +27,5 @@ interface OutboundCall : OutboundCallProperties {
   var serverSecret: String
   var method: MethodType
   var postArgs: JsonElement
-  var number: String
+  var phoneNumber: String
 }

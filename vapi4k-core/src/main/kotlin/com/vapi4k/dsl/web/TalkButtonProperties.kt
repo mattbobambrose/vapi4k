@@ -29,7 +29,7 @@ class TalkButtonProperties(
   override var postArgs: JsonElement = JsonElementUtils.EMPTY_JSON_ELEMENT,
 ) : TalkButton {
   fun verifyTalkButtonValues() {
-    require(serverPath.isNotBlank()) { "serverPath must not be blank in talkButton{}" }
-    require(vapiPublicApiKey.isNotBlank()) { "vapiPublicApiKey must not be blank in talkButton{}" }
+    require(serverPath.isNotBlank()) { "serverPath must be assigned in talkButton{}" }
+    require(vapiPublicApiKey.isNotBlank()) { "vapiPublicApiKey must be assigned in talkButton{}" }
   }
 }

@@ -183,7 +183,7 @@ class ModelTests {
       }
     }.also {
       assertEquals(
-        "externalTool{} parameter name must not be blank",
+        "Parameter name must be assigned in externalTool{}",
         it.message,
       )
     }
