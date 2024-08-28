@@ -168,12 +168,14 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         installContentNegotiation()
         post {
           val arg = call.receive<SessionCacheIdSwap>()
+          logger.info { "Swapping cache IDs: ${arg.oldSessionCacheId} -> ${arg.newSessionCacheId}" }
           with(config.outboundCallApplications) {
             firstOrNull { it.serviceToolCache.containsSessionCacheId(arg.oldSessionCacheId) }
               ?.also { it.serviceToolCache.swapCacheKeys(arg.oldSessionCacheId, arg.newSessionCacheId) }
             firstOrNull { it.functionCache.containsSessionCacheId(arg.oldSessionCacheId) }
               ?.also { it.functionCache.swapCacheKeys(arg.oldSessionCacheId, arg.newSessionCacheId) }
           }
+          call.respondText("Swapped cache IDs")
         }
       }
 
