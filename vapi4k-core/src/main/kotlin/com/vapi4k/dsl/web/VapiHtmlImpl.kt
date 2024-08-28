@@ -18,8 +18,9 @@ package com.vapi4k.dsl.web
 
 import com.vapi4k.api.web.TalkButton
 import com.vapi4k.api.web.VapiHtml
-import com.vapi4k.common.CoreEnvVars.serverBaseUrl
+import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.utils.HtmlUtils.rawHtml
+import com.vapi4k.utils.MiscUtils.removeEnds
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.script
 
@@ -38,9 +39,9 @@ class VapiHtmlImpl(
           append("\t\taddVapiButton(\n$indent")
           appendLine(
             listOf(
-              "'$serverBaseUrl/${props.serverPath.removePrefix("/").removeSuffix("/")}'",
+              "'$vapi4kBaseUrl/${props.serverPath.removeEnds("/")}'",
               "'${props.serverSecret}'",
-              "'${props.vapiApiKey}'",
+              "'${props.vapiPublicApiKey}'",
               "'${props.method.name}'",
               "JSON.parse('${props.postArgs}')",
             ).joinToString(",\n$indent"),

@@ -17,8 +17,8 @@
 package com.vapi4k.server
 
 import com.vapi4k.common.CoreEnvVars.isProduction
-import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
-import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
+import com.vapi4k.common.Headers.VALIDATE_HEADER
+import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -55,8 +55,8 @@ internal object OutboundCallAndWebAssistantRequest {
     if (!isValidSecret(application.serverSecret)) {
       call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
-      val validateCall = call.request.headers[VAPI4K_VALIDATE_HEADER].orEmpty()
-      if (isProduction || validateCall != VAPI4K_VALIDATE_VALUE) {
+      val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
+      if (isProduction || validateCall != VALIDATE_VALUE) {
         processOutboundCallAndWebAssistantRequest(config, application, request)
       } else {
         runCatching {

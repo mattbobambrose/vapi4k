@@ -22,18 +22,14 @@ import com.vapi4k.api.call.Phone
 import com.vapi4k.api.call.Save
 import com.vapi4k.api.call.VapiApi
 import com.vapi4k.api.call.enums.ApiObjectType
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.id
-import com.vapi4k.common.Constants.OUTBOUND_SERVER_PATH
-import com.vapi4k.common.Constants.VAPI_API_URL
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
-import com.vapi4k.dsl.vapi4k.AssistantRequestContext
-import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
+import com.vapi4k.common.Constants.PRIVATE_KEY_PROPERTY
+import com.vapi4k.common.CoreEnvVars.vapiBaseUrl
+import com.vapi4k.common.CoreEnvVars.vapiPrivateKey
+import com.vapi4k.common.SessionCacheId
+import com.vapi4k.dsl.call.ProcessOutboundCall.processOutboundCall
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonElementUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.errorMsg
-import com.vapi4k.utils.json.JsonElementUtils.containsKey
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
@@ -41,49 +37,18 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType
+import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
 
 class VapiApiImpl private constructor(
   internal val config: ApplicationConfig,
   private val authString: String,
 ) : VapiApi {
-  override fun phone(block: Phone.() -> OutboundCall): HttpResponse =
-    runBlocking {
-      val phone = Phone()
-      val callRequest =
-        phone.runCatching(block)
-          .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
-          .onFailure { e -> logger.error { "Failed to create call request: ${e.errorMsg}" } }
-          .getOrThrow()
-
-      val httpResponse = runCatching {
-        httpClient.post("$VAPI_API_URL/call/phone") {
-          configCall(authString)
-          setBody(callRequest)
-        }
-      }.onSuccess { logger.info { "Call made successfully" } }
-        .onFailure { e -> logger.error { "Failed to make call: ${e.errorMsg}" } }
-        .getOrThrow()
-
-      val jsonElement = httpResponse.bodyAsText().toJsonElement()
-      val hasId = jsonElement.containsKey("id")
-      if (hasId) {
-        logger.info { "Call ID: ${jsonElement.id}" }
-        with(outboundCallApplication) {
-          serviceToolCache.swapCacheKeys(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
-          functionCache.swapCacheKeys(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
-        }
-      } else {
-        logger.warn { "No call ID found in response" }
-      }
-
-      httpResponse
-    }
+  override fun phone(block: Phone.() -> OutboundCall): HttpResponse = processOutboundCall(authString, block)
 
   internal fun test(block: Phone.() -> OutboundCall) =
     runBlocking {
@@ -102,7 +67,7 @@ class VapiApiImpl private constructor(
           .getOrThrow()
 
       runCatching {
-        httpClient.post("$VAPI_API_URL/call") {
+        httpClient.post("$vapiBaseUrl/call") {
           configCall(authString)
           setBody(callRequest)
         }
@@ -115,7 +80,7 @@ class VapiApiImpl private constructor(
     runBlocking {
       runCatching {
         runCatching {
-          httpClient.get("$VAPI_API_URL/${objectType.endpoint}") { configCall(authString) }
+          httpClient.get("$vapiBaseUrl/${objectType.endpoint}") { configCall(authString) }
         }.onSuccess { logger.info { "$objectType objects fetched successfully" } }
           .onFailure { e -> logger.error { "Failed to fetch $objectType objects: ${e.errorMsg}" } }
           .getOrThrow()
@@ -126,7 +91,7 @@ class VapiApiImpl private constructor(
     runBlocking {
       runCatching {
         runCatching {
-          httpClient.get("$VAPI_API_URL/call/$callId") { configCall(authString) }
+          httpClient.get("$vapiBaseUrl/call/$callId") { configCall(authString) }
         }.onSuccess { logger.info { "Call deleted successfully" } }
           .onFailure { e -> logger.error { "Failed to delete call: ${e.errorMsg}" } }
           .getOrThrow()
@@ -134,24 +99,26 @@ class VapiApiImpl private constructor(
     }.getOrThrow()
 
   companion object {
-    internal val outboundCallApplication = InboundCallApplicationImpl().also { it.serverPath = OUTBOUND_SERVER_PATH }
-    internal val outboundRequestContext = AssistantRequestContext(outboundCallApplication, emptyJsonElement())
-
     internal fun HttpRequestBuilder.configCall(authString: String) {
-      contentType(ContentType.Application.Json)
+      contentType(Application.Json)
       bearerAuth(authString)
     }
 
     fun vapiApi(authString: String = ""): VapiApi {
-      val config = HoconApplicationConfig(ConfigFactory.load())
       val apiAuth =
-        authString.ifEmpty {
-          config.propertyOrNull("vapi.api.privateKey")?.getString()
-            ?: System.getenv("VAPI_PRIVATE_KEY")
-            ?: error("No API key found in application.conf")
+        authString.ifBlank {
+          HoconApplicationConfig(ConfigFactory.load()).propertyOrNull(PRIVATE_KEY_PROPERTY)?.getString()
+            ?: vapiPrivateKey
+              .ifBlank { error("$PRIVATE_KEY_PROPERTY not found in application.conf and VAPI_PRIVATE_KEY not defined") }
         }
 
-      return VapiApiImpl(config, apiAuth)
+      return VapiApiImpl(HoconApplicationConfig(ConfigFactory.load()), apiAuth)
     }
   }
 }
+
+@Serializable
+class SessionCacheIdSwap(
+  val oldSessionCacheId: SessionCacheId,
+  val newSessionCacheId: SessionCacheId,
+)

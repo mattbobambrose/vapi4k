@@ -16,12 +16,8 @@
 
 package com.vapi4k
 
-import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.dsl.call.VapiApiImpl
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.vapiApi
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import io.ktor.client.statement.bodyAsText
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
@@ -33,12 +29,12 @@ class ApiCalls {
     assertThrows(IllegalStateException::class.java) {
       api.test {
         outboundCall {
-          assistantId {
-            id = "123-445-666"
-          }
-          assistantId {
-            id = "345-445-666"
-          }
+//          assistantId {
+//            id = "123-445-666"
+//          }
+//          assistantId {
+//            id = "345-445-666"
+//          }
         }
       }
     }.also {
@@ -52,12 +48,12 @@ class ApiCalls {
     assertThrows(IllegalStateException::class.java) {
       api.test {
         outboundCall {
-          assistant {
-            firstMessage = "Hi there. I am here to help."
-          }
-          assistant {
-            firstMessage = "Hi there. I am here to help."
-          }
+//          assistant {
+//            firstMessage = "Hi there. I am here to help."
+//          }
+//          assistant {
+//            firstMessage = "Hi there. I am here to help."
+//          }
         }
       }
     }.also {
@@ -71,12 +67,12 @@ class ApiCalls {
     assertThrows(IllegalStateException::class.java) {
       api.test {
         outboundCall {
-          assistantId {
-            id = "123-445-666"
-          }
-          assistant {
-            firstMessage = "Hi there. I am here to help."
-          }
+//          assistantId {
+//            id = "123-445-666"
+//          }
+//          assistant {
+//            firstMessage = "Hi there. I am here to help."
+//          }
         }
       }
     }.also {
@@ -90,12 +86,12 @@ class ApiCalls {
     assertThrows(IllegalStateException::class.java) {
       api.test {
         outboundCall {
-          assistantOverrides {
-            firstMessage = "Hi there. I am here to help."
-          }
-          assistantOverrides {
-            firstMessage = "Hi there. I am here to help."
-          }
+//          assistantOverrides {
+//            firstMessage = "Hi there. I am here to help."
+//          }
+//          assistantOverrides {
+//            firstMessage = "Hi there. I am here to help."
+//          }
         }
       }
     }.also {
@@ -109,65 +105,13 @@ class ApiCalls {
     assertThrows(IllegalStateException::class.java) {
       api.test {
         outboundCall {
-          assistantOverrides {
-            firstMessage = "Hi there. I am here to help."
-          }
+//          assistantOverrides {
+//            firstMessage = "Hi there. I am here to help."
+//          }
         }
       }
     }.also {
       assertEquals("assistant{} or assistantId{} must be called before assistantOverrides{}", it.message)
-    }
-  }
-
-  companion object {
-    @JvmStatic
-    fun main(args: Array<String>) {
-      val api = vapiApi("123-445-666")
-      val callResp =
-        api.phone {
-          outboundCall {
-            assistant {
-              firstMessage = "Hi there. I am here to help."
-              openAIModel {
-                modelType = OpenAIModelType.GPT_4_TURBO
-                systemMessage = "Answer questions."
-              }
-            }
-
-            number = "+14156721042"
-            phoneNumberId = (api as VapiApiImpl).config.property("phoneNumberId").getString()
-          }
-        }
-      println("Call status: ${callResp.status}")
-      runBlocking {
-        println("Call response:> ${callResp.bodyAsText().toJsonElement()}")
-      }
-
-//    val listResp = api.list(ASSISTANTS)
-//    println("List response: ${listResp.jsonElement}")
-//
-//
-//    val saveResp =
-//      api.save {
-//        call {}
-//      }
-//
-//    val je = saveResp.jsonElement
-//
-//    val delResp = api.delete("123-445-666")
-//
-//
-//    api.create(assistant)
-//
-//    api.create {
-//      assistant {
-//
-//      }
-//    }
-//
-//    api.list(ASSISTANT)
-//    api.delete(ASSISTANT, "123-445-666")
-//
     }
   }
 }

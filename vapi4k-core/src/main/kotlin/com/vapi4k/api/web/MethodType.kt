@@ -19,4 +19,9 @@ package com.vapi4k.api.web
 enum class MethodType {
   GET,
   POST,
+  ;
+
+  fun isPost() = this == POST
+
+  fun isGet() = this == GET
 }

@@ -26,7 +26,7 @@ async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
     }
 }
 
-function addVapiButton(vapi4kUrl, serverSecret, vapiApiKey, method, postArgs) {
+function addVapiButton(vapi4kUrl, serverSecret, vapiPublicApiKey, method, postArgs) {
     fetchJson(method, vapi4kUrl, {"x-vapi-secret": serverSecret}, postArgs,)
         .then((response) => {
             (function (document, t) {
@@ -37,7 +37,7 @@ function addVapiButton(vapi4kUrl, serverSecret, vapiApiKey, method, postArgs) {
                 var scriptTag = document.getElementsByTagName(t)[0];
                 scriptTag.parentNode.insertBefore(elem, scriptTag);
                 elem.onload = function () {
-                    const config = buildVapiConfig(response, vapiApiKey);
+                    const config = buildVapiConfig(response, vapiPublicApiKey);
                     const vapi = window.vapiSDK.run(config);
                     logVapiEvents(vapi);
                 };
@@ -45,9 +45,9 @@ function addVapiButton(vapi4kUrl, serverSecret, vapiApiKey, method, postArgs) {
         });
 }
 
-function buildVapiConfig(response, vapiApiKey) {
+function buildVapiConfig(response, publicApiKey) {
     var vapiConfig = {
-        apiKey: vapiApiKey
+        apiKey: publicApiKey
     }
 
     if (response.assistant) {

@@ -17,6 +17,8 @@
 package com.vapi4k.utils
 
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.messageCallId
+import com.vapi4k.common.Headers.SESSION_CACHE_ID_HEADER
+import com.vapi4k.common.SessionCacheId.Companion.UNSPECIFIED_SESSION_CACHE_ID
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
@@ -24,6 +26,7 @@ import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.ktor.http.Parameters
+import io.ktor.server.application.ApplicationCall
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonObjectBuilder
@@ -48,8 +51,10 @@ object JsonElementUtils {
 
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
 
-  internal fun JsonObjectBuilder.addArgsAndMessage(parameters: Parameters) {
-    put("queryArgs", queryParametersAsArgs(parameters))
+  internal fun JsonObjectBuilder.addArgsAndMessage(call: ApplicationCall) {
+    val sessionCacheId =
+      call.request.headers[SESSION_CACHE_ID_HEADER]?.toSessionCacheId() ?: UNSPECIFIED_SESSION_CACHE_ID
+    put("queryArgs", queryParametersAsArgs(call.request.queryParameters))
     put(
       "message",
       buildJsonObject {
@@ -57,7 +62,13 @@ object JsonElementUtils {
         put(
           "call",
           buildJsonObject {
-            put("id", getRandomSecret(8, 4, 4, 12))
+            put(
+              "id",
+              if (sessionCacheId.isSpecified())
+                sessionCacheId.value
+              else
+                getRandomSecret(8, 4, 4, 12),
+            )
           },
         )
       },

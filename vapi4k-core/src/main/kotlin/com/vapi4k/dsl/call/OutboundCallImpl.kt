@@ -16,101 +16,44 @@
 
 package com.vapi4k.dsl.call
 
-import com.vapi4k.api.assistant.Assistant
-import com.vapi4k.api.assistant.AssistantId
-import com.vapi4k.api.assistant.AssistantOverrides
+import com.typesafe.config.ConfigFactory
 import com.vapi4k.api.call.OutboundCall
-import com.vapi4k.api.squad.Squad
-import com.vapi4k.api.squad.SquadId
 import com.vapi4k.api.web.MethodType
-import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.assistant.AssistantIdImpl
-import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.assistant.AssistantOverridesImpl
-import com.vapi4k.dsl.call.VapiApiImpl.Companion.outboundRequestContext
-import com.vapi4k.dsl.squad.SquadIdImpl
-import com.vapi4k.dsl.squad.SquadImpl
+import com.vapi4k.common.Constants.PHONE_NUMBER_ID_PROPERTY
+import com.vapi4k.common.CoreEnvVars.vapiPhoneNumberId
 import com.vapi4k.dtos.api.OutboundCallRequestDto
-import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.JsonElementUtils
+import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.serialization.json.JsonElement
 
 class OutboundCallImpl internal constructor(
-  private val sessionCacheId: SessionCacheId,
-  private val assistantCacheIdSource: AssistantCacheIdSource,
-  private val dto: OutboundCallRequestDto,
-) : OutboundCallProperties by dto,
+  internal val outboundCallRequestDto: OutboundCallRequestDto,
+) : OutboundCallProperties by outboundCallRequestDto,
   OutboundCall {
-  private val assistantChecker = DuplicateInvokeChecker()
-  private val overridesChecker = DuplicateInvokeChecker()
-
   override var serverPath = ""
   override var serverSecret = ""
   override var method: MethodType = MethodType.POST
   override var postArgs: JsonElement = JsonElementUtils.EMPTY_JSON_ELEMENT
 
   override var number: String
-    get() = dto.customerDto.number
+    get() = outboundCallRequestDto.customerDto.number
     set(value) {
-      dto.customerDto.number = value
+      outboundCallRequestDto.customerDto.number = value
     }
 
-  fun verifyValues() {
+  internal fun verifyValues() {
     require(serverPath.isNotBlank()) { "serverPath must not be blank in outboundCall{}" }
     require(number.isNotBlank()) { "number must not be blank in outboundCall{}" }
-    require(dto.phoneNumberId.isNotBlank()) { "phoneNumberId must not be blank in outboundCall{}" }
+
+    if (outboundCallRequestDto.phoneNumberId.isBlank())
+      outboundCallRequestDto.phoneNumberId =
+        HoconApplicationConfig(ConfigFactory.load()).propertyOrNull(PHONE_NUMBER_ID_PROPERTY)?.getString()
+          ?: vapiPhoneNumberId
+            .ifBlank {
+              error(
+                "Missing phoneNumberId value. It can be defined with $PHONE_NUMBER_ID_PROPERTY in " +
+                  "application.conf, VAPI_PHONE_NUMBER_ID, or by assigning phoneNumberId in outboundCall{}",
+              )
+            }
   }
-
-  override fun assistantId(block: AssistantId.() -> Unit): AssistantId {
-    assistantChecker.check("assistantId{} already called")
-    return AssistantIdImpl(outboundRequestContext, sessionCacheId, assistantCacheIdSource, dto).apply(block)
-  }
-
-  override fun assistant(block: Assistant.() -> Unit): Assistant {
-    assistantChecker.check("assistant{} already called")
-    return with(dto) {
-      AssistantImpl(
-        outboundRequestContext,
-        sessionCacheId,
-        assistantCacheIdSource,
-        assistantDto,
-        assistantOverridesDto,
-      )
-        .apply(block)
-        .apply {
-          assistantDto.updated = true
-          assistantDto.verifyValues()
-
-          assistantDto.serverUrl = assistantRequestContext.application.serverUrl
-        }
-    }
-  }
-
-  override fun squadId(block: SquadId.() -> Unit): SquadId {
-    assistantChecker.check("squadId{} already called")
-    return SquadIdImpl(outboundRequestContext, dto).apply(block)
-  }
-
-  override fun squad(block: Squad.() -> Unit): Squad {
-    assistantChecker.check("squad{} already called")
-    return with(dto) {
-      SquadImpl(outboundRequestContext, sessionCacheId, assistantCacheIdSource, squadDto).apply(block)
-    }
-  }
-
-  override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides {
-    overridesChecker.check("assistantOverrides{} already called")
-    return if (dto.assistantDto.updated || dto.assistantId.isNotEmpty())
-      AssistantOverridesImpl(
-        outboundRequestContext,
-        sessionCacheId,
-        assistantCacheIdSource,
-        dto.assistantOverridesDto,
-      ).apply(block)
-    else
-      error("assistant{} or assistantId{} must be called before assistantOverrides{}")
-  }
-
-  // override fun customer(block: Customer.() -> Unit): Customer = Customer(dto.customerDto).apply(block)
 }

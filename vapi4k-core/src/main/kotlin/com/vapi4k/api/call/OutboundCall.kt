@@ -16,11 +16,6 @@
 
 package com.vapi4k.api.call
 
-import com.vapi4k.api.assistant.Assistant
-import com.vapi4k.api.assistant.AssistantId
-import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.api.squad.Squad
-import com.vapi4k.api.squad.SquadId
 import com.vapi4k.api.web.MethodType
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.OutboundCallProperties
@@ -33,14 +28,4 @@ interface OutboundCall : OutboundCallProperties {
   var method: MethodType
   var postArgs: JsonElement
   var number: String
-
-  fun assistantId(block: AssistantId.() -> Unit): AssistantId
-
-  fun assistant(block: Assistant.() -> Unit): Assistant
-
-  fun squadId(block: SquadId.() -> Unit): SquadId
-
-  fun squad(block: Squad.() -> Unit): Squad
-
-  fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }

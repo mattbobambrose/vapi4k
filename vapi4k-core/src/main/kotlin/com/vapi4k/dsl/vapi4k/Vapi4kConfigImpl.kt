@@ -22,7 +22,6 @@ import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.call.VapiApiImpl.Companion.outboundCallApplication
 import com.vapi4k.server.RequestResponseCallback
 import com.vapi4k.utils.enums.ServerRequestType
 import io.ktor.server.config.ApplicationConfig
@@ -51,8 +50,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   internal val outboundCallApplications = mutableListOf<AbstractApplicationImpl>()
   internal val allWebAndInboundApplications get() = webApplications + inboundCallApplications
   internal val allApplications
-    get() =
-      webApplications + inboundCallApplications + outboundCallApplications + outboundCallApplication
+    get() = webApplications + inboundCallApplications + outboundCallApplications
 
   private fun verifyServerPath(serverPath: String) {
     if (allApplications.any { it.serverPath == serverPath })

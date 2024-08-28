@@ -19,20 +19,18 @@ package com.vapi4k.api.call
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.OutboundCallImpl
 import com.vapi4k.dtos.api.OutboundCallRequestDto
-import com.vapi4k.utils.AssistantCacheIdSource
-import com.vapi4k.utils.MiscUtils
+import com.vapi4k.utils.DuplicateInvokeChecker
+import com.vapi4k.utils.MiscUtils.nextSessionCacheId
 
 @AssistantDslMarker
 class Phone {
-  internal val sessionCacheId = MiscUtils.nextSessionCacheId()
-  private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
+  internal val sessionCacheId = nextSessionCacheId()
+  private val duplicateChecker = DuplicateInvokeChecker()
 
-  fun outboundCall(block: OutboundCall.() -> Unit): OutboundCall =
-    OutboundCallRequestDto().let {
-      OutboundCallImpl(sessionCacheId, assistantCacheIdSource, it)
-        .apply(block)
-        .apply {
-          verifyValues()
-        }
-    }
+  fun outboundCall(block: OutboundCall.() -> Unit): OutboundCall {
+    duplicateChecker.check("outboundCall{} was already called")
+    return OutboundCallImpl(OutboundCallRequestDto())
+      .apply(block)
+      .apply { verifyValues() }
+  }
 }

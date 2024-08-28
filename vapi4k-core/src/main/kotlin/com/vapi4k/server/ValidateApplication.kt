@@ -85,7 +85,7 @@ internal object ValidateApplication {
         body {
           h2 { +"Configuration Error" }
           p {
-            +"Please set the environment variable SERVER_BASE_URL =  "
+            +"Please set the environment variable VAPI4K_BASE_URL =  "
             span {
               id = "serverBaseUrl"
             }

@@ -19,9 +19,9 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
-import com.vapi4k.common.CoreEnvVars.serverBaseUrl
-import com.vapi4k.common.Headers.VAPI4K_VALIDATE_HEADER
-import com.vapi4k.common.Headers.VAPI4K_VALIDATE_VALUE
+import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.common.Headers.VALIDATE_HEADER
+import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_QUERY_PARAM
 import com.vapi4k.common.SessionCacheId
@@ -33,6 +33,7 @@ import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonElementUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.JsonElementUtils.sessionCacheId
+import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
 import io.github.oshai.kotlinlogging.KLogger
@@ -57,7 +58,7 @@ enum class ApplicationType(
 abstract class AbstractApplicationImpl(
   val applicationType: ApplicationType,
 ) {
-  internal val applicationId = getRandomSecret(10).toApplicationId()
+  internal val applicationId = getRandomSecret(15).toApplicationId()
   internal val serviceToolCache = ServiceCache { serverPath }
   internal val functionCache = ServiceCache { serverPath }
   internal val manualToolCache = ManualToolCache { serverPath }
@@ -74,8 +75,8 @@ abstract class AbstractApplicationImpl(
   var serverPath = defaultServerPath
   var serverSecret = ""
 
-  internal val serverUrl get() = "$serverBaseUrl/$serverPathAsSegment"
-  internal val serverPathAsSegment get() = serverPath.removePrefix("/").removeSuffix("/")
+  internal val serverUrl get() = "$vapi4kBaseUrl/$serverPathAsSegment"
+  internal val serverPathAsSegment get() = serverPath.removeEnds("/")
   internal val serverPathWithSecretAsQueryParam: String
     get() = "$serverPathAsSegment${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_QUERY_PARAM=$it" }}"
 
@@ -85,10 +86,10 @@ abstract class AbstractApplicationImpl(
     secret: String,
   ): Pair<HttpStatusCode, String> =
     runBlocking {
-      val url = "$serverBaseUrl/$appName"
+      val url = "$vapi4kBaseUrl/$appName"
       val response = httpClient.post(url) {
         contentType(Application.Json)
-        headers.append(VAPI4K_VALIDATE_HEADER, VAPI4K_VALIDATE_VALUE)
+        headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
         // logger.info { "Assigning secret from QP: $secret" }
         if (secret.isNotEmpty())
           headers.append(VAPI_SECRET_HEADER, secret)

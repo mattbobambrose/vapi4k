@@ -27,12 +27,14 @@ import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
+import com.vapi4k.common.Endpoints.SWAP_CACHE_IDS
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.call.SessionCacheIdSwap
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
@@ -162,30 +164,43 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeRequest(config) }
       }
 
+      route(SWAP_CACHE_IDS) {
+        installContentNegotiation()
+        post {
+          val arg = call.receive<SessionCacheIdSwap>()
+          with(config.outboundCallApplications) {
+            firstOrNull { it.serviceToolCache.containsSessionCacheId(arg.oldSessionCacheId) }
+              ?.also { it.serviceToolCache.swapCacheKeys(arg.oldSessionCacheId, arg.newSessionCacheId) }
+            firstOrNull { it.functionCache.containsSessionCacheId(arg.oldSessionCacheId) }
+              ?.also { it.functionCache.swapCacheKeys(arg.oldSessionCacheId, arg.newSessionCacheId) }
+          }
+        }
+      }
+
       // Process Inbound Call requests
-      config.inboundCallApplications.forEach { application ->
-        route(application.serverPath) {
-          logger.info { "Adding ${application.applicationType.desc} POST endpoint: \"${application.serverPath}\"" }
+      config.inboundCallApplications.forEach { app ->
+        route(app.serverPath) {
+          logger.info { "Adding ${app.applicationType.desc} POST endpoint: \"${app.serverPath}\"" }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
           post {
             val request = call.receive<String>().toJsonElement()
-            inboundCallAssistantRequest(config, application, request)
+            inboundCallAssistantRequest(config, app, request)
           }
         }
       }
 
       // Process Outbound Call and Web requests
       (config.outboundCallApplications + config.webApplications)
-        .forEach { application ->
-          route(application.serverPath) {
+        .forEach { app ->
+          route(app.serverPath) {
             installContentNegotiation()
-            logger.info { """Adding ${application.applicationType.desc} GET endpoint: "${application.serverPath}"""" }
+            logger.info { """Adding ${app.applicationType.desc} GET endpoint: "${app.serverPath}"""" }
             get {
-              val request = buildJsonObject { addArgsAndMessage(call.request.queryParameters) }
-              outboundCallAndWebAssistantRequest(config, application, request)
+              val request = buildJsonObject { addArgsAndMessage(call) }
+              outboundCallAndWebAssistantRequest(config, app, request)
             }
-            logger.info { """Adding ${application.applicationType.desc} POST endpoint: "${application.serverPath}"""" }
+            logger.info { """Adding ${app.applicationType.desc} POST endpoint: "${app.serverPath}"""" }
             post {
               val json = call.receive<String>().toJsonElement()
               val request =
@@ -204,10 +219,10 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                         }
                       },
                     )
-                    addArgsAndMessage(call.request.queryParameters)
+                    addArgsAndMessage(call)
                   }
                 }
-              outboundCallAndWebAssistantRequest(config, application, request)
+              outboundCallAndWebAssistantRequest(config, app, request)
             }
           }
         }

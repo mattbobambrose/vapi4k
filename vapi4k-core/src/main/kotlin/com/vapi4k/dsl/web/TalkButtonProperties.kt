@@ -24,12 +24,12 @@ import kotlinx.serialization.json.JsonElement
 class TalkButtonProperties(
   override var serverPath: String = "",
   override var serverSecret: String = "",
-  override var vapiApiKey: String = "",
+  override var vapiPublicApiKey: String = "",
   override var method: MethodType = MethodType.POST,
   override var postArgs: JsonElement = JsonElementUtils.EMPTY_JSON_ELEMENT,
 ) : TalkButton {
   fun verifyTalkButtonValues() {
     require(serverPath.isNotBlank()) { "serverPath must not be blank in talkButton{}" }
-    require(vapiApiKey.isNotBlank()) { "vapiApiKey must not be blank in talkButton{}" }
+    require(vapiPublicApiKey.isNotBlank()) { "vapiPublicApiKey must not be blank in talkButton{}" }
   }
 }

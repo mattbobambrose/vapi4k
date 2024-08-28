@@ -16,29 +16,14 @@
 
 package com.vapi4k.dtos.api
 
-import com.vapi4k.dsl.assistant.AssistantIdProperties
 import com.vapi4k.dsl.call.OutboundCallProperties
-import com.vapi4k.dsl.squad.SquadIdSource
-import com.vapi4k.dtos.assistant.AssistantDto
-import com.vapi4k.dtos.assistant.AssistantOverridesDto
-import com.vapi4k.dtos.squad.SquadDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class OutboundCallRequestDto(
-  override var assistantId: String = "",
-  @SerialName("assistant")
-  override val assistantDto: AssistantDto = AssistantDto(),
-  @SerialName("assistantOverrides")
-  override val assistantOverridesDto: AssistantOverridesDto = AssistantOverridesDto(),
-  override var squadId: String = "",
-  @SerialName("squad")
-  val squadDto: SquadDto = SquadDto(),
   override var phoneNumberId: String = "",
   @SerialName("customer")
   val customerDto: CustomerDto = CustomerDto(),
   var error: String = "",
-) : OutboundCallProperties,
-  AssistantIdProperties,
-  SquadIdSource
+) : OutboundCallProperties

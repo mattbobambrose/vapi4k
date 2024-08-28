@@ -17,20 +17,20 @@
 package com.vapi4k.common
 
 object Constants {
-  const val VAPI_API_URL = "https://api.vapi.ai"
   const val HTMX_SOURCE_URL = "https://unpkg.com/htmx.org@2.0.2"
 
   const val UNSPECIFIED_DEFAULT = "unspecified"
   const val UNKNOWN = "unknown"
   const val STATIC_BASE = "/core_static"
 
-  const val OUTBOUND_SERVER_PATH = "__outboundCalls"
-
   const val APPLICATION_ID = "applicationId"
   const val SESSION_CACHE_ID = "sessionCacheId"
   const val FUNCTION_NAME = "functionName"
 
   const val POST_ARGS = "postArgs"
+
+  const val PRIVATE_KEY_PROPERTY = "vapi.api.privateKey"
+  const val PHONE_NUMBER_ID_PROPERTY = "vapi.phoneNumberId"
 }
 
 object QueryParams {
@@ -39,8 +39,9 @@ object QueryParams {
 
 object Headers {
   const val VAPI_SECRET_HEADER = "x-vapi-secret"
-  const val VAPI4K_VALIDATE_HEADER = "x-vapi4k-validate"
-  const val VAPI4K_VALIDATE_VALUE = "true"
+  const val VALIDATE_HEADER = "x-vapi4k-validate"
+  const val VALIDATE_VALUE = "true"
+  const val SESSION_CACHE_ID_HEADER = "x-vapi4k-session_cache_id"
 }
 
 object Endpoints {
@@ -52,4 +53,5 @@ object Endpoints {
   const val CLEAR_CACHES_PATH = "/clear-caches"
   const val VALIDATE_PATH = "/validate"
   const val VALIDATE_INVOKE_TOOL_PATH = "/validateInvokeTool"
+  const val SWAP_CACHE_IDS = "/swapCacheIds"
 }

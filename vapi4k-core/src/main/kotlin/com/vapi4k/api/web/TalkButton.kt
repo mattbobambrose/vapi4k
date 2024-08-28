@@ -21,7 +21,7 @@ import kotlinx.serialization.json.JsonElement
 interface TalkButton {
   var serverPath: String
   var serverSecret: String
-  var vapiApiKey: String
+  var vapiPublicApiKey: String
   var method: MethodType
   var postArgs: JsonElement
 }

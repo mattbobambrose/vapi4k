@@ -37,6 +37,8 @@ value class SessionCacheId private constructor(
 ) {
   fun isNotSpecified() = value == UNSPECIFIED_VALUE
 
+  fun isSpecified() = !isNotSpecified()
+
   override fun toString() = value
 
   companion object {
