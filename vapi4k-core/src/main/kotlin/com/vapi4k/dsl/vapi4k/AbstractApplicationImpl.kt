@@ -47,14 +47,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
-enum class ApplicationType(
-  val desc: String,
-) {
-  INBOUND_CALL("inboundCallApplication{}"),
-  OUTBOUND_CALL("outboundCallApplication{}"),
-  WEB("webApplication{}"),
-}
-
 abstract class AbstractApplicationImpl(
   val applicationType: ApplicationType,
 ) {
@@ -75,10 +67,12 @@ abstract class AbstractApplicationImpl(
   var serverPath = defaultServerPath
   var serverSecret = ""
 
-  internal val serverUrl get() = "$vapi4kBaseUrl/$serverPathAsSegment"
+  internal val serverUrl get() = "$vapi4kBaseUrl/$fullServerPath"
   internal val serverPathAsSegment get() = serverPath.removeEnds("/")
-  internal val serverPathWithSecretAsQueryParam: String
-    get() = "$serverPathAsSegment${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_QUERY_PARAM=$it" }}"
+  internal val fullServerPath: String
+    get() = "${applicationType.pathPrefix}/$serverPathAsSegment"
+  internal val fullServerPathWithSecretAsQueryParam: String
+    get() = "${fullServerPath}${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_QUERY_PARAM=$it" }}"
 
   fun fetchContent(
     request: JsonElement,
@@ -86,7 +80,7 @@ abstract class AbstractApplicationImpl(
     secret: String,
   ): Pair<HttpStatusCode, String> =
     runBlocking {
-      val url = "$vapi4kBaseUrl/$appName"
+      val url = "$vapi4kBaseUrl/${applicationType.pathPrefix}/$appName"
       val response = httpClient.post(url) {
         contentType(Application.Json)
         headers.append(VALIDATE_HEADER, VALIDATE_VALUE)

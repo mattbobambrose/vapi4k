@@ -54,8 +54,7 @@ class ToolsImpl internal constructor(
     if (paramName.isBlank()) error("manualTool{} parameter name is required")
     if (!manualToolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onInvoke{} declared")
 
-    val application = model.application
-    application.manualToolCache.addToCache(model.sessionCacheId, paramName, manualToolImpl)
+    model.application.manualToolCache.addToCache(model.sessionCacheId, paramName, manualToolImpl)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
@@ -121,8 +120,7 @@ class ToolsImpl internal constructor(
     model.toolDtos += ToolDto().also { toolDto ->
       populateFunctionDto(model, obj, function, toolDto.functionDto)
       val sessionCacheId = model.getSessionCacheId()
-      val application = model.application
-      application.serviceToolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
+      model.application.serviceToolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
 
       with(toolDto) {
         type = ToolType.FUNCTION

@@ -33,7 +33,7 @@ object CallExample {
 
     runBlocking {
       println("Call status: ${callResp.status}")
-      println("Call response:> ${callResp.bodyAsText().toJsonElement()}")
+      println("Call response: ${callResp.bodyAsText().toJsonElement()}")
     }
 
 //    val listResp = api.list(ASSISTANTS)

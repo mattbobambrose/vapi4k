@@ -27,39 +27,38 @@ class ApplicationTest {
   @Test
   fun `test for serverPath and serverSecret`() {
     val str = "/something_else"
-    val application =
+    val app =
       with(Vapi4kConfigImpl()) {
         inboundCallApplication {
           serverPath = str
           serverSecret = "12345"
         }
       }
-    assertEquals(str, application.serverPath)
-    assertEquals("12345", application.serverSecret)
+    assertEquals(str, app.serverPath)
+    assertEquals("12345", app.serverSecret)
   }
 
   @Test
   fun `test for default serverPath`() {
-    val application =
+    val app =
       with(Vapi4kConfigImpl()) {
         inboundCallApplication {
         }
       }
-    assertEquals(defaultServerPath.removePrefix("/"), application.serverPath)
-    assertEquals("", application.serverSecret)
+    assertEquals(defaultServerPath.removePrefix("/"), app.serverPath)
+    assertEquals("", app.serverSecret)
   }
 
   @Test
   fun `test for duplicate default serverPaths`() {
     val str = "/something_else"
     assertThrows(IllegalStateException::class.java) {
-      val application =
-        with(Vapi4kConfigImpl()) {
-          inboundCallApplication {
-          }
-          inboundCallApplication {
-          }
+      with(Vapi4kConfigImpl()) {
+        inboundCallApplication {
         }
+        inboundCallApplication {
+        }
+      }
     }.also {
       assertTrue(it.message.orEmpty().contains("already exists"))
     }

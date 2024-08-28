@@ -22,6 +22,9 @@ import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
+import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
+import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.server.RequestResponseCallback
 import com.vapi4k.utils.enums.ServerRequestType
 import io.ktor.server.config.ApplicationConfig
@@ -52,16 +55,20 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   internal val allApplications
     get() = webApplications + inboundCallApplications + outboundCallApplications
 
-  private fun verifyServerPath(serverPath: String) {
-    if (allApplications.any { it.serverPath == serverPath })
-      error("Application with serverPath \"${serverPath}\" already exists")
+  private fun verifyServerPath(
+    serverPath: String,
+    name: String,
+    applications: List<AbstractApplicationImpl>,
+  ) {
+    if (applications.any { it.serverPath == serverPath })
+      error("$name with serverPath \"${serverPath}\" already exists")
   }
 
   override fun inboundCallApplication(block: InboundCallApplication.() -> Unit): InboundCallApplication =
     InboundCallApplicationImpl()
       .apply(block)
       .also { ica ->
-        verifyServerPath(ica.serverPath)
+        verifyServerPath(ica.serverPath, INBOUND_CALL.desc, inboundCallApplications)
         inboundCallApplications += ica
       }
 
@@ -69,7 +76,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     OutboundCallApplicationImpl()
       .apply(block)
       .also { ica ->
-        verifyServerPath(ica.serverPath)
+        verifyServerPath(ica.serverPath, OUTBOUND_CALL.desc, outboundCallApplications)
         outboundCallApplications += ica
       }
 
@@ -77,7 +84,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     WebApplicationImpl()
       .apply(block)
       .also { wa ->
-        verifyServerPath(wa.serverPath)
+        verifyServerPath(wa.serverPath, WEB.desc, webApplications)
         webApplications += wa
       }
 

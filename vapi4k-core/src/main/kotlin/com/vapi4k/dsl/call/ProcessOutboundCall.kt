@@ -26,6 +26,7 @@ import com.vapi4k.common.Headers.SESSION_CACHE_ID_HEADER
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.configCall
+import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.MiscUtils.removeEnds
@@ -57,9 +58,9 @@ object ProcessOutboundCall {
         .onFailure { e -> logger.error { "Failed to create outbound call: ${e.errorMsg}" } }
         .getOrThrow()
 
-    val response =
+    val assistantResponse =
       runCatching {
-        val url = "$vapi4kBaseUrl/${outboundCall.serverPath.removeEnds("/")}"
+        val url = "$vapi4kBaseUrl/${OUTBOUND_CALL.pathPrefix}/${outboundCall.serverPath.removeEnds("/")}"
         if (outboundCall.method.isPost()) {
           httpClient.post(url) {
             contentType(Application.Json)
@@ -77,7 +78,7 @@ object ProcessOutboundCall {
       }.onFailure { e -> logger.error { "Failed to fetch assistant from vapi4k server: ${e.errorMsg}" } }
         .getOrThrow()
 
-    val assistantJson = response.bodyAsText().toJsonElement()
+    val assistantJson = assistantResponse.bodyAsText().toJsonElement()
 
     val outboundDto = (outboundCall as OutboundCallImpl).outboundCallRequestDto
     val outboundJson = outboundDto.toJsonElement()
@@ -88,7 +89,7 @@ object ProcessOutboundCall {
         assistantJson.keys.forEach { key -> put(key, assistantJson[key]) }
       }
 
-    val httpResponse =
+    val vapiResponse =
       runCatching {
         httpClient.post("$vapiBaseUrl/call/phone") {
           configCall(authString)
@@ -97,23 +98,19 @@ object ProcessOutboundCall {
       }.onFailure { e -> logger.error { "Failed calling $vapiBaseUrl: ${e.errorMsg}" } }
         .getOrThrow()
 
-    if (httpResponse.status.value != HttpStatusCode.Created.value) {
-      val msg = "Failed calling $vapiBaseUrl: ${httpResponse.status} - ${httpResponse.bodyAsText()}"
+    if (vapiResponse.status.value != HttpStatusCode.Created.value) {
+      val msg = "Failed calling $vapiBaseUrl: ${vapiResponse.status} - ${vapiResponse.bodyAsText()}"
       logger.error { msg }
       error(msg)
     }
 
-    val jsonElement = httpResponse.bodyAsText().toJsonElement()
-    val hasId = jsonElement.containsKey("id")
-
-    if (hasId) {
+    val jsonElement = vapiResponse.bodyAsText().toJsonElement()
+    if (jsonElement.containsKey("id")) {
       logger.info { "Swapping call ID: ${jsonElement.id}" }
 
       val swapObj = SessionCacheIdSwap(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
 
       val swapUrl = "$vapi4kBaseUrl/${SWAP_CACHE_IDS.removeEnds("/")}"
-      println("Swapping cache IDs: $swapUrl")
-      println(swapObj.toJsonString())
       val swapResponse =
         httpClient.post(swapUrl) {
           contentType(Application.Json)
@@ -126,10 +123,10 @@ object ProcessOutboundCall {
         error(msg)
       }
     } else {
-      logger.warn { "No call ID found in outbound call response" }
+      logger.error { "No call ID found in outbound call response: ${jsonElement.toJsonString()}" }
     }
 
-    httpResponse
+    vapiResponse
   }
 
   private fun HttpRequestBuilder.addVapiSecret(call: OutboundCall) {

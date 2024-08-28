@@ -35,17 +35,17 @@ class FunctionsImpl internal constructor(
     obj: Any,
     vararg functions: KFunction<*>,
   ) {
-    val application = model.application
+    val app = model.application
     if (functions.isEmpty()) {
       verifyObjectHasOnlyOneToolCall(obj)
       val function = obj.toolCallFunction
       verifyIsValidReturnType(false, function)
-      addFunction(application, obj, function)
+      addFunction(app, obj, function)
     } else {
       functions.forEach { function ->
         verifyIsToolCall(false, function)
         verifyIsValidReturnType(false, function)
-        addFunction(application, obj, function)
+        addFunction(app, obj, function)
       }
     }
   }

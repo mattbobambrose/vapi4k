@@ -19,12 +19,17 @@ package com.vapi4k.server
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestPage
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.Constants.APPLICATION_ID
+import com.vapi4k.common.Constants.APP_NAME
+import com.vapi4k.common.Constants.APP_TYPE
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_QUERY_PARAM
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
+import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
+import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomString
@@ -60,10 +65,18 @@ import java.net.ConnectException
 internal object ValidateApplication {
   suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl) =
     runCatching {
-      val appName = call.parameters["appName"].orEmpty()
-      val application = config.allApplications.firstOrNull { it.serverPathAsSegment == appName }
-      if (application.isNotNull())
-        processValidateRequest(config, application, appName)
+      val appType = call.parameters[APP_TYPE].orEmpty()
+      val appName = call.parameters[APP_NAME].orEmpty()
+      val app =
+        when (appType) {
+          WEB.pathPrefix -> config.webApplications
+          INBOUND_CALL.pathPrefix -> config.inboundCallApplications
+          OUTBOUND_CALL.pathPrefix -> config.outboundCallApplications
+          else -> error("Invalid application type: $appType")
+        }.firstOrNull { it.serverPathAsSegment == appName }
+
+      if (app.isNotNull())
+        processValidateRequest(config, app, appName)
       else
         call.respondText("Application for /$appName not found", status = HttpStatusCode.NotFound)
     }.getOrElse {
@@ -108,12 +121,11 @@ internal object ValidateApplication {
     runCatching {
       val params = call.request.queryParameters
       val applicationId = params[APPLICATION_ID]?.toApplicationId() ?: error("No $APPLICATION_ID found")
-      val application = config.getApplication(applicationId)
+      val app = config.getApplication(applicationId)
       val toolRequest = getToolRequest(params)
 
-      httpClient.post(application.serverUrl) {
-        // logger.info { "Assigning secret: ${application.serverSecret}" }
-        headers.append(VAPI_SECRET_HEADER, application.serverSecret)
+      httpClient.post(app.serverUrl) {
+        headers.append(VAPI_SECRET_HEADER, app.serverSecret)
         setBody(toolRequest.toJsonString<JsonObject>())
       }
     }.onSuccess { response ->

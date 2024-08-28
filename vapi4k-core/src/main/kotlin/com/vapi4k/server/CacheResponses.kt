@@ -40,7 +40,7 @@ internal object CacheResponses {
       buildJsonObject {
         config.allApplications.forEach { application ->
           put(
-            application.serverPathAsSegment,
+            application.fullServerPath,
             buildJsonObject {
               put(
                 "toolServices",

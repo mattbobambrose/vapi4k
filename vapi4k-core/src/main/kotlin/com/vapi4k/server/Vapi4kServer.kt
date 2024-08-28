@@ -160,7 +160,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           get { clearCaches(config) }
         }
         get(VALIDATE_PATH) { validateRootPage(config) }
-        get("$VALIDATE_PATH/{appName}") { validateApplication(config) }
+        get("$VALIDATE_PATH/{appType}/{appName}") { validateApplication(config) }
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeRequest(config) }
       }
 
@@ -181,8 +181,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       // Process Inbound Call requests
       config.inboundCallApplications.forEach { app ->
-        route(app.serverPath) {
-          logger.info { "Adding ${app.applicationType.desc} POST endpoint: \"${app.serverPath}\"" }
+        val path = "/${app.fullServerPath}"
+        route(path) {
+          logger.info { """Adding ${app.applicationType.desc} POST endpoint: "$path"""" }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
           post {
@@ -195,14 +196,15 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       // Process Outbound Call and Web requests
       (config.outboundCallApplications + config.webApplications)
         .forEach { app ->
-          route(app.serverPath) {
+          val path = "/${app.fullServerPath}"
+          route(path) {
             installContentNegotiation()
-            logger.info { """Adding ${app.applicationType.desc} GET endpoint: "${app.serverPath}"""" }
+            logger.info { """Adding ${app.applicationType.desc} GET endpoint: "$path"""" }
             get {
               val request = buildJsonObject { addArgsAndMessage(call) }
               outboundCallAndWebAssistantRequest(config, app, request)
             }
-            logger.info { """Adding ${app.applicationType.desc} POST endpoint: "${app.serverPath}"""" }
+            logger.info { """Adding ${app.applicationType.desc} POST endpoint: "$path"""" }
             post {
               val json = call.receive<String>().toJsonElement()
               val request =
