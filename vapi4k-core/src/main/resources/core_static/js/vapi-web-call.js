@@ -50,13 +50,13 @@ function buildVapiConfig(response, publicApiKey) {
         apiKey: publicApiKey
     }
 
-    if ('assistant' in response) {
+    if (response.hasOwnProperty('assistant')) {
         vapiConfig.assistant = response.assistant
-    } else if ('squad' in response) {
+    } else if (response.hasOwnProperty('squad')) {
         vapiConfig.squad = response.squad
-    } else if ('assistantId' in response) {
+    } else if (response.hasOwnProperty('assistantId')) {
         vapiConfig.assistantId = response.assistantId
-    } else if ('squadId' in response) {
+    } else if (response.hasOwnProperty('squadId' in response)) {
         vapiConfig.squadId = response.squadId
     } else {
         console.error('Error:', Error(`Assistant, Squad, AssistantId, or SquadId not found in response`));
