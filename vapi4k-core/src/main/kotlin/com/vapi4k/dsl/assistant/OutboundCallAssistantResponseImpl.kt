@@ -14,8 +14,12 @@
  *
  */
 
-package com.vapi4k.dsl.call
+package com.vapi4k.dsl.assistant
 
-interface CustomerProperties {
-  var number: String
-}
+import com.vapi4k.api.assistant.OutboundCallAssistantResponse
+import com.vapi4k.dsl.vapi4k.AssistantRequestContext
+
+class OutboundCallAssistantResponseImpl(
+  assistantRequestContext: AssistantRequestContext,
+) : AbstractAssistantResponseImpl(assistantRequestContext),
+  OutboundCallAssistantResponse

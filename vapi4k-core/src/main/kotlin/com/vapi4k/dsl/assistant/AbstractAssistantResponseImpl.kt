@@ -37,9 +37,9 @@ abstract class AbstractAssistantResponseImpl(
 
   internal val isAssigned get() = duplicateChecker.wasCalled
 
-  fun assistant(block: Assistant.() -> Unit) {
+  fun assistant(block: Assistant.() -> Unit): Assistant {
     duplicateChecker.check("assistant{} was already called")
-    assistantRequestResponse.apply {
+    return assistantRequestResponse.run {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
       AssistantImpl(
@@ -59,27 +59,27 @@ abstract class AbstractAssistantResponseImpl(
     }
   }
 
-  fun assistantId(block: AssistantId.() -> Unit) {
+  fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     duplicateChecker.check("assistantId{} was already called")
-    assistantRequestResponse.apply {
+    return assistantRequestResponse.run {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
       AssistantIdImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, messageResponse).apply(block)
     }
   }
 
-  fun squad(block: Squad.() -> Unit) {
+  fun squad(block: Squad.() -> Unit): Squad {
     duplicateChecker.check("squad{} was already called")
-    assistantRequestResponse.apply {
+    return assistantRequestResponse.run {
       val sessionCacheId = assistantRequestContext.request.sessionCacheId
       val assistantCacheIdSource = AssistantCacheIdSource()
       SquadImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, messageResponse.squadDto).apply(block)
     }
   }
 
-  fun squadId(block: SquadId.() -> Unit) {
+  fun squadId(block: SquadId.() -> Unit): SquadId {
     duplicateChecker.check("squadId{} was already called")
-    assistantRequestResponse.apply {
+    return assistantRequestResponse.run {
       SquadIdImpl(assistantRequestContext, messageResponse).apply(block)
     }
   }

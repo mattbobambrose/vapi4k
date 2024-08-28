@@ -27,6 +27,12 @@ class Phone {
   internal val sessionCacheId = MiscUtils.nextSessionCacheId()
   private val assistantCacheIdSource: AssistantCacheIdSource = AssistantCacheIdSource()
 
-  fun outboundCallApplication(block: OutboundCall.() -> Unit): OutboundCall =
-    OutboundCallRequestDto().let { OutboundCallImpl(sessionCacheId, assistantCacheIdSource, it).apply(block) }
+  fun outboundCall(block: OutboundCall.() -> Unit): OutboundCall =
+    OutboundCallRequestDto().let {
+      OutboundCallImpl(sessionCacheId, assistantCacheIdSource, it)
+        .apply(block)
+        .apply {
+          verifyValues()
+        }
+    }
 }

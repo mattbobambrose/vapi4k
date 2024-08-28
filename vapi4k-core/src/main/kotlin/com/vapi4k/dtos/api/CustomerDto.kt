@@ -16,14 +16,13 @@
 
 package com.vapi4k.dtos.api
 
-import com.vapi4k.dsl.call.CustomerProperties
 import kotlinx.serialization.Serializable
 
 // TODO: Make polymorphic
 @Serializable
 data class CustomerDto(
-  override var number: String = "",
+  var number: String = "",
   var sipUri: String = "",
   var name: String = "",
   var extension: String = "",
-) : CustomerProperties
+)

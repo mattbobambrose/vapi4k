@@ -19,12 +19,14 @@ package com.vapi4k.server
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import io.ktor.http.ContentType
 import io.ktor.server.application.call
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondText
+import kotlinx.html.UL
 import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.h1
@@ -41,58 +43,51 @@ import kotlinx.html.ul
 
 internal object ValidateRoot {
   suspend fun KtorCallContext.validateRootPage(config: Vapi4kConfigImpl) {
-    when {
-      config.allWebAndInboundApplications.size == 1 -> {
-        val application = config.allWebAndInboundApplications.first()
-        call.respondRedirect("$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}")
-      }
-
-      else -> {
-        val html = createHTML()
-          .html {
-            head {
-              link {
-                rel = "stylesheet"
-                href = "$STATIC_BASE/css/styles.css"
-              }
-              link {
-                rel = "stylesheet"
-                href = "$STATIC_BASE/css/validator.css"
-              }
-              title { +"Assistant Request Validation" }
-              script { src = HTMX_SOURCE_URL }
+    if (config.allWebAndInboundApplications.size == 1) {
+      val application = config.allWebAndInboundApplications.first()
+      call.respondRedirect("$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}")
+    } else {
+      val html = createHTML()
+        .html {
+          head {
+            link {
+              rel = "stylesheet"
+              href = "$STATIC_BASE/css/styles.css"
             }
-            body {
-              h1 { +"Vapi4k Validator" }
-              h2 { +"InboundCall Applications" }
-              ul {
-                config.inboundCallApplications
-                  .forEach { application ->
-                    li {
-                      id = "all-li"
-                      a {
-                        href = "$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}"
-                        +application.serverPath.ensureStartsWith("/")
-                      }
-                    }
-                  }
-              }
-              h2 { +"Web Applications" }
-              ul {
-                config.webApplications
-                  .forEach { application ->
-                    li {
-                      id = "all-li"
-                      a {
-                        href = "$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}"
-                        +application.serverPath.ensureStartsWith("/")
-                      }
-                    }
-                  }
-              }
+            link {
+              rel = "stylesheet"
+              href = "$STATIC_BASE/css/validator.css"
+            }
+            title { +"Assistant Request Validation" }
+            script { src = HTMX_SOURCE_URL }
+          }
+          body {
+            h1 { +"Vapi4k Validator" }
+
+            h2 { +"InboundCall Applications" }
+            ul {
+              config.inboundCallApplications.forEach { applicationDetails(it) }
+            }
+            h2 { +"OutboundCall Applications" }
+            ul {
+              config.outboundCallApplications.forEach { applicationDetails(it) }
+            }
+            h2 { +"Web Applications" }
+            ul {
+              config.webApplications.forEach { applicationDetails(it) }
             }
           }
-        call.respondText(html, ContentType.Text.Html)
+        }
+      call.respondText(html, ContentType.Text.Html)
+    }
+  }
+
+  private fun UL.applicationDetails(application: AbstractApplicationImpl) {
+    li {
+      id = "all-li"
+      a {
+        href = "$VALIDATE_PATH/${application.serverPathWithSecretAsQueryParam}"
+        +application.serverPath.ensureStartsWith("/")
       }
     }
   }

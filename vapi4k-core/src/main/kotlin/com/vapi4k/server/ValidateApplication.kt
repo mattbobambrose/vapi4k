@@ -65,7 +65,7 @@ internal object ValidateApplication {
       if (application.isNotNull())
         processValidateRequest(config, application, appName)
       else
-        call.respondText("Application for /$appName found", status = HttpStatusCode.NotFound)
+        call.respondText("Application for /$appName not found", status = HttpStatusCode.NotFound)
     }.getOrElse {
       if (it is ConnectException) {
         val html = serverBasePage()

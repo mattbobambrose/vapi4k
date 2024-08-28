@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.vapi4k.InboundCallApplication
+import com.vapi4k.api.vapi4k.OutboundCallApplication
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.common.ApplicationId
@@ -47,8 +48,11 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
 
   internal val webApplications = mutableListOf<AbstractApplicationImpl>()
   internal val inboundCallApplications = mutableListOf<AbstractApplicationImpl>()
+  internal val outboundCallApplications = mutableListOf<AbstractApplicationImpl>()
   internal val allWebAndInboundApplications get() = webApplications + inboundCallApplications
-  internal val allApplications get() = webApplications + inboundCallApplications + outboundCallApplication
+  internal val allApplications
+    get() =
+      webApplications + inboundCallApplications + outboundCallApplications + outboundCallApplication
 
   private fun verifyServerPath(serverPath: String) {
     if (allApplications.any { it.serverPath == serverPath })
@@ -61,6 +65,14 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
       .also { ica ->
         verifyServerPath(ica.serverPath)
         inboundCallApplications += ica
+      }
+
+  override fun outboundCallApplication(block: OutboundCallApplication.() -> Unit): OutboundCallApplication =
+    OutboundCallApplicationImpl()
+      .apply(block)
+      .also { ica ->
+        verifyServerPath(ica.serverPath)
+        outboundCallApplications += ica
       }
 
   override fun webApplication(block: WebApplication.() -> Unit): WebApplication =
