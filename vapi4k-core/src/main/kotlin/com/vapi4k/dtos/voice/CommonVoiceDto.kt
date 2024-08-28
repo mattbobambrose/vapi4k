@@ -47,6 +47,7 @@ private object VoiceSerializer : KSerializer<CommonVoiceDto> {
       }
 
       is DeepgramVoiceDto -> {
+        value.assignEnumOverrides()
         encoder.encodeSerializableValue(DeepgramVoiceDto.serializer(), value)
       }
 

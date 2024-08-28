@@ -41,8 +41,14 @@ data class DeepgramVoiceDto(
   @EncodeDefault
   val provider: VoiceProviderType = VoiceProviderType.DEEPGRAM
 
+  fun assignEnumOverrides() {
+    voiceId = customVoiceId.ifEmpty { voiceIdType.desc }
+  }
+
   override fun verifyValues() {
-    if (voiceId.isEmpty())
-      error("deepgramVoice{} requires a voiceId value")
+    if (voiceIdType.isNotSpecified() && customVoiceId.isEmpty())
+      error("deepgramVoice{} requires a voiceIdType or customVoiceId value")
+    if (voiceIdType.isSpecified() && customVoiceId.isNotEmpty())
+      error("deepgramVoice{} cannot have both voiceIdType and customVoiceId values")
   }
 }
