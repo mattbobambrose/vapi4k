@@ -17,6 +17,7 @@
 package com.vapi4k
 
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
@@ -28,7 +29,7 @@ class BaseToolMessageTest {
   @Test
   fun `toolMessageStart test`() {
     val (response, jsonElement) =
-      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) {
+      withTestApplication(INBOUND_CALL, JsonFilenames.JSON_ASSISTANT_REQUEST) {
         squad {
           members {
             member {

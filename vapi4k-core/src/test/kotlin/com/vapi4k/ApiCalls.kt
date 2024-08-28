@@ -48,12 +48,7 @@ class ApiCalls {
     assertThrows(IllegalStateException::class.java) {
       api.test {
         outboundCall {
-//          assistant {
-//            firstMessage = "Hi there. I am here to help."
-//          }
-//          assistant {
-//            firstMessage = "Hi there. I am here to help."
-//          }
+          serverPath = "/outboundRequest"
         }
       }
     }.also {

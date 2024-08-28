@@ -26,6 +26,7 @@ import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.api.transcriber.enums.DeepgramModelType
 import com.vapi4k.api.transcriber.enums.GladiaModelType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
+import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -65,7 +66,7 @@ class AssistantTest {
   @Test
   fun testRegular() {
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) {
+      withTestApplication(INBOUND_CALL, JSON_ASSISTANT_REQUEST) {
         assistant {
           firstMessage = messageOne
           openAIModel {
@@ -156,7 +157,7 @@ class AssistantTest {
   @Test
   fun `test reverse delay order`() {
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) {
+      withTestApplication(INBOUND_CALL, JSON_ASSISTANT_REQUEST) {
         assistant {
           firstMessage = messageOne
           openAIModel {
@@ -192,7 +193,7 @@ class AssistantTest {
   @Test
   fun `test message with no millis`() {
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) {
+      withTestApplication(INBOUND_CALL, JSON_ASSISTANT_REQUEST) {
         assistant {
           firstMessage = messageOne
           openAIModel {
@@ -229,12 +230,11 @@ class AssistantTest {
   @Test
   fun `multiple message`() {
     val (response, jsonElement) =
-      withTestApplication(JSON_ASSISTANT_REQUEST) {
+      withTestApplication(INBOUND_CALL, JSON_ASSISTANT_REQUEST) {
         assistant {
           firstMessage = messageOne
           openAIModel {
             modelType = OpenAIModelType.GPT_3_5_TURBO
-
             systemMessage = sysMessage
             tools {
               serviceTool(FavoriteFoodService()) {
@@ -266,34 +266,35 @@ class AssistantTest {
 
   @Test
   fun `multiple delay time`() {
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
-      assistant {
-        firstMessage = messageOne
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
+    val (response, jsonElement) =
+      withTestApplication(INBOUND_CALL, JSON_ASSISTANT_REQUEST) {
+        assistant {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
 
-          systemMessage = sysMessage
-          tools {
-            serviceTool(FavoriteFoodService()) {
-              requestStartMessage {
-                content = startMessage
-              }
-              requestCompleteMessage {
-                content = completeMessage
-              }
-              requestFailedMessage {
-                content = failedMessage
-              }
-              requestDelayedMessage {
-                content = delayedMessage
-                timingMilliseconds = 2000
-                timingMilliseconds = 1000
+            systemMessage = sysMessage
+            tools {
+              serviceTool(FavoriteFoodService()) {
+                requestStartMessage {
+                  content = startMessage
+                }
+                requestCompleteMessage {
+                  content = completeMessage
+                }
+                requestFailedMessage {
+                  content = failedMessage
+                }
+                requestDelayedMessage {
+                  content = delayedMessage
+                  timingMilliseconds = 2000
+                  timingMilliseconds = 1000
+                }
               }
             }
           }
         }
       }
-    }
 
     // println(jsonElement.toJsonString())
 
@@ -305,34 +306,35 @@ class AssistantTest {
 
   @Test
   fun `multiple message multiple delay time`() {
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
-      assistant {
-        firstMessage = messageOne
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
-          systemMessage = sysMessage
-          tools {
-            serviceTool(FavoriteFoodService()) {
-              requestStartMessage {
-                content = startMessage
-              }
-              requestCompleteMessage {
-                content = completeMessage
-              }
-              requestFailedMessage {
-                content = failedMessage
-              }
-              requestDelayedMessage {
-                content = delayedMessage
-                content = secondDelayedMessage
-                timingMilliseconds = 2000
-                timingMilliseconds = 1000
+    val (response, jsonElement) =
+      withTestApplication(INBOUND_CALL, JSON_ASSISTANT_REQUEST) {
+        assistant {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+            systemMessage = sysMessage
+            tools {
+              serviceTool(FavoriteFoodService()) {
+                requestStartMessage {
+                  content = startMessage
+                }
+                requestCompleteMessage {
+                  content = completeMessage
+                }
+                requestFailedMessage {
+                  content = failedMessage
+                }
+                requestDelayedMessage {
+                  content = delayedMessage
+                  content = secondDelayedMessage
+                  timingMilliseconds = 2000
+                  timingMilliseconds = 1000
+                }
               }
             }
           }
         }
       }
-    }
     with(jsonElement.firstMessageOfType(ToolMessageType.REQUEST_RESPONSE_DELAYED)) {
       assertEquals(secondDelayedMessage, stringValue("content"))
       assertEquals(1000, intValue("timingMilliseconds"))
@@ -341,47 +343,48 @@ class AssistantTest {
 
   @Test
   fun `chicago illinois message`() {
-    val (response, jsonElement) = withTestApplication(JSON_ASSISTANT_REQUEST) {
-      assistant {
-        firstMessage = messageOne
-        openAIModel {
-          modelType = OpenAIModelType.GPT_3_5_TURBO
-          systemMessage = sysMessage
-          tools {
-            serviceTool(FavoriteFoodService()) {
-              condition("city" eq "Chicago", "state" eq "Illinois") {
+    val (response, jsonElement) =
+      withTestApplication(INBOUND_CALL, JSON_ASSISTANT_REQUEST) {
+        assistant {
+          firstMessage = messageOne
+          openAIModel {
+            modelType = OpenAIModelType.GPT_3_5_TURBO
+            systemMessage = sysMessage
+            tools {
+              serviceTool(FavoriteFoodService()) {
+                condition("city" eq "Chicago", "state" eq "Illinois") {
+                  requestStartMessage {
+                    content = chicagoIllinoisStartMessage
+                  }
+                  requestCompleteMessage {
+                    content = chicagoIllinoisCompleteMessage
+                  }
+                  requestFailedMessage {
+                    content = chicagoIllinoisFailedMessage
+                  }
+                  requestDelayedMessage {
+                    content = chicagoIllinoisDelayedMessage
+                    timingMilliseconds = 2000
+                  }
+                }
                 requestStartMessage {
-                  content = chicagoIllinoisStartMessage
+                  content = startMessage
                 }
                 requestCompleteMessage {
-                  content = chicagoIllinoisCompleteMessage
+                  content = completeMessage
                 }
                 requestFailedMessage {
-                  content = chicagoIllinoisFailedMessage
+                  content = failedMessage
                 }
                 requestDelayedMessage {
-                  content = chicagoIllinoisDelayedMessage
-                  timingMilliseconds = 2000
+                  content = delayedMessage
+                  timingMilliseconds = 1000
                 }
-              }
-              requestStartMessage {
-                content = startMessage
-              }
-              requestCompleteMessage {
-                content = completeMessage
-              }
-              requestFailedMessage {
-                content = failedMessage
-              }
-              requestDelayedMessage {
-                content = delayedMessage
-                timingMilliseconds = 1000
               }
             }
           }
         }
       }
-    }
 
     val chicagoCity = "city" eq "Chicago"
     val illinoisState = "state" eq "Illinois"

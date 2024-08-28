@@ -20,6 +20,7 @@ import com.vapi4k.DoubleToolAssistant.doubleToolAssistant
 import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.Endpoints.CACHES_PATH
+import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.JsonUtils.firstInList
@@ -61,7 +62,7 @@ class ServerTest {
   @Test
   fun `simple assistant request`() {
     val (response, jsonElement) =
-      withTestApplication(JsonFilenames.JSON_ASSISTANT_REQUEST) {
+      withTestApplication(INBOUND_CALL, JsonFilenames.JSON_ASSISTANT_REQUEST) {
         assistant {
           groqModel {
             modelType = GroqModelType.LLAMA3_70B
@@ -77,6 +78,7 @@ class ServerTest {
   fun `Tool requests arg ordering`() {
     val responses =
       withTestApplication(
+        INBOUND_CALL,
         listOf(
           JsonFilenames.JSON_ASSISTANT_REQUEST,
           "/json-tool-tests/toolRequest1.json",
@@ -122,6 +124,7 @@ class ServerTest {
   fun `Check for EOCR cache removal`() {
     val responses =
       withTestApplication(
+        INBOUND_CALL,
         listOf(
           JsonFilenames.JSON_ASSISTANT_REQUEST,
           "/json-tool-tests/endOfCallReportRequest.json",

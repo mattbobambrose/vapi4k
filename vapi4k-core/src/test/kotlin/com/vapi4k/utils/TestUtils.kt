@@ -22,6 +22,7 @@ import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.responses.AssistantMessageResponseDto
@@ -73,6 +74,7 @@ else
     .first { it.stringValue("type") == type.desc }
 
 fun withTestApplication(
+  appType: ApplicationType,
   fileName: String,
   block: InboundCallAssistantResponse.() -> Unit,
 ): Pair<HttpResponse, JsonElement> {
@@ -90,7 +92,7 @@ fun withTestApplication(
     }
 
     response =
-      client.post("/$defaultServerPath") {
+      client.post("/${appType.pathPrefix}/$defaultServerPath") {
         configPost()
         setBody(resourceFile(fileName))
       }
@@ -105,6 +107,7 @@ fun withTestApplication(
 }
 
 fun withTestApplication(
+  appType: ApplicationType,
   fileNames: List<String>,
   getArg: String = "",
   cacheRemovalEnabled: Boolean = true,
@@ -127,7 +130,7 @@ fun withTestApplication(
     responses
       .addAll(
         fileNames.map { fileName ->
-          val response = client.post("/$defaultServerPath") {
+          val response = client.post("/${appType.pathPrefix}/$defaultServerPath") {
             configPost()
             setBody(resourceFile(fileName))
           }
