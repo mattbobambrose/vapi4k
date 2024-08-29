@@ -6,7 +6,7 @@ secrets
 http-client.private.env.json
 vapi2.conf
 
-node_modules
+.run/
 secrets/
 
 src/test/resources/application.conf

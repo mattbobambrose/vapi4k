@@ -22,6 +22,7 @@ interface TalkButton {
   var serverPath: String
   var serverSecret: String
   var vapiPublicApiKey: String
+  var sessionId: String
   var method: MethodType
   var postArgs: JsonElement
 }

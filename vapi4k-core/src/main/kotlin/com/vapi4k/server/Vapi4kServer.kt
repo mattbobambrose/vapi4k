@@ -46,7 +46,9 @@ import com.vapi4k.server.ValidateApplication.validateApplication
 import com.vapi4k.server.ValidateApplication.validateToolInvokeRequest
 import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
-import com.vapi4k.utils.JsonElementUtils.addArgsAndMessage
+import com.vapi4k.utils.JsonUtils.addArgsAndMessage
+import com.vapi4k.utils.JsonUtils.getSessionIdQueryParameter
+import com.vapi4k.utils.JsonUtils.sessionCacheId
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
@@ -188,7 +190,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
           post {
             val request = call.receive<String>().toJsonElement()
-            inboundCallAssistantRequest(config, app, request)
+            val sessionCacheId = request.sessionCacheId
+            inboundCallAssistantRequest(config, app, request, sessionCacheId)
           }
         }
       }
@@ -202,7 +205,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             logger.info { """Adding ${app.applicationType.desc} GET endpoint: "$path"""" }
             get {
               val request = buildJsonObject { addArgsAndMessage(call) }
-              outboundCallAndWebAssistantRequest(config, app, request)
+              val sessionCacheId = call.getSessionIdQueryParameter()
+              outboundCallAndWebAssistantRequest(config, app, request, sessionCacheId)
             }
             logger.info { """Adding ${app.applicationType.desc} POST endpoint: "$path"""" }
             post {
@@ -226,7 +230,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                     addArgsAndMessage(call)
                   }
                 }
-              outboundCallAndWebAssistantRequest(config, app, request)
+              val sessionCacheId = call.getSessionIdQueryParameter()
+              outboundCallAndWebAssistantRequest(config, app, request, sessionCacheId)
             }
           }
         }

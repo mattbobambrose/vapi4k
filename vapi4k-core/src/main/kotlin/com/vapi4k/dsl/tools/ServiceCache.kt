@@ -16,13 +16,13 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.common.AssistantCacheId
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.functions.FunctionDetails
 import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.FunctionInfoDto.Companion.toFunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
+import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.isNull
@@ -41,11 +41,12 @@ internal class ServiceCache(
   val path get() = pathBlock().ensureStartsWith("/")
 
   fun addToCache(
-    sessionCacheId: SessionCacheId,
-    assistantCacheId: AssistantCacheId,
+    model: AbstractModel,
     obj: Any,
     function: KFunction<*>,
   ) {
+    val sessionCacheId = model.sessionCacheId
+    val assistantCacheId = model.assistantCacheId
     val toolCallInfo = ToolCallInfo(assistantCacheId, function)
     val toolFuncName = toolCallInfo.llmName
     val funcInfo = cacheMap.computeIfAbsent(sessionCacheId) { FunctionInfo() }

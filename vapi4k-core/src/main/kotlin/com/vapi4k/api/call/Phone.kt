@@ -16,15 +16,17 @@
 
 package com.vapi4k.api.call
 
+import com.vapi4k.common.Constants.SESSION_ID
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.OutboundCallImpl
 import com.vapi4k.dtos.api.OutboundCallRequestDto
+import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.DuplicateInvokeChecker
-import com.vapi4k.utils.MiscUtils.nextSessionCacheId
+import com.vapi4k.utils.MiscUtils.addQueryParam
 
 @AssistantDslMarker
 class Phone {
-  internal val sessionCacheId = nextSessionCacheId()
+  //  internal val sessionCacheId = nextSessionCacheId()
   private val duplicateChecker = DuplicateInvokeChecker()
 
   fun outboundCall(block: OutboundCall.() -> Unit): OutboundCall {
@@ -32,5 +34,11 @@ class Phone {
     return OutboundCallImpl(OutboundCallRequestDto())
       .apply(block)
       .apply { verifyValues() }
+      .apply {
+        val sessionId = "OutboundCall-${getRandomSecret(8, 4, 4, 12)}"
+        serverPath = serverPath.addQueryParam(SESSION_ID, sessionId)
+      }
   }
 }
+
+//internal fun nextSessionCacheId() = "Outbound-${getRandomSecret(8, 4, 4, 12)}".toSessionCacheId()

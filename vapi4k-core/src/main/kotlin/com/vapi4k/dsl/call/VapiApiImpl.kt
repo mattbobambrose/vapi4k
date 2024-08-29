@@ -110,7 +110,6 @@ class VapiApiImpl private constructor(
           }
         }
 
-
       return VapiApiImpl(apiAuth)
     }
   }

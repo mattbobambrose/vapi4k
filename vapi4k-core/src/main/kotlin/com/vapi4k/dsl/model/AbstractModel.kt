@@ -19,9 +19,6 @@ package com.vapi4k.dsl.model
 import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.tools.Tools
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.messageCallId
-import com.vapi4k.common.MessageCallId.Companion.toMessageCallId
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.functions.FunctionsImpl
 import com.vapi4k.dsl.tools.ToolsImpl
 import com.vapi4k.dtos.RoleMessageDto
@@ -37,7 +34,6 @@ abstract class AbstractModel(
   internal val request get() = modelUnion.assistantRequestContext.request
   override val sessionCacheId get() = modelUnion.sessionCacheId
   override val assistantCacheId get() = modelUnion.assistantCacheId
-  override val messageCallId get() = request.messageCallId.toMessageCallId()
   override val messages get() = dto.messages
   override val functionDtos get() = dto.functions
   override val toolDtos get() = dto.tools
@@ -49,12 +45,6 @@ abstract class AbstractModel(
   var userMessage by ModelMessageDelegate(MessageRoleType.USER)
 
   internal val duplicateChecker = DuplicateInvokeChecker()
-
-  internal fun getSessionCacheId() =
-    if (sessionCacheId.isNotSpecified())
-      sessionCacheId
-    else
-      messageCallId.toSessionCacheId()
 
   fun tools(block: Tools.() -> Unit): Tools = ToolsImpl(this).apply(block)
 

@@ -16,15 +16,17 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
-import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.ReflectionUtils.functions
+import com.vapi4k.utils.common.Utils.encode
 import io.github.oshai.kotlinlogging.KLogger
 
 object MiscUtils {
-  internal fun nextSessionCacheId() = "Outbound-${getRandomSecret(8, 4, 4, 12)}".toSessionCacheId()
-
   internal fun String.removeEnds(str: String = "/") = removePrefix(str).removeSuffix(str)
+
+  internal fun String.addQueryParam(
+    paramName: String,
+    paramValue: String,
+  ): String = (if (contains("?")) "&" else "?").let { "$this$it$paramName=${paramValue.encode()}" }
 
   fun Any.findFunction(methodName: String) =
     functions.singleOrNull { it.name == methodName } ?: error("Method $methodName not found")

@@ -18,8 +18,12 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.vapi4k.InboundCallApplication
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
+import com.vapi4k.responses.AssistantMessageResponseDto
+import com.vapi4k.utils.JsonUtils.sessionCacheId
 import com.vapi4k.utils.common.Utils.isNull
+import io.ktor.server.application.ApplicationCall
 import kotlinx.serialization.json.JsonElement
 
 class InboundCallApplicationImpl internal constructor() :
@@ -34,12 +38,15 @@ class InboundCallApplicationImpl internal constructor() :
       error("onAssistantRequest{} can be called only once per inboundCallApplication{}")
   }
 
-  internal suspend fun getAssistantResponse(request: JsonElement) =
+  internal suspend fun getAssistantResponse(
+    request: JsonElement,
+    sessionCacheId: SessionCacheId,
+  ): AssistantMessageResponseDto =
     assistantRequest.let { func ->
       if (func.isNull()) {
         error("onAssistantRequest{} not called")
       } else {
-        val assistantRequestContext = AssistantRequestContext(this, request)
+        val assistantRequestContext = AssistantRequestContext(this, request, sessionCacheId)
         val assistantResponse = InboundCallAssistantResponseImpl(assistantRequestContext)
         func.invoke(assistantResponse, request)
         if (!assistantResponse.isAssigned)
@@ -48,4 +55,9 @@ class InboundCallApplicationImpl internal constructor() :
           assistantResponse.assistantRequestResponse
       }
     }
+
+  override fun getSessionCacheId(
+    call: ApplicationCall,
+    request: JsonElement,
+  ): SessionCacheId = request.sessionCacheId
 }

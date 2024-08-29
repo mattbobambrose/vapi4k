@@ -83,9 +83,9 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   override fun webApplication(block: WebApplication.() -> Unit): WebApplication =
     WebApplicationImpl()
       .apply(block)
-      .also { wa ->
-        verifyServerPath(wa.serverPath, WEB.desc, webApplications)
-        webApplications += wa
+      .also { app ->
+        verifyServerPath(app.serverPath, WEB.desc, webApplications)
+        webApplications += app
       }
 
   override fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {

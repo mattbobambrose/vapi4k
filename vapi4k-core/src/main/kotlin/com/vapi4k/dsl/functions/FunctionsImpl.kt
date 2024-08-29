@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.api.functions.Functions
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
@@ -58,12 +57,7 @@ class FunctionsImpl internal constructor(
     model.functionDtos +=
       FunctionDto().also { functionDto ->
         populateFunctionDto(model, obj, function, functionDto)
-        val sessionCacheId =
-          if (model.sessionCacheId.isNotSpecified())
-            model.sessionCacheId
-          else
-            model.messageCallId.toSessionCacheId()
-        application.functionCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
+        application.functionCache.addToCache(model, obj, function)
       }.also { func ->
         if (model.functionDtos.any { func.name == it.name }) {
           error("Duplicate function name declared: ${func.name}")

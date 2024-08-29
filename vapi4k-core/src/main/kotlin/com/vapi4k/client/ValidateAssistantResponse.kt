@@ -31,11 +31,11 @@ import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.server.KtorCallContext
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
-import com.vapi4k.utils.JsonElementUtils.sessionCacheId
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
@@ -47,6 +47,7 @@ import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
+import io.ktor.server.application.call
 import kotlinx.html.BODY
 import kotlinx.html.DIV
 import kotlinx.html.FORM
@@ -86,7 +87,7 @@ object ValidateAssistantResponse {
     return copyWithNewCallId(request.toJsonElement())
   }
 
-  fun validateAssistantRequestPage(
+  fun KtorCallContext.validateAssistantRequestPage(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     appName: String,
@@ -95,7 +96,8 @@ object ValidateAssistantResponse {
     val request = getNewRequest()
     val (status, responseBody) = application.fetchContent(request, appName, secret)
 
-    val sessionCacheId = request.sessionCacheId
+    val sessionCacheId = application.getSessionCacheId(call, request)
+
     return createHTML()
       .html {
         head {

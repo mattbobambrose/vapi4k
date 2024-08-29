@@ -35,19 +35,10 @@ value class ApplicationId private constructor(
 value class SessionCacheId private constructor(
   val value: String,
 ) {
-  fun isNotSpecified() = value == UNSPECIFIED_VALUE
-
-  fun isSpecified() = !isNotSpecified()
-
   override fun toString() = value
 
   companion object {
-    const val UNSPECIFIED_VALUE = "_unspecified_"
-    val UNSPECIFIED_SESSION_CACHE_ID = SessionCacheId(UNSPECIFIED_VALUE)
-
     fun String.toSessionCacheId() = SessionCacheId(this)
-
-    fun MessageCallId.toSessionCacheId() = SessionCacheId(this.value)
   }
 }
 

@@ -31,8 +31,7 @@ import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonElementUtils.EMPTY_JSON_ELEMENT
-import com.vapi4k.utils.JsonElementUtils.sessionCacheId
+import com.vapi4k.utils.JsonUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
@@ -43,6 +42,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import io.ktor.server.application.ApplicationCall
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
@@ -84,7 +84,6 @@ abstract class AbstractApplicationImpl(
       val response = httpClient.post(url) {
         contentType(Application.Json)
         headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
-        // logger.info { "Assigning secret from QP: $secret" }
         if (secret.isNotEmpty())
           headers.append(VAPI_SECRET_HEADER, secret)
         val jsonBody =
@@ -178,14 +177,13 @@ abstract class AbstractApplicationImpl(
   }
 
   fun processEOCRMessage(
-    request: JsonElement,
+    sessionCacheId: SessionCacheId,
     logger: KLogger,
     logger0: KLogger,
     logger1: KLogger,
     logger2: KLogger,
   ) {
     if (eocrCacheRemovalEnabled) {
-      val sessionCacheId = request.sessionCacheId
       with(this) {
         serviceToolCache.removeFromCache(sessionCacheId) { funcInfo ->
           logger.info { "EOCR removed ${funcInfo.functions.size} serviceTool cache items [${funcInfo.ageSecs}] " }
@@ -196,4 +194,9 @@ abstract class AbstractApplicationImpl(
       }
     }
   }
+
+  abstract fun getSessionCacheId(
+    call: ApplicationCall,
+    request: JsonElement,
+  ): SessionCacheId
 }

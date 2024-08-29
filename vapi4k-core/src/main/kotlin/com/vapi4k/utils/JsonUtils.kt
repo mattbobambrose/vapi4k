@@ -16,16 +16,30 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.common.Constants.QUERY_ARGS
+import com.vapi4k.common.Constants.SESSION_ID
+import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
+import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
+import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.utils.json.get
+import io.ktor.http.Parameters
+import io.ktor.server.application.ApplicationCall
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 
 object JsonUtils {
   inline fun <reified T> JsonElement.toObject() = Json.decodeFromJsonElement<T>(this)
@@ -49,4 +63,53 @@ object JsonUtils {
     mapValues {
       if (it.value is String) JsonPrimitive(it.value as String) else it.value as JsonPrimitive
     }
+
+  val JsonElement.sessionCacheId get() = stringValue("message.call.id").toSessionCacheId()
+
+  val JsonElement.toolCallList
+    get() = if (isToolCall)
+      jsonElementList("message.toolCallList")
+    else
+      error("JsonElement is not a tool call request")
+
+  val JsonElement.assistantClientMessages get() = jsonElementList("messageResponse.assistant.clientMessages")
+  val JsonElement.assistantServerMessages get() = jsonElementList("messageResponse.assistant.serverMessages")
+
+  val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
+
+  fun emptyJsonElement() = EMPTY_JSON_ELEMENT
+
+  internal fun JsonObjectBuilder.addArgsAndMessage(call: ApplicationCall) {
+    put(QUERY_ARGS, queryParametersAsArgs(call.request.queryParameters))
+    put(
+      "message",
+      buildJsonObject {
+        put("type", ASSISTANT_REQUEST.desc)
+        put(
+          "call",
+          buildJsonObject {
+            put("id", call.getSessionIdQueryParameter().value)
+          },
+        )
+      },
+    )
+  }
+
+  internal fun queryParametersAsArgs(parameters: Parameters): JsonObject =
+    buildJsonObject {
+      parameters.forEach { key, value ->
+        put(
+          key,
+          if (value.size > 1)
+            buildJsonArray { value.forEach { add(JsonPrimitive(it)) } }
+          else
+            JsonPrimitive(
+              value.firstOrNull().orEmpty(),
+            ),
+        )
+      }
+    }
+
+  internal fun ApplicationCall.getSessionIdQueryParameter() =
+    request.queryParameters[SESSION_ID]?.toSessionCacheId() ?: error("No session id query parameter found")
 }

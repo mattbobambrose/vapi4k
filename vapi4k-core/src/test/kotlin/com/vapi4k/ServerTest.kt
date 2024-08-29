@@ -110,7 +110,7 @@ class ServerTest {
         )
 
       if (i == 6) {
-        val path = "${INBOUND_CALL.pathPrefix.ensureStartsWith("/")}/${defaultServerPath}"
+        val path = "${INBOUND_CALL.pathPrefix.ensureStartsWith("/")}/$defaultServerPath"
         println(jsonElement.toJsonString())
         assertEquals(0, jsonElement.intValue("$path.toolServices.toolCallCacheSize"))
         assertEquals(0, jsonElement.intValue("$path.functions.toolCallCacheSize"))
@@ -135,7 +135,7 @@ class ServerTest {
     responses.forEachIndexed { i, (response, jsonElement) ->
       assertEquals(HttpStatusCode.OK, response.status)
       if (i == 2) {
-        val path = "${INBOUND_CALL.pathPrefix.ensureStartsWith("/")}/${defaultServerPath}"
+        val path = "${INBOUND_CALL.pathPrefix.ensureStartsWith("/")}/$defaultServerPath"
         assertEquals(1, jsonElement["$path.toolServices.toolCallCache"].keys.size)
         assertEquals(0, jsonElement["$path.functions.toolCallCache"].keys.size)
       }

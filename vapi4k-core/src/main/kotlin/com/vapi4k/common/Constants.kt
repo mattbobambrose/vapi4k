@@ -27,12 +27,15 @@ object Constants {
   const val SESSION_CACHE_ID = "sessionCacheId"
   const val FUNCTION_NAME = "functionName"
 
-  const val POST_ARGS = "postArgs"
   const val APP_TYPE = "appType"
   const val APP_NAME = "appName"
 
   const val PRIVATE_KEY_PROPERTY = "vapi.api.privateKey"
   const val PHONE_NUMBER_ID_PROPERTY = "vapi.phoneNumberId"
+
+  const val QUERY_ARGS = "queryArgs"
+  const val POST_ARGS = "postArgs"
+  const val SESSION_ID = "__sessionId"
 }
 
 object QueryParams {

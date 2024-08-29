@@ -19,6 +19,7 @@ package com.vapi4k.server
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VALIDATE_HEADER
 import com.vapi4k.common.Headers.VALIDATE_VALUE
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -50,16 +51,17 @@ internal object InboundCallAssistantRequest {
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,
+    sessionCacheId: SessionCacheId,
   ) {
     if (!isValidSecret(application.serverSecret)) {
       call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
       val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
       if (isProduction || validateCall != VALIDATE_VALUE) {
-        processInboundCallAssistantRequest(config, application, request)
+        processInboundCallAssistantRequest(config, application, request, sessionCacheId)
       } else {
         runCatching {
-          processInboundCallAssistantRequest(config, application, request)
+          processInboundCallAssistantRequest(config, application, request, sessionCacheId)
         }.onFailure { e ->
           logger.error(e) { "Error processing inbound call assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -72,6 +74,7 @@ internal object InboundCallAssistantRequest {
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,
+    sessionCacheId: SessionCacheId,
   ) {
     val requestType = request.requestType
     invokeRequestCallbacks(config, application.applicationId, requestType, request)
@@ -79,19 +82,19 @@ internal object InboundCallAssistantRequest {
     val (response, duration) = measureTimedValue {
       when (requestType) {
         ASSISTANT_REQUEST -> {
-          val response = (application as InboundCallApplicationImpl).getAssistantResponse(request)
+          val response = (application as InboundCallApplicationImpl).getAssistantResponse(request, sessionCacheId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         FUNCTION_CALL -> {
-          val response = getFunctionCallResponse(application, request)
+          val response = getFunctionCallResponse(application, request, sessionCacheId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         TOOL_CALL -> {
-          val response = getToolCallResponse(application, request)
+          val response = getToolCallResponse(application, request, sessionCacheId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
@@ -103,8 +106,7 @@ internal object InboundCallAssistantRequest {
         }
 
         END_OF_CALL_REPORT -> {
-          application.processEOCRMessage(request, logger, logger, logger, logger)
-
+          application.processEOCRMessage(sessionCacheId, logger, logger, logger, logger)
           val response = SimpleMessageResponse("End of call report received")
           call.respond(response)
           lambda { response.toJsonElement() }

@@ -119,8 +119,7 @@ class ToolsImpl internal constructor(
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
       populateFunctionDto(model, obj, function, toolDto.functionDto)
-      val sessionCacheId = model.getSessionCacheId()
-      model.application.serviceToolCache.addToCache(sessionCacheId, model.assistantCacheId, obj, function)
+      model.application.serviceToolCache.addToCache(model, obj, function)
 
       with(toolDto) {
         type = ToolType.FUNCTION

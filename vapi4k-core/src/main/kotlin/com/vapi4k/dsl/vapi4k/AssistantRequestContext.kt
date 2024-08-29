@@ -16,9 +16,11 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.common.SessionCacheId
 import kotlinx.serialization.json.JsonElement
 
 class AssistantRequestContext(
   val application: AbstractApplicationImpl,
   val request: JsonElement,
+  val sessionCacheId: SessionCacheId,
 )

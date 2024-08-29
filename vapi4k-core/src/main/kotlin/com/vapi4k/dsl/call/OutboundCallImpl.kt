@@ -21,7 +21,7 @@ import com.vapi4k.api.web.MethodType
 import com.vapi4k.common.Constants.PHONE_NUMBER_ID_PROPERTY
 import com.vapi4k.common.CoreEnvVars.vapiPhoneNumberId
 import com.vapi4k.dtos.api.OutboundCallRequestDto
-import com.vapi4k.utils.JsonElementUtils
+import com.vapi4k.utils.JsonUtils
 import com.vapi4k.utils.envvar.EnvVar.Companion.getSystemValue
 import kotlinx.serialization.json.JsonElement
 
@@ -32,7 +32,7 @@ class OutboundCallImpl internal constructor(
   override var serverPath = ""
   override var serverSecret = ""
   override var method: MethodType = MethodType.POST
-  override var postArgs: JsonElement = JsonElementUtils.EMPTY_JSON_ELEMENT
+  override var postArgs: JsonElement = JsonUtils.EMPTY_JSON_ELEMENT
 
   override var phoneNumber: String
     get() = outboundCallRequestDto.customerDto.number

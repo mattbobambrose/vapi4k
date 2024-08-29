@@ -18,18 +18,27 @@ package com.vapi4k.dsl.web
 
 import com.vapi4k.api.web.MethodType
 import com.vapi4k.api.web.TalkButton
-import com.vapi4k.utils.JsonElementUtils
+import com.vapi4k.common.Constants.SESSION_ID
+import com.vapi4k.utils.DslUtils.getRandomSecret
+import com.vapi4k.utils.JsonUtils
+import com.vapi4k.utils.MiscUtils.addQueryParam
 import kotlinx.serialization.json.JsonElement
 
 class TalkButtonProperties(
   override var serverPath: String = "",
   override var serverSecret: String = "",
   override var vapiPublicApiKey: String = "",
+  override var sessionId: String = "",
   override var method: MethodType = MethodType.POST,
-  override var postArgs: JsonElement = JsonElementUtils.EMPTY_JSON_ELEMENT,
+  override var postArgs: JsonElement = JsonUtils.EMPTY_JSON_ELEMENT,
 ) : TalkButton {
   fun verifyTalkButtonValues() {
     require(serverPath.isNotBlank()) { "serverPath must be assigned in talkButton{}" }
     require(vapiPublicApiKey.isNotBlank()) { "vapiPublicApiKey must be assigned in talkButton{}" }
+
+    if (sessionId.isBlank()) {
+      sessionId = "Web-${getRandomSecret(8, 4, 4, 12)}"
+    }
+    serverPath = serverPath.addQueryParam(SESSION_ID, sessionId)
   }
 }

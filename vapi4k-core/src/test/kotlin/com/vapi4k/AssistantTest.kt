@@ -30,9 +30,10 @@ import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.utils.JsonElementUtils.assistantClientMessages
-import com.vapi4k.utils.JsonElementUtils.assistantServerMessages
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
+import com.vapi4k.utils.JsonUtils.assistantClientMessages
+import com.vapi4k.utils.JsonUtils.assistantServerMessages
+import com.vapi4k.utils.JsonUtils.sessionCacheId
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.firstMessageOfType
 import com.vapi4k.utils.json.JsonElementUtils.intValue
@@ -747,7 +748,7 @@ class AssistantTest {
   }
 
   companion object {
-    const val ASSISTANT_REQUEST = """
+    val ASSISTANT_REQUEST = """
     {
     "message": {
         "type": "assistant-request",
@@ -758,8 +759,9 @@ class AssistantTest {
         "timestamp": "2024-07-13T21:27:59.870Z"
       }
     }
-    """
+    """.toJsonElement()
 
-    fun newRequestContext() = AssistantRequestContext(InboundCallApplicationImpl(), ASSISTANT_REQUEST.toJsonElement())
+    fun newRequestContext() =
+      AssistantRequestContext(InboundCallApplicationImpl(), ASSISTANT_REQUEST, ASSISTANT_REQUEST.sessionCacheId)
   }
 }

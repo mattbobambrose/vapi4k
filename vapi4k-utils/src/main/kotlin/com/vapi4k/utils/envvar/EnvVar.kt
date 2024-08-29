@@ -85,6 +85,7 @@ class EnvVar(
       }
 
     private val config by lazy { HoconApplicationConfig(ConfigFactory.load()) }
+
     fun getSystemValue(
       envvarValue: String,
       propertyName: String,

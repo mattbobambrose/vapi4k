@@ -18,8 +18,12 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.WebAssistantResponse
 import com.vapi4k.api.vapi4k.WebApplication
+import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.assistant.WebAssistantResponseImpl
+import com.vapi4k.responses.AssistantMessageResponseDto
+import com.vapi4k.utils.JsonUtils.getSessionIdQueryParameter
 import com.vapi4k.utils.common.Utils.isNull
+import io.ktor.server.application.ApplicationCall
 import kotlinx.serialization.json.JsonElement
 
 class WebApplicationImpl internal constructor() :
@@ -34,18 +38,26 @@ class WebApplicationImpl internal constructor() :
       error("onAssistantRequest{} can be called only once per inboundCallApplication{}")
   }
 
-  internal suspend fun getAssistantResponse(request: JsonElement) =
-    assistantRequest.let { func ->
-      if (func.isNull()) {
+  internal suspend fun getAssistantResponse(
+    request: JsonElement,
+    sessionCacheId: SessionCacheId,
+  ): AssistantMessageResponseDto =
+    assistantRequest.let { requestFunc ->
+      if (requestFunc.isNull()) {
         error("onAssistantRequest{} not called")
       } else {
-        val assistantRequestContext = AssistantRequestContext(this, request)
+        val assistantRequestContext = AssistantRequestContext(this, request, sessionCacheId)
         val assistantResponse = WebAssistantResponseImpl(assistantRequestContext)
-        func.invoke(assistantResponse, request)
+        requestFunc.invoke(assistantResponse, request)
         if (!assistantResponse.isAssigned)
           error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
         else
           assistantResponse.assistantRequestResponse
       }
     }
+
+  override fun getSessionCacheId(
+    call: ApplicationCall,
+    request: JsonElement,
+  ): SessionCacheId = call.getSessionIdQueryParameter()
 }
