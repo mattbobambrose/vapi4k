@@ -58,5 +58,4 @@ object Endpoints {
   const val CLEAR_CACHES_PATH = "/clear-caches"
   const val VALIDATE_PATH = "/validate"
   const val VALIDATE_INVOKE_TOOL_PATH = "/validateInvokeTool"
-  const val SWAP_CACHE_IDS = "/swapCacheIds"
 }

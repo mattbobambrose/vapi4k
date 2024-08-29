@@ -27,14 +27,12 @@ import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
-import com.vapi4k.common.Endpoints.SWAP_CACHE_IDS
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.call.SessionCacheIdSwap
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
@@ -164,21 +162,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         get(VALIDATE_PATH) { validateRootPage(config) }
         get("$VALIDATE_PATH/{appType}/{appName}") { validateApplication(config) }
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeRequest(config) }
-      }
-
-      route(SWAP_CACHE_IDS) {
-        installContentNegotiation()
-        post {
-          val arg = call.receive<SessionCacheIdSwap>()
-          logger.info { "Swapping cache IDs: ${arg.oldSessionCacheId} -> ${arg.newSessionCacheId}" }
-          with(config.outboundCallApplications) {
-            firstOrNull { it.serviceToolCache.containsSessionCacheId(arg.oldSessionCacheId) }
-              ?.also { it.serviceToolCache.swapCacheKeys(arg.oldSessionCacheId, arg.newSessionCacheId) }
-            firstOrNull { it.functionCache.containsSessionCacheId(arg.oldSessionCacheId) }
-              ?.also { it.functionCache.swapCacheKeys(arg.oldSessionCacheId, arg.newSessionCacheId) }
-          }
-          call.respondText("Swapped cache IDs")
-        }
       }
 
       // Process Inbound Call requests

@@ -96,19 +96,6 @@ internal class ServiceCache(
     return count
   }
 
-  private fun swapKeys(
-    oldSessionCacheId: SessionCacheId,
-    newSessionCacheKey: SessionCacheId,
-  ) {
-    logger.info { "Swapping serviceTool cache keys: $oldSessionCacheId -> $newSessionCacheKey" }
-    cacheMap.remove(oldSessionCacheId)?.also { cacheMap[newSessionCacheKey] = it }
-  }
-
-  fun swapCacheKeys(
-    oldSessionCacheId: SessionCacheId,
-    newSessionCacheKey: SessionCacheId,
-  ) = swapKeys(oldSessionCacheId, newSessionCacheKey)
-
   private val asDtoMap: Map<SessionCacheId, FunctionInfoDto>
     get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
 

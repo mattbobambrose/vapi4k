@@ -98,37 +98,8 @@ object ProcessOutboundCall {
         error(msg)
       }
 
-      // swapSessionCacheIds(vapiResponse, phone)
-
       vapiResponse
     }
-
-//  private suspend fun swapSessionCacheIds(
-//    vapiResponse: HttpResponse,
-//    phone: Phone,
-//  ) {
-//    val jsonElement = vapiResponse.bodyAsText().toJsonElement()
-//    if (jsonElement.containsKey("id")) {
-//      logger.info { "Swapping call ID: ${jsonElement.id}" }
-//
-//      val swapObj = SessionCacheIdSwap(phone.sessionCacheId, jsonElement.id.toSessionCacheId())
-//
-//      val swapUrl = "$vapi4kBaseUrl/${SWAP_CACHE_IDS.removeEnds("/")}"
-//      val swapResponse =
-//        httpClient.post(swapUrl) {
-//          contentType(Application.Json)
-//          setBody(swapObj)
-//        }
-//
-//      if (swapResponse.status.value != HttpStatusCode.OK.value) {
-//        val msg = "Failed swapping cache IDs: ${swapResponse.status} - ${swapResponse.bodyAsText()}"
-//        logger.error { msg }
-//        error(msg)
-//      }
-//    } else {
-//      logger.error { "No call ID found in outbound call response: ${jsonElement.toJsonString()}" }
-//    }
-//  }
 
   private fun HttpRequestBuilder.addVapiSecret(call: OutboundCall) {
     if (call.serverSecret.isNotBlank()) {
