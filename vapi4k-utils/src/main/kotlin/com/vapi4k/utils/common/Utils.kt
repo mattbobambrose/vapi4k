@@ -46,7 +46,7 @@ object Utils {
   ): String = toString().padEnd(width, padChar)
 
   fun String.capitalizeFirstChar(): String =
-    replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+    lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
   fun String.obfuscate(freq: Int = 2) = mapIndexed { i, v -> if (i % freq == 0) '*' else v }.joinToString("")
 
