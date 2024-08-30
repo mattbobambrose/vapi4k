@@ -68,7 +68,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     InboundCallApplicationImpl()
       .apply(block)
       .also { ica ->
-        verifyServerPath(ica.serverPath, INBOUND_CALL.desc, inboundCallApplications)
+        verifyServerPath(ica.serverPath, INBOUND_CALL.functionName, inboundCallApplications)
         inboundCallApplications += ica
       }
 
@@ -76,7 +76,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     OutboundCallApplicationImpl()
       .apply(block)
       .also { ica ->
-        verifyServerPath(ica.serverPath, OUTBOUND_CALL.desc, outboundCallApplications)
+        verifyServerPath(ica.serverPath, OUTBOUND_CALL.functionName, outboundCallApplications)
         outboundCallApplications += ica
       }
 
@@ -84,7 +84,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     WebApplicationImpl()
       .apply(block)
       .also { app ->
-        verifyServerPath(app.serverPath, WEB.desc, webApplications)
+        verifyServerPath(app.serverPath, WEB.functionName, webApplications)
         webApplications += app
       }
 
@@ -116,7 +116,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     requestTypes.forEach { globalPerResponses += it to block }
   }
 
-  internal fun getApplication(applicationId: ApplicationId): AbstractApplicationImpl =
+  internal fun getApplicationById(applicationId: ApplicationId): AbstractApplicationImpl =
     allApplications.firstOrNull { it.applicationId == applicationId }
       ?: error("Application not found for applicationId: $applicationId")
 }

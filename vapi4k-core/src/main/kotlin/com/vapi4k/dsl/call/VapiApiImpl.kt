@@ -24,7 +24,6 @@ import com.vapi4k.api.call.enums.ApiObjectType
 import com.vapi4k.common.Constants.PRIVATE_KEY_PROPERTY
 import com.vapi4k.common.CoreEnvVars.vapiBaseUrl
 import com.vapi4k.common.CoreEnvVars.vapiPrivateKey
-import com.vapi4k.common.SessionCacheId
 import com.vapi4k.dsl.call.ProcessOutboundCall.processOutboundCall
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
@@ -40,7 +39,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.Serializable
 
 class VapiApiImpl private constructor(
   private val authString: String,
@@ -114,9 +112,3 @@ class VapiApiImpl private constructor(
     }
   }
 }
-
-@Serializable
-class SessionCacheIdSwap(
-  val oldSessionCacheId: SessionCacheId,
-  val newSessionCacheId: SessionCacheId,
-)

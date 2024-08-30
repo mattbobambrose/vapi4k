@@ -29,10 +29,10 @@ import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
+import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.utils.enums.ServerRequestType.STATUS_UPDATE
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
@@ -90,6 +90,8 @@ fun Application.module() {
             }
 
             tools {
+              serviceTool(WeatherLookupByAreaCodeService())
+
               manualTool {
                 name = "manualWeatherLookup"
                 description = "Look up the weather for a city and state"
@@ -246,7 +248,7 @@ fun Application.module() {
     }
 
     inboundCallApplication {
-      serverPath = "/inboundRequest2"
+      serverPath = "/talkApp"
 
       onAssistantRequest { request ->
         myAssistantRequest(request)
@@ -277,11 +279,11 @@ fun Application.module() {
 //        logger.info { "Function call: $request" }
       }
 
-      onRequest(STATUS_UPDATE) { request ->
+      onRequest(ServerRequestType.STATUS_UPDATE) { request ->
         logger.info { "Status update: STATUS_UPDATE" }
       }
 
-      onRequest(STATUS_UPDATE) { request ->
+      onRequest(ServerRequestType.STATUS_UPDATE) { request ->
         if (request.hasStatusUpdateError()) {
           logger.info { "Status update error: ${request.statusUpdateError}" }
         }

@@ -18,32 +18,21 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
+import com.vapi4k.common.AssistantId
+import com.vapi4k.common.CacheKey.Companion.cacheKeyValue
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
-import com.vapi4k.common.Headers.VALIDATE_HEADER
-import com.vapi4k.common.Headers.VALIDATE_VALUE
-import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
-import com.vapi4k.common.QueryParams.SECRET_QUERY_PARAM
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.QueryParams.SECRET_PARAM
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ServiceCache
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
+import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
-import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
-import io.github.oshai.kotlinlogging.KLogger
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType.Application
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
-import io.ktor.server.application.ApplicationCall
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
@@ -51,14 +40,16 @@ abstract class AbstractApplicationImpl(
   val applicationType: ApplicationType,
 ) {
   internal val applicationId = getRandomSecret(15).toApplicationId()
-  internal val serviceToolCache = ServiceCache { serverPath }
-  internal val functionCache = ServiceCache { serverPath }
-  internal val manualToolCache = ManualToolCache { serverPath }
+  internal val serviceCache = ServiceCache { fullServerPath }
+  internal val functionCache = ServiceCache { fullServerPath }
+  internal val manualToolCache = ManualToolCache { fullServerPath }
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
+
+  internal val assistantIds = mutableListOf<AssistantId>()
 
   internal var eocrCacheRemovalEnabled = true
 
@@ -69,56 +60,41 @@ abstract class AbstractApplicationImpl(
 
   internal val serverUrl get() = "$vapi4kBaseUrl/$fullServerPath"
   internal val serverPathAsSegment get() = serverPath.removeEnds("/")
-  internal val fullServerPath: String
-    get() = "${applicationType.pathPrefix}/$serverPathAsSegment"
+  internal val fullServerPath: String get() = "${applicationType.pathPrefix}/$serverPathAsSegment"
   internal val fullServerPathWithSecretAsQueryParam: String
-    get() = "${fullServerPath}${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_QUERY_PARAM=$it" }}"
+    get() = "${fullServerPath}${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_PARAM=$it" }}"
 
-  fun fetchContent(
-    request: JsonElement,
-    appName: String,
-    secret: String,
-  ): Pair<HttpStatusCode, String> =
-    runBlocking {
-      val url = "$vapi4kBaseUrl/${applicationType.pathPrefix}/$appName"
-      val response = httpClient.post(url) {
-        contentType(Application.Json)
-        headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
-        if (secret.isNotEmpty())
-          headers.append(VAPI_SECRET_HEADER, secret)
-        val jsonBody =
-          if (applicationType == ApplicationType.INBOUND_CALL)
-            request
-          else
-            EMPTY_JSON_ELEMENT
-        setBody(jsonBody)
-      }
-      response.status to response.bodyAsText()
-    }
+  internal fun addAssistantId(assistantId: AssistantId) {
+    assistantIds += assistantId
+  }
 
   internal fun containsServiceToolInCache(
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
     funcName: String,
-  ) = serviceToolCache.containsSessionCacheId(sessionCacheId) &&
-    serviceToolCache.getFromCache(sessionCacheId).containsFunction(funcName)
+  ) = serviceCache.containsIds(sessionId, assistantId) &&
+    serviceCache.getFromCache(sessionId, assistantId).containsFunction(funcName)
 
   internal fun containsManualToolInCache(funcName: String): Boolean = manualToolCache.containsTool(funcName)
 
   internal fun containsFunctionInCache(
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
     funcName: String,
-  ) = functionCache.containsSessionCacheId(sessionCacheId) &&
-    functionCache.getFromCache(sessionCacheId).containsFunction(funcName)
+  ) = functionCache.containsIds(sessionId, assistantId) &&
+    functionCache.getFromCache(sessionId, assistantId).containsFunction(funcName)
 
   internal fun getServiceToolFromCache(
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
     funcName: String,
-  ) = serviceToolCache.getFromCache(sessionCacheId).getFunction(funcName)
+  ) = serviceCache.getFromCache(sessionId, assistantId).getFunction(funcName)
 
   internal fun getFunctionFromCache(
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
     funcName: String,
-  ) = functionCache.getFromCache(sessionCacheId).getFunction(funcName)
+  ) = functionCache.getFromCache(sessionId, assistantId).getFunction(funcName)
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
     applicationAllRequests += block
@@ -152,7 +128,11 @@ abstract class AbstractApplicationImpl(
     requestTypes.forEach { applicationPerResponses += it to block }
   }
 
-  internal suspend fun getTransferDestinationResponse(request: JsonElement) =
+  internal suspend fun getTransferDestinationResponse(
+    request: JsonElement,
+    sessionId: SessionId,
+    assistantId: AssistantId,
+  ): TransferMessageResponseDto =
     transferDestinationRequest.let { func ->
       if (func.isNull()) {
         error("onTransferDestinationRequest{} not called")
@@ -177,26 +157,23 @@ abstract class AbstractApplicationImpl(
   }
 
   fun processEOCRMessage(
-    sessionCacheId: SessionCacheId,
-    logger: KLogger,
-    logger0: KLogger,
-    logger1: KLogger,
-    logger2: KLogger,
+    sessionId: SessionId,
+    assistantId: AssistantId,
   ) {
+    // Need to count the number of functions available to prevent error if no funcs exist
     if (eocrCacheRemovalEnabled) {
-      with(this) {
-        serviceToolCache.removeFromCache(sessionCacheId) { funcInfo ->
-          logger.info { "EOCR removed ${funcInfo.functions.size} serviceTool cache items [${funcInfo.ageSecs}] " }
-        } ?: logger0.warn { "EOCR unable to find and remove serviceTool cache entry [$sessionCacheId]" }
-        functionCache.removeFromCache(sessionCacheId) { funcInfo ->
-          logger1.info { "EOCR removed ${funcInfo.functions.size} function cache items [${funcInfo.ageSecs}] " }
-        } ?: logger2.warn { "EOCR unable to find and remove function cache entry [$sessionCacheId]" }
+      val cacheKey = cacheKeyValue(sessionId, assistantId)
+      if (serviceCache.isNotEmpty()) {
+        serviceCache.removeFromCache(sessionId, assistantId) { funcInfo ->
+          logger.info { "EOCR removed ${funcInfo.size} serviceTool cache items [${funcInfo.ageSecs}] " }
+        } ?: logger.warn { "EOCR unable to find and remove serviceTool cache entry [$cacheKey]" }
+      }
+
+      if (functionCache.isNotEmpty()) {
+        functionCache.removeFromCache(sessionId, assistantId) { funcInfo ->
+          logger.info { "EOCR removed ${funcInfo.size} function cache items [${funcInfo.ageSecs}] " }
+        } ?: logger.warn { "EOCR unable to find and remove function cache entry [$cacheKey]" }
       }
     }
   }
-
-  abstract fun getSessionCacheId(
-    call: ApplicationCall,
-    request: JsonElement,
-  ): SessionCacheId
 }

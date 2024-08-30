@@ -32,11 +32,11 @@ abstract class AbstractModel(
   private val dto: CommonModelDto,
 ) : AbstractModelProperties {
   internal val request get() = modelUnion.assistantRequestContext.request
-  override val sessionCacheId get() = modelUnion.sessionCacheId
-  override val assistantCacheId get() = modelUnion.assistantCacheId
+  override val sessionId get() = modelUnion.sessionId
+  override val assistantId get() = modelUnion.assistantId
   override val messages get() = dto.messages
-  override val functionDtos get() = dto.functions
   override val toolDtos get() = dto.tools
+  override val functionDtos get() = dto.functions
 
   var systemMessage by ModelMessageDelegate(MessageRoleType.SYSTEM)
   var assistantMessage by ModelMessageDelegate(MessageRoleType.ASSISTANT)

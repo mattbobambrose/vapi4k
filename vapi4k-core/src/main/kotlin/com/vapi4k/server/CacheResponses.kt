@@ -29,7 +29,7 @@ internal object CacheResponses {
   suspend fun KtorCallContext.clearCaches(config: Vapi4kConfigImpl) {
     config.allApplications.forEach { application ->
       with(application) {
-        serviceToolCache.clearToolCache()
+        serviceCache.clearToolCache()
         functionCache.clearToolCache()
       }
     }
@@ -45,7 +45,7 @@ internal object CacheResponses {
             buildJsonObject {
               put(
                 "toolServices",
-                application.serviceToolCache.cacheAsJson().toJsonElement(),
+                application.serviceCache.cacheAsJson().toJsonElement(),
               )
               put(
                 "functions",

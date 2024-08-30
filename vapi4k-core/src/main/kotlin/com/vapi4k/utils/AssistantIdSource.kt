@@ -16,10 +16,10 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.common.AssistantCacheId.Companion.toAssistantCacheId
+import com.vapi4k.common.AssistantId.Companion.toAssistantId
 
-class AssistantCacheIdSource {
+class AssistantIdSource {
   private var assistantCounter = 1
 
-  internal fun nextAssistantCacheId() = (assistantCounter++).toString().padStart(3, '0').toAssistantCacheId()
+  internal fun nextAssistantId() = (assistantCounter++).toString().padStart(4, '0').toAssistantId()
 }

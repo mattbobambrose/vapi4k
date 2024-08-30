@@ -23,10 +23,11 @@ import io.github.oshai.kotlinlogging.KLogger
 object MiscUtils {
   internal fun String.removeEnds(str: String = "/") = removePrefix(str).removeSuffix(str)
 
-  internal fun String.addQueryParam(
-    paramName: String,
-    paramValue: String,
-  ): String = (if (contains("?")) "&" else "?").let { "$this$it$paramName=${paramValue.encode()}" }
+  internal fun String.appendQueryParams(vararg params: Pair<String, String>) =
+    params.fold(this) { acc, param -> acc.appendQueryParam(param) }
+
+  private fun String.appendQueryParam(param: Pair<String, String>): String =
+    (if (contains("?")) "&" else "?").let { "$this$it${param.first}=${param.second.encode()}" }
 
   fun Any.findFunction(methodName: String) =
     functions.singleOrNull { it.name == methodName } ?: error("Method $methodName not found")

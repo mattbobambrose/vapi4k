@@ -19,11 +19,11 @@ package com.vapi4k.dsl.squad
 import com.vapi4k.api.assistant.AssistantOverrides
 import com.vapi4k.api.squad.Members
 import com.vapi4k.api.squad.Squad
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.AssistantOverridesImpl
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.squad.SquadDto
-import com.vapi4k.utils.AssistantCacheIdSource
+import com.vapi4k.utils.AssistantIdSource
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
@@ -47,15 +47,15 @@ interface SquadProperties {
 
 class SquadImpl internal constructor(
   internal val assistantRequestContext: AssistantRequestContext,
-  internal val sessionCacheId: SessionCacheId,
-  internal val assistantCacheIdSource: AssistantCacheIdSource,
+  internal val sessionId: SessionId,
+  internal val assistantIdSource: AssistantIdSource,
   internal val dto: SquadDto,
 ) : SquadProperties by dto,
   Squad {
   override fun members(block: Members.() -> Unit): Members = MembersImpl(this).apply(block)
 
   override fun memberOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
-    AssistantOverridesImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, dto.membersOverrides)
+    AssistantOverridesImpl(assistantRequestContext, sessionId, assistantIdSource, dto.membersOverrides)
       .apply(block)
 }
 

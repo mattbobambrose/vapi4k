@@ -16,7 +16,8 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.SessionId
+import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 
@@ -24,13 +25,13 @@ internal class ManualToolCache(
   private val pathBlock: () -> String,
 ) {
   private val manualTools = mutableMapOf<String, ManualToolImpl>()
-  private val createMap = mutableMapOf<String, SessionCacheId>()
+  private val createMap = mutableMapOf<String, SessionId>()
 
   val functions get() = manualTools.values
   val path get() = pathBlock().ensureStartsWith("/")
 
   fun addToCache(
-    sessionCacheId: SessionCacheId,
+    model: AbstractModel,
     toolName: String,
     toolImpl: ManualToolImpl,
   ) {
@@ -39,7 +40,7 @@ internal class ManualToolCache(
       // Skip adding the tool after the first time it is declared
       logger.debug { "Manual tool name already declared: $toolName" }
     } else {
-      createMap[toolName] = sessionCacheId
+      createMap[toolName] = model.sessionId
 
       if (manualTools.containsKey(toolName)) {
         error("Manual tool name already declared: $toolName")

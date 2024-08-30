@@ -18,7 +18,8 @@ package com.vapi4k.responses
 
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionName
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionParameters
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.AssistantId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.errorMsg
@@ -33,14 +34,15 @@ class FunctionResponse(
     suspend fun getFunctionCallResponse(
       application: AbstractApplicationImpl,
       request: JsonElement,
-      sessionCacheId: SessionCacheId,
+      sessionId: SessionId,
+      assistantId: AssistantId,
     ) = FunctionResponse()
       .also { response ->
         val funcName = request.functionName
         val args = request.functionParameters
         runCatching {
-          if (application.containsFunctionInCache(sessionCacheId, funcName)) {
-            application.getFunctionFromCache(sessionCacheId, funcName)
+          if (application.containsFunctionInCache(sessionId, assistantId, funcName)) {
+            application.getFunctionFromCache(sessionId, assistantId, funcName)
               .invokeToolMethod(
                 isTool = false,
                 request = request,
@@ -54,7 +56,7 @@ class FunctionResponse(
           }
         }.getOrElse { e ->
           val errorMsg = e.message ?: "Error invoking function: $funcName ${e.errorMsg}"
-          logger.info { errorMsg }
+          logger.error(e) { errorMsg }
         }
       }
   }

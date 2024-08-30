@@ -16,22 +16,22 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.common.AssistantCacheId
+import com.vapi4k.common.AssistantId
 import com.vapi4k.dsl.functions.FunctionUtils.llmType
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import kotlin.reflect.KFunction
 
 class ToolCallInfo(
-  private val assistantCacheId: AssistantCacheId,
+  private val assistantId: AssistantId,
   private val function: KFunction<*>,
 ) {
   private val toolCall get() = function.toolCallAnnotation!!
   private val toolHasName get() = toolCall.name.isNotEmpty()
   private val toolHasDescription get() = toolCall.description.isNotEmpty()
-  private val cacheName get() = if (toolHasName) toolCall.name else function.name
+  private val name get() = if (toolHasName) toolCall.name else function.name
 
-  val llmName get() = "${cacheName}_$assistantCacheId"
+  val llmName get() = "${name}_$assistantId"
 
   val llmDescription
     get() =

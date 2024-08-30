@@ -16,10 +16,11 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.common.AssistantId
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VALIDATE_HEADER
 import com.vapi4k.common.Headers.VALIDATE_VALUE
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -52,17 +53,18 @@ internal object OutboundCallAndWebAssistantRequest {
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
   ) {
     if (!isValidSecret(application.serverSecret)) {
       call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
       val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
       if (isProduction || validateCall != VALIDATE_VALUE) {
-        processOutboundCallAndWebAssistantRequest(config, application, request, sessionCacheId)
+        processOutboundCallAndWebAssistantRequest(config, application, request, sessionId, assistantId)
       } else {
         runCatching {
-          processOutboundCallAndWebAssistantRequest(config, application, request, sessionCacheId)
+          processOutboundCallAndWebAssistantRequest(config, application, request, sessionId, assistantId)
         }.onFailure { e ->
           logger.error(e) { "Error processing web assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -75,7 +77,8 @@ internal object OutboundCallAndWebAssistantRequest {
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
   ) {
     val requestType = request.requestType
     invokeRequestCallbacks(config, application.applicationId, requestType, request)
@@ -85,8 +88,8 @@ internal object OutboundCallAndWebAssistantRequest {
         ASSISTANT_REQUEST -> {
           val response =
             when (application) {
-              is OutboundCallApplicationImpl -> application.getAssistantResponse(request, sessionCacheId)
-              is WebApplicationImpl -> application.getAssistantResponse(request, sessionCacheId)
+              is OutboundCallApplicationImpl -> application.getAssistantResponse(request, sessionId)
+              is WebApplicationImpl -> application.getAssistantResponse(request, sessionId)
               else -> error("Invalid application type: ${application.applicationType}")
             }
 
@@ -96,25 +99,25 @@ internal object OutboundCallAndWebAssistantRequest {
         }
 
         FUNCTION_CALL -> {
-          val response = getFunctionCallResponse(application, request, sessionCacheId)
+          val response = getFunctionCallResponse(application, request, sessionId, assistantId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         TOOL_CALL -> {
-          val response = getToolCallResponse(application, request, sessionCacheId)
+          val response = getToolCallResponse(application, request, sessionId, assistantId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         TRANSFER_DESTINATION_REQUEST -> {
-          val response = application.getTransferDestinationResponse(request)
+          val response = application.getTransferDestinationResponse(request, sessionId, assistantId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         END_OF_CALL_REPORT -> {
-          application.processEOCRMessage(sessionCacheId, logger, logger, logger, logger)
+          application.processEOCRMessage(sessionId, assistantId)
           val response = SimpleMessageResponse("End of call report received")
           call.respond(response)
           lambda { response.toJsonElement() }

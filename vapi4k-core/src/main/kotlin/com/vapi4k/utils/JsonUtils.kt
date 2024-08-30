@@ -16,13 +16,14 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.QUERY_ARGS
-import com.vapi4k.common.Constants.SESSION_ID
-import com.vapi4k.common.SessionCacheId.Companion.toSessionCacheId
+import com.vapi4k.common.QueryParams.ASSISTANT_ID
+import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
-import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.utils.json.get
@@ -64,8 +65,6 @@ object JsonUtils {
       if (it.value is String) JsonPrimitive(it.value as String) else it.value as JsonPrimitive
     }
 
-  val JsonElement.sessionCacheId get() = stringValue("message.call.id").toSessionCacheId()
-
   val JsonElement.toolCallList
     get() = if (isToolCall)
       jsonElementList("message.toolCallList")
@@ -85,12 +84,12 @@ object JsonUtils {
       "message",
       buildJsonObject {
         put("type", ASSISTANT_REQUEST.desc)
-        put(
-          "call",
-          buildJsonObject {
-            put("id", call.getSessionIdQueryParameter().value)
-          },
-        )
+//        put(
+//          "call",
+//          buildJsonObject {
+//            put("id", call.getSessionIdFromQueryParameters().value)
+//          },
+//        )
       },
     )
   }
@@ -110,6 +109,8 @@ object JsonUtils {
       }
     }
 
-  internal fun ApplicationCall.getSessionIdQueryParameter() =
-    request.queryParameters[SESSION_ID]?.toSessionCacheId() ?: error("No session id query parameter found")
+  internal fun ApplicationCall.getSessionIdFromQueryParameters() = request.queryParameters[SESSION_ID]?.toSessionId()
+
+  internal fun ApplicationCall.getAssistantIdFromQueryParameters() =
+    request.queryParameters[ASSISTANT_ID]?.toAssistantId()
 }

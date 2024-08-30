@@ -20,15 +20,17 @@ import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.api.assistant.AssistantId
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.common.Constants.SESSION_ID
+import com.vapi4k.common.QueryParams.APPLICATION_ID
+import com.vapi4k.common.QueryParams.ASSISTANT_ID
+import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.responses.AssistantMessageResponseDto
-import com.vapi4k.utils.AssistantCacheIdSource
+import com.vapi4k.utils.AssistantIdSource
 import com.vapi4k.utils.DuplicateInvokeChecker
-import com.vapi4k.utils.MiscUtils.addQueryParam
+import com.vapi4k.utils.MiscUtils.appendQueryParams
 
 abstract class AbstractAssistantResponseImpl(
   internal val assistantRequestContext: AssistantRequestContext,
@@ -41,12 +43,12 @@ abstract class AbstractAssistantResponseImpl(
   fun assistant(block: Assistant.() -> Unit): Assistant {
     duplicateChecker.check("assistant{} was already called")
     return assistantRequestResponse.run {
-      val sessionCacheId = assistantRequestContext.sessionCacheId
-      val assistantCacheIdSource = AssistantCacheIdSource()
+      val sessionId = assistantRequestContext.sessionId
+      val assistantIdSource = AssistantIdSource()
       AssistantImpl(
         assistantRequestContext,
-        sessionCacheId,
-        assistantCacheIdSource,
+        sessionId,
+        assistantIdSource,
         messageResponse.assistantDto,
         messageResponse.assistantOverridesDto,
       ).apply(block)
@@ -55,8 +57,12 @@ abstract class AbstractAssistantResponseImpl(
           messageResponse.assistantDto.verifyValues()
 
           if (assistantRequestContext.application.applicationType in assignUrlTypes) {
-            val serverUrl = assistantRequestContext.application.serverUrl
-            messageResponse.assistantDto.serverUrl = serverUrl.addQueryParam(SESSION_ID, sessionCacheId.value)
+            messageResponse.assistantDto.serverUrl =
+              assistantRequestContext.application.serverUrl.appendQueryParams(
+                APPLICATION_ID to assistantRequestContext.application.applicationId.value,
+                SESSION_ID to sessionId.value,
+                ASSISTANT_ID to assistantId.value,
+              )
           }
         }
     }
@@ -65,18 +71,18 @@ abstract class AbstractAssistantResponseImpl(
   fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     duplicateChecker.check("assistantId{} was already called")
     return assistantRequestResponse.run {
-      val sessionCacheId = assistantRequestContext.sessionCacheId
-      val assistantCacheIdSource = AssistantCacheIdSource()
-      AssistantIdImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, messageResponse).apply(block)
+      val sessionId = assistantRequestContext.sessionId
+      val assistantIdSource = AssistantIdSource()
+      AssistantIdImpl(assistantRequestContext, sessionId, assistantIdSource, messageResponse).apply(block)
     }
   }
 
   fun squad(block: Squad.() -> Unit): Squad {
     duplicateChecker.check("squad{} was already called")
     return assistantRequestResponse.run {
-      val sessionCacheId = assistantRequestContext.sessionCacheId
-      val assistantCacheIdSource = AssistantCacheIdSource()
-      SquadImpl(assistantRequestContext, sessionCacheId, assistantCacheIdSource, messageResponse.squadDto).apply(block)
+      val sessionId = assistantRequestContext.sessionId
+      val assistantIdSource = AssistantIdSource()
+      SquadImpl(assistantRequestContext, sessionId, assistantIdSource, messageResponse.squadDto).apply(block)
     }
   }
 

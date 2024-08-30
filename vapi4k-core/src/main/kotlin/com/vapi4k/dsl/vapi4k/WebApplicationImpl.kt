@@ -18,12 +18,10 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.WebAssistantResponse
 import com.vapi4k.api.vapi4k.WebApplication
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.WebAssistantResponseImpl
 import com.vapi4k.responses.AssistantMessageResponseDto
-import com.vapi4k.utils.JsonUtils.getSessionIdQueryParameter
 import com.vapi4k.utils.common.Utils.isNull
-import io.ktor.server.application.ApplicationCall
 import kotlinx.serialization.json.JsonElement
 
 class WebApplicationImpl internal constructor() :
@@ -40,24 +38,19 @@ class WebApplicationImpl internal constructor() :
 
   internal suspend fun getAssistantResponse(
     request: JsonElement,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
   ): AssistantMessageResponseDto =
     assistantRequest.let { requestFunc ->
       if (requestFunc.isNull()) {
         error("onAssistantRequest{} not called")
       } else {
-        val assistantRequestContext = AssistantRequestContext(this, request, sessionCacheId)
+        val assistantRequestContext = AssistantRequestContext(this, request, sessionId)
         val assistantResponse = WebAssistantResponseImpl(assistantRequestContext)
         requestFunc.invoke(assistantResponse, request)
-        if (!assistantResponse.isAssigned)
-          error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
-        else
+        if (assistantResponse.isAssigned)
           assistantResponse.assistantRequestResponse
+        else
+          error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
       }
     }
-
-  override fun getSessionCacheId(
-    call: ApplicationCall,
-    request: JsonElement,
-  ): SessionCacheId = call.getSessionIdQueryParameter()
 }

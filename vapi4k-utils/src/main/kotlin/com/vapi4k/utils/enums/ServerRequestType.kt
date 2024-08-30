@@ -43,17 +43,17 @@ enum class ServerRequestType(
     internal val ServerRequestType.isToolCall get() = this == TOOL_CALL
 
     val JsonElement.requestType get() = ServerRequestType.fromString(stringValue("message.type"))
-    val JsonElement.isAssistantRequest get() = requestType == ServerRequestType.ASSISTANT_REQUEST
-    val JsonElement.isConversationUpdate get() = requestType == ServerRequestType.CONVERSATION_UPDATE
-    val JsonElement.isEndOfCallReport get() = requestType == ServerRequestType.END_OF_CALL_REPORT
-    val JsonElement.isFunctionCall get() = requestType == ServerRequestType.FUNCTION_CALL
-    val JsonElement.isHang get() = requestType == ServerRequestType.HANG
-    val JsonElement.isPhoneCallControl get() = requestType == ServerRequestType.PHONE_CALL_CONTROL
-    val JsonElement.isSpeechUpdate get() = requestType == ServerRequestType.SPEECH_UPDATE
-    val JsonElement.isStatusUpdate get() = requestType == ServerRequestType.STATUS_UPDATE
-    val JsonElement.isToolCall get() = requestType == ServerRequestType.TOOL_CALL
-    val JsonElement.isTransferDestinationRequest get() = requestType == ServerRequestType.TRANSFER_DESTINATION_REQUEST
-    val JsonElement.isUserInterrupted get() = requestType == ServerRequestType.USER_INTERRUPTED
+    val JsonElement.isAssistantRequest get() = requestType == ASSISTANT_REQUEST
+    val JsonElement.isConversationUpdate get() = requestType == CONVERSATION_UPDATE
+    val JsonElement.isEndOfCallReport get() = requestType == END_OF_CALL_REPORT
+    val JsonElement.isFunctionCall get() = requestType == FUNCTION_CALL
+    val JsonElement.isHang get() = requestType == HANG
+    val JsonElement.isPhoneCallControl get() = requestType == PHONE_CALL_CONTROL
+    val JsonElement.isSpeechUpdate get() = requestType == SPEECH_UPDATE
+    val JsonElement.isStatusUpdate get() = requestType == STATUS_UPDATE
+    val JsonElement.isToolCall get() = requestType == TOOL_CALL
+    val JsonElement.isTransferDestinationRequest get() = requestType == TRANSFER_DESTINATION_REQUEST
+    val JsonElement.isUserInterrupted get() = requestType == USER_INTERRUPTED
 
     internal fun fromString(desc: String) =
       try {

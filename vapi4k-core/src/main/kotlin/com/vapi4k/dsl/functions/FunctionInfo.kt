@@ -16,6 +16,8 @@
 
 package com.vapi4k.dsl.functions
 
+import com.vapi4k.common.AssistantId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.functions.FunctionDetails.FunctionDetailsDto
 import com.vapi4k.dsl.functions.FunctionDetails.FunctionDetailsDto.Companion.toFunctionDetailsDto
 import kotlinx.datetime.Clock
@@ -23,16 +25,37 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.time.DurationUnit
 
-class FunctionInfo internal constructor() {
+class FunctionInfo internal constructor(
+  val sessionId: SessionId,
+  val assistantId: AssistantId,
+) {
   val created: Instant = Clock.System.now()
-  internal val functions = mutableMapOf<String, FunctionDetails>()
+  private val functions = mutableMapOf<String, FunctionDetails>()
 
   val age get() = Clock.System.now() - created
   val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
 
-  fun containsFunction(funcName: String) = functions.contains(funcName)
+  internal val size get() = functions.size
 
-  fun getFunction(funcName: String) = functions[funcName] ?: error("Function not found: \"$funcName\"")
+  internal fun containsFunction(funcName: String) = functions.contains(funcName)
+
+  internal fun addFunction(
+    funcName: String,
+    funcDetails: FunctionDetails,
+  ) {
+    functions[funcName] = funcDetails
+  }
+
+  internal fun getFunctionOrNull(funcName: String) = functions[funcName]
+
+  internal fun getFunction(funcName: String) = getFunctionOrNull(funcName) ?: error("Function not found: \"$funcName\"")
+
+  fun toFunctionInfoDto() =
+    FunctionInfoDto(
+      created.toString(),
+      age.toString(),
+      functions.mapValues { it.value.toFunctionDetailsDto() },
+    )
 
   override fun toString() = "FunctionInfo(age=$age, functions=$functions)"
 }
@@ -42,13 +65,4 @@ class FunctionInfoDto(
   val created: String = "",
   val age: String = "",
   val functions: Map<String, FunctionDetailsDto>? = null,
-) {
-  companion object {
-    fun FunctionInfo.toFunctionInfoDto() =
-      FunctionInfoDto(
-        created.toString(),
-        age.toString(),
-        functions.mapValues { it.value.toFunctionDetailsDto() },
-      )
-  }
-}
+)

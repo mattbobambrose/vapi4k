@@ -20,23 +20,35 @@ import com.vapi4k.api.vapi4k.AssistantRequestUtils.isAssistantIdResponse
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.isAssistantResponse
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.isSquadIdResponse
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.isSquadResponse
-import com.vapi4k.common.Constants.APPLICATION_ID
+import com.vapi4k.common.AssistantId
+import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
-import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
+import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.Headers.VALIDATE_HEADER
+import com.vapi4k.common.Headers.VALIDATE_VALUE
+import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
+import com.vapi4k.common.QueryParams.APPLICATION_ID
+import com.vapi4k.common.QueryParams.ASSISTANT_ID
+import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.QueryParams.TOOL_TYPE
+import com.vapi4k.common.SessionId
+import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.server.KtorCallContext
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
+import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.JsonUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
+import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
 import com.vapi4k.utils.common.Utils.resourceFile
@@ -47,7 +59,13 @@ import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
-import io.ktor.server.application.call
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType.Application
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import kotlinx.coroutines.runBlocking
 import kotlinx.html.BODY
 import kotlinx.html.DIV
 import kotlinx.html.FORM
@@ -87,16 +105,18 @@ object ValidateAssistantResponse {
     return copyWithNewCallId(request.toJsonElement())
   }
 
-  fun KtorCallContext.validateAssistantRequestPage(
+  fun validateAssistantRequestPage(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     appName: String,
     secret: String,
   ): String {
     val request = getNewRequest()
-    val (status, responseBody) = application.fetchContent(request, appName, secret)
 
-    val sessionCacheId = application.getSessionCacheId(call, request)
+    val typePrefix = application.applicationType.pathPrefix
+    val sessionId = application.applicationType.defaultSessionId().toSessionId()
+    val url = "$vapi4kBaseUrl/$typePrefix/$appName".appendQueryParams(SESSION_ID to sessionId.value)
+    val (status, responseBody) = fetchContent(application, request, secret, url)
 
     return createHTML()
       .html {
@@ -133,12 +153,12 @@ object ValidateAssistantResponse {
             div {
               id = "status-div"
               h3 {
-                +"Vapi Server URL: "
-                a {
-                  href = application.serverUrl
-                  target = "_blank"
-                  +application.serverUrl
-                }
+                +"Vapi Server URL: ${application.serverUrl}"
+//                a {
+//                  href = application.serverUrl
+//                  target = "_blank"
+//                  +application.serverUrl
+//                }
               }
               h3 { +"Status: $status" }
               pre {
@@ -150,25 +170,25 @@ object ValidateAssistantResponse {
 
             with(responseBody.toJsonElement()) {
               when {
-                isAssistantResponse ->
-                  assistantRequestToolsBody(application, this, sessionCacheId, "messageResponse.assistant.model")
+                isAssistantResponse || containsKey("assistant") -> {
+                  assistantRequestToolsBody(
+                    application = application,
+                    jsonElement = this,
+                    sessionId = sessionId,
+                    key = if (isAssistantResponse) "messageResponse.assistant.model" else "assistant.model",
+                  )
+                }
 
-                containsKey("assistant") ->
-                  assistantRequestToolsBody(application, this, sessionCacheId, "assistant.model")
-
-                isSquadResponse -> {
+                isSquadResponse || containsKey("squad") -> {
                   val assistants = jsonElementList("messageResponse.squad.members")
                   assistants.forEachIndexed { i, assistant ->
                     h2 { +"""Assistant "${getAssistantName(assistant, i)}"""" }
-                    assistantRequestToolsBody(application, assistant, sessionCacheId, "assistant.model")
-                  }
-                }
-
-                containsKey("squad") -> {
-                  val assistants = jsonElementList("squad.members")
-                  assistants.forEachIndexed { i, assistant ->
-                    h2 { +"""Assistant "${getAssistantName(assistant, i)}"""" }
-                    assistantRequestToolsBody(application, assistant, sessionCacheId, "assistant.model")
+                    assistantRequestToolsBody(
+                      application = application,
+                      jsonElement = assistant,
+                      sessionId = sessionId,
+                      key = if (isSquadResponse) "messageResponse.assistant.model" else "assistant.model",
+                    )
                   }
                 }
 
@@ -216,7 +236,7 @@ object ValidateAssistantResponse {
   private fun BODY.assistantRequestToolsBody(
     application: AbstractApplicationImpl,
     jsonElement: JsonElement,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
     key: String,
   ) {
     logger.debug { jsonElement.toJsonString() }
@@ -235,21 +255,22 @@ object ValidateAssistantResponse {
       else
         emptyList()
 
-    displayServiceTools(application, sessionCacheId, toolNames)
-
-    displayManualTools(application, sessionCacheId, toolNames)
-
-    displayFunctions(application, sessionCacheId, funcNames)
+    displayServiceTools(application, sessionId, toolNames)
+    displayFunctions(application, sessionId, funcNames)
+    displayManualTools(application, sessionId, toolNames)
   }
 
   private fun BODY.displayServiceTools(
     application: AbstractApplicationImpl,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
     toolNames: List<String>,
   ) {
-    if (application.serviceToolCache.containsSessionCacheId(sessionCacheId)) {
+    if (application.serviceCache.isNotEmpty()) {
+      val funcs = application.serviceCache.entriesForSessionId(sessionId)
+      val assistantId = funcs.first().assistantId
+
       h3 { +"Service Tools" }
-      val functionInfo = application.serviceToolCache.getFromCache(sessionCacheId)
+      val functionInfo = application.serviceCache.getFromCache(sessionId, assistantId)
       toolNames
         .filter { functionInfo.containsFunction(it) }
         .forEach { toolName ->
@@ -259,8 +280,8 @@ object ValidateAssistantResponse {
             val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
             form {
-              setupHtmxTags(divId)
-              addHiddenFields(application, sessionCacheId, toolName)
+              setupHtmxTags(ToolType.SERVICE_TOOL, sessionId, divId)
+              addHiddenFields(application, sessionId, assistantId, toolName)
 
               table {
                 tbody {
@@ -303,7 +324,7 @@ object ValidateAssistantResponse {
 
   private fun BODY.displayManualTools(
     application: AbstractApplicationImpl,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
     toolNames: List<String>,
   ) {
     if (application.manualToolCache.functions.isNotEmpty()) {
@@ -317,8 +338,8 @@ object ValidateAssistantResponse {
             val divId = getRandomString()
             h3 { +"$funcName (${manualToolImpl.signature})" }
             form {
-              setupHtmxTags(divId)
-              addHiddenFields(application, sessionCacheId, funcName)
+              setupHtmxTags(ToolType.MANUAL_TOOL, sessionId, divId)
+              addHiddenFields(application, sessionId, EMPTY_ASSISTANT_ID, funcName)
 
               table {
                 tbody {
@@ -359,12 +380,15 @@ object ValidateAssistantResponse {
 
   private fun BODY.displayFunctions(
     application: AbstractApplicationImpl,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
     funcNames: List<String>,
   ) {
-    if (application.functionCache.containsSessionCacheId(sessionCacheId)) {
+    if (application.functionCache.isNotEmpty()) {
+      val funcs = application.functionCache.entriesForSessionId(sessionId)
+      val assistantId = funcs.first().assistantId
+
       h3 { +"Functions" }
-      val functionInfo = application.functionCache.getFromCache(sessionCacheId)
+      val functionInfo = application.functionCache.getFromCache(sessionId, assistantId)
       funcNames
         .filter { functionInfo.containsFunction(it) }
         .forEach { funcName ->
@@ -374,8 +398,8 @@ object ValidateAssistantResponse {
             val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
             form {
-              setupHtmxTags(divId)
-              addHiddenFields(application, sessionCacheId, funcName)
+              setupHtmxTags(ToolType.FUNCTION, sessionId, divId)
+              addHiddenFields(application, sessionId, assistantId, funcName)
 
               table {
                 tbody {
@@ -416,15 +440,25 @@ object ValidateAssistantResponse {
     }
   }
 
-  private fun FORM.setupHtmxTags(divId: String) {
-    attributes["hx-get"] = VALIDATE_INVOKE_TOOL_PATH
+  private fun FORM.setupHtmxTags(
+    toolType: ToolType,
+    sessionId: SessionId,
+    divId: String,
+  ) {
+    attributes["hx-get"] =
+      VALIDATE_INVOKE_TOOL_PATH
+        .appendQueryParams(
+          SESSION_ID to sessionId.value,
+          TOOL_TYPE to toolType.name,
+        )
     attributes["hx-trigger"] = "submit"
     attributes["hx-target"] = "#result-$divId"
   }
 
   private fun FORM.addHiddenFields(
     application: AbstractApplicationImpl,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
     funcName: String,
   ) {
     hiddenInput {
@@ -432,8 +466,12 @@ object ValidateAssistantResponse {
       value = application.applicationId.value
     }
     hiddenInput {
-      name = SESSION_CACHE_ID
-      value = sessionCacheId.value
+      name = SESSION_ID
+      value = sessionId.value
+    }
+    hiddenInput {
+      name = ASSISTANT_ID
+      value = assistantId.value
     }
     hiddenInput {
       name = FUNCTION_NAME
@@ -495,6 +533,28 @@ object ValidateAssistantResponse {
             }
         },
       )
+    }
+
+  private fun fetchContent(
+    application: AbstractApplicationImpl,
+    request: JsonElement,
+    secret: String,
+    url: String,
+  ): Pair<HttpStatusCode, String> =
+    runBlocking {
+      val response = httpClient.post(url) {
+        contentType(Application.Json)
+        headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
+        if (secret.isNotEmpty())
+          headers.append(VAPI_SECRET_HEADER, secret)
+        val jsonBody =
+          if (application.applicationType == ApplicationType.INBOUND_CALL)
+            request
+          else
+            EMPTY_JSON_ELEMENT
+        setBody(jsonBody)
+      }
+      response.status to response.bodyAsText()
     }
 
   const val ASSISTANT_REQUEST_JSON = """

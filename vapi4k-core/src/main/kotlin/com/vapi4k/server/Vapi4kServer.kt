@@ -18,6 +18,7 @@ package com.vapi4k.server
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
+import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.Constants.POST_ARGS
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
@@ -30,9 +31,12 @@ import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
+import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
+import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
+import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
@@ -45,8 +49,8 @@ import com.vapi4k.server.ValidateApplication.validateToolInvokeRequest
 import com.vapi4k.server.ValidateRoot.validateRootPage
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.JsonUtils.addArgsAndMessage
-import com.vapi4k.utils.JsonUtils.getSessionIdQueryParameter
-import com.vapi4k.utils.JsonUtils.sessionCacheId
+import com.vapi4k.utils.JsonUtils.getAssistantIdFromQueryParameters
+import com.vapi4k.utils.JsonUtils.getSessionIdFromQueryParameters
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
@@ -168,13 +172,14 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       config.inboundCallApplications.forEach { app ->
         val path = "/${app.fullServerPath}"
         route(path) {
-          logger.info { """Adding ${app.applicationType.desc} POST endpoint: "$path"""" }
+          logger.info { """Adding POST endpoint "$path" for ${app.applicationType.displayName} """ }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
           post {
             val request = call.receive<String>().toJsonElement()
-            val sessionCacheId = request.sessionCacheId
-            inboundCallAssistantRequest(config, app, request, sessionCacheId)
+            val sessionId = call.getSessionIdFromQueryParameters() ?: INBOUND_CALL.defaultSessionId().toSessionId()
+            val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
+            inboundCallAssistantRequest(config, app as InboundCallApplicationImpl, request, sessionId, assistantId)
           }
         }
       }
@@ -185,13 +190,14 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           val path = "/${app.fullServerPath}"
           route(path) {
             installContentNegotiation()
-            logger.info { """Adding ${app.applicationType.desc} GET endpoint: "$path"""" }
+            logger.info { """Adding GET  endpoint "$path" for ${app.applicationType.displayName}""" }
             get {
               val request = buildJsonObject { addArgsAndMessage(call) }
-              val sessionCacheId = call.getSessionIdQueryParameter()
-              outboundCallAndWebAssistantRequest(config, app, request, sessionCacheId)
+              val sessionId = call.getSessionIdFromQueryParameters() ?: error("Missing sessionId in query parameters")
+              val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
+              outboundCallAndWebAssistantRequest(config, app, request, sessionId, assistantId)
             }
-            logger.info { """Adding ${app.applicationType.desc} POST endpoint: "$path"""" }
+            logger.info { """Adding POST endpoint "$path" for ${app.applicationType.displayName}""" }
             post {
               val json = call.receive<String>().toJsonElement()
               val request =
@@ -213,8 +219,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                     addArgsAndMessage(call)
                   }
                 }
-              val sessionCacheId = call.getSessionIdQueryParameter()
-              outboundCallAndWebAssistantRequest(config, app, request, sessionCacheId)
+              val sessionId = call.getSessionIdFromQueryParameters() ?: error("No session ID found in query parameters")
+              val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
+              outboundCallAndWebAssistantRequest(config, app, request, sessionId, assistantId)
             }
           }
         }

@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.model
 
-import com.vapi4k.common.AssistantCacheId
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.AssistantId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.AnalysisPlanDto
 import com.vapi4k.dtos.ArtifactPlanDto
@@ -37,10 +37,10 @@ interface ModelUnion {
   val assistantRequestContext: AssistantRequestContext
   val analysisPlanDto: AnalysisPlanDto
   val artifactPlanDto: ArtifactPlanDto
-  val assistantCacheId: AssistantCacheId
+  val assistantId: AssistantId
   val modelChecker: DuplicateInvokeChecker
   val modelDtoUnion: ModelDtoUnion
-  val sessionCacheId: SessionCacheId
+  val sessionId: SessionId
   val transcriberChecker: DuplicateInvokeChecker
   val voiceChecker: DuplicateInvokeChecker
   val voicemailDetectionDto: VoicemailDetectionDto

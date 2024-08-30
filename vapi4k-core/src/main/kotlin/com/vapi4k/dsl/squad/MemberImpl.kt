@@ -20,10 +20,14 @@ import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.api.squad.AssistantDestinations
 import com.vapi4k.api.squad.AssistantId
 import com.vapi4k.api.squad.Member
+import com.vapi4k.common.QueryParams.APPLICATION_ID
+import com.vapi4k.common.QueryParams.ASSISTANT_ID
+import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.dsl.assistant.AbstractAssistantResponseImpl.Companion.assignUrlTypes
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dtos.squad.MemberDto
 import com.vapi4k.utils.DuplicateInvokeChecker
+import com.vapi4k.utils.MiscUtils.appendQueryParams
 
 data class MemberImpl(
   internal val members: MembersImpl,
@@ -40,14 +44,21 @@ data class MemberImpl(
     memberChecker.check("Member already has an assistant assigned")
     return AssistantImpl(
       members.squad.assistantRequestContext,
-      members.squad.sessionCacheId,
-      members.squad.assistantCacheIdSource,
+      members.squad.sessionId,
+      members.squad.assistantIdSource,
       dto.assistantDto,
       dto.assistantOverridesDto,
     ).apply(block)
       .apply {
-        if (assistantRequestContext.application.applicationType in assignUrlTypes)
-          this@MemberImpl.dto.assistantDto.serverUrl = assistantRequestContext.application.serverUrl
+        if (assistantRequestContext.application.applicationType in assignUrlTypes) {
+          this@MemberImpl.dto.assistantDto.serverUrl =
+            assistantRequestContext.application.serverUrl
+              .appendQueryParams(
+                APPLICATION_ID to assistantRequestContext.application.applicationId.value,
+                SESSION_ID to sessionId.value,
+                ASSISTANT_ID to assistantId.value,
+              )
+        }
       }
   }
 

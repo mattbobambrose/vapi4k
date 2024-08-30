@@ -14,13 +14,19 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package com.vapi4k.client
 
-import com.vapi4k.common.SessionId
-import kotlinx.serialization.json.JsonElement
+import com.vapi4k.api.assistant.enums.AssistantServerMessageType
+import com.vapi4k.api.assistant.enums.AssistantServerMessageType.FUNCTION_CALL
+import com.vapi4k.api.assistant.enums.AssistantServerMessageType.TOOL_CALLS
 
-class AssistantRequestContext(
-  val application: AbstractApplicationImpl,
-  val request: JsonElement,
-  val sessionId: SessionId,
-)
+enum class ToolType(
+  val messageType: AssistantServerMessageType,
+  val funcName: String,
+  val paramName: String,
+) {
+  FUNCTION(FUNCTION_CALL, "functionCall", "parameters"),
+  SERVICE_TOOL(TOOL_CALLS, "function", "arguments"),
+  MANUAL_TOOL(TOOL_CALLS, "function", "arguments"),
+  ;
+}

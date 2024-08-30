@@ -4,17 +4,17 @@ const defaultHeaders = {
 
 async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
   try {
-    var initArg = {
+    var fetchArg = {
       method: "POST",
       headers: {...defaultHeaders, ...userHeaders},
     }
 
     // Add json body if one is present and it is a post request
     if (jsonBody && fetchMethod && fetchMethod.toUpperCase() === "POST") {
-      initArg.body = JSON.stringify(jsonBody)
+      fetchArg.body = JSON.stringify(jsonBody)
     }
 
-    const response = await fetch(url, initArg);
+    const response = await fetch(url, fetchArg);
 
     if (response.ok) {
       return await response.json()
@@ -39,7 +39,7 @@ function addVapiButton(vapi4kUrl, serverSecret, vapiPublicApiKey, method, postAr
         elem.onload = function () {
           const config = buildVapiConfig(response, vapiPublicApiKey);
           const vapi = window.vapiSDK.run(config);
-          logVapiEvents(vapi);
+          // logVapiEvents(vapi);
         };
       })(document, "script");
     });

@@ -23,8 +23,6 @@ object Constants {
   const val UNKNOWN = "unknown"
   const val STATIC_BASE = "/core_static"
 
-  const val APPLICATION_ID = "applicationId"
-  const val SESSION_CACHE_ID = "sessionCacheId"
   const val FUNCTION_NAME = "functionName"
 
   const val APP_TYPE = "appType"
@@ -35,11 +33,16 @@ object Constants {
 
   const val QUERY_ARGS = "queryArgs"
   const val POST_ARGS = "postArgs"
-  const val SESSION_ID = "__sessionId"
 }
 
 object QueryParams {
-  const val SECRET_QUERY_PARAM = "secret"
+  const val SECRET_PARAM = "secret"
+
+  const val ID_PREFIX = "__"
+  val APPLICATION_ID = "${ID_PREFIX}applicationId"
+  val SESSION_ID = "${ID_PREFIX}sessionId"
+  val ASSISTANT_ID = "${ID_PREFIX}assistantId"
+  val TOOL_TYPE = "${ID_PREFIX}toolType"
 }
 
 object Headers {

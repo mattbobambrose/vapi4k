@@ -19,7 +19,8 @@ package com.vapi4k.responses
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.toolCallArguments
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.toolCallName
-import com.vapi4k.common.SessionCacheId
+import com.vapi4k.common.AssistantId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.ManualToolCallResponseImpl
 import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
@@ -48,7 +49,8 @@ data class ToolCallResponse(
     suspend fun getToolCallResponse(
       application: AbstractApplicationImpl,
       request: JsonElement,
-      sessionCacheId: SessionCacheId,
+      sessionId: SessionId,
+      assistantId: AssistantId,
     ) = runCatching {
       ToolCallMessageResponse()
         .also { tcmr ->
@@ -71,8 +73,8 @@ data class ToolCallResponse(
                       }
                       runCatching {
                         when {
-                          application.containsServiceToolInCache(sessionCacheId, funcName) -> {
-                            application.getServiceToolFromCache(sessionCacheId, funcName)
+                          application.containsServiceToolInCache(sessionId, assistantId, funcName) -> {
+                            application.getServiceToolFromCache(sessionId, assistantId, funcName)
                               .also { func ->
                                 logger.info { "Invoking $funcName on serviceTool method ${func.fqName}" }
                               }
@@ -115,7 +117,7 @@ data class ToolCallResponse(
                         }
                       }.getOrElse { e ->
                         val errorMsg = "Error invoking tool: $funcName ${e.errorMsg}"
-                        logger.info { errorMsg }
+                        logger.error(e) { errorMsg }
                         errorAction(errorMsg)
                       }
                     }

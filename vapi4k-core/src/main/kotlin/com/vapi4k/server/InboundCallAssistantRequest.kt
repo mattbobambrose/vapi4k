@@ -16,11 +16,11 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.common.AssistantId
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VALIDATE_HEADER
 import com.vapi4k.common.Headers.VALIDATE_VALUE
-import com.vapi4k.common.SessionCacheId
-import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
@@ -49,19 +49,20 @@ import kotlin.time.measureTimedValue
 internal object InboundCallAssistantRequest {
   suspend fun KtorCallContext.inboundCallAssistantRequest(
     config: Vapi4kConfigImpl,
-    application: AbstractApplicationImpl,
+    application: InboundCallApplicationImpl,
     request: JsonElement,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
   ) {
     if (!isValidSecret(application.serverSecret)) {
       call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
       val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
       if (isProduction || validateCall != VALIDATE_VALUE) {
-        processInboundCallAssistantRequest(config, application, request, sessionCacheId)
+        processInboundCallAssistantRequest(config, application, request, sessionId, assistantId)
       } else {
         runCatching {
-          processInboundCallAssistantRequest(config, application, request, sessionCacheId)
+          processInboundCallAssistantRequest(config, application, request, sessionId, assistantId)
         }.onFailure { e ->
           logger.error(e) { "Error processing inbound call assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -72,9 +73,10 @@ internal object InboundCallAssistantRequest {
 
   private suspend fun KtorCallContext.processInboundCallAssistantRequest(
     config: Vapi4kConfigImpl,
-    application: AbstractApplicationImpl,
+    application: InboundCallApplicationImpl,
     request: JsonElement,
-    sessionCacheId: SessionCacheId,
+    sessionId: SessionId,
+    assistantId: AssistantId,
   ) {
     val requestType = request.requestType
     invokeRequestCallbacks(config, application.applicationId, requestType, request)
@@ -82,31 +84,31 @@ internal object InboundCallAssistantRequest {
     val (response, duration) = measureTimedValue {
       when (requestType) {
         ASSISTANT_REQUEST -> {
-          val response = (application as InboundCallApplicationImpl).getAssistantResponse(request, sessionCacheId)
+          val response = application.getAssistantResponse(request, sessionId, assistantId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         FUNCTION_CALL -> {
-          val response = getFunctionCallResponse(application, request, sessionCacheId)
+          val response = getFunctionCallResponse(application, request, sessionId, assistantId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         TOOL_CALL -> {
-          val response = getToolCallResponse(application, request, sessionCacheId)
+          val response = getToolCallResponse(application, request, sessionId, assistantId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         TRANSFER_DESTINATION_REQUEST -> {
-          val response = application.getTransferDestinationResponse(request)
+          val response = application.getTransferDestinationResponse(request, sessionId, assistantId)
           call.respond(response)
           lambda { response.toJsonElement() }
         }
 
         END_OF_CALL_REPORT -> {
-          application.processEOCRMessage(sessionCacheId, logger, logger, logger, logger)
+          application.processEOCRMessage(sessionId, assistantId)
           val response = SimpleMessageResponse("End of call report received")
           call.respond(response)
           lambda { response.toJsonElement() }

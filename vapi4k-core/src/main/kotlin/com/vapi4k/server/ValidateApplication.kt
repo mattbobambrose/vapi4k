@@ -16,16 +16,19 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.client.ToolType
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestPage
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
-import com.vapi4k.common.Constants.APPLICATION_ID
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE
 import com.vapi4k.common.Constants.FUNCTION_NAME
-import com.vapi4k.common.Constants.SESSION_CACHE_ID
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
-import com.vapi4k.common.QueryParams.SECRET_QUERY_PARAM
+import com.vapi4k.common.QueryParams.APPLICATION_ID
+import com.vapi4k.common.QueryParams.ASSISTANT_ID
+import com.vapi4k.common.QueryParams.SECRET_PARAM
+import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.QueryParams.TOOL_TYPE
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
@@ -34,8 +37,10 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.JsonUtils.getSessionIdFromQueryParameters
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
+import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.common.Utils.isNotNull
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
@@ -112,7 +117,7 @@ internal object ValidateApplication {
     application: AbstractApplicationImpl,
     appName: String,
   ) {
-    val secret = call.request.queryParameters[SECRET_QUERY_PARAM].orEmpty()
+    val secret = call.request.queryParameters[SECRET_PARAM].orEmpty()
     val html = validateAssistantRequestPage(config, application, appName, secret)
     call.respondText(html, ContentType.Text.Html)
   }
@@ -121,44 +126,64 @@ internal object ValidateApplication {
     runCatching {
       val params = call.request.queryParameters
       val applicationId = params[APPLICATION_ID]?.toApplicationId() ?: error("No $APPLICATION_ID found")
-      val app = config.getApplication(applicationId)
-      val toolRequest = getToolRequest(params)
-
-      httpClient.post(app.serverUrl) {
+      val app = config.getApplicationById(applicationId)
+      val toolType = ToolType.valueOf(params[TOOL_TYPE] ?: error("No $TOOL_TYPE found"))
+      val toolRequest = generateToolRequest(toolType, params)
+      val sessionId = call.getSessionIdFromQueryParameters() ?: error("No $SESSION_ID found")
+      val serverUrl =
+        app.serverUrl.appendQueryParams(
+          SESSION_ID to sessionId.value,
+          // TODO ZZZ This will not work for squads
+          ASSISTANT_ID to app.assistantIds.first().value,
+        )
+      println(serverUrl)
+      httpClient.post(serverUrl) {
         headers.append(VAPI_SECRET_HEADER, app.serverSecret)
         setBody(toolRequest.toJsonString<JsonObject>())
       }
     }.onSuccess { response ->
-      call.respondText(response.bodyAsText().toJsonString())
+      val resp = response.bodyAsText()
+      call.respondText(resp.toJsonString())
     }.onFailure { e ->
       logger.error(e) { "Error validating tool invoke request" }
       call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
     }
 
-  fun getToolRequest(params: Parameters): JsonObject {
-    val sessionCacheId = params[SESSION_CACHE_ID] ?: error("No $SESSION_CACHE_ID found")
+  private fun functionParams(
+    params: Parameters,
+    argName: String,
+  ) = mapOf(
+    "name" to JsonPrimitive(params[FUNCTION_NAME] ?: error("No $FUNCTION_NAME found")),
+    argName to
+      params
+        .names()
+        .filterNot { it in setOf(APPLICATION_ID, SESSION_ID, ASSISTANT_ID, TOOL_TYPE, FUNCTION_NAME) }
+        .filter { params[it].orEmpty().isNotEmpty() }.associateWith { JsonPrimitive(params[it]) }
+        .toJsonObject(),
+  ).toJsonObject()
+
+  fun generateToolRequest(
+    toolType: ToolType,
+    params: Parameters,
+  ): JsonObject {
+    val sessionId = params[SESSION_ID] ?: error("No $SESSION_ID found")
     return buildJsonObject {
       put(
         "message",
         mapOf(
-          "type" to JsonPrimitive("tool-calls"),
-          "call" to mapOf("id" to JsonPrimitive(sessionCacheId)).toJsonObject(),
-          "toolCallList" to
-            listOf(
-              mapOf(
-                "id" to JsonPrimitive("call_${getRandomString(24)}"),
-                "type" to JsonPrimitive("function"),
-                "function" to mapOf(
-                  "name" to JsonPrimitive(params[FUNCTION_NAME] ?: error("No $FUNCTION_NAME found")),
-                  "arguments" to
-                    params
-                      .names()
-                      .filterNot { it in setOf(APPLICATION_ID, SESSION_CACHE_ID, FUNCTION_NAME) }
-                      .filter { params[it].orEmpty().isNotEmpty() }.associateWith { JsonPrimitive(params[it]) }
-                      .toJsonObject(),
+          "type" to JsonPrimitive(toolType.messageType.desc),
+          "call" to mapOf("id" to JsonPrimitive(sessionId)).toJsonObject(),
+          if (toolType == ToolType.FUNCTION)
+            toolType.funcName to functionParams(params, toolType.paramName)
+          else
+            "toolCallList" to
+              listOf(
+                mapOf(
+                  "id" to JsonPrimitive("call_${getRandomString(24)}"),
+                  "type" to JsonPrimitive("function"),
+                  toolType.funcName to functionParams(params, toolType.paramName),
                 ).toJsonObject(),
-              ).toJsonObject(),
-            ).toJsonArray(),
+              ).toJsonArray(),
         ).toJsonObject(),
       )
     }

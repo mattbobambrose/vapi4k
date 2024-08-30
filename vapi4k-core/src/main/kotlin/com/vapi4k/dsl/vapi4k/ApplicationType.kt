@@ -16,11 +16,19 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.utils.DslUtils.getRandomSecret
+
 enum class ApplicationType(
-  val desc: String,
+  val displayName: String,
   val pathPrefix: String,
+  private val paramName: String,
 ) {
-  INBOUND_CALL("inboundCallApplication{}", "inboundCall"),
-  OUTBOUND_CALL("outboundCallApplication{}", "outboundCall"),
-  WEB("webApplication{}", "web"),
+  INBOUND_CALL("inboundCallApplication", "inboundCall", "Inbound"),
+  OUTBOUND_CALL("outboundCallApplication", "outboundCall", "Outbound"),
+  WEB("webApplication", "web", "Web"),
+  ;
+
+  val functionName get() = "$displayName{}"
+
+  fun defaultSessionId() = "$paramName-${getRandomSecret(8, 4, 4, 12)}"
 }

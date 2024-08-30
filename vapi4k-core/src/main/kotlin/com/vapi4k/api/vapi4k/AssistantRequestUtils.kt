@@ -70,18 +70,27 @@ object AssistantRequestUtils {
   /**
   Extract the tool call arguments from a tool call and throws an error if the JsonElement is not a tool call.
    */
-  val JsonElement.toolCallArguments get() = this["function.arguments"]
+  val JsonElement.toolCallArguments: JsonElement get() = this["function.arguments"]
+//    get() {
+//      val args = this["function.arguments"]
+//      return buildJsonObject {
+//        args.keys
+//          .filterNot { it.startsWith(ID_PREFIX) }
+//          .forEach { put(it, args[it]) }
+//      }
+//    }
 
   /**
   Extract the assistant request error message from a status update message and throws an error if the JsonElement is not a status update message.
    */
   val JsonElement.statusUpdateError: String
-    get() = if (isStatusUpdate)
+    get() = if (isStatusUpdate) {
       runCatching {
         stringValue("message.inboundPhoneCallDebuggingArtifacts.assistantRequestError")
       }.getOrElse { "" }
-    else
+    } else {
       error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
+    }
 
   /**
   Check if the JsonElement has a status update error message.

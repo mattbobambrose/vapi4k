@@ -32,37 +32,46 @@ value class ApplicationId private constructor(
 
 @Serializable
 @JvmInline
-value class SessionCacheId private constructor(
+value class SessionId private constructor(
   val value: String,
 ) {
   override fun toString() = value
 
   companion object {
-    fun String.toSessionCacheId() = SessionCacheId(this)
+    val EMPTY_SESSION_ID = "".toSessionId()
+
+    fun String.toSessionId() = SessionId(this)
   }
 }
 
 @Serializable
 @JvmInline
-value class AssistantCacheId private constructor(
+value class AssistantId private constructor(
   val value: String,
 ) {
   override fun toString() = value
 
   companion object {
-    fun String.toAssistantCacheId() = AssistantCacheId(this)
+    val EMPTY_ASSISTANT_ID = "".toAssistantId()
+
+    fun String.toAssistantId() = AssistantId(this)
   }
 }
 
 @Serializable
 @JvmInline
-value class MessageCallId private constructor(
+value class CacheKey private constructor(
   val value: String,
 ) {
   override fun toString() = value
 
   companion object {
-    fun String.toMessageCallId() = MessageCallId(this)
+    fun String.toCacheKey() = CacheKey(this)
+
+    fun cacheKeyValue(
+      sessionId: SessionId,
+      assistantId: AssistantId,
+    ) = "${sessionId.value}--${assistantId.value}".toCacheKey()
   }
 }
 

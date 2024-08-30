@@ -74,7 +74,7 @@ internal object FunctionUtils {
     function: KFunction<*>,
     dto: FunctionDto,
   ) {
-    ToolCallInfo(model.assistantCacheId, function).also { toolCallInfo ->
+    ToolCallInfo(model.assistantId, function).also { toolCallInfo ->
       dto.name = toolCallInfo.llmName
       dto.description = toolCallInfo.llmDescription
 

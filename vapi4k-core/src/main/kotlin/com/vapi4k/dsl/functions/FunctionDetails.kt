@@ -117,10 +117,11 @@ class FunctionDetails internal constructor(
     logger.info { "Invoking method $fqName with args $argNames" }
     val paramMap = function.valueParameters.toMap()
     val valueMap =
-      argNames.associate { argName ->
-        val param = paramMap[argName] ?: error("Parameter $argName not found in method $fqName")
-        param to getArgValue(args, argName, param.type)
-      }
+      argNames
+        .associate { argName ->
+          val param = paramMap[argName] ?: error("Parameter $argName not found in method $fqName")
+          param to getArgValue(args, argName, param.type)
+        }
 
     // Check if the function has a request JsonElement parameter
     val requestParam = function.valueParameters.firstOrNull { it.second.asKClass() == JsonElement::class }?.second
