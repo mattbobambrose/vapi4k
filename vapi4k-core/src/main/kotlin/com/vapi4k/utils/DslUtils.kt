@@ -28,7 +28,7 @@ object DslUtils {
   inline fun <reified T> printObject(
     value: T,
     prettify: Boolean = false,
-  ) = println("${T::class.simpleName} JSON:\n$${value?.toJsonString(prettify) ?: ""}\"")
+  ) = println("${T::class.simpleName} JSON:\n${value?.toJsonString(prettify) ?: ""}\"")
 
   val isLoggingEnabled: Boolean get() = System.getenv("LOGGING_ENABLED")?.toBoolean() ?: false
 

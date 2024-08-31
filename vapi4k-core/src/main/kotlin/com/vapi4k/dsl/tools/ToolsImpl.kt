@@ -59,6 +59,8 @@ class ToolsImpl internal constructor(
     val funcName = toolDto.functionDto.name.toFunctionName()
     if (funcName.value.isBlank()) error("manualTool{} name is required")
     if (!manualToolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onInvoke{} declared")
+    if (model.declaredManualTools.contains(funcName)) error("Duplicate manual tool name declared: $funcName")
+    model.declaredManualTools += funcName
 
     model.application.manualToolCache.addToCache(funcName, manualToolImpl)
   }

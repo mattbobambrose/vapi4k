@@ -19,6 +19,7 @@ package com.vapi4k.dsl.model
 import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.tools.Tools
+import com.vapi4k.common.FunctionName
 import com.vapi4k.dsl.functions.FunctionsImpl
 import com.vapi4k.dsl.tools.ToolsImpl
 import com.vapi4k.dtos.model.CommonModelDto
@@ -31,6 +32,9 @@ abstract class AbstractModel(
   override val modelUnion: ModelUnion,
   private val dto: CommonModelDto,
 ) : AbstractModelProperties {
+  // This will track manual tools declared per model and prevent duplicates
+  internal val declaredManualTools = mutableSetOf<FunctionName>()
+
   internal val request get() = modelUnion.assistantRequestContext.request
   override val sessionId get() = modelUnion.sessionId
   override val assistantId get() = modelUnion.assistantId

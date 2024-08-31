@@ -35,7 +35,7 @@ internal class ManualToolCache(
     if (manualTools.containsKey(toolName)) {
       // Manual tools do not get stored per session
       // Skip adding the tool after the first time it is declared
-      error("Manual tool name already declared: $toolName")
+      logger.debug { "Manual tool name already declared: $toolName" }
     } else {
       manualTools[toolName] = toolImpl
       logger.info { "Added \"$toolName\" to $path manualTool cache" }
