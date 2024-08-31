@@ -16,10 +16,6 @@
 
 package com.vapi4k.client
 
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.isAssistantIdResponse
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.isAssistantResponse
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.isSquadIdResponse
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.isSquadResponse
 import com.vapi4k.common.ApplicationName
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
@@ -47,6 +43,7 @@ import com.vapi4k.dsl.functions.ToolCallInfo.Companion.ID_SEPARATOR
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
@@ -167,40 +164,7 @@ object ValidateAssistantResponse {
                 }
               }
             }
-
-            with(responseBody.toJsonElement()) {
-              when {
-                isAssistantResponse || containsKey("assistant") -> {
-                  assistantRequestToolsBody(
-                    application = application,
-                    jsonElement = this,
-                    sessionId = sessionId,
-                    key = if (isAssistantResponse) "messageResponse.assistant.model" else "assistant.model",
-                  )
-                }
-
-                isSquadResponse || containsKey("squad") -> {
-                  val key = if (isSquadResponse) "messageResponse.squad.members" else "squad.members"
-                  val assistants = jsonElementList(key)
-                  assistants.forEachIndexed { i, assistant ->
-                    h2 { +"""Assistant "${getAssistantName(assistant, i + 1)}"""" }
-                    assistantRequestToolsBody(
-                      application = application,
-                      jsonElement = assistant,
-                      sessionId = sessionId,
-                      key = if (isSquadResponse) "messageResponse.assistant.model" else "assistant.model",
-                    )
-                  }
-                }
-
-                // TODO - Add support for assistantId and squadId responses
-                isAssistantIdResponse || containsKey("assistantId") -> {}
-                isSquadIdResponse || containsKey("squadId") -> {}
-                else -> {
-                  error("Unknown response type: ${responseBody.toJsonElement().keys}")
-                }
-              }
-            }
+            displayTools(responseBody, application, sessionId)
           } else {
             h3 {
               +"Vapi Server URL: "
@@ -226,6 +190,70 @@ object ValidateAssistantResponse {
       }
   }
 
+  private fun BODY.displayTools(
+    responseBody: String,
+    application: AbstractApplicationImpl,
+    sessionId: SessionId,
+  ) {
+    val topLevel = responseBody.toJsonElement()
+    // Strip messageResponse if it exists
+    val child = if (topLevel.containsKey("messageResponse")) topLevel["messageResponse"] else topLevel
+    when {
+      child.containsKey("assistant") -> {
+        assistantRequestToolsBody(
+          application = application,
+          jsonElement = child["assistant"],
+          sessionId = sessionId,
+          key = "model",
+        )
+      }
+
+      child.containsKey("squad") -> {
+        if (child.containsKey("squad.members")) {
+          child.jsonElementList("squad.members")
+            .forEachIndexed { i, member ->
+              h2 { +"""Assistant "${getAssistantName(member, i + 1)}"""" }
+              assistantRequestToolsBody(
+                application = application,
+                jsonElement = member["assistant"],
+                sessionId = sessionId,
+                key = "model",
+              )
+            }
+        }
+
+        if (child.containsKey("squad.membersOverrides")) {
+          h2 { +"""Member Overrides""" }
+          assistantRequestToolsBody(
+            application = application,
+            jsonElement = child["squad.membersOverrides"],
+            sessionId = sessionId,
+            key = "model",
+          )
+        }
+      }
+
+      child.containsKey("assistantId") -> {
+        if (child.containsKey("assistantOverrides")) {
+          assistantRequestToolsBody(
+            application = application,
+            jsonElement = child["assistantOverrides"],
+            sessionId = sessionId,
+            key = "model",
+          )
+        }
+      }
+
+      child.containsKey("squadId") -> {
+        // Nothing to do here
+      }
+
+      else -> {
+        logger.error { "Unknown response type: ${responseBody.toJsonElement().keys}" }
+      }
+    }
+  }
+
   private fun getAssistantName(
     assistantElement: JsonElement,
     index: Int,
@@ -241,7 +269,7 @@ object ValidateAssistantResponse {
     key: String,
   ) {
     val toolNames =
-      if (jsonElement[key].containsKey("tools"))
+      if (jsonElement.containsKey("$key.tools"))
         jsonElement
           .jsonElementList(key, "tools")
           .mapNotNull { it.stringValueOrNull("function.name") }
@@ -249,7 +277,7 @@ object ValidateAssistantResponse {
         emptyList()
 
     val funcNames =
-      if (jsonElement[key].containsKey("functions"))
+      if (jsonElement.containsKey("$key.functions"))
         jsonElement
           .jsonElementList(key, "functions")
           .mapNotNull { it.stringValueOrNull("name") }

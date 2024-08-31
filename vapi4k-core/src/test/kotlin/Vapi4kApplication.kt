@@ -173,6 +173,45 @@ fun Application.module() {
       }
     }
 
+    webApplication {
+      serverPath = "/assistantId"
+
+      onAssistantRequest { args ->
+        assistantId {
+          id = "123-456-789"
+
+          assistantOverrides {
+            firstMessage = "This is the first message"
+
+            openAIModel {
+              modelType = OpenAIModelType.GPT_4_TURBO
+              systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
+
+              functions {
+                function(FavoriteFoodService())
+                function(WeatherLookupByAreaCodeService())
+              }
+
+              tools {
+                serviceTool(WeatherLookupByAreaCodeService())
+                manualTooDecl()
+              }
+            }
+          }
+        }
+      }
+    }
+
+    webApplication {
+      serverPath = "/squadId"
+
+      onAssistantRequest { args ->
+        squadId {
+          id = "123-456-789"
+        }
+      }
+    }
+
     outboundCallApplication {
       serverPath = "/outboundRequest1"
 
@@ -242,6 +281,73 @@ fun Application.module() {
                   function(WeatherLookupByAreaCodeService())
                 },
               )
+            }
+          }
+        }
+      }
+    }
+
+    outboundCallApplication {
+      serverPath = "/squadMemberOverride"
+
+      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
+        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+      }
+
+      onAssistantRequest { args ->
+        squad {
+          members {
+            member {
+              squadAssistant(
+                "assist1",
+                {
+                  serviceTool(WeatherLookupByAreaCodeService("[assistant 1]"))
+                  manualTooDecl()
+                },
+                {
+                  function(FavoriteFoodService())
+                  function(WeatherLookupByAreaCodeService())
+                },
+              )
+            }
+            member {
+              squadAssistant(
+                "assist2",
+                {
+                  serviceTool(WeatherLookupByAreaCodeService("[assistant 2]"))
+                  manualTooDecl()
+                },
+                {
+                  function(FavoriteFoodService())
+                  function(WeatherLookupByAreaCodeService())
+                },
+              )
+            }
+          }
+          memberOverrides {
+            firstMessage = "This is the first message from memberOverrides"
+
+            this.name = name
+            firstMessage = "Hi, I am Beth how can I assist you today?"
+
+            openAIModel {
+              modelType = OpenAIModelType.GPT_4_TURBO
+              systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
+
+              functions {
+                function(FavoriteFoodService())
+                function(WeatherLookupByAreaCodeService())
+              }
+
+              tools {
+                serviceTool(WeatherLookupByAreaCodeService("[assistant 1]"))
+                manualTooDecl()
+              }
+            }
+
+            elevenLabsVoice {
+              voiceIdType = ElevenLabsVoiceIdType.PAULA
+              modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
             }
           }
         }
