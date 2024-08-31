@@ -30,5 +30,5 @@ enum class ApplicationType(
 
   val functionName get() = "$displayName{}"
 
-  fun defaultSessionId() = "$paramName-${getRandomSecret(8, 4, 4, 12)}"
+  fun defaultSessionId() = "$paramName-${getRandomSecret(15)}"
 }

@@ -77,19 +77,13 @@ value class CacheKey private constructor(
 
 @Serializable
 @JvmInline
-value class Email private constructor(
+value class FunctionName private constructor(
   val value: String,
 ) {
-  fun isNotBlank() = value.isNotBlank()
-
-  fun isBlank() = value.isBlank()
-
   override fun toString() = value
 
   companion object {
-    val EMPTY_EMAIL = "".toEmail()
-
     // Force all emails to be lowercase
-    fun String.toEmail() = Email(this.lowercase().trim())
+    fun String.toFunctionName() = FunctionName(this)
   }
 }

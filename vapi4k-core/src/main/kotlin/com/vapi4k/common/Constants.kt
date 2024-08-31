@@ -49,7 +49,6 @@ object Headers {
   const val VAPI_SECRET_HEADER = "x-vapi-secret"
   const val VALIDATE_HEADER = "x-vapi4k-validate"
   const val VALIDATE_VALUE = "true"
-  const val SESSION_CACHE_ID_HEADER = "x-vapi4k-session_cache_id"
 }
 
 object Endpoints {
@@ -61,4 +60,8 @@ object Endpoints {
   const val CLEAR_CACHES_PATH = "/clear-caches"
   const val VALIDATE_PATH = "/validate"
   const val VALIDATE_INVOKE_TOOL_PATH = "/validateInvokeTool"
+}
+
+object CssNames {
+  const val TOOLS_DIV = "tools-div"
 }

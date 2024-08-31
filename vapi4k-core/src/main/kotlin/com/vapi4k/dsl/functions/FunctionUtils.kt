@@ -75,7 +75,7 @@ internal object FunctionUtils {
     dto: FunctionDto,
   ) {
     ToolCallInfo(model.assistantId, function).also { toolCallInfo ->
-      dto.name = toolCallInfo.llmName
+      dto.name = toolCallInfo.llmName.value
       dto.description = toolCallInfo.llmDescription
 
       function.parameters

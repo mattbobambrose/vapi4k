@@ -22,13 +22,17 @@ import com.vapi4k.api.vapi4k.AssistantRequestUtils.isSquadIdResponse
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.isSquadResponse
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
+import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.common.CssNames.TOOLS_DIV
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
+import com.vapi4k.common.FunctionName
+import com.vapi4k.common.FunctionName.Companion.toFunctionName
 import com.vapi4k.common.Headers.VALIDATE_HEADER
 import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
@@ -38,6 +42,7 @@ import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.TOOL_TYPE
 import com.vapi4k.common.SessionId
 import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.dsl.functions.ToolCallInfo.Companion.ID_SEPARATOR
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -56,6 +61,7 @@ import com.vapi4k.utils.json.JsonElementUtils.containsKey
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.json.JsonElementUtils.stringValueOrNull
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
@@ -152,14 +158,7 @@ object ValidateAssistantResponse {
           if (status.value == 200) {
             div {
               id = "status-div"
-              h3 {
-                +"Vapi Server URL: ${application.serverUrl}"
-//                a {
-//                  href = application.serverUrl
-//                  target = "_blank"
-//                  +application.serverUrl
-//                }
-              }
+              h3 { +"Vapi Server URL: ${application.serverUrl}" }
               h3 { +"Status: $status" }
               pre {
                 code(classes = "language-json line-numbers match-braces") {
@@ -180,9 +179,10 @@ object ValidateAssistantResponse {
                 }
 
                 isSquadResponse || containsKey("squad") -> {
-                  val assistants = jsonElementList("messageResponse.squad.members")
+                  val key = if (isSquadResponse) "messageResponse.squad.members" else "squad.members"
+                  val assistants = jsonElementList(key)
                   assistants.forEachIndexed { i, assistant ->
-                    h2 { +"""Assistant "${getAssistantName(assistant, i)}"""" }
+                    h2 { +"""Assistant "${getAssistantName(assistant, i + 1)}"""" }
                     assistantRequestToolsBody(
                       application = application,
                       jsonElement = assistant,
@@ -244,14 +244,15 @@ object ValidateAssistantResponse {
       if (jsonElement[key].containsKey("tools"))
         jsonElement
           .jsonElementList(key, "tools")
-          .mapNotNull { if (!it.containsKey("function.name")) null else it.stringValue("function.name") }
+          .mapNotNull { it.stringValueOrNull("function.name") }
       else
         emptyList()
+
     val funcNames =
       if (jsonElement[key].containsKey("functions"))
         jsonElement
           .jsonElementList(key, "functions")
-          .mapNotNull { if (!it.containsKey("name")) null else it.stringValue("name") }
+          .mapNotNull { it.stringValueOrNull("name") }
       else
         emptyList()
 
@@ -266,21 +267,25 @@ object ValidateAssistantResponse {
     toolNames: List<String>,
   ) {
     if (application.serviceCache.isNotEmpty()) {
-      val funcs = application.serviceCache.entriesForSessionId(sessionId)
-      val assistantId = funcs.first().assistantId
-
       h3 { +"Service Tools" }
-      val functionInfo = application.serviceCache.getFromCache(sessionId, assistantId)
+
       toolNames
-        .filter { functionInfo.containsFunction(it) }
-        .forEach { toolName ->
+        .mapIndexed { i, name ->
+          name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
+        }
+        .filter { (toolName, assistantId) ->
+          val functionInfo = application.serviceCache.getFromCache(sessionId, assistantId)
+          functionInfo.containsFunction(toolName)
+        }
+        .forEach { (toolName, assistantId) ->
           div {
-            id = "tools-div"
+            id = TOOLS_DIV
+            val functionInfo = application.serviceCache.getFromCache(sessionId, assistantId)
             val functionDetails = functionInfo.getFunction(toolName)
             val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
             form {
-              setupHtmxTags(ToolType.SERVICE_TOOL, sessionId, divId)
+              setupHtmxTags(ToolType.SERVICE_TOOL, sessionId, assistantId, divId)
               addHiddenFields(application, sessionId, assistantId, toolName)
 
               table {
@@ -330,15 +335,18 @@ object ValidateAssistantResponse {
     if (application.manualToolCache.functions.isNotEmpty()) {
       h3 { +"Manual Tools" }
       toolNames
-        .filter { application.manualToolCache.containsTool(it) }
-        .forEach { funcName ->
+        .mapIndexed { i, name ->
+          name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
+        }
+        .filter { (toolName, assistantId) -> application.manualToolCache.containsTool(toolName) }
+        .forEach { (funcName, assistantId) ->
           div {
-            id = "tools-div"
+            id = TOOLS_DIV
             val manualToolImpl = application.manualToolCache.getTool(funcName)
             val divId = getRandomString()
             h3 { +"$funcName (${manualToolImpl.signature})" }
             form {
-              setupHtmxTags(ToolType.MANUAL_TOOL, sessionId, divId)
+              setupHtmxTags(ToolType.MANUAL_TOOL, sessionId, assistantId, divId)
               addHiddenFields(application, sessionId, EMPTY_ASSISTANT_ID, funcName)
 
               table {
@@ -385,20 +393,22 @@ object ValidateAssistantResponse {
   ) {
     if (application.functionCache.isNotEmpty()) {
       val funcs = application.functionCache.entriesForSessionId(sessionId)
+
       val assistantId = funcs.first().assistantId
 
       h3 { +"Functions" }
       val functionInfo = application.functionCache.getFromCache(sessionId, assistantId)
       funcNames
+        .map { it.toFunctionName() }
         .filter { functionInfo.containsFunction(it) }
         .forEach { funcName ->
           div {
-            id = "tools-div"
+            id = TOOLS_DIV
             val functionDetails = functionInfo.getFunction(funcName)
             val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
             form {
-              setupHtmxTags(ToolType.FUNCTION, sessionId, divId)
+              setupHtmxTags(ToolType.FUNCTION, sessionId, assistantId, divId)
               addHiddenFields(application, sessionId, assistantId, funcName)
 
               table {
@@ -443,13 +453,15 @@ object ValidateAssistantResponse {
   private fun FORM.setupHtmxTags(
     toolType: ToolType,
     sessionId: SessionId,
+    assistantId: AssistantId,
     divId: String,
   ) {
     attributes["hx-get"] =
       VALIDATE_INVOKE_TOOL_PATH
         .appendQueryParams(
-          SESSION_ID to sessionId.value,
           TOOL_TYPE to toolType.name,
+          SESSION_ID to sessionId.value,
+          ASSISTANT_ID to assistantId.value,
         )
     attributes["hx-trigger"] = "submit"
     attributes["hx-target"] = "#result-$divId"
@@ -459,7 +471,7 @@ object ValidateAssistantResponse {
     application: AbstractApplicationImpl,
     sessionId: SessionId,
     assistantId: AssistantId,
-    funcName: String,
+    funcName: FunctionName,
   ) {
     hiddenInput {
       name = APPLICATION_ID
@@ -475,7 +487,7 @@ object ValidateAssistantResponse {
     }
     hiddenInput {
       name = FUNCTION_NAME
-      value = funcName
+      value = funcName.value
     }
   }
 

@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.common.AssistantId
+import com.vapi4k.common.FunctionName
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.functions.FunctionDetails.FunctionDetailsDto
 import com.vapi4k.dsl.functions.FunctionDetails.FunctionDetailsDto.Companion.toFunctionDetailsDto
@@ -30,25 +31,26 @@ class FunctionInfo internal constructor(
   val assistantId: AssistantId,
 ) {
   val created: Instant = Clock.System.now()
-  private val functions = mutableMapOf<String, FunctionDetails>()
+  private val functions = mutableMapOf<FunctionName, FunctionDetails>()
 
   val age get() = Clock.System.now() - created
   val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
 
   internal val size get() = functions.size
 
-  internal fun containsFunction(funcName: String) = functions.contains(funcName)
+  internal fun containsFunction(funcName: FunctionName) = functions.contains(funcName)
 
   internal fun addFunction(
-    funcName: String,
+    funcName: FunctionName,
     funcDetails: FunctionDetails,
   ) {
     functions[funcName] = funcDetails
   }
 
-  internal fun getFunctionOrNull(funcName: String) = functions[funcName]
+  internal fun getFunctionOrNull(funcName: FunctionName) = functions[funcName]
 
-  internal fun getFunction(funcName: String) = getFunctionOrNull(funcName) ?: error("Function not found: \"$funcName\"")
+  internal fun getFunction(funcName: FunctionName) =
+    getFunctionOrNull(funcName) ?: error("Function not found: \"$funcName\"")
 
   fun toFunctionInfoDto() =
     FunctionInfoDto(
@@ -64,5 +66,5 @@ class FunctionInfo internal constructor(
 class FunctionInfoDto(
   val created: String = "",
   val age: String = "",
-  val functions: Map<String, FunctionDetailsDto>? = null,
+  val functions: Map<FunctionName, FunctionDetailsDto>? = null,
 )

@@ -126,6 +126,7 @@ internal object ValidateApplication {
     runCatching {
       val params = call.request.queryParameters
       val applicationId = params[APPLICATION_ID]?.toApplicationId() ?: error("No $APPLICATION_ID found")
+      val assistantId = params[ASSISTANT_ID]?.toApplicationId() ?: error("No $ASSISTANT_ID found")
       val app = config.getApplicationById(applicationId)
       val toolType = ToolType.valueOf(params[TOOL_TYPE] ?: error("No $TOOL_TYPE found"))
       val toolRequest = generateToolRequest(toolType, params)
@@ -133,8 +134,7 @@ internal object ValidateApplication {
       val serverUrl =
         app.serverUrl.appendQueryParams(
           SESSION_ID to sessionId.value,
-          // TODO ZZZ This will not work for squads
-          ASSISTANT_ID to app.assistantIds.first().value,
+          ASSISTANT_ID to assistantId.value,
         )
       println(serverUrl)
       httpClient.post(serverUrl) {

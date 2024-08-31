@@ -26,10 +26,12 @@ import com.vapi4k.api.tools.Tools
 import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.VoiceMailTool
 import com.vapi4k.api.tools.enums.ToolType
+import com.vapi4k.common.FunctionName.Companion.toFunctionName
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
+import com.vapi4k.dsl.functions.ToolCallInfo.Companion.appendAssistantId
 import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
@@ -43,18 +45,22 @@ class ToolsImpl internal constructor(
     obj: Any,
     vararg functions: KFunction<*>,
     block: BaseTool.() -> Unit,
-  ) = processFunctions(functions, obj) {
+  ) = processServiceTool(obj, functions) {
     BaseToolImpl("serviceTool", it).apply(block)
   }
 
   override fun manualTool(block: ManualTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
     val manualToolImpl = ManualToolImpl("manualTool", toolDto).apply(block)
-    val paramName = toolDto.functionDto.name
-    if (paramName.isBlank()) error("manualTool{} parameter name is required")
+
+    // Append the assistantId to the tool name to avoid cache collisions
+    toolDto.functionDto.name = toolDto.functionDto.name.appendAssistantId(model.assistantId)
+
+    val funcName = toolDto.functionDto.name.toFunctionName()
+    if (funcName.value.isBlank()) error("manualTool{} name is required")
     if (!manualToolImpl.isToolCallRequestInitialized()) error("manualTool{} must have onInvoke{} declared")
 
-    model.application.manualToolCache.addToCache(model, paramName, manualToolImpl)
+    model.application.manualToolCache.addToCache(funcName, manualToolImpl)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
@@ -93,9 +99,9 @@ class ToolsImpl internal constructor(
     TransferToolImpl("transferTool", toolDto).apply(block)
   }
 
-  private fun processFunctions(
-    functionRefs: Array<out KFunction<*>>,
+  private fun processServiceTool(
     obj: Any,
+    functionRefs: Array<out KFunction<*>>,
     block: (ToolDto) -> Unit,
   ) {
     if (functionRefs.isEmpty()) {

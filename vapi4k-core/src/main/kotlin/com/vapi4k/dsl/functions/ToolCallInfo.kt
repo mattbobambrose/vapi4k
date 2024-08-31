@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.functions
 
 import com.vapi4k.common.AssistantId
+import com.vapi4k.common.FunctionName.Companion.toFunctionName
 import com.vapi4k.dsl.functions.FunctionUtils.llmType
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
@@ -31,7 +32,7 @@ class ToolCallInfo(
   private val toolHasDescription get() = toolCall.description.isNotEmpty()
   private val name get() = if (toolHasName) toolCall.name else function.name
 
-  val llmName get() = "${name}_$assistantId"
+  val llmName get() = name.appendAssistantId(assistantId).toFunctionName()
 
   val llmDescription
     get() =
@@ -42,4 +43,9 @@ class ToolCallInfo(
       }
 
   val llmReturnType get() = function.returnType.asKClass().llmType
+
+  companion object {
+    internal const val ID_SEPARATOR = "_"
+    internal fun String.appendAssistantId(assistantId: AssistantId): String = "$this$ID_SEPARATOR$assistantId"
+  }
 }

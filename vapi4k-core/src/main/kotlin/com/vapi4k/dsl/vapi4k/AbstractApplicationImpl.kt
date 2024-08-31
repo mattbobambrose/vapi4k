@@ -22,6 +22,7 @@ import com.vapi4k.common.AssistantId
 import com.vapi4k.common.CacheKey.Companion.cacheKeyValue
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.common.FunctionName
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.tools.ManualToolCache
@@ -71,29 +72,29 @@ abstract class AbstractApplicationImpl(
   internal fun containsServiceToolInCache(
     sessionId: SessionId,
     assistantId: AssistantId,
-    funcName: String,
+    funcName: FunctionName,
   ) = serviceCache.containsIds(sessionId, assistantId) &&
     serviceCache.getFromCache(sessionId, assistantId).containsFunction(funcName)
 
-  internal fun containsManualToolInCache(funcName: String): Boolean = manualToolCache.containsTool(funcName)
+  internal fun containsManualToolInCache(funcName: FunctionName): Boolean = manualToolCache.containsTool(funcName)
 
   internal fun containsFunctionInCache(
     sessionId: SessionId,
     assistantId: AssistantId,
-    funcName: String,
+    funcName: FunctionName,
   ) = functionCache.containsIds(sessionId, assistantId) &&
     functionCache.getFromCache(sessionId, assistantId).containsFunction(funcName)
 
   internal fun getServiceToolFromCache(
     sessionId: SessionId,
     assistantId: AssistantId,
-    funcName: String,
+    funcName: FunctionName,
   ) = serviceCache.getFromCache(sessionId, assistantId).getFunction(funcName)
 
   internal fun getFunctionFromCache(
     sessionId: SessionId,
     assistantId: AssistantId,
-    funcName: String,
+    funcName: FunctionName,
   ) = functionCache.getFromCache(sessionId, assistantId).getFunction(funcName)
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {

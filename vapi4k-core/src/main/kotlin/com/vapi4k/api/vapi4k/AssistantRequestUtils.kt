@@ -16,6 +16,7 @@
 
 package com.vapi4k.api.vapi4k
 
+import com.vapi4k.common.FunctionName.Companion.toFunctionName
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isFunctionCall
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isStatusUpdate
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
@@ -65,7 +66,7 @@ object AssistantRequestUtils {
   /**
   Extract the tool call name from a tool call and throws an error if the JsonElement is not a tool call.
    */
-  val JsonElement.toolCallName get() = stringValue("function.name")
+  val JsonElement.toolCallName get() = stringValue("function.name").toFunctionName()
 
   /**
   Extract the tool call arguments from a tool call and throws an error if the JsonElement is not a tool call.
@@ -102,7 +103,7 @@ object AssistantRequestUtils {
    */
   val JsonElement.functionName
     get() = if (isFunctionCall)
-      stringValue("message.functionCall.name")
+      stringValue("message.functionCall.name").toFunctionName()
     else
       error("JsonElement is not a function call")
 

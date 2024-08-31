@@ -66,7 +66,7 @@ data class ToolCallResponse(
                       val funcName = toolCall.toolCallName
                       val args = toolCall.toolCallArguments
                       toolCallResult.toolCallId = toolCall.id
-                      toolCallResult.name = funcName
+                      toolCallResult.name = funcName.value
                       val errorAction = { errorMsg: String ->
                         toolCallResult.error = errorMsg
                         errorMessage = errorMsg

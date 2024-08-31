@@ -15,21 +15,16 @@
  */
 
 import TalkPage.talkPage
-import com.vapi4k.FavoriteFoodService
 import com.vapi4k.WeatherLookupByAreaCodeService
-import com.vapi4k.api.buttons.ButtonColor
-import com.vapi4k.api.buttons.enums.ButtonPosition
-import com.vapi4k.api.buttons.enums.ButtonType
-import com.vapi4k.api.destination.enums.AssistantTransferMode
+import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError
+import com.vapi4k.api.squad.Member
+import com.vapi4k.api.tools.Tools
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
-import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
@@ -68,237 +63,308 @@ fun Application.module() {
   }
 
   install(Vapi4k) {
-    webApplication {
-      serverPath = "/talkapp"
-      serverSecret = "12345"
+//    webApplication {
+//      serverPath = "/talkapp"
+//      serverSecret = "12345"
+//
+//      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
+//        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+//      }
+//
+//      onAssistantRequest { args ->
+//        assistant {
+//          firstMessage = "Hi, I am Beth how can I assist you today?"
+//
+//          openAIModel {
+//            modelType = OpenAIModelType.GPT_4_TURBO
+//            systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
+//
+//            functions {
+//              function(FavoriteFoodService())
+//              function(WeatherLookupByAreaCodeService())
+//            }
+//
+//            tools {
+//              serviceTool(WeatherLookupByAreaCodeService())
+//
+//              manualTool {
+//                name = "manualWeatherLookup"
+//                description = "Look up the weather for a city and state"
+//
+//                parameters {
+//                  parameter {
+//                    name = "city"
+//                    description = "The city to look up"
+//                  }
+//                  parameter {
+//                    name = "state"
+//                    description = "The state to look up"
+//                  }
+//                }
+//
+//                requestStartMessage {
+//                  content = "This is the manual weather lookup start message"
+//                }
+//
+//                onInvoke { args ->
+//                  val city = args.stringValue("city")
+//                  val state = args.stringValue("state")
+//                  result = "The weather in $city, $state is sunny"
+//                  requestCompleteMessages {
+//                    requestCompleteMessage {
+//                      content = "This is the manual weather lookup complete message"
+//                    }
+//                  }
+//
+//                  requestFailedMessages {
+//                    requestFailedMessage {
+//                      content = "This is the manual weather lookup failed message"
+//                    }
+//                  }
+//                }
+//              }
+//            }
+//          }
+//
+//          elevenLabsVoice {
+//            voiceIdType = ElevenLabsVoiceIdType.PAULA
+//            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
+//          }
+//        }
+//
+//        buttonConfig {
+//          position = ButtonPosition.BOTTOM_LEFT
+//          offset = "40px"
+//          width = "50px"
+//          height = "50px"
+//
+//          idle {
+//            color = ButtonColor(93, 254, 202)
+//            type = ButtonType.PILL
+//            title = "Have a quick question?"
+//            subtitle = "Talk with our AI assistant"
+//            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg"
+//          }
+//
+//          loading {
+//            color = ButtonColor(93, 124, 202)
+//            type = ButtonType.PILL
+//            title = "Connecting..."
+//            subtitle = "Please wait"
+//            icon = "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg"
+//          }
+//
+//          active {
+//            color = ButtonColor(255, 0, 0)
+//            type = ButtonType.PILL
+//            title = "Call is in progress..."
+//            subtitle = "End the call."
+//            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg"
+//          }
+//        }
+//      }
+//    }
 
-      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
-        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
-      }
-
-      onAssistantRequest { args ->
-        assistant {
-          firstMessage = "Hi, I am Beth how can I assist you today?"
-
-          openAIModel {
-            modelType = OpenAIModelType.GPT_4_TURBO
-            systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
-
-            functions {
-              function(FavoriteFoodService())
-              function(WeatherLookupByAreaCodeService())
-            }
-
-            tools {
-              serviceTool(WeatherLookupByAreaCodeService())
-
-              manualTool {
-                name = "manualWeatherLookup"
-                description = "Look up the weather for a city and state"
-
-                parameters {
-                  parameter {
-                    name = "city"
-                    description = "The city to look up"
-                  }
-                  parameter {
-                    name = "state"
-                    description = "The state to look up"
-                  }
-                }
-
-                requestStartMessage {
-                  content = "This is the manual weather lookup start message"
-                }
-
-                onInvoke { args ->
-                  val city = args.stringValue("city")
-                  val state = args.stringValue("state")
-                  result = "The weather in $city, $state is sunny"
-                  requestCompleteMessages {
-                    requestCompleteMessage {
-                      content = "This is the manual weather lookup complete message"
-                    }
-                  }
-
-                  requestFailedMessages {
-                    requestFailedMessage {
-                      content = "This is the manual weather lookup failed message"
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          elevenLabsVoice {
-            voiceIdType = ElevenLabsVoiceIdType.PAULA
-            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
-          }
-        }
-
-        buttonConfig {
-          position = ButtonPosition.BOTTOM_LEFT
-          offset = "40px"
-          width = "50px"
-          height = "50px"
-
-          idle {
-            color = ButtonColor(93, 254, 202)
-            type = ButtonType.PILL
-            title = "Have a quick question?"
-            subtitle = "Talk with our AI assistant"
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg"
-          }
-
-          loading {
-            color = ButtonColor(93, 124, 202)
-            type = ButtonType.PILL
-            title = "Connecting..."
-            subtitle = "Please wait"
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg"
-          }
-
-          active {
-            color = ButtonColor(255, 0, 0)
-            type = ButtonType.PILL
-            title = "Call is in progress..."
-            subtitle = "End the call."
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg"
-          }
-        }
-      }
-    }
+//    outboundCallApplication {
+//      serverPath = "/outboundRequest1"
+//
+//      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
+//        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+//      }
+//
+//      onAssistantRequest { args ->
+//        assistant {
+//          firstMessage = "Hi, I am Beth how can I assist you today?"
+//
+//          openAIModel {
+//            modelType = OpenAIModelType.GPT_4_TURBO
+//            systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
+//
+//            functions {
+//              function(FavoriteFoodService())
+//              function(WeatherLookupByAreaCodeService())
+//            }
+//
+//            tools {
+//              serviceTool(WeatherLookupByAreaCodeService())
+//              manualTooDecl()
+//            }
+//          }
+//
+//          elevenLabsVoice {
+//            voiceIdType = ElevenLabsVoiceIdType.PAULA
+//            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
+//          }
+//        }
+//      }
+//    }
 
     outboundCallApplication {
-      serverPath = "/outboundRequest"
+      serverPath = "/squadOutbound"
 
       onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
         logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
       }
 
       onAssistantRequest { args ->
-        assistant {
-          firstMessage = "Hi, I am Beth how can I assist you today?"
-
-          openAIModel {
-            modelType = OpenAIModelType.GPT_4_TURBO
-            systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
-
-            functions {
-              function(FavoriteFoodService())
-              function(WeatherLookupByAreaCodeService())
+        squad {
+          members {
+            member {
+              squadAssistant(
+                {
+                  serviceTool(WeatherLookupByAreaCodeService("[assistant 1]"))
+                  //  manualTooDecl()
+                },
+                {
+//                  function(FavoriteFoodService())
+//                  function(WeatherLookupByAreaCodeService())
+                }
+              )
             }
-
-            tools {
-              manualTool {
-                name = "manualWeatherLookup"
-                description = "Look up the weather for a city and state"
-
-                parameters {
-                  parameter {
-                    name = "city"
-                    description = "The city to look up"
-                  }
-                  parameter {
-                    name = "state"
-                    description = "The state to look up"
-                  }
+            member {
+              squadAssistant(
+                {
+                  serviceTool(WeatherLookupByAreaCodeService("[assistant 2]"))
+                  //   manualTooDecl()
+                },
+                {
+//                  function(FavoriteFoodService())
+//                  function(WeatherLookupByAreaCodeService())
                 }
-
-                requestStartMessage {
-                  content = "This is the manual weather lookup start message"
-                }
-
-                onInvoke { args ->
-                  val city = args.stringValue("city")
-                  val state = args.stringValue("state")
-                  result = "The weather in $city, $state is sunny"
-                  requestCompleteMessages {
-                    requestCompleteMessage {
-                      content = "This is the manual weather lookup complete message"
-                    }
-                  }
-
-                  requestFailedMessages {
-                    requestFailedMessage {
-                      content = "This is the manual weather lookup failed message"
-                    }
-                  }
-                }
-              }
+              )
             }
-          }
-
-          elevenLabsVoice {
-            voiceIdType = ElevenLabsVoiceIdType.PAULA
-            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
           }
         }
       }
     }
 
-    inboundCallApplication {
-      serverPath = "/inboundRequest1"
-      serverSecret = "12345"
+//    inboundCallApplication {
+//      serverPath = "/inboundRequest1"
+//      serverSecret = "12345"
+//
+//      onAssistantRequest { request ->
+//        myAssistantRequest(request)
+//      }
+//    }
+//
+//    inboundCallApplication {
+//      serverPath = "/talkApp"
+//
+//      onAssistantRequest { request ->
+//        myAssistantRequest(request)
+//      }
+//
+//      onTransferDestinationRequest { request ->
+//        assistantDestination {
+//          assistantName = "Assistant"
+//          transferMode = AssistantTransferMode.ROLLING_HISTORY
+//          message = "Message"
+//          description = "Description"
+//        }
+//      }
+//
+//      onAllRequests { request ->
+//        logger.info { "All requests: ${request.requestType}" }
+////        if (isProduction)
+////          insertRequest(request)
+////        logObject(request)
+////        printObject(request)
+//      }
+//
+//      onRequest(TOOL_CALL) { request ->
+////        logger.info { "Tool call: $request" }
+//      }
+//
+//      onRequest(FUNCTION_CALL) { request ->
+////        logger.info { "Function call: $request" }
+//      }
+//
+//      onRequest(ServerRequestType.STATUS_UPDATE) { request ->
+//        logger.info { "Status update: STATUS_UPDATE" }
+//      }
+//
+//      onRequest(ServerRequestType.STATUS_UPDATE) { request ->
+//        if (request.hasStatusUpdateError()) {
+//          logger.info { "Status update error: ${request.statusUpdateError}" }
+//        }
+//      }
+//
+//      onAllResponses { requestType, response, elapsedTime ->
+////        logger.info { "All responses: $response" }
+////        logObject(response)
+////        logger.info { response.toJsonString() }
+////        if (isProduction)
+////          insertResponse(requestType, response, elapsedTime)
+//      }
+//
+//      onResponse(ASSISTANT_REQUEST) { requestType, response, elapsed ->
+////      logger.info { "Response: $response" }
+//      }
+//    }
+  }
+}
 
-      onAssistantRequest { request ->
-        myAssistantRequest(request)
+private fun Member.squadAssistant(
+  toolsBlock: Tools.() -> Unit,
+  functionsBlock: Functions.() -> Unit,
+) {
+  assistant {
+    firstMessage = "Hi, I am Beth how can I assist you today?"
+
+    openAIModel {
+      modelType = OpenAIModelType.GPT_4_TURBO
+      systemMessage = "You're a versatile AI assistant named Vapi who is fun to talk with."
+
+      functions {
+        functionsBlock()
+      }
+
+      tools {
+        toolsBlock()
       }
     }
 
-    inboundCallApplication {
-      serverPath = "/talkApp"
+    elevenLabsVoice {
+      voiceIdType = ElevenLabsVoiceIdType.PAULA
+      modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
+    }
+  }
+}
 
-      onAssistantRequest { request ->
-        myAssistantRequest(request)
+private fun Tools.manualTooDecl() {
+  manualTool {
+    name = "manualWeatherLookup"
+    description = "Look up the weather for a city and state"
+
+    parameters {
+      parameter {
+        name = "city"
+        description = "The city to look up"
       }
+      parameter {
+        name = "state"
+        description = "The state to look up"
+      }
+    }
 
-      onTransferDestinationRequest { request ->
-        assistantDestination {
-          assistantName = "Assistant"
-          transferMode = AssistantTransferMode.ROLLING_HISTORY
-          message = "Message"
-          description = "Description"
+    requestStartMessage {
+      content = "This is the manual weather lookup start message"
+    }
+
+    onInvoke { args ->
+      val city = args.stringValue("city")
+      val state = args.stringValue("state")
+      result = "The weather in $city, $state is sunny"
+      requestCompleteMessages {
+        requestCompleteMessage {
+          content = "This is the manual weather lookup complete message"
         }
       }
 
-      onAllRequests { request ->
-        logger.info { "All requests: ${request.requestType}" }
-//        if (isProduction)
-//          insertRequest(request)
-//        logObject(request)
-//        printObject(request)
-      }
-
-      onRequest(TOOL_CALL) { request ->
-//        logger.info { "Tool call: $request" }
-      }
-
-      onRequest(FUNCTION_CALL) { request ->
-//        logger.info { "Function call: $request" }
-      }
-
-      onRequest(ServerRequestType.STATUS_UPDATE) { request ->
-        logger.info { "Status update: STATUS_UPDATE" }
-      }
-
-      onRequest(ServerRequestType.STATUS_UPDATE) { request ->
-        if (request.hasStatusUpdateError()) {
-          logger.info { "Status update error: ${request.statusUpdateError}" }
+      requestFailedMessages {
+        requestFailedMessage {
+          content = "This is the manual weather lookup failed message"
         }
-      }
-
-      onAllResponses { requestType, response, elapsedTime ->
-//        logger.info { "All responses: $response" }
-//        logObject(response)
-//        logger.info { response.toJsonString() }
-//        if (isProduction)
-//          insertResponse(requestType, response, elapsedTime)
-      }
-
-      onResponse(ASSISTANT_REQUEST) { requestType, response, elapsed ->
-//      logger.info { "Response: $response" }
       }
     }
   }
