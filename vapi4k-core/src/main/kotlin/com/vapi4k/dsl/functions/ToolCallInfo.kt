@@ -46,6 +46,7 @@ class ToolCallInfo(
 
   companion object {
     internal const val ID_SEPARATOR = "_"
+
     internal fun String.appendAssistantId(assistantId: AssistantId): String = "$this$ID_SEPARATOR$assistantId"
   }
 }

@@ -73,8 +73,9 @@ abstract class AbstractApplicationImpl(
     sessionId: SessionId,
     assistantId: AssistantId,
     funcName: FunctionName,
-  ) = serviceCache.containsIds(sessionId, assistantId) &&
-    serviceCache.getFromCache(sessionId, assistantId).containsFunction(funcName)
+  ): Boolean =
+    serviceCache.containsIds(sessionId, assistantId) &&
+      serviceCache.getFromCache(sessionId, assistantId).containsFunction(funcName)
 
   internal fun containsManualToolInCache(funcName: FunctionName): Boolean = manualToolCache.containsTool(funcName)
 

@@ -28,5 +28,4 @@ enum class ToolType(
   FUNCTION(FUNCTION_CALL, "functionCall", "parameters"),
   SERVICE_TOOL(TOOL_CALLS, "function", "arguments"),
   MANUAL_TOOL(TOOL_CALLS, "function", "arguments"),
-  ;
 }

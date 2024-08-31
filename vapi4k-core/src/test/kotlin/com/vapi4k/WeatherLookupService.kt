@@ -73,7 +73,9 @@ class WeatherLookupService2 {
   fun lookupWeatherByZipCode(zipCode: String) = "The weather in zip code $zipCode is sunny"
 }
 
-class WeatherLookupByAreaCodeService(val id: String = "") {
+class WeatherLookupByAreaCodeService(
+  val id: String = "",
+) {
   @ToolCall("Look up the weather for an area code", "weatherByAreaCode")
   fun lookupWeatherByAreaCode(areaCode: String) = "The weather in area code $areaCode is windy $id"
 }
