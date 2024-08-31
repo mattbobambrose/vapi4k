@@ -20,7 +20,6 @@ import com.vapi4k.api.assistant.enums.AssistantClientMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.BackgroundSoundType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType
-import com.vapi4k.dtos.TransportConfigurationDto
 import kotlinx.serialization.Serializable
 
 internal val DEFAULT_CLIENT_MESSAGES =

@@ -14,13 +14,17 @@
  *
  */
 
-package com.vapi4k.dtos
+package com.vapi4k.dtos.assistant
 
+import com.vapi4k.dsl.assistant.ArtifactPlanProperties
 import kotlinx.serialization.Serializable
 
+/**
+<p>This is the plan for artifacts generated during assistant's calls. Stored in `call.artifact`.
+<br>Note: `recordingEnabled` is currently at the root level. It will be moved to `artifactPlan` in the future, but will remain backwards compatible.
+</p>
+ */
 @Serializable
-data class MessagePlanDto(
-  var idleMessageMaxSpokenCount: Double = -1.0,
-  var idleTimeoutSeconds: Double = -1.0,
-  val idleMessages: MutableList<String> = mutableListOf(),
-)
+data class ArtifactPlanDto(
+  override var videoRecordingEnabled: Boolean? = null,
+) : ArtifactPlanProperties

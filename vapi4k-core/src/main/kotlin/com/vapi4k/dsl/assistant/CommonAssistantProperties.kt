@@ -20,7 +20,7 @@ import com.vapi4k.api.assistant.enums.AssistantClientMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.BackgroundSoundType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType
-import com.vapi4k.dtos.TransportConfigurationDto
+import com.vapi4k.dtos.assistant.TransportConfigurationDto
 
 interface CommonAssistantProperties {
   /**

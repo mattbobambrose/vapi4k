@@ -18,8 +18,8 @@ package com.vapi4k.dsl.model
 
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.SessionId
-import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.functions.FunctionDto
+import com.vapi4k.dtos.model.RoleMessageDto
 import com.vapi4k.dtos.tools.ToolDto
 
 interface AbstractModelProperties {

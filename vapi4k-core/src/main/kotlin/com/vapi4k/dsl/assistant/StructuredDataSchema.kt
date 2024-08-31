@@ -16,7 +16,7 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.dtos.StructuredDataSchemaDto
+import com.vapi4k.dtos.assistant.StructuredDataSchemaDto
 
 @AssistantDslMarker
 class StructuredDataSchema internal constructor(

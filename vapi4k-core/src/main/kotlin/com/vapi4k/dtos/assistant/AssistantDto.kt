@@ -22,11 +22,6 @@ import com.vapi4k.api.assistant.enums.BackgroundSoundType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType
 import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.model.ModelDtoUnion
-import com.vapi4k.dtos.AnalysisPlanDto
-import com.vapi4k.dtos.ArtifactPlanDto
-import com.vapi4k.dtos.MessagePlanDto
-import com.vapi4k.dtos.TransportConfigurationDto
-import com.vapi4k.dtos.VoicemailDetectionDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.transcriber.CommonTranscriberDto
 import com.vapi4k.dtos.voice.CommonVoiceDto

@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dtos
+package com.vapi4k.dtos.model
 
 import kotlinx.serialization.Serializable
 

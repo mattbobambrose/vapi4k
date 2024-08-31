@@ -14,17 +14,21 @@
  *
  */
 
-package com.vapi4k.dtos
+package com.vapi4k.dtos.assistant
 
-import com.vapi4k.dsl.assistant.ArtifactPlanProperties
+import com.vapi4k.api.assistant.enums.VoicemailDetectionType
+import com.vapi4k.dsl.assistant.VoicemailDetectionProperties
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
-/**
-<p>This is the plan for artifacts generated during assistant's calls. Stored in `call.artifact`.
-<br>Note: `recordingEnabled` is currently at the root level. It will be moved to `artifactPlan` in the future, but will remain backwards compatible.
-</p>
- */
 @Serializable
-data class ArtifactPlanDto(
-  override var videoRecordingEnabled: Boolean? = null,
-) : ArtifactPlanProperties
+data class VoicemailDetectionDto(
+  @EncodeDefault
+  var provider: String = "twilio",
+  override var enabled: Boolean? = null,
+  override var machineDetectionTimeout: Int = -1,
+  override var machineDetectionSpeechThreshold: Int = -1,
+  override var machineDetectionSpeechEndThreshold: Int = -1,
+  override var machineDetectionSilenceTimeout: Int = -1,
+  override val voicemailDetectionTypes: MutableSet<VoicemailDetectionType> = mutableSetOf(),
+) : VoicemailDetectionProperties

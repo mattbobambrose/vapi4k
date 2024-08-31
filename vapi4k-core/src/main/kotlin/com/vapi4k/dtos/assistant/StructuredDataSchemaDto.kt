@@ -14,14 +14,21 @@
  *
  */
 
-package com.vapi4k.dtos
+package com.vapi4k.dtos.assistant
 
+import com.vapi4k.api.assistant.enums.StructureDataSchemeType
+import com.vapi4k.dsl.assistant.StructuredDataSchemaProperties
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TransportConfigurationDto(
-  var provider: String = "",
-  var timeout: Int = -1,
-  var record: Boolean? = null,
-  var recordingChannels: String = "",
-)
+data class StructuredDataSchemaDto(
+  override var type: StructureDataSchemeType = StructureDataSchemeType.UNSPECIFIED,
+  override var description: String = "",
+  @EncodeDefault
+  override val items: MutableMap<String, String> = mutableMapOf(),
+  @EncodeDefault
+  override val properties: MutableMap<String, String> = mutableMapOf(),
+  // @EncodeDefault
+  override val required: MutableList<String> = mutableListOf(),
+) : StructuredDataSchemaProperties

@@ -19,7 +19,6 @@ package com.vapi4k.dtos.model
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.dsl.model.ModelType
 import com.vapi4k.dsl.model.OpenAIModelProperties
-import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.tools.ToolDto
 import kotlinx.serialization.EncodeDefault

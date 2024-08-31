@@ -21,9 +21,9 @@ import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.dsl.functions.FunctionsImpl
 import com.vapi4k.dsl.tools.ToolsImpl
-import com.vapi4k.dtos.RoleMessageDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
+import com.vapi4k.dtos.model.RoleMessageDto
 import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.common.Utils.trimLeadingSpaces
 

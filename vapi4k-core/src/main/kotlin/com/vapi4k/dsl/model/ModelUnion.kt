@@ -19,9 +19,9 @@ package com.vapi4k.dsl.model
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
-import com.vapi4k.dtos.AnalysisPlanDto
-import com.vapi4k.dtos.ArtifactPlanDto
-import com.vapi4k.dtos.VoicemailDetectionDto
+import com.vapi4k.dtos.assistant.AnalysisPlanDto
+import com.vapi4k.dtos.assistant.ArtifactPlanDto
+import com.vapi4k.dtos.assistant.VoicemailDetectionDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.transcriber.CommonTranscriberDto
 import com.vapi4k.dtos.voice.CommonVoiceDto
