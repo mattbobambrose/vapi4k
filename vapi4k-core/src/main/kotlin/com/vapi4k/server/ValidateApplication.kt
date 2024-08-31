@@ -19,6 +19,8 @@ package com.vapi4k.server
 import com.vapi4k.client.ToolType
 import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestPage
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
+import com.vapi4k.common.ApplicationName
+import com.vapi4k.common.ApplicationName.Companion.toApplicationName
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE
 import com.vapi4k.common.Constants.FUNCTION_NAME
@@ -72,19 +74,19 @@ internal object ValidateApplication {
   suspend fun KtorCallContext.validateApplication(config: Vapi4kConfigImpl) =
     runCatching {
       val appType = call.parameters[APP_TYPE].orEmpty()
-      val appName = call.parameters[APP_NAME].orEmpty()
+      val appName = call.parameters[APP_NAME].orEmpty().toApplicationName()
       val app =
         when (appType) {
           WEB.pathPrefix -> config.webApplications
           INBOUND_CALL.pathPrefix -> config.inboundCallApplications
           OUTBOUND_CALL.pathPrefix -> config.outboundCallApplications
           else -> error("Invalid application type: $appType")
-        }.firstOrNull { it.serverPathAsSegment == appName }
+        }.firstOrNull { it.serverPathAsSegment == appName.value }
 
       if (app.isNotNull())
         processValidateRequest(config, app, appName)
       else
-        call.respondText("Application for /$appName not found", status = HttpStatusCode.NotFound)
+        call.respondText("Application for /${appName.value} not found", status = HttpStatusCode.NotFound)
     }.getOrElse {
       if (it is ConnectException) {
         val html = serverBasePage()
@@ -116,7 +118,7 @@ internal object ValidateApplication {
   suspend fun KtorCallContext.processValidateRequest(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
-    appName: String,
+    appName: ApplicationName,
   ) {
     val secret = call.request.queryParameters[SECRET_PARAM].orEmpty()
     val html = validateAssistantRequestPage(config, application, appName, secret)

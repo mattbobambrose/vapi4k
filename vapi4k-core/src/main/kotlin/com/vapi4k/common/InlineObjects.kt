@@ -87,3 +87,16 @@ value class FunctionName private constructor(
     fun String.toFunctionName() = FunctionName(this)
   }
 }
+
+@Serializable
+@JvmInline
+value class ApplicationName private constructor(
+  val value: String,
+) {
+  override fun toString() = value
+
+  companion object {
+    // Force all emails to be lowercase
+    fun String.toApplicationName() = ApplicationName(this)
+  }
+}

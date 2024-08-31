@@ -20,6 +20,7 @@ import com.vapi4k.api.vapi4k.AssistantRequestUtils.isAssistantIdResponse
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.isAssistantResponse
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.isSquadIdResponse
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.isSquadResponse
+import com.vapi4k.common.ApplicationName
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.AssistantId.Companion.toAssistantId
@@ -113,14 +114,14 @@ object ValidateAssistantResponse {
   fun validateAssistantRequestPage(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
-    appName: String,
+    appName: ApplicationName,
     secret: String,
   ): String {
     val request = getNewRequest()
 
     val typePrefix = application.applicationType.pathPrefix
     val sessionId = application.applicationType.defaultSessionId().toSessionId()
-    val url = "$vapi4kBaseUrl/$typePrefix/$appName".appendQueryParams(SESSION_ID to sessionId.value)
+    val url = "$vapi4kBaseUrl/$typePrefix/${appName.value}".appendQueryParams(SESSION_ID to sessionId.value)
     val (status, responseBody) = fetchContent(application, request, secret, url)
 
     return createHTML()

@@ -227,7 +227,7 @@ fun Application.module() {
                 {
                   function(FavoriteFoodService())
                   function(WeatherLookupByAreaCodeService())
-                }
+                },
               )
             }
             member {
@@ -240,7 +240,7 @@ fun Application.module() {
                 {
                   function(FavoriteFoodService())
                   function(WeatherLookupByAreaCodeService())
-                }
+                },
               )
             }
           }
