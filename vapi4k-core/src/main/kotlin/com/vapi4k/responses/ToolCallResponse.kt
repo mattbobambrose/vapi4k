@@ -135,7 +135,6 @@ data class ToolCallResult(
   var toolCallId: String = "",
   var name: String = "",
   var result: String = "",
-  // TODO: Ask Vapi if this should be messages (plural)
   var error: String = "",
   @SerialName("message")
   val messageDtos: MutableList<CommonToolMessageDto> = mutableListOf(),
