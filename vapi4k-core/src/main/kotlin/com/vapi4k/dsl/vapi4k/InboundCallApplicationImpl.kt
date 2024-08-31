@@ -21,7 +21,7 @@ import com.vapi4k.api.vapi4k.InboundCallApplication
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
-import com.vapi4k.responses.AssistantMessageResponseDto
+import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.serialization.json.JsonElement
 
@@ -41,7 +41,7 @@ class InboundCallApplicationImpl internal constructor() :
     request: JsonElement,
     sessionId: SessionId,
     assistantId: AssistantId,
-  ): AssistantMessageResponseDto =
+  ): AssistantMessageResponse =
     assistantRequest.let { func ->
       if (func.isNull()) {
         error("onAssistantRequest{} not called")

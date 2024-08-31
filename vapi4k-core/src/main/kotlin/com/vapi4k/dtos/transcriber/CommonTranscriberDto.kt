@@ -19,24 +19,10 @@ package com.vapi4k.dtos.transcriber
 import com.vapi4k.api.transcriber.enums.TranscriberType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-
-@Serializable
-abstract class AbstractTranscriberDto {
-  abstract var model: String
-
-  abstract var language: String
-
-  @Transient
-  var customModel: String = ""
-
-  @Transient
-  var customLanguage: String = ""
-}
 
 @Serializable(with = TranscriberSerializer::class)
 interface CommonTranscriberDto {

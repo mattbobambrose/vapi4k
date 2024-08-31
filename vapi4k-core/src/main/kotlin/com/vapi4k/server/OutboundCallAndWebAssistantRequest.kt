@@ -27,7 +27,7 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dsl.vapi4k.WebApplicationImpl
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
-import com.vapi4k.responses.ToolCallResponse.Companion.getToolCallResponse
+import com.vapi4k.responses.ToolCallResponseDto.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
 import com.vapi4k.server.ValidateApplication.isValidSecret

@@ -14,18 +14,20 @@
  *
  */
 
-package com.vapi4k.dtos.tools
+package com.vapi4k.dtos.transcriber
 
-import com.vapi4k.dtos.api.destination.CommonDestinationDto
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
-data class TransferMessageResponseDto(
-  val messageResponse: TransferDestinationDto = TransferDestinationDto(),
-)
+abstract class AbstractTranscriberDto {
+  abstract var model: String
 
-@Serializable
-data class TransferDestinationDto(
-  var destination: CommonDestinationDto? = null,
-  var error: String = "",
-)
+  abstract var language: String
+
+  @Transient
+  var customModel: String = ""
+
+  @Transient
+  var customLanguage: String = ""
+}

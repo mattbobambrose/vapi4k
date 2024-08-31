@@ -36,12 +36,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-data class ToolCallMessageResponse(
-  val messageResponse: ToolCallResponse = ToolCallResponse(),
-)
-
-@Serializable
-data class ToolCallResponse(
+data class ToolCallResponseDto(
   var results: MutableList<ToolCallResult> = mutableListOf(),
   var error: String = "",
 ) {

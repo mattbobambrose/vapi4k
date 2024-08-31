@@ -27,7 +27,7 @@ import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
-import com.vapi4k.responses.AssistantMessageResponseDto
+import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.utils.AssistantIdSource
 import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.MiscUtils.appendQueryParams
@@ -36,7 +36,7 @@ abstract class AbstractAssistantResponseImpl(
   internal val assistantRequestContext: AssistantRequestContext,
 ) {
   internal val duplicateChecker = DuplicateInvokeChecker()
-  internal val assistantRequestResponse = AssistantMessageResponseDto()
+  internal val assistantRequestResponse = AssistantMessageResponse()
 
   internal val isAssigned get() = duplicateChecker.wasCalled
 
