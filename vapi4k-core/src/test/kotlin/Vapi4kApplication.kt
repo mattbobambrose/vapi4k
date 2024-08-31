@@ -20,15 +20,19 @@ import com.vapi4k.WeatherLookupByAreaCodeService
 import com.vapi4k.api.buttons.ButtonColor
 import com.vapi4k.api.buttons.enums.ButtonPosition
 import com.vapi4k.api.buttons.enums.ButtonType
+import com.vapi4k.api.destination.enums.AssistantTransferMode
 import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.squad.Member
 import com.vapi4k.api.tools.Tools
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.server.Vapi4k
 import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
+import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
@@ -215,25 +219,27 @@ fun Application.module() {
           members {
             member {
               squadAssistant(
+                "assist1",
                 {
-                  serviceTool(WeatherLookupByAreaCodeService("[assistant 1]"))
-                  //  manualTooDecl()
+//                  serviceTool(WeatherLookupByAreaCodeService("[assistant 1]"))
+//                  manualTooDecl()
                 },
                 {
-//                  function(FavoriteFoodService())
-//                  function(WeatherLookupByAreaCodeService())
+                  function(FavoriteFoodService())
+                  function(WeatherLookupByAreaCodeService())
                 }
               )
             }
             member {
               squadAssistant(
+                "assist2",
                 {
-                  serviceTool(WeatherLookupByAreaCodeService("[assistant 2]"))
-                  //   manualTooDecl()
+//                  serviceTool(WeatherLookupByAreaCodeService("[assistant 2]"))
+//                  manualTooDecl()
                 },
                 {
-//                  function(FavoriteFoodService())
-//                  function(WeatherLookupByAreaCodeService())
+                  function(FavoriteFoodService())
+                  function(WeatherLookupByAreaCodeService())
                 }
               )
             }
@@ -309,10 +315,12 @@ fun Application.module() {
 }
 
 private fun Member.squadAssistant(
+  name: String,
   toolsBlock: Tools.() -> Unit,
   functionsBlock: Functions.() -> Unit,
 ) {
   assistant {
+    this.name = name
     firstMessage = "Hi, I am Beth how can I assist you today?"
 
     openAIModel {

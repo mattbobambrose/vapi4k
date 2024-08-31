@@ -46,7 +46,6 @@ import com.vapi4k.dsl.functions.ToolCallInfo.Companion.ID_SEPARATOR
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
@@ -231,7 +230,7 @@ object ValidateAssistantResponse {
   ): String =
     runCatching {
       assistantElement.stringValue("assistant.name")
-    }.getOrElse { index.toString() }
+    }.getOrElse { "Unnamed-$index" }
 
   private fun BODY.assistantRequestToolsBody(
     application: AbstractApplicationImpl,
@@ -239,7 +238,6 @@ object ValidateAssistantResponse {
     sessionId: SessionId,
     key: String,
   ) {
-    logger.debug { jsonElement.toJsonString() }
     val toolNames =
       if (jsonElement[key].containsKey("tools"))
         jsonElement
@@ -257,8 +255,8 @@ object ValidateAssistantResponse {
         emptyList()
 
     displayServiceTools(application, sessionId, toolNames)
-    displayFunctions(application, sessionId, funcNames)
     displayManualTools(application, sessionId, toolNames)
+    displayFunctions(application, sessionId, funcNames)
   }
 
   private fun BODY.displayServiceTools(
@@ -268,7 +266,6 @@ object ValidateAssistantResponse {
   ) {
     if (application.serviceCache.isNotEmpty()) {
       h3 { +"Service Tools" }
-
       toolNames
         .mapIndexed { i, name ->
           name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
@@ -392,18 +389,19 @@ object ValidateAssistantResponse {
     funcNames: List<String>,
   ) {
     if (application.functionCache.isNotEmpty()) {
-      val funcs = application.functionCache.entriesForSessionId(sessionId)
-
-      val assistantId = funcs.first().assistantId
-
       h3 { +"Functions" }
-      val functionInfo = application.functionCache.getFromCache(sessionId, assistantId)
       funcNames
-        .map { it.toFunctionName() }
-        .filter { functionInfo.containsFunction(it) }
-        .forEach { funcName ->
+        .mapIndexed { i, name ->
+          name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
+        }
+        .filter { (funcName, assistantId) ->
+          val functionInfo = application.functionCache.getFromCache(sessionId, assistantId)
+          functionInfo.containsFunction(funcName)
+        }
+        .forEach { (funcName, assistantId) ->
           div {
             id = TOOLS_DIV
+            val functionInfo = application.functionCache.getFromCache(sessionId, assistantId)
             val functionDetails = functionInfo.getFunction(funcName)
             val divId = getRandomString()
             h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
