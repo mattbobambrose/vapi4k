@@ -20,6 +20,7 @@ import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.QUERY_ARGS
 import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
@@ -29,6 +30,7 @@ import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.utils.json.get
 import io.ktor.http.Parameters
 import io.ktor.server.application.ApplicationCall
+import io.ktor.util.filter
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -96,7 +98,9 @@ object JsonUtils {
 
   internal fun queryParametersAsArgs(parameters: Parameters): JsonObject =
     buildJsonObject {
-      parameters.forEach { key, value ->
+      parameters
+        .filter { key, value -> key !in SYSTEM_IDS }
+        .forEach { key, value ->
         put(
           key,
           if (value.size > 1)

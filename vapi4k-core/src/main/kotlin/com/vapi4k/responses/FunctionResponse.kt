@@ -49,7 +49,7 @@ class FunctionResponse(
                 args = args,
                 messageDtos = mutableListOf(),
                 successAction = { result -> response.result = result },
-                errorAction = { result -> response.result = "Error invoking function" },
+                errorAction = { result -> response.result = result },
               )
           } else {
             error("Function not found: $funcName")

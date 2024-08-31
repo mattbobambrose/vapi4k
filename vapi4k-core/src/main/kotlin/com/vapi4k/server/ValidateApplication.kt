@@ -28,6 +28,7 @@ import com.vapi4k.common.QueryParams.APPLICATION_ID
 import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.common.QueryParams.TOOL_TYPE
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
@@ -136,7 +137,6 @@ internal object ValidateApplication {
           SESSION_ID to sessionId.value,
           ASSISTANT_ID to assistantId.value,
         )
-      println(serverUrl)
       httpClient.post(serverUrl) {
         headers.append(VAPI_SECRET_HEADER, app.serverSecret)
         setBody(toolRequest.toJsonString<JsonObject>())
@@ -157,7 +157,7 @@ internal object ValidateApplication {
     argName to
       params
         .names()
-        .filterNot { it in setOf(APPLICATION_ID, SESSION_ID, ASSISTANT_ID, TOOL_TYPE, FUNCTION_NAME) }
+        .filterNot { it in SYSTEM_IDS }
         .filter { params[it].orEmpty().isNotEmpty() }.associateWith { JsonPrimitive(params[it]) }
         .toJsonObject(),
   ).toJsonObject()

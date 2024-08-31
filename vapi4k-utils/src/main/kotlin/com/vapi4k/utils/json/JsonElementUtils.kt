@@ -79,7 +79,7 @@ object JsonElementUtils {
   internal fun JsonElement.elementOrNull(key: String) = jsonObject[key]
 
   internal fun JsonElement.element(key: String) =
-    elementOrNull(key) ?: throw IllegalArgumentException("JsonElement key \"$key\" not found")
+    elementOrNull(key) ?: throw IllegalArgumentException("""JsonElement key "$key" not found""")
 
   fun JsonElement.containsKey(vararg keys: String): Boolean {
     val ks = keys.flatMap { it.split(".") }

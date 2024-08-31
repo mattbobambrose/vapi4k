@@ -16,6 +16,8 @@
 
 package com.vapi4k.common
 
+import com.vapi4k.common.Constants.FUNCTION_NAME
+
 object Constants {
   const val HTMX_SOURCE_URL = "https://unpkg.com/htmx.org@2.0.2"
 
@@ -43,6 +45,8 @@ object QueryParams {
   val SESSION_ID = "${ID_PREFIX}sessionId"
   val ASSISTANT_ID = "${ID_PREFIX}assistantId"
   val TOOL_TYPE = "${ID_PREFIX}toolType"
+
+  val SYSTEM_IDS = setOf(APPLICATION_ID, SESSION_ID, ASSISTANT_ID, TOOL_TYPE, FUNCTION_NAME)
 }
 
 object Headers {

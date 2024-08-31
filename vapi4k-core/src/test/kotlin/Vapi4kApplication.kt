@@ -221,8 +221,8 @@ fun Application.module() {
               squadAssistant(
                 "assist1",
                 {
-//                  serviceTool(WeatherLookupByAreaCodeService("[assistant 1]"))
-//                  manualTooDecl()
+                  serviceTool(WeatherLookupByAreaCodeService("[assistant 1]"))
+                  manualTooDecl()
                 },
                 {
                   function(FavoriteFoodService())
@@ -234,8 +234,8 @@ fun Application.module() {
               squadAssistant(
                 "assist2",
                 {
-//                  serviceTool(WeatherLookupByAreaCodeService("[assistant 2]"))
-//                  manualTooDecl()
+                  serviceTool(WeatherLookupByAreaCodeService("[assistant 2]"))
+                  manualTooDecl()
                 },
                 {
                   function(FavoriteFoodService())
@@ -364,6 +364,7 @@ private fun Tools.manualTooDecl() {
     }
 
     onInvoke { args ->
+      println(args.toJsonString())
       val city = args.stringValue("city")
       val state = args.stringValue("state")
       result = "The weather in $city, $state is sunny"
