@@ -26,7 +26,7 @@ open class ToolWithServerImpl internal constructor(
   toolDto: ToolDto,
 ) : BaseToolImpl(callerName, toolDto),
   ToolWithServer {
-  internal val serverChecker = DuplicateInvokeChecker()
+  private val serverChecker = DuplicateInvokeChecker()
 
   override fun server(block: Server.() -> Unit): Server {
     serverChecker.check("$callerName{} contains multiple calls to server{}")

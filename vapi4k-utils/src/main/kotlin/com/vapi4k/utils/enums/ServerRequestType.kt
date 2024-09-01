@@ -55,7 +55,7 @@ enum class ServerRequestType(
     val JsonElement.isTransferDestinationRequest get() = requestType == TRANSFER_DESTINATION_REQUEST
     val JsonElement.isUserInterrupted get() = requestType == USER_INTERRUPTED
 
-    internal fun fromString(desc: String) =
+    private fun fromString(desc: String) =
       try {
         ServerRequestType.entries.first { it.desc == desc }
       } catch (e: Exception) {

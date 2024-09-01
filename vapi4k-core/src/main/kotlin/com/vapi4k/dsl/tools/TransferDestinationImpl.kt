@@ -36,7 +36,7 @@ class TransferDestinationImpl internal constructor(
   private val callerName: String,
   private val dto: TransferMessageResponseDto,
 ) : TransferDestinationResponse {
-  internal val duplicateChecker = DuplicateInvokeChecker()
+  private val duplicateChecker = DuplicateInvokeChecker()
 
   override fun assistantDestination(block: AssistantDestination.() -> Unit) {
     duplicateChecker.check("assistantDestination{} already called in $callerName{}")
