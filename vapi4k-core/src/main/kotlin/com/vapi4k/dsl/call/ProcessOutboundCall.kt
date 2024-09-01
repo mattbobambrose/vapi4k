@@ -26,6 +26,7 @@ import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.MiscUtils.removeEnds
+import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
@@ -41,6 +42,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.buildJsonObject
+import java.net.URI
 
 object ProcessOutboundCall {
   internal fun processOutboundCall(
@@ -54,9 +56,9 @@ object ProcessOutboundCall {
           .onFailure { e -> logger.error { "Failed to create outbound call: ${e.errorMsg}" } }
           .getOrThrow()
 
+      val url = "$vapi4kBaseUrl/${OUTBOUND_CALL.pathPrefix}/${outboundCall.serverPath.removeEnds("/")}"
       val assistantResponse =
         runCatching {
-          val url = "$vapi4kBaseUrl/${OUTBOUND_CALL.pathPrefix}/${outboundCall.serverPath.removeEnds("/")}"
           if (outboundCall.method.isPost()) {
             httpClient.post(url) {
               contentType(Application.Json)
@@ -71,6 +73,23 @@ object ProcessOutboundCall {
           }
         }.onFailure { e -> logger.error { "Failed to fetch assistant from vapi4k server: ${e.errorMsg}" } }
           .getOrThrow()
+
+      val status = assistantResponse.status
+      if (status != HttpStatusCode.OK) {
+        when (status) {
+          HttpStatusCode.NotFound -> {
+            val path = URI(url).path.split("/").last().ensureStartsWith("/")
+            error("""Invalid serverPath "$path" used in assistant definition: $url""")
+          }
+
+          HttpStatusCode.Unauthorized -> error("Unauthorized to fetch assistant: $url")
+
+          else -> {
+            val body = assistantResponse.bodyAsText().let { if (it.isBlank()) "" else "- $it" }
+            error("Failed to fetch assistant $url from vapi4k server: $status $body")
+          }
+        }
+      }
 
       val assistantJson = assistantResponse.bodyAsText().toJsonElement()
 
