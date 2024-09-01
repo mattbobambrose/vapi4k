@@ -75,7 +75,6 @@ import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.http.content.staticResources
 import io.ktor.server.request.receive
-import io.ktor.server.request.uri
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondText
@@ -135,9 +134,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     defaultKtorConfig(appMicrometerRegistry)
 
     intercept(ApplicationCallPipeline.Call) {
-      println("Request received: ${call.request.uri}")
+      // println("Request received: ${call.request.uri}")
       proceed()
-      println("Response sent with status: ${call.response.status()}")
+      // println("Response sent with status: ${call.response.status()}")
     }
 
     routing {
