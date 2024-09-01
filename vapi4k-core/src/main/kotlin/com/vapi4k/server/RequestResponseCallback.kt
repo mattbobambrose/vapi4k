@@ -20,6 +20,7 @@ import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.vapi4k.RequestResponseType
 import com.vapi4k.utils.JsonUtils
 import com.vapi4k.utils.enums.ServerRequestType
+import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
@@ -32,26 +33,24 @@ data class RequestResponseCallback(
   val elapsed: Duration = Duration.ZERO,
 ) {
   companion object {
-    fun requestCallback(
-      applicationId: ApplicationId,
-      requestType: ServerRequestType,
-      request: JsonElement,
-    ) = RequestResponseCallback(
-      applicationId = applicationId,
-      type = RequestResponseType.REQUEST,
-      requestType = requestType,
-      request = request,
-    )
+    fun requestCallback(requestContext: RequestContext): RequestResponseCallback =
+      with(requestContext) {
+        RequestResponseCallback(
+          applicationId = application.applicationId,
+          type = RequestResponseType.REQUEST,
+          requestType = request.requestType,
+          request = request,
+        )
+      }
 
     fun responseCallback(
-      applicationId: ApplicationId,
-      requestType: ServerRequestType,
+      requestContext: RequestContext,
       response: () -> JsonElement,
       elapsed: Duration,
     ) = RequestResponseCallback(
-      applicationId = applicationId,
+      applicationId = requestContext.application.applicationId,
       type = RequestResponseType.RESPONSE,
-      requestType = requestType,
+      requestType = requestContext.request.requestType,
       response = response,
       elapsed = elapsed,
     )

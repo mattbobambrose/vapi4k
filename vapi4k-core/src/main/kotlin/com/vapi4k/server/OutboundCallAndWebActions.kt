@@ -16,12 +16,9 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.common.AssistantId
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VALIDATE_HEADER
 import com.vapi4k.common.Headers.VALIDATE_VALUE
-import com.vapi4k.common.SessionId
-import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dsl.vapi4k.WebApplicationImpl
@@ -46,26 +43,22 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
-import kotlinx.serialization.json.JsonElement
 import kotlin.time.measureTimedValue
 
 internal object OutboundCallAndWebActions {
   suspend fun KtorCallContext.outboundCallAndWebRequest(
     config: Vapi4kConfigImpl,
-    application: AbstractApplicationImpl,
-    request: JsonElement,
-    sessionId: SessionId,
-    assistantId: AssistantId,
+    requestContext: RequestContext,
   ) {
-    if (!isValidSecret(application.serverSecret)) {
+    if (!isValidSecret(requestContext.application.serverSecret)) {
       call.respond(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
       val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
       if (isProduction || validateCall != VALIDATE_VALUE) {
-        processOutboundCallAndWebRequest(config, application, request, sessionId, assistantId)
+        processOutboundCallAndWebRequest(config, requestContext)
       } else {
         runCatching {
-          processOutboundCallAndWebRequest(config, application, request, sessionId, assistantId)
+          processOutboundCallAndWebRequest(config, requestContext)
         }.onFailure { e ->
           logger.error(e) { "Error processing web assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -76,62 +69,62 @@ internal object OutboundCallAndWebActions {
 
   private suspend fun KtorCallContext.processOutboundCallAndWebRequest(
     config: Vapi4kConfigImpl,
-    application: AbstractApplicationImpl,
-    request: JsonElement,
-    sessionId: SessionId,
-    assistantId: AssistantId,
+    requestContext: RequestContext,
   ) {
-    val requestType = request.requestType
-    invokeRequestCallbacks(config, application.applicationId, requestType, request)
+    val requestType = requestContext.request.requestType
+    invokeRequestCallbacks(config, requestContext)
 
-    val (response, duration) = measureTimedValue {
-      when (requestType) {
-        ASSISTANT_REQUEST -> {
-          val response =
-            when (application) {
-              is OutboundCallApplicationImpl -> application.getAssistantResponse(request, sessionId)
-              is WebApplicationImpl -> application.getAssistantResponse(request, sessionId)
-              else -> error("Invalid application type: ${application.applicationType}")
+    val (response, duration) =
+      measureTimedValue {
+        with(requestContext) {
+          when (requestType) {
+            ASSISTANT_REQUEST -> {
+              val response =
+                when (application) {
+                  is OutboundCallApplicationImpl -> application.getAssistantResponse(requestContext)
+                  is WebApplicationImpl -> application.getAssistantResponse(requestContext)
+                  else -> error("Invalid application type: ${application.applicationType}")
+                }
+
+              // Drop the messageResponse prefix property
+              call.respond(response.messageResponse)
+              lambda { response.toJsonElement() }
             }
 
-          // Drop the messageResponse prefix property
-          call.respond(response.messageResponse)
-          lambda { response.toJsonElement() }
-        }
+            FUNCTION_CALL -> {
+              val response = getFunctionCallResponse(requestContext)
+              call.respond(response)
+              lambda { response.toJsonElement() }
+            }
 
-        FUNCTION_CALL -> {
-          val response = getFunctionCallResponse(application, request, sessionId, assistantId)
-          call.respond(response)
-          lambda { response.toJsonElement() }
-        }
+            TOOL_CALL -> {
+              val response = getToolCallResponse(requestContext)
+              call.respond(response)
+              lambda { response.toJsonElement() }
+            }
 
-        TOOL_CALL -> {
-          val response = getToolCallResponse(application, request, sessionId, assistantId)
-          call.respond(response)
-          lambda { response.toJsonElement() }
-        }
+            TRANSFER_DESTINATION_REQUEST -> {
+              val response = application.getTransferDestinationResponse(requestContext)
+              call.respond(response)
+              lambda { response.toJsonElement() }
+            }
 
-        TRANSFER_DESTINATION_REQUEST -> {
-          val response = application.getTransferDestinationResponse(request, sessionId, assistantId)
-          call.respond(response)
-          lambda { response.toJsonElement() }
-        }
+            END_OF_CALL_REPORT -> {
+              application.processEOCRMessage(requestContext)
+              val response = SimpleMessageResponse("End of call report received")
+              call.respond(response)
+              lambda { response.toJsonElement() }
+            }
 
-        END_OF_CALL_REPORT -> {
-          application.processEOCRMessage(sessionId, assistantId)
-          val response = SimpleMessageResponse("End of call report received")
-          call.respond(response)
-          lambda { response.toJsonElement() }
-        }
-
-        else -> {
-          val response = SimpleMessageResponse("$requestType received")
-          call.respond(response)
-          lambda { response.toJsonElement() }
+            else -> {
+              val response = SimpleMessageResponse("$requestType received")
+              call.respond(response)
+              lambda { response.toJsonElement() }
+            }
+          }
         }
       }
-    }
 
-    invokeResponseCallbacks(config, application.applicationId, requestType, response, duration)
+    invokeResponseCallbacks(config, requestContext, response, duration)
   }
 }

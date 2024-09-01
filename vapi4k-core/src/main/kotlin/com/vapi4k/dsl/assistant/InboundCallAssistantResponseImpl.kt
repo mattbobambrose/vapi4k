@@ -21,13 +21,13 @@ import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.dsl.destination.NumberDestinationImpl
 import com.vapi4k.dsl.destination.SipDestinationImpl
-import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
+import com.vapi4k.server.RequestContext
 
 class InboundCallAssistantResponseImpl(
-  assistantRequestContext: AssistantRequestContext,
-) : AbstractAssistantResponseImpl(assistantRequestContext),
+  requestContext: RequestContext,
+) : AbstractAssistantResponseImpl(requestContext),
   InboundCallAssistantResponse {
   override var error: String
     get() = assistantRequestResponse.messageResponse.error

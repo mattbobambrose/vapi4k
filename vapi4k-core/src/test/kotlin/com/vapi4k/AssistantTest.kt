@@ -26,11 +26,12 @@ import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.api.transcriber.enums.DeepgramModelType
 import com.vapi4k.api.transcriber.enums.GladiaModelType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
+import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
-import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
 import com.vapi4k.utils.JsonUtils.assistantClientMessages
@@ -763,10 +764,11 @@ class AssistantTest {
     """.toJsonElement()
 
     fun newRequestContext() =
-      AssistantRequestContext(
+      RequestContext(
         InboundCallApplicationImpl(),
         ASSISTANT_REQUEST,
         getRandomSecret(8, 4, 4, 12).toSessionId(),
+        getRandomSecret(8, 4, 4, 12).toAssistantId(),
       )
   }
 }

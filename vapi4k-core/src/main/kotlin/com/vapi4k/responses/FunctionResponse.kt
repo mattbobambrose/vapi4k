@@ -18,46 +18,41 @@ package com.vapi4k.responses
 
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionName
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionParameters
-import com.vapi4k.common.AssistantId
-import com.vapi4k.common.SessionId
-import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.common.Utils.errorMsg
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 @Serializable
 class FunctionResponse(
   var result: String = "",
 ) {
   companion object {
-    suspend fun getFunctionCallResponse(
-      application: AbstractApplicationImpl,
-      request: JsonElement,
-      sessionId: SessionId,
-      assistantId: AssistantId,
-    ) = FunctionResponse()
-      .also { response ->
-        val funcName = request.functionName
-        val args = request.functionParameters
-        runCatching {
-          if (application.containsFunctionInCache(sessionId, assistantId, funcName)) {
-            application.getFunctionFromCache(sessionId, assistantId, funcName)
-              .invokeToolMethod(
-                isTool = false,
-                request = request,
-                args = args,
-                messageDtos = mutableListOf(),
-                successAction = { result -> response.result = result },
-                errorAction = { result -> response.result = result },
-              )
-          } else {
-            error("Function not found: $funcName")
+    suspend fun getFunctionCallResponse(requestContext: RequestContext): FunctionResponse =
+      FunctionResponse()
+        .also { response ->
+          with(requestContext) {
+            val funcName = requestContext.request.functionName
+            val args = requestContext.request.functionParameters
+            runCatching {
+              if (application.containsFunctionInCache(requestContext, funcName)) {
+                application.getFunctionFromCache(requestContext, funcName)
+                  .invokeToolMethod(
+                    isTool = false,
+                    request = request,
+                    args = args,
+                    messageDtos = mutableListOf(),
+                    successAction = { result -> response.result = result },
+                    errorAction = { result -> response.result = result },
+                  )
+              } else {
+                error("Function not found: $funcName")
+              }
+            }.getOrElse { e ->
+              val errorMsg = e.message ?: "Error invoking function: $funcName ${e.errorMsg}"
+              logger.error(e) { errorMsg }
+            }
           }
-        }.getOrElse { e ->
-          val errorMsg = e.message ?: "Error invoking function: $funcName ${e.errorMsg}"
-          logger.error(e) { errorMsg }
         }
-      }
   }
 }

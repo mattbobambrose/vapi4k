@@ -35,7 +35,7 @@ abstract class AbstractModel(
   // This will track manual tools declared per model and prevent duplicates
   internal val declaredManualTools = mutableSetOf<FunctionName>()
 
-  internal val request get() = modelUnion.assistantRequestContext.request
+  internal val request get() = modelUnion.requestContext.request
   override val sessionId get() = modelUnion.sessionId
   override val assistantId get() = modelUnion.assistantId
   override val messages get() = dto.messages

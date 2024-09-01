@@ -43,18 +43,18 @@ data class MemberImpl(
   override fun assistant(block: Assistant.() -> Unit): Assistant {
     memberChecker.check("Member already has an assistant assigned")
     return AssistantImpl(
-      members.squad.assistantRequestContext,
+      members.squad.requestContext,
       members.squad.sessionId,
       members.squad.assistantIdSource,
       dto.assistantDto,
       dto.assistantOverridesDto,
     ).apply(block)
       .apply {
-        if (assistantRequestContext.application.applicationType in assignUrlTypes) {
+        if (requestContext.application.applicationType in assignUrlTypes) {
           this@MemberImpl.dto.assistantDto.serverUrl =
-            assistantRequestContext.application.serverUrl
+            requestContext.application.serverUrl
               .appendQueryParams(
-                APPLICATION_ID to assistantRequestContext.application.applicationId.value,
+                APPLICATION_ID to requestContext.application.applicationId.value,
                 SESSION_ID to sessionId.value,
                 ASSISTANT_ID to assistantId.value,
               )

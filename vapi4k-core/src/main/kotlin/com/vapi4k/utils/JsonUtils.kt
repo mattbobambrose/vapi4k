@@ -16,12 +16,8 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.QUERY_ARGS
-import com.vapi4k.common.QueryParams.ASSISTANT_ID
-import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.SYSTEM_IDS
-import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
@@ -101,20 +97,15 @@ object JsonUtils {
       parameters
         .filter { key, value -> key !in SYSTEM_IDS }
         .forEach { key, value ->
-        put(
-          key,
-          if (value.size > 1)
-            buildJsonArray { value.forEach { add(JsonPrimitive(it)) } }
-          else
-            JsonPrimitive(
-              value.firstOrNull().orEmpty(),
-            ),
-        )
-      }
+          put(
+            key,
+            if (value.size > 1)
+              buildJsonArray { value.forEach { add(JsonPrimitive(it)) } }
+            else
+              JsonPrimitive(
+                value.firstOrNull().orEmpty(),
+              ),
+          )
+        }
     }
-
-  internal fun ApplicationCall.getSessionIdFromQueryParameters() = request.queryParameters[SESSION_ID]?.toSessionId()
-
-  internal fun ApplicationCall.getAssistantIdFromQueryParameters() =
-    request.queryParameters[ASSISTANT_ID]?.toAssistantId()
 }

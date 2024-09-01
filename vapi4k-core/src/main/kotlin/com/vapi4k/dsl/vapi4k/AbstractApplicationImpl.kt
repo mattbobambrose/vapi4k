@@ -24,12 +24,13 @@ import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.FunctionName
 import com.vapi4k.common.QueryParams.SECRET_PARAM
-import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ServiceCache
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.plugin.Vapi4kServer.logger
+import com.vapi4k.responses.AssistantMessageResponse
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.isNull
@@ -65,38 +66,35 @@ abstract class AbstractApplicationImpl(
   internal val fullServerPathWithSecretAsQueryParam: String
     get() = "${fullServerPath}${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_PARAM=$it" }}"
 
+  internal abstract suspend fun getAssistantResponse(requestContext: RequestContext): AssistantMessageResponse
+
   internal fun addAssistantId(assistantId: AssistantId) {
     assistantIds += assistantId
   }
 
   internal fun containsServiceToolInCache(
-    sessionId: SessionId,
-    assistantId: AssistantId,
+    requestContext: RequestContext,
     funcName: FunctionName,
   ): Boolean =
-    serviceCache.containsIds(sessionId, assistantId) &&
-      serviceCache.getFromCache(sessionId, assistantId).containsFunction(funcName)
+    serviceCache.containsIds(requestContext) && serviceCache.getFromCache(requestContext).containsFunction(funcName)
 
   internal fun containsManualToolInCache(funcName: FunctionName): Boolean = manualToolCache.containsTool(funcName)
 
   internal fun containsFunctionInCache(
-    sessionId: SessionId,
-    assistantId: AssistantId,
+    requestContext: RequestContext,
     funcName: FunctionName,
-  ) = functionCache.containsIds(sessionId, assistantId) &&
-    functionCache.getFromCache(sessionId, assistantId).containsFunction(funcName)
+  ) = functionCache.containsIds(requestContext) &&
+    functionCache.getFromCache(requestContext).containsFunction(funcName)
 
   internal fun getServiceToolFromCache(
-    sessionId: SessionId,
-    assistantId: AssistantId,
+    requestContext: RequestContext,
     funcName: FunctionName,
-  ) = serviceCache.getFromCache(sessionId, assistantId).getFunction(funcName)
+  ) = serviceCache.getFromCache(requestContext).getFunction(funcName)
 
   internal fun getFunctionFromCache(
-    sessionId: SessionId,
-    assistantId: AssistantId,
+    requestContext: RequestContext,
     funcName: FunctionName,
-  ) = functionCache.getFromCache(sessionId, assistantId).getFunction(funcName)
+  ) = functionCache.getFromCache(requestContext).getFunction(funcName)
 
   fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
     applicationAllRequests += block
@@ -130,18 +128,14 @@ abstract class AbstractApplicationImpl(
     requestTypes.forEach { applicationPerResponses += it to block }
   }
 
-  internal suspend fun getTransferDestinationResponse(
-    request: JsonElement,
-    sessionId: SessionId,
-    assistantId: AssistantId,
-  ): TransferMessageResponseDto =
+  internal suspend fun getTransferDestinationResponse(requestContext: RequestContext) =
     transferDestinationRequest.let { func ->
       if (func.isNull()) {
         error("onTransferDestinationRequest{} not called")
       } else {
         val responseDto = TransferMessageResponseDto()
         val destImpl = TransferDestinationImpl("onTransferDestinationRequest", responseDto)
-        func.invoke(destImpl, request)
+        func.invoke(destImpl, requestContext.request)
         if (responseDto.messageResponse.destination.isNull())
           error(
             "onTransferDestinationRequest{} is missing a call to numberDestination{}, sipDestination{}, " +
@@ -158,21 +152,18 @@ abstract class AbstractApplicationImpl(
       error("onTransferDestinationRequest{} can be called only once per inboundCallApplication{}")
   }
 
-  fun processEOCRMessage(
-    sessionId: SessionId,
-    assistantId: AssistantId,
-  ) {
+  fun processEOCRMessage(requestContext: RequestContext) {
     // Need to count the number of functions available to prevent error if no funcs exist
     if (eocrCacheRemovalEnabled) {
-      val cacheKey = cacheKeyValue(sessionId, assistantId)
+      val cacheKey = cacheKeyValue(requestContext)
       if (serviceCache.isNotEmpty()) {
-        serviceCache.removeFromCache(sessionId, assistantId) { funcInfo ->
+        serviceCache.removeFromCache(requestContext) { funcInfo ->
           logger.info { "EOCR removed ${funcInfo.size} serviceTool cache items [${funcInfo.ageSecs}] " }
         } ?: logger.warn { "EOCR unable to find and remove serviceTool cache entry [$cacheKey]" }
       }
 
       if (functionCache.isNotEmpty()) {
-        functionCache.removeFromCache(sessionId, assistantId) { funcInfo ->
+        functionCache.removeFromCache(requestContext) { funcInfo ->
           logger.info { "EOCR removed ${funcInfo.size} function cache items [${funcInfo.ageSecs}] " }
         } ?: logger.warn { "EOCR unable to find and remove function cache entry [$cacheKey]" }
       }

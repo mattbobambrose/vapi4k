@@ -16,7 +16,6 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.common.AssistantId
 import com.vapi4k.common.CacheKey
 import com.vapi4k.common.CacheKey.Companion.cacheKeyValue
 import com.vapi4k.common.SessionId
@@ -26,6 +25,7 @@ import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
 import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.plugin.Vapi4kServer.logger
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.datetime.Clock
@@ -71,23 +71,16 @@ internal class ServiceCache(
     }
   }
 
-  fun containsIds(
-    sessionId: SessionId,
-    assistantId: AssistantId,
-  ) = cacheMap.containsKey(cacheKeyValue(sessionId, assistantId))
+  fun containsIds(requestContext: RequestContext) = cacheMap.containsKey(cacheKeyValue(requestContext))
 
-  fun getFromCache(
-    sessionId: SessionId,
-    assistantId: AssistantId,
-  ): FunctionInfo =
-    cacheKeyValue(sessionId, assistantId).let { key -> cacheMap[key] ?: error("Session cache id not found: $key") }
+  fun getFromCache(requestContext: RequestContext): FunctionInfo =
+    cacheKeyValue(requestContext).let { key -> cacheMap[key] ?: error("Cache key not found: $key") }
 
   fun removeFromCache(
-    sessionId: SessionId,
-    assistantId: AssistantId,
+    requestContext: RequestContext,
     block: (FunctionInfo) -> Unit,
   ): FunctionInfo? =
-    cacheKeyValue(sessionId, assistantId).let { key ->
+    cacheKeyValue(requestContext).let { key ->
       cacheMap.remove(key)
         ?.also { block(it) }
         .also {

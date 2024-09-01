@@ -19,17 +19,17 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.api.assistant.AssistantOverrides
 import com.vapi4k.common.SessionId
-import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.AssistantIdSource
 import com.vapi4k.utils.DuplicateInvokeChecker
 
 interface AssistantProperties : CommonAssistantProperties
 
 class AssistantImpl internal constructor(
-  override val assistantRequestContext: AssistantRequestContext,
+  override val requestContext: RequestContext,
   override val sessionId: SessionId,
   private val assistantIdSource: AssistantIdSource,
   private val assistantDto: AssistantDto,
@@ -38,7 +38,7 @@ class AssistantImpl internal constructor(
   AssistantProperties by assistantDto,
   Assistant {
   override val assistantId =
-    assistantIdSource.nextAssistantId().also { assistantRequestContext.application.addAssistantId(it) }
+    assistantIdSource.nextAssistantId().also { requestContext.application.addAssistantId(it) }
   override val transcriberChecker = DuplicateInvokeChecker()
   override val modelChecker = DuplicateInvokeChecker()
   override val voiceChecker = DuplicateInvokeChecker()
@@ -50,7 +50,7 @@ class AssistantImpl internal constructor(
   // AssistantOverrides
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides =
     AssistantOverridesImpl(
-      assistantRequestContext,
+      requestContext,
       sessionId,
       assistantIdSource,
       assistantOverridesDto,

@@ -36,7 +36,6 @@ import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
-import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
@@ -45,11 +44,12 @@ import com.vapi4k.server.CacheActions.cachesRequest
 import com.vapi4k.server.CacheActions.clearCaches
 import com.vapi4k.server.InboundCallActions.inboundCallRequest
 import com.vapi4k.server.OutboundCallAndWebActions.outboundCallAndWebRequest
+import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContext.Companion.getAssistantIdFromQueryParameters
+import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParameters
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.server.installContentNegotiation
 import com.vapi4k.utils.JsonUtils.addArgsAndMessage
-import com.vapi4k.utils.JsonUtils.getAssistantIdFromQueryParameters
-import com.vapi4k.utils.JsonUtils.getSessionIdFromQueryParameters
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
@@ -178,35 +178,45 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       }
 
       // Process Inbound Call requests
-      config.inboundCallApplications.forEach { app ->
-        val path = "/${app.fullServerPath}"
+      config.inboundCallApplications.forEach { application ->
+        val path = "/${application.fullServerPath}"
         route(path) {
-          logger.info { """Adding POST endpoint "$path" for ${app.applicationType.displayName} """ }
+          logger.info { """Adding POST endpoint "$path" for ${application.applicationType.displayName} """ }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
           post {
-            val request = call.receive<String>().toJsonElement()
-            val sessionId = call.getSessionIdFromQueryParameters() ?: INBOUND_CALL.defaultSessionId().toSessionId()
-            val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
-            inboundCallRequest(config, app as InboundCallApplicationImpl, request, sessionId, assistantId)
+            inboundCallRequest(
+              config = config,
+              requestContext = RequestContext(
+                application = application,
+                request = call.receive<String>().toJsonElement(),
+                sessionId = call.getSessionIdFromQueryParameters() ?: INBOUND_CALL.defaultSessionId().toSessionId(),
+                assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
+              ),
+            )
           }
         }
       }
 
       // Process Outbound Call and Web requests
       (config.outboundCallApplications + config.webApplications)
-        .forEach { app ->
-          val path = "/${app.fullServerPath}"
+        .forEach { application ->
+          val path = "/${application.fullServerPath}"
           route(path) {
             installContentNegotiation()
-            logger.info { """Adding GET  endpoint "$path" for ${app.applicationType.displayName}""" }
+            logger.info { """Adding GET  endpoint "$path" for ${application.applicationType.displayName}""" }
             get {
-              val request = buildJsonObject { addArgsAndMessage(call) }
-              val sessionId = call.getSessionIdFromQueryParameters() ?: error("Missing sessionId in query parameters")
-              val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
-              outboundCallAndWebRequest(config, app, request, sessionId, assistantId)
+              outboundCallAndWebRequest(
+                config = config,
+                requestContext = RequestContext(
+                  application = application,
+                  request = buildJsonObject { addArgsAndMessage(call) },
+                  sessionId = call.getSessionIdFromQueryParameters() ?: error("No sessionId in query parameters"),
+                  assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
+                ),
+              )
             }
-            logger.info { """Adding POST endpoint "$path" for ${app.applicationType.displayName}""" }
+            logger.info { """Adding POST endpoint "$path" for ${application.applicationType.displayName}""" }
             post {
               val json = call.receive<String>().toJsonElement()
               val request =
@@ -228,9 +238,16 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                     addArgsAndMessage(call)
                   }
                 }
-              val sessionId = call.getSessionIdFromQueryParameters() ?: error("No session ID found in query parameters")
-              val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
-              outboundCallAndWebRequest(config, app, request, sessionId, assistantId)
+
+              outboundCallAndWebRequest(
+                config = config,
+                requestContext = RequestContext(
+                  application = application,
+                  request = request,
+                  sessionId = call.getSessionIdFromQueryParameters() ?: error("No sessionId found in query parameters"),
+                  assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
+                ),
+              )
             }
           }
         }

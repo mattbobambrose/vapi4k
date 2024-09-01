@@ -19,21 +19,18 @@ package com.vapi4k.responses
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.toolCallArguments
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.toolCallName
-import com.vapi4k.common.AssistantId
-import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.ManualToolCallResponseImpl
 import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
-import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.plugin.Vapi4kServer.logger
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.JsonUtils.toolCallList
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class ToolCallResponseDto(
@@ -41,91 +38,89 @@ data class ToolCallResponseDto(
   var error: String = "",
 ) {
   companion object {
-    suspend fun getToolCallResponse(
-      application: AbstractApplicationImpl,
-      request: JsonElement,
-      sessionId: SessionId,
-      assistantId: AssistantId,
-    ) = runCatching {
-      ToolCallMessageResponse()
-        .also { tcmr ->
-          val response = tcmr.messageResponse
-          var errorMessage = ""
+    suspend fun getToolCallResponse(requestContext: RequestContext) =
+      runCatching {
+        ToolCallMessageResponse()
+          .also { tcmr ->
+            val response = tcmr.messageResponse
+            var errorMessage = ""
 
-          request.toolCallList
-            .forEach { toolCall ->
-              response.also { toolCallResponse ->
-                response.results +=
-                  ToolCallResult()
-                    .also { toolCallResult ->
-                      val funcName = toolCall.toolCallName
-                      val args = toolCall.toolCallArguments
-                      toolCallResult.toolCallId = toolCall.id
-                      toolCallResult.name = funcName.value
-                      val errorAction = { errorMsg: String ->
-                        toolCallResult.error = errorMsg
-                        errorMessage = errorMsg
-                      }
-                      runCatching {
-                        when {
-                          application.containsServiceToolInCache(sessionId, assistantId, funcName) -> {
-                            application.getServiceToolFromCache(sessionId, assistantId, funcName)
-                              .also { func ->
-                                logger.info { "Invoking $funcName on serviceTool method ${func.fqName}" }
+            requestContext.request.toolCallList
+              .forEach { toolCall ->
+                response.also { toolCallResponse ->
+                  response.results +=
+                    ToolCallResult()
+                      .also { toolCallResult ->
+                        val funcName = toolCall.toolCallName
+                        val args = toolCall.toolCallArguments
+                        toolCallResult.toolCallId = toolCall.id
+                        toolCallResult.name = funcName.value
+                        val errorAction = { errorMsg: String ->
+                          toolCallResult.error = errorMsg
+                          errorMessage = errorMsg
+                        }
+                        with(requestContext) {
+                          runCatching {
+                            when {
+                              application.containsServiceToolInCache(requestContext, funcName) -> {
+                                application.getServiceToolFromCache(requestContext, funcName)
+                                  .also { func ->
+                                    logger.info { "Invoking $funcName on serviceTool method ${func.fqName}" }
+                                  }
+                                  .invokeToolMethod(
+                                    isTool = true,
+                                    request = request,
+                                    args = args,
+                                    messageDtos = toolCallResult.messageDtos,
+                                    successAction = { result -> toolCallResult.result = result },
+                                    errorAction = errorAction,
+                                  )
                               }
-                              .invokeToolMethod(
-                                isTool = true,
-                                request = request,
-                                args = args,
-                                messageDtos = toolCallResult.messageDtos,
-                                successAction = { result -> toolCallResult.result = result },
-                                errorAction = errorAction,
-                              )
-                          }
 
-                          application.containsManualToolInCache(funcName) -> {
-                            val manualToolImpl: ManualToolImpl = application.manualToolCache.getTool(funcName)
-                            if (!manualToolImpl.isToolCallRequestInitialized()) {
-                              error("onInvoke{} not declared in $funcName")
-                            } else {
-                              val completeMsgs = RequestCompleteMessagesImpl()
-                              val failedMsgs = RequestFailedMessagesImpl()
-                              val resp = ManualToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
-                              runCatching {
-                                manualToolImpl.toolCallRequest.invoke(resp, args)
-                                toolCallResult.messageDtos.addAll(completeMsgs.messageList.map { it.dto })
-                              }.onFailure {
-                                with(toolCallResult) {
-                                  result = ""
-                                  error = it.errorMsg
-                                  messageDtos.addAll(failedMsgs.messageList.map { it.dto })
+                              application.containsManualToolInCache(funcName) -> {
+                                val manualToolImpl: ManualToolImpl = application.manualToolCache.getTool(funcName)
+                                if (!manualToolImpl.isToolCallRequestInitialized()) {
+                                  error("onInvoke{} not declared in $funcName")
+                                } else {
+                                  val completeMsgs = RequestCompleteMessagesImpl()
+                                  val failedMsgs = RequestFailedMessagesImpl()
+                                  val resp = ManualToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
+                                  runCatching {
+                                    manualToolImpl.toolCallRequest.invoke(resp, args)
+                                    toolCallResult.messageDtos.addAll(completeMsgs.messageList.map { it.dto })
+                                  }.onFailure {
+                                    with(toolCallResult) {
+                                      result = ""
+                                      error = it.errorMsg
+                                      messageDtos.addAll(failedMsgs.messageList.map { it.dto })
+                                    }
+                                  }
+                                  toolCallResult.apply {
+                                    toolCallId = toolCall.stringValue("id")
+                                  }
                                 }
                               }
-                              toolCallResult.apply {
-                                toolCallId = toolCall.stringValue("id")
-                              }
+
+                              else -> error("Tool not found: $funcName")
                             }
+                          }.getOrElse { e ->
+                            val errorMsg = "Error invoking tool: $funcName ${e.errorMsg}"
+                            logger.error(e) { errorMsg }
+                            errorAction(errorMsg)
                           }
-
-                          else -> error("Tool not found: $funcName")
                         }
-                      }.getOrElse { e ->
-                        val errorMsg = "Error invoking tool: $funcName ${e.errorMsg}"
-                        logger.error(e) { errorMsg }
-                        errorAction(errorMsg)
                       }
-                    }
 
-                if (errorMessage.isNotEmpty()) {
-                  response.error = errorMessage
+                  if (errorMessage.isNotEmpty()) {
+                    response.error = errorMessage
+                  }
                 }
               }
-            }
-        }
-    }.getOrElse { e ->
-      logger.error { "Error receiving tool call: ${e.errorMsg}" }
-      error("Error receiving tool call: ${e.errorMsg}")
-    }
+          }
+      }.getOrElse { e ->
+        logger.error { "Error receiving tool call: ${e.errorMsg}" }
+        error("Error receiving tool call: ${e.errorMsg}")
+      }
   }
 }
 

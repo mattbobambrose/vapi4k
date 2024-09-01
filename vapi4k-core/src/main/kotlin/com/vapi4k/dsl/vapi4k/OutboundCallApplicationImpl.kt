@@ -18,9 +18,9 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.OutboundCallAssistantResponse
 import com.vapi4k.api.vapi4k.OutboundCallApplication
-import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.assistant.OutboundCallAssistantResponseImpl
 import com.vapi4k.responses.AssistantMessageResponse
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.serialization.json.JsonElement
 
@@ -36,17 +36,13 @@ class OutboundCallApplicationImpl internal constructor() :
       error("onAssistantRequest{} can be called only once per inboundCallApplication{}")
   }
 
-  internal suspend fun getAssistantResponse(
-    request: JsonElement,
-    sessionId: SessionId,
-  ): AssistantMessageResponse =
+  override suspend fun getAssistantResponse(requestContext: RequestContext): AssistantMessageResponse =
     assistantRequest.let { func ->
       if (func.isNull()) {
         error("onAssistantRequest{} not called")
       } else {
-        val assistantRequestContext = AssistantRequestContext(this, request, sessionId)
-        val assistantResponse = OutboundCallAssistantResponseImpl(assistantRequestContext)
-        func.invoke(assistantResponse, request)
+        val assistantResponse = OutboundCallAssistantResponseImpl(requestContext)
+        func.invoke(assistantResponse, requestContext.request)
         if (!assistantResponse.isAssigned)
           error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
         else

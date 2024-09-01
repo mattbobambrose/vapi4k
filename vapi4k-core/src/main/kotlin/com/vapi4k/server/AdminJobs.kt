@@ -16,7 +16,6 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.common.ApplicationId
 import com.vapi4k.common.CoreEnvVars.TOOL_CACHE_CLEAN_PAUSE_MINS
 import com.vapi4k.common.CoreEnvVars.TOOL_CACHE_MAX_AGE_MINS
 import com.vapi4k.dsl.vapi4k.RequestResponseType.REQUEST
@@ -26,7 +25,6 @@ import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.utils.common.Utils.errorMsg
-import com.vapi4k.utils.enums.ServerRequestType
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -149,16 +147,13 @@ internal object AdminJobs {
 
   suspend fun invokeRequestCallbacks(
     config: Vapi4kConfigImpl,
-    applicationId: ApplicationId,
-    requestType: ServerRequestType,
-    request: JsonElement,
-  ) = config.callbackChannel.send(requestCallback(applicationId, requestType, request))
+    requestContext: RequestContext,
+  ) = config.callbackChannel.send(requestCallback(requestContext))
 
   suspend fun invokeResponseCallbacks(
     config: Vapi4kConfigImpl,
-    applicationId: ApplicationId,
-    requestType: ServerRequestType,
+    requestContext: RequestContext,
     response: () -> JsonElement,
     elapsed: Duration,
-  ) = config.callbackChannel.send(responseCallback(applicationId, requestType, response, elapsed))
+  ) = config.callbackChannel.send(responseCallback(requestContext, response, elapsed))
 }

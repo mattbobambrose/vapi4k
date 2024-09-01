@@ -23,10 +23,10 @@ import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
-import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.responses.AssistantMessageResponse
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.JsonUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
@@ -44,10 +44,10 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
 
 fun assistantResponse(
-  assistantRequestContext: AssistantRequestContext,
+  requestContext: RequestContext,
   block: InboundCallAssistantResponse.() -> Unit,
 ): AssistantMessageResponse {
-  val assistantResponse = InboundCallAssistantResponseImpl(assistantRequestContext).apply(block)
+  val assistantResponse = InboundCallAssistantResponseImpl(requestContext).apply(block)
   return if (assistantResponse.isAssigned)
     assistantResponse.assistantRequestResponse
   else

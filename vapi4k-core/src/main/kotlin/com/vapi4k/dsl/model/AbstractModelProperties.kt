@@ -30,7 +30,7 @@ interface AbstractModelProperties {
   val toolDtos: MutableList<ToolDto>
   val functionDtos: MutableList<FunctionDto>
 
-  val application get() = modelUnion.assistantRequestContext.application
+  val application get() = modelUnion.requestContext.application
 
   fun message(
     role: MessageRoleType,

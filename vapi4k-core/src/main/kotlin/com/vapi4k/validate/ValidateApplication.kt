@@ -19,6 +19,7 @@ package com.vapi4k.validate
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.ApplicationName
 import com.vapi4k.common.ApplicationName.Companion.toApplicationName
+import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE
 import com.vapi4k.common.Constants.FUNCTION_NAME
@@ -37,9 +38,10 @@ import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.KtorCallContext
 import com.vapi4k.plugin.Vapi4kServer.logger
+import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParameters
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HttpUtils.httpClient
-import com.vapi4k.utils.JsonUtils.getSessionIdFromQueryParameters
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
 import com.vapi4k.utils.MiscUtils.appendQueryParams
@@ -129,19 +131,27 @@ internal object ValidateApplication {
     runCatching {
       val params = call.request.queryParameters
       val applicationId = params[APPLICATION_ID]?.toApplicationId() ?: error("No $APPLICATION_ID found")
-      val assistantId = params[ASSISTANT_ID]?.toApplicationId() ?: error("No $ASSISTANT_ID found")
-      val app = config.getApplicationById(applicationId)
       val toolType = ToolType.valueOf(params[TOOL_TYPE] ?: error("No $TOOL_TYPE found"))
-      val toolRequest = generateToolRequest(toolType, params)
-      val sessionId = call.getSessionIdFromQueryParameters() ?: error("No $SESSION_ID found")
-      val serverUrl =
-        app.serverUrl.appendQueryParams(
-          SESSION_ID to sessionId.value,
-          ASSISTANT_ID to assistantId.value,
+
+      val requestContext =
+        RequestContext(
+          application = config.getApplicationById(applicationId),
+          request = generateToolRequest(toolType, params),
+          sessionId = call.getSessionIdFromQueryParameters() ?: error("No $SESSION_ID found"),
+          assistantId = params[ASSISTANT_ID]?.toAssistantId() ?: error("No $ASSISTANT_ID found"),
         )
+
+      val serverUrl =
+        with(requestContext) {
+          application.serverUrl.appendQueryParams(
+            SESSION_ID to sessionId.value,
+            ASSISTANT_ID to assistantId.value,
+          )
+        }
+
       httpClient.post(serverUrl) {
-        headers.append(VAPI_SECRET_HEADER, app.serverSecret)
-        setBody(toolRequest.toJsonString<JsonObject>())
+        headers.append(VAPI_SECRET_HEADER, requestContext.application.serverSecret)
+        setBody((requestContext.request as JsonObject).toJsonString<JsonObject>(false))
       }
     }.onSuccess { response ->
       val resp = response.bodyAsText()
