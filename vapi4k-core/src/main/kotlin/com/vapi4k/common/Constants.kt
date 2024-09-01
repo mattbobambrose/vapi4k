@@ -69,3 +69,7 @@ object Endpoints {
 object CssNames {
   const val TOOLS_DIV = "tools-div"
 }
+
+object ErrorMessages {
+  const val INVALID_BASE_URL = "Invalid VAPI4K_BASE_URL env value"
+}

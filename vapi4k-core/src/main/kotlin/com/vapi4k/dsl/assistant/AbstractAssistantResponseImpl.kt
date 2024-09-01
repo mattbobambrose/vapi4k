@@ -46,7 +46,6 @@ abstract class AbstractAssistantResponseImpl(
       val assistantIdSource = AssistantIdSource()
       AssistantImpl(
         requestContext,
-        sessionId,
         assistantIdSource,
         messageResponse.assistantDto,
         messageResponse.assistantOverridesDto,
@@ -70,18 +69,16 @@ abstract class AbstractAssistantResponseImpl(
   fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     duplicateChecker.check("assistantId{} was already called")
     return assistantRequestResponse.run {
-      val sessionId = requestContext.sessionId
       val assistantIdSource = AssistantIdSource()
-      AssistantIdImpl(requestContext, sessionId, assistantIdSource, messageResponse).apply(block)
+      AssistantIdImpl(requestContext, assistantIdSource, messageResponse).apply(block)
     }
   }
 
   fun squad(block: Squad.() -> Unit): Squad {
     duplicateChecker.check("squad{} was already called")
     return assistantRequestResponse.run {
-      val sessionId = requestContext.sessionId
       val assistantIdSource = AssistantIdSource()
-      SquadImpl(requestContext, sessionId, assistantIdSource, messageResponse.squadDto).apply(block)
+      SquadImpl(requestContext, assistantIdSource, messageResponse.squadDto).apply(block)
     }
   }
 

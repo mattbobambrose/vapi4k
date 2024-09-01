@@ -42,15 +42,15 @@ class VapiHtmlImpl(
 
               buildString {
                 appendLine()
-                append("\t\taddVapiButton(\n$indent")
+                append("\t\taddVapiButton(\n$INDENT")
                 appendLine(
                   listOf(
                     "'$vapi4kBaseUrl/${WEB.pathPrefix}/${serverPath.removeEnds("/")}'",
-                    "'${serverSecret}'",
-                    "'${vapiPublicApiKey}'",
+                    "'$serverSecret'",
+                    "'$vapiPublicApiKey'",
                     "'${method.name}'",
-                    "JSON.parse('${postArgs}')",
-                  ).joinToString(",\n$indent"),
+                    "JSON.parse('$postArgs')",
+                  ).joinToString(",\n$INDENT"),
                 )
                 appendLine("\t\t);")
               }
@@ -61,6 +61,6 @@ class VapiHtmlImpl(
   }
 
   companion object {
-    private const val indent = "\t\t\t"
+    private const val INDENT = "\t\t\t"
   }
 }

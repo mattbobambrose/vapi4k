@@ -20,6 +20,7 @@ import com.vapi4k.api.call.OutboundCall
 import com.vapi4k.api.call.Phone
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.CoreEnvVars.vapiBaseUrl
+import com.vapi4k.common.ErrorMessages.INVALID_BASE_URL
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.configCall
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
@@ -81,7 +82,7 @@ object ProcessOutboundCall {
         when (status) {
           HttpStatusCode.NotFound -> {
             val path = URI(url).path.split("/").last().ensureStartsWith("/")
-            error("""Invalid VAPI4K_BASE_URL env value or invalid serverPath "$path" used in assistant definition: $stripped""")
+            error("""$INVALID_BASE_URL or invalid serverPath "$path" used in assistant definition: $stripped""")
           }
 
           HttpStatusCode.Unauthorized -> error("Unauthorized to fetch assistant: $stripped")

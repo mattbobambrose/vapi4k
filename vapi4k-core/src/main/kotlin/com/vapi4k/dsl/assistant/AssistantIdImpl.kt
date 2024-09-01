@@ -18,7 +18,6 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.AssistantId
 import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.common.SessionId
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.server.RequestContext
@@ -32,7 +31,6 @@ interface AssistantIdProperties {
 
 class AssistantIdImpl internal constructor(
   internal val requestContext: RequestContext,
-  private val sessionId: SessionId,
   private val assistantIdSource: AssistantIdSource,
   private val assistantIdProperties: AssistantIdProperties,
 ) : AssistantIdProperties by assistantIdProperties,
@@ -44,7 +42,6 @@ class AssistantIdImpl internal constructor(
   override fun assistantOverrides(block: AssistantOverrides.() -> Unit) =
     AssistantOverridesImpl(
       requestContext,
-      sessionId,
       assistantIdSource,
       assistantIdProperties.assistantOverridesDto,
     ).apply(block)

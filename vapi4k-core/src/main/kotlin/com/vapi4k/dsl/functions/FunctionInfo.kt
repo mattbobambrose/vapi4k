@@ -35,7 +35,6 @@ class FunctionInfo internal constructor(
 
   internal val age get() = Clock.System.now() - created
   internal val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
-
   internal val size get() = functions.size
 
   internal fun containsFunction(funcName: FunctionName) = functions.contains(funcName)

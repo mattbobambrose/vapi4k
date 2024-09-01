@@ -35,8 +35,6 @@ abstract class AbstractModel(
   // This will track manual tools declared per model and prevent duplicates
   internal val declaredManualTools = mutableSetOf<FunctionName>()
 
-  internal val request get() = modelUnion.requestContext.request
-  override val sessionId get() = modelUnion.sessionId
   override val assistantId get() = modelUnion.assistantId
   override val messages get() = dto.messages
   override val toolDtos get() = dto.tools
@@ -58,7 +56,7 @@ abstract class AbstractModel(
     val caller = this::class.simpleName.orEmpty().removeSuffix("Impl").replaceFirstChar { it.lowercaseChar() }
     duplicateChecker.check("$caller{} contains multiple calls to knowledgeBase{}")
     val kbDto = KnowledgeBaseDto().also { dto.knowledgeBaseDto = it }
-    return KnowledgeBaseImpl(request, kbDto)
+    return KnowledgeBaseImpl(modelUnion.requestContext.request, kbDto)
       .apply(block)
       .apply {
         if (kbDto.fileIds.isEmpty())

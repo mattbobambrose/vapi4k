@@ -18,7 +18,6 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.CacheKey
 import com.vapi4k.common.CacheKey.Companion.cacheKeyValue
-import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.functions.FunctionDetails
 import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
@@ -44,30 +43,25 @@ internal class ServiceCache(
 
   fun isNotEmpty() = cacheMap.isNotEmpty()
 
-  fun entriesForSessionId(sessionId: SessionId) =
-    cacheMap.entries
-      .filter { it.key.value.startsWith(sessionId.value) }
-      .map { it.value }
-
   fun addToCache(
     model: AbstractModel,
     obj: Any,
     function: KFunction<*>,
   ) {
-    val sessionId = model.sessionId
+    val sessionId = model.modelUnion.requestContext.sessionId
     val assistantId = model.assistantId
     val cacheKey = cacheKeyValue(sessionId, assistantId)
     val toolCallInfo = ToolCallInfo(assistantId, function)
-    val toolFuncName = toolCallInfo.llmName
+    val funcName = toolCallInfo.llmName
     val funcInfo = cacheMap.computeIfAbsent(cacheKey) { FunctionInfo(sessionId, assistantId) }
-    val funcDetails = funcInfo.getFunctionOrNull(toolFuncName)
+    val funcDetails = funcInfo.getFunctionOrNull(funcName)
 
     if (funcDetails.isNull()) {
       val newFuncDetails = FunctionDetails(obj, function, toolCallInfo)
-      funcInfo.addFunction(toolFuncName, newFuncDetails)
-      logger.info { "Added \"$toolFuncName\" (${newFuncDetails.fqName}) to $path serviceTool cache [$cacheKey]" }
+      funcInfo.addFunction(funcName, newFuncDetails)
+      logger.info { "Added \"$funcName\" (${newFuncDetails.fqName}) to $path serviceTool cache [$cacheKey]" }
     } else {
-      error("\"$toolFuncName\" already declared in cache at ${funcDetails.fqName} [$cacheKey]")
+      error("\"$funcName\" already declared in cache at ${funcDetails.fqName} [$cacheKey]")
     }
   }
 
@@ -96,11 +90,11 @@ internal class ServiceCache(
   fun purgeToolCache(maxAge: Duration): Int {
     var count = 0
     lastCacheCleanInstant = Clock.System.now()
-    cacheMap.entries.removeIf { (sessionId, funcInfo) ->
+    cacheMap.entries.removeIf { (cacheKey, funcInfo) ->
       (funcInfo.age > maxAge).also { isOld ->
         if (isOld) {
           count++
-          logger.debug { "Purging serviceTool cache entry $sessionId: $funcInfo" }
+          logger.debug { "Purging serviceTool cache entry $cacheKey: $funcInfo" }
         }
       }
     }

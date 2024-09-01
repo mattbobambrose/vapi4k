@@ -43,7 +43,6 @@ data class MemberImpl(
     memberChecker.check("Member already has an assistant assigned")
     return AssistantImpl(
       members.squad.requestContext,
-      members.squad.sessionId,
       members.squad.assistantIdSource,
       dto.assistantDto,
       dto.assistantOverridesDto,
@@ -54,7 +53,7 @@ data class MemberImpl(
             requestContext.application.serverUrl
               .appendQueryParams(
                 APPLICATION_ID to requestContext.application.applicationId.value,
-                SESSION_ID to sessionId.value,
+                SESSION_ID to requestContext.sessionId.value,
                 ASSISTANT_ID to assistantId.value,
               )
         }
