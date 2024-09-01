@@ -49,9 +49,14 @@ object AssistantRequestUtils {
   val JsonElement.isSquadIdResponse get() = containsKey("messageResponse.squadId")
 
   /**
-  Extract the id from a JsonElement and throws an error if the JsonElement doesn't have an id.
+  Extract the id from a JsonElement.
    */
   val JsonElement.id get() = stringValue("id")
+
+  /**
+  Extract the message call id from a JsonElement.
+   */
+  val JsonElement.messageCallId get() = stringValue("message.call.id")
 
   /**
   Extract the request type of a JsonElement.

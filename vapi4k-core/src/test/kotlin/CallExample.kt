@@ -26,7 +26,7 @@ object CallExample {
       vapiApi()
         .phone {
           outboundCall {
-            serverPath = "/outboundRequest"
+            serverPath = "/outboundRequest1"
             phoneNumber = "+14156721042"
           }
         }
