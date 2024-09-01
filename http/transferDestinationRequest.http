@@ -56,7 +56,7 @@ Content-Type: application/json
                 ],
                 "functions": [
                   {
-                    "name": "getPainDTDInterference_002",
+                    "name": "getPainDTDInterference_0002",
                     "description": "Get how much pain interfered with daily activities",
                     "parameters": {
                       "type": "object",

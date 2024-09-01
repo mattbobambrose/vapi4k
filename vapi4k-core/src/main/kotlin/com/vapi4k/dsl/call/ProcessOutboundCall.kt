@@ -78,7 +78,7 @@ object ProcessOutboundCall {
 
       val status = assistantResponse.status
       if (status != HttpStatusCode.OK) {
-        val stripped = stripQueryParams(url)
+        val stripped = url.stripQueryParams()
         when (status) {
           HttpStatusCode.NotFound -> {
             val path = URI(url).path.split("/").last().ensureStartsWith("/")

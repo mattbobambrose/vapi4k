@@ -42,5 +42,7 @@ object HttpUtils {
     }
   }
 
-  internal fun stripQueryParams(url: String) = url.split("?").first()
+  internal fun String.stripQueryParams() = split("?").first()
+
+  internal fun String.queryParams() = split("?").last()
 }

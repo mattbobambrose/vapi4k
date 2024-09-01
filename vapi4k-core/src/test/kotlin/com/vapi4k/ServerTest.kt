@@ -136,7 +136,7 @@ class ServerTest {
       assertEquals(HttpStatusCode.OK, response.status)
       if (i == 2) {
         val path = "${INBOUND_CALL.pathPrefix.ensureStartsWith("/")}/$defaultServerPath"
-        assertEquals(1, jsonElement["$path.toolServices.toolCallCache"].keys.size)
+        assertEquals(2, jsonElement["$path.toolServices.toolCallCache"].keys.size)
         assertEquals(0, jsonElement["$path.functions.toolCallCache"].keys.size)
       }
     }

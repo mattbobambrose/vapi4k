@@ -6,7 +6,7 @@
         "id": "call_mrf9",
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_002",
+          "name": "getWeatherByCity_0002",
           "arguments": {
             "city": "Boston",
             "state": "Massachusetts"
@@ -19,7 +19,7 @@
         "id": "call_mrf9",
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_002",
+          "name": "getWeatherByCity_0002",
           "arguments": {
             "city": "Boston",
             "state": "Massachusetts"
@@ -31,7 +31,7 @@
       {
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_002",
+          "name": "getWeatherByCity_0002",
           "description": "Look up the weather for a city",
           "parameters": {
             "type": "object",
@@ -61,7 +61,7 @@
           "id": "call_mrf9",
           "type": "function",
           "function": {
-            "name": "getWeatherByCity_002",
+            "name": "getWeatherByCity_0002",
             "arguments": {
               "city": "Boston",
               "state": "Massachusetts"
@@ -95,7 +95,7 @@
                   {
                     "async": false,
                     "function": {
-                      "name": "getWeatherByCity_001",
+                      "name": "getWeatherByCity_0001",
                       "description": "Look up the weather for a city",
                       "parameters": {
                         "type": "object",
@@ -144,7 +144,7 @@
                   {
                     "async": false,
                     "function": {
-                      "name": "getWeatherByCity_002",
+                      "name": "getWeatherByCity_0002",
                       "description": "Look up the weather for a city",
                       "parameters": {
                         "type": "object",
@@ -225,7 +225,7 @@
               "id": "call_51kj",
               "type": "function",
               "function": {
-                "name": "getWeatherByCity_001",
+                "name": "getWeatherByCity_0001",
                 "arguments": "{\"city\": \"Danville\", \"state\": \"California\"}"
               }
             }
@@ -239,7 +239,7 @@
           "role": "tool_call_result",
           "time": 1722032458839,
           "secondsFromStart": 9.981,
-          "name": "getWeatherByCity_001",
+          "name": "getWeatherByCity_0001",
           "result": "The weather in Danville, California is windy",
           "toolCallId": "call_51kj"
         },
@@ -305,7 +305,7 @@
               "id": "call_mrf9",
               "type": "function",
               "function": {
-                "name": "getWeatherByCity_002",
+                "name": "getWeatherByCity_0002",
                 "arguments": "{\"city\": \"Boston\", \"state\": \"Massachusetts\"}"
               }
             }
@@ -333,7 +333,7 @@
               "type": "function",
               "id": "call_51kj",
               "function": {
-                "name": "getWeatherByCity_001",
+                "name": "getWeatherByCity_0001",
                 "arguments": "{\"city\": \"Danville\", \"state\": \"California\"}"
               }
             }
@@ -387,7 +387,7 @@
               "type": "function",
               "id": "call_mrf9",
               "function": {
-                "name": "getWeatherByCity_002",
+                "name": "getWeatherByCity_0002",
                 "arguments": "{\"city\": \"Boston\", \"state\": \"Massachusetts\"}"
               }
             }

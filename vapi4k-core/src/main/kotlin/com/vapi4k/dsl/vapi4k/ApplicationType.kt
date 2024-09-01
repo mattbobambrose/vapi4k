@@ -25,7 +25,7 @@ enum class ApplicationType(
   private val paramName: String,
   internal val shouldAssignServerUrl: Boolean,
 ) {
-  INBOUND_CALL("inboundCallApplication", "inboundCall", "Inbound", false),
+  INBOUND_CALL("inboundCallApplication", "inboundCall", "Inbound", true),
   OUTBOUND_CALL("outboundCallApplication", "outboundCall", "Outbound", true),
   WEB("webApplication", "web", "Web", true),
   ;

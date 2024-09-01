@@ -27,12 +27,16 @@ import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.server.RequestContext
+import com.vapi4k.utils.HttpUtils.queryParams
 import com.vapi4k.utils.JsonUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
+import com.vapi4k.utils.json.get
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -127,14 +131,25 @@ fun withTestApplication(
       }
     }
 
+    val baseUrl = "/${appType.pathPrefix}/$defaultServerPath"
+    var url = baseUrl
     responses
       .addAll(
         fileNames.map { fileName ->
-          val response = client.post("/${appType.pathPrefix}/$defaultServerPath") {
+          println("url: $url")
+          val response = client.post(url) {
             configPost()
             setBody(resourceFile(fileName))
           }
-          response to response.bodyAsText().toJsonElement()
+
+          val body = response.bodyAsText().toJsonElement()
+          val members = "messageResponse.squad.members"
+          if (body.containsKey(members)) {
+            val qp = body.get(members).toJsonElementList().first().stringValue("assistant.serverUrl").queryParams()
+            url = "$baseUrl?$qp"
+            println("response: ${body.toJsonString()}")
+          }
+          response to body
         },
       )
 

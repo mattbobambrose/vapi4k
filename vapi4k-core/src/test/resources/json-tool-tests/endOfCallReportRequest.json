@@ -33,7 +33,7 @@
             "id": "call_hncn",
             "type": "function",
             "function": {
-              "name": "getWeatherByCity_001",
+              "name": "getWeatherByCity_0001",
               "arguments": "{\"city\": \"Danville\", \"state\": \"California\"}"
             }
           }
@@ -47,7 +47,7 @@
         "role": "tool_call_result",
         "time": 1722115417673,
         "secondsFromStart": 10.48,
-        "name": "getWeatherByCity_001",
+        "name": "getWeatherByCity_0001",
         "result": "The weather in Danville, California is windy",
         "toolCallId": "call_hncn"
       },
@@ -119,7 +119,7 @@
             "id": "call_0pfw",
             "type": "function",
             "function": {
-              "name": "getWeatherByCity_002",
+              "name": "getWeatherByCity_0002",
               "arguments": "{\"city\": \"San Francisco\", \"state\": \"California\"}"
             }
           }
@@ -141,7 +141,7 @@
         "role": "tool_call_result",
         "time": 1722115434583,
         "secondsFromStart": 8.52,
-        "name": "getWeatherByCity_002",
+        "name": "getWeatherByCity_0002",
         "result": "The weather in San Francisco, California is rainy",
         "toolCallId": "call_0pfw"
       },
@@ -193,7 +193,7 @@
                   {
                     "async": false,
                     "function": {
-                      "name": "getWeatherByCity_001",
+                      "name": "getWeatherByCity_0001",
                       "description": "Look up the weather for a city",
                       "parameters": {
                         "type": "object",
@@ -242,7 +242,7 @@
                   {
                     "async": false,
                     "function": {
-                      "name": "getWeatherByCity_002",
+                      "name": "getWeatherByCity_0002",
                       "description": "Look up the weather for a city",
                       "parameters": {
                         "type": "object",

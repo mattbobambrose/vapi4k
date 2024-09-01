@@ -141,7 +141,7 @@ internal object ValidateApplication {
           assistantId = params[ASSISTANT_ID]?.toAssistantId() ?: error("No $ASSISTANT_ID found in query parameters"),
         )
 
-      val serverUrl =
+      val url =
         with(requestContext) {
           application.serverUrl.appendQueryParams(
             SESSION_ID to sessionId.value,
@@ -149,7 +149,7 @@ internal object ValidateApplication {
           )
         }
 
-      httpClient.post(serverUrl) {
+      httpClient.post(url) {
         headers.append(VAPI_SECRET_HEADER, requestContext.application.serverSecret)
         setBody((requestContext.request as JsonObject).toJsonString<JsonObject>(false))
       }
