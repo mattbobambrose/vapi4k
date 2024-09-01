@@ -25,6 +25,7 @@ import com.vapi4k.dsl.call.VapiApiImpl.Companion.configCall
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.HttpUtils.stripQueryParams
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.errorMsg
@@ -45,10 +46,6 @@ import kotlinx.serialization.json.buildJsonObject
 import java.net.URI
 
 object ProcessOutboundCall {
-  private fun stripQueryParams(url: String): String {
-    return url.split("?").first()
-  }
-
   internal fun processOutboundCall(
     authString: String,
     block: Phone.() -> OutboundCall,
