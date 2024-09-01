@@ -45,6 +45,10 @@ import kotlinx.serialization.json.buildJsonObject
 import java.net.URI
 
 object ProcessOutboundCall {
+  private fun stripQueryParams(url: String): String {
+    return url.split("?").first()
+  }
+
   internal fun processOutboundCall(
     authString: String,
     block: Phone.() -> OutboundCall,
@@ -76,17 +80,18 @@ object ProcessOutboundCall {
 
       val status = assistantResponse.status
       if (status != HttpStatusCode.OK) {
+        val stripped = stripQueryParams(url)
         when (status) {
           HttpStatusCode.NotFound -> {
             val path = URI(url).path.split("/").last().ensureStartsWith("/")
-            error("""Invalid serverPath "$path" used in assistant definition: $url""")
+            error("""Invalid VAPI4K_BASE_URL env value or invalid serverPath "$path" used in assistant definition: $stripped""")
           }
 
-          HttpStatusCode.Unauthorized -> error("Unauthorized to fetch assistant: $url")
+          HttpStatusCode.Unauthorized -> error("Unauthorized to fetch assistant: $stripped")
 
           else -> {
             val body = assistantResponse.bodyAsText().let { if (it.isBlank()) "" else "- $it" }
-            error("Failed to fetch assistant $url from vapi4k server: $status $body")
+            error("Failed to fetch assistant $stripped from vapi4k server: $status $body")
           }
         }
       }

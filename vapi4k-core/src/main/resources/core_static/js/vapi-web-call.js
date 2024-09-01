@@ -19,11 +19,27 @@ async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
     if (response.ok) {
       return await response.json()
     } else {
-      console.error('Error:', Error(`HTTP error status: ${response.status}`));
+      if (response.status === 404) {
+        const urlObj = new URL(url);
+        const fullPath = urlObj.pathname;
+        const path = fullPath.split('/').pop();
+        console.error(
+          'Error:',
+          Error(`Invalid VAPI4K_BASE_URL env value or invalid serverPath "/${path}" used in assistant definition: ${stripQueryParams(url)}`)
+        );
+      } else {
+        console.error('Error:', Error(`HTTP error status ${response.status} fetching: ${stripQueryParams(url)}`));
+      }
     }
   } catch (error) {
     console.error('Error:', error);
   }
+}
+
+function stripQueryParams(url) {
+  const urlObj = new URL(url);
+  urlObj.search = '';
+  return urlObj.toString();
 }
 
 function addVapiButton(vapi4kUrl, serverSecret, vapiPublicApiKey, method, postArgs) {
