@@ -1,2 +1,2 @@
-var span = document.getElementById("serverBaseUrl");
+let span = document.getElementById("serverBaseUrl");
 span.innerText = window.location.origin;

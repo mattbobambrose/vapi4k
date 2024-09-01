@@ -25,8 +25,8 @@ import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.AssistantRequestContext
 import com.vapi4k.dtos.tools.ToolMessageCondition
+import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.responses.AssistantMessageResponse
-import com.vapi4k.server.Vapi4k
 import com.vapi4k.utils.JsonUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.json.JsonElementUtils.containsKey

@@ -16,7 +16,7 @@
 
 package simpleDemo
 
-import com.vapi4k.server.Vapi4k
+import com.vapi4k.plugin.Vapi4k
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO

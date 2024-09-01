@@ -75,5 +75,5 @@ class WeatherLookupService {
     return "The real weather in $city, $state is $currentTemperature degrees Fahrenheit"
   }
 
-  fun getLocationAPIKey() = System.getenv("LOCATION_LOOKUP_API_KEY") ?: "LOCATION_LOOKUP_API_KEY not found"
+  private fun getLocationAPIKey() = System.getenv("LOCATION_LOOKUP_API_KEY") ?: "LOCATION_LOOKUP_API_KEY not found"
 }

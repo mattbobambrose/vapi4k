@@ -48,7 +48,7 @@ abstract class AbstractModel(
   var toolMessage by ModelMessageDelegate(MessageRoleType.TOOL)
   var userMessage by ModelMessageDelegate(MessageRoleType.USER)
 
-  internal val duplicateChecker = DuplicateInvokeChecker()
+  private val duplicateChecker = DuplicateInvokeChecker()
 
   fun tools(block: Tools.() -> Unit): Tools = ToolsImpl(this).apply(block)
 

@@ -27,7 +27,7 @@ import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dtos.tools.CommonToolMessageDto
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.JsonUtils.toolCallList
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
@@ -83,8 +83,7 @@ data class ToolCallResponseDto(
                               )
                           }
 
-                          application.manualToolCache.containsTool(funcName) -> {
-                            // Invoke external tool
+                          application.containsManualToolInCache(funcName) -> {
                             val manualToolImpl: ManualToolImpl = application.manualToolCache.getTool(funcName)
                             if (!manualToolImpl.isToolCallRequestInitialized()) {
                               error("onInvoke{} not declared in $funcName")

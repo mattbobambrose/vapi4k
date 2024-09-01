@@ -14,13 +14,14 @@
  *
  */
 
-package com.vapi4k.server
+package com.vapi4k.validate
 
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.plugin.KtorCallContext
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import io.ktor.http.ContentType
 import io.ktor.server.application.call

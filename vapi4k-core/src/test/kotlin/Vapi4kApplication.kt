@@ -29,8 +29,8 @@ import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
-import com.vapi4k.server.Vapi4k
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4k
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST

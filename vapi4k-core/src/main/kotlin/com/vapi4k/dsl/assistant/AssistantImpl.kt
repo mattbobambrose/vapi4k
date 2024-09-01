@@ -31,7 +31,7 @@ interface AssistantProperties : CommonAssistantProperties
 class AssistantImpl internal constructor(
   override val assistantRequestContext: AssistantRequestContext,
   override val sessionId: SessionId,
-  internal val assistantIdSource: AssistantIdSource,
+  private val assistantIdSource: AssistantIdSource,
   private val assistantDto: AssistantDto,
   private val assistantOverridesDto: AssistantOverridesDto,
 ) : AbstractAssistantImpl(),

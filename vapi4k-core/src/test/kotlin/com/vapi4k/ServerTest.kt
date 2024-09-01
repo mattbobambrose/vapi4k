@@ -21,7 +21,7 @@ import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
-import com.vapi4k.server.Vapi4k
+import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.utils.JsonFilenames
 import com.vapi4k.utils.JsonUtils.firstInList
 import com.vapi4k.utils.common.Utils.ensureStartsWith

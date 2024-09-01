@@ -21,7 +21,7 @@ import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionParameters
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.errorMsg
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement

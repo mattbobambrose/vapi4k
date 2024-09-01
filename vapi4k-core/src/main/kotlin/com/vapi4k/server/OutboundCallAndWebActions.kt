@@ -25,13 +25,13 @@ import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dsl.vapi4k.WebApplicationImpl
+import com.vapi4k.plugin.KtorCallContext
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponseDto.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
-import com.vapi4k.server.ValidateApplication.isValidSecret
-import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.lambda
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
@@ -41,6 +41,7 @@ import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TRANSFER_DESTINATION_REQUEST
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.validate.ValidateApplication.isValidSecret
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
@@ -48,8 +49,8 @@ import io.ktor.server.response.respondText
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.measureTimedValue
 
-internal object OutboundCallAndWebAssistantRequest {
-  suspend fun KtorCallContext.outboundCallAndWebAssistantRequest(
+internal object OutboundCallAndWebActions {
+  suspend fun KtorCallContext.outboundCallAndWebRequest(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,
@@ -61,10 +62,10 @@ internal object OutboundCallAndWebAssistantRequest {
     } else {
       val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
       if (isProduction || validateCall != VALIDATE_VALUE) {
-        processOutboundCallAndWebAssistantRequest(config, application, request, sessionId, assistantId)
+        processOutboundCallAndWebRequest(config, application, request, sessionId, assistantId)
       } else {
         runCatching {
-          processOutboundCallAndWebAssistantRequest(config, application, request, sessionId, assistantId)
+          processOutboundCallAndWebRequest(config, application, request, sessionId, assistantId)
         }.onFailure { e ->
           logger.error(e) { "Error processing web assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -73,7 +74,7 @@ internal object OutboundCallAndWebAssistantRequest {
     }
   }
 
-  private suspend fun KtorCallContext.processOutboundCallAndWebAssistantRequest(
+  private suspend fun KtorCallContext.processOutboundCallAndWebRequest(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,

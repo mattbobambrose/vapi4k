@@ -34,7 +34,7 @@ class AssistantIdImpl internal constructor(
   internal val assistantRequestContext: AssistantRequestContext,
   private val sessionId: SessionId,
   private val assistantIdSource: AssistantIdSource,
-  internal val assistantIdProperties: AssistantIdProperties,
+  private val assistantIdProperties: AssistantIdProperties,
 ) : AssistantIdProperties by assistantIdProperties,
   AssistantId {
   override var id

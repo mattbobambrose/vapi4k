@@ -67,9 +67,9 @@ value class CacheKey private constructor(
   override fun toString() = value
 
   companion object {
-    fun String.toCacheKey() = CacheKey(this)
+    internal fun String.toCacheKey() = CacheKey(this)
 
-    fun cacheKeyValue(
+    internal fun cacheKeyValue(
       sessionId: SessionId,
       assistantId: AssistantId,
     ) = "${sessionId.value}$ID_SEPARATOR${assistantId.value}".toCacheKey()
@@ -84,8 +84,7 @@ value class FunctionName private constructor(
   override fun toString() = value
 
   companion object {
-    // Force all emails to be lowercase
-    fun String.toFunctionName() = FunctionName(this)
+    internal fun String.toFunctionName() = FunctionName(this)
   }
 }
 
@@ -97,7 +96,6 @@ value class ApplicationName private constructor(
   override fun toString() = value
 
   companion object {
-    // Force all emails to be lowercase
-    fun String.toApplicationName() = ApplicationName(this)
+    internal fun String.toApplicationName() = ApplicationName(this)
   }
 }

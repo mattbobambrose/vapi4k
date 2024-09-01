@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.server
+package com.vapi4k.plugin
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
@@ -38,16 +38,15 @@ import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
-import com.vapi4k.server.CacheResponses.cachesRequest
-import com.vapi4k.server.CacheResponses.clearCaches
-import com.vapi4k.server.InboundCallAssistantRequest.inboundCallAssistantRequest
-import com.vapi4k.server.OutboundCallAndWebAssistantRequest.outboundCallAndWebAssistantRequest
-import com.vapi4k.server.ValidateApplication.validateApplication
-import com.vapi4k.server.ValidateApplication.validateToolInvokeRequest
-import com.vapi4k.server.ValidateRoot.validateRootPage
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.server.CacheActions.cachesRequest
+import com.vapi4k.server.CacheActions.clearCaches
+import com.vapi4k.server.InboundCallActions.inboundCallRequest
+import com.vapi4k.server.OutboundCallAndWebActions.outboundCallAndWebRequest
+import com.vapi4k.server.defaultKtorConfig
+import com.vapi4k.server.installContentNegotiation
 import com.vapi4k.utils.JsonUtils.addArgsAndMessage
 import com.vapi4k.utils.JsonUtils.getAssistantIdFromQueryParameters
 import com.vapi4k.utils.JsonUtils.getSessionIdFromQueryParameters
@@ -59,10 +58,14 @@ import com.vapi4k.utils.json.JsonElementUtils.getOrNull
 import com.vapi4k.utils.json.JsonElementUtils.isNotEmpty
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.validate.ValidateApplication.validateApplication
+import com.vapi4k.validate.ValidateApplication.validateToolInvokeRequest
+import com.vapi4k.validate.ValidateRoot.validateRootPage
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.server.application.ApplicationCall
+import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.ApplicationStarting
@@ -72,6 +75,7 @@ import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.http.content.staticResources
 import io.ktor.server.request.receive
+import io.ktor.server.request.uri
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondText
@@ -130,6 +134,12 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
     val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
     defaultKtorConfig(appMicrometerRegistry)
 
+    intercept(ApplicationCallPipeline.Call) {
+      println("Request received: ${call.request.uri}")
+      proceed()
+      println("Response sent with status: ${call.response.status()}")
+    }
+
     routing {
       staticResources(STATIC_BASE, "core_static")
 
@@ -179,7 +189,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             val request = call.receive<String>().toJsonElement()
             val sessionId = call.getSessionIdFromQueryParameters() ?: INBOUND_CALL.defaultSessionId().toSessionId()
             val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
-            inboundCallAssistantRequest(config, app as InboundCallApplicationImpl, request, sessionId, assistantId)
+            inboundCallRequest(config, app as InboundCallApplicationImpl, request, sessionId, assistantId)
           }
         }
       }
@@ -195,7 +205,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               val request = buildJsonObject { addArgsAndMessage(call) }
               val sessionId = call.getSessionIdFromQueryParameters() ?: error("Missing sessionId in query parameters")
               val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
-              outboundCallAndWebAssistantRequest(config, app, request, sessionId, assistantId)
+              outboundCallAndWebRequest(config, app, request, sessionId, assistantId)
             }
             logger.info { """Adding POST endpoint "$path" for ${app.applicationType.displayName}""" }
             post {
@@ -221,7 +231,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                 }
               val sessionId = call.getSessionIdFromQueryParameters() ?: error("No session ID found in query parameters")
               val assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID
-              outboundCallAndWebAssistantRequest(config, app, request, sessionId, assistantId)
+              outboundCallAndWebRequest(config, app, request, sessionId, assistantId)
             }
           }
         }

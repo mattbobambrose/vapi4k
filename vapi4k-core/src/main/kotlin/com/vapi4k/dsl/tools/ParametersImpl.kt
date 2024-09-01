@@ -24,8 +24,8 @@ import com.vapi4k.dtos.functions.FunctionPropertyDescDto
 import com.vapi4k.dtos.tools.ToolDto
 
 class ParametersImpl internal constructor(
-  val callerName: String,
-  val toolDto: ToolDto,
+  private val callerName: String,
+  private val toolDto: ToolDto,
 ) : Parameters {
   override fun parameter(block: Parameter.() -> Unit) {
     val p = ParameterImpl().apply(block)

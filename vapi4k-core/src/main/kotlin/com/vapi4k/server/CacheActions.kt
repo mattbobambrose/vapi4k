@@ -18,6 +18,7 @@ package com.vapi4k.server
 
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.plugin.KtorCallContext
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.ktor.server.application.call
@@ -25,7 +26,7 @@ import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import kotlinx.serialization.json.buildJsonObject
 
-internal object CacheResponses {
+internal object CacheActions {
   suspend fun KtorCallContext.clearCaches(config: Vapi4kConfigImpl) {
     config.allApplications.forEach { application ->
       with(application) {

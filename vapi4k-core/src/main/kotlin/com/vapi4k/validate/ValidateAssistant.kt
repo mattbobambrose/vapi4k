@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.client
+package com.vapi4k.validate
 
 import com.vapi4k.common.ApplicationName
 import com.vapi4k.common.AssistantId
@@ -43,7 +43,7 @@ import com.vapi4k.dsl.functions.ToolCallInfo.Companion.ID_SEPARATOR
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
@@ -68,7 +68,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import kotlinx.coroutines.runBlocking
 import kotlinx.html.BODY
 import kotlinx.html.DIV
 import kotlinx.html.FORM
@@ -100,15 +99,15 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlin.collections.set
 
-object ValidateAssistantResponse {
-  internal fun getNewRequest(): JsonElement {
+object ValidateAssistant {
+  private fun getNewRequest(): JsonElement {
     val request = runCatching {
       resourceFile(REQUEST_VALIDATION_FILENAME.value)
     }.getOrElse { ASSISTANT_REQUEST_JSON }
     return copyWithNewCallId(request.toJsonElement())
   }
 
-  fun validateAssistantRequestPage(
+  suspend fun validateAssistantRequestPage(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     appName: ApplicationName,
@@ -365,7 +364,7 @@ object ValidateAssistantResponse {
         .mapIndexed { i, name ->
           name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
         }
-        .filter { (toolName, assistantId) -> application.manualToolCache.containsTool(toolName) }
+        .filter { (toolName, _) -> application.containsManualToolInCache(toolName) }
         .forEach { (funcName, assistantId) ->
           div {
             id = TOOLS_DIV
@@ -378,7 +377,7 @@ object ValidateAssistantResponse {
 
               table {
                 tbody {
-                  manualToolImpl.properties.forEach { propertyName, propertyDesc ->
+                  manualToolImpl.properties.forEach { (propertyName, propertyDesc) ->
                     tr {
                       td { +"$propertyName:" }
                       td {
@@ -557,29 +556,28 @@ object ValidateAssistantResponse {
       )
     }
 
-  private fun fetchContent(
+  private suspend fun fetchContent(
     application: AbstractApplicationImpl,
     request: JsonElement,
     secret: String,
     url: String,
-  ): Pair<HttpStatusCode, String> =
-    runBlocking {
-      val response = httpClient.post(url) {
-        contentType(Application.Json)
-        headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
-        if (secret.isNotEmpty())
-          headers.append(VAPI_SECRET_HEADER, secret)
-        val jsonBody =
-          if (application.applicationType == ApplicationType.INBOUND_CALL)
-            request
-          else
-            EMPTY_JSON_ELEMENT
-        setBody(jsonBody)
-      }
-      response.status to response.bodyAsText()
+  ): Pair<HttpStatusCode, String> {
+    val response = httpClient.post(url) {
+      contentType(Application.Json)
+      headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
+      if (secret.isNotEmpty())
+        headers.append(VAPI_SECRET_HEADER, secret)
+      val jsonBody =
+        if (application.applicationType == ApplicationType.INBOUND_CALL)
+          request
+        else
+          EMPTY_JSON_ELEMENT
+      setBody(jsonBody)
     }
+    return response.status to response.bodyAsText()
+  }
 
-  const val ASSISTANT_REQUEST_JSON = """
+  private const val ASSISTANT_REQUEST_JSON = """
     {
       "message": {
         "type": "assistant-request",

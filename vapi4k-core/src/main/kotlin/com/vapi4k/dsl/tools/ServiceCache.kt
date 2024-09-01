@@ -25,7 +25,7 @@ import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
 import com.vapi4k.dsl.model.AbstractModel
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.datetime.Clock
@@ -40,7 +40,7 @@ internal class ServiceCache(
   private var lastCacheCleanInstant = Clock.System.now()
   private val cacheMap = ConcurrentHashMap<CacheKey, FunctionInfo>()
 
-  val path get() = pathBlock().ensureStartsWith("/")
+  private val path get() = pathBlock().ensureStartsWith("/")
 
   fun isNotEmpty() = cacheMap.isNotEmpty()
 

@@ -50,20 +50,20 @@ class AssistantTest {
     Vapi4kConfigImpl()
   }
 
-  val messageOne = "Hi there test"
-  val sysMessage = "You are the test systemMessage voice"
-  val startMessage = "This is the test request start message"
-  val completeMessage = "This is the test request complete message"
-  val failedMessage = "This is the test request failed message"
-  val delayedMessage = "This is the test request delayed message"
-  val secondStartMessage = "This is the second test request start message"
-  val secondCompleteMessage = "This is the second test request complete message"
-  val secondFailedMessage = "This is the second test request failed message"
-  val secondDelayedMessage = "This is the second test request delayed message"
-  val chicagoIllinoisStartMessage = "This is the Chicago Illinois request start message"
-  val chicagoIllinoisCompleteMessage = "This is the Chicago Illinois request complete message"
-  val chicagoIllinoisFailedMessage = "This is the Chicago Illinois request failed message"
-  val chicagoIllinoisDelayedMessage = "This is the Chicago Illinois request delayed message"
+  private val messageOne = "Hi there test"
+  private val sysMessage = "You are the test systemMessage voice"
+  private val startMessage = "This is the test request start message"
+  private val completeMessage = "This is the test request complete message"
+  private val failedMessage = "This is the test request failed message"
+  private val delayedMessage = "This is the test request delayed message"
+  private val secondStartMessage = "This is the second test request start message"
+  private val secondCompleteMessage = "This is the second test request complete message"
+  private val secondFailedMessage = "This is the second test request failed message"
+  private val secondDelayedMessage = "This is the second test request delayed message"
+  private val chicagoIllinoisStartMessage = "This is the Chicago Illinois request start message"
+  private val chicagoIllinoisCompleteMessage = "This is the Chicago Illinois request complete message"
+  private val chicagoIllinoisFailedMessage = "This is the Chicago Illinois request failed message"
+  private val chicagoIllinoisDelayedMessage = "This is the Chicago Illinois request delayed message"
 
   @Test
   fun testRegular() {
@@ -749,7 +749,7 @@ class AssistantTest {
   }
 
   companion object {
-    val ASSISTANT_REQUEST = """
+    private val ASSISTANT_REQUEST = """
     {
     "message": {
         "type": "assistant-request",

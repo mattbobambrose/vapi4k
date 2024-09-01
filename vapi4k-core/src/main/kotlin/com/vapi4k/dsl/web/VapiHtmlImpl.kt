@@ -26,7 +26,7 @@ import kotlinx.html.HtmlBlockTag
 import kotlinx.html.script
 
 class VapiHtmlImpl(
-  val htmlContext: HtmlBlockTag,
+  private val htmlContext: HtmlBlockTag,
 ) : VapiHtml {
   override fun talkButton(block: TalkButton.() -> Unit) {
     val props = TalkButtonProperties()

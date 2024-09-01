@@ -23,13 +23,13 @@ import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.plugin.KtorCallContext
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
 import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponseDto.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
-import com.vapi4k.server.ValidateApplication.isValidSecret
-import com.vapi4k.server.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.lambda
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
@@ -39,6 +39,7 @@ import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TRANSFER_DESTINATION_REQUEST
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.validate.ValidateApplication.isValidSecret
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
@@ -46,8 +47,8 @@ import io.ktor.server.response.respondText
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.measureTimedValue
 
-internal object InboundCallAssistantRequest {
-  suspend fun KtorCallContext.inboundCallAssistantRequest(
+internal object InboundCallActions {
+  suspend fun KtorCallContext.inboundCallRequest(
     config: Vapi4kConfigImpl,
     application: InboundCallApplicationImpl,
     request: JsonElement,
@@ -59,10 +60,10 @@ internal object InboundCallAssistantRequest {
     } else {
       val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
       if (isProduction || validateCall != VALIDATE_VALUE) {
-        processInboundCallAssistantRequest(config, application, request, sessionId, assistantId)
+        processInboundCallRequest(config, application, request, sessionId, assistantId)
       } else {
         runCatching {
-          processInboundCallAssistantRequest(config, application, request, sessionId, assistantId)
+          processInboundCallRequest(config, application, request, sessionId, assistantId)
         }.onFailure { e ->
           logger.error(e) { "Error processing inbound call assistant request" }
           call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
@@ -71,7 +72,7 @@ internal object InboundCallAssistantRequest {
     }
   }
 
-  private suspend fun KtorCallContext.processInboundCallAssistantRequest(
+  private suspend fun KtorCallContext.processInboundCallRequest(
     config: Vapi4kConfigImpl,
     application: InboundCallApplicationImpl,
     request: JsonElement,

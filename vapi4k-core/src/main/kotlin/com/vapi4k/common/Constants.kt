@@ -40,11 +40,11 @@ object Constants {
 object QueryParams {
   const val SECRET_PARAM = "secret"
 
-  const val ID_PREFIX = "__"
-  val APPLICATION_ID = "${ID_PREFIX}applicationId"
-  val SESSION_ID = "${ID_PREFIX}sessionId"
-  val ASSISTANT_ID = "${ID_PREFIX}assistantId"
-  val TOOL_TYPE = "${ID_PREFIX}toolType"
+  private const val ID_PREFIX = "__"
+  const val APPLICATION_ID = "${ID_PREFIX}applicationId"
+  const val SESSION_ID = "${ID_PREFIX}sessionId"
+  const val ASSISTANT_ID = "${ID_PREFIX}assistantId"
+  const val TOOL_TYPE = "${ID_PREFIX}toolType"
 
   val SYSTEM_IDS = setOf(APPLICATION_ID, SESSION_ID, ASSISTANT_ID, TOOL_TYPE, FUNCTION_NAME)
 }

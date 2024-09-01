@@ -29,7 +29,7 @@ import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ServiceCache
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.isNull
@@ -50,7 +50,7 @@ abstract class AbstractApplicationImpl(
   internal val applicationAllResponses = mutableListOf<ResponseArgs>()
   internal val applicationPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  internal val assistantIds = mutableListOf<AssistantId>()
+  private val assistantIds = mutableListOf<AssistantId>()
 
   internal var eocrCacheRemovalEnabled = true
 

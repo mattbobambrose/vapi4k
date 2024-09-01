@@ -25,7 +25,7 @@ import com.vapi4k.common.Constants.PRIVATE_KEY_PROPERTY
 import com.vapi4k.common.CoreEnvVars.vapiBaseUrl
 import com.vapi4k.common.CoreEnvVars.vapiPrivateKey
 import com.vapi4k.dsl.call.ProcessOutboundCall.processOutboundCall
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.envvar.EnvVar.Companion.getSystemValue

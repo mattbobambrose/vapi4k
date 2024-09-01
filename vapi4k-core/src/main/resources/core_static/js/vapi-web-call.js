@@ -4,7 +4,7 @@ const defaultHeaders = {
 
 async function fetchJson(fetchMethod, url, userHeaders, jsonBody) {
   try {
-    var fetchArg = {
+    let fetchArg = {
       method: "POST",
       headers: {...defaultHeaders, ...userHeaders},
     }
@@ -46,7 +46,7 @@ function addVapiButton(vapi4kUrl, serverSecret, vapiPublicApiKey, method, postAr
 }
 
 function buildVapiConfig(response, publicApiKey) {
-  var vapiConfig = {
+  let vapiConfig = {
     apiKey: publicApiKey
   }
 

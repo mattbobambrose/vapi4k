@@ -23,7 +23,7 @@ import com.vapi4k.common.CoreEnvVars.vapiBaseUrl
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.configCall
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.errorMsg

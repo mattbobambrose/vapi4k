@@ -33,8 +33,8 @@ import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.utils.DuplicateInvokeChecker
 
 class TransferDestinationImpl internal constructor(
-  val callerName: String,
-  val dto: TransferMessageResponseDto,
+  private val callerName: String,
+  private val dto: TransferMessageResponseDto,
 ) : TransferDestinationResponse {
   internal val duplicateChecker = DuplicateInvokeChecker()
 

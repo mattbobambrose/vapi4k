@@ -30,11 +30,11 @@ class FunctionInfo internal constructor(
   val sessionId: SessionId,
   val assistantId: AssistantId,
 ) {
-  val created: Instant = Clock.System.now()
+  internal val created: Instant = Clock.System.now()
   private val functions = mutableMapOf<FunctionName, FunctionDetails>()
 
-  val age get() = Clock.System.now() - created
-  val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
+  internal val age get() = Clock.System.now() - created
+  internal val ageSecs get() = age.toString(unit = DurationUnit.SECONDS)
 
   internal val size get() = functions.size
 

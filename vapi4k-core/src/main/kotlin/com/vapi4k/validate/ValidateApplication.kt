@@ -14,10 +14,8 @@
  *
  */
 
-package com.vapi4k.server
+package com.vapi4k.validate
 
-import com.vapi4k.client.ToolType
-import com.vapi4k.client.ValidateAssistantResponse.validateAssistantRequestPage
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.ApplicationName
 import com.vapi4k.common.ApplicationName.Companion.toApplicationName
@@ -37,7 +35,8 @@ import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.KtorCallContext
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonUtils.getSessionIdFromQueryParameters
@@ -47,6 +46,7 @@ import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.common.Utils.isNotNull
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
+import com.vapi4k.validate.ValidateAssistant.validateAssistantRequestPage
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -115,7 +115,7 @@ internal object ValidateApplication {
         }
       }
 
-  suspend fun KtorCallContext.processValidateRequest(
+  private suspend fun KtorCallContext.processValidateRequest(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     appName: ApplicationName,
@@ -164,7 +164,7 @@ internal object ValidateApplication {
         .toJsonObject(),
   ).toJsonObject()
 
-  fun generateToolRequest(
+  private fun generateToolRequest(
     toolType: ToolType,
     params: Parameters,
   ): JsonObject {

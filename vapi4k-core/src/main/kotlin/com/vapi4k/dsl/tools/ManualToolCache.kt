@@ -17,7 +17,7 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.FunctionName
-import com.vapi4k.server.Vapi4kServer.logger
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 
 internal class ManualToolCache(
@@ -26,7 +26,7 @@ internal class ManualToolCache(
   private val manualTools = mutableMapOf<FunctionName, ManualToolImpl>()
 
   val functions get() = manualTools.values
-  val path get() = pathBlock().ensureStartsWith("/")
+  private val path get() = pathBlock().ensureStartsWith("/")
 
   fun addToCache(
     toolName: FunctionName,

@@ -26,7 +26,7 @@ class WebAssistantResponseImpl(
   assistantRequestContext: AssistantRequestContext,
 ) : AbstractAssistantResponseImpl(assistantRequestContext),
   WebAssistantResponse {
-  internal val buttonConfigDuplicateChecker = DuplicateInvokeChecker()
+  private val buttonConfigDuplicateChecker = DuplicateInvokeChecker()
 
   override fun buttonConfig(block: ButtonConfig.() -> Unit): ButtonConfig {
     buttonConfigDuplicateChecker.check("buttonConfig{} was already called")

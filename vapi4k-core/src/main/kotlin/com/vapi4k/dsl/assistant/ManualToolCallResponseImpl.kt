@@ -24,9 +24,9 @@ import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
 import com.vapi4k.responses.ToolCallResult
 
 class ManualToolCallResponseImpl(
-  val completeMessages: RequestCompleteMessagesImpl,
-  val failedMessages: RequestFailedMessagesImpl,
-  val toolCallResult: ToolCallResult,
+  private val completeMessages: RequestCompleteMessagesImpl,
+  private val failedMessages: RequestFailedMessagesImpl,
+  private val toolCallResult: ToolCallResult,
 ) : ManualToolCallResponse {
   override var result: String
     get() = toolCallResult.result
