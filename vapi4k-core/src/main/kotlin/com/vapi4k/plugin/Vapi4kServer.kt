@@ -19,6 +19,8 @@ package com.vapi4k.plugin
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
+import com.vapi4k.common.Constants.APP_NAME
+import com.vapi4k.common.Constants.APP_TYPE
 import com.vapi4k.common.Constants.POST_ARGS
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
@@ -173,7 +175,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           get { clearCaches(config) }
         }
         get(VALIDATE_PATH) { validateRootPage(config) }
-        get("$VALIDATE_PATH/{appType}/{appName}") { validateApplication(config) }
+        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplication(config) }
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeRequest(config) }
       }
 
