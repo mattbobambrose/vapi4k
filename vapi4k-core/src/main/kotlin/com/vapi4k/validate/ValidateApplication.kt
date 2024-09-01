@@ -137,8 +137,8 @@ internal object ValidateApplication {
         RequestContext(
           application = config.getApplicationById(applicationId),
           request = generateToolRequest(toolType, params),
-          sessionId = call.getSessionIdFromQueryParameters() ?: error("No $SESSION_ID found"),
-          assistantId = params[ASSISTANT_ID]?.toAssistantId() ?: error("No $ASSISTANT_ID found"),
+          sessionId = call.getSessionIdFromQueryParameters() ?: error("No $SESSION_ID found in query parameters"),
+          assistantId = params[ASSISTANT_ID]?.toAssistantId() ?: error("No $ASSISTANT_ID found in query parameters"),
         )
 
       val serverUrl =

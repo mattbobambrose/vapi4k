@@ -36,7 +36,6 @@ import com.vapi4k.common.QueryParams.APPLICATION_ID
 import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.TOOL_TYPE
-import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.functions.ToolCallInfo.Companion.ID_SEPARATOR
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
@@ -88,6 +87,7 @@ import kotlinx.html.link
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.stream.createHTML
+import kotlinx.html.style
 import kotlinx.html.table
 import kotlinx.html.tbody
 import kotlinx.html.td
@@ -113,18 +113,18 @@ object ValidateAssistant {
     secret: String,
   ): String {
     val request = getNewRequest()
-
     val typePrefix = application.applicationType.pathPrefix
+    val sessionId = application.applicationType.randomSessionId
     val requestContext =
       RequestContext(
         application = application,
-        request = EMPTY_JSON_ELEMENT,
-        sessionId = application.applicationType.defaultSessionId().toSessionId(),
+        request = request,
+        sessionId = sessionId,
         assistantId = EMPTY_ASSISTANT_ID,
       )
 
-    val sessionId = requestContext.sessionId.value
-    val url = "$vapi4kBaseUrl/$typePrefix/${appName.value}".appendQueryParams(SESSION_ID to sessionId)
+    val baseUrl = "$vapi4kBaseUrl/$typePrefix/${appName.value}"
+    val url = baseUrl.appendQueryParams(SESSION_ID to sessionId.value)
     val (status, responseBody) = fetchContent(application, request, secret, url)
 
     return createHTML()
@@ -152,9 +152,15 @@ object ValidateAssistant {
           if (config.allWebAndInboundApplications.size > 1) {
             div {
               id = "back-div"
+
+              a {
+                style = "text-decoration: none;"
+                href = VALIDATE_PATH
+                +"⬅️ "
+              }
               a {
                 href = VALIDATE_PATH
-                +"⬅️ Back"
+                +"Back"
               }
             }
           }
@@ -205,11 +211,7 @@ object ValidateAssistant {
     val child = if (topLevel.containsKey("messageResponse")) topLevel["messageResponse"] else topLevel
     when {
       child.containsKey("assistant") -> {
-        assistantRequestToolsBody(
-          requestContext = requestContext,
-          jsonElement = child["assistant"],
-          key = "model",
-        )
+        assistantRequestToolsBody(requestContext, child["assistant"], "model")
       }
 
       child.containsKey("squad") -> {
@@ -217,31 +219,19 @@ object ValidateAssistant {
           child.jsonElementList("squad.members")
             .forEachIndexed { i, member ->
               h2 { +"""Assistant "${getAssistantName(member, i + 1)}"""" }
-              assistantRequestToolsBody(
-                requestContext = requestContext,
-                jsonElement = member["assistant"],
-                key = "model",
-              )
+              assistantRequestToolsBody(requestContext, member["assistant"], "model")
             }
         }
 
         if (child.containsKey("squad.membersOverrides")) {
           h2 { +"""Member Overrides""" }
-          assistantRequestToolsBody(
-            requestContext = requestContext,
-            jsonElement = child["squad.membersOverrides"],
-            key = "model",
-          )
+          assistantRequestToolsBody(requestContext, child["squad.membersOverrides"], "model")
         }
       }
 
       child.containsKey("assistantId") -> {
         if (child.containsKey("assistantOverrides")) {
-          assistantRequestToolsBody(
-            requestContext = requestContext,
-            jsonElement = child["assistantOverrides"],
-            key = "model",
-          )
+          assistantRequestToolsBody(requestContext, child["assistantOverrides"], "model")
         }
       }
 

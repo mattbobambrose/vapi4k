@@ -21,6 +21,7 @@ import com.vapi4k.api.web.VapiHtml
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.utils.HtmlUtils.rawHtml
+import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.MiscUtils.removeEnds
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.script
@@ -29,28 +30,36 @@ class VapiHtmlImpl(
   private val htmlContext: HtmlBlockTag,
 ) : VapiHtml {
   override fun talkButton(block: TalkButton.() -> Unit) {
-    val props = TalkButtonProperties()
-    TalkButtonImpl(props).apply(block)
-    props.verifyTalkButtonValues()
     with(htmlContext) {
       script {
-        val indent = "\t\t\t"
-        val args = buildString {
-          appendLine()
-          append("\t\taddVapiButton(\n$indent")
-          appendLine(
-            listOf(
-              "'$vapi4kBaseUrl/${WEB.pathPrefix}/${props.serverPath.removeEnds("/")}'",
-              "'${props.serverSecret}'",
-              "'${props.vapiPublicApiKey}'",
-              "'${props.method.name}'",
-              "JSON.parse('${props.postArgs}')",
-            ).joinToString(",\n$indent"),
-          )
-          appendLine("\t\t);")
-        }
-        rawHtml(args)
+        val js =
+          TalkButtonProperties()
+            .run {
+              TalkButtonImpl(this).apply(block)
+              verifyTalkButtonValues()
+              serverPath = serverPath.appendQueryParams(WEB.randomSessionIdPair)
+
+              buildString {
+                appendLine()
+                append("\t\taddVapiButton(\n$indent")
+                appendLine(
+                  listOf(
+                    "'$vapi4kBaseUrl/${WEB.pathPrefix}/${serverPath.removeEnds("/")}'",
+                    "'${serverSecret}'",
+                    "'${vapiPublicApiKey}'",
+                    "'${method.name}'",
+                    "JSON.parse('${postArgs}')",
+                  ).joinToString(",\n$indent"),
+                )
+                appendLine("\t\t);")
+              }
+            }
+        rawHtml(js)
       }
     }
+  }
+
+  companion object {
+    private const val indent = "\t\t\t"
   }
 }

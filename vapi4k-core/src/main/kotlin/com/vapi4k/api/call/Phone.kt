@@ -16,7 +16,6 @@
 
 package com.vapi4k.api.call
 
-import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.OutboundCallImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
@@ -32,9 +31,9 @@ class Phone {
     duplicateChecker.check("outboundCall{} was already called")
     return OutboundCallImpl(OutboundCallRequestDto())
       .apply(block)
-      .apply { verifyValues() }
       .apply {
-        serverPath = serverPath.appendQueryParams(SESSION_ID to OUTBOUND_CALL.defaultSessionId())
+        verifyValues()
+        serverPath = serverPath.appendQueryParams(OUTBOUND_CALL.randomSessionIdPair)
       }
   }
 }

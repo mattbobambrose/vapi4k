@@ -31,7 +31,7 @@ import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
-import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
@@ -190,7 +190,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               requestContext = RequestContext(
                 application = application,
                 request = call.receive<String>().toJsonElement(),
-                sessionId = call.getSessionIdFromQueryParameters() ?: INBOUND_CALL.defaultSessionId().toSessionId(),
+                sessionId = call.getSessionIdFromQueryParameters() ?: INBOUND_CALL.randomSessionId,
                 assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
               ),
             )
@@ -211,7 +211,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                 requestContext = RequestContext(
                   application = application,
                   request = buildJsonObject { addArgsAndMessage(call) },
-                  sessionId = call.getSessionIdFromQueryParameters() ?: error("No sessionId in query parameters"),
+                  sessionId = call.getSessionIdFromQueryParameters()
+                    ?: error("No $SESSION_ID found in query parameters"),
                   assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
                 ),
               )
@@ -244,7 +245,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                 requestContext = RequestContext(
                   application = application,
                   request = request,
-                  sessionId = call.getSessionIdFromQueryParameters() ?: error("No sessionId found in query parameters"),
+                  sessionId = call.getSessionIdFromQueryParameters()
+                    ?: error("No $SESSION_ID found in query parameters"),
                   assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
                 ),
               )

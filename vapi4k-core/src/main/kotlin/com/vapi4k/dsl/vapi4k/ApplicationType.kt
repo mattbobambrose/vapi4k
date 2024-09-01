@@ -16,6 +16,8 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.utils.DslUtils.getRandomSecret
 
 enum class ApplicationType(
@@ -30,5 +32,7 @@ enum class ApplicationType(
 
   val functionName get() = "$displayName{}"
 
-  fun defaultSessionId() = "$paramName-${getRandomSecret(15)}"
+  val randomSessionIdPair get() = SESSION_ID to randomSessionId.value
+
+  val randomSessionId get() = "$paramName-${getRandomSecret(15)}".toSessionId()
 }
