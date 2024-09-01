@@ -16,6 +16,7 @@
 
 package com.vapi4k.api.call
 
+import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.OutboundCallImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
@@ -33,7 +34,7 @@ class Phone {
       .apply(block)
       .apply {
         verifyValues()
-        serverPath = serverPath.appendQueryParams(OUTBOUND_CALL.randomSessionIdPair)
+        serverPath = serverPath.appendQueryParams(SESSION_ID to OUTBOUND_CALL.randomSessionId.value)
       }
   }
 }

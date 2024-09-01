@@ -16,23 +16,21 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.utils.DslUtils.getRandomSecret
 
 enum class ApplicationType(
-  val displayName: String,
-  val pathPrefix: String,
+  internal val displayName: String,
+  internal val pathPrefix: String,
   private val paramName: String,
+  internal val shouldAssignServerUrl: Boolean,
 ) {
-  INBOUND_CALL("inboundCallApplication", "inboundCall", "Inbound"),
-  OUTBOUND_CALL("outboundCallApplication", "outboundCall", "Outbound"),
-  WEB("webApplication", "web", "Web"),
+  INBOUND_CALL("inboundCallApplication", "inboundCall", "Inbound", false),
+  OUTBOUND_CALL("outboundCallApplication", "outboundCall", "Outbound", true),
+  WEB("webApplication", "web", "Web", true),
   ;
 
-  val functionName get() = "$displayName{}"
+  internal val functionName get() = "$displayName{}"
 
-  val randomSessionIdPair get() = SESSION_ID to randomSessionId.value
-
-  val randomSessionId get() = "$paramName-${getRandomSecret(15)}".toSessionId()
+  internal val randomSessionId get() = "$paramName-${getRandomSecret(15)}".toSessionId()
 }

@@ -25,7 +25,6 @@ import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
-import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.AssistantIdSource
@@ -56,7 +55,7 @@ abstract class AbstractAssistantResponseImpl(
           messageResponse.assistantDto.updated = true
           messageResponse.assistantDto.verifyValues()
 
-          if (requestContext.application.applicationType in assignUrlTypes) {
+          if (requestContext.application.applicationType.shouldAssignServerUrl) {
             messageResponse.assistantDto.serverUrl =
               requestContext.application.serverUrl.appendQueryParams(
                 APPLICATION_ID to requestContext.application.applicationId.value,
@@ -91,9 +90,5 @@ abstract class AbstractAssistantResponseImpl(
     return assistantRequestResponse.run {
       SquadIdImpl(requestContext, messageResponse).apply(block)
     }
-  }
-
-  companion object {
-    internal val assignUrlTypes = listOf(ApplicationType.WEB, ApplicationType.OUTBOUND_CALL)
   }
 }

@@ -23,7 +23,6 @@ import com.vapi4k.api.squad.Member
 import com.vapi4k.common.QueryParams.APPLICATION_ID
 import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
-import com.vapi4k.dsl.assistant.AbstractAssistantResponseImpl.Companion.assignUrlTypes
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dtos.squad.MemberDto
 import com.vapi4k.utils.DuplicateInvokeChecker
@@ -50,7 +49,7 @@ data class MemberImpl(
       dto.assistantOverridesDto,
     ).apply(block)
       .apply {
-        if (requestContext.application.applicationType in assignUrlTypes) {
+        if (requestContext.application.applicationType.shouldAssignServerUrl) {
           this@MemberImpl.dto.assistantDto.serverUrl =
             requestContext.application.serverUrl
               .appendQueryParams(
