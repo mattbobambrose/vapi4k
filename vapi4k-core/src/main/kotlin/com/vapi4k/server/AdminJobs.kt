@@ -44,8 +44,8 @@ internal object AdminJobs {
           config.allApplications.forEach { application ->
             logger.debug { "Purging cache for ${application.serverPath}" }
             with(application) {
-              serviceCache.purgeToolCache(maxAge)
-              functionCache.purgeToolCache(maxAge)
+              purgeServiceToolCache(maxAge)
+              purgeFunctionCache(maxAge)
             }
           }
         }.onFailure { e ->

@@ -2,328 +2,288 @@
   "message": {
     "type": "function-call",
     "functionCall": {
-      "name": "ManyInfoService--saveManyInfo",
+      "name": "weatherByAreaCode_0001",
       "parameters": {
-        "age": "20",
-        "favoriteColor": "blue",
-        "favoriteFood": "pizza"
+        "areaCode": "415"
       }
     },
     "call": {
-      "id": "6325d4f6-695a-4229-8624-f25185dbbf82",
+      "id": "ddecaad5-d025-4806-aad6-71db005bd684",
       "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
-      "createdAt": "2024-07-14T05:28:20.931Z",
-      "updatedAt": "2024-07-14T05:28:20.931Z",
-      "type": "inboundPhoneCall",
-      "status": "ringing",
-      "phoneCallProvider": "twilio",
-      "phoneCallProviderId": "CAdae7752337e0716eb67dc12ff773c3c2",
-      "phoneCallTransport": "pstn",
-      "phoneNumberId": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
-      "customer": {
-        "number": "+19256836490"
-      },
+      "createdAt": "2024-09-01T21:49:37.466Z",
+      "updatedAt": "2024-09-01T21:49:37.466Z",
+      "type": "webCall",
+      "status": "queued",
       "assistant": {
         "model": {
           "model": "gpt-4-turbo",
           "messages": [
             {
-              "content": "\n[Identity]\nYou are the friendly and helpful voice of EO Care. Your goal is to collect information\nfrom the user.\n\n[Style]\n- Be friendly and concise.\n\n[Response Guideline]\n- Present dates in a clear format (e.g., 01/15/2024 or mm/dd/yyyy).\n\n[Task]\n1. Ask for the user's first and last name. If they only give one, ask which name that was\nand ask for the other as well. \n<wait for user response>\n2. Repeat the user's name, spell it out for them, and ask if that was correct. \nImmediately call the corresponding service to save the user's name after the information \nis confirmed. Make sure they confirm the spelling before moving on to the next question\n<wait for user response>\n3. Ask the user their age, favorite color, and favorite food. \n<wait for user response>\n4. Repeat the user's age, favorite color, and favorite food and ask if that was correct.\nImmediately call the corresponding service to save the user's age, favorite color, and \nfavorite food after the information is confirmed.\n<wait for user response>\n5. Ask the user what the date is today.\n",
+              "content": "You're a versatile AI assistant named Vapi who is fun to talk with.",
               "role": "system"
             }
           ],
           "functions": [
             {
-              "name": "NameService--saveNameOfUser",
-              "description": "Save the name of the user",
+              "name": "weatherByAreaCode_0001",
+              "description": "Look up the weather for an area code",
               "parameters": {
                 "type": "object",
                 "properties": {
-                  "firstName": {
-                    "description": "The firstName parameter",
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "description": "The lastName parameter",
+                  "areaCode": {
+                    "description": "The areaCode parameter",
                     "type": "string"
                   }
                 },
                 "required": [
-                  "firstName",
-                  "lastName"
+                  "areaCode"
                 ]
               }
+            }
+          ],
+          "tools": [
+            {
+              "async": false,
+              "function": {
+                "name": "weatherByAreaCode_0001",
+                "description": "Look up the weather for an area code",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "areaCode": {
+                      "description": "The areaCode parameter",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "areaCode"
+                  ]
+                }
+              },
+              "type": "function"
             },
             {
-              "name": "ManyInfoService--saveManyInfo",
-              "description": "Save the age, favorite color, and favorite food of the user",
-              "parameters": {
-                "type": "object",
-                "properties": {
-                  "age": {
-                    "description": "The age parameter",
-                    "type": "string"
-                  },
-                  "favoriteColor": {
-                    "description": "The favoriteColor parameter",
-                    "type": "string"
-                  },
-                  "favoriteFood": {
-                    "description": "The favoriteFood parameter",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "age",
-                  "favoriteColor",
-                  "favoriteFood"
-                ]
-              }
+              "async": false,
+              "function": {
+                "name": "getFavFoodInChicago_0001",
+                "description": "Look up the favorite food in Chicago"
+              },
+              "type": "function"
             },
             {
-              "name": "DateService--askUserDate",
-              "description": "Ask the user what the date is today",
-              "parameters": {
-                "type": "object",
-                "properties": {
-                  "date": {
-                    "description": "The date parameter",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "date"
-                ]
-              }
+              "function": {
+                "name": "manualWeatherLookup_0001",
+                "description": "Look up the weather for a city and state",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "description": "The city to look up",
+                      "type": "string"
+                    },
+                    "state": {
+                      "description": "The state to look up",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "city",
+                    "state"
+                  ]
+                }
+              },
+              "messages": [
+                {
+                  "content": "This is the manual weather lookup start message",
+                  "type": "request-start"
+                }
+              ],
+              "type": "function"
             }
           ],
           "provider": "openai"
         },
-        "firstMessage": "\n            Hi there. My name is Ellen. I'd like to collect some information from you \n            today. Is that alright?\n            ",
-        "serverMessages": [
-          "end-of-call-report",
-          "function-call",
-          "hang",
-          "status-update",
-          "tool-calls",
-          "transfer-destination-request",
-          "user-interrupted"
-        ]
-      }
+        "voice": {
+          "provider": "11labs",
+          "voiceId": "paula",
+          "model": "eleven_turbo_v2"
+        },
+        "firstMessage": "Hi, I am Beth how can I assist you today?",
+        "serverUrl": "https://ba44-73-71-109-237.ngrok-free.app/web/talkapp?__applicationId=0sTRLSBdKRouP3D&__sessionId=Web-bpzIBGilZjAGswE&__assistantId=0001"
+      },
+      "webCallUrl": "https://vapi.daily.co/ymoN8XIzJS2eycHB9dUX"
     },
-    "phoneNumber": {
-      "id": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
-      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
-      "number": "+19254207621",
-      "createdAt": "2024-06-29T03:03:00.576Z",
-      "updatedAt": "2024-06-29T03:04:32.131Z",
-      "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33cFxM9B7",
-      "stripeSubscriptionStatus": "active",
-      "stripeSubscriptionCurrentPeriodStart": "2024-06-29T03:02:56.000Z",
-      "provider": "twilio"
-    },
-    "customer": {
-      "number": "+19256836490"
+    "assistant": {
+      "model": {
+        "model": "gpt-4-turbo",
+        "messages": [
+          {
+            "content": "You're a versatile AI assistant named Vapi who is fun to talk with.",
+            "role": "system"
+          }
+        ],
+        "functions": [
+          {
+            "name": "weatherByAreaCode_0001",
+            "description": "Look up the weather for an area code",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "areaCode": {
+                  "description": "The areaCode parameter",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "areaCode"
+              ]
+            }
+          }
+        ],
+        "tools": [
+          {
+            "async": false,
+            "function": {
+              "name": "weatherByAreaCode_0001",
+              "description": "Look up the weather for an area code",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "areaCode": {
+                    "description": "The areaCode parameter",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "areaCode"
+                ]
+              }
+            },
+            "type": "function"
+          },
+          {
+            "async": false,
+            "function": {
+              "name": "getFavFoodInChicago_0001",
+              "description": "Look up the favorite food in Chicago"
+            },
+            "type": "function"
+          },
+          {
+            "function": {
+              "name": "manualWeatherLookup_0001",
+              "description": "Look up the weather for a city and state",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "description": "The city to look up",
+                    "type": "string"
+                  },
+                  "state": {
+                    "description": "The state to look up",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city",
+                  "state"
+                ]
+              }
+            },
+            "messages": [
+              {
+                "content": "This is the manual weather lookup start message",
+                "type": "request-start"
+              }
+            ],
+            "type": "function"
+          }
+        ],
+        "provider": "openai"
+      },
+      "voice": {
+        "provider": "11labs",
+        "voiceId": "paula",
+        "model": "eleven_turbo_v2"
+      },
+      "firstMessage": "Hi, I am Beth how can I assist you today?",
+      "serverUrl": "https://ba44-73-71-109-237.ngrok-free.app/web/talkapp?__applicationId=0sTRLSBdKRouP3D&__sessionId=Web-bpzIBGilZjAGswE&__assistantId=0001"
     },
     "artifact": {
       "messages": [
         {
+          "role": "system",
+          "message": "You're a versatile AI assistant named Vapi who is fun to talk with.",
+          "time": 1725227387995,
+          "secondsFromStart": 0
+        },
+        {
           "role": "bot",
-          "message": "Hi there. My name is Ellen. I'd like to collect some information from you today. Is that alright?",
-          "time": 1720934904948,
-          "endTime": 1720934909978,
-          "secondsFromStart": 1.04,
+          "message": "Hi. I am Beth. How can I assist you today?",
+          "time": 1725227389390,
+          "endTime": 1725227391510,
+          "secondsFromStart": 1.12,
           "source": ""
         },
         {
           "role": "user",
-          "message": "Sure.",
-          "time": 1.7209349111679998E12,
-          "endTime": 1.7209349116679998E12,
-          "secondsFromStart": 7.2599998,
-          "duration": 4.93
-        },
-        {
-          "role": "bot",
-          "message": "Great. Could you please start by telling me your first and last name?",
-          "time": 1.7209349139279995E12,
-          "endTime": 1720934917708,
-          "secondsFromStart": 10.0199995,
-          "source": ""
-        },
-        {
-          "role": "user",
-          "message": "Matthew Ambrose.",
-          "time": 1720934918738,
-          "endTime": 1720934920198,
-          "secondsFromStart": 14.83,
-          "duration": 4.459999
-        },
-        {
-          "role": "bot",
-          "message": "Thank you, Matthew Ambrose. Just to confirm, is your name spelled as follows, m a t t t h e w m b r s e? Is that correct?",
-          "time": 1720934921928,
-          "endTime": 1720934930388,
-          "secondsFromStart": 18.02,
-          "source": ""
-        },
-        {
-          "role": "user",
-          "message": "Correct.",
-          "time": 1720934931088,
-          "endTime": 1720934931588,
-          "secondsFromStart": 27.18,
-          "duration": 3.4099998
+          "message": "What's the weather in area code 4 1 5?",
+          "time": 1725227391450,
+          "endTime": 1725227394430,
+          "secondsFromStart": 3.18,
+          "duration": 3.15
         },
         {
           "toolCalls": [
             {
-              "id": "call_8ct8A7c50E5vsHdVSxl82qPQ",
+              "id": "call_3QhVhuoGkk1fTsE8LBHWwLs3",
               "type": "function",
               "function": {
-                "name": "NameService--saveNameOfUser",
-                "arguments": "{\"firstName\": \"Matthew\", \"lastName\": \"Ambrose\"}"
+                "name": "weatherByAreaCode_0001",
+                "arguments": "{\"areaCode\": \"415\"}"
               }
             }
           ],
           "role": "tool_calls",
           "message": "",
-          "time": 1720934931276,
-          "secondsFromStart": 27.758
-        },
-        {
-          "role": "tool_call_result",
-          "time": 1720934933060,
-          "secondsFromStart": 29.542,
-          "name": "NameService--saveNameOfUser",
-          "result": "{}",
-          "toolCallId": "call_8ct8A7c50E5vsHdVSxl82qPQ"
-        },
-        {
-          "role": "bot",
-          "message": "This will just take a sec. Thanks, Matthew. Now could you please tell me your age, favorite color, and favorite food?",
-          "time": 1720934933238,
-          "endTime": 1720934941968,
-          "secondsFromStart": 29.33,
-          "source": ""
-        },
-        {
-          "role": "user",
-          "message": "20 blue pizza.",
-          "time": 1720934943878,
-          "endTime": 1720934945178,
-          "secondsFromStart": 39.97,
-          "duration": 3.8600006
-        },
-        {
-          "role": "bot",
-          "message": "Got it. You're 20 years old. Your favorite color is blue, and your favorite food is pizza. Did I get everything right?",
-          "time": 1720934947338,
-          "endTime": 1720934953218,
-          "secondsFromStart": 43.43,
-          "source": ""
-        },
-        {
-          "role": "user",
-          "message": "Correct.",
-          "time": 1720934954368,
-          "endTime": 1720934954868,
-          "secondsFromStart": 50.46,
-          "duration": 4.540001
-        },
-        {
-          "toolCalls": [
-            {
-              "id": "call_wWALBiKoL3l5rH5OOzO1qZSy",
-              "type": "function",
-              "function": {
-                "name": "ManyInfoService--saveManyInfo",
-                "arguments": "{\n  \"age\": \"20\",\n  \"favoriteColor\": \"blue\",\n  \"favoriteFood\": \"pizza\"\n}"
-              }
-            }
-          ],
-          "role": "tool_calls",
-          "message": "",
-          "time": 1720934955021,
-          "secondsFromStart": 51.503
+          "time": 1725227394235,
+          "secondsFromStart": 6.193
         }
       ],
       "messagesOpenAIFormatted": [
         {
+          "role": "system",
+          "content": "You're a versatile AI assistant named Vapi who is fun to talk with."
+        },
+        {
           "role": "assistant",
-          "content": "Hi there. My name is Ellen. I'd like to collect some information from you today. Is that alright?"
+          "content": "Hi. I am Beth. How can I assist you today?"
         },
         {
           "role": "user",
-          "content": "Sure."
+          "content": "What's the weather in area code 4 1 5?"
         },
         {
           "role": "assistant",
-          "content": "Great. Could you please start by telling me your first and last name?"
-        },
-        {
-          "role": "user",
-          "content": "Matthew Ambrose."
-        },
-        {
-          "role": "assistant",
-          "content": "Thank you, Matthew Ambrose. Just to confirm, is your name spelled as follows, m a t t t h e w m b r s e? Is that correct?"
-        },
-        {
-          "role": "user",
-          "content": "Correct."
-        },
-        {
-          "role": "assistant",
-          "content": "",
           "tool_calls": [
             {
+              "id": "call_3QhVhuoGkk1fTsE8LBHWwLs3",
               "type": "function",
-              "id": "call_8ct8A7c50E5vsHdVSxl82qPQ",
               "function": {
-                "name": "NameService--saveNameOfUser",
-                "arguments": "{\"firstName\": \"Matthew\", \"lastName\": \"Ambrose\"}"
+                "name": "weatherByAreaCode_0001",
+                "arguments": "{\"areaCode\": \"415\"}"
               }
             }
           ]
         },
         {
           "role": "tool",
-          "tool_call_id": "call_8ct8A7c50E5vsHdVSxl82qPQ",
-          "content": "{}"
-        },
-        {
-          "role": "assistant",
-          "content": "This will just take a sec. Thanks, Matthew. Now could you please tell me your age, favorite color, and favorite food?"
-        },
-        {
-          "role": "user",
-          "content": "20 blue pizza."
-        },
-        {
-          "role": "assistant",
-          "content": "Got it. You're 20 years old. Your favorite color is blue, and your favorite food is pizza. Did I get everything right?"
-        },
-        {
-          "role": "user",
-          "content": "Correct."
-        },
-        {
-          "role": "assistant",
-          "content": "",
-          "tool_calls": [
-            {
-              "type": "function",
-              "id": "call_wWALBiKoL3l5rH5OOzO1qZSy",
-              "function": {
-                "name": "ManyInfoService--saveManyInfo",
-                "arguments": "{\n  \"age\": \"20\",\n  \"favoriteColor\": \"blue\",\n  \"favoriteFood\": \"pizza\"\n}"
-              }
-            }
-          ]
+          "tool_call_id": "call_3QhVhuoGkk1fTsE8LBHWwLs3",
+          "content": "Tool Result Still Pending But Proceed Further If Possible."
         }
       ]
     },
-    "timestamp": "2024-07-14T05:29:15.026Z"
+    "timestamp": "2024-09-01T21:49:54.238Z"
   }
 }

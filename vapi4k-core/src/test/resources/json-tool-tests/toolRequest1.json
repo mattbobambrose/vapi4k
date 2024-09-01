@@ -89,6 +89,8 @@
           {
             "assistant": {
               "name": "assistant1",
+              "firstMessage": "Hi there! I'm assistant1",
+              "serverUrl": "https://ba44-73-71-109-237.ngrok-free.app/web/talkSquad?__applicationId=fncOOhrc61vVP7x&__sessionId=Web-P4vPkPimClBGBkd&__assistantId=0001",
               "model": {
                 "model": "llama3-70b-8192",
                 "tools": [
@@ -123,8 +125,7 @@
                   }
                 ],
                 "provider": "groq"
-              },
-              "firstMessage": "Hi there! I'm assistant1"
+              }
             },
             "assistantDestinations": [
               {
@@ -138,6 +139,8 @@
           {
             "assistant": {
               "name": "assistant2",
+              "firstMessage": "Hi there! I'm assistant2",
+              "serverUrl": "https://ba44-73-71-109-237.ngrok-free.app/web/talkSquad?__applicationId=fncOOhrc61vVP7x&__sessionId=Web-P4vPkPimClBGBkd&__assistantId=0002",
               "model": {
                 "model": "llama3-70b-8192",
                 "tools": [
@@ -172,8 +175,7 @@
                   }
                 ],
                 "provider": "groq"
-              },
-              "firstMessage": "Hi there! I'm assistant2"
+              }
             },
             "assistantDestinations": [
               {

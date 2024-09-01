@@ -130,24 +130,29 @@ fun withTestApplication(
         }
       }
     }
-
+// zzz
     val baseUrl = "/${appType.pathPrefix}/$defaultServerPath"
     var url = baseUrl
     responses
       .addAll(
         fileNames.map { fileName ->
           println("url: $url")
+          val arg = resourceFile(fileName)
+          //val jsonArg = arg.toJsonElement()
+
           val response = client.post(url) {
             configPost()
-            setBody(resourceFile(fileName))
+            setBody(arg)
           }
 
           val body = response.bodyAsText().toJsonElement()
+          println("response: ${body}")
           val members = "messageResponse.squad.members"
           if (body.containsKey(members)) {
             val qp = body.get(members).toJsonElementList().first().stringValue("assistant.serverUrl").queryParams()
             url = "$baseUrl?$qp"
             println("response: ${body.toJsonString()}")
+            println(arg)
           }
           response to body
         },

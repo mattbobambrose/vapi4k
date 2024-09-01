@@ -62,7 +62,7 @@ class ToolsImpl internal constructor(
     if (model.declaredManualTools.contains(funcName)) error("Duplicate manual tool name declared: $funcName")
     model.declaredManualTools += funcName
 
-    model.application.manualToolCache.addToCache(funcName, manualToolImpl)
+    model.application.addManualToolToCache(funcName, manualToolImpl)
   }
 
   override fun externalTool(block: ExternalTool.() -> Unit) {
@@ -73,17 +73,17 @@ class ToolsImpl internal constructor(
 
   override fun dtmfTool(block: DtmfTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.DTMF).also { model.toolDtos += it }
-    ToolWitParametersImpl("dtmfTool", toolDto).apply(block).checkIfServerCalled()
+    ToolWithParametersImpl("dtmfTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun endCallTool(block: EndCallTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.END_CALL).also { model.toolDtos += it }
-    ToolWitParametersImpl("endCallTool", toolDto).apply(block).checkIfServerCalled()
+    ToolWithParametersImpl("endCallTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun voiceMailTool(block: VoiceMailTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.VOICEMAIL).also { model.toolDtos += it }
-    ToolWitParametersImpl("voiceMailTool", toolDto).apply(block).checkIfServerCalled()
+    ToolWithParametersImpl("voiceMailTool", toolDto).apply(block).checkIfServerCalled()
   }
 
   override fun ghlTool(block: GhlTool.() -> Unit) {
@@ -127,7 +127,7 @@ class ToolsImpl internal constructor(
   ) {
     model.toolDtos += ToolDto().also { toolDto ->
       populateFunctionDto(model, obj, function, toolDto.functionDto)
-      model.application.serviceCache.addToCache(model, obj, function)
+      model.application.addServiceToolToCache(model, obj, function)
 
       with(toolDto) {
         type = ToolType.FUNCTION

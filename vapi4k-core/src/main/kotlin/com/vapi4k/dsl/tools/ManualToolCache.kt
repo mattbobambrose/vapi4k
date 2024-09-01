@@ -17,8 +17,10 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.FunctionName
+import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.common.Utils.ensureStartsWith
+import kotlinx.serialization.Serializable
 
 internal class ManualToolCache(
   private val pathBlock: () -> String,
@@ -46,4 +48,15 @@ internal class ManualToolCache(
 
   fun getTool(toolName: FunctionName): ManualToolImpl =
     manualTools[toolName] ?: error("Manual tool name found: $toolName")
+
+  private val asDtoMap: Map<FunctionName, ToolDto>
+    get() = manualTools.map { (k, v) -> k to v.toolDto }.toMap()
+
+  fun cacheAsJson() = ManualCacheInfoDto(manualTools.size, asDtoMap)
 }
+
+@Serializable
+class ManualCacheInfoDto(
+  val cacheSize: Int = -1,
+  val cache: Map<FunctionName, ToolDto>? = null,
+)

@@ -16,13 +16,15 @@
 
 package com.vapi4k.dsl.tools
 
+import com.vapi4k.api.assistant.ManualToolCallResponse
 import com.vapi4k.api.tools.DtmfTool
 import com.vapi4k.api.tools.EndCallTool
 import com.vapi4k.api.tools.Parameters
 import com.vapi4k.api.tools.VoiceMailTool
 import com.vapi4k.dtos.tools.ToolDto
+import kotlinx.serialization.json.JsonElement
 
-open class ToolWitParametersImpl internal constructor(
+open class ToolWithParametersImpl internal constructor(
   callerName: String,
   toolDto: ToolDto,
 ) : ToolWithServerImpl(callerName, toolDto),
@@ -30,11 +32,32 @@ open class ToolWitParametersImpl internal constructor(
   DtmfTool,
   EndCallTool,
   VoiceMailTool {
+
+  internal lateinit var toolCallRequest: (suspend ManualToolCallResponse.(JsonElement) -> Unit)
+
+  internal fun isToolCallRequestInitialized() = ::toolCallRequest.isInitialized
+
+  override var name
+    get() = toolDto.functionDto.name
+    set(value) = run { toolDto.functionDto.name = value }
+
+  override var description
+    get() = toolDto.functionDto.description
+    set(value) = run { toolDto.functionDto.description = value }
+
   override var async
     get() = toolDto.async ?: true
     set(value) = run { toolDto.async = value }
 
+
   override fun parameters(block: Parameters.() -> Unit) {
     ParametersImpl(callerName, toolDto).apply(block)
+  }
+
+  override fun onInvoke(block: suspend ManualToolCallResponse.(JsonElement) -> Unit) {
+    if (!::toolCallRequest.isInitialized)
+      toolCallRequest = block
+    else
+      error("onInvoke{} can be called only once per manualTool{}")
   }
 }

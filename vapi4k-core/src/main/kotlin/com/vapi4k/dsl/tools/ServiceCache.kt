@@ -105,12 +105,12 @@ internal class ServiceCache(
   private val asDtoMap: Map<CacheKey, FunctionInfoDto>
     get() = cacheMap.map { (k, v) -> k to v.toFunctionInfoDto() }.toMap()
 
-  fun cacheAsJson() = CacheInfoDto(lastCacheCleanInstant.toString(), asDtoMap.size, asDtoMap)
+  fun cacheAsJson() = ServiceCacheInfoDto(lastCacheCleanInstant.toString(), asDtoMap.size, asDtoMap)
 }
 
 @Serializable
-class CacheInfoDto(
+class ServiceCacheInfoDto(
   val lastPurgeTime: String = "",
-  val toolCallCacheSize: Int = -1,
-  val toolCallCache: Map<CacheKey, FunctionInfoDto>? = null,
+  val cacheSize: Int = -1,
+  val cache: Map<CacheKey, FunctionInfoDto>? = null,
 )

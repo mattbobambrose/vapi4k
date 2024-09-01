@@ -57,7 +57,7 @@ class FunctionsImpl internal constructor(
     model.functionDtos +=
       FunctionDto().also { functionDto ->
         populateFunctionDto(model, obj, function, functionDto)
-        application.functionCache.addToCache(model, obj, function)
+        application.addFunctionToCache(model, obj, function)
       }.also { func ->
         if (model.functionDtos.any { func.name == it.name }) {
           error("Duplicate function name declared: ${func.name}")

@@ -283,9 +283,9 @@ object ValidateAssistant {
     requestContext: RequestContext,
     toolNames: List<String>,
   ) {
-    if (requestContext.application.serviceCache.isNotEmpty()) {
+    if (requestContext.application.hasServiceTools()) {
       h3 { +"Service Tools" }
-      val serviceCache = requestContext.application.serviceCache
+      val serviceCache = requestContext.application.serviceToolCache
       toolNames
         .mapIndexed { i, name ->
           name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
@@ -346,17 +346,17 @@ object ValidateAssistant {
     requestContext: RequestContext,
     toolNames: List<String>,
   ) {
-    if (requestContext.application.manualToolCache.functions.isNotEmpty()) {
+    if (requestContext.application.hasManualTools()) {
       h3 { +"Manual Tools" }
       toolNames
         .mapIndexed { i, name ->
           name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
         }
-        .filter { (toolName, _) -> requestContext.application.containsManualToolInCache(toolName) }
+        .filter { (toolName, _) -> requestContext.application.containsManualTool(toolName) }
         .forEach { (funcName, assistantId) ->
           div {
             id = TOOLS_DIV
-            val manualToolImpl = requestContext.application.manualToolCache.getTool(funcName)
+            val manualToolImpl = requestContext.application.getManualTool(funcName)
             val divId = getRandomString()
             h3 { +"$funcName (${manualToolImpl.signature})" }
             form {
@@ -401,7 +401,7 @@ object ValidateAssistant {
     requestContext: RequestContext,
     funcNames: List<String>,
   ) {
-    if (requestContext.application.functionCache.isNotEmpty()) {
+    if (requestContext.application.hasFunctions()) {
       h3 { +"Functions" }
       val functionCache = requestContext.application.functionCache
       funcNames

@@ -62,8 +62,8 @@ data class ToolCallResponseDto(
                         with(requestContext) {
                           runCatching {
                             when {
-                              application.containsServiceToolInCache(requestContext, funcName) -> {
-                                application.getServiceToolFromCache(requestContext, funcName)
+                              application.containsServiceTool(requestContext, funcName) -> {
+                                application.getServiceTool(requestContext, funcName)
                                   .also { func ->
                                     logger.info { "Invoking $funcName on serviceTool method ${func.fqName}" }
                                   }
@@ -77,8 +77,8 @@ data class ToolCallResponseDto(
                                   )
                               }
 
-                              application.containsManualToolInCache(funcName) -> {
-                                val manualToolImpl: ManualToolImpl = application.manualToolCache.getTool(funcName)
+                              application.containsManualTool(funcName) -> {
+                                val manualToolImpl: ManualToolImpl = application.getManualTool(funcName)
                                 if (!manualToolImpl.isToolCallRequestInitialized()) {
                                   error("onInvoke{} not declared in $funcName")
                                 } else {

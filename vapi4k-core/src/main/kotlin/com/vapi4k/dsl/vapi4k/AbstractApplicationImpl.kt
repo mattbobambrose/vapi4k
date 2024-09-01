@@ -24,7 +24,9 @@ import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.FunctionName
 import com.vapi4k.common.QueryParams.SECRET_PARAM
+import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.dsl.tools.ManualToolCache
+import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.tools.ServiceCache
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
@@ -35,16 +37,19 @@ import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.isNull
 import com.vapi4k.utils.enums.ServerRequestType
+import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import kotlinx.serialization.json.JsonElement
+import kotlin.reflect.KFunction
 import kotlin.time.Duration
 
 abstract class AbstractApplicationImpl(
   val applicationType: ApplicationType,
 ) {
   internal val applicationId = getRandomSecret(15).toApplicationId()
-  internal val serviceCache = ServiceCache { fullServerPath }
+
+  internal val serviceToolCache = ServiceCache { fullServerPath }
   internal val functionCache = ServiceCache { fullServerPath }
-  internal val manualToolCache = ManualToolCache { fullServerPath }
+  private val manualToolCache = ManualToolCache { fullServerPath }
 
   internal val applicationAllRequests = mutableListOf<(RequestArgs)>()
   internal val applicationPerRequests = mutableListOf<Pair<ServerRequestType, RequestArgs>>()
@@ -68,30 +73,72 @@ abstract class AbstractApplicationImpl(
 
   internal abstract suspend fun getAssistantResponse(requestContext: RequestContext): AssistantMessageResponse
 
+  internal fun serviceCacheAsJson() = serviceToolCache.cacheAsJson().toJsonElement()
+
+  internal fun functionCacheAsJson() = functionCache.cacheAsJson().toJsonElement()
+
+  internal fun manualCacheAsJson() = manualToolCache.cacheAsJson().toJsonElement()
+
+  internal fun purgeServiceToolCache(maxAge: Duration) = serviceToolCache.purgeToolCache(maxAge)
+
+  internal fun purgeFunctionCache(maxAge: Duration) = functionCache.purgeToolCache(maxAge)
+
+  internal fun clearServiceToolCache() = serviceToolCache.clearToolCache()
+
+  internal fun clearFunctionCache() = functionCache.clearToolCache()
+
   internal fun addAssistantId(assistantId: AssistantId) {
     assistantIds += assistantId
   }
 
-  internal fun containsServiceToolInCache(
+  internal fun addServiceToolToCache(
+    model: AbstractModel,
+    obj: Any,
+    function: KFunction<*>,
+  ) = serviceToolCache.addToCache(model, obj, function)
+
+  internal fun addManualToolToCache(
+    funcName: FunctionName,
+    manualToolImpl: ManualToolImpl,
+  ) = manualToolCache.addToCache(funcName, manualToolImpl)
+
+  internal fun addFunctionToCache(
+    model: AbstractModel,
+    obj: Any,
+    function: KFunction<*>,
+  ) = functionCache.addToCache(model, obj, function)
+
+  internal fun hasServiceTools() = serviceToolCache.isNotEmpty()
+
+  internal fun hasFunctions() = functionCache.isNotEmpty()
+
+  internal fun hasManualTools() = manualToolCache.functions.isNotEmpty()
+
+  internal fun containsServiceTool(
     requestContext: RequestContext,
     funcName: FunctionName,
   ): Boolean =
-    serviceCache.containsIds(requestContext) && serviceCache.getFromCache(requestContext).containsFunction(funcName)
+    serviceToolCache.containsIds(requestContext) && serviceToolCache.getFromCache(requestContext)
+      .containsFunction(funcName)
 
-  internal fun containsManualToolInCache(funcName: FunctionName): Boolean = manualToolCache.containsTool(funcName)
+  internal fun containsManualTool(funcName: FunctionName): Boolean = manualToolCache.containsTool(funcName)
 
-  internal fun containsFunctionInCache(
+  internal fun containsFunction(
     requestContext: RequestContext,
     funcName: FunctionName,
   ) = functionCache.containsIds(requestContext) &&
     functionCache.getFromCache(requestContext).containsFunction(funcName)
 
-  internal fun getServiceToolFromCache(
+  internal fun getServiceTool(
     requestContext: RequestContext,
     funcName: FunctionName,
-  ) = serviceCache.getFromCache(requestContext).getFunction(funcName)
+  ) = serviceToolCache.getFromCache(requestContext).getFunction(funcName)
 
-  internal fun getFunctionFromCache(
+  internal fun getManualTool(
+    funcName: FunctionName,
+  ) = manualToolCache.getTool(funcName)
+
+  internal fun getFunction(
     requestContext: RequestContext,
     funcName: FunctionName,
   ) = functionCache.getFromCache(requestContext).getFunction(funcName)
@@ -156,13 +203,13 @@ abstract class AbstractApplicationImpl(
     // Need to count the number of functions available to prevent error if no funcs exist
     if (eocrCacheRemovalEnabled) {
       val cacheKey = cacheKeyValue(requestContext)
-      if (serviceCache.isNotEmpty()) {
-        serviceCache.removeFromCache(requestContext) { funcInfo ->
+      if (hasServiceTools()) {
+        serviceToolCache.removeFromCache(requestContext) { funcInfo ->
           logger.info { "EOCR removed ${funcInfo.size} serviceTool cache items [${funcInfo.ageSecs}] " }
         } ?: logger.warn { "EOCR unable to find and remove serviceTool cache entry [$cacheKey]" }
       }
 
-      if (functionCache.isNotEmpty()) {
+      if (hasFunctions()) {
         functionCache.removeFromCache(requestContext) { funcInfo ->
           logger.info { "EOCR removed ${funcInfo.size} function cache items [${funcInfo.ageSecs}] " }
         } ?: logger.warn { "EOCR unable to find and remove function cache entry [$cacheKey]" }

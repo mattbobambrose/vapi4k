@@ -20,7 +20,6 @@ import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.KtorCallContext
 import com.vapi4k.utils.common.Utils.ensureStartsWith
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
@@ -30,8 +29,8 @@ internal object CacheActions {
   suspend fun KtorCallContext.clearCaches(config: Vapi4kConfigImpl) {
     config.allApplications.forEach { application ->
       with(application) {
-        serviceCache.clearToolCache()
-        functionCache.clearToolCache()
+        clearServiceToolCache()
+        clearFunctionCache()
       }
     }
     call.respondRedirect(CACHES_PATH)
@@ -45,12 +44,16 @@ internal object CacheActions {
             application.fullServerPath.ensureStartsWith("/"),
             buildJsonObject {
               put(
-                "toolServices",
-                application.serviceCache.cacheAsJson().toJsonElement(),
+                "serviceTools",
+                application.serviceCacheAsJson(),
               )
               put(
                 "functions",
-                application.functionCache.cacheAsJson().toJsonElement(),
+                application.functionCacheAsJson(),
+              )
+              put(
+                "manualTools",
+                application.manualCacheAsJson(),
               )
             },
           )

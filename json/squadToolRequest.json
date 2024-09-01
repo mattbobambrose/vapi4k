@@ -1,0 +1,413 @@
+{
+  "message": {
+    "type": "tool-calls",
+    "toolCalls": [
+      {
+        "id": "call_MpRa1MJGlW7wQdmzJVkgZFJN",
+        "type": "function",
+        "function": {
+          "name": "weatherByAreaCode_0001",
+          "arguments": {
+            "areaCode": "415"
+          }
+        }
+      }
+    ],
+    "toolCallList": [
+      {
+        "id": "call_MpRa1MJGlW7wQdmzJVkgZFJN",
+        "type": "function",
+        "function": {
+          "name": "weatherByAreaCode_0001",
+          "arguments": {
+            "areaCode": "415"
+          }
+        }
+      }
+    ],
+    "toolWithToolCallList": [
+      {
+        "type": "function",
+        "function": {
+          "name": "weatherByAreaCode_0001",
+          "description": "Look up the weather for an area code",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "areaCode": {
+                "description": "The areaCode parameter",
+                "type": "string"
+              }
+            },
+            "required": [
+              "areaCode"
+            ]
+          }
+        },
+        "async": false,
+        "messages": [
+        ],
+        "toolCall": {
+          "id": "call_MpRa1MJGlW7wQdmzJVkgZFJN",
+          "type": "function",
+          "function": {
+            "name": "weatherByAreaCode_0001",
+            "arguments": {
+              "areaCode": "415"
+            }
+          }
+        }
+      }
+    ],
+    "call": {
+      "id": "f4e808b6-0b80-435c-a93a-d19c4ccff888",
+      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "createdAt": "2024-09-01T22:04:05.416Z",
+      "updatedAt": "2024-09-01T22:04:05.416Z",
+      "type": "webCall",
+      "status": "queued",
+      "squad": {
+        "members": [
+          {
+            "assistant": {
+              "name": "Jane",
+              "firstMessage": "Hi, I am Jane how can I assist you today?",
+              "serverUrl": "https://ba44-73-71-109-237.ngrok-free.app/web/talkSquad?__applicationId=fncOOhrc61vVP7x&__sessionId=Web-P4vPkPimClBGBkd&__assistantId=0001",
+              "model": {
+                "model": "gpt-4-turbo",
+                "messages": [
+                  {
+                    "content": "You're a versatile AI assistant named Vapi who is fun to talk with.",
+                    "role": "system"
+                  }
+                ],
+                "functions": [
+                  {
+                    "name": "getFavFoodInChicago_0001",
+                    "description": "Look up the favorite food in Chicago"
+                  }
+                ],
+                "tools": [
+                  {
+                    "async": false,
+                    "function": {
+                      "name": "weatherByAreaCode_0001",
+                      "description": "Look up the weather for an area code",
+                      "parameters": {
+                        "type": "object",
+                        "properties": {
+                          "areaCode": {
+                            "description": "The areaCode parameter",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "areaCode"
+                        ]
+                      }
+                    },
+                    "type": "function"
+                  },
+                  {
+                    "function": {
+                      "name": "manualWeatherLookup_0001",
+                      "description": "Look up the weather for a city and state",
+                      "parameters": {
+                        "type": "object",
+                        "properties": {
+                          "city": {
+                            "description": "The city to look up",
+                            "type": "string"
+                          },
+                          "state": {
+                            "description": "The state to look up",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "city",
+                          "state"
+                        ]
+                      }
+                    },
+                    "messages": [
+                      {
+                        "content": "This is the manual weather lookup start message",
+                        "type": "request-start"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "provider": "openai"
+              },
+              "voice": {
+                "provider": "11labs",
+                "voiceId": "paula",
+                "model": "eleven_turbo_v2"
+              }
+            }
+          },
+          {
+            "assistant": {
+              "name": "Sarah",
+              "firstMessage": "Hi, I am Sarah how can I assist you today?",
+              "serverUrl": "https://ba44-73-71-109-237.ngrok-free.app/web/talkSquad?__applicationId=fncOOhrc61vVP7x&__sessionId=Web-P4vPkPimClBGBkd&__assistantId=0002",
+              "model": {
+                "model": "gpt-4-turbo",
+                "messages": [
+                  {
+                    "content": "You're a versatile AI assistant named Vapi who is fun to talk with.",
+                    "role": "system"
+                  }
+                ],
+                "functions": [
+                  {
+                    "name": "getFavFoodInChicago_0002",
+                    "description": "Look up the favorite food in Chicago"
+                  }
+                ],
+                "tools": [
+                  {
+                    "async": false,
+                    "function": {
+                      "name": "weatherByAreaCode_0002",
+                      "description": "Look up the weather for an area code",
+                      "parameters": {
+                        "type": "object",
+                        "properties": {
+                          "areaCode": {
+                            "description": "The areaCode parameter",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "areaCode"
+                        ]
+                      }
+                    },
+                    "type": "function"
+                  },
+                  {
+                    "function": {
+                      "name": "manualWeatherLookup_0002",
+                      "description": "Look up the weather for a city and state",
+                      "parameters": {
+                        "type": "object",
+                        "properties": {
+                          "city": {
+                            "description": "The city to look up",
+                            "type": "string"
+                          },
+                          "state": {
+                            "description": "The state to look up",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "city",
+                          "state"
+                        ]
+                      }
+                    },
+                    "messages": [
+                      {
+                        "content": "This is the manual weather lookup start message",
+                        "type": "request-start"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "provider": "openai"
+              },
+              "voice": {
+                "provider": "11labs",
+                "voiceId": "paula",
+                "model": "eleven_turbo_v2"
+              }
+            }
+          }
+        ]
+      },
+      "webCallUrl": "https://vapi.daily.co/Kovjxmq6aMWUG5KeHIJO"
+    },
+    "assistant": {
+      "name": "Jane",
+      "model": {
+        "model": "gpt-4-turbo",
+        "messages": [
+          {
+            "content": "You're a versatile AI assistant named Vapi who is fun to talk with.",
+            "role": "system"
+          }
+        ],
+        "functions": [
+          {
+            "name": "getFavFoodInChicago_0001",
+            "description": "Look up the favorite food in Chicago"
+          }
+        ],
+        "tools": [
+          {
+            "async": false,
+            "function": {
+              "name": "weatherByAreaCode_0001",
+              "description": "Look up the weather for an area code",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "areaCode": {
+                    "description": "The areaCode parameter",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "areaCode"
+                ]
+              }
+            },
+            "type": "function"
+          },
+          {
+            "function": {
+              "name": "manualWeatherLookup_0001",
+              "description": "Look up the weather for a city and state",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "description": "The city to look up",
+                    "type": "string"
+                  },
+                  "state": {
+                    "description": "The state to look up",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city",
+                  "state"
+                ]
+              }
+            },
+            "messages": [
+              {
+                "content": "This is the manual weather lookup start message",
+                "type": "request-start"
+              }
+            ],
+            "type": "function"
+          }
+        ],
+        "provider": "openai"
+      },
+      "voice": {
+        "provider": "11labs",
+        "voiceId": "paula",
+        "model": "eleven_turbo_v2"
+      },
+      "firstMessage": "Hi, I am Jane how can I assist you today?",
+      "serverUrl": "https://ba44-73-71-109-237.ngrok-free.app/web/talkSquad?__applicationId=fncOOhrc61vVP7x&__sessionId=Web-P4vPkPimClBGBkd&__assistantId=0001"
+    },
+    "artifact": {
+      "messages": [
+        {
+          "role": "system",
+          "message": "You're a versatile AI assistant named Vapi who is fun to talk with.",
+          "time": 1725228253872,
+          "secondsFromStart": 0
+        },
+        {
+          "role": "bot",
+          "message": "Hi. I am Jane. How can I assist you today?",
+          "time": 1725228255633,
+          "endTime": 1725228257813,
+          "secondsFromStart": 1.5999999,
+          "source": ""
+        },
+        {
+          "role": "user",
+          "message": "What's your name?",
+          "time": 1725228258493,
+          "endTime": 1725228259393,
+          "secondsFromStart": 4.46,
+          "duration": 2.3400002
+        },
+        {
+          "role": "bot",
+          "message": "I'm Vapi, your AI assistant. How can I help you today?",
+          "time": 1725228261313,
+          "endTime": 1725228264253,
+          "secondsFromStart": 7.28,
+          "source": ""
+        },
+        {
+          "role": "user",
+          "message": "What's the weather in area code 4 1 5?",
+          "time": 1725228265223,
+          "endTime": 1725228267713,
+          "secondsFromStart": 11.19,
+          "duration": 2.6500006
+        },
+        {
+          "toolCalls": [
+            {
+              "id": "call_MpRa1MJGlW7wQdmzJVkgZFJN",
+              "type": "function",
+              "function": {
+                "name": "weatherByAreaCode_0001",
+                "arguments": "{\"areaCode\": \"415\"}"
+              }
+            }
+          ],
+          "role": "tool_calls",
+          "message": "",
+          "time": 1725228267463,
+          "secondsFromStart": 13.553
+        }
+      ],
+      "messagesOpenAIFormatted": [
+        {
+          "role": "system",
+          "content": "You're a versatile AI assistant named Vapi who is fun to talk with."
+        },
+        {
+          "role": "assistant",
+          "content": "Hi. I am Jane. How can I assist you today?"
+        },
+        {
+          "role": "user",
+          "content": "What's your name?"
+        },
+        {
+          "role": "assistant",
+          "content": "I'm Vapi, your AI assistant. How can I help you today?"
+        },
+        {
+          "role": "user",
+          "content": "What's the weather in area code 4 1 5?"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_MpRa1MJGlW7wQdmzJVkgZFJN",
+              "type": "function",
+              "function": {
+                "name": "weatherByAreaCode_0001",
+                "arguments": "{\"areaCode\": \"415\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_MpRa1MJGlW7wQdmzJVkgZFJN",
+          "content": "Tool Result Still Pending But Proceed Further If Possible."
+        }
+      ]
+    },
+    "timestamp": "2024-09-01T22:04:27.468Z"
+  }
+}

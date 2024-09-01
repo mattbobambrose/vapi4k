@@ -35,8 +35,8 @@ class FunctionResponse(
             val funcName = requestContext.request.functionName
             val args = requestContext.request.functionParameters
             runCatching {
-              if (application.containsFunctionInCache(requestContext, funcName)) {
-                application.getFunctionFromCache(requestContext, funcName)
+              if (application.containsFunction(requestContext, funcName)) {
+                application.getFunction(requestContext, funcName)
                   .invokeToolMethod(
                     isTool = false,
                     request = request,
