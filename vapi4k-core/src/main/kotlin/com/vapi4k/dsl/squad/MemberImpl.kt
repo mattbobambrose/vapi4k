@@ -48,15 +48,13 @@ data class MemberImpl(
       dto.assistantOverridesDto,
     ).apply(block)
       .apply {
-        if (requestContext.application.applicationType.shouldAssignServerUrl) {
-          this@MemberImpl.dto.assistantDto.serverUrl =
-            requestContext.application.serverUrl
-              .appendQueryParams(
-                APPLICATION_ID to requestContext.application.applicationId.value,
-                SESSION_ID to requestContext.sessionId.value,
-                ASSISTANT_ID to assistantId.value,
-              )
-        }
+        this@MemberImpl.dto.assistantDto.serverUrl =
+          requestContext.application.serverUrl
+            .appendQueryParams(
+              APPLICATION_ID to requestContext.application.applicationId.value,
+              SESSION_ID to requestContext.sessionId.value,
+              ASSISTANT_ID to assistantId.value,
+            )
       }
   }
 

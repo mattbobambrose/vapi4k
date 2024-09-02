@@ -51,16 +51,14 @@ abstract class AbstractAssistantResponseImpl(
         messageResponse.assistantOverridesDto,
       ).apply(block)
         .apply {
-          messageResponse.assistantDto.updated = true
-          messageResponse.assistantDto.verifyValues()
+          with(messageResponse.assistantDto) {
+            verifyValues()
 
-          if (requestContext.application.applicationType.shouldAssignServerUrl) {
-            messageResponse.assistantDto.serverUrl =
-              requestContext.application.serverUrl.appendQueryParams(
-                APPLICATION_ID to requestContext.application.applicationId.value,
-                SESSION_ID to sessionId.value,
-                ASSISTANT_ID to assistantId.value,
-              )
+            serverUrl = requestContext.application.serverUrl.appendQueryParams(
+              APPLICATION_ID to requestContext.application.applicationId.value,
+              SESSION_ID to sessionId.value,
+              ASSISTANT_ID to assistantId.value,
+            )
           }
         }
     }

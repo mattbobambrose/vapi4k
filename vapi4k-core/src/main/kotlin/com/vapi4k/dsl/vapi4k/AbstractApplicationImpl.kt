@@ -118,8 +118,8 @@ abstract class AbstractApplicationImpl(
     requestContext: RequestContext,
     funcName: FunctionName,
   ): Boolean =
-    serviceToolCache.containsIds(requestContext) && serviceToolCache.getFromCache(requestContext)
-      .containsFunction(funcName)
+    serviceToolCache.containsIds(requestContext) &&
+      serviceToolCache.getFromCache(requestContext).containsFunction(funcName)
 
   internal fun containsManualTool(funcName: FunctionName): Boolean = manualToolCache.containsTool(funcName)
 
@@ -134,9 +134,7 @@ abstract class AbstractApplicationImpl(
     funcName: FunctionName,
   ) = serviceToolCache.getFromCache(requestContext).getFunction(funcName)
 
-  internal fun getManualTool(
-    funcName: FunctionName,
-  ) = manualToolCache.getTool(funcName)
+  internal fun getManualTool(funcName: FunctionName) = manualToolCache.getTool(funcName)
 
   internal fun getFunction(
     requestContext: RequestContext,

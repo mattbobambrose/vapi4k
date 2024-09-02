@@ -32,7 +32,6 @@ open class ToolWithParametersImpl internal constructor(
   DtmfTool,
   EndCallTool,
   VoiceMailTool {
-
   internal lateinit var toolCallRequest: (suspend ManualToolCallResponse.(JsonElement) -> Unit)
 
   internal fun isToolCallRequestInitialized() = ::toolCallRequest.isInitialized
@@ -48,7 +47,6 @@ open class ToolWithParametersImpl internal constructor(
   override var async
     get() = toolDto.async ?: true
     set(value) = run { toolDto.async = value }
-
 
   override fun parameters(block: Parameters.() -> Unit) {
     ParametersImpl(callerName, toolDto).apply(block)

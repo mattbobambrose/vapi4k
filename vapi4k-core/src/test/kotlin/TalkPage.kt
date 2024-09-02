@@ -23,12 +23,11 @@ object TalkPage {
               serverSecret = "12345"
               vapiPublicApiKey = "c1492df9-e59f-4e06-a9ab-54f44df44f66"
               method = MethodType.POST
-              postArgs = """
-              {"x": "1",
-               "y": "2",
-               "position": "BOTTOM",
-               "name": "Ellen"
-               }""".toJsonElement()
+              postArgs = mapOf(
+                "x" to "1",
+                "y" to "2",
+                "name" to "Bill",
+              ).toJsonElement()
             }
           }
         }

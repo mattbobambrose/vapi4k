@@ -76,19 +76,19 @@ object JsonElementUtils {
 
   fun JsonElement.jsonElementListOrNull(vararg keys: String) = getOrNull(*keys)?.toJsonElementList()
 
-  internal fun JsonElement.elementOrNull(key: String) = jsonObject[key]
+  internal fun JsonElement.elementOrNull(key: String) = jsonObject.get(key)
 
   internal fun JsonElement.element(key: String) =
     elementOrNull(key) ?: throw IllegalArgumentException("""JsonElement key "$key" not found""")
 
   fun JsonElement.containsKey(vararg keys: String): Boolean {
     val ks = keys.flatMap { it.split(".") }
-    var currElement = this
+    var currElement: JsonElement = this
     for (k in ks) {
-      if (k !in currElement.keys)
-        return false
+      if (currElement is JsonObject && k in currElement.keys)
+        currElement = (currElement as JsonElement)[k]
       else
-        currElement = currElement[k]
+        return false
     }
     return true
   }

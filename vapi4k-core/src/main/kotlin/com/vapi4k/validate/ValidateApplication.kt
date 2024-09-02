@@ -39,7 +39,7 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.KtorCallContext
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContext
-import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParameters
+import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParams
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonUtils.toJsonArray
@@ -137,7 +137,7 @@ internal object ValidateApplication {
         RequestContext(
           application = config.getApplicationById(applicationId),
           request = generateToolRequest(toolType, params),
-          sessionId = call.getSessionIdFromQueryParameters() ?: error("No $SESSION_ID found in query parameters"),
+          sessionId = call.getSessionIdFromQueryParams() ?: error("No $SESSION_ID found in query parameters"),
           assistantId = params[ASSISTANT_ID]?.toAssistantId() ?: error("No $ASSISTANT_ID found in query parameters"),
         )
 

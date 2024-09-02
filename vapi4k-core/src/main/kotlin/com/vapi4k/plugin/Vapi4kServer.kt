@@ -47,8 +47,8 @@ import com.vapi4k.server.CacheActions.clearCaches
 import com.vapi4k.server.InboundCallActions.inboundCallRequest
 import com.vapi4k.server.OutboundCallAndWebActions.outboundCallAndWebRequest
 import com.vapi4k.server.RequestContext
-import com.vapi4k.server.RequestContext.Companion.getAssistantIdFromQueryParameters
-import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParameters
+import com.vapi4k.server.RequestContext.Companion.getAssistantIdFromQueryParams
+import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParams
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.server.installContentNegotiation
 import com.vapi4k.utils.JsonUtils.addArgsAndMessage
@@ -192,8 +192,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               requestContext = RequestContext(
                 application = application,
                 request = call.receive<String>().toJsonElement(),
-                sessionId = call.getSessionIdFromQueryParameters() ?: INBOUND_CALL.randomSessionId,
-                assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
+                sessionId = call.getSessionIdFromQueryParams() ?: INBOUND_CALL.randomSessionId,
+                assistantId = call.getAssistantIdFromQueryParams() ?: EMPTY_ASSISTANT_ID,
               ),
             )
           }
@@ -213,9 +213,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                 requestContext = RequestContext(
                   application = application,
                   request = buildJsonObject { addArgsAndMessage(call) },
-                  sessionId = call.getSessionIdFromQueryParameters()
-                    ?: error("No $SESSION_ID found in query parameters"),
-                  assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
+                  sessionId = call.getSessionIdFromQueryParams() ?: error("No $SESSION_ID found in query parameters"),
+                  assistantId = call.getAssistantIdFromQueryParams() ?: EMPTY_ASSISTANT_ID,
                 ),
               )
             }
@@ -247,9 +246,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
                 requestContext = RequestContext(
                   application = application,
                   request = request,
-                  sessionId = call.getSessionIdFromQueryParameters()
+                  sessionId = call.getSessionIdFromQueryParams()
                     ?: error("No $SESSION_ID found in query parameters"),
-                  assistantId = call.getAssistantIdFromQueryParameters() ?: EMPTY_ASSISTANT_ID,
+                  assistantId = call.getAssistantIdFromQueryParams() ?: EMPTY_ASSISTANT_ID,
                 ),
               )
             }

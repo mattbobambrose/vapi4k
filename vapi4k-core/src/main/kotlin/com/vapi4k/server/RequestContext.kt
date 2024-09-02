@@ -35,9 +35,9 @@ data class RequestContext(
   fun newAssistantId(newAssistantId: AssistantId) = RequestContext(application, request, sessionId, newAssistantId)
 
   companion object {
-    internal fun ApplicationCall.getSessionIdFromQueryParameters() = request.queryParameters[SESSION_ID]?.toSessionId()
+    internal fun ApplicationCall.getSessionIdFromQueryParams() = request.queryParameters[SESSION_ID]?.toSessionId()
 
-    internal fun ApplicationCall.getAssistantIdFromQueryParameters() =
+    internal fun ApplicationCall.getAssistantIdFromQueryParams() =
       request.queryParameters[ASSISTANT_ID]?.toAssistantId()
   }
 }

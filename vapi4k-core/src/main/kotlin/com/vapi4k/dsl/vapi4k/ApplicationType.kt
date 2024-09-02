@@ -23,11 +23,10 @@ enum class ApplicationType(
   internal val displayName: String,
   internal val pathPrefix: String,
   private val paramName: String,
-  internal val shouldAssignServerUrl: Boolean,
 ) {
-  INBOUND_CALL("inboundCallApplication", "inboundCall", "Inbound", true),
-  OUTBOUND_CALL("outboundCallApplication", "outboundCall", "Outbound", true),
-  WEB("webApplication", "web", "Web", true),
+  INBOUND_CALL("inboundCallApplication", "inboundCall", "Inbound"),
+  OUTBOUND_CALL("outboundCallApplication", "outboundCall", "Outbound"),
+  WEB("webApplication", "web", "Web"),
   ;
 
   internal val functionName get() = "$displayName{}"

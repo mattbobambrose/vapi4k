@@ -138,7 +138,7 @@ fun withTestApplication(
         fileNames.map { fileName ->
           println("url: $url")
           val arg = resourceFile(fileName)
-          //val jsonArg = arg.toJsonElement()
+          // val jsonArg = arg.toJsonElement()
 
           val response = client.post(url) {
             configPost()
@@ -146,7 +146,7 @@ fun withTestApplication(
           }
 
           val body = response.bodyAsText().toJsonElement()
-          println("response: ${body}")
+          println("response: ${body.toJsonString()}")
           val members = "messageResponse.squad.members"
           if (body.containsKey(members)) {
             val qp = body.get(members).toJsonElementList().first().stringValue("assistant.serverUrl").queryParams()

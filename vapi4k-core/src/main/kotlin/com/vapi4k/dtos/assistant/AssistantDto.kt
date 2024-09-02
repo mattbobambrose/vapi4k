@@ -28,7 +28,6 @@ import com.vapi4k.dtos.voice.CommonVoiceDto
 import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 @Serializable
 data class AssistantDto(
@@ -80,9 +79,6 @@ data class AssistantDto(
   val messagePlanDto: MessagePlanDto = MessagePlanDto(),
 ) : AssistantProperties,
   ModelDtoUnion {
-  @Transient
-  var updated = false
-
   internal fun verifyValues() {
     if (modelDto.isNull())
       error("An assistant{} requires a model{} decl")
