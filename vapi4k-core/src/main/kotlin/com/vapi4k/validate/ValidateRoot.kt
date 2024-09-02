@@ -20,8 +20,8 @@ import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.dsl.vapi4k.KtorCallContext
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.plugin.KtorCallContext
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import io.ktor.http.ContentType
 import io.ktor.server.application.call
@@ -63,19 +63,21 @@ internal object ValidateRoot {
             script { src = HTMX_SOURCE_URL }
           }
           body {
-            h1 { +"Vapi4k Validator" }
+            h1 { +"Vapi4k Application Validator" }
 
-            h2 { +"InboundCall Applications" }
-            ul {
-              config.inboundCallApplications.forEach { applicationDetails(it) }
+            config.inboundCallApplications.also { apps ->
+              h2 { +"${if (apps.isEmpty()) "No " else ""}InboundCall Applications" }
+              ul { apps.forEach { applicationDetails(it) } }
             }
-            h2 { +"OutboundCall Applications" }
-            ul {
-              config.outboundCallApplications.forEach { applicationDetails(it) }
+
+            config.outboundCallApplications.also { apps ->
+              h2 { +"${if (apps.isEmpty()) "No " else ""}OutboundCall Applications" }
+              ul { apps.forEach { applicationDetails(it) } }
             }
-            h2 { +"Web Applications" }
-            ul {
-              config.webApplications.forEach { applicationDetails(it) }
+
+            config.webApplications.also { apps ->
+              h2 { +"${if (apps.isEmpty()) "No " else ""}Web Applications" }
+              ul { apps.forEach { applicationDetails(it) } }
             }
           }
         }

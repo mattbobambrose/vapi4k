@@ -78,13 +78,15 @@ data class ToolCallResponseDto(
                               }
 
                               application.containsManualTool(funcName) -> {
-                                val manualToolImpl: ManualToolImpl = application.getManualTool(funcName)
+                                val manualToolImpl: ManualToolImpl =
+                                  application.getManualTool(funcName) as ManualToolImpl
                                 if (!manualToolImpl.isToolCallRequestInitialized()) {
                                   error("onInvoke{} not declared in $funcName")
                                 } else {
                                   val completeMsgs = RequestCompleteMessagesImpl()
                                   val failedMsgs = RequestFailedMessagesImpl()
                                   val resp = ManualToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
+
                                   runCatching {
                                     manualToolImpl.toolCallRequest.invoke(resp, args)
                                     toolCallResult.messageDtos.addAll(completeMsgs.messageList.map { it.dto })

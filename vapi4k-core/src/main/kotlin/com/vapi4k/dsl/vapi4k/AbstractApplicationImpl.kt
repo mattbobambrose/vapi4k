@@ -26,8 +26,8 @@ import com.vapi4k.common.FunctionName
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.dsl.tools.ManualToolCache
-import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.tools.ServiceCache
+import com.vapi4k.dsl.tools.ToolWithServerImpl
 import com.vapi4k.dsl.tools.TransferDestinationImpl
 import com.vapi4k.dtos.tools.TransferMessageResponseDto
 import com.vapi4k.plugin.Vapi4kServer.logger
@@ -99,7 +99,7 @@ abstract class AbstractApplicationImpl(
 
   internal fun addManualToolToCache(
     funcName: FunctionName,
-    manualToolImpl: ManualToolImpl,
+    manualToolImpl: ToolWithServerImpl,
   ) = manualToolCache.addToCache(funcName, manualToolImpl)
 
   internal fun addFunctionToCache(

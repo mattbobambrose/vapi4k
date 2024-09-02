@@ -286,6 +286,30 @@ fun Application.module() {
             tools {
               serviceTool(WeatherLookupByAreaCodeService())
               manualTooDecl()
+
+              endCallTool {
+                name = "endCallTool"
+                description = "End the call"
+
+                server {
+                  url = "https://ba44-73-71-109-237.ngrok-free.app/emailTool"
+                }
+              }
+
+              voiceMailTool {
+                name = "voiceMailTool"
+                description = "Leave a voice mail"
+
+                parameters {
+                  parameter {
+                    name = "message"
+                    description = "The message to leave"
+                  }
+                }
+                requestStartMessage {
+                  content = "This is the voicemail start message"
+                }
+              }
             }
           }
 

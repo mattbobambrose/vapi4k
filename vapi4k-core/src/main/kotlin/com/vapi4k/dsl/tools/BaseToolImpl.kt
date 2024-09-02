@@ -55,7 +55,7 @@ open class BaseToolImpl internal constructor(
     get() = messages.filter { it.conditions.isNotEmpty() }.map { it.conditions }.toSet()
 
   override fun requestStartMessage(block: ToolMessageStart.() -> Unit): ToolMessageStart {
-    startChecker.check("$callerName{} already has a request start message")
+    startChecker.check("${this.callerName}{} already has a request start message")
     return ToolMessageStartDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageStartImpl(dto).apply(block)
@@ -63,7 +63,7 @@ open class BaseToolImpl internal constructor(
   }
 
   override fun requestCompleteMessage(block: ToolMessageComplete.() -> Unit): ToolMessageComplete {
-    completeChecker.check("$callerName{} already has a request complete message")
+    completeChecker.check("${this.callerName}{} already has a request complete message")
     return ToolMessageCompleteDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageCompleteImpl(dto).apply(block)
@@ -71,7 +71,7 @@ open class BaseToolImpl internal constructor(
   }
 
   override fun requestFailedMessage(block: ToolMessageFailed.() -> Unit): ToolMessageFailed {
-    failedChecker.check("$callerName{} already has a request failed message")
+    failedChecker.check("${this.callerName}{} already has a request failed message")
     return ToolMessageFailedDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageFailedImpl(dto).apply(block)
@@ -79,7 +79,7 @@ open class BaseToolImpl internal constructor(
   }
 
   override fun requestDelayedMessage(block: ToolMessageDelayed.() -> Unit): ToolMessageDelayed {
-    delayedChecker.check("$callerName{} already has a request delayed message")
+    delayedChecker.check("${this.callerName}{} already has a request delayed message")
     return ToolMessageDelayedDto().let { dto ->
       toolDto.messages.add(dto)
       ToolMessageDelayedImpl(dto).apply(block)

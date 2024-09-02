@@ -35,8 +35,8 @@ import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
+import com.vapi4k.dsl.vapi4k.KtorCallContext
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.plugin.KtorCallContext
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContext
 import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParams

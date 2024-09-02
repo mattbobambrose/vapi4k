@@ -25,6 +25,7 @@ import com.vapi4k.common.Constants.POST_ARGS
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
+import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
@@ -66,7 +67,6 @@ import com.vapi4k.validate.ValidateRoot.validateRootPage
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
-import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
@@ -84,7 +84,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import io.ktor.util.pipeline.PipelineContext
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.coroutines.channels.Channel
@@ -100,8 +99,6 @@ import kotlinx.serialization.json.buildJsonObject
 object Vapi4kServer {
   val logger = KotlinLogging.logger {}
 }
-
-typealias KtorCallContext = PipelineContext<Unit, ApplicationCall>
 
 val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   name = "Vapi4k",
@@ -126,7 +123,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   environment?.monitor?.apply {
     val name = Vapi4kServer::class.simpleName
     subscribe(ApplicationStarting) { it.environment.log.info("$name is starting") }
-    subscribe(ApplicationStarted) { it.environment.log.info("$name is started") }
+    subscribe(ApplicationStarted) { it.environment.log.info("$name is started at $vapi4kBaseUrl") }
     subscribe(ApplicationStopped) { it.environment.log.info("$name is stopped") }
     subscribe(ApplicationStopping) { it.environment.log.info("$name is stopping") }
   }

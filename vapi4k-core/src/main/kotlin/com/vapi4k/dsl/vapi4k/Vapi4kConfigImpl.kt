@@ -27,13 +27,16 @@ import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.server.RequestResponseCallback
 import com.vapi4k.utils.enums.ServerRequestType
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.config.ApplicationConfig
+import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
 typealias RequestArgs = suspend (JsonElement) -> Unit
 typealias ResponseArgs = suspend (requestType: ServerRequestType, JsonElement, Duration) -> Unit
+typealias KtorCallContext = PipelineContext<Unit, ApplicationCall>
 
 class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   init {

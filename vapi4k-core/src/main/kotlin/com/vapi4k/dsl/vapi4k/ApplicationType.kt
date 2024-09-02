@@ -24,8 +24,8 @@ enum class ApplicationType(
   internal val pathPrefix: String,
   private val paramName: String,
 ) {
-  INBOUND_CALL("inboundCallApplication", "inboundCall", "Inbound"),
-  OUTBOUND_CALL("outboundCallApplication", "outboundCall", "Outbound"),
+  INBOUND_CALL("inboundCallApplication", "inboundCall", "InboundCall"),
+  OUTBOUND_CALL("outboundCallApplication", "outboundCall", "OutboundCall"),
   WEB("webApplication", "web", "Web"),
   ;
 

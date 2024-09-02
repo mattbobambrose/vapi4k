@@ -51,6 +51,6 @@ class ManualToolImpl internal constructor(
     if (!::toolCallRequest.isInitialized)
       toolCallRequest = block
     else
-      error("onInvoke{} can be called only once per manualTool{}")
+      error("onInvoke{} can be called only once per $callerName{}")
   }
 }

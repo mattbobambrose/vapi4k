@@ -73,17 +73,47 @@ class ToolsImpl internal constructor(
 
   override fun dtmfTool(block: DtmfTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.DTMF).also { model.toolDtos += it }
-    ToolWithParametersImpl("dtmfTool", toolDto).apply(block).checkIfServerCalled()
+    val impl = DtmfToolImpl("dtmfTool", toolDto).apply(block)
+
+    // Append the assistantId to the tool name to avoid cache collisions
+    toolDto.functionDto.name = toolDto.functionDto.name.appendAssistantId(model.assistantId)
+
+    val funcName = toolDto.functionDto.name.toFunctionName()
+    if (funcName.value.isBlank()) error("dtmfTool{} name is required")
+    if (!impl.isToolCallRequestInitialized()) error("dtmfTool{} must have onInvoke{} declared")
+    if (model.declaredManualTools.contains(funcName)) error("Duplicate manual tool name declared: $funcName")
+    model.declaredManualTools += funcName
+    model.application.addManualToolToCache(funcName, impl)
   }
 
   override fun endCallTool(block: EndCallTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.END_CALL).also { model.toolDtos += it }
-    ToolWithParametersImpl("endCallTool", toolDto).apply(block).checkIfServerCalled()
+    val impl = EndCallToolImpl("endCallTool", toolDto).apply(block)
+
+    // Append the assistantId to the tool name to avoid cache collisions
+    toolDto.functionDto.name = toolDto.functionDto.name.appendAssistantId(model.assistantId)
+
+    val funcName = toolDto.functionDto.name.toFunctionName()
+    if (funcName.value.isBlank()) error("endCallTool{} name is required")
+    if (!impl.isToolCallRequestInitialized()) error("endCallTool{} must have onInvoke{} declared")
+    if (model.declaredManualTools.contains(funcName)) error("Duplicate manual tool name declared: $funcName")
+    model.declaredManualTools += funcName
+    model.application.addManualToolToCache(funcName, impl)
   }
 
   override fun voiceMailTool(block: VoiceMailTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.VOICEMAIL).also { model.toolDtos += it }
-    ToolWithParametersImpl("voiceMailTool", toolDto).apply(block).checkIfServerCalled()
+    val impl = VoiceMailToolImpl("voiceMailTool", toolDto).apply(block)
+
+    // Append the assistantId to the tool name to avoid cache collisions
+    toolDto.functionDto.name = toolDto.functionDto.name.appendAssistantId(model.assistantId)
+
+    val funcName = toolDto.functionDto.name.toFunctionName()
+    if (funcName.value.isBlank()) error("voiceMailTool{} name is required")
+    if (!impl.isToolCallRequestInitialized()) error("voiceMailTool{} must have onInvoke{} declared")
+    if (model.declaredManualTools.contains(funcName)) error("Duplicate manual tool name declared: $funcName")
+    model.declaredManualTools += funcName
+    model.application.addManualToolToCache(funcName, impl)
   }
 
   override fun ghlTool(block: GhlTool.() -> Unit) {

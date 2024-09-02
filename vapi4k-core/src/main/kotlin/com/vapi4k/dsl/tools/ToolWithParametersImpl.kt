@@ -16,7 +16,9 @@
 
 package com.vapi4k.dsl.tools
 
-import com.vapi4k.api.assistant.ManualToolCallResponse
+import com.vapi4k.api.assistant.DtmfToolResponse
+import com.vapi4k.api.assistant.EndCallToolResponse
+import com.vapi4k.api.assistant.VoiceMailToolResponse
 import com.vapi4k.api.tools.DtmfTool
 import com.vapi4k.api.tools.EndCallTool
 import com.vapi4k.api.tools.Parameters
@@ -28,19 +30,12 @@ open class ToolWithParametersImpl internal constructor(
   callerName: String,
   toolDto: ToolDto,
 ) : ToolWithServerImpl(callerName, toolDto),
-  ToolWithParameters,
-  DtmfTool,
-  EndCallTool,
-  VoiceMailTool {
-  internal lateinit var toolCallRequest: (suspend ManualToolCallResponse.(JsonElement) -> Unit)
-
-  internal fun isToolCallRequestInitialized() = ::toolCallRequest.isInitialized
-
-  override var name
+  ToolWithParameters {
+  var name
     get() = toolDto.functionDto.name
     set(value) = run { toolDto.functionDto.name = value }
 
-  override var description
+  var description
     get() = toolDto.functionDto.description
     set(value) = run { toolDto.functionDto.description = value }
 
@@ -51,11 +46,55 @@ open class ToolWithParametersImpl internal constructor(
   override fun parameters(block: Parameters.() -> Unit) {
     ParametersImpl(callerName, toolDto).apply(block)
   }
+}
 
-  override fun onInvoke(block: suspend ManualToolCallResponse.(JsonElement) -> Unit) {
+class DtmfToolImpl internal constructor(
+  callerName: String,
+  toolDto: ToolDto,
+) : ToolWithParametersImpl(callerName, toolDto),
+  DtmfTool {
+  internal lateinit var toolCallRequest: (suspend DtmfToolResponse.(JsonElement) -> Unit)
+
+  internal fun isToolCallRequestInitialized() = ::toolCallRequest.isInitialized
+
+  override fun onInvoke(block: suspend DtmfToolResponse.(JsonElement) -> Unit) {
     if (!::toolCallRequest.isInitialized)
       toolCallRequest = block
     else
-      error("onInvoke{} can be called only once per manualTool{}")
+      error("onInvoke{} can be called only once per $callerName{}")
+  }
+}
+
+class EndCallToolImpl internal constructor(
+  callerName: String,
+  toolDto: ToolDto,
+) : ToolWithParametersImpl(callerName, toolDto),
+  EndCallTool {
+  internal lateinit var toolCallRequest: (suspend EndCallToolResponse.(JsonElement) -> Unit)
+
+  internal fun isToolCallRequestInitialized() = ::toolCallRequest.isInitialized
+
+  override fun onInvoke(block: suspend EndCallToolResponse.(JsonElement) -> Unit) {
+    if (!::toolCallRequest.isInitialized)
+      toolCallRequest = block
+    else
+      error("onInvoke{} can be called only once per $callerName{}")
+  }
+}
+
+class VoiceMailToolImpl internal constructor(
+  callerName: String,
+  toolDto: ToolDto,
+) : ToolWithParametersImpl(callerName, toolDto),
+  VoiceMailTool {
+  internal lateinit var toolCallRequest: (suspend VoiceMailToolResponse.(JsonElement) -> Unit)
+
+  internal fun isToolCallRequestInitialized() = ::toolCallRequest.isInitialized
+
+  override fun onInvoke(block: suspend VoiceMailToolResponse.(JsonElement) -> Unit) {
+    if (!::toolCallRequest.isInitialized)
+      toolCallRequest = block
+    else
+      error("onInvoke{} can be called only once per $callerName{}")
   }
 }

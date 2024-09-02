@@ -16,7 +16,7 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.api.assistant.ManualToolCallResponse
+import com.vapi4k.api.assistant.VoiceMailToolResponse
 import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolWithParameters
 import kotlinx.serialization.json.JsonElement
@@ -38,5 +38,5 @@ interface VoiceMailTool : ToolWithParameters {
   /**
   The block that will be executed when the tool is called.
    */
-  fun onInvoke(block: suspend ManualToolCallResponse.(JsonElement) -> Unit)
+  fun onInvoke(block: suspend VoiceMailToolResponse.(JsonElement) -> Unit)
 }

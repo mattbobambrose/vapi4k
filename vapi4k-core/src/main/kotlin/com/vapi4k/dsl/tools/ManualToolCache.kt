@@ -25,14 +25,14 @@ import kotlinx.serialization.Serializable
 internal class ManualToolCache(
   private val pathBlock: () -> String,
 ) {
-  private val manualTools = mutableMapOf<FunctionName, ManualToolImpl>()
+  private val manualTools = mutableMapOf<FunctionName, ToolWithServerImpl>()
 
   val functions get() = manualTools.values
   private val path get() = pathBlock().ensureStartsWith("/")
 
   fun addToCache(
     toolName: FunctionName,
-    toolImpl: ManualToolImpl,
+    toolImpl: ToolWithServerImpl,
   ) {
     if (manualTools.containsKey(toolName)) {
       // Manual tools do not get stored per session
@@ -46,7 +46,7 @@ internal class ManualToolCache(
 
   fun containsTool(toolName: FunctionName) = manualTools.containsKey(toolName)
 
-  fun getTool(toolName: FunctionName): ManualToolImpl =
+  fun getTool(toolName: FunctionName): ToolWithServerImpl =
     manualTools[toolName] ?: error("Manual tool name found: $toolName")
 
   private val asDtoMap: Map<FunctionName, ToolDto>
