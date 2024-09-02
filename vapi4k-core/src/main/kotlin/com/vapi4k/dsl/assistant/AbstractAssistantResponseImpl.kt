@@ -42,7 +42,6 @@ abstract class AbstractAssistantResponseImpl(
   fun assistant(block: Assistant.() -> Unit): Assistant {
     duplicateChecker.check("assistant{} was already called")
     return assistantRequestResponse.run {
-      val sessionId = requestContext.sessionId
       val assistantIdSource = AssistantIdSource()
       AssistantImpl(
         requestContext,
@@ -56,7 +55,7 @@ abstract class AbstractAssistantResponseImpl(
 
             serverUrl = requestContext.application.serverUrl.appendQueryParams(
               APPLICATION_ID to requestContext.application.applicationId.value,
-              SESSION_ID to sessionId.value,
+              SESSION_ID to requestContext.sessionId.value,
               ASSISTANT_ID to assistantId.value,
             )
           }

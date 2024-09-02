@@ -35,7 +35,7 @@ class AssistantImpl internal constructor(
 ) : AbstractAssistantImpl(),
   AssistantProperties by assistantDto,
   Assistant {
-  override val assistantId = assistantIdSource.nextAssistantId().also { requestContext.application.addAssistantId(it) }
+  override val assistantId = assistantIdSource.nextAssistantId(requestContext)
   override val transcriberChecker = DuplicateInvokeChecker()
   override val modelChecker = DuplicateInvokeChecker()
   override val voiceChecker = DuplicateInvokeChecker()

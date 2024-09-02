@@ -34,7 +34,7 @@ class Phone {
       .apply(block)
       .apply {
         verifyValues()
-        serverPath = serverPath.appendQueryParams(SESSION_ID to OUTBOUND_CALL.randomSessionId.value)
+        serverPath = serverPath.appendQueryParams(SESSION_ID to OUTBOUND_CALL.getRandomSessionId().value)
       }
   }
 }

@@ -189,7 +189,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               requestContext = RequestContext(
                 application = application,
                 request = call.receive<String>().toJsonElement(),
-                sessionId = call.getSessionIdFromQueryParams() ?: INBOUND_CALL.randomSessionId,
+                sessionId = call.getSessionIdFromQueryParams() ?: INBOUND_CALL.getRandomSessionId(),
                 assistantId = call.getAssistantIdFromQueryParams() ?: EMPTY_ASSISTANT_ID,
               ),
             )

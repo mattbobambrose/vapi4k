@@ -114,7 +114,7 @@ object ValidateAssistant {
   ): String {
     val request = getNewRequest()
     val typePrefix = application.applicationType.pathPrefix
-    val sessionId = application.applicationType.randomSessionId
+    val sessionId = application.applicationType.getRandomSessionId()
     val requestContext =
       RequestContext(
         application = application,
