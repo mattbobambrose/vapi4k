@@ -6,7 +6,7 @@
         "id": "call_7c7qwGDOMvAaSyHojhux3oEh",
         "type": "function",
         "function": {
-          "name": "weatherByAreaCode_0001",
+          "name": "weatherByAreaCode_001",
           "arguments": {
             "areaCode": "415"
           }
@@ -18,7 +18,7 @@
         "id": "call_7c7qwGDOMvAaSyHojhux3oEh",
         "type": "function",
         "function": {
-          "name": "weatherByAreaCode_0001",
+          "name": "weatherByAreaCode_001",
           "arguments": {
             "areaCode": "415"
           }
@@ -29,7 +29,7 @@
       {
         "type": "function",
         "function": {
-          "name": "weatherByAreaCode_0001",
+          "name": "weatherByAreaCode_001",
           "description": "Look up the weather for an area code",
           "parameters": {
             "type": "object",
@@ -51,7 +51,7 @@
           "id": "call_7c7qwGDOMvAaSyHojhux3oEh",
           "type": "function",
           "function": {
-            "name": "weatherByAreaCode_0001",
+            "name": "weatherByAreaCode_001",
             "arguments": {
               "areaCode": "415"
             }
@@ -77,7 +77,7 @@
           ],
           "functions": [
             {
-              "name": "getFavFoodInChicago_0001",
+              "name": "getFavFoodInChicago_001",
               "description": "Look up the favorite food in Chicago"
             }
           ],
@@ -85,7 +85,7 @@
             {
               "async": false,
               "function": {
-                "name": "weatherByAreaCode_0001",
+                "name": "weatherByAreaCode_001",
                 "description": "Look up the weather for an area code",
                 "parameters": {
                   "type": "object",
@@ -104,7 +104,7 @@
             },
             {
               "function": {
-                "name": "manualWeatherLookup_0001",
+                "name": "manualWeatherLookup_001",
                 "description": "Look up the weather for a city and state",
                 "parameters": {
                   "type": "object",
@@ -156,7 +156,7 @@
         ],
         "functions": [
           {
-            "name": "getFavFoodInChicago_0001",
+            "name": "getFavFoodInChicago_001",
             "description": "Look up the favorite food in Chicago"
           }
         ],
@@ -164,7 +164,7 @@
           {
             "async": false,
             "function": {
-              "name": "weatherByAreaCode_0001",
+              "name": "weatherByAreaCode_001",
               "description": "Look up the weather for an area code",
               "parameters": {
                 "type": "object",
@@ -183,7 +183,7 @@
           },
           {
             "function": {
-              "name": "manualWeatherLookup_0001",
+              "name": "manualWeatherLookup_001",
               "description": "Look up the weather for a city and state",
               "parameters": {
                 "type": "object",
@@ -252,7 +252,7 @@
               "id": "call_7c7qwGDOMvAaSyHojhux3oEh",
               "type": "function",
               "function": {
-                "name": "weatherByAreaCode_0001",
+                "name": "weatherByAreaCode_001",
                 "arguments": "{\"areaCode\": \"415\"}"
               }
             }
@@ -283,7 +283,7 @@
               "id": "call_7c7qwGDOMvAaSyHojhux3oEh",
               "type": "function",
               "function": {
-                "name": "weatherByAreaCode_0001",
+                "name": "weatherByAreaCode_001",
                 "arguments": "{\"areaCode\": \"415\"}"
               }
             }

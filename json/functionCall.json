@@ -2,7 +2,7 @@
   "message": {
     "type": "function-call",
     "functionCall": {
-      "name": "getFavFoodInChicago_0001",
+      "name": "getFavFoodInChicago_001",
       "parameters": {
       }
     },
@@ -24,11 +24,11 @@
           ],
           "functions": [
             {
-              "name": "getFavFoodInChicago_0001",
+              "name": "getFavFoodInChicago_001",
               "description": "Look up the favorite food in Chicago"
             },
             {
-              "name": "weatherByAreaCode_0001",
+              "name": "weatherByAreaCode_001",
               "description": "Look up the weather for an area code",
               "parameters": {
                 "type": "object",
@@ -48,7 +48,7 @@
             {
               "async": false,
               "function": {
-                "name": "weatherByAreaCode_0001",
+                "name": "weatherByAreaCode_001",
                 "description": "Look up the weather for an area code",
                 "parameters": {
                   "type": "object",
@@ -67,7 +67,7 @@
             },
             {
               "function": {
-                "name": "manualWeatherLookup_0001",
+                "name": "manualWeatherLookup_001",
                 "description": "Look up the weather for a city and state",
                 "parameters": {
                   "type": "object",
@@ -119,11 +119,11 @@
         ],
         "functions": [
           {
-            "name": "getFavFoodInChicago_0001",
+            "name": "getFavFoodInChicago_001",
             "description": "Look up the favorite food in Chicago"
           },
           {
-            "name": "weatherByAreaCode_0001",
+            "name": "weatherByAreaCode_001",
             "description": "Look up the weather for an area code",
             "parameters": {
               "type": "object",
@@ -143,7 +143,7 @@
           {
             "async": false,
             "function": {
-              "name": "weatherByAreaCode_0001",
+              "name": "weatherByAreaCode_001",
               "description": "Look up the weather for an area code",
               "parameters": {
                 "type": "object",
@@ -162,7 +162,7 @@
           },
           {
             "function": {
-              "name": "manualWeatherLookup_0001",
+              "name": "manualWeatherLookup_001",
               "description": "Look up the weather for a city and state",
               "parameters": {
                 "type": "object",
@@ -231,7 +231,7 @@
               "id": "call_jEw6itA7PRcqMtudduLMGOFB",
               "type": "function",
               "function": {
-                "name": "getFavFoodInChicago_0001",
+                "name": "getFavFoodInChicago_001",
                 "arguments": "{}"
               }
             }
@@ -262,7 +262,7 @@
               "id": "call_jEw6itA7PRcqMtudduLMGOFB",
               "type": "function",
               "function": {
-                "name": "getFavFoodInChicago_0001",
+                "name": "getFavFoodInChicago_001",
                 "arguments": "{}"
               }
             }

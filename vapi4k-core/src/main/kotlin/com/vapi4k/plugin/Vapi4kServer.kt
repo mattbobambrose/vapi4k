@@ -19,9 +19,9 @@ package com.vapi4k.plugin
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
+import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE
-import com.vapi4k.common.Constants.POST_ARGS
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
@@ -34,7 +34,9 @@ import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
+import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
@@ -48,18 +50,15 @@ import com.vapi4k.server.CacheActions.clearCaches
 import com.vapi4k.server.InboundCallActions.inboundCallRequest
 import com.vapi4k.server.OutboundCallAndWebActions.outboundCallAndWebRequest
 import com.vapi4k.server.RequestContext
-import com.vapi4k.server.RequestContext.Companion.getAssistantIdFromQueryParams
-import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParams
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.server.installContentNegotiation
+import com.vapi4k.utils.HttpUtils.getQueryParam
+import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.JsonUtils.addArgsAndMessage
+import com.vapi4k.utils.JsonUtils.buildRequestArg
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
-import com.vapi4k.utils.json.JsonElementUtils.containsKey
-import com.vapi4k.utils.json.JsonElementUtils.getOrNull
-import com.vapi4k.utils.json.JsonElementUtils.isNotEmpty
-import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.validate.ValidateApplication.validateApplication
 import com.vapi4k.validate.ValidateApplication.validateToolInvokeRequest
@@ -88,7 +87,6 @@ import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.coroutines.channels.Channel
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
 @Version(
@@ -189,8 +187,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
               requestContext = RequestContext(
                 application = application,
                 request = call.receive<String>().toJsonElement(),
-                sessionId = call.getSessionIdFromQueryParams() ?: INBOUND_CALL.getRandomSessionId(),
-                assistantId = call.getAssistantIdFromQueryParams() ?: EMPTY_ASSISTANT_ID,
+                sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: INBOUND_CALL.getRandomSessionId(),
+                assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: EMPTY_ASSISTANT_ID,
               ),
             )
           }
@@ -203,49 +201,27 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           val path = "/${application.fullServerPath}"
           route(path) {
             installContentNegotiation()
-            logger.info { """Adding GET  endpoint "$path" for ${application.applicationType.displayName}""" }
+            logger.info { """Adding GET and POST endpoints "$path" for ${application.applicationType.displayName}""" }
             get {
               outboundCallAndWebRequest(
                 config = config,
                 requestContext = RequestContext(
                   application = application,
                   request = buildJsonObject { addArgsAndMessage(call) },
-                  sessionId = call.getSessionIdFromQueryParams() ?: error("No $SESSION_ID found in query parameters"),
-                  assistantId = call.getAssistantIdFromQueryParams() ?: EMPTY_ASSISTANT_ID,
+                  sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),
+                  assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: EMPTY_ASSISTANT_ID,
                 ),
               )
             }
-            logger.info { """Adding POST endpoint "$path" for ${application.applicationType.displayName}""" }
             post {
               val json = call.receive<String>().toJsonElement()
-              val request =
-                if (json.isNotEmpty() && json.containsKey("message.type")) {
-                  json
-                } else {
-                  buildJsonObject {
-                    // Add values from the JSON object passed in with the POST request
-                    put(
-                      POST_ARGS,
-                      buildJsonObject {
-                        if (json.isNotEmpty()) {
-                          json.keys.forEach { key ->
-                            put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
-                          }
-                        }
-                      },
-                    )
-                    addArgsAndMessage(call)
-                  }
-                }
-
               outboundCallAndWebRequest(
                 config = config,
                 requestContext = RequestContext(
                   application = application,
-                  request = request,
-                  sessionId = call.getSessionIdFromQueryParams()
-                    ?: error("No $SESSION_ID found in query parameters"),
-                  assistantId = call.getAssistantIdFromQueryParams() ?: EMPTY_ASSISTANT_ID,
+                  request = buildRequestArg(json),
+                  sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),
+                  assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: EMPTY_ASSISTANT_ID,
                 ),
               )
             }

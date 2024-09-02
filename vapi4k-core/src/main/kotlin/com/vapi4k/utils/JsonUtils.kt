@@ -16,17 +16,24 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.common.Constants.POST_ARGS
 import com.vapi4k.common.Constants.QUERY_ARGS
 import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
+import com.vapi4k.utils.json.JsonElementUtils.containsKey
+import com.vapi4k.utils.json.JsonElementUtils.getOrNull
+import com.vapi4k.utils.json.JsonElementUtils.isNotEmpty
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
+import com.vapi4k.utils.json.JsonElementUtils.keys
+import com.vapi4k.utils.json.JsonElementUtils.stringValueOrNull
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.utils.json.get
-import io.ktor.http.Parameters
 import io.ktor.server.application.ApplicationCall
+import io.ktor.server.application.call
 import io.ktor.util.filter
+import io.ktor.util.pipeline.PipelineContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -76,8 +83,28 @@ object JsonUtils {
 
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT
 
+  internal fun PipelineContext<Unit, ApplicationCall>.buildRequestArg(json: JsonElement) =
+    if (json.isNotEmpty() && json.containsKey("message.type")) {
+      json
+    } else {
+      buildJsonObject {
+        // Add values from the JSON object passed in with the POST request
+        put(
+          POST_ARGS,
+          buildJsonObject {
+            if (json.isNotEmpty()) {
+              json.keys.forEach { key ->
+                put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
+              }
+            }
+          },
+        )
+        addArgsAndMessage(call)
+      }
+    }
+
   internal fun JsonObjectBuilder.addArgsAndMessage(call: ApplicationCall) {
-    put(QUERY_ARGS, queryParametersAsArgs(call.request.queryParameters))
+    put(QUERY_ARGS, call.queryParametersAsArgs())
     put(
       "message",
       buildJsonObject {
@@ -92,9 +119,9 @@ object JsonUtils {
     )
   }
 
-  internal fun queryParametersAsArgs(parameters: Parameters): JsonObject =
+  private fun ApplicationCall.queryParametersAsArgs(): JsonObject =
     buildJsonObject {
-      parameters
+      request.queryParameters
         .filter { key, value -> key !in SYSTEM_IDS }
         .forEach { key, value ->
           put(
@@ -108,4 +135,16 @@ object JsonUtils {
           )
         }
     }
+
+  internal fun JsonElement.getToolNames(key: String) =
+    if (containsKey("$key.tools"))
+      jsonElementList(key, "tools").mapNotNull { it.stringValueOrNull("function.name") }
+    else
+      emptyList()
+
+  internal fun JsonElement.getFunctionNames(key: String) =
+    if (containsKey("$key.functions"))
+      jsonElementList(key, "functions").mapNotNull { it.stringValueOrNull("name") }
+    else
+      emptyList()
 }

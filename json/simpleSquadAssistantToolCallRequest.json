@@ -6,7 +6,7 @@
         "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
         "type": "function",
         "function": {
-          "name": "lookupTime_0001",
+          "name": "lookupTime_001",
           "arguments": {}
         }
       }
@@ -16,7 +16,7 @@
         "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
         "type": "function",
         "function": {
-          "name": "lookupTime_0001",
+          "name": "lookupTime_001",
           "arguments": {}
         }
       }
@@ -25,7 +25,7 @@
       {
         "type": "function",
         "function": {
-          "name": "lookupTime_0001",
+          "name": "lookupTime_001",
           "description": "Look up the current time for the given coast",
           "parameters": {
             "type": "object",
@@ -42,7 +42,7 @@
           "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
           "type": "function",
           "function": {
-            "name": "lookupTime_0001",
+            "name": "lookupTime_001",
             "arguments": {}
           }
         }
@@ -79,7 +79,7 @@
                   {
                     "async": false,
                     "function": {
-                      "name": "lookupTime_0001",
+                      "name": "lookupTime_001",
                       "description": "Look up the current time for the given coast",
                       "parameters": {
                         "type": "object",
@@ -113,7 +113,7 @@
                   {
                     "async": false,
                     "function": {
-                      "name": "lookupTime_0002",
+                      "name": "lookupTime_002",
                       "description": "Look up the current time for the given coast",
                       "parameters": {
                         "type": "object",
@@ -173,7 +173,7 @@
               "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
               "type": "function",
               "function": {
-                "name": "lookupTime_0001",
+                "name": "lookupTime_001",
                 "arguments": "{}"
               }
             }
@@ -200,7 +200,7 @@
               "id": "call_8XlKzPjJs8HfxJDqyVmNrjx1",
               "type": "function",
               "function": {
-                "name": "lookupTime_0001",
+                "name": "lookupTime_001",
                 "arguments": "{}"
               }
             }

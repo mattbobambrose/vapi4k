@@ -6,7 +6,7 @@
         "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
         "type": "function",
         "function": {
-          "name": "getRealWeatherByCity_0001",
+          "name": "getRealWeatherByCity_001",
           "arguments": {
             "city": "Danville",
             "state": "CA"
@@ -19,7 +19,7 @@
         "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
         "type": "function",
         "function": {
-          "name": "getRealWeatherByCity_0001",
+          "name": "getRealWeatherByCity_001",
           "arguments": {
             "city": "Danville",
             "state": "CA"
@@ -31,7 +31,7 @@
       {
         "type": "function",
         "function": {
-          "name": "getRealWeatherByCity_0001",
+          "name": "getRealWeatherByCity_001",
           "description": "Look up the real weather for a city",
           "parameters": {
             "type": "object",
@@ -66,7 +66,7 @@
           "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
           "type": "function",
           "function": {
-            "name": "getRealWeatherByCity_0001",
+            "name": "getRealWeatherByCity_001",
             "arguments": {
               "city": "Danville",
               "state": "CA"
@@ -102,7 +102,7 @@
             {
               "async": false,
               "function": {
-                "name": "getRealWeatherByCity_0001",
+                "name": "getRealWeatherByCity_001",
                 "description": "Look up the real weather for a city",
                 "parameters": {
                   "type": "object",
@@ -203,7 +203,7 @@
               "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
               "type": "function",
               "function": {
-                "name": "getRealWeatherByCity_0001",
+                "name": "getRealWeatherByCity_001",
                 "arguments": "{\"city\": \"Danville\", \"state\": \"CA\"}"
               }
             }
@@ -238,7 +238,7 @@
               "id": "call_7sxV2b6yFHEKQnIG44a0bhog",
               "type": "function",
               "function": {
-                "name": "getRealWeatherByCity_0001",
+                "name": "getRealWeatherByCity_001",
                 "arguments": "{\"city\": \"Danville\", \"state\": \"CA\"}"
               }
             }

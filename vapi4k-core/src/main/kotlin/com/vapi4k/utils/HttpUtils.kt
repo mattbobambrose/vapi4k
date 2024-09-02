@@ -20,6 +20,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.ApplicationCall
 import kotlinx.serialization.json.Json
 
 object HttpUtils {
@@ -45,4 +46,8 @@ object HttpUtils {
   internal fun String.stripQueryParams() = split("?").first()
 
   internal fun String.queryParams() = split("?").last()
+
+  internal fun missingQueryParam(name: String): Nothing = error("Missing query parameter: $name")
+
+  internal fun ApplicationCall.getQueryParam(name: String) = request.queryParameters[name]
 }

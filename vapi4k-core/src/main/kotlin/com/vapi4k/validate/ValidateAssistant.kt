@@ -18,6 +18,7 @@ package com.vapi4k.validate
 
 import com.vapi4k.common.ApplicationName
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
+import com.vapi4k.common.AssistantId.Companion.getAssistantIdFromSuffix
 import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
@@ -47,6 +48,8 @@ import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.JsonUtils.EMPTY_JSON_ELEMENT
+import com.vapi4k.utils.JsonUtils.getFunctionNames
+import com.vapi4k.utils.JsonUtils.getToolNames
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.ReflectionUtils.asKClass
@@ -56,7 +59,6 @@ import com.vapi4k.utils.json.JsonElementUtils.containsKey
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.json.JsonElementUtils.stringValueOrNull
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
@@ -258,22 +260,8 @@ object ValidateAssistant {
     jsonElement: JsonElement,
     key: String,
   ) {
-    val toolNames =
-      if (jsonElement.containsKey("$key.tools"))
-        jsonElement
-          .jsonElementList(key, "tools")
-          .mapNotNull { it.stringValueOrNull("function.name") }
-      else
-        emptyList()
-
-    val funcNames =
-      if (jsonElement.containsKey("$key.functions"))
-        jsonElement
-          .jsonElementList(key, "functions")
-          .mapNotNull { it.stringValueOrNull("name") }
-      else
-        emptyList()
-
+    val toolNames = jsonElement.getToolNames(key)
+    val funcNames = jsonElement.getFunctionNames(key)
     displayServiceTools(requestContext, toolNames)
     displayManualTools(requestContext, toolNames)
     displayFunctions(requestContext, funcNames)
@@ -288,53 +276,54 @@ object ValidateAssistant {
       val serviceCache = requestContext.application.serviceToolCache
       toolNames
         .mapIndexed { i, name ->
-          name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
+          // Grab assistantId from suffix of function name
+          val assistantId = name.getAssistantIdFromSuffix()
+          val newRequestContext = requestContext.copyWithNewAssistantId(assistantId)
+          name.toFunctionName() to newRequestContext
         }
-        .filter { (toolName, assistantId) ->
-          val functionInfo = serviceCache.getFromCache(requestContext.newAssistantId(assistantId))
-          functionInfo.containsFunction(toolName)
-        }
-        .forEach { (toolName, assistantId) ->
-          val newRequestContext = requestContext.newAssistantId(assistantId)
-          div {
-            id = TOOLS_DIV
-            val functionInfo = serviceCache.getFromCache(newRequestContext)
+        .forEach { (toolName, newRequestContext) ->
+          val functionInfo = serviceCache.getFromCache(newRequestContext)
+          if (functionInfo.containsFunction(toolName)) {
             val functionDetails = functionInfo.getFunction(toolName)
             val divId = getRandomString()
-            h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
-            form {
-              setupHtmxTags(ToolType.SERVICE_TOOL, newRequestContext, divId)
-              addHiddenFields(newRequestContext, toolName, false)
 
-              table {
-                tbody {
-                  functionDetails.params
-                    .filter { it.second.asKClass() != JsonElement::class }
-                    .forEach { functionDetail ->
-                      tr {
-                        td { +"${functionDetail.first}:" }
-                        td {
-                          input {
-                            id = "tools-input"
-                            type =
-                              when (functionDetail.second.asKClass()) {
-                                String::class -> InputType.text
-                                Int::class -> InputType.number
-                                Double::class -> InputType.number
-                                Boolean::class -> InputType.checkBox
-                                else -> InputType.text
-                              }
-                            name = functionDetail.first
+            div {
+              id = TOOLS_DIV
+              h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
+              form {
+                setupHtmxTags(ToolType.SERVICE_TOOL, newRequestContext, divId)
+                addHiddenFields(newRequestContext, toolName, false)
+
+                table {
+                  tbody {
+                    functionDetails.params
+                      .filter { it.second.asKClass() != JsonElement::class }
+                      .forEach { functionDetail ->
+                        tr {
+                          td { +"${functionDetail.first}:" }
+                          td {
+                            input {
+                              id = "tools-input"
+                              type =
+                                when (functionDetail.second.asKClass()) {
+                                  String::class -> InputType.text
+                                  Int::class -> InputType.number
+                                  Double::class -> InputType.number
+                                  Boolean::class -> InputType.checkBox
+                                  else -> InputType.text
+                                }
+                              name = functionDetail.first
+                            }
                           }
+                          td { +"[${functionDetail.second.paramAnnotationWithDefault}]" }
                         }
-                        td { +"[${functionDetail.second.paramAnnotationWithDefault}]" }
                       }
-                    }
-                  addInvokeToolOption("Tool")
+                    addInvokeToolOption("Tool")
+                  }
                 }
               }
+              displayResponse(divId)
             }
-            displayResponse(divId)
           }
         }
     } else {
@@ -406,53 +395,54 @@ object ValidateAssistant {
       val functionCache = requestContext.application.functionCache
       funcNames
         .mapIndexed { i, name ->
-          name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
+          // Grab assistantId from suffix of function name
+          val assistantId = name.getAssistantIdFromSuffix()
+          val newRequestContext = requestContext.copyWithNewAssistantId(assistantId)
+          name.toFunctionName() to newRequestContext
         }
-        .filter { (funcName, assistantId) ->
-          val functionInfo = functionCache.getFromCache(requestContext.newAssistantId(assistantId))
-          functionInfo.containsFunction(funcName)
-        }
-        .forEach { (funcName, assistantId) ->
-          val newRequestContext = requestContext.newAssistantId(assistantId)
-          div {
-            id = TOOLS_DIV
-            val functionInfo = functionCache.getFromCache(newRequestContext)
+        .forEach { (funcName, newRequestContext) ->
+          val functionInfo = functionCache.getFromCache(newRequestContext)
+          if (functionInfo.containsFunction(funcName)) {
             val functionDetails = functionInfo.getFunction(funcName)
             val divId = getRandomString()
-            h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
-            form {
-              setupHtmxTags(ToolType.FUNCTION, newRequestContext, divId)
-              addHiddenFields(newRequestContext, funcName, false)
 
-              table {
-                tbody {
-                  functionDetails.params
-                    .filter { it.second.asKClass() != JsonElement::class }
-                    .forEach { functionDetail ->
-                      tr {
-                        td { +"${functionDetail.first}:" }
-                        td {
-                          input {
-                            id = "tools-input"
-                            type =
-                              when (functionDetail.second.asKClass()) {
-                                String::class -> InputType.text
-                                Int::class -> InputType.number
-                                Double::class -> InputType.number
-                                Boolean::class -> InputType.checkBox
-                                else -> InputType.text
-                              }
-                            name = functionDetail.first
+            div {
+              id = TOOLS_DIV
+              h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
+              form {
+                setupHtmxTags(ToolType.FUNCTION, newRequestContext, divId)
+                addHiddenFields(newRequestContext, funcName, false)
+
+                table {
+                  tbody {
+                    functionDetails.params
+                      .filter { it.second.asKClass() != JsonElement::class }
+                      .forEach { functionDetail ->
+                        tr {
+                          td { +"${functionDetail.first}:" }
+                          td {
+                            input {
+                              id = "tools-input"
+                              type =
+                                when (functionDetail.second.asKClass()) {
+                                  String::class -> InputType.text
+                                  Int::class -> InputType.number
+                                  Double::class -> InputType.number
+                                  Boolean::class -> InputType.checkBox
+                                  else -> InputType.text
+                                }
+                              name = functionDetail.first
+                            }
                           }
+                          td { +"[${functionDetail.second.paramAnnotationWithDefault}]" }
                         }
-                        td { +"[${functionDetail.second.paramAnnotationWithDefault}]" }
                       }
-                    }
-                  addInvokeToolOption("Function")
+                    addInvokeToolOption("Function")
+                  }
                 }
               }
+              displayResponse(divId)
             }
-            displayResponse(divId)
           }
         }
     } else {

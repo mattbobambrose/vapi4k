@@ -2,7 +2,7 @@
   "results": [
     {
       "toolCallId": "call_0DzZIopMbA5wP1YPTd2AW5TT",
-      "name": "getWeatherByCity_0001",
+      "name": "getWeatherByCity_001",
       "result": "The weather in city Danville and state California is windy",
       "message": [
         {

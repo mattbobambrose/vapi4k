@@ -31,6 +31,7 @@ import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.common.QueryParams.TOOL_TYPE
+import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
@@ -39,9 +40,10 @@ import com.vapi4k.dsl.vapi4k.KtorCallContext
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContext
-import com.vapi4k.server.RequestContext.Companion.getSessionIdFromQueryParams
 import com.vapi4k.utils.DslUtils.getRandomString
+import com.vapi4k.utils.HttpUtils.getQueryParam
 import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
 import com.vapi4k.utils.MiscUtils.appendQueryParams
@@ -54,7 +56,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.Parameters
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
 import io.ktor.server.response.respondText
 import kotlinx.html.body
@@ -122,7 +124,7 @@ internal object ValidateApplication {
     application: AbstractApplicationImpl,
     appName: ApplicationName,
   ) {
-    val secret = call.request.queryParameters[SECRET_PARAM].orEmpty()
+    val secret = call.getQueryParam(SECRET_PARAM).orEmpty()
     val html = validateAssistantRequestPage(config, application, appName, secret)
     call.respondText(html, ContentType.Text.Html)
   }
@@ -130,15 +132,16 @@ internal object ValidateApplication {
   suspend fun KtorCallContext.validateToolInvokeRequest(config: Vapi4kConfigImpl) =
     runCatching {
       val params = call.request.queryParameters
-      val applicationId = params[APPLICATION_ID]?.toApplicationId() ?: error("No $APPLICATION_ID found")
-      val toolType = ToolType.valueOf(params[TOOL_TYPE] ?: error("No $TOOL_TYPE found"))
+      val applicationId =
+        call.getQueryParam(APPLICATION_ID)?.toApplicationId() ?: missingQueryParam(APPLICATION_ID)
+      val toolType = ToolType.valueOf(params[TOOL_TYPE] ?: missingQueryParam(TOOL_TYPE))
 
       val requestContext =
         RequestContext(
           application = config.getApplicationById(applicationId),
-          request = generateToolRequest(toolType, params),
-          sessionId = call.getSessionIdFromQueryParams() ?: error("No $SESSION_ID found in query parameters"),
-          assistantId = params[ASSISTANT_ID]?.toAssistantId() ?: error("No $ASSISTANT_ID found in query parameters"),
+          request = call.generateToolRequest(toolType),
+          sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),
+          assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: missingQueryParam(ASSISTANT_ID),
         )
 
       val url =
@@ -161,39 +164,37 @@ internal object ValidateApplication {
       call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
     }
 
-  private fun functionParams(
-    params: Parameters,
-    argName: String,
-  ) = mapOf(
-    "name" to JsonPrimitive(params[FUNCTION_NAME] ?: error("No $FUNCTION_NAME found")),
-    argName to
-      params
-        .names()
-        .filterNot { it in SYSTEM_IDS }
-        .filter { params[it].orEmpty().isNotEmpty() }.associateWith { JsonPrimitive(params[it]) }
-        .toJsonObject(),
-  ).toJsonObject()
+  private fun ApplicationCall.functionParams(argName: String): JsonObject {
+    val params = request.queryParameters
+    return mapOf(
+      "name" to JsonPrimitive(getQueryParam(FUNCTION_NAME) ?: missingQueryParam(FUNCTION_NAME)),
+      argName to
+        params
+          .names()
+          .filterNot { it in SYSTEM_IDS }
+          .mapNotNull { params[it] }
+          .associateWith { JsonPrimitive(params[it]) }
+          .toJsonObject(),
+    ).toJsonObject()
+  }
 
-  private fun generateToolRequest(
-    toolType: ToolType,
-    params: Parameters,
-  ): JsonObject {
-    val sessionId = params[SESSION_ID] ?: error("No $SESSION_ID found")
+  private fun ApplicationCall.generateToolRequest(toolType: ToolType): JsonObject {
+    val sessionId = getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID)
     return buildJsonObject {
       put(
         "message",
         mapOf(
           "type" to JsonPrimitive(toolType.messageType.desc),
-          "call" to mapOf("id" to JsonPrimitive(sessionId)).toJsonObject(),
+          "call" to mapOf("id" to JsonPrimitive(sessionId.value)).toJsonObject(),
           if (toolType == ToolType.FUNCTION)
-            toolType.funcName to functionParams(params, toolType.paramName)
+            toolType.funcName to functionParams(toolType.paramName)
           else
             "toolCallList" to
               listOf(
                 mapOf(
                   "id" to JsonPrimitive("call_${getRandomString(24)}"),
                   "type" to JsonPrimitive("function"),
-                  toolType.funcName to functionParams(params, toolType.paramName),
+                  toolType.funcName to functionParams(toolType.paramName),
                 ).toJsonObject(),
               ).toJsonArray(),
         ).toJsonObject(),

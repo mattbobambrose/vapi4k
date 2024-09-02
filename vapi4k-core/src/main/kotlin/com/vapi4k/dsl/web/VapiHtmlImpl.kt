@@ -38,6 +38,7 @@ class VapiHtmlImpl(
             .run {
               TalkButtonImpl(this).apply(block)
               verifyTalkButtonValues()
+
               serverPath = serverPath.appendQueryParams(SESSION_ID to WEB.getRandomSessionId().value)
 
               buildString {

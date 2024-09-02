@@ -6,7 +6,7 @@
         "id": "call_51kj",
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_0001",
+          "name": "getWeatherByCity_001",
           "arguments": {
             "state": "California",
             "city": "Danville"
@@ -19,7 +19,7 @@
         "id": "call_51kj",
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_0001",
+          "name": "getWeatherByCity_001",
           "arguments": {
             "state": "California",
             "city": "Danville"
@@ -31,7 +31,7 @@
       {
         "type": "function",
         "function": {
-          "name": "getWeatherByCity_0001",
+          "name": "getWeatherByCity_001",
           "description": "Look up the weather for a city",
           "parameters": {
             "type": "object",
@@ -61,7 +61,7 @@
           "id": "call_51kj",
           "type": "function",
           "function": {
-            "name": "getWeatherByCity_0001",
+            "name": "getWeatherByCity_001",
             "arguments": {
               "state": "California",
               "city": "Danville"
@@ -95,7 +95,7 @@
                   {
                     "async": false,
                     "function": {
-                      "name": "getWeatherByCity_0001",
+                      "name": "getWeatherByCity_001",
                       "description": "Look up the weather for a city",
                       "parameters": {
                         "type": "object",
@@ -144,7 +144,7 @@
                   {
                     "async": false,
                     "function": {
-                      "name": "getWeatherByCity_0002",
+                      "name": "getWeatherByCity_002",
                       "description": "Look up the weather for a city",
                       "parameters": {
                         "type": "object",
@@ -225,7 +225,7 @@
               "id": "call_51kj",
               "type": "function",
               "function": {
-                "name": "getWeatherByCity_0001",
+                "name": "getWeatherByCity_001",
                 "arguments": "{\"city\": \"Danville\", \"state\": \"California\"}"
               }
             }
@@ -253,7 +253,7 @@
               "type": "function",
               "id": "call_51kj",
               "function": {
-                "name": "getWeatherByCity_0001",
+                "name": "getWeatherByCity_001",
                 "arguments": "{\"city\": \"Danville\", \"state\": \"California\"}"
               }
             }

@@ -57,6 +57,8 @@ value class AssistantId private constructor(
     val EMPTY_ASSISTANT_ID = "".toAssistantId()
 
     fun String.toAssistantId() = AssistantId(this)
+
+    fun String.getAssistantIdFromSuffix() = substringAfterLast(ID_SEPARATOR).toAssistantId()
   }
 }
 

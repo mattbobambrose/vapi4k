@@ -35,6 +35,8 @@ object Constants {
 
   const val QUERY_ARGS = "queryArgs"
   const val POST_ARGS = "postArgs"
+
+  const val ASSISTANT_ID_WIDTH = 3
 }
 
 object QueryParams {
