@@ -41,6 +41,7 @@ class ModelTests {
             tools {
               dtmfTool {
                 async = false
+                onInvoke { }
                 server {
                   url = "zzz"
                   secret = "123"
