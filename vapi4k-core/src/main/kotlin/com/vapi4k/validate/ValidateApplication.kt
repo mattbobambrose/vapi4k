@@ -162,8 +162,8 @@ internal object ValidateApplication {
       call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
     }
 
-  private fun ApplicationCall.functionParams(argName: String): JsonObject {
-    return mapOf(
+  private fun ApplicationCall.functionParams(argName: String): JsonObject =
+    mapOf(
       "name" to JsonPrimitive(getQueryParam(FUNCTION_NAME) ?: missingQueryParam(FUNCTION_NAME)),
       argName to
         request.queryParameters
@@ -173,7 +173,6 @@ internal object ValidateApplication {
           .associateWith { JsonPrimitive(getQueryParam(it)) }
           .toJsonObject(),
     ).toJsonObject()
-  }
 
   private fun ApplicationCall.generateToolRequest(): JsonObject {
     val sessionId = getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID)
