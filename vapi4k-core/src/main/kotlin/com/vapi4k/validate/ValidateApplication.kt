@@ -131,15 +131,13 @@ internal object ValidateApplication {
 
   suspend fun KtorCallContext.validateToolInvokeRequest(config: Vapi4kConfigImpl) =
     runCatching {
-      val params = call.request.queryParameters
       val applicationId =
         call.getQueryParam(APPLICATION_ID)?.toApplicationId() ?: missingQueryParam(APPLICATION_ID)
-      val toolType = ToolType.valueOf(params[TOOL_TYPE] ?: missingQueryParam(TOOL_TYPE))
 
       val requestContext =
         RequestContext(
           application = config.getApplicationById(applicationId),
-          request = call.generateToolRequest(toolType),
+          request = call.generateToolRequest(),
           sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),
           assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: missingQueryParam(ASSISTANT_ID),
         )
@@ -165,21 +163,22 @@ internal object ValidateApplication {
     }
 
   private fun ApplicationCall.functionParams(argName: String): JsonObject {
-    val params = request.queryParameters
     return mapOf(
       "name" to JsonPrimitive(getQueryParam(FUNCTION_NAME) ?: missingQueryParam(FUNCTION_NAME)),
       argName to
-        params
+        request.queryParameters
           .names()
           .filterNot { it in SYSTEM_IDS }
-          .mapNotNull { params[it] }
-          .associateWith { JsonPrimitive(params[it]) }
+          .filter { getQueryParam(it).isNotNull() }
+          .associateWith { JsonPrimitive(getQueryParam(it)) }
           .toJsonObject(),
     ).toJsonObject()
   }
 
-  private fun ApplicationCall.generateToolRequest(toolType: ToolType): JsonObject {
+  private fun ApplicationCall.generateToolRequest(): JsonObject {
     val sessionId = getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID)
+    val toolTypeStr = getQueryParam(TOOL_TYPE) ?: missingQueryParam(TOOL_TYPE)
+    val toolType = ToolType.valueOf(toolTypeStr)
     return buildJsonObject {
       put(
         "message",
