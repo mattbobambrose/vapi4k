@@ -85,7 +85,7 @@ internal object ValidateApplication {
           INBOUND_CALL.pathPrefix -> config.inboundCallApplications
           OUTBOUND_CALL.pathPrefix -> config.outboundCallApplications
           else -> error("Invalid application type: $appType")
-        }.firstOrNull { it.serverPathAsSegment == appName.value }
+        }.firstOrNull { it.serverPathNoSlash == appName.value }
 
       if (app.isNotNull())
         processValidateRequest(config, app, appName)

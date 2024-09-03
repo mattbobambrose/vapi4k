@@ -57,6 +57,7 @@ import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.JsonUtils.addArgsAndMessage
 import com.vapi4k.utils.JsonUtils.buildRequestArg
 import com.vapi4k.utils.MiscUtils.getBanner
+import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
@@ -65,6 +66,7 @@ import com.vapi4k.validate.ValidateApplication.validateToolInvokeRequest
 import com.vapi4k.validate.ValidateRoot.validateRootPage
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.ApplicationPlugin
@@ -75,6 +77,7 @@ import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.http.content.staticResources
+import io.ktor.server.request.path
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
@@ -129,12 +132,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
   with(application) {
     val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
     defaultKtorConfig(appMicrometerRegistry)
-
-    intercept(ApplicationCallPipeline.Call) {
-      // println("Request received: ${call.request.uri}")
-      proceed()
-      // println("Response sent with status: ${call.response.status()}")
-    }
 
     routing {
       staticResources(STATIC_BASE, "core_static")
@@ -227,6 +224,23 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             }
           }
         }
+    }
+
+    intercept(ApplicationCallPipeline.Call) {
+      proceed()
+
+      if (call.response.status() == HttpStatusCode.NotFound) {
+        // See if user forgot the inboundCall prefix in the path
+        val path = call.request.path().removeEnds("/")
+        val match = config.inboundCallApplications.any { application ->
+          application.serverPathNoSlash == path
+        }
+        if (match)
+          logger.info {
+            "/$path is a valid inboundCallApplication{} serverPath value. " +
+              "Did you mean to use \"/inboundCall/$path\" instead of \"/$path\" as the Vapi Server URL in the Vapi dashboard?"
+          }
+      }
     }
   }
 }

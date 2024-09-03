@@ -66,8 +66,8 @@ abstract class AbstractApplicationImpl(
   var serverSecret = ""
 
   internal val serverUrl get() = "$vapi4kBaseUrl/$fullServerPath"
-  internal val serverPathAsSegment get() = serverPath.removeEnds("/")
-  internal val fullServerPath: String get() = "${applicationType.pathPrefix}/$serverPathAsSegment"
+  internal val serverPathNoSlash get() = serverPath.removeEnds("/")
+  internal val fullServerPath: String get() = "${applicationType.pathPrefix}/$serverPathNoSlash"
   internal val fullServerPathWithSecretAsQueryParam: String
     get() = "${fullServerPath}${serverSecret.let { if (it.isBlank()) "" else "?$SECRET_PARAM=$it" }}"
 
