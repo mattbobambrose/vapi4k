@@ -41,6 +41,7 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.DslUtils.getRandomString
+import com.vapi4k.utils.HttpUtils.getHeader
 import com.vapi4k.utils.HttpUtils.getQueryParam
 import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.HttpUtils.missingQueryParam
@@ -201,7 +202,7 @@ internal object ValidateApplication {
   }
 
   internal fun KtorCallContext.isValidSecret(configPropertiesSecret: String): Boolean {
-    val secret = call.request.headers[VAPI_SECRET_HEADER].orEmpty()
+    val secret = call.getHeader(VAPI_SECRET_HEADER)
     return (configPropertiesSecret.isBlank() || secret.trim() == configPropertiesSecret.trim()).also {
       if (!it) {
         logger.info { """Invalid secret. Found: "$secret" Expected: "$configPropertiesSecret"""" }

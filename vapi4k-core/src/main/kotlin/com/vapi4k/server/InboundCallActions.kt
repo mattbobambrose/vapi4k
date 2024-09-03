@@ -16,9 +16,16 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
+import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VALIDATE_HEADER
 import com.vapi4k.common.Headers.VALIDATE_VALUE
+import com.vapi4k.common.QueryParams.ASSISTANT_ID
+import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.KtorCallContext
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
@@ -27,6 +34,8 @@ import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponseDto.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
+import com.vapi4k.utils.HttpUtils.getHeader
+import com.vapi4k.utils.HttpUtils.getQueryParam
 import com.vapi4k.utils.common.Utils.lambda
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
@@ -39,20 +48,27 @@ import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.validate.ValidateApplication.isValidSecret
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import kotlin.time.measureTimedValue
 
 internal object InboundCallActions {
-  suspend fun KtorCallContext.inboundCallRequest(
+  internal suspend fun KtorCallContext.inboundCallRequest(
     config: Vapi4kConfigImpl,
-    requestContext: RequestContext,
+    application: AbstractApplicationImpl,
   ) {
+    val requestContext = RequestContext(
+      application = application,
+      request = call.receive<String>().toJsonElement(),
+      sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: INBOUND_CALL.getRandomSessionId(),
+      assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: EMPTY_ASSISTANT_ID,
+    )
+
     if (!isValidSecret(requestContext.application.serverSecret)) {
-      call.respond(HttpStatusCode.Forbidden, "Invalid secret")
+      call.respond<String>(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
-      val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
-      if (isProduction || validateCall != VALIDATE_VALUE) {
+      if (isProduction || call.getHeader(VALIDATE_HEADER) != VALIDATE_VALUE) {
         processInboundCallRequest(config, requestContext)
       } else {
         runCatching {

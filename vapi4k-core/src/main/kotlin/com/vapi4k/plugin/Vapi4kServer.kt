@@ -18,8 +18,6 @@ package com.vapi4k.plugin
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
-import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
-import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE
 import com.vapi4k.common.Constants.STATIC_BASE
@@ -34,13 +32,9 @@ import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
-import com.vapi4k.common.QueryParams.ASSISTANT_ID
-import com.vapi4k.common.QueryParams.SESSION_ID
-import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.assistant.AssistantImpl
-import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
@@ -48,14 +42,11 @@ import com.vapi4k.server.AdminJobs.startCallbackThread
 import com.vapi4k.server.CacheActions.cachesRequest
 import com.vapi4k.server.CacheActions.clearCaches
 import com.vapi4k.server.InboundCallActions.inboundCallRequest
+import com.vapi4k.server.OutboundCallAndWebActions.addArgsAndMessage
+import com.vapi4k.server.OutboundCallAndWebActions.buildRequestArg
 import com.vapi4k.server.OutboundCallAndWebActions.outboundCallAndWebRequest
-import com.vapi4k.server.RequestContext
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.server.installContentNegotiation
-import com.vapi4k.utils.HttpUtils.getQueryParam
-import com.vapi4k.utils.HttpUtils.missingQueryParam
-import com.vapi4k.utils.JsonUtils.addArgsAndMessage
-import com.vapi4k.utils.JsonUtils.buildRequestArg
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
@@ -178,17 +169,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           logger.info { """Adding POST endpoint "$path" for ${application.applicationType.displayName} """ }
           installContentNegotiation()
           get { call.respondText("${this@route.parent} requires a post request", status = MethodNotAllowed) }
-          post {
-            inboundCallRequest(
-              config = config,
-              requestContext = RequestContext(
-                application = application,
-                request = call.receive<String>().toJsonElement(),
-                sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: INBOUND_CALL.getRandomSessionId(),
-                assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: EMPTY_ASSISTANT_ID,
-              ),
-            )
-          }
+          post { inboundCallRequest(config, application) }
         }
       }
 
@@ -200,27 +181,13 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             installContentNegotiation()
             logger.info { """Adding GET and POST endpoints "$path" for ${application.applicationType.displayName}""" }
             get {
-              outboundCallAndWebRequest(
-                config = config,
-                requestContext = RequestContext(
-                  application = application,
-                  request = buildJsonObject { addArgsAndMessage(call) },
-                  sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),
-                  assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: EMPTY_ASSISTANT_ID,
-                ),
-              )
+              val request = buildJsonObject { addArgsAndMessage(call) }
+              outboundCallAndWebRequest(config, application, request)
             }
             post {
               val json = call.receive<String>().toJsonElement()
-              outboundCallAndWebRequest(
-                config = config,
-                requestContext = RequestContext(
-                  application = application,
-                  request = buildRequestArg(json),
-                  sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),
-                  assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: EMPTY_ASSISTANT_ID,
-                ),
-              )
+              val request = buildRequestArg(json)
+              outboundCallAndWebRequest(config, application, request)
             }
           }
         }

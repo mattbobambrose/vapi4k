@@ -16,9 +16,18 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
+import com.vapi4k.common.AssistantId.Companion.toAssistantId
+import com.vapi4k.common.Constants.POST_ARGS
+import com.vapi4k.common.Constants.QUERY_ARGS
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.Headers.VALIDATE_HEADER
 import com.vapi4k.common.Headers.VALIDATE_VALUE
+import com.vapi4k.common.QueryParams.ASSISTANT_ID
+import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.QueryParams.SYSTEM_IDS
+import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.KtorCallContext
 import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -29,6 +38,9 @@ import com.vapi4k.responses.SimpleMessageResponse
 import com.vapi4k.responses.ToolCallResponseDto.Companion.getToolCallResponse
 import com.vapi4k.server.AdminJobs.invokeRequestCallbacks
 import com.vapi4k.server.AdminJobs.invokeResponseCallbacks
+import com.vapi4k.utils.HttpUtils.getHeader
+import com.vapi4k.utils.HttpUtils.getQueryParam
+import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.common.Utils.lambda
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
@@ -37,24 +49,44 @@ import com.vapi4k.utils.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TRANSFER_DESTINATION_REQUEST
+import com.vapi4k.utils.json.JsonElementUtils.containsKey
+import com.vapi4k.utils.json.JsonElementUtils.getOrNull
+import com.vapi4k.utils.json.JsonElementUtils.isNotEmpty
+import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.validate.ValidateApplication.isValidSecret
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
+import io.ktor.util.filter
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonObjectBuilder
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import kotlin.time.measureTimedValue
 
 internal object OutboundCallAndWebActions {
-  suspend fun KtorCallContext.outboundCallAndWebRequest(
+  internal suspend fun KtorCallContext.outboundCallAndWebRequest(
     config: Vapi4kConfigImpl,
-    requestContext: RequestContext,
+    application: AbstractApplicationImpl,
+    request: JsonElement,
   ) {
+    val requestContext = RequestContext(
+      application = application,
+      request = request,
+      sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),
+      assistantId = call.getQueryParam(ASSISTANT_ID)?.toAssistantId() ?: EMPTY_ASSISTANT_ID,
+    )
+
     if (!isValidSecret(requestContext.application.serverSecret)) {
-      call.respond(HttpStatusCode.Forbidden, "Invalid secret")
+      call.respond<String>(HttpStatusCode.Forbidden, "Invalid secret")
     } else {
-      val validateCall = call.request.headers[VALIDATE_HEADER].orEmpty()
-      if (isProduction || validateCall != VALIDATE_VALUE) {
+      if (isProduction || call.getHeader(VALIDATE_HEADER) != VALIDATE_VALUE) {
         processOutboundCallAndWebRequest(config, requestContext)
       } else {
         runCatching {
@@ -127,4 +159,44 @@ internal object OutboundCallAndWebActions {
 
     invokeResponseCallbacks(config, requestContext, response, duration)
   }
+
+  internal fun KtorCallContext.buildRequestArg(json: JsonElement) =
+    if (json.isNotEmpty() && json.containsKey("message.type")) {
+      json
+    } else {
+      buildJsonObject {
+        // Add values from the JSON object passed in with the POST request
+        put(
+          POST_ARGS,
+          buildJsonObject {
+            if (json.isNotEmpty()) {
+              json.keys.forEach { key ->
+                put(key, json.getOrNull(key)?.toJsonElement() ?: JsonPrimitive(""))
+              }
+            }
+          },
+        )
+        addArgsAndMessage(call)
+      }
+    }
+
+  internal fun JsonObjectBuilder.addArgsAndMessage(call: ApplicationCall) {
+    put(QUERY_ARGS, call.queryParametersAsArgs())
+    put("message", buildJsonObject { put("type", ASSISTANT_REQUEST.desc) })
+  }
+
+  private fun ApplicationCall.queryParametersAsArgs(): JsonObject =
+    buildJsonObject {
+      request.queryParameters
+        .filter { key, value -> key !in SYSTEM_IDS }
+        .forEach { key, value ->
+          put(
+            key,
+            if (value.size > 1)
+              buildJsonArray { value.forEach { add(JsonPrimitive(it)) } }
+            else
+              JsonPrimitive(value.firstOrNull().orEmpty()),
+          )
+        }
+    }
 }

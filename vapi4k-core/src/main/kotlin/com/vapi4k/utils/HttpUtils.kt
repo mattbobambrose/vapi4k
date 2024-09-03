@@ -50,4 +50,6 @@ object HttpUtils {
   internal fun missingQueryParam(name: String): Nothing = error("Missing query parameter: $name")
 
   internal fun ApplicationCall.getQueryParam(name: String) = request.queryParameters[name]
+
+  internal fun ApplicationCall.getHeader(name: String) = request.headers[name].orEmpty()
 }
