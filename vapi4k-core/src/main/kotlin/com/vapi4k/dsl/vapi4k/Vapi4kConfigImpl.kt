@@ -104,9 +104,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
     requestTypes.forEach { globalPerRequests += it to block }
   }
 
-  override fun onAllResponses(
-    block: suspend (responseContext: ResponseContext) -> Unit,
-  ) {
+  override fun onAllResponses(block: suspend (responseContext: ResponseContext) -> Unit) {
     globalAllResponses += block
   }
 

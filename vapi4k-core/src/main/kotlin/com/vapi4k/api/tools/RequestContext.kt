@@ -28,7 +28,8 @@ interface RequestContext {
   val sessionId: SessionId
   val created: Instant
   val age: Duration
-  fun hasStatusUpdateError(): Boolean
   val statusUpdateError: String
   val phoneNumber: String
+
+  fun hasStatusUpdateError(): Boolean
 }

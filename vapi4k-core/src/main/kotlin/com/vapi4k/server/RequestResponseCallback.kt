@@ -47,8 +47,7 @@ data class RequestResponseCallback(
   fun toResponseContext(
     config: Vapi4kConfigImpl,
     response: JsonElement,
-  ): ResponseContextImpl =
-    ResponseContextImpl(toRequestContext(config), response, elapsed)
+  ): ResponseContextImpl = ResponseContextImpl(toRequestContext(config), response, elapsed)
 
   companion object {
     fun requestCallback(requestContext: RequestContextImpl): RequestResponseCallback =

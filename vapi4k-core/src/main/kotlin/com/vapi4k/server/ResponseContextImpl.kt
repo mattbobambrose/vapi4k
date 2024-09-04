@@ -29,7 +29,6 @@ class ResponseContextImpl(
   override val response: JsonElement,
   override val elapsed: Duration,
 ) : ResponseContext {
-
   override val serverRequestType: ServerRequestType get() = requestContext.request.serverRequestType
 
   override fun toString(): String =
