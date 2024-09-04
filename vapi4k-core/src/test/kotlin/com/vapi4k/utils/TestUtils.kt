@@ -149,7 +149,7 @@ fun withTestApplication(
           println("response: ${body.toJsonString()}")
           val members = "messageResponse.squad.members"
           if (body.containsKey(members)) {
-            val qp = body.get(members).toJsonElementList().first().stringValue("assistant.serverUrl").queryParams()
+            val qp = body[members].toJsonElementList().first().stringValue("assistant.serverUrl").queryParams()
             url = "$baseUrl?$qp"
             println("response: ${body.toJsonString()}")
             println(arg)

@@ -101,13 +101,14 @@ class FunctionDetails internal constructor(
     args: JsonElement,
     argName: String,
     argType: KType,
-  ) = when (argType.asKClass()) {
-    String::class -> args.stringValue(argName)
-    Int::class -> args.intValue(argName)
-    Double::class -> args.doubleValue(argName)
-    Boolean::class -> args.booleanValue(argName)
-    else -> error("Unsupported parameter type: $argType")
-  }
+  ): Any =
+    when (argType.asKClass()) {
+      String::class -> args.stringValue(argName)
+      Int::class -> args.intValue(argName)
+      Double::class -> args.doubleValue(argName)
+      Boolean::class -> args.booleanValue(argName)
+      else -> error("Unsupported parameter type: $argType")
+    }
 
   private suspend fun invokeMethod(
     requestContext: RequestContext,

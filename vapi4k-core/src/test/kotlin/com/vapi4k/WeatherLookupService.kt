@@ -38,7 +38,9 @@ class WeatherLookupService1 : ToolCallService() {
   fun getWeatherByCity(
     @Param(description = "The city name") city: String,
     state: String,
+    requestContext: RequestContext,
   ): String {
+    logger.info { "requestContext sessiond: ${requestContext.sessionId}" }
     return "The weather in city $city and state $state is windy"
   }
 

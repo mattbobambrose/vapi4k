@@ -55,5 +55,4 @@ class TalkButtonProperties(
   companion object {
     private const val INDENT = "\t\t\t"
   }
-
 }

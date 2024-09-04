@@ -17,6 +17,7 @@
 import TalkPage.talkPage
 import com.vapi4k.FavoriteFoodService
 import com.vapi4k.WeatherLookupByAreaCodeService
+import com.vapi4k.WeatherLookupService1
 import com.vapi4k.api.buttons.ButtonColor
 import com.vapi4k.api.buttons.enums.ButtonPosition
 import com.vapi4k.api.buttons.enums.ButtonType
@@ -509,6 +510,7 @@ private fun Member.memberAssistant(name: String) {
       }
 
       tools {
+        serviceTool(WeatherLookupService1())
         serviceTool(WeatherLookupByAreaCodeService())
         manualTool {
           this.name = "manualWeatherLookup"
