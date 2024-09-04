@@ -100,14 +100,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlin.collections.set
 
-object ValidateAssistant {
-  private fun getNewRequest(): JsonElement {
-    val request = runCatching {
-      resourceFile(REQUEST_VALIDATION_FILENAME.value)
-    }.getOrElse { ASSISTANT_REQUEST_JSON }
-    return copyWithNewCallId(request.toJsonElement())
-  }
-
+object ValidateAssistantRequestPage {
   suspend fun validateAssistantRequestPage(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
@@ -202,6 +195,13 @@ object ValidateAssistant {
           }
         }
       }
+  }
+
+  private fun getNewRequest(): JsonElement {
+    val request = runCatching {
+      resourceFile(REQUEST_VALIDATION_FILENAME.value)
+    }.getOrElse { ASSISTANT_REQUEST_JSON }
+    return copyWithNewCallId(request.toJsonElement())
   }
 
   private fun BODY.displayTools(

@@ -16,7 +16,6 @@
 
 package com.vapi4k.validate
 
-import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
@@ -37,12 +36,12 @@ import kotlinx.html.html
 import kotlinx.html.id
 import kotlinx.html.li
 import kotlinx.html.link
-import kotlinx.html.script
+import kotlinx.html.meta
 import kotlinx.html.stream.createHTML
 import kotlinx.html.title
 import kotlinx.html.ul
 
-internal object ValidateRoot {
+internal object ValidateRootPage {
   suspend fun KtorCallContext.validateRootPage(config: Vapi4kConfigImpl) {
     if (config.allWebAndInboundApplications.size == 1) {
       val app = config.allWebAndInboundApplications.first()
@@ -51,6 +50,11 @@ internal object ValidateRoot {
       val html = createHTML()
         .html {
           head {
+            meta { charset = "UTF-8" }
+            meta {
+              name = "viewport"
+              content = "width=device-width, initial-scale=1.0"
+            }
             link {
               rel = "stylesheet"
               href = "$STATIC_BASE/css/styles.css"
@@ -59,8 +63,9 @@ internal object ValidateRoot {
               rel = "stylesheet"
               href = "$STATIC_BASE/css/validator.css"
             }
-            title { +"Assistant Request Validation" }
-            script { src = HTMX_SOURCE_URL }
+            title { +"Assistant Application Validation" }
+            // script { src = HTMX_SOURCE_URL }
+            //  script { src = "https://cdn.tailwindcss.com" }
           }
           body {
             h1 { +"Vapi4k Application Validator" }

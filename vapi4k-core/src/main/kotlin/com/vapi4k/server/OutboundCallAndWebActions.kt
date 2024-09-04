@@ -54,7 +54,7 @@ import com.vapi4k.utils.json.JsonElementUtils.getOrNull
 import com.vapi4k.utils.json.JsonElementUtils.isNotEmpty
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.validate.ValidateApplication.isValidSecret
+import com.vapi4k.validate.ValidateApplicationPage.isValidSecret
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call

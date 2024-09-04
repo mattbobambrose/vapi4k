@@ -45,7 +45,7 @@ import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TRANSFER_DESTINATION_REQUEST
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.validate.ValidateApplication.isValidSecret
+import com.vapi4k.validate.ValidateApplicationPage.isValidSecret
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive

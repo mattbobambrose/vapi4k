@@ -52,11 +52,11 @@ import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.validate.ValidateApplication.validateApplication
-import com.vapi4k.validate.ValidateApplication.validateToolInvokeRequest
-import com.vapi4k.validate.ValidateRoot.validateRootPage
+import com.vapi4k.validate.ValidateApplicationPage.validateApplicationPage
+import com.vapi4k.validate.ValidateRootPage.validateRootPage
+import com.vapi4k.validate.ValidateToolInvokePage.validateToolInvokePage
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.ktor.http.ContentType
+import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.server.application.ApplicationCallPipeline
@@ -129,9 +129,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       get(PING_PATH) { call.respondText("pong") }
 
-      get(VERSION_PATH) {
-        call.respondText(ContentType.Application.Json) { Vapi4kServer::class.versionDesc(true) }
-      }
+      get(VERSION_PATH) { call.respondText(Application.Json) { Vapi4kServer::class.versionDesc(true) } }
 
       if (!isProduction) {
         get("/") { call.respondRedirect(VALIDATE_PATH) }
@@ -158,8 +156,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           get { clearCaches(config) }
         }
         get(VALIDATE_PATH) { validateRootPage(config) }
-        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplication(config) }
-        get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokeRequest(config) }
+        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config) }
+        get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokePage(config) }
       }
 
       // Process Inbound Call requests
@@ -195,7 +193,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
     intercept(ApplicationCallPipeline.Call) {
       proceed()
-
       if (call.response.status() == HttpStatusCode.NotFound) {
         // See if user forgot the inboundCall prefix in the path
         val path = call.request.path().removeEnds("/")
