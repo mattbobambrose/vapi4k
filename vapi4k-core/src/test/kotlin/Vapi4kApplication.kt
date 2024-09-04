@@ -185,9 +185,9 @@ fun Application.module() {
             member {
               memberAssistant("Jane")
             }
-//            member {
-//              memberAssistant("Sarah")
-//            }
+            member {
+              memberAssistant("Sarah")
+            }
           }
         }
 
