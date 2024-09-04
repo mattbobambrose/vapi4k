@@ -21,11 +21,16 @@ import com.vapi4k.api.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.toolservice.ToolCallService
+import com.vapi4k.plugin.Vapi4kServer.logger
+import com.vapi4k.server.RequestContext
 import kotlinx.serialization.json.JsonElement
 
 class FavoriteFoodService {
   @ToolCall("Look up the favorite food in Chicago")
-  fun getFavFoodInChicago() = "Pizza"
+  fun getFavFoodInChicago(requestContext: RequestContext): String {
+    logger.info { "requestContext sessiond: ${requestContext.sessionId}" }
+    return "Pizza"
+  }
 }
 
 class WeatherLookupService1 : ToolCallService() {

@@ -20,11 +20,11 @@ import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
-import kotlinx.serialization.json.JsonElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -32,7 +32,7 @@ import kotlin.reflect.KParameter
 internal object FunctionUtils {
   internal val allowedParamTypes = setOf(String::class, Int::class, Double::class, Boolean::class)
   private val allowedToolParamTypes =
-    setOf(String::class, Int::class, Double::class, Boolean::class, JsonElement::class)
+    setOf(String::class, Int::class, Double::class, Boolean::class, RequestContext::class)
   private val allowedReturnTypes = setOf(String::class, Int::class, Double::class, Boolean::class, Unit::class)
   private val tcName by lazy { ToolCall::class.simpleName.orEmpty() }
 
@@ -87,7 +87,7 @@ internal object FunctionUtils {
             val simpleName = kclass.simpleName
             error(
               "Parameter \"${param.name}\" in $fqName is a $simpleName. Allowed types are " +
-                "String, Int, Double, Boolean, and JsonElement",
+                "String, Int, Double, Boolean, and RequestContext",
             )
           }
 
