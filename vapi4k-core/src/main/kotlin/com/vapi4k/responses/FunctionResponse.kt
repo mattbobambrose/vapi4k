@@ -39,7 +39,7 @@ class FunctionResponse(
                 application.getFunction(requestContext, funcName)
                   .invokeToolMethod(
                     isTool = false,
-                    request = request,
+                    requestContext = requestContext,
                     args = args,
                     messageDtos = mutableListOf(),
                     successAction = { result -> response.result = result },

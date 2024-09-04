@@ -22,7 +22,7 @@ import com.vapi4k.dsl.tools.ToolWithParameters
 @AssistantDslMarker
 interface ExternalTool : ToolWithParameters {
   /**
-  <p>This is the the name of the function to be called.
+  <p>This is the name of the function to be called.
   <br>Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
   </p>
    */

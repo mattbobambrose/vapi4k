@@ -20,6 +20,7 @@ import com.vapi4k.api.web.TalkButton
 import com.vapi4k.api.web.VapiHtml
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.MiscUtils.appendQueryParams
@@ -30,7 +31,8 @@ import kotlinx.html.script
 class VapiHtmlImpl(
   private val htmlContext: HtmlBlockTag,
 ) : VapiHtml {
-  override fun talkButton(block: TalkButton.() -> Unit) {
+  override fun talkButton(block: TalkButton.() -> Unit): SessionId {
+    val newSessionId = WEB.getRandomSessionId()
     with(htmlContext) {
       script {
         val js =
@@ -39,7 +41,6 @@ class VapiHtmlImpl(
               TalkButtonImpl(this).apply(block)
               verifyTalkButtonValues()
 
-              val newSessionId = WEB.getRandomSessionId()
               serverPath = serverPath.appendQueryParams(SESSION_ID to newSessionId.value)
 
               buildString {
@@ -60,6 +61,7 @@ class VapiHtmlImpl(
         rawHtml(js)
       }
     }
+    return newSessionId
   }
 
   companion object {

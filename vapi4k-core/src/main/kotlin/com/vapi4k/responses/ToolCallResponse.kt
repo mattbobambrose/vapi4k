@@ -69,7 +69,7 @@ data class ToolCallResponseDto(
                                   }
                                   .invokeToolMethod(
                                     isTool = true,
-                                    request = request,
+                                    requestContext = requestContext,
                                     args = args,
                                     messageDtos = toolCallResult.messageDtos,
                                     successAction = { result -> toolCallResult.result = result },

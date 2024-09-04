@@ -19,6 +19,7 @@ package com.vapi4k.dsl.functions
 import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.plugin.Vapi4kServer.logger
+import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.MiscUtils.findFunction
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.instanceParameter
@@ -60,7 +61,7 @@ class FunctionDetails internal constructor(
 
   suspend fun invokeToolMethod(
     isTool: Boolean,
-    request: JsonElement,
+    requestContext: RequestContext,
     args: JsonElement,
     messageDtos: MutableList<CommonToolMessageDto> = mutableListOf(),
     successAction: (String) -> Unit,
@@ -68,17 +69,17 @@ class FunctionDetails internal constructor(
   ) {
     runCatching {
       invokeCounter.incrementAndGet()
-      val result = invokeMethod(request, args).also { logger.info { "Tool call result: $it" } }
+      val result = invokeMethod(requestContext, args).also { logger.info { "Tool call result: $it" } }
       successAction(result)
       if (isTool && obj is ToolCallService)
-        messageDtos.addAll(obj.onToolCallComplete(request, result).map { it.dto })
+        messageDtos.addAll(obj.onToolCallComplete(requestContext.request, result).map { it.dto })
           .also { logger.debug { "Adding onToolCallComplete messages $it" } }
     }.onFailure { e ->
       val eMsg = if (e is InvocationTargetException) e.cause?.errorMsg ?: e.errorMsg else e.errorMsg
       val errorMsg = "Error invoking method $fqName: $eMsg"
       errorAction(errorMsg)
       if (isTool && obj is ToolCallService)
-        messageDtos.addAll(obj.onToolCallFailed(request, errorMsg).map { it.dto })
+        messageDtos.addAll(obj.onToolCallFailed(requestContext.request, errorMsg).map { it.dto })
           .also { logger.debug { "Adding onToolCallFailed messages $it" } }
       logger.info { errorMsg }
     }
@@ -109,39 +110,40 @@ class FunctionDetails internal constructor(
   }
 
   private suspend fun invokeMethod(
-    request: JsonElement,
-    args: JsonElement,
+    requestContext: RequestContext,
+    invokeArgs: JsonElement,
   ): String {
     val function = obj.findFunction(functionName)
-    val argNames = args.keys
+    val argNames = invokeArgs.keys
     logger.info { "Invoking method $fqName with args $argNames" }
     val paramMap = function.valueParameters.toMap()
     val valueMap =
       argNames
         .associate { argName ->
           val param = paramMap[argName] ?: error("Parameter $argName not found in method $fqName")
-          param to getArgValue(args, argName, param.type)
+          param to getArgValue(invokeArgs, argName, param.type)
         }
 
-    // Check if the function has a request JsonElement parameter
-    val requestParam = function.valueParameters.firstOrNull { it.second.asKClass() == JsonElement::class }?.second
+    // Check if the function has a RequestContext parameter
+    val requestContextParam =
+      function.valueParameters.firstOrNull { it.second.asKClass() == RequestContext::class }?.second
 
     // If the function has a request parameter, add it to the valueMap
-    val valueMapWithRequest =
-      requestParam?.let { param -> valueMap.toMutableMap().also { it[param] = request } } ?: valueMap
+    val valueMapWithRequestContext =
+      requestContextParam?.let { param -> valueMap.toMutableMap().also { it[param] = requestContext } } ?: valueMap
 
     val callMap =
       function.instanceParameter?.let { param ->
-        valueMapWithRequest.toMutableMap().also { it[param] = obj }
-      } ?: valueMapWithRequest
+        valueMapWithRequestContext.toMutableMap().also { it[param] = obj }
+      } ?: valueMapWithRequestContext
 
-    val args = if (valueMapWithRequest.isEmpty()) {
+    val funcArgs = if (valueMapWithRequestContext.isEmpty()) {
       "with no args"
     } else {
-      valueMapWithRequest
+      valueMapWithRequestContext
         .mapNotNull { (param, value) ->
           when (param.type.asKClass()) {
-            JsonElement::class -> "${param.name}: Request Value"
+            RequestContext::class -> "${param.name}: RequestContext Value"
             String::class -> "${param.name}: \"$value\""
             Int::class -> "${param.name}: $value"
             Double::class -> "${param.name}: $value"
@@ -150,7 +152,7 @@ class FunctionDetails internal constructor(
           }
         }.joinToString(", ")
     }
-    logger.info { "Calling \"${toolCall?.description.orEmpty()}\" tool service: $functionName($args)" }
+    logger.info { "Calling \"${toolCall?.description.orEmpty()}\" tool service: $functionName($funcArgs)" }
 
     // Invoke the function with the arguments
     val result =

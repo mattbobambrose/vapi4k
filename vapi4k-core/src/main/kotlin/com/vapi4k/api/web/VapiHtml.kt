@@ -16,9 +16,10 @@
 
 package com.vapi4k.api.web
 
+import com.vapi4k.common.SessionId
 import kotlinx.html.HtmlTagMarker
 
 @HtmlTagMarker
 interface VapiHtml {
-  fun talkButton(block: TalkButton.() -> Unit)
+  fun talkButton(block: TalkButton.() -> Unit): SessionId
 }
