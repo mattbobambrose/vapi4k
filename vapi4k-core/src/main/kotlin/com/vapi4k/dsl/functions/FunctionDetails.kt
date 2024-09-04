@@ -62,14 +62,14 @@ class FunctionDetails internal constructor(
   suspend fun invokeToolMethod(
     isTool: Boolean,
     requestContext: RequestContext,
-    args: JsonElement,
+    invokeArgs: JsonElement,
     messageDtos: MutableList<CommonToolMessageDto> = mutableListOf(),
     successAction: (String) -> Unit,
     errorAction: (String) -> Unit,
   ) {
     runCatching {
       invokeCounter.incrementAndGet()
-      val result = invokeMethod(requestContext, args).also { logger.info { "Tool call result: $it" } }
+      val result = invokeMethod(requestContext, invokeArgs).also { logger.info { "Tool call result: $it" } }
       successAction(result)
       if (isTool && obj is ToolCallService)
         messageDtos.addAll(obj.onToolCallComplete(requestContext.request, result).map { it.dto })

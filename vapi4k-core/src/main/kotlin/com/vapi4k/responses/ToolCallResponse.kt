@@ -52,7 +52,7 @@ data class ToolCallResponseDto(
                     ToolCallResult()
                       .also { toolCallResult ->
                         val funcName = toolCall.toolCallName
-                        val args = toolCall.toolCallArguments
+                        val invokeArgs = toolCall.toolCallArguments
                         toolCallResult.toolCallId = toolCall.id
                         toolCallResult.name = funcName.value
                         val errorAction = { errorMsg: String ->
@@ -70,7 +70,7 @@ data class ToolCallResponseDto(
                                   .invokeToolMethod(
                                     isTool = true,
                                     requestContext = requestContext,
-                                    args = args,
+                                    invokeArgs = invokeArgs,
                                     messageDtos = toolCallResult.messageDtos,
                                     successAction = { result -> toolCallResult.result = result },
                                     errorAction = errorAction,
@@ -88,7 +88,7 @@ data class ToolCallResponseDto(
                                   val resp = ManualToolCallResponseImpl(completeMsgs, failedMsgs, toolCallResult)
 
                                   runCatching {
-                                    manualToolImpl.toolCallRequest.invoke(resp, args)
+                                    manualToolImpl.toolCallRequest.invoke(resp, invokeArgs)
                                     toolCallResult.messageDtos.addAll(completeMsgs.messageList.map { it.dto })
                                   }.onFailure {
                                     with(toolCallResult) {

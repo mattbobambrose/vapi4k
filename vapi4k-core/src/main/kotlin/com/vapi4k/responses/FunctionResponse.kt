@@ -33,14 +33,14 @@ class FunctionResponse(
         .also { response ->
           with(requestContext) {
             val funcName = requestContext.request.functionName
-            val args = requestContext.request.functionParameters
+            val invokeArgs = requestContext.request.functionParameters
             runCatching {
               if (application.containsFunction(requestContext, funcName)) {
                 application.getFunction(requestContext, funcName)
                   .invokeToolMethod(
                     isTool = false,
                     requestContext = requestContext,
-                    args = args,
+                    invokeArgs = invokeArgs,
                     messageDtos = mutableListOf(),
                     successAction = { result -> response.result = result },
                     errorAction = { result -> response.result = result },

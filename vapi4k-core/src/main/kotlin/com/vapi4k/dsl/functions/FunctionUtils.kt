@@ -78,8 +78,10 @@ internal object FunctionUtils {
       dto.name = toolCallInfo.llmName.value
       dto.description = toolCallInfo.llmDescription
 
+      // TODO Need to make sure that only one RequestContext argument is present here
       function.parameters
         .filter { it.kind == KParameter.Kind.VALUE }
+        .filter { it.type.asKClass() != RequestContext::class }
         .forEach { param ->
           val kclass = param.asKClass()
           if (kclass !in allowedToolParamTypes) {
