@@ -27,10 +27,10 @@ import kotlin.time.Duration
 class ResponseContextImpl(
   override val requestContext: RequestContext,
   override val response: JsonElement,
-  override val elapsed: Duration,
+  override val elapsedTime: Duration,
 ) : ResponseContext {
   override val serverRequestType: ServerRequestType get() = requestContext.request.serverRequestType
 
   override fun toString(): String =
-    "RequestContext:\nRequestType: ${serverRequestType}\nSession ID: ${requestContext.sessionId}\nElapsed: $elapsed\nResponse:\n${response.toJsonString()}"
+    "RequestContext:\nRequestType: ${serverRequestType}\nSession ID: ${requestContext.sessionId}\nElapsed: $elapsedTime\nResponse:\n${response.toJsonString()}"
 }

@@ -24,5 +24,5 @@ interface ResponseContext {
   val requestContext: RequestContext
   val serverRequestType: ServerRequestType
   val response: JsonElement
-  val elapsed: Duration
+  val elapsedTime: Duration
 }
