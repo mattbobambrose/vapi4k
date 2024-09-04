@@ -20,7 +20,7 @@ import com.vapi4k.api.assistant.AssistantId
 import com.vapi4k.api.assistant.AssistantOverrides
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.AssistantIdSource
 
 interface AssistantIdProperties {
@@ -30,7 +30,7 @@ interface AssistantIdProperties {
 }
 
 class AssistantIdImpl internal constructor(
-  internal val requestContext: RequestContext,
+  internal val requestContext: RequestContextImpl,
   private val assistantIdSource: AssistantIdSource,
   private val assistantIdProperties: AssistantIdProperties,
 ) : AssistantIdProperties by assistantIdProperties,

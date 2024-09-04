@@ -14,22 +14,21 @@
  *
  */
 
-package com.vapi4k.utils
+package com.vapi4k.api.tools
 
-import com.vapi4k.common.AssistantId
-import com.vapi4k.common.AssistantId.Companion.toAssistantId
-import com.vapi4k.common.Constants.ASSISTANT_ID_WIDTH
-import com.vapi4k.server.RequestContextImpl
+import com.vapi4k.common.SessionId
+import com.vapi4k.utils.enums.ServerRequestType
+import kotlinx.datetime.Instant
+import kotlinx.serialization.json.JsonElement
+import kotlin.time.Duration
 
-class AssistantIdSource {
-  private var assistantCounter = 1
-
-  internal fun nextAssistantId(requestContext: RequestContextImpl): AssistantId {
-    val newId = (assistantCounter++).toString().padStart(ASSISTANT_ID_WIDTH, '0').toAssistantId()
-
-    // Add assistantId to the application's list of them
-    requestContext.application.addAssistantId(newId)
-
-    return newId
-  }
+interface RequestContext {
+  val serverRequestType: ServerRequestType
+  val request: JsonElement
+  val sessionId: SessionId
+  val created: Instant
+  val age: Duration
+  fun hasStatusUpdateError(): Boolean
+  val statusUpdateError: String
+  val phoneNumber: String
 }

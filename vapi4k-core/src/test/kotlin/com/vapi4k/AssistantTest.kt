@@ -31,7 +31,7 @@ import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.InboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
 import com.vapi4k.utils.JsonUtils.assistantClientMessages
@@ -764,7 +764,7 @@ class AssistantTest {
     """.toJsonElement()
 
     fun newRequestContext() =
-      RequestContext(
+      RequestContextImpl(
         InboundCallApplicationImpl(),
         ASSISTANT_REQUEST,
         getRandomSecret(8, 4, 4, 12).toSessionId(),

@@ -16,13 +16,15 @@
 
 package com.vapi4k.dsl.functions
 
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.MiscUtils.findFunction
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.instanceParameter
+import com.vapi4k.utils.ReflectionUtils.isRequestContextClass
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.parameterSignature
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
@@ -61,7 +63,7 @@ class FunctionDetails internal constructor(
 
   suspend fun invokeToolMethod(
     isTool: Boolean,
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     invokeArgs: JsonElement,
     messageDtos: MutableList<CommonToolMessageDto> = mutableListOf(),
     successAction: (String) -> Unit,
@@ -72,14 +74,14 @@ class FunctionDetails internal constructor(
       val result = invokeMethod(requestContext, invokeArgs).also { logger.info { "Tool call result: $it" } }
       successAction(result)
       if (isTool && obj is ToolCallService)
-        messageDtos.addAll(obj.onToolCallComplete(requestContext.request, result).map { it.dto })
+        messageDtos.addAll(obj.onToolCallComplete(requestContext, result).map { it.dto })
           .also { logger.debug { "Adding onToolCallComplete messages $it" } }
     }.onFailure { e ->
       val eMsg = if (e is InvocationTargetException) e.cause?.errorMsg ?: e.errorMsg else e.errorMsg
       val errorMsg = "Error invoking method $fqName: $eMsg"
       errorAction(errorMsg)
       if (isTool && obj is ToolCallService)
-        messageDtos.addAll(obj.onToolCallFailed(requestContext.request, errorMsg).map { it.dto })
+        messageDtos.addAll(obj.onToolCallFailed(requestContext, errorMsg).map { it.dto })
           .also { logger.debug { "Adding onToolCallFailed messages $it" } }
       logger.info { errorMsg }
     }
@@ -111,7 +113,7 @@ class FunctionDetails internal constructor(
     }
 
   private suspend fun invokeMethod(
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     invokeArgs: JsonElement,
   ): String {
     val function = obj.findFunction(functionName)
@@ -127,7 +129,7 @@ class FunctionDetails internal constructor(
 
     // Check if the function has a RequestContext parameter
     val requestContextParam =
-      function.valueParameters.firstOrNull { it.second.asKClass() == RequestContext::class }?.second
+      function.valueParameters.firstOrNull { it.second.isRequestContextClass() }?.second
 
     // If the function has a request parameter, add it to the valueMap
     val valueMapWithRequestContext =

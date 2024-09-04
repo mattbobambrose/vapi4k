@@ -16,15 +16,15 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.tools.ResponseContext
 import com.vapi4k.utils.enums.ServerRequestType
-import kotlinx.serialization.json.JsonElement
-import kotlin.time.Duration
 
 interface CommonCallbacks {
   /**
   Whenever a request is made, the contents of the onAllRequests{} block will be executed.
    */
-  fun onAllRequests(block: suspend (request: JsonElement) -> Unit)
+  fun onAllRequests(block: suspend (requestContext: RequestContext) -> Unit)
 
   /**
   Whenever a request is made, the contents of the onRequest{} block will be executed.
@@ -32,13 +32,13 @@ interface CommonCallbacks {
   fun onRequest(
     requestType: ServerRequestType,
     vararg requestTypes: ServerRequestType,
-    block: suspend (request: JsonElement) -> Unit,
+    block: suspend (requestContext: RequestContext) -> Unit,
   )
 
   /**
   Whenever a response is received, the contents of the onAllResponses{} block will be executed.
    */
-  fun onAllResponses(block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit)
+  fun onAllResponses(block: suspend (responseContext: ResponseContext) -> Unit)
 
   /**
   Whenever a response is received, the contents of the onResponse{} block will be executed.
@@ -46,6 +46,6 @@ interface CommonCallbacks {
   fun onResponse(
     requestType: ServerRequestType,
     vararg requestTypes: ServerRequestType,
-    block: suspend (requestType: ServerRequestType, request: JsonElement, elapsed: Duration) -> Unit,
+    block: suspend (responseContext: ResponseContext) -> Unit,
   )
 }

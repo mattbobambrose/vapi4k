@@ -22,12 +22,12 @@ import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
-import kotlinx.serialization.json.JsonElement
 
-fun InboundCallAssistantResponse.myAssistantRequest(request: JsonElement) =
-  when (request.phoneNumber) {
+fun InboundCallAssistantResponse.myAssistantRequest(requestContext: RequestContext) =
+  when (requestContext.request.phoneNumber) {
     "+14156721022" ->
       assistantId {
         id = "44792a91-d7f9-4915-9445-0991aeef97bc"
@@ -44,7 +44,7 @@ fun InboundCallAssistantResponse.myAssistantRequest(request: JsonElement) =
     else -> getAssistant()
   }
 
-fun InboundCallAssistantResponse.getSquad(request: JsonElement) =
+fun InboundCallAssistantResponse.getSquad(requestContext: RequestContext) =
   squad {
     name = "Squad Name"
     members {

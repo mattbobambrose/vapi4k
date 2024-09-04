@@ -14,19 +14,15 @@
  *
  */
 
-package com.vapi4k.server
+package com.vapi4k.api.tools
 
-import com.vapi4k.common.AssistantId
-import com.vapi4k.common.SessionId
-import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.utils.enums.ServerRequestType
 import kotlinx.serialization.json.JsonElement
+import kotlin.time.Duration
 
-data class RequestContext(
-  val application: AbstractApplicationImpl,
-  val request: JsonElement,
-  val sessionId: SessionId,
-  val assistantId: AssistantId,
-) {
-  fun copyWithNewAssistantId(newAssistantId: AssistantId) =
-    RequestContext(application, request, sessionId, newAssistantId)
+interface ResponseContext {
+  val requestContext: RequestContext
+  val serverRequestType: ServerRequestType
+  val response: JsonElement
+  val elapsed: Duration
 }

@@ -25,7 +25,7 @@ import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.JsonUtils.toolCallList
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
@@ -38,7 +38,7 @@ data class ToolCallResponseDto(
   var error: String = "",
 ) {
   companion object {
-    suspend fun getToolCallResponse(requestContext: RequestContext) =
+    suspend fun getToolCallResponse(requestContext: RequestContextImpl) =
       runCatching {
         ToolCallMessageResponse()
           .also { tcmr ->

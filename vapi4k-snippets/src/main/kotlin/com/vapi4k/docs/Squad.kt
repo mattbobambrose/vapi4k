@@ -2,10 +2,10 @@ package com.vapi4k.docs
 
 import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.model.enums.OpenAIModelType
-import kotlinx.serialization.json.JsonElement
+import com.vapi4k.api.tools.RequestContext
 
 object Squad {
-  fun InboundCallAssistantResponse.getSquad(request: JsonElement) =
+  fun InboundCallAssistantResponse.getSquad(requestContext: RequestContext) =
     squad {
       name = "Squad Name-31"
       members {

@@ -21,14 +21,14 @@ import com.vapi4k.api.assistant.AssistantOverrides
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.AssistantIdSource
 import com.vapi4k.utils.DuplicateInvokeChecker
 
 interface AssistantProperties : CommonAssistantProperties
 
 class AssistantImpl internal constructor(
-  override val requestContext: RequestContext,
+  override val requestContext: RequestContextImpl,
   private val assistantIdSource: AssistantIdSource,
   private val assistantDto: AssistantDto,
   private val assistantOverridesDto: AssistantOverridesDto,

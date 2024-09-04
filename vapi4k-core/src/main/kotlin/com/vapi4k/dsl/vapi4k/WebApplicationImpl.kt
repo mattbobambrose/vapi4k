@@ -17,31 +17,31 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.WebAssistantResponse
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.dsl.assistant.WebAssistantResponseImpl
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.common.Utils.isNull
-import kotlinx.serialization.json.JsonElement
 
 class WebApplicationImpl internal constructor() :
   AbstractApplicationImpl(ApplicationType.WEB),
   WebApplication {
-  private var assistantRequest: (suspend WebAssistantResponse.(JsonElement) -> Unit)? = null
+  private var assistantRequest: (suspend WebAssistantResponse.(RequestContext) -> Unit)? = null
 
-  override fun onAssistantRequest(block: suspend WebAssistantResponse.(JsonElement) -> Unit) {
+  override fun onAssistantRequest(block: suspend WebAssistantResponse.(RequestContext) -> Unit) {
     if (assistantRequest.isNull())
       assistantRequest = block
     else
       error("onAssistantRequest{} can be called only once per inboundCallApplication{}")
   }
 
-  override suspend fun getAssistantResponse(requestContext: RequestContext) =
+  override suspend fun getAssistantResponse(requestContext: RequestContextImpl) =
     assistantRequest.let { requestFunc ->
       if (requestFunc.isNull()) {
         error("onAssistantRequest{} not called")
       } else {
         val assistantResponse = WebAssistantResponseImpl(requestContext)
-        requestFunc.invoke(assistantResponse, requestContext.request)
+        requestFunc.invoke(assistantResponse, requestContext)
         if (assistantResponse.isAssigned)
           assistantResponse.assistantRequestResponse
         else

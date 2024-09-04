@@ -16,20 +16,20 @@
 
 package com.vapi4k.dsl.toolservice
 
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.toolservice.RequestCompleteMessages
 import com.vapi4k.api.toolservice.RequestFailedMessages
 import com.vapi4k.dsl.assistant.ToolMessageCompleteImpl
 import com.vapi4k.dsl.assistant.ToolMessageFailedImpl
-import kotlinx.serialization.json.JsonElement
 
 abstract class ToolCallService {
   open fun onToolCallComplete(
-    toolCallRequest: JsonElement,
+    requestContext: RequestContext,
     result: String,
   ): List<ToolMessageCompleteImpl> = emptyList()
 
   open fun onToolCallFailed(
-    toolCallRequest: JsonElement,
+    requestContext: RequestContext,
     errorMessage: String,
   ): List<ToolMessageFailedImpl> = emptyList()
 

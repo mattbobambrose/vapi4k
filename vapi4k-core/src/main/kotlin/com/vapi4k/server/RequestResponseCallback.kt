@@ -17,42 +17,66 @@
 package com.vapi4k.server
 
 import com.vapi4k.common.ApplicationId
+import com.vapi4k.common.AssistantId
+import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.RequestResponseType
+import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.JsonUtils
-import com.vapi4k.utils.enums.ServerRequestType
-import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
+import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 
 data class RequestResponseCallback(
-  val applicationId: ApplicationId,
   val type: RequestResponseType,
-  val requestType: ServerRequestType,
-  val request: JsonElement = JsonUtils.emptyJsonElement(),
-  val response: (() -> JsonElement) = { JsonUtils.emptyJsonElement() },
+  val created: Instant,
+  val applicationId: ApplicationId,
+  val sessionId: SessionId,
+  val request: JsonElement,
+  val response: () -> JsonElement = { JsonUtils.emptyJsonElement() },
   val elapsed: Duration = Duration.ZERO,
 ) {
+  fun toRequestContext(config: Vapi4kConfigImpl): RequestContextImpl =
+    RequestContextImpl(
+      application = config.getApplicationById(applicationId),
+      request = request,
+      sessionId = sessionId,
+      assistantId = AssistantId.EMPTY_ASSISTANT_ID,
+      created = created,
+    )
+
+  fun toResponseContext(
+    config: Vapi4kConfigImpl,
+    response: JsonElement,
+  ): ResponseContextImpl =
+    ResponseContextImpl(toRequestContext(config), response, elapsed)
+
   companion object {
-    fun requestCallback(requestContext: RequestContext): RequestResponseCallback =
+    fun requestCallback(requestContext: RequestContextImpl): RequestResponseCallback =
       with(requestContext) {
         RequestResponseCallback(
-          applicationId = application.applicationId,
           type = RequestResponseType.REQUEST,
-          requestType = request.requestType,
+          created = created,
+          applicationId = application.applicationId,
+          sessionId = sessionId,
           request = request,
         )
       }
 
     fun responseCallback(
-      requestContext: RequestContext,
+      requestContext: RequestContextImpl,
       response: () -> JsonElement,
       elapsed: Duration,
-    ) = RequestResponseCallback(
-      applicationId = requestContext.application.applicationId,
-      type = RequestResponseType.RESPONSE,
-      requestType = requestContext.request.requestType,
-      response = response,
-      elapsed = elapsed,
-    )
+    ): RequestResponseCallback =
+      with(requestContext) {
+        RequestResponseCallback(
+          type = RequestResponseType.RESPONSE,
+          created = created,
+          applicationId = application.applicationId,
+          sessionId = sessionId,
+          request = request,
+          response = response,
+          elapsed = elapsed,
+        )
+      }
   }
 }

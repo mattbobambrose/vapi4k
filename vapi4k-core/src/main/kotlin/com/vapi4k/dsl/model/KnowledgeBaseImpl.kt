@@ -18,10 +18,10 @@ package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.dtos.model.KnowledgeBaseDto
-import kotlinx.serialization.json.JsonElement
+import com.vapi4k.server.RequestContextImpl
 
 class KnowledgeBaseImpl internal constructor(
-  internal val request: JsonElement,
+  internal val requestContext: RequestContextImpl,
   private val dto: KnowledgeBaseDto,
 ) : KnowledgeBaseProperties by dto,
   KnowledgeBase

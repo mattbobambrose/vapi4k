@@ -26,8 +26,6 @@ import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.squad.Member
 import com.vapi4k.api.tools.Tools
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.plugin.Vapi4k
@@ -35,7 +33,6 @@ import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
@@ -76,8 +73,12 @@ fun Application.module() {
       serverPath = "/talkapp"
       serverSecret = "12345"
 
-      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
-        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { requestContext ->
+        logger.info { requestContext }
+      }
+
+      onResponse(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { responseContext ->
+        logger.info { responseContext }
       }
 
       onAssistantRequest { args ->
@@ -176,8 +177,8 @@ fun Application.module() {
       serverPath = "/talkSquad"
       // serverSecret = "12345"
 
-      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
-        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { requestContext ->
+        logger.info { requestContext }
       }
 
       onAssistantRequest { args ->
@@ -267,8 +268,8 @@ fun Application.module() {
     outboundCallApplication {
       serverPath = "/outboundRequest1"
 
-      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
-        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { requestContext ->
+        logger.info { requestContext }
       }
 
       onAssistantRequest { args ->
@@ -292,6 +293,7 @@ fun Application.module() {
                 name = "endCallTool"
                 description = "End the call"
 
+                onInvoke { }
                 server {
                   url = "https://ba44-73-71-109-237.ngrok-free.app/emailTool"
                 }
@@ -307,6 +309,7 @@ fun Application.module() {
                     description = "The message to leave"
                   }
                 }
+                onInvoke { }
                 requestStartMessage {
                   content = "This is the voicemail start message"
                 }
@@ -325,8 +328,8 @@ fun Application.module() {
     outboundCallApplication {
       serverPath = "/squadOutbound"
 
-      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
-        logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { requestContext ->
+        logger.info { requestContext }
       }
 
       onAssistantRequest { args ->
@@ -366,8 +369,8 @@ fun Application.module() {
     outboundCallApplication {
       serverPath = "/squadMemberOverride"
 
-      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
-        //  logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
+      onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { requestContext ->
+        //  logger.info { requestContext }
       }
 
       onAssistantRequest { args ->
@@ -434,19 +437,19 @@ fun Application.module() {
       serverPath = "/inboundRequest1"
       serverSecret = "12345"
 
-      onAssistantRequest { request ->
-        myAssistantRequest(request)
+      onAssistantRequest { requestContext ->
+        myAssistantRequest(requestContext)
       }
     }
 
     inboundCallApplication {
       serverPath = "/talkApp"
 
-      onAssistantRequest { request ->
-        myAssistantRequest(request)
+      onAssistantRequest { requestContext ->
+        myAssistantRequest(requestContext)
       }
 
-      onTransferDestinationRequest { request ->
+      onTransferDestinationRequest { requestContext ->
         assistantDestination {
           assistantName = "Assistant"
           transferMode = AssistantTransferMode.ROLLING_HISTORY
@@ -455,33 +458,33 @@ fun Application.module() {
         }
       }
 
-      onAllRequests { request ->
-        logger.info { "All requests: ${request.requestType}" }
+      onAllRequests { requestContext ->
+        logger.info { "All requests: ${requestContext.serverRequestType}" }
 //        if (isProduction)
 //          insertRequest(request)
 //        logObject(request)
 //        printObject(request)
       }
 
-      onRequest(TOOL_CALL) { request ->
-//        logger.info { "Tool call: $request" }
+      onRequest(TOOL_CALL) { requestContext ->
+//        logger.info { "Tool call: $requestContext" }
       }
 
-      onRequest(FUNCTION_CALL) { request ->
-//        logger.info { "Function call: $request" }
+      onRequest(FUNCTION_CALL) { requestContext ->
+//        logger.info { "Function call: $requestContext" }
       }
 
-      onRequest(ServerRequestType.STATUS_UPDATE) { request ->
+      onRequest(ServerRequestType.STATUS_UPDATE) { requestContext ->
         logger.info { "Status update: STATUS_UPDATE" }
       }
 
-      onRequest(ServerRequestType.STATUS_UPDATE) { request ->
-        if (request.hasStatusUpdateError()) {
-          logger.info { "Status update error: ${request.statusUpdateError}" }
+      onRequest(ServerRequestType.STATUS_UPDATE) { requestContext ->
+        if (requestContext.hasStatusUpdateError()) {
+          logger.info { "Status update error: ${requestContext.statusUpdateError}" }
         }
       }
 
-      onAllResponses { requestType, response, elapsedTime ->
+      onAllResponses { responseContext ->
 //        logger.info { "All responses: $response" }
 //        logObject(response)
 //        logger.info { response.toJsonString() }
@@ -489,8 +492,8 @@ fun Application.module() {
 //          insertResponse(requestType, response, elapsedTime)
       }
 
-      onResponse(ASSISTANT_REQUEST) { requestType, response, elapsed ->
-//      logger.info { "Response: $response" }
+      onResponse(ASSISTANT_REQUEST) { responseContext ->
+//      logger.info { "Response: responseContext" }
       }
     }
   }

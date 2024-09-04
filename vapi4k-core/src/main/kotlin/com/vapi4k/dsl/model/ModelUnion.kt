@@ -23,7 +23,7 @@ import com.vapi4k.dtos.assistant.VoicemailDetectionDto
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.transcriber.CommonTranscriberDto
 import com.vapi4k.dtos.voice.CommonVoiceDto
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DuplicateInvokeChecker
 
 interface ModelDtoUnion {
@@ -33,7 +33,7 @@ interface ModelDtoUnion {
 }
 
 interface ModelUnion {
-  val requestContext: RequestContext
+  val requestContext: RequestContextImpl
   val assistantId: AssistantId
   val modelChecker: DuplicateInvokeChecker
   val modelDtoUnion: ModelDtoUnion

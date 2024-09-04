@@ -27,7 +27,7 @@ import com.vapi4k.common.QueryParams.TOOL_TYPE
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.vapi4k.KtorCallContext
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HttpUtils.getQueryParam
 import com.vapi4k.utils.HttpUtils.missingQueryParam
@@ -54,7 +54,7 @@ object ValidateToolInvokePage {
       val applicationId = call.getQueryParam(APPLICATION_ID)?.toApplicationId() ?: missingQueryParam(APPLICATION_ID)
 
       val requestContext =
-        RequestContext(
+        RequestContextImpl(
           application = config.getApplicationById(applicationId),
           request = call.generateToolRequest(),
           sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),

@@ -16,14 +16,16 @@
 
 package com.vapi4k.dsl.functions
 
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto
-import com.vapi4k.server.RequestContext
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.functions
 import com.vapi4k.utils.ReflectionUtils.hasToolCallAnnotation
+import com.vapi4k.utils.ReflectionUtils.isNotRequestContextClass
+import com.vapi4k.utils.ReflectionUtils.isRequestContextClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -78,10 +80,12 @@ internal object FunctionUtils {
       dto.name = toolCallInfo.llmName.value
       dto.description = toolCallInfo.llmDescription
 
-      // TODO Need to make sure that only one RequestContext argument is present here
+      if (function.parameters.count { it.type.isRequestContextClass() } > 1)
+        error("Function ${function.name} may have only one parameter of type RequestContext")
+
       function.parameters
         .filter { it.kind == KParameter.Kind.VALUE }
-        .filter { it.type.asKClass() != RequestContext::class }
+        .filter { it.type.isNotRequestContextClass() }
         .forEach { param ->
           val kclass = param.asKClass()
           if (kclass !in allowedToolParamTypes) {

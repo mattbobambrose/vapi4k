@@ -17,9 +17,9 @@
 package com.vapi4k.api.vapi4k
 
 import com.vapi4k.api.assistant.OutboundCallAssistantResponse
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.dsl.vapi4k.CommonCallbacks
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
-import kotlinx.serialization.json.JsonElement
 
 @Vapi4KDslMarker
 interface OutboundCallApplication : CommonCallbacks {
@@ -36,5 +36,5 @@ interface OutboundCallApplication : CommonCallbacks {
   /**
   Whenever an AssistantRequest is made, the contents of the onAssistantRequest{} block will be executed.
    */
-  fun onAssistantRequest(block: suspend OutboundCallAssistantResponse.(JsonElement) -> Unit)
+  fun onAssistantRequest(block: suspend OutboundCallAssistantResponse.(RequestContext) -> Unit)
 }

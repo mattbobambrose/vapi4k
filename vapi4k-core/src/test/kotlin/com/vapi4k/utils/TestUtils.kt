@@ -26,7 +26,7 @@ import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dtos.tools.ToolMessageCondition
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.responses.AssistantMessageResponse
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.HttpUtils.queryParams
 import com.vapi4k.utils.JsonUtils.emptyJsonElement
 import com.vapi4k.utils.common.Utils.resourceFile
@@ -48,7 +48,7 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.JsonElement
 
 fun assistantResponse(
-  requestContext: RequestContext,
+  requestContext: RequestContextImpl,
   block: InboundCallAssistantResponse.() -> Unit,
 ): AssistantMessageResponse {
   val assistantResponse = InboundCallAssistantResponseImpl(requestContext).apply(block)

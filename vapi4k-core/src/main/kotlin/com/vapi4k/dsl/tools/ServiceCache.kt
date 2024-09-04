@@ -24,7 +24,7 @@ import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
 import com.vapi4k.dsl.model.AbstractModel
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.datetime.Clock
@@ -65,13 +65,13 @@ internal class ServiceCache(
     }
   }
 
-  fun containsIds(requestContext: RequestContext) = cacheMap.containsKey(cacheKeyValue(requestContext))
+  fun containsIds(requestContext: RequestContextImpl) = cacheMap.containsKey(cacheKeyValue(requestContext))
 
-  fun getFromCache(requestContext: RequestContext): FunctionInfo =
+  fun getFromCache(requestContext: RequestContextImpl): FunctionInfo =
     cacheKeyValue(requestContext).let { key -> cacheMap[key] ?: error("Cache key not found: $key") }
 
   fun removeFromCache(
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     block: (FunctionInfo) -> Unit,
   ): FunctionInfo? =
     cacheKeyValue(requestContext).let { key ->

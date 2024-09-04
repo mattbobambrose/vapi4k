@@ -44,7 +44,7 @@ import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.common.Utils.lambda
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
+import com.vapi4k.utils.enums.ServerRequestType.Companion.serverRequestType
 import com.vapi4k.utils.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
@@ -76,7 +76,7 @@ internal object OutboundCallAndWebActions {
     application: AbstractApplicationImpl,
     request: JsonElement,
   ) {
-    val requestContext = RequestContext(
+    val requestContext = RequestContextImpl(
       application = application,
       request = request,
       sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: missingQueryParam(SESSION_ID),
@@ -101,9 +101,9 @@ internal object OutboundCallAndWebActions {
 
   private suspend fun KtorCallContext.processOutboundCallAndWebRequest(
     config: Vapi4kConfigImpl,
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
   ) {
-    val requestType = requestContext.request.requestType
+    val requestType = requestContext.request.serverRequestType
     invokeRequestCallbacks(config, requestContext)
 
     val (response, duration) =

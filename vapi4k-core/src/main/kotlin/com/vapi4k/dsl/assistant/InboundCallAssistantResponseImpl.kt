@@ -23,10 +23,10 @@ import com.vapi4k.dsl.destination.NumberDestinationImpl
 import com.vapi4k.dsl.destination.SipDestinationImpl
 import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 
 class InboundCallAssistantResponseImpl(
-  requestContext: RequestContext,
+  requestContext: RequestContextImpl,
 ) : AbstractAssistantResponseImpl(requestContext),
   InboundCallAssistantResponse {
   override var error: String

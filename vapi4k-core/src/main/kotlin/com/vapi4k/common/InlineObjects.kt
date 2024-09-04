@@ -17,7 +17,7 @@
 package com.vapi4k.common
 
 import com.vapi4k.dsl.functions.ToolCallInfo.Companion.ID_SEPARATOR
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -77,7 +77,7 @@ value class CacheKey private constructor(
       assistantId: AssistantId,
     ) = "${sessionId.value}$ID_SEPARATOR${assistantId.value}".toCacheKey()
 
-    internal fun cacheKeyValue(requestContext: RequestContext) =
+    internal fun cacheKeyValue(requestContext: RequestContextImpl) =
       cacheKeyValue(requestContext.sessionId, requestContext.assistantId)
   }
 }

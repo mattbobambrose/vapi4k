@@ -14,44 +14,24 @@
  *
  */
 
-package com.vapi4k.dbms
+package com.vapi4k.server
 
+import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.tools.ResponseContext
 import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.enums.ServerRequestType.Companion.serverRequestType
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import kotlinx.serialization.json.JsonElement
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.time.Duration
 
-object Messages {
-  fun insertRequest(request: JsonElement) {
-    transaction {
-      val str = request.toJsonString()
-      MessagesTable.insert { rec ->
-        rec[messageType] = "REQUEST"
-        rec[requestType] = request.serverRequestType.desc
-        rec[messageJsonb] = str
-        rec[messageJson] = str
-        rec[elapsedTime] = Duration.ZERO
-      }
-    }
-  }
+class ResponseContextImpl(
+  override val requestContext: RequestContext,
+  override val response: JsonElement,
+  override val elapsed: Duration,
+) : ResponseContext {
 
-  fun insertResponse(
-    type: ServerRequestType,
-    response: JsonElement,
-    elapsed: Duration,
-  ) {
-    transaction {
-      val str = response.toJsonString()
-      MessagesTable.insert { rec ->
-        rec[messageType] = "RESPONSE"
-        rec[requestType] = type.desc
-        rec[messageJsonb] = str
-        rec[messageJson] = str
-        rec[elapsedTime] = elapsed
-      }
-    }
-  }
+  override val serverRequestType: ServerRequestType get() = requestContext.request.serverRequestType
+
+  override fun toString(): String =
+    "RequestContext:\nRequestType: ${serverRequestType}\nSession ID: ${requestContext.sessionId}\nElapsed: $elapsed\nResponse:\n${response.toJsonString()}"
 }

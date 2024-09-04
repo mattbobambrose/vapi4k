@@ -31,5 +31,5 @@ enum class ApplicationType(
 
   internal val functionName get() = "$displayName{}"
 
-  internal fun getRandomSessionId() = "$paramName-${getRandomSecret(15)}".toSessionId()
+  internal fun getRandomSessionId() = "${getRandomSecret(8, 4, 4, 12)}-$paramName".toSessionId()
 }

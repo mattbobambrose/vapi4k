@@ -87,23 +87,6 @@ object AssistantRequestUtils {
 //    }
 
   /**
-  Extract the assistant request error message from a status update message and throws an error if the JsonElement is not a status update message.
-   */
-  val JsonElement.statusUpdateError: String
-    get() = if (isStatusUpdate) {
-      runCatching {
-        stringValue("message.inboundPhoneCallDebuggingArtifacts.assistantRequestError")
-      }.getOrElse { "" }
-    } else {
-      error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
-    }
-
-  /**
-  Check if the JsonElement has a status update error message.
-   */
-  fun JsonElement.hasStatusUpdateError(): Boolean = statusUpdateError.isNotEmpty()
-
-  /**
   Extract the function name from a function call and throws an error if the JsonElement is not a function call.
    */
   val JsonElement.functionName
@@ -120,4 +103,21 @@ object AssistantRequestUtils {
       this["message.functionCall.parameters"]
     else
       error("JsonElement is not a function call")
+
+  /**
+  Extract the assistant request error message from a status update message and throws an error if the JsonElement is not a status update message.
+   */
+  val JsonElement.statusUpdateError: String
+    get() = if (isStatusUpdate) {
+      runCatching {
+        stringValue("message.inboundPhoneCallDebuggingArtifacts.assistantRequestError")
+      }.getOrElse { "" }
+    } else {
+      error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
+    }
+
+  /**
+  Check if the JsonElement has a status update error message.
+   */
+  fun JsonElement.hasStatusUpdateError(): Boolean = statusUpdateError.isNotEmpty()
 }

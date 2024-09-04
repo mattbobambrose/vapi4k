@@ -20,10 +20,10 @@ import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.dsl.toolservice.ToolCallService
-import kotlinx.serialization.json.JsonElement
 
 object SimpleAssistant {
   fun InboundCallAssistantResponse.simpleAssistantRequest() {
@@ -109,7 +109,7 @@ object SimpleAssistant {
     ) = "The weather in city $city and state $state is windy"
 
     override fun onToolCallComplete(
-      toolCallRequest: JsonElement,
+      requestContext: RequestContext,
       result: String,
     ) = requestCompleteMessages {
       condition("city" eq "Chicago", "state" eq "Illinois") {
@@ -135,7 +135,7 @@ object SimpleAssistant {
     fun getWeatherByZipCode(zipCode: String) = "The weather in zip code $zipCode is rainy"
 
     override fun onToolCallComplete(
-      toolCallRequest: JsonElement,
+      requestContext: RequestContext,
       result: String,
     ) = requestCompleteMessages {
       condition("city" eq "Chicago", "state" eq "Illinois") {

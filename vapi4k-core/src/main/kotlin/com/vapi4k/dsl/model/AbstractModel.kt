@@ -56,7 +56,7 @@ abstract class AbstractModel(
     val caller = this::class.simpleName.orEmpty().removeSuffix("Impl").replaceFirstChar { it.lowercaseChar() }
     duplicateChecker.check("$caller{} contains multiple calls to knowledgeBase{}")
     val kbDto = KnowledgeBaseDto().also { dto.knowledgeBaseDto = it }
-    return KnowledgeBaseImpl(modelUnion.requestContext.request, kbDto)
+    return KnowledgeBaseImpl(modelUnion.requestContext, kbDto)
       .apply(block)
       .apply {
         if (kbDto.fileIds.isEmpty())

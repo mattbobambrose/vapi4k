@@ -17,7 +17,6 @@
 package com.vapi4k.examples
 
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.plugin.Vapi4kServer.logger
@@ -37,8 +36,8 @@ fun Application.helloWorld() {
   install(Vapi4k) {
     // Define the Vapi4k application
     inboundCallApplication {
-      onAssistantRequest { request ->
-        logger.info { "Assistant request has been made: ${request.phoneNumber}" }
+      onAssistantRequest { requestContext ->
+        logger.info { "Assistant request has been made: ${requestContext.phoneNumber}" }
 
         assistant {
           firstMessage = "Hello, I am a simple Vapi assistant that looks up the weather for a city and state."

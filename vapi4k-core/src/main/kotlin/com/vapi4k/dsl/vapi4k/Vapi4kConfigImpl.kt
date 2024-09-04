@@ -16,6 +16,8 @@
 
 package com.vapi4k.dsl.vapi4k
 
+import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.tools.ResponseContext
 import com.vapi4k.api.vapi4k.InboundCallApplication
 import com.vapi4k.api.vapi4k.OutboundCallApplication
 import com.vapi4k.api.vapi4k.Vapi4kConfig
@@ -31,11 +33,9 @@ import io.ktor.server.application.ApplicationCall
 import io.ktor.server.config.ApplicationConfig
 import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.channels.Channel
-import kotlinx.serialization.json.JsonElement
-import kotlin.time.Duration
 
-typealias RequestArgs = suspend (JsonElement) -> Unit
-typealias ResponseArgs = suspend (requestType: ServerRequestType, JsonElement, Duration) -> Unit
+typealias RequestArgs = suspend (RequestContext) -> Unit
+typealias ResponseArgs = suspend (ResponseContext) -> Unit
 typealias KtorCallContext = PipelineContext<Unit, ApplicationCall>
 
 class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
@@ -54,9 +54,9 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   internal val webApplications = mutableListOf<AbstractApplicationImpl>()
   internal val inboundCallApplications = mutableListOf<AbstractApplicationImpl>()
   internal val outboundCallApplications = mutableListOf<AbstractApplicationImpl>()
+
   internal val allWebAndInboundApplications get() = webApplications + inboundCallApplications
-  internal val allApplications
-    get() = webApplications + inboundCallApplications + outboundCallApplications
+  internal val allApplications get() = webApplications + inboundCallApplications + outboundCallApplications
 
   private fun verifyServerPath(
     serverPath: String,
@@ -91,21 +91,21 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
         webApplications += app
       }
 
-  override fun onAllRequests(block: suspend (request: JsonElement) -> Unit) {
+  override fun onAllRequests(block: suspend (requestContext: RequestContext) -> Unit) {
     globalAllRequests += block
   }
 
   override fun onRequest(
     requestType: ServerRequestType,
     vararg requestTypes: ServerRequestType,
-    block: suspend (request: JsonElement) -> Unit,
+    block: suspend (requestContext: RequestContext) -> Unit,
   ) {
     globalPerRequests += requestType to block
     requestTypes.forEach { globalPerRequests += it to block }
   }
 
   override fun onAllResponses(
-    block: suspend (requestType: ServerRequestType, response: JsonElement, elapsed: Duration) -> Unit,
+    block: suspend (responseContext: ResponseContext) -> Unit,
   ) {
     globalAllResponses += block
   }
@@ -113,7 +113,7 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   override fun onResponse(
     requestType: ServerRequestType,
     vararg requestTypes: ServerRequestType,
-    block: suspend (requestType: ServerRequestType, request: JsonElement, elapsed: Duration) -> Unit,
+    block: suspend (responseContext: ResponseContext) -> Unit,
   ) {
     globalPerResponses += requestType to block
     requestTypes.forEach { globalPerResponses += it to block }

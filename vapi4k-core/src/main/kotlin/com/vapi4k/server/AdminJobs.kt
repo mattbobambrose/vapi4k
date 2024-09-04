@@ -25,6 +25,7 @@ import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
 import com.vapi4k.utils.common.Utils.errorMsg
+import com.vapi4k.utils.enums.ServerRequestType.Companion.serverRequestType
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -66,20 +67,20 @@ internal object AdminJobs {
                   REQUEST -> {
                     config.allApplications
                       .filter { it.applicationId == callback.applicationId }
-                      .forEach { application ->
-                        with(application) {
-                          applicationAllRequests.forEach { launch { it.invoke(callback.request) } }
+                      .forEach { app ->
+                        with(app) {
+                          applicationAllRequests.forEach { launch { it.invoke(callback.toRequestContext(config)) } }
                           applicationPerRequests
-                            .filter { it.first == callback.requestType }
-                            .forEach { (_, block) -> launch { block(callback.request) } }
+                            .filter { it.first == callback.request.serverRequestType }
+                            .forEach { (_, block) -> launch { block(callback.toRequestContext(config)) } }
                         }
                       }
 
                     with(config) {
-                      globalAllRequests.forEach { launch { it.invoke(callback.request) } }
+                      globalAllRequests.forEach { launch { it.invoke(callback.toRequestContext(config)) } }
                       globalPerRequests
-                        .filter { it.first == callback.requestType }
-                        .forEach { (_, block) -> launch { block(callback.request) } }
+                        .filter { it.first == callback.request.serverRequestType }
+                        .forEach { (_, block) -> launch { block(callback.toRequestContext(config)) } }
                     }
                   }
 
@@ -96,12 +97,12 @@ internal object AdminJobs {
                             }.getOrThrow()
 
                           applicationAllResponses.forEach {
-                            launch { it.invoke(callback.requestType, resp, callback.elapsed) }
+                            launch { it.invoke(callback.toResponseContext(config, resp)) }
                           }
                           applicationPerResponses
-                            .filter { it.first == callback.requestType }
-                            .forEach { (reqType, block) ->
-                              launch { block(reqType, resp, callback.elapsed) }
+                            .filter { it.first == callback.request.serverRequestType }
+                            .forEach { (_, block) ->
+                              launch { block(callback.toResponseContext(config, resp)) }
                             }
                         }
                       }
@@ -118,18 +119,13 @@ internal object AdminJobs {
                           }.getOrThrow()
 
                         globalAllResponses.forEach {
-                          launch {
-                            it.invoke(
-                              callback.requestType,
-                              resp,
-                              callback.elapsed,
-                            )
-                          }
+                          launch { it.invoke(callback.toResponseContext(config, resp)) }
                         }
+
                         globalPerResponses
-                          .filter { it.first == callback.requestType }
-                          .forEach { (reqType, block) ->
-                            launch { block(reqType, resp, callback.elapsed) }
+                          .filter { it.first == callback.request.serverRequestType }
+                          .forEach { (_, block) ->
+                            launch { block(callback.toResponseContext(config, resp)) }
                           }
                       }
                     }
@@ -147,12 +143,12 @@ internal object AdminJobs {
 
   suspend fun invokeRequestCallbacks(
     config: Vapi4kConfigImpl,
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
   ) = config.callbackChannel.send(requestCallback(requestContext))
 
   suspend fun invokeResponseCallbacks(
     config: Vapi4kConfigImpl,
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     response: () -> JsonElement,
     elapsed: Duration,
   ) = config.callbackChannel.send(responseCallback(requestContext, response, elapsed))

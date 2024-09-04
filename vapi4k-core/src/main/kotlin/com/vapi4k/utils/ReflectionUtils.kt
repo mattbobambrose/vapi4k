@@ -16,6 +16,7 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.dsl.assistant.Param
 import com.vapi4k.dsl.assistant.ToolCall
 import com.vapi4k.utils.common.Utils.isNotNull
@@ -50,4 +51,12 @@ internal object ReflectionUtils {
   fun KType.asKClass() = classifier as KClass<*>
 
   fun KParameter.asKClass() = type.classifier as KClass<*>
+
+  fun KType.isRequestContextClass() = asKClass() == RequestContext::class
+
+  fun KType.isNotRequestContextClass() = !isRequestContextClass()
+
+  fun KParameter.isRequestContextClass() = asKClass() == RequestContext::class
+
+  fun KParameter.isNotRequestContextClass() = !isRequestContextClass()
 }

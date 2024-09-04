@@ -17,6 +17,7 @@
 package com.vapi4k.validate
 
 import com.vapi4k.common.ApplicationName
+import com.vapi4k.common.AssistantId
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.AssistantId.Companion.getAssistantIdFromSuffix
 import com.vapi4k.common.AssistantId.Companion.toAssistantId
@@ -42,7 +43,7 @@ import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HtmlUtils.rawHtml
@@ -53,6 +54,7 @@ import com.vapi4k.utils.JsonUtils.getToolNames
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.ReflectionUtils.asKClass
+import com.vapi4k.utils.ReflectionUtils.isNotRequestContextClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
@@ -111,7 +113,7 @@ object ValidateAssistantRequestPage {
     val typePrefix = application.applicationType.pathPrefix
     val sessionId = application.applicationType.getRandomSessionId()
     val requestContext =
-      RequestContext(
+      RequestContextImpl(
         application = application,
         request = request,
         sessionId = sessionId,
@@ -206,7 +208,7 @@ object ValidateAssistantRequestPage {
 
   private fun BODY.displayTools(
     responseBody: String,
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
   ) {
     val topLevel = responseBody.toJsonElement()
     // Strip messageResponse if it exists
@@ -256,7 +258,7 @@ object ValidateAssistantRequestPage {
     }.getOrElse { "Unnamed-$index" }
 
   private fun BODY.assistantRequestToolsBody(
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     jsonElement: JsonElement,
     key: String,
   ) {
@@ -268,7 +270,7 @@ object ValidateAssistantRequestPage {
   }
 
   private fun BODY.displayServiceTools(
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     toolNames: List<String>,
   ) {
     if (requestContext.application.hasServiceTools()) {
@@ -297,7 +299,7 @@ object ValidateAssistantRequestPage {
                 table {
                   tbody {
                     functionDetails.params
-                      .filter { it.second.asKClass() != RequestContext::class }
+                      .filter { it.second.isNotRequestContextClass() }
                       .forEach { functionDetail ->
                         tr {
                           td { +"${functionDetail.first}:" }
@@ -332,7 +334,7 @@ object ValidateAssistantRequestPage {
   }
 
   private fun BODY.displayManualTools(
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     toolNames: List<String>,
   ) {
     if (requestContext.application.hasManualTools()) {
@@ -387,7 +389,7 @@ object ValidateAssistantRequestPage {
   }
 
   private fun BODY.displayFunctions(
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     funcNames: List<String>,
   ) {
     if (requestContext.application.hasFunctions()) {
@@ -416,7 +418,7 @@ object ValidateAssistantRequestPage {
                 table {
                   tbody {
                     functionDetails.params
-                      .filter { it.second.asKClass() != RequestContext::class }
+                      .filter { it.second.isNotRequestContextClass() }
                       .forEach { functionDetail ->
                         tr {
                           td { +"${functionDetail.first}:" }
@@ -452,7 +454,7 @@ object ValidateAssistantRequestPage {
 
   private fun FORM.setupHtmxTags(
     toolType: ToolType,
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     divId: String,
   ) {
     attributes["hx-get"] =
@@ -467,7 +469,7 @@ object ValidateAssistantRequestPage {
   }
 
   private fun FORM.addHiddenFields(
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
     funcName: FunctionName,
     emptyAssistantId: Boolean,
   ) {
@@ -532,21 +534,18 @@ object ValidateAssistantRequestPage {
     request: JsonElement,
     secret: String,
     url: String,
-  ): Pair<HttpStatusCode, String> {
-    val response = httpClient.post(url) {
+  ): Pair<HttpStatusCode, String> =
+    httpClient.post(url) {
       contentType(Application.Json)
       headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
       if (secret.isNotEmpty())
         headers.append(VAPI_SECRET_HEADER, secret)
-      val jsonBody =
-        if (application.applicationType == ApplicationType.INBOUND_CALL)
-          request
-        else
-          EMPTY_JSON_ELEMENT
+      val jsonBody = if (application.applicationType == ApplicationType.INBOUND_CALL) request else EMPTY_JSON_ELEMENT
       setBody(jsonBody)
-    }
-    return response.status to response.bodyAsText()
-  }
+    }.run { status to bodyAsText() }
+
+  private fun RequestContextImpl.copyWithNewAssistantId(newAssistantId: AssistantId) =
+    RequestContextImpl(application, request, sessionId, newAssistantId)
 
   private const val ASSISTANT_REQUEST_JSON = """
     {

@@ -39,7 +39,7 @@ import com.vapi4k.utils.HttpUtils.getQueryParam
 import com.vapi4k.utils.common.Utils.lambda
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.utils.enums.ServerRequestType.Companion.requestType
+import com.vapi4k.utils.enums.ServerRequestType.Companion.serverRequestType
 import com.vapi4k.utils.enums.ServerRequestType.END_OF_CALL_REPORT
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
@@ -58,7 +58,7 @@ internal object InboundCallActions {
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
   ) {
-    val requestContext = RequestContext(
+    val requestContext = RequestContextImpl(
       application = application,
       request = call.receive<String>().toJsonElement(),
       sessionId = call.getQueryParam(SESSION_ID)?.toSessionId() ?: INBOUND_CALL.getRandomSessionId(),
@@ -83,9 +83,9 @@ internal object InboundCallActions {
 
   private suspend fun KtorCallContext.processInboundCallRequest(
     config: Vapi4kConfigImpl,
-    requestContext: RequestContext,
+    requestContext: RequestContextImpl,
   ) {
-    val requestType = requestContext.request.requestType
+    val requestType = requestContext.request.serverRequestType
     invokeRequestCallbacks(config, requestContext)
 
     val (response, duration) =

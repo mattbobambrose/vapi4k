@@ -17,14 +17,14 @@
 package com.vapi4k.dsl.squad
 
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.server.RequestContext
+import com.vapi4k.server.RequestContextImpl
 
 internal interface SquadIdSource {
   var squadId: String
 }
 
 class SquadIdImpl internal constructor(
-  internal val requestContext: RequestContext,
+  internal val requestContext: RequestContextImpl,
   private val squadIdSource: SquadIdSource,
 ) : SquadId {
   override var id
