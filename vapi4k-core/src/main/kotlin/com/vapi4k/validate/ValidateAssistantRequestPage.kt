@@ -297,7 +297,7 @@ object ValidateAssistantRequestPage {
                 table {
                   tbody {
                     functionDetails.params
-                      .filter { it.second.asKClass() != JsonElement::class }
+                      .filter { it.second.asKClass() != RequestContext::class }
                       .forEach { functionDetail ->
                         tr {
                           td { +"${functionDetail.first}:" }
@@ -416,7 +416,7 @@ object ValidateAssistantRequestPage {
                 table {
                   tbody {
                     functionDetails.params
-                      .filter { it.second.asKClass() != JsonElement::class }
+                      .filter { it.second.asKClass() != RequestContext::class }
                       .forEach { functionDetail ->
                         tr {
                           td { +"${functionDetail.first}:" }
