@@ -16,14 +16,31 @@
 
 package com.vapi4k.dsl.web
 
-import com.vapi4k.api.web.VapiHtml
+import com.vapi4k.api.web.TalkButton
 import com.vapi4k.common.Constants.STATIC_BASE
+import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.SessionId
+import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
+import com.vapi4k.utils.HtmlUtils.rawHtml
+import com.vapi4k.utils.MiscUtils.appendQueryParams
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.script
 
 object VapiWeb {
-  fun HtmlBlockTag.vapi(block: VapiHtml.() -> Unit) {
+  fun HtmlBlockTag.vapiTalkButton(block: TalkButton.() -> Unit): SessionId {
+    val newSessionId = WEB.getRandomSessionId()
     script { src = "$STATIC_BASE/js/vapi-web-call.js" }
-    VapiHtmlImpl(this).apply(block)
+    script {
+      val js =
+        TalkButtonProperties()
+          .run {
+            TalkButtonImpl(this).apply(block)
+            verifyTalkButtonValues()
+            serverPath = serverPath.appendQueryParams(SESSION_ID to newSessionId.value)
+            invokeJsFunction()
+          }
+      rawHtml(js)
+    }
+    return newSessionId
   }
 }

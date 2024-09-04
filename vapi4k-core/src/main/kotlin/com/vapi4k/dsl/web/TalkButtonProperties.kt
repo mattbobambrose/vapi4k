@@ -18,7 +18,10 @@ package com.vapi4k.dsl.web
 
 import com.vapi4k.api.web.MethodType
 import com.vapi4k.api.web.TalkButton
+import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.utils.JsonUtils
+import com.vapi4k.utils.MiscUtils.removeEnds
 import kotlinx.serialization.json.JsonElement
 
 class TalkButtonProperties(
@@ -32,4 +35,25 @@ class TalkButtonProperties(
     require(serverPath.isNotBlank()) { "serverPath must be assigned in talkButton{}" }
     require(vapiPublicApiKey.isNotBlank()) { "vapiPublicApiKey must be assigned in talkButton{}" }
   }
+
+  fun invokeJsFunction(): String =
+    buildString {
+      appendLine()
+      append("\t\taddVapiButton(\n$INDENT")
+      appendLine(
+        listOf(
+          "'$vapi4kBaseUrl/${WEB.pathPrefix}/${serverPath.removeEnds("/")}'",
+          "'$serverSecret'",
+          "'$vapiPublicApiKey'",
+          "'${method.name}'",
+          "JSON.parse('$postArgs')",
+        ).joinToString(",\n$INDENT"),
+      )
+      appendLine("\t\t);")
+    }
+
+  companion object {
+    private const val INDENT = "\t\t\t"
+  }
+
 }

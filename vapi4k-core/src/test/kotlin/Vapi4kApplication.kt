@@ -173,7 +173,7 @@ fun Application.module() {
 
     webApplication {
       serverPath = "/talkSquad"
-      serverSecret = "12345"
+      // serverSecret = "12345"
 
       onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { request ->
         logger.info { "Assistant requests: ${request.requestType} \n${request.toJsonString()}" }
@@ -185,9 +185,9 @@ fun Application.module() {
             member {
               memberAssistant("Jane")
             }
-            member {
-              memberAssistant("Sarah")
-            }
+//            member {
+//              memberAssistant("Sarah")
+//            }
           }
         }
 
