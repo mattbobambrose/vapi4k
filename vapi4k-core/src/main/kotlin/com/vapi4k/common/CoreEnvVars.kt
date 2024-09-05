@@ -33,6 +33,12 @@ object CoreEnvVars {
     maskFunc = { it.obfuscate(1) },
   )
 
+  private val VAPI_PUBLIC_KEY = EnvVar(
+    name = "VAPI_PUBLIC_KEY",
+    src = { System.getenv(name) ?: "" },
+    maskFunc = { it.obfuscate(1) },
+  )
+
   private val VAPI_PHONE_NUMBER_ID = EnvVar(
     name = "VAPI_PHONE_NUMBER_ID",
     src = { System.getenv(name) ?: "" },
@@ -59,6 +65,7 @@ object CoreEnvVars {
   val isProduction: Boolean = IS_PRODUCTION.toBoolean()
   val vapi4kBaseUrl: String = VAPI4K_BASE_URL.value.removeSuffix("/")
   val vapiBaseUrl: String = VAPI_BASE_URL.value.removeSuffix("/")
+  val vapiPublicKey: String = VAPI_PUBLIC_KEY.value
   val vapiPrivateKey: String = VAPI_PRIVATE_KEY.value
   val vapiPhoneNumberId: String = VAPI_PHONE_NUMBER_ID.value
 
