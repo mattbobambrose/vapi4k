@@ -36,7 +36,7 @@ import kotlinx.coroutines.channels.Channel
 
 typealias RequestArgs = suspend (RequestContext) -> Unit
 typealias ResponseArgs = suspend (ResponseContext) -> Unit
-typealias KtorCallContext = PipelineContext<Unit, ApplicationCall>
+typealias PipelineCall = PipelineContext<Unit, ApplicationCall>
 
 class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   init {

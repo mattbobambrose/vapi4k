@@ -26,7 +26,7 @@ import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
-import com.vapi4k.dsl.vapi4k.KtorCallContext
+import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.responses.FunctionResponse.Companion.getFunctionCallResponse
@@ -54,7 +54,7 @@ import io.ktor.server.response.respondText
 import kotlin.time.measureTimedValue
 
 internal object InboundCallActions {
-  internal suspend fun KtorCallContext.inboundCallRequest(
+  internal suspend fun PipelineCall.inboundCallRequest(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
   ) {
@@ -81,7 +81,7 @@ internal object InboundCallActions {
     }
   }
 
-  private suspend fun KtorCallContext.processInboundCallRequest(
+  private suspend fun PipelineCall.processInboundCallRequest(
     config: Vapi4kConfigImpl,
     requestContext: RequestContextImpl,
   ) {

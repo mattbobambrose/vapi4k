@@ -28,8 +28,8 @@ import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
-import com.vapi4k.dsl.vapi4k.KtorCallContext
 import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
+import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dsl.vapi4k.WebApplicationImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
@@ -71,7 +71,7 @@ import kotlinx.serialization.json.put
 import kotlin.time.measureTimedValue
 
 internal object OutboundCallAndWebActions {
-  internal suspend fun KtorCallContext.outboundCallAndWebRequest(
+  internal suspend fun PipelineCall.outboundCallAndWebRequest(
     config: Vapi4kConfigImpl,
     application: AbstractApplicationImpl,
     request: JsonElement,
@@ -99,7 +99,7 @@ internal object OutboundCallAndWebActions {
     }
   }
 
-  private suspend fun KtorCallContext.processOutboundCallAndWebRequest(
+  private suspend fun PipelineCall.processOutboundCallAndWebRequest(
     config: Vapi4kConfigImpl,
     requestContext: RequestContextImpl,
   ) {
@@ -160,7 +160,7 @@ internal object OutboundCallAndWebActions {
     invokeResponseCallbacks(config, requestContext, response, duration)
   }
 
-  internal fun KtorCallContext.buildRequestArg(json: JsonElement) =
+  internal fun PipelineCall.buildRequestArg(json: JsonElement) =
     if (json.isNotEmpty() && json.containsKey("message.type")) {
       json
     } else {

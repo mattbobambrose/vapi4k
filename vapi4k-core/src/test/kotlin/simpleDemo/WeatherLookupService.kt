@@ -33,45 +33,46 @@ class WeatherLookupService {
     city: String,
     state: String,
   ): String {
-    val currentTemperature = runBlocking {
-      val response =
+    val currentTemperature =
+      runBlocking {
+        val response =
+          httpClient
+            .get {
+              url {
+                protocol = URLProtocol.HTTP
+                host = "api.openweathermap.org"
+                encodedPath = "/geo/1.0/direct"
+                parameters.apply {
+                  append("q", "$city,$state,US")
+                  append("limit", "5")
+                  append("appid", getLocationAPIKey())
+                }
+              }
+            }
+        val je = response
+          .bodyAsText()
+          .toJsonElement()
+          .toJsonElementList()
+          .first()
+
         httpClient
           .get {
             url {
-              protocol = URLProtocol.HTTP
-              host = "api.openweathermap.org"
-              encodedPath = "/geo/1.0/direct"
+              protocol = URLProtocol.HTTPS
+              host = "api.open-meteo.com"
+              encodedPath = "/v1/forecast"
               parameters.apply {
-                append("q", "$city,$state,US")
-                append("limit", "5")
-                append("appid", getLocationAPIKey())
+                append("latitude", je.stringValue("lat"))
+                append("longitude", je.stringValue("lon"))
+                append("timezone", "PST")
+                append("temperature_unit", "fahrenheit")
+                append("current", "temperature_1000hPa")
               }
             }
-          }
-      val je = response
-        .bodyAsText()
-        .toJsonElement()
-        .toJsonElementList()
-        .first()
-
-      httpClient
-        .get {
-          url {
-            protocol = URLProtocol.HTTPS
-            host = "api.open-meteo.com"
-            encodedPath = "/v1/forecast"
-            parameters.apply {
-              append("latitude", je.stringValue("lat"))
-              append("longitude", je.stringValue("lon"))
-              append("timezone", "PST")
-              append("temperature_unit", "fahrenheit")
-              append("current", "temperature_1000hPa")
-            }
-          }
-        }.bodyAsText()
-        .toJsonElement()
-        .stringValue("current.temperature_1000hPa")
-    }
+          }.bodyAsText()
+          .toJsonElement()
+          .stringValue("current.temperature_1000hPa")
+      }
     return "The real weather in $city, $state is $currentTemperature degrees Fahrenheit"
   }
 

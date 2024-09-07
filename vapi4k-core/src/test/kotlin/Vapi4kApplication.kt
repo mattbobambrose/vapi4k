@@ -37,13 +37,12 @@ import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
 import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
-import io.ktor.http.ContentType
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.response.respondText
+import io.ktor.server.html.respondHtml
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import io.micrometer.prometheusmetrics.PrometheusConfig
@@ -64,7 +63,7 @@ fun Application.module() {
 
   routing {
     get("/talk") {
-      call.respondText(talkPage(), contentType = ContentType.Text.Html)
+      call.respondHtml { talkPage() }
     }
   }
 

@@ -52,6 +52,7 @@ import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.validate.TailwindPage.tailwindPage
 import com.vapi4k.validate.ValidateApplicationPage.validateApplicationPage
 import com.vapi4k.validate.ValidateRootPage.validateRootPage
 import com.vapi4k.validate.ValidateToolInvokePage.validateToolInvokePage
@@ -67,6 +68,7 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
+import io.ktor.server.html.respondHtml
 import io.ktor.server.http.content.staticResources
 import io.ktor.server.request.path
 import io.ktor.server.request.receive
@@ -131,6 +133,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       get(VERSION_PATH) { call.respondText(Application.Json) { Vapi4kServer::class.versionDesc(true) } }
 
+      get("/tailwind") { call.respondHtml { tailwindPage() } }
       if (!isProduction) {
         get("/") { call.respondRedirect(VALIDATE_PATH) }
 

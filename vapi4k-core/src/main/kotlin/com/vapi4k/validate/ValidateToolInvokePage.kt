@@ -25,7 +25,7 @@ import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.common.QueryParams.TOOL_TYPE
 import com.vapi4k.common.SessionId.Companion.toSessionId
-import com.vapi4k.dsl.vapi4k.KtorCallContext
+import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomString
@@ -49,7 +49,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
 object ValidateToolInvokePage {
-  suspend fun KtorCallContext.validateToolInvokePage(config: Vapi4kConfigImpl) =
+  suspend fun PipelineCall.validateToolInvokePage(config: Vapi4kConfigImpl) =
     runCatching {
       val applicationId = call.getQueryParam(APPLICATION_ID)?.toApplicationId() ?: missingQueryParam(APPLICATION_ID)
 
