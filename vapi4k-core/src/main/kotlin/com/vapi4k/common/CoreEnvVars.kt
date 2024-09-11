@@ -17,50 +17,51 @@
 package com.vapi4k.common
 
 import com.vapi4k.utils.MiscUtils.removeEnds
-import com.vapi4k.utils.common.Utils.obfuscate
 import com.vapi4k.utils.envvar.EnvVar
+import com.vapi4k.utils.envvar.EnvVar.Companion.getWithDefault
+import com.vapi4k.utils.envvar.EnvVar.Companion.obfuscate
 
 object CoreEnvVars {
-  private val IS_PRODUCTION = EnvVar("IS_PRODUCTION", { System.getenv(name) ?: "false" })
-  private val DEFAULT_SERVER_PATH = EnvVar("DEFAULT_SERVER_PATH", { System.getenv(name) ?: "/vapi4k" })
+  private val IS_PRODUCTION = EnvVar("IS_PRODUCTION", getWithDefault(false))
+  private val DEFAULT_SERVER_PATH = EnvVar("DEFAULT_SERVER_PATH", getWithDefault("/vapi4k"))
 
-  private val VAPI4K_BASE_URL = EnvVar("VAPI4K_BASE_URL", { System.getenv(name) ?: "http://localhost:8080" })
-  private val VAPI_BASE_URL = EnvVar("VAPI_BASE_URL", { System.getenv(name) ?: "https://api.vapi.ai" })
+  private val VAPI4K_BASE_URL = EnvVar("VAPI4K_BASE_URL", getWithDefault("http://localhost:8080"))
+  private val VAPI_BASE_URL = EnvVar("VAPI_BASE_URL", getWithDefault("https://api.vapi.ai"))
 
   private val VAPI_PRIVATE_KEY = EnvVar(
     name = "VAPI_PRIVATE_KEY",
-    src = { System.getenv(name) ?: "" },
-    maskFunc = { it.obfuscate(1) },
+    src = getWithDefault(""),
+    maskFunc = obfuscate(1),
   )
 
   private val VAPI_PUBLIC_KEY = EnvVar(
     name = "VAPI_PUBLIC_KEY",
-    src = { System.getenv(name) ?: "" },
-    maskFunc = { it.obfuscate(1) },
+    src = getWithDefault(""),
+    maskFunc = obfuscate(1),
   )
 
   private val VAPI_PHONE_NUMBER_ID = EnvVar(
     name = "VAPI_PHONE_NUMBER_ID",
-    src = { System.getenv(name) ?: "" },
-    maskFunc = { it.obfuscate(3) },
+    src = getWithDefault(""),
+    maskFunc = obfuscate(3),
   )
 
   internal val REQUEST_VALIDATION_FILENAME =
     EnvVar(
       name = "REQUEST_VALIDATION_FILENAME",
-      src = { System.getenv(name) ?: "/json/AssistantRequestValidation.json" },
+      src = getWithDefault("/json/AssistantRequestValidation.json"),
       reportOnBoot = false,
     )
 
   internal val TOOL_CACHE_CLEAN_PAUSE_MINS =
-    EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", { System.getenv(name) ?: "30" }, reportOnBoot = false)
+    EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", getWithDefault(30), reportOnBoot = false)
   internal val TOOL_CACHE_MAX_AGE_MINS =
-    EnvVar("TOOL_CACHE_MAX_AGE_MINS", { System.getenv(name) ?: "60" }, reportOnBoot = false)
+    EnvVar("TOOL_CACHE_MAX_AGE_MINS", getWithDefault(60), reportOnBoot = false)
 
   internal val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removeEnds("/") }
 
-  val PORT = EnvVar("PORT", { System.getenv(name) ?: "8080" })
-  val HOST = EnvVar("HOST", { System.getenv(name) ?: "unknown" })
+  val PORT = EnvVar("PORT", getWithDefault(8080))
+  val HOST = EnvVar("HOST", getWithDefault("unknown"))
 
   val isProduction: Boolean = IS_PRODUCTION.toBoolean()
   val vapi4kBaseUrl: String = VAPI4K_BASE_URL.value.removeSuffix("/")

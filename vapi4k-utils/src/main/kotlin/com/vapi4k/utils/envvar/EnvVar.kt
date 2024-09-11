@@ -18,6 +18,8 @@ package com.vapi4k.utils.envvar
 
 import com.typesafe.config.ConfigFactory
 import com.vapi4k.utils.common.Utils.isNull
+import com.vapi4k.utils.common.Utils.lambda
+import com.vapi4k.utils.common.Utils.obfuscate
 import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -27,10 +29,13 @@ class EnvVar(
   private val src: EnvVar.() -> Any,
   private val maskFunc: ((str: String) -> String)? = null,
   private val width: Int = 10,
+  val required: Boolean = false,
   val reportOnBoot: Boolean = true,
 ) {
   init {
     envVars[name] = this
+    if (required)
+      getRequired()
   }
 
   val value: String by lazy { src().toString() }
@@ -64,6 +69,14 @@ class EnvVar(
       // Without this, the logger will not throw a missing value exception when reporting the values at startup
       System.setProperty("kotlin-logging.throwOnMessageError", "true")
     }
+
+    fun obfuscate(freq: Int): String.() -> String = lambda { obfuscate(freq) }
+
+    fun getWithDefault(default: String): EnvVar.() -> String = lambda { System.getenv(name) ?: default }
+
+    fun getWithDefault(default: Int) = getWithDefault(default.toString())
+
+    fun getWithDefault(default: Boolean) = getWithDefault(default.toString())
 
     private val envVars = mutableMapOf<String, EnvVar>()
 
