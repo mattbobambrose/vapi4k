@@ -61,6 +61,7 @@ import kotlinx.html.InputType
 import kotlinx.html.TBODY
 import kotlinx.html.a
 import kotlinx.html.body
+import kotlinx.html.classes
 import kotlinx.html.code
 import kotlinx.html.div
 import kotlinx.html.form
@@ -132,7 +133,8 @@ object ValidateAssistantRequestPage {
           h3 { +"Vapi Server URL: ${application.serverUrl}" }
           h3 { +"Status: $status" }
           pre {
-            code(classes = "language-json line-numbers match-braces") {
+            code {
+              classes = setOf("language-json", "line-numbers", "match-braces")
               +responseBody.toJsonString()
             }
           }
@@ -464,9 +466,11 @@ object ValidateAssistantRequestPage {
   private fun DIV.displayResponse(divId: String) {
     script { rawHtml("setupPrismUpdate(`$divId`);\n") }
 
-    pre(classes = "code-pre") {
+    pre {
+      classes += "code-pre"
       id = "display-$divId"
-      code(classes = "language-json line-numbers match-braces") {
+      code {
+        classes = setOf("language-json", "line-numbers", "match-braces")
         id = "result-$divId"
       }
     }

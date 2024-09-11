@@ -24,6 +24,7 @@ object Constants {
   const val UNSPECIFIED_DEFAULT = "unspecified"
   const val UNKNOWN = "unknown"
   const val STATIC_BASE = "/core_static"
+  const val BS_BASE = "/bootstrap"
 
   const val FUNCTION_NAME = "functionName"
 

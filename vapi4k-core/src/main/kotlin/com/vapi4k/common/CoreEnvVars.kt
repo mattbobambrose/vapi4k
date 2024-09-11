@@ -61,7 +61,7 @@ object CoreEnvVars {
   internal val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removeEnds("/") }
 
   val PORT = EnvVar("PORT", getWithDefault(8080))
-  val HOST = EnvVar("HOST", getWithDefault("unknown"))
+  val HOST = EnvVar("HOST", getWithDefault("unknown"), reportOnBoot = false)
 
   val isProduction: Boolean = IS_PRODUCTION.toBoolean()
   val vapi4kBaseUrl: String = VAPI4K_BASE_URL.value.removeSuffix("/")

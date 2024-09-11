@@ -20,6 +20,7 @@ import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE
+import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
@@ -53,7 +54,6 @@ import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.validate.BootstrapPage.bootstrapPage
-import com.vapi4k.validate.TailwindPage.tailwindPage
 import com.vapi4k.validate.ValidateApplicationPage.validateApplicationPage
 import com.vapi4k.validate.ValidateRootPage.validateRootPage
 import com.vapi4k.validate.ValidateToolInvokePage.validateToolInvokePage
@@ -129,12 +129,11 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
     routing {
       staticResources(STATIC_BASE, "core_static")
+      staticResources(BS_BASE, "bootstrap")
 
       get(PING_PATH) { call.respondText("pong") }
 
       get(VERSION_PATH) { call.respondText(Application.Json) { Vapi4kServer::class.versionDesc(true) } }
-
-      get("/tailwind") { call.respondHtml { tailwindPage() } }
 
       get("/bootstrap") { call.respondHtml { bootstrapPage() } }
 
