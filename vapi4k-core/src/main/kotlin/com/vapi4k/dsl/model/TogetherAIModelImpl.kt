@@ -44,7 +44,7 @@ interface TogetherAIModelProperties {
   var numFastTurns: Int
 
   /**
-  This is the temperature that will be used for calls. Default is 0 to leverage caching for lower latency.
+  This is the temperature that will be used for calls.
    */
   var temperature: Double
 
