@@ -27,7 +27,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CustomLLMModelDto(
-  override var temperature: Int = -1,
+  override var temperature: Double = -1.0,
   override var maxTokens: Int = -1,
   override var emotionRecognitionEnabled: Boolean? = null,
   override var numFastTurns: Int = -1,

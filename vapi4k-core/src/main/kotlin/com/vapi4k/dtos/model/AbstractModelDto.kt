@@ -24,7 +24,7 @@ import kotlinx.serialization.Serializable
 // Not used for now
 @Serializable
 abstract class AbstractModelDto {
-  var temperature: Int = -1
+  var temperature: Double = -1.0
   var maxTokens: Int = -1
   var emotionRecognitionEnabled: Boolean? = null
   var numFastTurns: Int = -1

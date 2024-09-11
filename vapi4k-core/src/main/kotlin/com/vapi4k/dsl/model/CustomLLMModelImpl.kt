@@ -59,7 +59,7 @@ interface CustomLLMModelProperties {
   /**
   This is the temperature that will be used for calls. Default is 0 to leverage caching for lower latency.
    */
-  var temperature: Int
+  var temperature: Double
 
   /**
   These are the tools that the assistant can use during the call. To use transient tools, use `tools`.

@@ -28,7 +28,7 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class AnthropicModelDto(
-  override var temperature: Int = -1,
+  override var temperature: Double = -1.0,
   override var maxTokens: Int = -1,
   override var emotionRecognitionEnabled: Boolean? = null,
   override var numFastTurns: Int = -1,
