@@ -16,6 +16,7 @@
 
 package com.vapi4k.utils
 
+import kotlinx.html.FlowOrMetaDataOrPhrasingContent
 import kotlinx.html.HEAD
 import kotlinx.html.HTMLTag
 import kotlinx.html.TagConsumer
@@ -42,7 +43,7 @@ object HtmlUtils {
     }
   }
 
-  fun HEAD.js(vararg files: String) {
+  fun FlowOrMetaDataOrPhrasingContent.js(vararg files: String) {
     files.forEach { file ->
       script { src = file }
     }

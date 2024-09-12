@@ -20,7 +20,6 @@ import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CssNames.MAIN_DIV
-import com.vapi4k.common.Endpoints.ADMIN_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -33,7 +32,6 @@ import kotlinx.html.BODY
 import kotlinx.html.ButtonType
 import kotlinx.html.HTML
 import kotlinx.html.HTMLTag
-import kotlinx.html.MAIN
 import kotlinx.html.SVG
 import kotlinx.html.UL
 import kotlinx.html.a
@@ -48,12 +46,10 @@ import kotlinx.html.img
 import kotlinx.html.li
 import kotlinx.html.main
 import kotlinx.html.meta
-import kotlinx.html.role
 import kotlinx.html.script
 import kotlinx.html.span
 import kotlinx.html.strong
 import kotlinx.html.style
-import kotlinx.html.svg
 import kotlinx.html.title
 import kotlinx.html.ul
 
@@ -69,20 +65,18 @@ internal object AdminPage {
   ) {
     attribs(
       "width" to width,
-      "height" to height
+      "height" to height,
     )
     rawHtml(
       """
            <use xlink:href="#$href"/>
-        """
+        """,
     )
   }
 
-  fun A.setHtmxTags(
-    app: AbstractApplicationImpl,
-  ) {
+  fun A.setHtmxTags(app: AbstractApplicationImpl) {
     attribs(
-      "hx-get" to "$ADMIN_PATH/$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
+      "hx-get" to "$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
       "hx-trigger" to "click",
       "hx-target" to "#$MAIN_DIV",
     )
@@ -149,7 +143,7 @@ internal object AdminPage {
                   <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
               </symbol>
           </svg>
-        """
+        """,
       )
 
       toggleTheme()
@@ -157,7 +151,6 @@ internal object AdminPage {
       declareSvgs()
 
       main("d-flex flex-nowrap") {
-
         div {
           classes = setOf("d-flex", "flex-column", "flex-shrink-0", "p-3", "bg-body-tertiary", "sidebar")
           style = "width: 280px;"
@@ -169,7 +162,7 @@ internal object AdminPage {
               "mb-md-0",
               "me-md-auto",
               "link-body-emphasis",
-              "text-decoration-none"
+              "text-decoration-none",
             )
             // svg("bi pe-none me-2") { details(40, 32, "bootstrap") }
             span {
@@ -192,7 +185,6 @@ internal object AdminPage {
 //                +"Home"
 //              }
 //            }
-
 
 //            button(classes = "btn  d-inline-flex align-items-center rounded border-0 collapsed") {
 //              attribs(
@@ -395,8 +387,10 @@ internal object AdminPage {
 
       script { rawHtml("updateMainPrismContent();\n") }
       script { rawHtml("updateSidebarSelected();\n") }
-      script { src = "$BS_BASE/dist/js/bootstrap.bundle.min.js" }
-      script { src = "$STATIC_BASE/js/sidebars.js" }
+      js(
+        "$BS_BASE/dist/js/bootstrap.bundle.min.js",
+        "$STATIC_BASE/js/sidebars.js",
+      )
     }
   }
 
@@ -429,7 +423,7 @@ internal object AdminPage {
                   <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
               </symbol>
           </svg>
-        """
+        """,
     )
   }
 
@@ -448,7 +442,7 @@ internal object AdminPage {
                   <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
                       <use href="#circle-half"></use>
                   </svg>
-                """
+                """,
         )
         span("visually-hidden") {
           id = "bd-theme-text"
@@ -468,7 +462,7 @@ internal object AdminPage {
                   <svg class="bi me-2 opacity-50" width="1em" height="1em">
                       <use href="#sun-fill"></use>
                   </svg>
-                """
+                """,
             )
             +"Light"
             rawHtml(
@@ -476,7 +470,7 @@ internal object AdminPage {
                   <svg class="bi ms-auto d-none" width="1em" height="1em">
                       <use href="#check2"></use>
                   </svg>
-                """
+                """,
             )
           }
         }
@@ -491,7 +485,7 @@ internal object AdminPage {
                   <svg class="bi me-2 opacity-50" width="1em" height="1em">
                       <use href="#moon-stars-fill"></use>
                   </svg>
-                """
+                """,
             )
             +"Dark"
             rawHtml(
@@ -499,7 +493,7 @@ internal object AdminPage {
                   <svg class="bi ms-auto d-none" width="1em" height="1em">
                       <use href="#check2"></use>
                   </svg>
-                """
+                """,
             )
           }
         }
@@ -513,7 +507,7 @@ internal object AdminPage {
                   <svg class="bi me-2 opacity-50" width="1em" height="1em">
                       <use href="#circle-half"></use>
                   </svg>
-                """
+                """,
             )
             +"Auto"
             rawHtml(
@@ -521,442 +515,8 @@ internal object AdminPage {
                   <svg class="bi ms-auto d-none" width="1em" height="1em">
                       <use href="#check2"></use>
                   </svg>
-                """
+                """,
             )
-          }
-        }
-      }
-    }
-  }
-
-  private fun MAIN.collapsible() {
-    div("flex-shrink-0 p-3") {
-      style = "width: 280px;"
-      a(classes = "d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom") {
-        href = "/"
-        svg("bi pe-none me-2") {
-          details(30, 24, "bootstrap")
-        }
-        span("fs-5 fw-semibold") { +"Collapsible" }
-      }
-      ul("list-unstyled ps-0") {
-        li("mb-1") {
-          button(classes = "btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed") {
-            attribs(
-              "data-bs-toggle" to "collapse",
-              "data-bs-target" to "#home-collapse",
-              "aria-expanded" to "true",
-            )
-            +"Home"
-          }
-          div("collapse show") {
-            id = "home-collapse"
-            ul("btn-toggle-nav list-unstyled fw-normal pb-1 small") {
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"""Overview"""
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"""Updates"""
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"""Reports"""
-                }
-              }
-            }
-          }
-        }
-        li("mb-1") {
-          button(classes = "btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed") {
-            attributes["data-bs-toggle"] = "collapse"
-            attributes["data-bs-target"] = "#dashboard-collapse"
-            attributes["aria-expanded"] = "false"
-            +"Dashboard"
-          }
-          div("collapse") {
-            id = "dashboard-collapse"
-            ul("btn-toggle-nav list-unstyled fw-normal pb-1 small") {
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Overview"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Weekly"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Monthly"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Annually"
-                }
-              }
-            }
-          }
-        }
-        li("mb-1") {
-          button(classes = "btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed") {
-            attributes["data-bs-toggle"] = "collapse"
-            attributes["data-bs-target"] = "#orders-collapse"
-            attributes["aria-expanded"] = "false"
-            +"Orders"
-          }
-          div("collapse") {
-            id = "orders-collapse"
-            ul("btn-toggle-nav list-unstyled fw-normal pb-1 small") {
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"New"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Processed"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Shipped"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Returned"
-                }
-              }
-            }
-          }
-        }
-        li("border-top my-3") {
-        }
-        li("mb-1") {
-          button(classes = "btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed") {
-            attributes["data-bs-toggle"] = "collapse"
-            attributes["data-bs-target"] = "#account-collapse"
-            attributes["aria-expanded"] = "false"
-            +"Account"
-          }
-          div("collapse") {
-            id = "account-collapse"
-            ul("btn-toggle-nav list-unstyled fw-normal pb-1 small") {
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"New..."
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Profile"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Settings"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-                  href = "#"
-                  +"Sign out"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  private fun MAIN.iconOnly() {
-    div("d-flex flex-column flex-shrink-0 bg-body-tertiary") {
-      style = "width: 4.5rem;"
-      a(classes = "d-block p-3 link-body-emphasis text-decoration-none") {
-        href = "/"
-        title = "Icon-only"
-        attributes["data-bs-toggle"] = "tooltip"
-        attributes["data-bs-placement"] = "right"
-        svg("bi pe-none") {
-          details(40, 32, "bootstrap")
-        }
-        span("visually-hidden") { +"""Icon-only""" }
-      }
-      ul("nav nav-pills nav-flush flex-column mb-auto text-center") {
-        li("nav-item") {
-          a(classes = "nav-link active py-3 border-bottom rounded-0") {
-            attributes["aria-current"] = "page"
-            attributes["data-bs-toggle"] = "tooltip"
-            attributes["data-bs-placement"] = "right"
-            svg("bi pe-none") {
-              attributes["aria-label"] = "Home"
-              role = "img"
-              details(24, 24, "home")
-            }
-            href = "#"
-            title = "Home"
-          }
-        }
-        li {
-          a(classes = "nav-link py-3 border-bottom rounded-0") {
-            attributes["data-bs-toggle"] = "tooltip"
-            attributes["data-bs-placement"] = "right"
-            svg("bi pe-none") {
-              attributes["aria-label"] = "Dashboard"
-              role = "img"
-              details(24, 24, "speedometer2")
-            }
-            href = "#"
-            title = "Dashboard"
-          }
-        }
-        li {
-          a(classes = "nav-link py-3 border-bottom rounded-0") {
-            attributes["data-bs-toggle"] = "tooltip"
-            attributes["data-bs-placement"] = "right"
-            svg("bi pe-none") {
-              attributes["aria-label"] = "Orders"
-              role = "img"
-              details(24, 24, "table")
-            }
-            href = "#"
-            title = "Orders"
-          }
-        }
-        li {
-          a(classes = "nav-link py-3 border-bottom rounded-0") {
-            href = "#"
-            title = "Products"
-            attributes["data-bs-toggle"] = "tooltip"
-            attributes["data-bs-placement"] = "right"
-            svg("bi pe-none") {
-              attributes["aria-label"] = "Products"
-              role = "img"
-              details(24, 24, "grid")
-            }
-          }
-        }
-        li {
-          a(classes = "nav-link py-3 border-bottom rounded-0") {
-            href = "#"
-            title = "Customers"
-            attributes["data-bs-toggle"] = "tooltip"
-            attributes["data-bs-placement"] = "right"
-            svg("bi pe-none") {
-              attributes["aria-label"] = "Customers"
-              role = "img"
-              details(24, 24, "people-circle")
-            }
-          }
-        }
-      }
-      div("dropdown border-top") {
-        a(classes = "d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle") {
-          href = "#"
-          attributes["data-bs-toggle"] = "dropdown"
-          attributes["aria-expanded"] = "false"
-          img(classes = "rounded-circle") {
-            src = "https://github.com/mdo.png"
-            alt = "mdo"
-            width = "24"
-            height = "24"
-          }
-        }
-        ul("dropdown-menu text-small shadow") {
-          li {
-            a(classes = "dropdown-item") {
-              href = "#"
-              +"""New project..."""
-            }
-          }
-          li {
-            a(classes = "dropdown-item") {
-              href = "#"
-              +"""Settings"""
-            }
-          }
-          li {
-            a(classes = "dropdown-item") {
-              href = "#"
-              +"""Profile"""
-            }
-          }
-          li {
-            hr("dropdown-divider") {
-            }
-          }
-          li {
-            a(classes = "dropdown-item") {
-              href = "#"
-              +"""Sign out"""
-            }
-          }
-        }
-      }
-    }
-  }
-
-  private fun MAIN.spacer() {
-    div("b-example-divider b-example-vr") {}
-  }
-
-  private fun MAIN.column1() {
-    div("d-flex flex-column flex-shrink-0 p-3 text-bg-dark") {
-      style = "width: 280px;"
-      a(classes = "d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none") {
-        href = "/"
-        svg("bi pe-none me-2") {
-          details(40, 32, "bootstrap")
-        }
-        span("fs-4") { +"""Sidebar""" }
-      }
-      hr {
-      }
-      ul("nav nav-pills flex-column mb-auto") {
-        li("nav-item") {
-          a(classes = "nav-link active") {
-            href = "#"
-            attributes["aria-current"] = "page"
-            svg("bi pe-none me-2") {
-              details(16, 16, "home")
-            }
-            +"Home"
-          }
-        }
-        li {
-          a(classes = "nav-link text-white") {
-            href = "#"
-            svg("bi pe-none me-2") {
-              details(16, 16, "speedometer2")
-            }
-            +"Dashboard"
-          }
-        }
-        li {
-          a(classes = "nav-link text-white") {
-            href = "#"
-            svg("bi pe-none me-2") {
-              details(16, 16, "table")
-            }
-            +"Orders"
-          }
-        }
-        li("mb-1") {
-          button(classes = "btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed text-white") {
-            attributes["data-bs-toggle"] = "collapse"
-            attributes["data-bs-target"] = "#home-collapse"
-            attributes["aria-expanded"] = "true"
-            svg("bi pe-none me-2") {
-              details(16, 16, "table")
-            }
-            +"Home"
-          }
-          div("collapse show") {
-            id = "home-collapse"
-            ul("btn-toggle-nav list-unstyled fw-normal pb-1 small") {
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded text-white") {
-                  href = "#"
-                  +"Overview"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded text-white") {
-                  href = "#"
-                  +"Updates"
-                }
-              }
-              li {
-                a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded text-white") {
-                  href = "#"
-                  +"""Reports"""
-                }
-              }
-            }
-          }
-        }
-        li {
-          a(classes = "nav-link text-white") {
-            href = "#"
-            svg("bi pe-none me-2") {
-              details(16, 16, "grid")
-            }
-            +"Products"
-          }
-        }
-        li {
-          a(classes = "nav-link text-white") {
-            href = "#"
-            svg("bi pe-none me-2") {
-              details(16, 16, "people-circle")
-            }
-            +"Customers"
-          }
-        }
-      }
-      hr {}
-      div("dropdown") {
-        a(classes = "d-flex align-items-center text-white text-decoration-none dropdown-toggle") {
-          href = "#"
-          attributes["data-bs-toggle"] = "dropdown"
-          attributes["aria-expanded"] = "false"
-          img(classes = "rounded-circle me-2") {
-            src = "https://github.com/mdo.png"
-            alt = ""
-            width = "32"
-            height = "32"
-          }
-          strong { +"""mdozzz""" }
-        }
-        ul("dropdown-menu dropdown-menu-dark text-small shadow") {
-          li {
-            a(classes = "dropdown-item") {
-              href = "#"
-              +"""New project..."""
-            }
-          }
-          li {
-            a(classes = "dropdown-item") {
-              href = "#"
-              +"""Settings"""
-            }
-          }
-          li {
-            a(classes = "dropdown-item") {
-              href = "#"
-              +"""Profile"""
-            }
-          }
-          li {
-            hr("dropdown-divider") {
-            }
-          }
-          li {
-            a(classes = "dropdown-item") {
-              href = "#"
-              +"""Sign out"""
-            }
           }
         }
       }

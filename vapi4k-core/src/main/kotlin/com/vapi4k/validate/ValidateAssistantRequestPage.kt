@@ -21,15 +21,13 @@ import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.AssistantId.Companion.getAssistantIdFromSuffix
 import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.FUNCTION_NAME
-import com.vapi4k.common.Constants.HTMX_SOURCE_URL
-import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CssNames.FUNCTIONS
 import com.vapi4k.common.CssNames.MANUAL_TOOLS
 import com.vapi4k.common.CssNames.MESSAGE_RESPONSE
 import com.vapi4k.common.CssNames.SERVICE_TOOLS
 import com.vapi4k.common.CssNames.TOOLS_DIV
+import com.vapi4k.common.CssNames.VALIDATION_DATA
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
-import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.FunctionName
 import com.vapi4k.common.FunctionName.Companion.toFunctionName
 import com.vapi4k.common.QueryParams.APPLICATION_ID
@@ -38,13 +36,10 @@ import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.TOOL_TYPE
 import com.vapi4k.dsl.functions.ToolCallInfo.Companion.ID_SEPARATOR
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
-import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomString
-import com.vapi4k.utils.HtmlUtils.css
 import com.vapi4k.utils.HtmlUtils.html
-import com.vapi4k.utils.HtmlUtils.js
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.JsonUtils.getFunctionNames
 import com.vapi4k.utils.JsonUtils.getToolNames
@@ -61,23 +56,18 @@ import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
 import com.vapi4k.validate.AdminPage.attribs
 import io.ktor.http.HttpStatusCode
-import kotlinx.html.BODY
 import kotlinx.html.DIV
 import kotlinx.html.FORM
-import kotlinx.html.HTML
 import kotlinx.html.InputType
 import kotlinx.html.TBODY
 import kotlinx.html.TagConsumer
 import kotlinx.html.a
-import kotlinx.html.body
-import kotlinx.html.button
 import kotlinx.html.classes
 import kotlinx.html.code
 import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h2
 import kotlinx.html.h3
-import kotlinx.html.head
 import kotlinx.html.hiddenInput
 import kotlinx.html.id
 import kotlinx.html.input
@@ -90,78 +80,42 @@ import kotlinx.html.style
 import kotlinx.html.table
 import kotlinx.html.tbody
 import kotlinx.html.td
-import kotlinx.html.title
 import kotlinx.html.tr
 import kotlinx.html.ul
 import kotlinx.serialization.json.JsonElement
 
 object ValidateAssistantRequestPage {
-  fun HTML.validateAssistantRequestPage(
-    config: Vapi4kConfigImpl,
-    application: AbstractApplicationImpl,
-    requestContext: RequestContextImpl,
-    status: HttpStatusCode,
-    responseBody: String,
-  ) {
-    head {
-      css(
-        "$STATIC_BASE/css/styles.css",
-        "$STATIC_BASE/css/prism.css",
-        "$STATIC_BASE/css/validator-body.css",
-        "$STATIC_BASE/css/validator.css",
-      )
-
-      js(
-        HTMX_SOURCE_URL,
-        "$STATIC_BASE/js/update-prism-content.js",
-        "$STATIC_BASE/js/prism.js",
-      )
-
-      title { +"Assistant Request Validation" }
-    }
-    body {
-      if (config.allWebAndInboundApplications.size > 1)
-        displayBackButton()
-
-      h2 { +"Assistant Request Response" }
-
-//      if (status == HttpStatusCode.OK) {
-//        displayAssistantResponse(application, status, responseBody)
-//        displayTools(responseBody, requestContext)
-//      } else {
-//        displayError(application, status, responseBody)
-//      }
-    }
-  }
-
   fun validateAssistantRequestBody(
     application: AbstractApplicationImpl,
     requestContext: RequestContextImpl,
     status: HttpStatusCode,
     responseBody: String,
-  ) =
+  ): String =
     html {
       // h2 { +"Assistant Request Response" }
 
-      nav("navbar navbar-expand-lg bg-body-tertiary") {
-        div("container-fluid") {
-          a(classes = "navbar-brand") {
-            href = "#"
-            +"Application"
-          }
+      nav {
+        classes = setOf("navbar", "navbar-expand-lg", "bg-body-tertiary")
+        div {
+          classes += "container-fluid"
+//          a(classes = "navbar-brand") {
+//            href = "#"
+//            +"Application"
+//          }
 
-          button(classes = "navbar-toggler") {
-            type = kotlinx.html.ButtonType.button
-            attributes["data-bs-toggle"] = "collapse"
-            attributes["data-bs-target"] = "#navbarNav"
-            attributes["aria-controls"] = "navbarNav"
-            attributes["aria-expanded"] = "false"
-            attributes["aria-label"] = "Toggle navigation"
-            span("navbar-toggler-icon") {
-            }
-          }
+//          button(classes = "navbar-toggler") {
+//            type = kotlinx.html.ButtonType.button
+//            attributes["data-bs-toggle"] = "collapse"
+//            attributes["data-bs-target"] = "#navbarNav"
+//            attributes["aria-controls"] = "navbarNav"
+//            attributes["aria-expanded"] = "false"
+//            attributes["aria-label"] = "Toggle navigation"
+//            span("navbar-toggler-icon") {
+//            }
+//          }
 
-          div("collapse navbar-collapse") {
+          div {
+            classes = setOf("collapse", "navbar-collapse")
             id = "navbarNav"
             ul {
               classes += "navbar-nav"
@@ -171,7 +125,6 @@ object ValidateAssistantRequestPage {
                   classes = setOf("nav-link", "active")
                   id = "$MESSAGE_RESPONSE-tab"
                   attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
-
                   attributes["aria-current"] = "page"
                   +"Message Response"
                 }
@@ -208,6 +161,7 @@ object ValidateAssistantRequestPage {
           }
         }
       }
+
       if (status == HttpStatusCode.OK) {
         displayAssistantResponse(application, responseBody)
         displayTools(responseBody, requestContext)
@@ -216,55 +170,12 @@ object ValidateAssistantRequestPage {
       }
     }
 
-  private fun TagConsumer<*>.displayError(
-    application: AbstractApplicationImpl,
-    status: HttpStatusCode,
-    responseBody: String,
-  ) {
-    h3 {
-      +"Vapi Server URL: "
-      a {
-        href = application.serverUrl
-        target = "_blank"
-        +application.serverUrl
-      }
-    }
-
-    h3 { +"Status: $status" }
-    if (responseBody.isNotEmpty()) {
-      if (responseBody.length < 80) {
-        h3 { +"Error: $responseBody" }
-      } else {
-        h3 { +"Error:" }
-        pre { +responseBody }
-      }
-    } else {
-      h3 { +"Check the ktor log for error information." }
-    }
-  }
-
-  private fun BODY.displayBackButton() {
-    div {
-      id = "back-div"
-
-      a {
-        style = "text-decoration: none;"
-        href = VALIDATE_PATH
-        +"⬅️ "
-      }
-      a {
-        href = VALIDATE_PATH
-        +"Back"
-      }
-    }
-  }
-
-  fun TagConsumer<*>.displayAssistantResponse(
+  private fun TagConsumer<*>.displayAssistantResponse(
     application: AbstractApplicationImpl,
     responseBody: String,
   ) {
     div {
-      classes = setOf("validation-data")
+      classes += VALIDATION_DATA
       id = "$MESSAGE_RESPONSE-data"
       div {
         id = "response-header"
@@ -327,6 +238,38 @@ object ValidateAssistantRequestPage {
     }
   }
 
+  private fun TagConsumer<*>.displayError(
+    application: AbstractApplicationImpl,
+    status: HttpStatusCode,
+    responseBody: String,
+  ) {
+    div {
+      classes += VALIDATION_DATA
+      id = "$MESSAGE_RESPONSE-data"
+
+      h3 {
+        +"Vapi Server URL: "
+        a {
+          href = application.serverUrl
+          target = "_blank"
+          +application.serverUrl
+        }
+      }
+
+      h3 { +"Status: $status" }
+      if (responseBody.isNotEmpty()) {
+        if (responseBody.length < 80) {
+          h3 { +"Error: $responseBody" }
+        } else {
+          h3 { +"Error:" }
+          pre { +responseBody }
+        }
+      } else {
+        h3 { +"Check the ktor log for error information." }
+      }
+    }
+  }
+
   private fun getAssistantName(
     assistantElement: JsonElement,
     index: Int,
@@ -343,17 +286,17 @@ object ValidateAssistantRequestPage {
     val toolNames = jsonElement.getToolNames(key)
     val funcNames = jsonElement.getFunctionNames(key)
     div {
-      classes = setOf("validation-data", "hidden")
+      classes = setOf(VALIDATION_DATA, "hidden")
       id = "$SERVICE_TOOLS-data"
       displayServiceTools(requestContext, toolNames)
     }
     div {
-      classes = setOf("validation-data", "hidden")
+      classes = setOf(VALIDATION_DATA, "hidden")
       id = "$MANUAL_TOOLS-data"
       displayManualTools(requestContext, toolNames)
     }
     div {
-      classes = setOf("validation-data", "hidden")
+      classes = setOf(VALIDATION_DATA, "hidden")
       id = "$FUNCTIONS-data"
       displayFunctions(requestContext, funcNames)
     }
@@ -364,7 +307,7 @@ object ValidateAssistantRequestPage {
     toolNames: List<String>,
   ) {
     if (requestContext.application.hasServiceTools()) {
-      h3 { +"Service Tools" }
+//      h3 { +"Service Tools" }
       val serviceCache = requestContext.application.serviceToolCache
       toolNames
         .mapIndexed { i, name ->
@@ -428,7 +371,7 @@ object ValidateAssistantRequestPage {
     toolNames: List<String>,
   ) {
     if (requestContext.application.hasManualTools()) {
-      h3 { +"Manual Tools" }
+//      h3 { +"Manual Tools" }
       toolNames
         .mapIndexed { i, name ->
           name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
@@ -483,7 +426,7 @@ object ValidateAssistantRequestPage {
     funcNames: List<String>,
   ) {
     if (requestContext.application.hasFunctions()) {
-      h3 { +"Functions" }
+//      h3 { +"Functions" }
       val functionCache = requestContext.application.functionCache
       funcNames
         .mapIndexed { i, name ->

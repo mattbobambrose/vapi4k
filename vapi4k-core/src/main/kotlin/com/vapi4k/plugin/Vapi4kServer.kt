@@ -25,7 +25,6 @@ import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
-import com.vapi4k.common.Endpoints.ADMIN_PATH
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
@@ -163,8 +162,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           get { clearCaches(config) }
         }
         get(VALIDATE_PATH) { validateRootPage(config) }
-        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config, true) }
-        get("$ADMIN_PATH/$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config, false) }
+        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config) }
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokePage(config) }
       }
 
