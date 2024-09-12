@@ -41,7 +41,6 @@ import kotlinx.html.body
 import kotlinx.html.button
 import kotlinx.html.classes
 import kotlinx.html.div
-import kotlinx.html.h1
 import kotlinx.html.head
 import kotlinx.html.hr
 import kotlinx.html.id
@@ -74,7 +73,7 @@ internal object AdminPage {
     )
     rawHtml(
       """
-                <use xlink:href="#$href"/>
+           <use xlink:href="#$href"/>
         """
     )
   }
@@ -98,7 +97,6 @@ internal object AdminPage {
           "text-decoration-none",
           "rounded",
           "sidebar-menu-item",
-          // "nav-link", // This is used with active to highlight the current page
         )
         setHtmxTags(app)
         +app.serverPath.ensureStartsWith("/")
@@ -159,20 +157,31 @@ internal object AdminPage {
       declareSvgs()
 
       main("d-flex flex-nowrap") {
-        h1("visually-hidden") { +"Sidebars examples" }
 
-        div("d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary") {
+        div {
+          classes = setOf("d-flex", "flex-column", "flex-shrink-0", "p-3", "bg-body-tertiary", "sidebar")
           style = "width: 280px;"
-          a(classes = "d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none") {
-            href = "/"
-            svg("bi pe-none me-2") { details(40, 32, "bootstrap") }
-            span("fs-4") { +"Vapi4k Admin" }
+          span {
+            classes = setOf(
+              "d-flex",
+              "align-items-center",
+              "mb-3",
+              "mb-md-0",
+              "me-md-auto",
+              "link-body-emphasis",
+              "text-decoration-none"
+            )
+            // svg("bi pe-none me-2") { details(40, 32, "bootstrap") }
+            span {
+              classes += "fs-4"
+              +"Vapi4k Admin"
+            }
           }
 
           hr {}
 
-          ul("nav nav-pills flex-column mb-auto") {
-
+          ul {
+            classes = setOf("nav", "nav-pills", "flex-column", "mb-auto")
 //            li("nav-item") {
 //              a(classes = "nav-link active") {
 //                href = "#"
@@ -185,15 +194,15 @@ internal object AdminPage {
 //            }
 
 
-            button(classes = "btn  d-inline-flex align-items-center rounded border-0 collapsed") {
-              attribs(
-                "data-bs-toggle" to "collapse",
-                "data-bs-target" to "#validator-collapse",
-                "aria-expanded" to "true",
-              )
-              svg("bi pe-none me-2") { details(16, 16, "table") }
-              +"Application Validator"
-            }
+//            button(classes = "btn  d-inline-flex align-items-center rounded border-0 collapsed") {
+//              attribs(
+//                "data-bs-toggle" to "collapse",
+//                "data-bs-target" to "#validator-collapse",
+//                "aria-expanded" to "true",
+//              )
+//              svg("bi pe-none me-2") { details(16, 16, "table") }
+//              +"Application Validator"
+//            }
 
             li("mb-1") {
               button {

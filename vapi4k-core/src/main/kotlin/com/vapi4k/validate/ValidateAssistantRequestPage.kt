@@ -23,6 +23,10 @@ import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
+import com.vapi4k.common.CssNames.FUNCTIONS
+import com.vapi4k.common.CssNames.MANUAL_TOOLS
+import com.vapi4k.common.CssNames.MESSAGE_RESPONSE
+import com.vapi4k.common.CssNames.SERVICE_TOOLS
 import com.vapi4k.common.CssNames.TOOLS_DIV
 import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
@@ -66,6 +70,7 @@ import kotlinx.html.TBODY
 import kotlinx.html.TagConsumer
 import kotlinx.html.a
 import kotlinx.html.body
+import kotlinx.html.button
 import kotlinx.html.classes
 import kotlinx.html.code
 import kotlinx.html.div
@@ -76,6 +81,8 @@ import kotlinx.html.head
 import kotlinx.html.hiddenInput
 import kotlinx.html.id
 import kotlinx.html.input
+import kotlinx.html.li
+import kotlinx.html.nav
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.span
@@ -85,6 +92,7 @@ import kotlinx.html.tbody
 import kotlinx.html.td
 import kotlinx.html.title
 import kotlinx.html.tr
+import kotlinx.html.ul
 import kotlinx.serialization.json.JsonElement
 
 object ValidateAssistantRequestPage {
@@ -135,6 +143,71 @@ object ValidateAssistantRequestPage {
     html {
       // h2 { +"Assistant Request Response" }
 
+      nav("navbar navbar-expand-lg bg-body-tertiary") {
+        div("container-fluid") {
+          a(classes = "navbar-brand") {
+            href = "#"
+            +"Application"
+          }
+
+          button(classes = "navbar-toggler") {
+            type = kotlinx.html.ButtonType.button
+            attributes["data-bs-toggle"] = "collapse"
+            attributes["data-bs-target"] = "#navbarNav"
+            attributes["aria-controls"] = "navbarNav"
+            attributes["aria-expanded"] = "false"
+            attributes["aria-label"] = "Toggle navigation"
+            span("navbar-toggler-icon") {
+            }
+          }
+
+          div("collapse navbar-collapse") {
+            id = "navbarNav"
+            ul {
+              classes += "navbar-nav"
+              li {
+                classes += "nav-item"
+                a {
+                  classes = setOf("nav-link", "active")
+                  id = "$MESSAGE_RESPONSE-tab"
+                  attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
+
+                  attributes["aria-current"] = "page"
+                  +"Message Response"
+                }
+              }
+
+              li("nav-item") {
+                a {
+                  classes += "nav-link"
+                  id = "$SERVICE_TOOLS-tab"
+                  attribs("hx-on:click" to "selectTab('$SERVICE_TOOLS')")
+                  href = "#"
+                  +"Service Tools"
+                }
+              }
+
+              li("nav-item") {
+                a {
+                  classes += "nav-link"
+                  id = "$MANUAL_TOOLS-tab"
+                  attribs("hx-on:click" to "selectTab('$MANUAL_TOOLS')")
+                  +"Manual Tools"
+                }
+              }
+
+              li("nav-item") {
+                a {
+                  classes += "nav-link"
+                  id = "$FUNCTIONS-tab"
+                  attribs("hx-on:click" to "selectTab('$FUNCTIONS')")
+                  +"Functions"
+                }
+              }
+            }
+          }
+        }
+      }
       if (status == HttpStatusCode.OK) {
         displayAssistantResponse(application, responseBody)
         displayTools(responseBody, requestContext)
@@ -191,13 +264,14 @@ object ValidateAssistantRequestPage {
     responseBody: String,
   ) {
     div {
-      id = "response-div"
+      classes = setOf("validation-data")
+      id = "$MESSAGE_RESPONSE-data"
       div {
         id = "response-header"
         +"Vapi Server URL: "
         span {
           style = "padding-left: 4px;"
-          +"${application.serverUrl}"
+          +application.serverUrl
         }
       }
       pre {
@@ -268,9 +342,21 @@ object ValidateAssistantRequestPage {
   ) {
     val toolNames = jsonElement.getToolNames(key)
     val funcNames = jsonElement.getFunctionNames(key)
-    displayServiceTools(requestContext, toolNames)
-    displayManualTools(requestContext, toolNames)
-    displayFunctions(requestContext, funcNames)
+    div {
+      classes = setOf("validation-data", "hidden")
+      id = "$SERVICE_TOOLS-data"
+      displayServiceTools(requestContext, toolNames)
+    }
+    div {
+      classes = setOf("validation-data", "hidden")
+      id = "$MANUAL_TOOLS-data"
+      displayManualTools(requestContext, toolNames)
+    }
+    div {
+      classes = setOf("validation-data", "hidden")
+      id = "$FUNCTIONS-data"
+      displayFunctions(requestContext, funcNames)
+    }
   }
 
   private fun TagConsumer<*>.displayServiceTools(
