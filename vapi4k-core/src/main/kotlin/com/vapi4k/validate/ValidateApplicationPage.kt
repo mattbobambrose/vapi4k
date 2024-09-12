@@ -48,10 +48,12 @@ import com.vapi4k.utils.common.Utils.isNotNull
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.common.Utils.toErrorString
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.validate.ValidateAssistantRequestPage.validateAssistantRequestBody
 import com.vapi4k.validate.ValidateAssistantRequestPage.validateAssistantRequestPage
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
 import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
@@ -73,7 +75,10 @@ import kotlinx.serialization.json.buildJsonObject
 import java.net.ConnectException
 
 internal object ValidateApplicationPage {
-  suspend fun PipelineCall.validateApplicationPage(config: Vapi4kConfigImpl) =
+  suspend fun PipelineCall.validateApplicationPage(
+    config: Vapi4kConfigImpl,
+    fullPage: Boolean,
+  ) =
     runCatching {
       val appType = call.parameters[APP_TYPE].orEmpty()
       val appName = call.parameters[APP_NAME].orEmpty().toApplicationName()
@@ -93,9 +98,17 @@ internal object ValidateApplicationPage {
         val requestContext = RequestContextImpl(app, request, sessionId, EMPTY_ASSISTANT_ID)
         val baseUrl = "$vapi4kBaseUrl/$typePrefix/${appName.value}"
         val url = baseUrl.appendQueryParams(SESSION_ID to sessionId.value)
+        logger.info { "Fetching content for url: $url" }
         val (status, responseBody) = fetchContent(app, request, secret, url)
 
-        call.respondHtml { validateAssistantRequestPage(config, app, requestContext, status, responseBody) }
+        if (fullPage)
+          call.respondHtml { validateAssistantRequestPage(config, app, requestContext, status, responseBody) }
+        else
+          call.respondText(
+            validateAssistantRequestBody(app, requestContext, status, responseBody),
+            ContentType.Text.Html,
+            HttpStatusCode.OK
+          )
       } else {
         call.respondText("Application for /${appName.value} not found", status = HttpStatusCode.NotFound)
       }

@@ -38,6 +38,9 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomString
+import com.vapi4k.utils.HtmlUtils.css
+import com.vapi4k.utils.HtmlUtils.html
+import com.vapi4k.utils.HtmlUtils.js
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.JsonUtils.getFunctionNames
 import com.vapi4k.utils.JsonUtils.getToolNames
@@ -52,6 +55,7 @@ import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
+import com.vapi4k.validate.AdminPage.attribs
 import io.ktor.http.HttpStatusCode
 import kotlinx.html.BODY
 import kotlinx.html.DIV
@@ -59,6 +63,7 @@ import kotlinx.html.FORM
 import kotlinx.html.HTML
 import kotlinx.html.InputType
 import kotlinx.html.TBODY
+import kotlinx.html.TagConsumer
 import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.classes
@@ -71,9 +76,9 @@ import kotlinx.html.head
 import kotlinx.html.hiddenInput
 import kotlinx.html.id
 import kotlinx.html.input
-import kotlinx.html.link
 import kotlinx.html.pre
 import kotlinx.html.script
+import kotlinx.html.span
 import kotlinx.html.style
 import kotlinx.html.table
 import kotlinx.html.tbody
@@ -81,7 +86,6 @@ import kotlinx.html.td
 import kotlinx.html.title
 import kotlinx.html.tr
 import kotlinx.serialization.json.JsonElement
-import kotlin.collections.set
 
 object ValidateAssistantRequestPage {
   fun HTML.validateAssistantRequestPage(
@@ -92,79 +96,121 @@ object ValidateAssistantRequestPage {
     responseBody: String,
   ) {
     head {
-      link {
-        rel = "stylesheet"
-        href = "$STATIC_BASE/css/styles.css"
-      }
-      link {
-        rel = "stylesheet"
-        href = "$STATIC_BASE/css/prism.css"
-      }
-      link {
-        rel = "stylesheet"
-        href = "$STATIC_BASE/css/validator.css"
-      }
+      css(
+        "$STATIC_BASE/css/styles.css",
+        "$STATIC_BASE/css/prism.css",
+        "$STATIC_BASE/css/validator-body.css",
+        "$STATIC_BASE/css/validator.css",
+      )
+
+      js(
+        HTMX_SOURCE_URL,
+        "$STATIC_BASE/js/update-prism-content.js",
+        "$STATIC_BASE/js/prism.js",
+      )
+
       title { +"Assistant Request Validation" }
-      script { src = HTMX_SOURCE_URL }
-      script { src = "$STATIC_BASE/js/prism-update.js" }
     }
     body {
-      script { src = "$STATIC_BASE/js/prism.js" }
+      if (config.allWebAndInboundApplications.size > 1)
+        displayBackButton()
 
-      if (config.allWebAndInboundApplications.size > 1) {
-        div {
-          id = "back-div"
-
-          a {
-            style = "text-decoration: none;"
-            href = VALIDATE_PATH
-            +"⬅️ "
-          }
-          a {
-            href = VALIDATE_PATH
-            +"Back"
-          }
-        }
-      }
       h2 { +"Assistant Request Response" }
-      if (status.value == 200) {
-        div {
-          id = "status-div"
-          h3 { +"Vapi Server URL: ${application.serverUrl}" }
-          h3 { +"Status: $status" }
-          pre {
-            code {
-              classes = setOf("language-json", "line-numbers", "match-braces")
-              +responseBody.toJsonString()
-            }
-          }
-        }
+
+//      if (status == HttpStatusCode.OK) {
+//        displayAssistantResponse(application, status, responseBody)
+//        displayTools(responseBody, requestContext)
+//      } else {
+//        displayError(application, status, responseBody)
+//      }
+    }
+  }
+
+  fun validateAssistantRequestBody(
+    application: AbstractApplicationImpl,
+    requestContext: RequestContextImpl,
+    status: HttpStatusCode,
+    responseBody: String,
+  ) =
+    html {
+      // h2 { +"Assistant Request Response" }
+
+      if (status == HttpStatusCode.OK) {
+        displayAssistantResponse(application, responseBody)
         displayTools(responseBody, requestContext)
       } else {
-        h3 {
-          +"Vapi Server URL: "
-          a {
-            href = application.serverUrl
-            target = "_blank"
-            +application.serverUrl
-          }
+        displayError(application, status, responseBody)
+      }
+    }
+
+  private fun TagConsumer<*>.displayError(
+    application: AbstractApplicationImpl,
+    status: HttpStatusCode,
+    responseBody: String,
+  ) {
+    h3 {
+      +"Vapi Server URL: "
+      a {
+        href = application.serverUrl
+        target = "_blank"
+        +application.serverUrl
+      }
+    }
+
+    h3 { +"Status: $status" }
+    if (responseBody.isNotEmpty()) {
+      if (responseBody.length < 80) {
+        h3 { +"Error: $responseBody" }
+      } else {
+        h3 { +"Error:" }
+        pre { +responseBody }
+      }
+    } else {
+      h3 { +"Check the ktor log for error information." }
+    }
+  }
+
+  private fun BODY.displayBackButton() {
+    div {
+      id = "back-div"
+
+      a {
+        style = "text-decoration: none;"
+        href = VALIDATE_PATH
+        +"⬅️ "
+      }
+      a {
+        href = VALIDATE_PATH
+        +"Back"
+      }
+    }
+  }
+
+  fun TagConsumer<*>.displayAssistantResponse(
+    application: AbstractApplicationImpl,
+    responseBody: String,
+  ) {
+    div {
+      id = "response-div"
+      div {
+        id = "response-header"
+        +"Vapi Server URL: "
+        span {
+          style = "padding-left: 4px;"
+          +"${application.serverUrl}"
         }
-        h3 { +"Status: $status" }
-        if (responseBody.isNotEmpty()) {
-          if (responseBody.length < 80) {
-            h3 { +"Error: $responseBody" }
-          } else {
-            h3 { +"Error:" }
-            pre { +responseBody }
-          }
-        } else {
-          h3 { +"Check the ktor log for error information." }
+      }
+      pre {
+        code {
+          classes = setOf("language-json", "line-numbers", "match-braces")
+          id = "result-main"
+          +responseBody.toJsonString()
         }
       }
     }
   }
 
-  private fun BODY.displayTools(
+  private fun TagConsumer<*>.displayTools(
     responseBody: String,
     requestContext: RequestContextImpl,
   ) {
@@ -215,7 +261,7 @@ object ValidateAssistantRequestPage {
       assistantElement.stringValue("assistant.name")
     }.getOrElse { "Unnamed-$index" }
 
-  private fun BODY.assistantRequestToolsBody(
+  private fun TagConsumer<*>.assistantRequestToolsBody(
     requestContext: RequestContextImpl,
     jsonElement: JsonElement,
     key: String,
@@ -227,7 +273,7 @@ object ValidateAssistantRequestPage {
     displayFunctions(requestContext, funcNames)
   }
 
-  private fun BODY.displayServiceTools(
+  private fun TagConsumer<*>.displayServiceTools(
     requestContext: RequestContextImpl,
     toolNames: List<String>,
   ) {
@@ -251,7 +297,7 @@ object ValidateAssistantRequestPage {
               id = TOOLS_DIV
               h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
               form {
-                setupHtmxTags(ToolType.SERVICE_TOOL, newRequestContext, divId)
+                setHtmxTags(ToolType.SERVICE_TOOL, newRequestContext, divId)
                 addHiddenFields(newRequestContext, toolName, false)
 
                 table {
@@ -282,7 +328,7 @@ object ValidateAssistantRequestPage {
                   }
                 }
               }
-              displayResponse(divId)
+              displayToolResponse(divId)
             }
           }
         }
@@ -291,7 +337,7 @@ object ValidateAssistantRequestPage {
     }
   }
 
-  private fun BODY.displayManualTools(
+  private fun TagConsumer<*>.displayManualTools(
     requestContext: RequestContextImpl,
     toolNames: List<String>,
   ) {
@@ -309,7 +355,7 @@ object ValidateAssistantRequestPage {
             val divId = getRandomString()
             h3 { +"$funcName (${manualToolImpl.signature})" }
             form {
-              setupHtmxTags(ToolType.MANUAL_TOOL, requestContext, divId)
+              setHtmxTags(ToolType.MANUAL_TOOL, requestContext, divId)
               addHiddenFields(requestContext, funcName, true)
 
               table {
@@ -338,7 +384,7 @@ object ValidateAssistantRequestPage {
                 }
               }
             }
-            displayResponse(divId)
+            displayToolResponse(divId)
           }
         }
     } else {
@@ -346,7 +392,7 @@ object ValidateAssistantRequestPage {
     }
   }
 
-  private fun BODY.displayFunctions(
+  private fun TagConsumer<*>.displayFunctions(
     requestContext: RequestContextImpl,
     funcNames: List<String>,
   ) {
@@ -370,7 +416,7 @@ object ValidateAssistantRequestPage {
               id = TOOLS_DIV
               h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
               form {
-                setupHtmxTags(ToolType.FUNCTION, newRequestContext, divId)
+                setHtmxTags(ToolType.FUNCTION, newRequestContext, divId)
                 addHiddenFields(newRequestContext, funcName, false)
 
                 table {
@@ -401,7 +447,7 @@ object ValidateAssistantRequestPage {
                   }
                 }
               }
-              displayResponse(divId)
+              displayToolResponse(divId)
             }
           }
         }
@@ -410,20 +456,22 @@ object ValidateAssistantRequestPage {
     }
   }
 
-  private fun FORM.setupHtmxTags(
+  private fun FORM.setHtmxTags(
     toolType: ToolType,
     requestContext: RequestContextImpl,
     divId: String,
   ) {
-    attributes["hx-get"] =
-      VALIDATE_INVOKE_TOOL_PATH
-        .appendQueryParams(
-          TOOL_TYPE to toolType.name,
-          SESSION_ID to requestContext.sessionId.value,
-          ASSISTANT_ID to requestContext.assistantId.value,
-        )
-    attributes["hx-trigger"] = "submit"
-    attributes["hx-target"] = "#result-$divId"
+    attribs(
+      "hx-get" to
+        VALIDATE_INVOKE_TOOL_PATH
+          .appendQueryParams(
+            TOOL_TYPE to toolType.name,
+            SESSION_ID to requestContext.sessionId.value,
+            ASSISTANT_ID to requestContext.assistantId.value,
+          ),
+      "hx-trigger" to "submit",
+      "hx-target" to "#result-$divId",
+    )
   }
 
   private fun FORM.addHiddenFields(
@@ -463,11 +511,11 @@ object ValidateAssistantRequestPage {
     }
   }
 
-  private fun DIV.displayResponse(divId: String) {
-    script { rawHtml("setupPrismUpdate(`$divId`);\n") }
+  private fun DIV.displayToolResponse(divId: String) {
+    script { rawHtml("updateToolPrismContent(`$divId`);\n") }
 
     pre {
-      classes += "code-pre"
+      classes += "tools-pre"
       id = "display-$divId"
       code {
         classes = setOf("language-json", "line-numbers", "match-braces")

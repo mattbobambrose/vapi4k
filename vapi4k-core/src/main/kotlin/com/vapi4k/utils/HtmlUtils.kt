@@ -16,8 +16,11 @@
 
 package com.vapi4k.utils
 
+import kotlinx.html.HEAD
 import kotlinx.html.HTMLTag
 import kotlinx.html.TagConsumer
+import kotlinx.html.link
+import kotlinx.html.script
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.unsafe
 
@@ -29,4 +32,19 @@ object HtmlUtils {
     buildString {
       appendHTML().apply(block)
     }
+
+  fun HEAD.css(vararg files: String) {
+    files.forEach { file ->
+      link {
+        rel = "stylesheet"
+        href = file
+      }
+    }
+  }
+
+  fun HEAD.js(vararg files: String) {
+    files.forEach { file ->
+      script { src = file }
+    }
+  }
 }

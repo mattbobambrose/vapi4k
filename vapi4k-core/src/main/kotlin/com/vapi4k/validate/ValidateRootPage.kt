@@ -21,6 +21,7 @@ import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.utils.HtmlUtils.css
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import io.ktor.server.application.call
 import io.ktor.server.html.respondHtml
@@ -33,7 +34,6 @@ import kotlinx.html.h2
 import kotlinx.html.head
 import kotlinx.html.id
 import kotlinx.html.li
-import kotlinx.html.link
 import kotlinx.html.meta
 import kotlinx.html.title
 import kotlinx.html.ul
@@ -51,16 +51,14 @@ internal object ValidateRootPage {
             name = "viewport"
             content = "width=device-width, initial-scale=1.0"
           }
-          link {
-            rel = "stylesheet"
-            href = "$STATIC_BASE/css/styles.css"
-          }
-          link {
-            rel = "stylesheet"
-            href = "$STATIC_BASE/css/validator.css"
-          }
+
+          css(
+            "$STATIC_BASE/css/styles.css",
+            "$STATIC_BASE/css/validator-body.css",
+            "$STATIC_BASE/css/validator.css",
+          )
+
           title { +"Assistant Application Validation" }
-          // script { src = HTMX_SOURCE_URL }
         }
         body {
           h1 { +"Vapi4k Application Validator" }

@@ -25,6 +25,7 @@ import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.common.Endpoints.ADMIN_PATH
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
@@ -53,7 +54,7 @@ import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.validate.BootstrapPage.bootstrapPage
+import com.vapi4k.validate.AdminPage.adminPage
 import com.vapi4k.validate.ValidateApplicationPage.validateApplicationPage
 import com.vapi4k.validate.ValidateRootPage.validateRootPage
 import com.vapi4k.validate.ValidateToolInvokePage.validateToolInvokePage
@@ -135,7 +136,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       get(VERSION_PATH) { call.respondText(Application.Json) { Vapi4kServer::class.versionDesc(true) } }
 
-      get("/bootstrap") { call.respondHtml { bootstrapPage() } }
+      get("/bootstrap") { call.respondHtml { adminPage(config) } }
 
       if (!isProduction) {
         get("/") { call.respondRedirect(VALIDATE_PATH) }
@@ -162,7 +163,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
           get { clearCaches(config) }
         }
         get(VALIDATE_PATH) { validateRootPage(config) }
-        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config) }
+        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config, true) }
+        get("$ADMIN_PATH/$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config, false) }
         get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokePage(config) }
       }
 
