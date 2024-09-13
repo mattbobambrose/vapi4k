@@ -29,17 +29,17 @@ import com.vapi4k.common.Endpoints.ADMIN_PATH
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
+import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
-import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dashboard.AdminPage.adminPage
 import com.vapi4k.dashboard.BootstrapPage2.bootstrapPage2
-import com.vapi4k.dashboard.ValidateApplicationPage.validateApplicationPage
-import com.vapi4k.dashboard.ValidateToolInvokePage.validateToolInvokePage
+import com.vapi4k.dashboard.InvokeTool.invokeTool
+import com.vapi4k.dashboard.ValidateApplication.validateApplication
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
@@ -167,9 +167,10 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
 
         get(ADMIN_PATH) { call.respondHtml { adminPage(config) } }
-        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config) }
 
-        get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokePage(config) }
+        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { call.respondText(validateApplication(config)) }
+
+        get(INVOKE_TOOL_PATH) { call.respondText(invokeTool(config)) }
       }
 
       // Process Inbound Call requests

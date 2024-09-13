@@ -27,9 +27,11 @@ import com.vapi4k.common.QueryParams.TOOL_TYPE
 import com.vapi4k.common.SessionId.Companion.toSessionId
 import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HttpUtils.getQueryParam
+import com.vapi4k.utils.HttpUtils.httpClient
 import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
@@ -40,16 +42,14 @@ import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
-import io.ktor.server.response.respondText
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
-object ValidateToolInvokePage {
-  suspend fun PipelineCall.validateToolInvokePage(config: Vapi4kConfigImpl) =
+object InvokeTool {
+  suspend fun PipelineCall.invokeTool(config: Vapi4kConfigImpl) =
     runCatching {
       val applicationId = call.getQueryParam(APPLICATION_ID)?.toApplicationId() ?: missingQueryParam(APPLICATION_ID)
 
@@ -69,16 +69,14 @@ object ValidateToolInvokePage {
           )
         }
 
-      com.vapi4k.utils.HttpUtils.httpClient.post(url) {
+      val response = httpClient.post(url) {
         headers.append(com.vapi4k.common.Headers.VAPI_SECRET_HEADER, requestContext.application.serverSecret)
         setBody((requestContext.request as JsonObject).toJsonString<JsonObject>(false))
       }
-    }.onSuccess { response ->
-      val resp = response.bodyAsText()
-      call.respondText(resp.toJsonString())
-    }.onFailure { e ->
-      com.vapi4k.plugin.Vapi4kServer.logger.error(e) { "Error validating tool invoke request" }
-      call.respondText(e.toErrorString(), status = HttpStatusCode.InternalServerError)
+      response.bodyAsText().toJsonString()
+    }.getOrElse { e ->
+      logger.error(e) { "Error validating tool invoke request" }
+      e.toErrorString()
     }
 
   private fun ApplicationCall.functionParams(argName: String): JsonObject =

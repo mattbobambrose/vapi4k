@@ -27,7 +27,7 @@ import com.vapi4k.common.CssNames.MANUAL_TOOLS
 import com.vapi4k.common.CssNames.SERVICE_TOOLS
 import com.vapi4k.common.CssNames.TOOLS_DIV
 import com.vapi4k.common.CssNames.VALIDATION_DATA
-import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
+import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.FunctionName
 import com.vapi4k.common.FunctionName.Companion.toFunctionName
 import com.vapi4k.common.QueryParams.APPLICATION_ID
@@ -345,7 +345,7 @@ object ValidateTools {
   ) {
     attribs(
       "hx-get" to
-        VALIDATE_INVOKE_TOOL_PATH
+        INVOKE_TOOL_PATH
           .appendQueryParams(
             TOOL_TYPE to toolType.name,
             SESSION_ID to requestContext.sessionId.value,

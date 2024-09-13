@@ -180,7 +180,6 @@ internal object AdminPage {
                 id = "inbound-collapse"
                 ul {
                   classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
-                  // h2 { +"${if (apps.isEmpty()) "No " else ""}InboundCall Applications" }
                   config.inboundCallApplications.forEach { applicationDetails(it) }
                 }
               }
@@ -202,7 +201,6 @@ internal object AdminPage {
 
                 ul {
                   classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
-                  // h2 { +"${if (apps.isEmpty()) "No " else ""}InboundCall Applications" }
                   config.outboundCallApplications.forEach { applicationDetails(it) }
                 }
               }
@@ -228,7 +226,6 @@ internal object AdminPage {
 
                 ul {
                   classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
-                  // h2 { +"${if (apps.isEmpty()) "No " else ""}InboundCall Applications" }
                   config.webApplications.forEach { applicationDetails(it) }
                 }
               }

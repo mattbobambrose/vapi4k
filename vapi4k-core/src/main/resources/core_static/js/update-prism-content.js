@@ -69,3 +69,8 @@ function selectTab(name) {
 
   document.querySelector(`#${name}-data`).classList.remove('hidden');
 }
+
+function updateServerBaseUrl() {
+  let span = document.getElementById("serverBaseUrl");
+  span.innerText = window.location.origin;
+}

@@ -29,6 +29,7 @@ import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.html
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.http.HttpStatusCode
+import kotlinx.html.DIV
 import kotlinx.html.TagConsumer
 import kotlinx.html.a
 import kotlinx.html.classes
@@ -44,104 +45,19 @@ import kotlinx.html.style
 import kotlinx.html.ul
 import kotlin.collections.set
 
-object ValidateAssistantRequestPage {
-  fun validateAssistantRequestBody(
+object ValidateAssistant {
+  fun validateAssistant(
     application: AbstractApplicationImpl,
     requestContext: RequestContextImpl,
     status: HttpStatusCode,
     responseBody: String,
   ): String =
     html {
-      nav {
-        classes = setOf("navbar", "navbar-expand-lg", "bg-body-tertiary")
-        style = "padding-top: 10px; padding-bottom: 0px;"
-        div {
-          classes += "container-fluid"
-//          a(classes = "navbar-brand") {
-//            href = "#"
-//            +"Application"
-//          }
-
-//          button(classes = "navbar-toggler") {
-//            type = kotlinx.html.ButtonType.button
-//            attributes["data-bs-toggle"] = "collapse"
-//            attributes["data-bs-target"] = "#navbarNav"
-//            attributes["aria-controls"] = "navbarNav"
-//            attributes["aria-expanded"] = "false"
-//            attributes["aria-label"] = "Toggle navigation"
-//            span("navbar-toggler-icon") {
-//            }
-//          }
-
-          if (status == HttpStatusCode.OK) {
-            div {
-              classes = setOf("collapse", "navbar-collapse")
-              id = "navbarNav"
-              ul {
-                //classes += "navbar-nav"
-                classes = setOf("nav", "nav-tabs")
-                li {
-                  classes += "nav-item"
-                  a {
-                    classes = setOf("nav-link", "active")
-                    id = "$MESSAGE_RESPONSE-tab"
-                    attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
-                    attributes["aria-current"] = "page"
-                    +"Message Response"
-                  }
-                }
-
-                li {
-                  classes += "nav-item"
-                  a {
-                    classes = setOf("nav-link", if (requestContext.application.hasServiceTools()) "" else "disabled")
-                    id = "$SERVICE_TOOLS-tab"
-                    attribs("hx-on:click" to "selectTab('$SERVICE_TOOLS')")
-                    +"Service Tools"
-                  }
-                }
-
-                li {
-                  classes += "nav-item"
-                  a {
-                    classes = setOf("nav-link", if (requestContext.application.hasManualTools()) "" else "disabled")
-                    id = "$MANUAL_TOOLS-tab"
-                    attribs("hx-on:click" to "selectTab('$MANUAL_TOOLS')")
-                    +"Manual Tools"
-                  }
-                }
-
-                li {
-                  classes += "nav-item"
-                  a {
-                    classes = setOf("nav-link", if (requestContext.application.hasFunctions()) "" else "disabled")
-                    id = "$FUNCTIONS-tab"
-                    attribs("hx-on:click" to "selectTab('$FUNCTIONS')")
-                    +"Functions"
-                  }
-                }
-              }
-            }
-          } else {
-            div {
-              classes = setOf("collapse", "navbar-collapse")
-              id = "navbarNav"
-              ul {
-                // classes += "navbar-nav"
-                classes = setOf("nav", "nav-tabs")
-                li {
-                  classes += "nav-item"
-                  a {
-                    classes = setOf("nav-link", "active")
-                    id = "$MESSAGE_RESPONSE-tab"
-                    // attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
-                    attributes["aria-current"] = "page"
-                    +"Error Message"
-                  }
-                }
-              }
-            }
-          }
+      navBar {
+        if (status == HttpStatusCode.OK) {
+          validNavItems(requestContext)
+        } else {
+          errorNavItems()
         }
       }
 
@@ -152,6 +68,88 @@ object ValidateAssistantRequestPage {
         displayError(application, status, responseBody)
       }
     }
+
+  internal fun TagConsumer<StringBuilder>.navBar(block: DIV.() -> Unit) {
+    nav {
+      classes = setOf("navbar", "navbar-expand-lg", "bg-body-tertiary")
+      style = "padding-top: 10px; padding-bottom: 0px;"
+      div {
+        classes += "container-fluid"
+        block()
+      }
+    }
+  }
+
+  private fun DIV.validNavItems(requestContext: RequestContextImpl) {
+    div {
+      classes = setOf("collapse", "navbar-collapse")
+      id = "navbarNav"
+      ul {
+        //classes += "navbar-nav"
+        classes = setOf("nav", "nav-tabs")
+        li {
+          classes += "nav-item"
+          a {
+            classes = setOf("nav-link", "active")
+            id = "$MESSAGE_RESPONSE-tab"
+            attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
+            attributes["aria-current"] = "page"
+            +"Message Response"
+          }
+        }
+
+        li {
+          classes += "nav-item"
+          a {
+            classes = setOf("nav-link", if (requestContext.application.hasServiceTools()) "" else "disabled")
+            id = "$SERVICE_TOOLS-tab"
+            attribs("hx-on:click" to "selectTab('$SERVICE_TOOLS')")
+            +"Service Tools"
+          }
+        }
+
+        li {
+          classes += "nav-item"
+          a {
+            classes = setOf("nav-link", if (requestContext.application.hasManualTools()) "" else "disabled")
+            id = "$MANUAL_TOOLS-tab"
+            attribs("hx-on:click" to "selectTab('$MANUAL_TOOLS')")
+            +"Manual Tools"
+          }
+        }
+
+        li {
+          classes += "nav-item"
+          a {
+            classes = setOf("nav-link", if (requestContext.application.hasFunctions()) "" else "disabled")
+            id = "$FUNCTIONS-tab"
+            attribs("hx-on:click" to "selectTab('$FUNCTIONS')")
+            +"Functions"
+          }
+        }
+      }
+    }
+  }
+
+  internal fun DIV.errorNavItems() {
+    div {
+      classes = setOf("collapse", "navbar-collapse")
+      id = "navbarNav"
+      ul {
+        // classes += "navbar-nav"
+        classes = setOf("nav", "nav-tabs")
+        li {
+          classes += "nav-item"
+          a {
+            classes = setOf("nav-link", "active")
+            id = "$MESSAGE_RESPONSE-tab"
+            attributes["aria-current"] = "page"
+            +"Error Message"
+          }
+        }
+      }
+    }
+  }
 
   private fun TagConsumer<*>.displayResponse(
     application: AbstractApplicationImpl,

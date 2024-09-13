@@ -27,7 +27,7 @@ import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.common.SessionId.Companion.toSessionId
-import com.vapi4k.dashboard.ValidateApplicationPage.isValidSecret
+import com.vapi4k.dashboard.ValidateApplication.isValidSecret
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.PipelineCall

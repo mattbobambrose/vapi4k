@@ -67,7 +67,7 @@ object Endpoints {
   const val CLEAR_CACHES_PATH = "/clear-caches"
   const val ADMIN_PATH = "/admin"
   const val VALIDATE_PATH = "/validate"
-  const val VALIDATE_INVOKE_TOOL_PATH = "/validateInvokeTool"
+  const val INVOKE_TOOL_PATH = "/invokeTool"
 }
 
 object CssNames {
@@ -82,6 +82,8 @@ object CssNames {
   const val VALIDATION_DATA = "validation-data"
   const val HIDDEN = "hidden"
   const val ERROR_MSG = "error-msg"
+
+  const val CONNECT_ERROR = "connect_error"
 }
 
 object ErrorMessages {
