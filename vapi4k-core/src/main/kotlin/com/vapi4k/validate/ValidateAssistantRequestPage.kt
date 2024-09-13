@@ -191,19 +191,19 @@ object ValidateAssistantRequestPage {
       }
 
       if (status == HttpStatusCode.OK) {
-        displayAssistantResponse(application, responseBody)
+        displayResponse(application, responseBody)
         displayTools(responseBody, requestContext)
       } else {
         displayError(application, status, responseBody)
       }
     }
 
-  private fun TagConsumer<*>.displayAssistantResponse(
+  private fun TagConsumer<*>.displayResponse(
     application: AbstractApplicationImpl,
     responseBody: String,
   ) {
     div {
-      classes += VALIDATION_DATA
+      classes = setOf(VALIDATION_DATA)
       id = "$MESSAGE_RESPONSE-data"
       div {
         id = "response-header"

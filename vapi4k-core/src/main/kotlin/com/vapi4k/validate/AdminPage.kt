@@ -28,7 +28,6 @@ import com.vapi4k.utils.HtmlUtils.css
 import com.vapi4k.utils.HtmlUtils.js
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.common.Utils.ensureStartsWith
-import kotlinx.html.A
 import kotlinx.html.BODY
 import kotlinx.html.ButtonType
 import kotlinx.html.DIV
@@ -47,6 +46,7 @@ import kotlinx.html.img
 import kotlinx.html.li
 import kotlinx.html.main
 import kotlinx.html.meta
+import kotlinx.html.role
 import kotlinx.html.script
 import kotlinx.html.span
 import kotlinx.html.strong
@@ -126,6 +126,12 @@ internal object AdminPage {
             span {
               classes += "fs-4"
               +"Vapi4k Admin"
+              rawHtml("&nbsp;&nbsp;&nbsp;&nbsp;")
+            }
+            span("spinner-border text-primary p-1 htmx-indicator") {
+              id = "spinner"
+              role = "status"
+              // span("visually-hidden") { +"Loading..." }
             }
           }
 
@@ -441,14 +447,6 @@ internal object AdminPage {
     )
   }
 
-  fun A.setHtmxTags(app: AbstractApplicationImpl) {
-    attribs(
-      "hx-get" to "$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
-      "hx-trigger" to "click",
-      "hx-target" to "#$MAIN_DIV",
-    )
-  }
-
   fun UL.applicationDetails(app: AbstractApplicationImpl) {
     li {
       a {
@@ -459,7 +457,12 @@ internal object AdminPage {
           "rounded",
           "sidebar-menu-item",
         )
-        setHtmxTags(app)
+        attribs(
+          "hx-get" to "$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
+          "hx-trigger" to "click",
+          "hx-target" to "#$MAIN_DIV",
+          "hx-indicator" to "#spinner",
+        )
         +app.serverPath.ensureStartsWith("/")
       }
     }
