@@ -143,7 +143,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
       get("/bootstrap") { call.respondHtml { bootstrapPage2() } }
 
       if (!isProduction) {
-        get("/") { call.respondRedirect(VALIDATE_PATH) }
+        get("/") { call.respondRedirect(ADMIN_PATH) }
 
         route(ENV_PATH) {
           installContentNegotiation {
