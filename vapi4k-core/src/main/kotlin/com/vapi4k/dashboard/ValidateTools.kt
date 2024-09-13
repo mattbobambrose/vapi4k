@@ -174,7 +174,7 @@ object ValidateTools {
           val divId = getRandomString()
 
           div {
-            id = TOOLS_DIV
+            classes += TOOLS_DIV
             if (header.isNotBlank()) h6 { +header }
             h6 { +functionDetails.toolCallInfo.llmDescription }
             div { +"${functionDetails.fqNameWithParams}: ${functionDetails.returnType}" }
@@ -226,7 +226,7 @@ object ValidateTools {
       .filter { (toolName, _) -> requestContext.application.containsManualTool(toolName) }
       .forEach { (funcName, assistantId) ->
         div {
-          id = TOOLS_DIV
+          classes += TOOLS_DIV
           val manualToolImpl = requestContext.application.getManualTool(funcName)
           val divId = getRandomString()
           if (header.isNotBlank()) h6 { +header }
@@ -287,7 +287,7 @@ object ValidateTools {
           val divId = getRandomString()
 
           div {
-            id = TOOLS_DIV
+            classes += TOOLS_DIV
             if (header.isNotBlank()) h6 { +header }
             h6 { +functionDetails.toolCallInfo.llmDescription }
             div { +"${functionDetails.fqNameWithParams}: ${functionDetails.returnType}" }
@@ -398,7 +398,7 @@ object ValidateTools {
     script { rawHtml("updateToolContent(`$divId`);\n") }
 
     div {
-      classes = setOf("tools-div", HIDDEN)
+      classes = setOf("tools-response-div", HIDDEN)
       id = "display-$divId"
 
       button {

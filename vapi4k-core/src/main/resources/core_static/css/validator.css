@@ -1,7 +1,6 @@
-#back-div {
-    text-align: right;
-    margin-top: 20px;
-    margin-right: 15px;
+#main-div {
+    /*opacity:1;*/
+    /*transition: opacity 500ms ease-in;*/
 }
 
 #message-response-data {
@@ -44,14 +43,17 @@
 }
 
 #version-info {
-    padding-top: 10px;
+    padding-top: 20px;
     padding-left: 20px;
 }
 
-#tools-div {
+.tools-div {
     border: 1px solid black;
     padding: 10px;
-    margin: 10px;
+    margin-top: 15px;
+    margin-bottom: 0px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 #tools-input {
@@ -62,7 +64,7 @@
     margin-top: 10px;
 }
 
-.tools-div {
+.tools-response-div {
     padding-top: 10px;
 }
 

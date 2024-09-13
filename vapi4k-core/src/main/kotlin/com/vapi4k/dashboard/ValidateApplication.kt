@@ -68,7 +68,6 @@ import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.h2
-import kotlinx.html.h4
 import kotlinx.html.id
 import kotlinx.html.p
 import kotlinx.html.script
@@ -116,7 +115,7 @@ internal object ValidateApplication {
         id = "version-info"
         val json = Vapi4kServer::class.versionDesc(true).toJsonElement()
         for ((key, value) in json.jsonObject) {
-          h4 { +"$key: $value" }
+          p { +"$key: $value" }
         }
       }
     }
