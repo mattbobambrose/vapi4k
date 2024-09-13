@@ -25,16 +25,25 @@ import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
+import com.vapi4k.common.Endpoints.ADMIN_PATH
+import com.vapi4k.common.Endpoints.ADMIN_VERSION_PATH
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
+import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
-import com.vapi4k.common.Endpoints.VALIDATE_INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
+import com.vapi4k.dashboard.AdminPage.adminPage
+import com.vapi4k.dashboard.BootstrapPage2.bootstrapPage2
+import com.vapi4k.dashboard.InvokeTool.invokeTool
+import com.vapi4k.dashboard.ValidateApplication.appEnvVars
+import com.vapi4k.dashboard.ValidateApplication.systemInfo
+import com.vapi4k.dashboard.ValidateApplication.validateApplication
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
@@ -53,10 +62,6 @@ import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.validate.BootstrapPage.bootstrapPage
-import com.vapi4k.validate.ValidateApplicationPage.validateApplicationPage
-import com.vapi4k.validate.ValidateRootPage.validateRootPage
-import com.vapi4k.validate.ValidateToolInvokePage.validateToolInvokePage
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode
@@ -135,7 +140,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
 
       get(VERSION_PATH) { call.respondText(Application.Json) { Vapi4kServer::class.versionDesc(true) } }
 
-      get("/bootstrap") { call.respondHtml { bootstrapPage() } }
+      get("/bootstrap") { call.respondHtml { bootstrapPage2() } }
 
       if (!isProduction) {
         get("/") { call.respondRedirect(VALIDATE_PATH) }
@@ -149,21 +154,31 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
             call.respond<JsonObject>(jsonEnvVarValues())
           }
         }
+
         route(METRICS_PATH) {
           installContentNegotiation()
           get { call.respond(appMicrometerRegistry.scrape()) }
         }
+
         route(CACHES_PATH) {
           installContentNegotiation()
           get { cachesRequest(config) }
         }
+
         route(CLEAR_CACHES_PATH) {
           installContentNegotiation()
           get { clearCaches(config) }
         }
-        get(VALIDATE_PATH) { validateRootPage(config) }
-        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { validateApplicationPage(config) }
-        get(VALIDATE_INVOKE_TOOL_PATH) { validateToolInvokePage(config) }
+
+        get(ADMIN_PATH) { call.respondHtml { adminPage(config) } }
+
+        get(ADMIN_ENV_PATH) { call.respondText(appEnvVars()) }
+
+        get(ADMIN_VERSION_PATH) { call.respondText(systemInfo()) }
+
+        get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { call.respondText(validateApplication(config)) }
+
+        get(INVOKE_TOOL_PATH) { call.respondText(invokeTool(config)) }
       }
 
       // Process Inbound Call requests

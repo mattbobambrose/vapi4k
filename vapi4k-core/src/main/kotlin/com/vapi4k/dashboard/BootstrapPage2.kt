@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.validate
+package com.vapi4k.dashboard
 
 import com.vapi4k.common.Constants.STATIC_BASE
 import kotlinx.html.ButtonType

@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.validate
+package com.vapi4k.dashboard
 
 import com.vapi4k.common.ApplicationName.Companion.toApplicationName
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
@@ -23,11 +23,16 @@ import com.vapi4k.common.Constants.APP_TYPE
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.REQUEST_VALIDATION_FILENAME
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.common.CssNames.CONNECT_ERROR
 import com.vapi4k.common.Headers.VALIDATE_HEADER
 import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.Version.Companion.versionDesc
+import com.vapi4k.dashboard.ValidateAssistant.navBar
+import com.vapi4k.dashboard.ValidateAssistant.singleNavItem
+import com.vapi4k.dashboard.ValidateAssistant.validateAssistant
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
@@ -35,9 +40,11 @@ import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.plugin.Vapi4kServer
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
+import com.vapi4k.utils.HtmlUtils.html
 import com.vapi4k.utils.HttpUtils.getHeader
 import com.vapi4k.utils.HttpUtils.getQueryParam
 import com.vapi4k.utils.HttpUtils.httpClient
@@ -47,8 +54,9 @@ import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.common.Utils.isNotNull
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.common.Utils.toErrorString
+import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.validate.ValidateAssistantRequestPage.validateAssistantRequestPage
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -56,24 +64,64 @@ import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.application.call
-import io.ktor.server.html.respondHtml
-import io.ktor.server.response.respondText
-import kotlinx.html.HTML
-import kotlinx.html.body
+import io.ktor.util.network.UnresolvedAddressException
+import kotlinx.html.classes
+import kotlinx.html.div
 import kotlinx.html.h2
-import kotlinx.html.head
+import kotlinx.html.h4
 import kotlinx.html.id
 import kotlinx.html.p
 import kotlinx.html.script
 import kotlinx.html.span
-import kotlinx.html.title
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.th
+import kotlinx.html.thead
+import kotlinx.html.tr
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import java.net.ConnectException
+import kotlinx.serialization.json.jsonObject
+import java.io.IOException
 
-internal object ValidateApplicationPage {
-  suspend fun PipelineCall.validateApplicationPage(config: Vapi4kConfigImpl) =
+internal object ValidateApplication {
+  fun appEnvVars(): String =
+    html {
+      navBar { singleNavItem("Environment Variables") }
+      table {
+        classes += "table"
+        id = "envTable"
+        thead {
+          tr {
+            th { +"Environment Variable" }
+            th { +"Value" }
+          }
+        }
+        tbody {
+          jsonEnvVarValues().forEach { (key, value) ->
+            tr {
+              td { +key }
+              td { +value.toJsonString(false) }
+            }
+          }
+        }
+      }
+    }
+
+  fun systemInfo(): String =
+    html {
+      navBar { singleNavItem("System Info") }
+      div {
+        id = "version-info"
+        val json = Vapi4kServer::class.versionDesc(true).toJsonElement()
+        for ((key, value) in json.jsonObject) {
+          h4 { +"$key: $value" }
+        }
+      }
+    }
+
+  suspend fun PipelineCall.validateApplication(config: Vapi4kConfigImpl): String =
     runCatching {
       val appType = call.parameters[APP_TYPE].orEmpty()
       val appName = call.parameters[APP_NAME].orEmpty().toApplicationName()
@@ -93,20 +141,57 @@ internal object ValidateApplicationPage {
         val requestContext = RequestContextImpl(app, request, sessionId, EMPTY_ASSISTANT_ID)
         val baseUrl = "$vapi4kBaseUrl/$typePrefix/${appName.value}"
         val url = baseUrl.appendQueryParams(SESSION_ID to sessionId.value)
+        logger.info { "Fetching content for url: $url" }
         val (status, responseBody) = fetchContent(app, request, secret, url)
-
-        call.respondHtml { validateAssistantRequestPage(config, app, requestContext, status, responseBody) }
+        validateAssistant(app, requestContext, status, responseBody)
       } else {
-        call.respondText("Application for /${appName.value} not found", status = HttpStatusCode.NotFound)
+        html {
+          navBar { singleNavItem() }
+          div {
+            classes += CONNECT_ERROR
+            h2 { +"Error" }
+            p { "Application for /${appName.value} not found" }
+          }
+        }
       }
     }.getOrElse {
-      if (it is ConnectException) {
-        call.respondHtml { serverBasePage() }
+      if (it is IOException || it is UnresolvedAddressException) {
+        serverBasePage()
       } else {
         logger.error(it) { "Error validating application" }
-        call.respondText(it.toErrorString(), status = HttpStatusCode.InternalServerError)
+        html {
+          navBar { singleNavItem() }
+          div {
+            classes += CONNECT_ERROR
+            h2 { +"Error" }
+            p { it.toErrorString() }
+          }
+        }
       }
     }
+
+  private fun serverBasePage() =
+    html {
+      navBar { singleNavItem() }
+      div {
+        classes += CONNECT_ERROR
+        h2 { +"Configuration Error" }
+        p {}
+        val currentVal = System.getenv("VAPI4K_BASE_URL").orEmpty()
+        p {
+          if (currentVal.isBlank())
+            +"The environment variable VAPI4K_BASE_URL is not set"
+          else
+            +"The current value of VAPI4K_BASE_URL is $currentVal"
+        }
+        p {
+          +"Please set the environment variable VAPI4K_BASE_URL =  "
+          span { id = "serverBaseUrl" }
+        }
+        script { src = "$STATIC_BASE/js/assign-server-base-url.js" }
+      }
+    }
+
 
   private fun getNewRequest(): JsonElement {
     val request = runCatching {
@@ -127,22 +212,6 @@ internal object ValidateApplicationPage {
         },
       )
     }
-
-  private fun HTML.serverBasePage() {
-    head {
-      title { +"Assistant Request Validation" }
-    }
-    body {
-      h2 { +"Configuration Error" }
-      p {
-        +"Please set the environment variable VAPI4K_BASE_URL =  "
-        span {
-          id = "serverBaseUrl"
-        }
-      }
-      script { src = "$STATIC_BASE/js/server-base.js" }
-    }
-  }
 
   internal fun PipelineCall.isValidSecret(configPropertiesSecret: String): Boolean {
     val secret = call.getHeader(VAPI_SECRET_HEADER)

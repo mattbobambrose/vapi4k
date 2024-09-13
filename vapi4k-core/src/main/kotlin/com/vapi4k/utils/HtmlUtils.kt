@@ -16,17 +16,57 @@
 
 package com.vapi4k.utils
 
+import kotlinx.html.FlowOrMetaDataOrPhrasingContent
+import kotlinx.html.HEAD
 import kotlinx.html.HTMLTag
+import kotlinx.html.SVG
 import kotlinx.html.TagConsumer
+import kotlinx.html.link
+import kotlinx.html.script
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.unsafe
 
 object HtmlUtils {
   fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
 
+  fun HTMLTag.attribs(vararg pairs: Pair<String, Any>) {
+    pairs.forEach { (k, v) -> attributes[k] = v.toString() }
+  }
+
   // Creates snippets of HTML for use with HTMX
   fun html(block: TagConsumer<StringBuilder>.() -> Unit): String =
     buildString {
       appendHTML().apply(block)
     }
+
+  fun HEAD.css(vararg files: String) {
+    files.forEach { file ->
+      link {
+        rel = "stylesheet"
+        href = file
+      }
+    }
+  }
+
+  fun FlowOrMetaDataOrPhrasingContent.js(vararg files: String) {
+    files.forEach { file ->
+      script { src = file }
+    }
+  }
+
+  fun SVG.details(
+    width: Int,
+    height: Int,
+    href: String,
+  ) {
+    attribs(
+      "width" to width,
+      "height" to height,
+    )
+    rawHtml(
+      """
+           <use xlink:href="#$href"/>
+        """,
+    )
+  }
 }

@@ -65,12 +65,27 @@ object Endpoints {
   const val METRICS_PATH = "/metrics"
   const val CACHES_PATH = "/caches"
   const val CLEAR_CACHES_PATH = "/clear-caches"
+  const val ADMIN_PATH = "/admin"
   const val VALIDATE_PATH = "/validate"
-  const val VALIDATE_INVOKE_TOOL_PATH = "/validateInvokeTool"
+  const val ADMIN_ENV_PATH = "/admin-env-vars"
+  const val ADMIN_VERSION_PATH = "/admin-version"
+  const val INVOKE_TOOL_PATH = "/invokeTool"
 }
 
 object CssNames {
+  const val MAIN_DIV = "main-div"
   const val TOOLS_DIV = "tools-div"
+
+  const val MESSAGE_RESPONSE = "message-response"
+  const val SERVICE_TOOLS = "service-tools"
+  const val MANUAL_TOOLS = "manual-tools"
+  const val FUNCTIONS = "functions"
+
+  const val VALIDATION_DATA = "validation-data"
+  const val HIDDEN = "hidden"
+  const val ERROR_MSG = "error-msg"
+
+  const val CONNECT_ERROR = "connect-error"
 }
 
 object ErrorMessages {
