@@ -21,6 +21,7 @@ import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.AssistantId.Companion.getAssistantIdFromSuffix
 import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.FUNCTION_NAME
+import com.vapi4k.common.CssNames.ERROR_MSG
 import com.vapi4k.common.CssNames.FUNCTIONS
 import com.vapi4k.common.CssNames.HIDDEN
 import com.vapi4k.common.CssNames.MANUAL_TOOLS
@@ -70,7 +71,6 @@ import kotlinx.html.code
 import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h2
-import kotlinx.html.h3
 import kotlinx.html.h6
 import kotlinx.html.hiddenInput
 import kotlinx.html.id
@@ -96,10 +96,9 @@ object ValidateAssistantRequestPage {
     responseBody: String,
   ): String =
     html {
-      // h2 { +"Assistant Request Response" }
-
       nav {
         classes = setOf("navbar", "navbar-expand-lg", "bg-body-tertiary")
+        style = "padding-top: 10px; padding-bottom: 0px;"
         div {
           classes += "container-fluid"
 //          a(classes = "navbar-brand") {
@@ -118,50 +117,72 @@ object ValidateAssistantRequestPage {
 //            }
 //          }
 
-          div {
-            classes = setOf("collapse", "navbar-collapse")
-            id = "navbarNav"
-            ul {
-              classes += "navbar-nav"
-              li {
-                classes += "nav-item"
-                a {
-                  classes = setOf("nav-link", "active")
-                  id = "$MESSAGE_RESPONSE-tab"
-                  attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
-                  attributes["aria-current"] = "page"
-                  +"Message Response"
+          if (status == HttpStatusCode.OK) {
+            div {
+              classes = setOf("collapse", "navbar-collapse")
+              id = "navbarNav"
+              ul {
+                //classes += "navbar-nav"
+                classes = setOf("nav", "nav-tabs")
+                li {
+                  classes += "nav-item"
+                  a {
+                    classes = setOf("nav-link", "active")
+                    id = "$MESSAGE_RESPONSE-tab"
+                    attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
+                    attributes["aria-current"] = "page"
+                    +"Message Response"
+                  }
+                }
+
+                li {
+                  classes += "nav-item"
+                  a {
+                    classes = setOf("nav-link", if (requestContext.application.hasServiceTools()) "" else "disabled")
+                    id = "$SERVICE_TOOLS-tab"
+                    attribs("hx-on:click" to "selectTab('$SERVICE_TOOLS')")
+                    href = "#"
+                    +"Service Tools"
+                  }
+                }
+
+                li {
+                  classes += "nav-item"
+                  a {
+                    classes = setOf("nav-link", if (requestContext.application.hasManualTools()) "" else "disabled")
+                    id = "$MANUAL_TOOLS-tab"
+                    attribs("hx-on:click" to "selectTab('$MANUAL_TOOLS')")
+                    +"Manual Tools"
+                  }
+                }
+
+                li {
+                  classes += "nav-item"
+                  a {
+                    classes = setOf("nav-link", if (requestContext.application.hasFunctions()) "" else "disabled")
+                    id = "$FUNCTIONS-tab"
+                    attribs("hx-on:click" to "selectTab('$FUNCTIONS')")
+                    +"Functions"
+                  }
                 }
               }
-
-              li("nav-item") {
-                a {
-                  val enabled = if (requestContext.application.hasServiceTools()) "" else "disabled"
-                  classes = setOf("nav-link", enabled)
-                  id = "$SERVICE_TOOLS-tab"
-                  attribs("hx-on:click" to "selectTab('$SERVICE_TOOLS')")
-                  href = "#"
-                  +"Service Tools"
-                }
-              }
-
-              li("nav-item") {
-                a {
-                  val enabled = if (requestContext.application.hasManualTools()) "" else "disabled"
-                  classes = setOf("nav-link", enabled)
-                  id = "$MANUAL_TOOLS-tab"
-                  attribs("hx-on:click" to "selectTab('$MANUAL_TOOLS')")
-                  +"Manual Tools"
-                }
-              }
-
-              li("nav-item") {
-                a {
-                  val enabled = if (requestContext.application.hasFunctions()) "" else "disabled"
-                  classes = setOf("nav-link", enabled)
-                  id = "$FUNCTIONS-tab"
-                  attribs("hx-on:click" to "selectTab('$FUNCTIONS')")
-                  +"Functions"
+            }
+          } else {
+            div {
+              classes = setOf("collapse", "navbar-collapse")
+              id = "navbarNav"
+              ul {
+                // classes += "navbar-nav"
+                classes = setOf("nav", "nav-tabs")
+                li {
+                  classes += "nav-item"
+                  a {
+                    classes = setOf("nav-link", "active")
+                    id = "$MESSAGE_RESPONSE-tab"
+                    // attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
+                    attributes["aria-current"] = "page"
+                    +"Error Message"
+                  }
                 }
               }
             }
@@ -254,25 +275,38 @@ object ValidateAssistantRequestPage {
       classes += VALIDATION_DATA
       id = "$MESSAGE_RESPONSE-data"
 
-      h3 {
-        +"Vapi Server URL: "
-        a {
-          href = application.serverUrl
-          target = "_blank"
-          +application.serverUrl
+      div {
+        classes += ERROR_MSG
+        h6 {
+          style = "padding-top: 10px;"
+          +"Vapi Server URL: "
+          a {
+            href = application.serverUrl
+            target = "_blank"
+            +application.serverUrl
+          }
         }
+        h6 { +"Status: $status" }
       }
 
-      h3 { +"Status: $status" }
       if (responseBody.isNotEmpty()) {
         if (responseBody.length < 80) {
-          h3 { +"Error: $responseBody" }
+          h6 {
+            classes += ERROR_MSG
+            +"Error: $responseBody"
+          }
         } else {
-          h3 { +"Error:" }
-          pre { +responseBody }
+          h6 {
+            classes += ERROR_MSG
+            +"Error:"
+          }
+          pre { +"  $responseBody" }
         }
       } else {
-        h3 { +"Check the ktor log for error information." }
+        h6 {
+          classes += ERROR_MSG
+          +"Check the ktor log for error information."
+        }
       }
     }
   }

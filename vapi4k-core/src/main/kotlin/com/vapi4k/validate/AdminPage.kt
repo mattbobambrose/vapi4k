@@ -109,7 +109,7 @@ internal object AdminPage {
 
       main("d-flex flex-nowrap") {
         div {
-          classes = setOf("d-flex", "flex-column", "flex-shrink-0", "p-3", "bg-body-tertiary", "sidebar")
+          classes = setOf("d-flex", "flex-column", "flex-shrink-0", "p-2", "bg-body-tertiary", "sidebar")
           style = "width: 280px;"
           span {
             classes = setOf(
@@ -121,6 +121,7 @@ internal object AdminPage {
               "link-body-emphasis",
               "text-decoration-none",
             )
+            style = "padding-top: 5px; padding-left: 20px;"
             // svg("bi pe-none me-2") { details(40, 32, "bootstrap") }
             span {
               classes += "fs-4"
@@ -128,7 +129,9 @@ internal object AdminPage {
             }
           }
 
-          hr {}
+          hr {
+            style = "margin-top: 5px; margin-bottom: 5px;"
+          }
 
           ul {
             classes = setOf("nav", "nav-pills", "flex-column", "mb-auto")

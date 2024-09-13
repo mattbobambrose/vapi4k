@@ -80,6 +80,7 @@ object CssNames {
 
   const val VALIDATION_DATA = "validation-data"
   const val HIDDEN = "hidden"
+  const val ERROR_MSG = "error-msg"
 }
 
 object ErrorMessages {

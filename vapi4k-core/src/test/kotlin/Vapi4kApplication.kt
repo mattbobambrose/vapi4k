@@ -90,6 +90,7 @@ fun Application.module() {
 
             functions {
               function(FavoriteFoodService())
+              function(FavoriteFoodService())
             }
 
             tools {
