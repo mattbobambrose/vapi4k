@@ -1,4 +1,4 @@
-function updateMainPrismContent() {
+function updateMainResponseContent() {
   document.body.addEventListener(
     'htmx:afterOnLoad',
     function (event) {
@@ -10,7 +10,7 @@ function updateMainPrismContent() {
     });
 }
 
-function updateToolPrismContent(divId) {
+function updateToolContent(divId) {
   document.body.addEventListener(
     'htmx:afterOnLoad',
     function (event) {
@@ -27,6 +27,12 @@ function updateToolPrismContent(divId) {
       }
     });
 }
+
+function closeToolContent(divId) {
+    const preElement = document.querySelector(`#display-${divId}`);
+    preElement.style.display = 'none';
+}
+
 
 function updateSidebarSelected() {
   document.body.addEventListener(

@@ -333,6 +333,7 @@ object ValidateAssistantRequestPage {
                 addHiddenFields(newRequestContext, toolName, false)
 
                 table {
+                  // attributes["width"] = "100%"
                   tbody {
                     functionDetails.params
                       .filter { it.second.isNotRequestContextClass() }
@@ -360,7 +361,7 @@ object ValidateAssistantRequestPage {
                   }
                 }
               }
-              displayToolResponse(divId)
+              addToolResponse(divId)
             }
           }
         }
@@ -416,7 +417,7 @@ object ValidateAssistantRequestPage {
                 }
               }
             }
-            displayToolResponse(divId)
+            addToolResponse(divId)
           }
         }
     } else {
@@ -479,7 +480,7 @@ object ValidateAssistantRequestPage {
                   }
                 }
               }
-              displayToolResponse(divId)
+              addToolResponse(divId)
             }
           }
         }
@@ -532,20 +533,11 @@ object ValidateAssistantRequestPage {
   private fun TBODY.addInvokeToolOption(name: String) {
     tr {
       td {
-        span {
-          input {
-            style = "text-align: left;"
-            id = "invoke-input"
-            type = InputType.submit
-            value = "Invoke $name"
-          }
-
-          button {
-            style = "text-align: right;"
-            classes += "btn-close"
-            type = ButtonType.button
-            attributes["aria-label"] = "Close"
-          }
+        input {
+          style = "text-align: left;"
+          id = "invoke-input"
+          type = InputType.submit
+          value = "Invoke $name"
         }
       }
       td {}
@@ -553,14 +545,23 @@ object ValidateAssistantRequestPage {
     }
   }
 
-  private fun DIV.displayToolResponse(divId: String) {
-    script { rawHtml("updateToolPrismContent(`$divId`);\n") }
+  private fun DIV.addToolResponse(divId: String) {
+    script { rawHtml("updateToolContent(`$divId`);\n") }
 
     div {
-      classes += "tools-div"
+      classes = setOf("tools-div", "hidden")
+      id = "display-$divId"
+
+      button {
+        classes += "btn-close"
+        type = ButtonType.button
+        attribs(
+          "hx-on:click" to "closeToolContent('$divId')",
+          "aria-label" to "Close",
+        )
+      }
+
       pre {
-        classes += "tools-pre"
-        id = "display-$divId"
         code {
           classes = setOf("language-json", "line-numbers", "match-braces")
           id = "result-$divId"

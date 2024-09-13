@@ -385,7 +385,7 @@ internal object AdminPage {
         }
       }
 
-      script { rawHtml("updateMainPrismContent();\n") }
+      script { rawHtml("updateMainResponseContent();\n") }
       script { rawHtml("updateSidebarSelected();\n") }
       js(
         "$BS_BASE/dist/js/bootstrap.bundle.min.js",
