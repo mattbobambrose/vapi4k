@@ -22,6 +22,7 @@ import com.vapi4k.common.AssistantId.Companion.getAssistantIdFromSuffix
 import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.CssNames.FUNCTIONS
+import com.vapi4k.common.CssNames.HIDDEN
 import com.vapi4k.common.CssNames.MANUAL_TOOLS
 import com.vapi4k.common.CssNames.MESSAGE_RESPONSE
 import com.vapi4k.common.CssNames.SERVICE_TOOLS
@@ -39,6 +40,7 @@ import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomString
+import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.html
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.JsonUtils.getFunctionNames
@@ -54,7 +56,6 @@ import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
-import com.vapi4k.validate.AdminPage.attribs
 import io.ktor.http.HttpStatusCode
 import kotlinx.html.ButtonType
 import kotlinx.html.DIV
@@ -70,12 +71,12 @@ import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h2
 import kotlinx.html.h3
+import kotlinx.html.h6
 import kotlinx.html.hiddenInput
 import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.li
 import kotlinx.html.nav
-import kotlinx.html.p
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.span
@@ -135,7 +136,8 @@ object ValidateAssistantRequestPage {
 
               li("nav-item") {
                 a {
-                  classes += "nav-link"
+                  val enabled = if (requestContext.application.hasServiceTools()) "" else "disabled"
+                  classes = setOf("nav-link", enabled)
                   id = "$SERVICE_TOOLS-tab"
                   attribs("hx-on:click" to "selectTab('$SERVICE_TOOLS')")
                   href = "#"
@@ -145,7 +147,8 @@ object ValidateAssistantRequestPage {
 
               li("nav-item") {
                 a {
-                  classes += "nav-link"
+                  val enabled = if (requestContext.application.hasManualTools()) "" else "disabled"
+                  classes = setOf("nav-link", enabled)
                   id = "$MANUAL_TOOLS-tab"
                   attribs("hx-on:click" to "selectTab('$MANUAL_TOOLS')")
                   +"Manual Tools"
@@ -154,7 +157,8 @@ object ValidateAssistantRequestPage {
 
               li("nav-item") {
                 a {
-                  classes += "nav-link"
+                  val enabled = if (requestContext.application.hasFunctions()) "" else "disabled"
+                  classes = setOf("nav-link", enabled)
                   id = "$FUNCTIONS-tab"
                   attribs("hx-on:click" to "selectTab('$FUNCTIONS')")
                   +"Functions"
@@ -191,7 +195,7 @@ object ValidateAssistantRequestPage {
       pre {
         code {
           classes = setOf("language-json", "line-numbers", "match-braces")
-          id = "result-main"
+          id = "response-main"
           +responseBody.toJsonString()
         }
       }
@@ -288,20 +292,29 @@ object ValidateAssistantRequestPage {
   ) {
     val toolNames = jsonElement.getToolNames(key)
     val funcNames = jsonElement.getFunctionNames(key)
-    div {
-      classes = setOf(VALIDATION_DATA, "hidden")
-      id = "$SERVICE_TOOLS-data"
-      displayServiceTools(requestContext, toolNames)
+
+    if (requestContext.application.hasServiceTools()) {
+      div {
+        classes = setOf(VALIDATION_DATA, HIDDEN)
+        id = "$SERVICE_TOOLS-data"
+        displayServiceTools(requestContext, toolNames)
+      }
     }
-    div {
-      classes = setOf(VALIDATION_DATA, "hidden")
-      id = "$MANUAL_TOOLS-data"
-      displayManualTools(requestContext, toolNames)
+
+    if (requestContext.application.hasManualTools()) {
+      div {
+        classes = setOf(VALIDATION_DATA, HIDDEN)
+        id = "$MANUAL_TOOLS-data"
+        displayManualTools(requestContext, toolNames)
+      }
     }
-    div {
-      classes = setOf(VALIDATION_DATA, "hidden")
-      id = "$FUNCTIONS-data"
-      displayFunctions(requestContext, funcNames)
+
+    if (requestContext.application.hasFunctions()) {
+      div {
+        classes = setOf(VALIDATION_DATA, HIDDEN)
+        id = "$FUNCTIONS-data"
+        displayFunctions(requestContext, funcNames)
+      }
     }
   }
 
@@ -309,91 +322,83 @@ object ValidateAssistantRequestPage {
     requestContext: RequestContextImpl,
     toolNames: List<String>,
   ) {
-    if (requestContext.application.hasServiceTools()) {
-//      h3 { +"Service Tools" }
-      val serviceCache = requestContext.application.serviceToolCache
-      toolNames
-        .mapIndexed { i, name ->
-          // Grab assistantId from suffix of function name
-          val assistantId = name.getAssistantIdFromSuffix()
-          val newRequestContext = requestContext.copyWithNewAssistantId(assistantId)
-          name.toFunctionName() to newRequestContext
-        }
-        .forEach { (toolName, newRequestContext) ->
-          val functionInfo = serviceCache.getFromCache(newRequestContext)
-          if (functionInfo.containsFunction(toolName)) {
-            val functionDetails = functionInfo.getFunction(toolName)
-            val divId = getRandomString()
+    val serviceCache = requestContext.application.serviceToolCache
+    toolNames
+      .mapIndexed { i, name ->
+        // Grab assistantId from suffix of function name
+        val assistantId = name.getAssistantIdFromSuffix()
+        val newRequestContext = requestContext.copyWithNewAssistantId(assistantId)
+        name.toFunctionName() to newRequestContext
+      }
+      .forEach { (toolName, newRequestContext) ->
+        val functionInfo = serviceCache.getFromCache(newRequestContext)
+        if (functionInfo.containsFunction(toolName)) {
+          val functionDetails = functionInfo.getFunction(toolName)
+          val divId = getRandomString()
 
-            div {
-              id = TOOLS_DIV
-              p { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
-              form {
-                setHtmxTags(ToolType.SERVICE_TOOL, newRequestContext, divId)
-                addHiddenFields(newRequestContext, toolName, false)
+          div {
+            id = TOOLS_DIV
+            h6 { +functionDetails.toolCallInfo.llmDescription }
+            div { +"${functionDetails.fqNameWithParams}: ${functionDetails.returnType}" }
+            form {
+              setHtmxTags(ToolType.SERVICE_TOOL, newRequestContext, divId)
+              addHiddenFields(newRequestContext, toolName, false)
 
-                table {
-                  // attributes["width"] = "100%"
-                  tbody {
-                    functionDetails.params
-                      .filter { it.second.isNotRequestContextClass() }
-                      .forEach { functionDetail ->
-                        tr {
-                          td { +"${functionDetail.first}:" }
-                          td {
-                            input {
-                              id = "tools-input"
-                              type =
-                                when (functionDetail.second.asKClass()) {
-                                  String::class -> InputType.text
-                                  Int::class -> InputType.number
-                                  Double::class -> InputType.number
-                                  Boolean::class -> InputType.checkBox
-                                  else -> InputType.text
-                                }
-                              name = functionDetail.first
-                            }
+              table {
+                tbody {
+                  functionDetails.params
+                    .filter { it.second.isNotRequestContextClass() }
+                    .forEach { functionDetail ->
+                      tr {
+                        td { +"${functionDetail.first}:" }
+                        td {
+                          input {
+                            id = "tools-input"
+                            type =
+                              when (functionDetail.second.asKClass()) {
+                                String::class -> InputType.text
+                                Int::class -> InputType.number
+                                Double::class -> InputType.number
+                                Boolean::class -> InputType.checkBox
+                                else -> InputType.text
+                              }
+                            name = functionDetail.first
                           }
-                          td { +"[${functionDetail.second.paramAnnotationWithDefault}]" }
                         }
+                        td { +"(${functionDetail.second.paramAnnotationWithDefault})" }
                       }
-                    addInvokeToolOption("Tool")
-                  }
+                    }
+                  addInvokeToolOption("Tool")
                 }
               }
-              addToolResponse(divId)
             }
+            addToolResponse(divId)
           }
         }
-    } else {
-      h3 { +"No Service Tools" }
-    }
+      }
   }
 
   private fun TagConsumer<*>.displayManualTools(
     requestContext: RequestContextImpl,
     toolNames: List<String>,
   ) {
-    if (requestContext.application.hasManualTools()) {
-//      h3 { +"Manual Tools" }
-      toolNames
-        .mapIndexed { i, name ->
-          name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId()
-        }
-        .filter { (toolName, _) -> requestContext.application.containsManualTool(toolName) }
-        .forEach { (funcName, assistantId) ->
-          div {
-            id = TOOLS_DIV
-            val manualToolImpl = requestContext.application.getManualTool(funcName)
-            val divId = getRandomString()
-            p { +"$funcName (${manualToolImpl.signature})" }
-            form {
-              setHtmxTags(ToolType.MANUAL_TOOL, requestContext, divId)
-              addHiddenFields(requestContext, funcName, true)
+    toolNames
+      .mapIndexed { i, name -> name.toFunctionName() to name.split(ID_SEPARATOR).last().toAssistantId() }
+      .filter { (toolName, _) -> requestContext.application.containsManualTool(toolName) }
+      .forEach { (funcName, assistantId) ->
+        div {
+          id = TOOLS_DIV
+          val manualToolImpl = requestContext.application.getManualTool(funcName)
+          val divId = getRandomString()
+          h6 { +"$funcName(${manualToolImpl.signature})" }
+          form {
+            setHtmxTags(ToolType.MANUAL_TOOL, requestContext, divId)
+            addHiddenFields(requestContext, funcName, true)
 
-              table {
-                tbody {
-                  manualToolImpl.properties.forEach { (propertyName, propertyDesc) ->
+            table {
+              tbody {
+                manualToolImpl.properties
+                  .forEach { (propertyName, propertyDesc) ->
                     tr {
                       td { +"$propertyName:" }
                       td {
@@ -410,83 +415,76 @@ object ValidateAssistantRequestPage {
                           name = propertyName
                         }
                       }
-                      td { +"[${propertyDesc.description}]" }
+                      td { +"(${propertyDesc.description})" }
                     }
                   }
-                  addInvokeToolOption("Tool")
-                }
+                addInvokeToolOption("Tool")
               }
             }
-            addToolResponse(divId)
           }
+          addToolResponse(divId)
         }
-    } else {
-      h3 { +"No Manual Tools" }
-    }
+      }
   }
 
   private fun TagConsumer<*>.displayFunctions(
     requestContext: RequestContextImpl,
     funcNames: List<String>,
   ) {
-    if (requestContext.application.hasFunctions()) {
-//      h3 { +"Functions" }
-      val functionCache = requestContext.application.functionCache
-      funcNames
-        .mapIndexed { i, name ->
-          // Grab assistantId from suffix of function name
-          val assistantId = name.getAssistantIdFromSuffix()
-          val newRequestContext = requestContext.copyWithNewAssistantId(assistantId)
-          name.toFunctionName() to newRequestContext
-        }
-        .forEach { (funcName, newRequestContext) ->
-          val functionInfo = functionCache.getFromCache(newRequestContext)
-          if (functionInfo.containsFunction(funcName)) {
-            val functionDetails = functionInfo.getFunction(funcName)
-            val divId = getRandomString()
+    val functionCache = requestContext.application.functionCache
+    funcNames
+      .mapIndexed { i, name ->
+        // Grab assistantId from suffix of function name
+        val assistantId = name.getAssistantIdFromSuffix()
+        val newRequestContext = requestContext.copyWithNewAssistantId(assistantId)
+        name.toFunctionName() to newRequestContext
+      }
+      .forEach { (funcName, newRequestContext) ->
+        val functionInfo = functionCache.getFromCache(newRequestContext)
+        if (functionInfo.containsFunction(funcName)) {
+          val functionDetails = functionInfo.getFunction(funcName)
+          val divId = getRandomString()
 
-            div {
-              id = TOOLS_DIV
-              p { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
-              form {
-                setHtmxTags(ToolType.FUNCTION, newRequestContext, divId)
-                addHiddenFields(newRequestContext, funcName, false)
+          div {
+            id = TOOLS_DIV
+            h6 { +functionDetails.toolCallInfo.llmDescription }
+            div { +"${functionDetails.fqNameWithParams}: ${functionDetails.returnType}" }
+            form {
+              setHtmxTags(ToolType.FUNCTION, newRequestContext, divId)
+              addHiddenFields(newRequestContext, funcName, false)
 
-                table {
-                  tbody {
-                    functionDetails.params
-                      .filter { it.second.isNotRequestContextClass() }
-                      .forEach { functionDetail ->
-                        tr {
-                          td { +"${functionDetail.first}:" }
-                          td {
-                            input {
-                              id = "tools-input"
-                              type =
-                                when (functionDetail.second.asKClass()) {
-                                  String::class -> InputType.text
-                                  Int::class -> InputType.number
-                                  Double::class -> InputType.number
-                                  Boolean::class -> InputType.checkBox
-                                  else -> InputType.text
-                                }
-                              name = functionDetail.first
-                            }
+              table {
+                tbody {
+                  functionDetails.params
+                    .filter { it.second.isNotRequestContextClass() }
+                    .forEach { functionDetail ->
+                      tr {
+                        td { +"${functionDetail.first}:" }
+                        td {
+                          input {
+                            id = "tools-input"
+                            type =
+                              when (functionDetail.second.asKClass()) {
+                                String::class -> InputType.text
+                                Int::class -> InputType.number
+                                Double::class -> InputType.number
+                                Boolean::class -> InputType.checkBox
+                                else -> InputType.text
+                              }
+                            name = functionDetail.first
                           }
-                          td { +"[${functionDetail.second.paramAnnotationWithDefault}]" }
                         }
+                        td { +"(${functionDetail.second.paramAnnotationWithDefault})" }
                       }
-                    addInvokeToolOption("Function")
-                  }
+                    }
+                  addInvokeToolOption("Function")
                 }
               }
-              addToolResponse(divId)
             }
+            addToolResponse(divId)
           }
         }
-    } else {
-      h3 { +"No Functions" }
-    }
+      }
   }
 
   private fun FORM.setHtmxTags(
@@ -549,7 +547,7 @@ object ValidateAssistantRequestPage {
     script { rawHtml("updateToolContent(`$divId`);\n") }
 
     div {
-      classes = setOf("tools-div", "hidden")
+      classes = setOf("tools-div", HIDDEN)
       id = "display-$divId"
 
       button {

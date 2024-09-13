@@ -79,6 +79,7 @@ object CssNames {
   const val FUNCTIONS = "functions"
 
   const val VALIDATION_DATA = "validation-data"
+  const val HIDDEN = "hidden"
 }
 
 object ErrorMessages {

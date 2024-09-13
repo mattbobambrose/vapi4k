@@ -4,7 +4,7 @@ function updateMainResponseContent() {
     function (event) {
       if (event.detail.target.id === `main-div`) {
         // Format the json result
-        const codeElement = document.querySelector(`#result-main`);
+        const codeElement = document.querySelector(`#response-main`);
         Prism.highlightElement(codeElement);
       }
     });
@@ -29,8 +29,8 @@ function updateToolContent(divId) {
 }
 
 function closeToolContent(divId) {
-    const preElement = document.querySelector(`#display-${divId}`);
-    preElement.style.display = 'none';
+  const preElement = document.querySelector(`#display-${divId}`);
+  preElement.style.display = 'none';
 }
 
 

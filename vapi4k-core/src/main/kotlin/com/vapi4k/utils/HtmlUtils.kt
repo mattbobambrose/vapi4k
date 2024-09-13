@@ -28,6 +28,10 @@ import kotlinx.html.unsafe
 object HtmlUtils {
   fun HTMLTag.rawHtml(html: String) = unsafe { raw(html) }
 
+  fun HTMLTag.attribs(vararg pairs: Pair<String, Any>) {
+    pairs.forEach { (k, v) -> attributes[k] = v.toString() }
+  }
+
   // Creates snippets of HTML for use with HTMX
   fun html(block: TagConsumer<StringBuilder>.() -> Unit): String =
     buildString {

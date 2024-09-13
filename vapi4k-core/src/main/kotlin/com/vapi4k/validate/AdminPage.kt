@@ -23,6 +23,7 @@ import com.vapi4k.common.CssNames.MAIN_DIV
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.css
 import com.vapi4k.utils.HtmlUtils.js
 import com.vapi4k.utils.HtmlUtils.rawHtml
@@ -30,8 +31,8 @@ import com.vapi4k.utils.common.Utils.ensureStartsWith
 import kotlinx.html.A
 import kotlinx.html.BODY
 import kotlinx.html.ButtonType
+import kotlinx.html.DIV
 import kotlinx.html.HTML
-import kotlinx.html.HTMLTag
 import kotlinx.html.SVG
 import kotlinx.html.UL
 import kotlinx.html.a
@@ -54,50 +55,6 @@ import kotlinx.html.title
 import kotlinx.html.ul
 
 internal object AdminPage {
-  fun HTMLTag.attribs(vararg pairs: Pair<String, Any>) {
-    pairs.forEach { (k, v) -> attributes[k] = v.toString() }
-  }
-
-  fun SVG.details(
-    width: Int,
-    height: Int,
-    href: String,
-  ) {
-    attribs(
-      "width" to width,
-      "height" to height,
-    )
-    rawHtml(
-      """
-           <use xlink:href="#$href"/>
-        """,
-    )
-  }
-
-  fun A.setHtmxTags(app: AbstractApplicationImpl) {
-    attribs(
-      "hx-get" to "$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
-      "hx-trigger" to "click",
-      "hx-target" to "#$MAIN_DIV",
-    )
-  }
-
-  fun UL.applicationDetails(app: AbstractApplicationImpl) {
-    li {
-      a {
-        classes = setOf(
-          "link-body-emphasis",
-          "d-inline-flex",
-          "text-decoration-none",
-          "rounded",
-          "sidebar-menu-item",
-        )
-        setHtmxTags(app)
-        +app.serverPath.ensureStartsWith("/")
-      }
-    }
-  }
-
   fun HTML.adminPage(config: Vapi4kConfigImpl) {
     head {
       meta {
@@ -146,7 +103,7 @@ internal object AdminPage {
         """,
       )
 
-      toggleTheme()
+      addToggleThemeButton()
 
       declareSvgs()
 
@@ -241,8 +198,11 @@ internal object AdminPage {
               }
             }
 
-            li("mb-1") {
-              button(classes = "btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed") {
+            li {
+              classes += "mb-1"
+              button {
+                classes =
+                  setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "rounded", "border-0", "collapsed")
                 attribs(
                   "data-bs-toggle" to "collapse",
                   "data-bs-target" to "#web-collapse",
@@ -252,7 +212,8 @@ internal object AdminPage {
                 +"Web Applications"
               }
 
-              div("collapse show") {
+              div {
+                classes = setOf("collapse", "show")
                 id = "web-collapse"
 
                 ul {
@@ -260,124 +221,12 @@ internal object AdminPage {
                   // h2 { +"${if (apps.isEmpty()) "No " else ""}InboundCall Applications" }
                   config.webApplications.forEach { applicationDetails(it) }
                 }
-
-//                ul("btn-toggle-nav list-unstyled fw-normal pb-1 small") {
-//                  li {
-//                    a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-//                      href = "#"
-//                      +"OutboundCall Applications"
-//                    }
-//                  }
-//
-//                  li {
-//                    a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-//                      href = "#"
-//                      +"InboundCall Applications"
-//                    }
-//                  }
-//
-//                  li {
-//                    a(classes = "link-body-emphasis d-inline-flex text-decoration-none rounded") {
-//                      href = "#"
-//                      +"Web Applications"
-//                    }
-//                  }
-//                }
-              }
-            }
-
-//            li {
-//              a(classes = "nav-link link-body-emphasis") {
-//                href = "#"
-//                svg("bi pe-none me-2") {
-//                  details(16, 16, "speedometer2")
-//                }
-//                +"Dashboard"
-//              }
-//            }
-//
-//            li {
-//              a(classes = "nav-link link-body-emphasis") {
-//                href = "#"
-//                svg("bi pe-none me-2") {
-//                  details(16, 16, "table")
-//                }
-//                +"Orders"
-//              }
-//            }
-//
-//            li {
-//              a(classes = "nav-link link-body-emphasis") {
-//                href = "#"
-//                svg("bi pe-none me-2") {
-//                  details(16, 16, "grid")
-//                }
-//                +"Products"
-//              }
-//            }
-//
-//            li {
-//              a(classes = "nav-link link-body-emphasis") {
-//                href = "#"
-//                svg("bi pe-none me-2") {
-//                  details(16, 16, "people-circle")
-//                }
-//                +"Customers"
-//              }
-//            }
-          }
-
-          hr {}
-          div("dropdown") {
-            a(classes = "d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle") {
-              href = "#"
-              attributes["data-bs-toggle"] = "dropdown"
-              attributes["aria-expanded"] = "false"
-              img(classes = "rounded-circle me-2") {
-                src = "https://github.com/mdo.png"
-                alt = ""
-                width = "32"
-                height = "32"
-              }
-              strong { +"mdo" }
-            }
-            ul("dropdown-menu text-small shadow") {
-              li {
-                a(classes = "dropdown-item") {
-                  href = "#"
-                  +"New project..."
-                }
-              }
-              li {
-                a(classes = "dropdown-item") {
-                  href = "#"
-                  +"Settings"
-                }
-              }
-              li {
-                a(classes = "dropdown-item") {
-                  href = "#"
-                  +"""Profile"""
-                }
-              }
-              li {
-                hr("dropdown-divider") {
-                }
-              }
-              li {
-                a(classes = "dropdown-item") {
-                  href = "#"
-                  +"""Sign out"""
-                }
               }
             }
           }
+
+          // addBottonOptions()
         }
-
-//        iconOnly()
-
-//        collapsible()
-//        spacer()
 
         div {
           classes = setOf("container-fluid", "overflow-auto")
@@ -387,10 +236,60 @@ internal object AdminPage {
 
       script { rawHtml("updateMainResponseContent();\n") }
       script { rawHtml("updateSidebarSelected();\n") }
+
       js(
         "$BS_BASE/dist/js/bootstrap.bundle.min.js",
         "$STATIC_BASE/js/sidebars.js",
       )
+    }
+  }
+
+  private fun DIV.addBottonOptions() {
+    hr {}
+
+    div("dropdown") {
+      a(classes = "d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle") {
+        href = "#"
+        attributes["data-bs-toggle"] = "dropdown"
+        attributes["aria-expanded"] = "false"
+        img(classes = "rounded-circle me-2") {
+          src = "https://github.com/mdo.png"
+          alt = ""
+          width = "32"
+          height = "32"
+        }
+        strong { +"mdo" }
+      }
+      ul("dropdown-menu text-small shadow") {
+        li {
+          a(classes = "dropdown-item") {
+            href = "#"
+            +"New project..."
+          }
+        }
+        li {
+          a(classes = "dropdown-item") {
+            href = "#"
+            +"Settings"
+          }
+        }
+        li {
+          a(classes = "dropdown-item") {
+            href = "#"
+            +"""Profile"""
+          }
+        }
+        li {
+          hr("dropdown-divider") {
+          }
+        }
+        li {
+          a(classes = "dropdown-item") {
+            href = "#"
+            +"""Sign out"""
+          }
+        }
+      }
     }
   }
 
@@ -427,7 +326,7 @@ internal object AdminPage {
     )
   }
 
-  private fun BODY.toggleTheme() {
+  private fun BODY.addToggleThemeButton() {
     div("dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle") {
       button(classes = "btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center") {
         id = "bd-theme"
@@ -519,6 +418,46 @@ internal object AdminPage {
             )
           }
         }
+      }
+    }
+  }
+
+  fun SVG.details(
+    width: Int,
+    height: Int,
+    href: String,
+  ) {
+    attribs(
+      "width" to width,
+      "height" to height,
+    )
+    rawHtml(
+      """
+           <use xlink:href="#$href"/>
+        """,
+    )
+  }
+
+  fun A.setHtmxTags(app: AbstractApplicationImpl) {
+    attribs(
+      "hx-get" to "$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
+      "hx-trigger" to "click",
+      "hx-target" to "#$MAIN_DIV",
+    )
+  }
+
+  fun UL.applicationDetails(app: AbstractApplicationImpl) {
+    li {
+      a {
+        classes = setOf(
+          "link-body-emphasis",
+          "d-inline-flex",
+          "text-decoration-none",
+          "rounded",
+          "sidebar-menu-item",
+        )
+        setHtmxTags(app)
+        +app.serverPath.ensureStartsWith("/")
       }
     }
   }

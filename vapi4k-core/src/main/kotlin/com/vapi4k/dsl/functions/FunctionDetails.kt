@@ -58,6 +58,7 @@ class FunctionDetails internal constructor(
   val fqNameWithParams get() = "$className.$functionName(${function.parameterSignature})"
   val methodWithParams get() = "$functionName(${function.parameterSignature})"
   val params get() = function.valueParameters
+  val returnType get() = function.returnType.asKClass().simpleName.orEmpty()
 
   override fun toString() = fqNameWithParams
 
