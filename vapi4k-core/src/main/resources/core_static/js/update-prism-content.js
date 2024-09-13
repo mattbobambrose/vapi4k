@@ -4,10 +4,13 @@ function updateMainResponseContent() {
     function (event) {
       if (event.detail.target.id === `main-div`) {
         // Format the json result
-        const codeElement = document.querySelector(`#response-main`);
-        Prism.highlightElement(codeElement);
+        const element = document.querySelector(`#response-main`);
+        // This is added here because the line-numbers class was getting deleted on the 2nd selection
+        element.classList.add("line-numbers");
+        Prism.highlightElement(element);
       }
-    });
+    }
+  );
 }
 
 function updateToolContent(divId) {
@@ -25,7 +28,8 @@ function updateToolContent(divId) {
         const preElement = document.querySelector(`#display-${divId}`);
         preElement.style.display = 'block';
       }
-    });
+    }
+  );
 }
 
 function closeToolContent(divId) {
@@ -45,7 +49,8 @@ function updateSidebarSelected() {
           });
         event.target.classList.add('active');
       }
-    });
+    }
+  );
 }
 
 function selectTab(name) {
@@ -58,9 +63,9 @@ function selectTab(name) {
 
   document.querySelectorAll('.validation-data')
     .forEach(item => {
-      item.classList.add('hidden');
-    });
+        item.classList.add('hidden');
+      }
+    );
 
   document.querySelector(`#${name}-data`).classList.remove('hidden');
-
 }

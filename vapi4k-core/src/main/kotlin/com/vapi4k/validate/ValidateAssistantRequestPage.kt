@@ -215,7 +215,8 @@ object ValidateAssistantRequestPage {
       }
       pre {
         code {
-          classes = setOf("language-json", "line-numbers", "match-braces")
+          // "line-numbers" is added in the JS code. It is a work-around for it getting dropped on the 2nd selection
+          classes = setOf("language-json", "match-braces")
           id = "response-main"
           +responseBody.toJsonString()
         }
