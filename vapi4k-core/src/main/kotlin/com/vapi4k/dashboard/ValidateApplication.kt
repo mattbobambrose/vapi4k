@@ -29,8 +29,8 @@ import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
-import com.vapi4k.dashboard.ValidateAssistant.errorNavItems
 import com.vapi4k.dashboard.ValidateAssistant.navBar
+import com.vapi4k.dashboard.ValidateAssistant.singleNavItem
 import com.vapi4k.dashboard.ValidateAssistant.validateAssistant
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
@@ -52,7 +52,9 @@ import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.common.Utils.isNotNull
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.common.Utils.toErrorString
+import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -68,12 +70,41 @@ import kotlinx.html.id
 import kotlinx.html.p
 import kotlinx.html.script
 import kotlinx.html.span
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.th
+import kotlinx.html.thead
+import kotlinx.html.tr
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import java.io.IOException
 
 internal object ValidateApplication {
+  fun applicationEnvVars(): String =
+    html {
+      navBar { singleNavItem("Environment Variables") }
+      table {
+        classes += "table"
+        id = "envTable"
+        thead {
+          tr {
+            th { +"Environment Variable" }
+            th { +"Value" }
+          }
+        }
+        tbody {
+          jsonEnvVarValues().forEach { (key, value) ->
+            tr {
+              td { +key }
+              td { +value.toJsonString(false) }
+            }
+          }
+        }
+      }
+    }
+
   suspend fun PipelineCall.validateApplication(config: Vapi4kConfigImpl): String =
     runCatching {
       val appType = call.parameters[APP_TYPE].orEmpty()
@@ -99,7 +130,7 @@ internal object ValidateApplication {
         validateAssistant(app, requestContext, status, responseBody)
       } else {
         html {
-          navBar { errorNavItems() }
+          navBar { singleNavItem() }
           div {
             classes += CONNECT_ERROR
             h2 { +"Error" }
@@ -113,7 +144,7 @@ internal object ValidateApplication {
       } else {
         logger.error(it) { "Error validating application" }
         html {
-          navBar { errorNavItems() }
+          navBar { singleNavItem() }
           div {
             classes += CONNECT_ERROR
             h2 { +"Error" }
@@ -125,7 +156,7 @@ internal object ValidateApplication {
 
   private fun serverBasePage() =
     html {
-      navBar { errorNavItems() }
+      navBar { singleNavItem() }
       div {
         classes += CONNECT_ERROR
         h2 { +"Configuration Error" }

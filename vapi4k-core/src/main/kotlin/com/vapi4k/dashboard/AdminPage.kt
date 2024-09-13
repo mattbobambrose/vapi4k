@@ -20,11 +20,13 @@ import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CssNames.MAIN_DIV
+import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.css
+import com.vapi4k.utils.HtmlUtils.details
 import com.vapi4k.utils.HtmlUtils.js
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.common.Utils.ensureStartsWith
@@ -32,7 +34,6 @@ import kotlinx.html.BODY
 import kotlinx.html.ButtonType
 import kotlinx.html.DIV
 import kotlinx.html.HTML
-import kotlinx.html.SVG
 import kotlinx.html.UL
 import kotlinx.html.a
 import kotlinx.html.body
@@ -51,6 +52,7 @@ import kotlinx.html.script
 import kotlinx.html.span
 import kotlinx.html.strong
 import kotlinx.html.style
+import kotlinx.html.svg
 import kotlinx.html.title
 import kotlinx.html.ul
 
@@ -160,75 +162,22 @@ internal object AdminPage {
 //                "aria-expanded" to "true",
 //              )
 //              svg("bi pe-none me-2") { details(16, 16, "table") }
-//              +"Application Validator"
+//              +"Environment Vars"
 //            }
 
-            li("mb-1") {
-              button {
-                classes =
-                  setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "rounded", "border-0", "collapsed")
-                attribs(
-                  "data-bs-toggle" to "collapse",
-                  "data-bs-target" to "#inbound-collapse",
-                  "aria-expanded" to "true",
-                )
-//                svg("bi pe-none me-2") { details(16, 16, "table") }
-                +"InboundCall Applications"
-              }
+            displayApplications("InboundCall Applications", config.inboundCallApplications, "inbound-collapse")
+            displayApplications("OutboundCall Applications", config.outboundCallApplications, "outbound-collapse")
+            displayApplications("Web Applications", config.webApplications, "web-collapse")
 
-              div("collapse show") {
-                id = "inbound-collapse"
-                ul {
-                  classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
-                  config.inboundCallApplications.forEach { applicationDetails(it) }
-                }
-              }
-            }
-
-            li("mb-1") {
-              button(classes = "btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed") {
-                attribs(
-                  "data-bs-toggle" to "collapse",
-                  "data-bs-target" to "#outbound-collapse",
-                  "aria-expanded" to "true",
-                )
-//                svg("bi pe-none me-2") { details(16, 16, "table") }
-                +"OutboundCall Applications"
-              }
-
-              div("collapse show") {
-                id = "outbound-collapse"
-
-                ul {
-                  classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
-                  config.outboundCallApplications.forEach { applicationDetails(it) }
-                }
-              }
-            }
-
-            li {
-              classes += "mb-1"
-              button {
-                classes =
-                  setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "rounded", "border-0", "collapsed")
-                attribs(
-                  "data-bs-toggle" to "collapse",
-                  "data-bs-target" to "#web-collapse",
-                  "aria-expanded" to "true",
-                )
-//                svg("bi pe-none me-2") { details(16, 16, "table") }
-                +"Web Applications"
-              }
-
-              div {
-                classes = setOf("collapse", "show")
-                id = "web-collapse"
-
-                ul {
-                  classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
-                  config.webApplications.forEach { applicationDetails(it) }
-                }
-              }
+            button(classes = "btn d-inline-flex align-items-center rounded border-0 sidebar-menu-item") {
+              attribs(
+                "hx-get" to ADMIN_ENV_PATH,
+                "hx-trigger" to "click",
+                "hx-target" to "#$MAIN_DIV",
+                "hx-indicator" to "#spinner",
+              )
+              svg("bi pe-none me-2") { details(16, 16, "table") }
+              +"Environment Vars"
             }
           }
 
@@ -251,9 +200,53 @@ internal object AdminPage {
     }
   }
 
+  private fun UL.displayApplications(
+    header: String,
+    applications: List<AbstractApplicationImpl>,
+    target: String,
+  ) {
+    li {
+      classes += "mb-1"
+      button {
+        classes =
+          setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "rounded", "border-0", "collapsed")
+        attribs(
+          "data-bs-toggle" to "collapse",
+          "data-bs-target" to "#$target",
+          "aria-expanded" to "true",
+        )
+//      svg("bi pe-none me-2") { details(16, 16, "table") }
+        +header
+      }
+
+      div {
+        classes = setOf("collapse", "show")
+        id = target
+        ul {
+          classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
+          applications.forEach { displayApplicationItems(it) }
+        }
+      }
+    }
+  }
+
+  private fun UL.displayApplicationItems(app: AbstractApplicationImpl) {
+    li {
+      a {
+        classes = setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", "rounded", "sidebar-menu-item")
+        attribs(
+          "hx-get" to "$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
+          "hx-trigger" to "click",
+          "hx-target" to "#$MAIN_DIV",
+          "hx-indicator" to "#spinner",
+        )
+        +app.serverPath.ensureStartsWith("/")
+      }
+    }
+  }
+
   private fun DIV.addBottomOptions() {
     hr {}
-
     div("dropdown") {
       a(classes = "d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle") {
         href = "#"
@@ -425,43 +418,6 @@ internal object AdminPage {
             )
           }
         }
-      }
-    }
-  }
-
-  fun SVG.details(
-    width: Int,
-    height: Int,
-    href: String,
-  ) {
-    attribs(
-      "width" to width,
-      "height" to height,
-    )
-    rawHtml(
-      """
-           <use xlink:href="#$href"/>
-        """,
-    )
-  }
-
-  fun UL.applicationDetails(app: AbstractApplicationImpl) {
-    li {
-      a {
-        classes = setOf(
-          "link-body-emphasis",
-          "d-inline-flex",
-          "text-decoration-none",
-          "rounded",
-          "sidebar-menu-item",
-        )
-        attribs(
-          "hx-get" to "$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
-          "hx-trigger" to "click",
-          "hx-target" to "#$MAIN_DIV",
-          "hx-indicator" to "#spinner",
-        )
-        +app.serverPath.ensureStartsWith("/")
       }
     }
   }

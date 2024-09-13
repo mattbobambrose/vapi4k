@@ -25,6 +25,7 @@ import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
 import com.vapi4k.common.Endpoints.ADMIN_PATH
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
@@ -39,6 +40,7 @@ import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dashboard.AdminPage.adminPage
 import com.vapi4k.dashboard.BootstrapPage2.bootstrapPage2
 import com.vapi4k.dashboard.InvokeTool.invokeTool
+import com.vapi4k.dashboard.ValidateApplication.applicationEnvVars
 import com.vapi4k.dashboard.ValidateApplication.validateApplication
 import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -167,6 +169,8 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> = createApplicationPlugin(
         }
 
         get(ADMIN_PATH) { call.respondHtml { adminPage(config) } }
+
+        get(ADMIN_ENV_PATH) { call.respondText(applicationEnvVars()) }
 
         get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { call.respondText(validateApplication(config)) }
 

@@ -19,6 +19,7 @@ package com.vapi4k.utils
 import kotlinx.html.FlowOrMetaDataOrPhrasingContent
 import kotlinx.html.HEAD
 import kotlinx.html.HTMLTag
+import kotlinx.html.SVG
 import kotlinx.html.TagConsumer
 import kotlinx.html.link
 import kotlinx.html.script
@@ -52,4 +53,22 @@ object HtmlUtils {
       script { src = file }
     }
   }
+
+  fun SVG.details(
+    width: Int,
+    height: Int,
+    href: String,
+  ) {
+    attribs(
+      "width" to width,
+      "height" to height,
+    )
+    rawHtml(
+      """
+           <use xlink:href="#$href"/>
+        """,
+    )
+  }
+
+
 }

@@ -57,7 +57,7 @@ object ValidateAssistant {
         if (status == HttpStatusCode.OK) {
           validNavItems(requestContext)
         } else {
-          errorNavItems()
+          singleNavItem()
         }
       }
 
@@ -131,12 +131,11 @@ object ValidateAssistant {
     }
   }
 
-  internal fun DIV.errorNavItems() {
+  internal fun DIV.singleNavItem(msg: String = "Error Message") {
     div {
       classes = setOf("collapse", "navbar-collapse")
       id = "navbarNav"
       ul {
-        // classes += "navbar-nav"
         classes = setOf("nav", "nav-tabs")
         li {
           classes += "nav-item"
@@ -144,7 +143,7 @@ object ValidateAssistant {
             classes = setOf("nav-link", "active")
             id = "$MESSAGE_RESPONSE-tab"
             attributes["aria-current"] = "page"
-            +"Error Message"
+            +msg
           }
         }
       }
