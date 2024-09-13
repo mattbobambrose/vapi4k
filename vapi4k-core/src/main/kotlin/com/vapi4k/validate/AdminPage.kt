@@ -125,6 +125,7 @@ internal object AdminPage {
             // svg("bi pe-none me-2") { details(40, 32, "bootstrap") }
             span {
               classes += "fs-4"
+              rawHtml("&nbsp;&nbsp;")
               +"Vapi4k Admin"
               rawHtml("&nbsp;&nbsp;&nbsp;&nbsp;")
             }
