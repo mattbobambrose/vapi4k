@@ -53,6 +53,10 @@
     margin-top: 10px;
 }
 
+.tools-div {
+    padding-top: 10px;
+}
+
 .tools-pre {
     display: none;
 }

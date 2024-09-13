@@ -56,12 +56,14 @@ import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.json.get
 import com.vapi4k.validate.AdminPage.attribs
 import io.ktor.http.HttpStatusCode
+import kotlinx.html.ButtonType
 import kotlinx.html.DIV
 import kotlinx.html.FORM
 import kotlinx.html.InputType
 import kotlinx.html.TBODY
 import kotlinx.html.TagConsumer
 import kotlinx.html.a
+import kotlinx.html.button
 import kotlinx.html.classes
 import kotlinx.html.code
 import kotlinx.html.div
@@ -73,6 +75,7 @@ import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.li
 import kotlinx.html.nav
+import kotlinx.html.p
 import kotlinx.html.pre
 import kotlinx.html.script
 import kotlinx.html.span
@@ -324,7 +327,7 @@ object ValidateAssistantRequestPage {
 
             div {
               id = TOOLS_DIV
-              h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
+              p { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
               form {
                 setHtmxTags(ToolType.SERVICE_TOOL, newRequestContext, divId)
                 addHiddenFields(newRequestContext, toolName, false)
@@ -382,7 +385,7 @@ object ValidateAssistantRequestPage {
             id = TOOLS_DIV
             val manualToolImpl = requestContext.application.getManualTool(funcName)
             val divId = getRandomString()
-            h3 { +"$funcName (${manualToolImpl.signature})" }
+            p { +"$funcName (${manualToolImpl.signature})" }
             form {
               setHtmxTags(ToolType.MANUAL_TOOL, requestContext, divId)
               addHiddenFields(requestContext, funcName, true)
@@ -443,7 +446,7 @@ object ValidateAssistantRequestPage {
 
             div {
               id = TOOLS_DIV
-              h3 { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
+              p { +"${functionDetails.fqNameWithParams}  [${functionDetails.toolCallInfo.llmDescription}]" }
               form {
                 setHtmxTags(ToolType.FUNCTION, newRequestContext, divId)
                 addHiddenFields(newRequestContext, funcName, false)
@@ -529,10 +532,20 @@ object ValidateAssistantRequestPage {
   private fun TBODY.addInvokeToolOption(name: String) {
     tr {
       td {
-        input {
-          id = "invoke-input"
-          type = InputType.submit
-          value = "Invoke $name"
+        span {
+          input {
+            style = "text-align: left;"
+            id = "invoke-input"
+            type = InputType.submit
+            value = "Invoke $name"
+          }
+
+          button {
+            style = "text-align: right;"
+            classes += "btn-close"
+            type = ButtonType.button
+            attributes["aria-label"] = "Close"
+          }
         }
       }
       td {}
@@ -543,12 +556,15 @@ object ValidateAssistantRequestPage {
   private fun DIV.displayToolResponse(divId: String) {
     script { rawHtml("updateToolPrismContent(`$divId`);\n") }
 
-    pre {
-      classes += "tools-pre"
-      id = "display-$divId"
-      code {
-        classes = setOf("language-json", "line-numbers", "match-braces")
-        id = "result-$divId"
+    div {
+      classes += "tools-div"
+      pre {
+        classes += "tools-pre"
+        id = "display-$divId"
+        code {
+          classes = setOf("language-json", "line-numbers", "match-braces")
+          id = "result-$divId"
+        }
       }
     }
   }
