@@ -29,6 +29,7 @@ import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dashboard.ValidateAssistant.navBar
 import com.vapi4k.dashboard.ValidateAssistant.singleNavItem
 import com.vapi4k.dashboard.ValidateAssistant.validateAssistant
@@ -39,6 +40,7 @@ import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.plugin.Vapi4kServer
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
@@ -66,6 +68,7 @@ import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.h2
+import kotlinx.html.h4
 import kotlinx.html.id
 import kotlinx.html.p
 import kotlinx.html.script
@@ -79,10 +82,11 @@ import kotlinx.html.tr
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
 import java.io.IOException
 
 internal object ValidateApplication {
-  fun applicationEnvVars(): String =
+  fun appEnvVars(): String =
     html {
       navBar { singleNavItem("Environment Variables") }
       table {
@@ -101,6 +105,18 @@ internal object ValidateApplication {
               td { +value.toJsonString(false) }
             }
           }
+        }
+      }
+    }
+
+  fun systemInfo(): String =
+    html {
+      navBar { singleNavItem("System Info") }
+      div {
+        id = "version-info"
+        val json = Vapi4kServer::class.versionDesc(true).toJsonElement()
+        for ((key, value) in json.jsonObject) {
+          h4 { +"$key: $value" }
         }
       }
     }

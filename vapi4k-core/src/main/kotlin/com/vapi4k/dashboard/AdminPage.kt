@@ -21,6 +21,7 @@ import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CssNames.MAIN_DIV
 import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
+import com.vapi4k.common.Endpoints.ADMIN_VERSION_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -34,6 +35,7 @@ import kotlinx.html.BODY
 import kotlinx.html.ButtonType
 import kotlinx.html.DIV
 import kotlinx.html.HTML
+import kotlinx.html.HTMLTag
 import kotlinx.html.UL
 import kotlinx.html.a
 import kotlinx.html.body
@@ -170,18 +172,19 @@ internal object AdminPage {
             displayApplications("Web Applications", config.webApplications, "web-collapse")
 
             button(classes = "btn d-inline-flex align-items-center rounded border-0 sidebar-menu-item") {
-              attribs(
-                "hx-get" to ADMIN_ENV_PATH,
-                "hx-trigger" to "click",
-                "hx-target" to "#$MAIN_DIV",
-                "hx-indicator" to "#spinner",
-              )
+              clickAction(ADMIN_ENV_PATH)
               svg("bi pe-none me-2") { details(16, 16, "table") }
               +"Environment Vars"
             }
-          }
 
-          // addBottomOptions()
+            button(classes = "btn d-inline-flex align-items-center rounded border-0 sidebar-menu-item") {
+              clickAction(ADMIN_VERSION_PATH)
+              svg("bi pe-none me-2") { details(16, 16, "table") }
+              +"System Version"
+            }
+
+            // addBottomOptions()
+          }
         }
 
         div {
@@ -198,6 +201,15 @@ internal object AdminPage {
         "$STATIC_BASE/js/sidebars.js",
       )
     }
+  }
+
+  private fun HTMLTag.clickAction(path: String) {
+    attribs(
+      "hx-get" to path,
+      "hx-trigger" to "click",
+      "hx-target" to "#$MAIN_DIV",
+      "hx-indicator" to "#spinner",
+    )
   }
 
   private fun UL.displayApplications(
@@ -234,12 +246,7 @@ internal object AdminPage {
     li {
       a {
         classes = setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", "rounded", "sidebar-menu-item")
-        attribs(
-          "hx-get" to "$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}",
-          "hx-trigger" to "click",
-          "hx-target" to "#$MAIN_DIV",
-          "hx-indicator" to "#spinner",
-        )
+        clickAction("$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}")
         +app.serverPath.ensureStartsWith("/")
       }
     }
