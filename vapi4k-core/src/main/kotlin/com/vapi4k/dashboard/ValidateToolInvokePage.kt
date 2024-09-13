@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.validate
+package com.vapi4k.dashboard
 
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.AssistantId.Companion.toAssistantId

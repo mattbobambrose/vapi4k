@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.validate
+package com.vapi4k.dashboard
 
 import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
@@ -235,7 +235,7 @@ internal object AdminPage {
             }
           }
 
-          // addBottonOptions()
+          // addBottomOptions()
         }
 
         div {
@@ -254,7 +254,7 @@ internal object AdminPage {
     }
   }
 
-  private fun DIV.addBottonOptions() {
+  private fun DIV.addBottomOptions() {
     hr {}
 
     div("dropdown") {

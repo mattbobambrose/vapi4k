@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.validate
+package com.vapi4k.dashboard
 
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType.FUNCTION_CALL

@@ -27,6 +27,7 @@ import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.dashboard.ValidateApplicationPage.isValidSecret
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.OutboundCallApplicationImpl
 import com.vapi4k.dsl.vapi4k.PipelineCall
@@ -54,7 +55,6 @@ import com.vapi4k.utils.json.JsonElementUtils.getOrNull
 import com.vapi4k.utils.json.JsonElementUtils.isNotEmpty
 import com.vapi4k.utils.json.JsonElementUtils.keys
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.validate.ValidateApplicationPage.isValidSecret
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
