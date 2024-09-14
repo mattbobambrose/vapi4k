@@ -33,8 +33,7 @@ function updateToolContent(divId) {
 }
 
 function closeToolContent(divId) {
-  const preElement = document.querySelector(`#display-${divId}`);
-  preElement.style.display = 'none';
+  document.querySelector(`#display-${divId}`).style.display = 'none';
 }
 
 
@@ -43,10 +42,9 @@ function updateSidebarSelected() {
     'click',
     function (event) {
       if (event.target.classList.contains('sidebar-menu-item')) {
-        document.querySelectorAll('.sidebar-menu-item')
-          .forEach(item => {
-            item.classList.remove('active');
-          });
+        document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+          item.classList.remove('active');
+        });
         event.target.classList.add('active');
       }
     }
@@ -54,10 +52,9 @@ function updateSidebarSelected() {
 }
 
 function selectTab(name) {
-  document.querySelectorAll('.nav-link')
-    .forEach(item => {
-      item.classList.remove('active');
-    });
+  document.querySelectorAll('.nav-link').forEach(item => {
+    item.classList.remove('active');
+  });
 
   document.querySelector(`#${name}-tab`).classList.add('active');
 
@@ -71,6 +68,5 @@ function selectTab(name) {
 }
 
 function updateServerBaseUrl() {
-  let span = document.getElementById("serverBaseUrl");
-  span.innerText = window.location.origin;
+  document.getElementById("serverBaseUrl").innerText = window.location.origin;
 }

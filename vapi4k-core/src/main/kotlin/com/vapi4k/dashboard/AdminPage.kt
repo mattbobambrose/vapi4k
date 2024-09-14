@@ -199,6 +199,7 @@ internal object AdminPage {
       js(
         "$BS_BASE/dist/js/bootstrap.bundle.min.js",
         "$STATIC_BASE/js/sidebars.js",
+        "$STATIC_BASE/js/fade-events.js",
       )
     }
   }
