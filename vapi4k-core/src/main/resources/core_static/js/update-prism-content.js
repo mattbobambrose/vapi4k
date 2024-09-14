@@ -18,22 +18,21 @@ function updateToolContent(divId) {
     'htmx:afterOnLoad',
     function (event) {
       if (event.detail.target.id === `result-${divId}`) {
-        // Format the json result
+        // Format the tool result
         let responseData = event.detail.target.innerHTML;
         const element = document.querySelector(`#result-${divId}`);
         element.textContent = responseData;
         Prism.highlightElement(element);
 
-        // Make the json result visible
-        const preElement = document.querySelector(`#display-${divId}`);
-        preElement.style.display = 'block';
+        // Make the tool result visible
+        document.querySelector(`#display-${divId}`).classList.remove('hidden');
       }
     }
   );
 }
 
 function closeToolContent(divId) {
-  document.querySelector(`#display-${divId}`).style.display = 'none';
+  document.querySelector(`#display-${divId}`).classList.add('hidden');
 }
 
 
