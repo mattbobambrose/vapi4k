@@ -202,6 +202,16 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
           webSocket(ADMIN_CONSOLE_ENDPOINT) {
             coroutineScope {
               launch {
+                // Clear div on client after a server restart
+                val reset =
+                  html {
+                    div {
+                      attributes["hx-swap-oob"] = "innerHTML:#$MAIN_DIV"
+                      +""
+                    }
+                  }
+                outgoing.send(Frame.Text(reset))
+
                 SharedDataLoader.accessSharedFlow()
                   .onStart { logger.info { "Starting to listen for console updates" } }
                   .onEach { msg ->
@@ -211,7 +221,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
                         html {
                           div {
                             attributes["hx-swap-oob"] = "beforeend:#$MAIN_DIV"
-                            +"$line\n" //.encodeForHtml()
+                            +"$line\n"
                           }
                         }
                       outgoing.send(Frame.Text(html))

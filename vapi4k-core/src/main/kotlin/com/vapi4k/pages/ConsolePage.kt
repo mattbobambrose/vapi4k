@@ -22,35 +22,26 @@ import com.vapi4k.common.Constants.HTMX_WS_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CssNames.MAIN_DIV
 import com.vapi4k.common.Endpoints.ADMIN_CONSOLE_ENDPOINT
-import com.vapi4k.common.Endpoints.VALIDATE_PATH
-import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.css
 import com.vapi4k.utils.HtmlUtils.js
 import com.vapi4k.utils.HtmlUtils.rawHtml
-import com.vapi4k.utils.common.Utils.ensureStartsWith
 import kotlinx.html.BODY
 import kotlinx.html.ButtonType
-import kotlinx.html.DIV
 import kotlinx.html.HTML
-import kotlinx.html.HTMLTag
-import kotlinx.html.UL
-import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.button
 import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.head
-import kotlinx.html.hr
 import kotlinx.html.id
-import kotlinx.html.img
 import kotlinx.html.li
 import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.pre
 import kotlinx.html.span
-import kotlinx.html.strong
+import kotlinx.html.style
 import kotlinx.html.title
 import kotlinx.html.ul
 
@@ -63,25 +54,23 @@ internal object ConsolePage {
       }
 
       css(
-        "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
+        // "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
         "$BS_BASE/dist/css/bootstrap.min.css",
         "$STATIC_BASE/css/sidebars2.css",
         "$STATIC_BASE/css/sidebars.css",
         "$STATIC_BASE/css/styles.css",
-        //  "$STATIC_BASE/css/prism.css",
         "$STATIC_BASE/css/validator.css",
       )
 
       js(
         HTMX_SOURCE_URL,
         HTMX_WS_SOURCE_URL,
-        //    "$STATIC_BASE/js/update-prism-content.js",
         "$STATIC_BASE/js/ws-events.js",
         "$STATIC_BASE/js/prism.js",
         "$STATIC_BASE/js/color-modes.js",
       )
 
-      title { +"Vapi4k Admin" }
+      title { +"Vapi4k Console" }
     }
 
     body {
@@ -190,121 +179,31 @@ internal object ConsolePage {
 //          }
 //        }
 
-        pre {
+        div {
           classes = setOf("container-fluid", "overflow-auto")
-          id = MAIN_DIV
-          attribs(
-            "hx-ext" to "ws",
-            "ws-connect" to ADMIN_CONSOLE_ENDPOINT,
-          )
+          id = "scrolling-div"
+          button {
+            attributes["onclick"] = "scrollToBottom()"
+            style = "position:fixed; float: right;"
+            +"Live Tail"
+          }
+
+          pre {
+            id = MAIN_DIV
+            attribs(
+              "hx-ext" to "ws",
+              "ws-connect" to ADMIN_CONSOLE_ENDPOINT,
+            )
+          }
         }
       }
-
-//      script { rawHtml("updateMainResponseContent();\n") }
-//      script { rawHtml("updateSidebarSelected();\n") }
 
       js(
         "$BS_BASE/dist/js/bootstrap.bundle.min.js",
         "$STATIC_BASE/js/sidebars.js",
         "$STATIC_BASE/js/fade-events.js",
+        "$STATIC_BASE/js/console-support.js",
       )
-    }
-  }
-
-  private fun HTMLTag.clickAction(path: String) {
-    attribs(
-      "hx-get" to path,
-      "hx-trigger" to "click",
-      "hx-target" to "#$MAIN_DIV",
-      "hx-indicator" to "#spinner",
-    )
-  }
-
-  private fun UL.displayApplications(
-    header: String,
-    applications: List<AbstractApplicationImpl>,
-    target: String,
-  ) {
-    li {
-      classes += "mb-1"
-      button {
-        classes =
-          setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "rounded", "border-0", "collapsed")
-        attribs(
-          "data-bs-toggle" to "collapse",
-          "data-bs-target" to "#$target",
-          "aria-expanded" to "true",
-        )
-//      svg("bi pe-none me-2") { details(16, 16, "table") }
-        +header
-      }
-
-      div {
-        classes = setOf("collapse", "show")
-        id = target
-        ul {
-          classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
-          applications.forEach { displayApplicationItems(it) }
-        }
-      }
-    }
-  }
-
-  private fun UL.displayApplicationItems(app: AbstractApplicationImpl) {
-    li {
-      a {
-        classes = setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", "rounded", "sidebar-menu-item")
-        clickAction("$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}")
-        +app.serverPath.ensureStartsWith("/")
-      }
-    }
-  }
-
-  private fun DIV.addBottomOptions() {
-    hr {}
-    div("dropdown") {
-      a(classes = "d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle") {
-        href = "#"
-        attributes["data-bs-toggle"] = "dropdown"
-        attributes["aria-expanded"] = "false"
-        img(classes = "rounded-circle me-2") {
-          src = "https://github.com/mdo.png"
-          alt = ""
-          width = "32"
-          height = "32"
-        }
-        strong { +"mdo" }
-      }
-      ul("dropdown-menu text-small shadow") {
-        li {
-          a(classes = "dropdown-item") {
-            href = "#"
-            +"New project..."
-          }
-        }
-        li {
-          a(classes = "dropdown-item") {
-            href = "#"
-            +"Settings"
-          }
-        }
-        li {
-          a(classes = "dropdown-item") {
-            href = "#"
-            +"""Profile"""
-          }
-        }
-        li {
-          hr("dropdown-divider") {
-          }
-        }
-        li {
-          a(classes = "dropdown-item") {
-            href = "#"
-            +"""Sign out"""
-          }
-        }
-      }
     }
   }
 

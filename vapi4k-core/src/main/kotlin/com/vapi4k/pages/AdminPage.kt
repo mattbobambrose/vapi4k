@@ -69,7 +69,7 @@ internal object AdminPage {
       }
 
       css(
-        "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
+        // "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
         "$BS_BASE/dist/css/bootstrap.min.css",
         "$STATIC_BASE/css/sidebars2.css",
         "$STATIC_BASE/css/sidebars.css",

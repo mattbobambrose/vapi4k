@@ -2,6 +2,7 @@ function updateMainResponseContent() {
   document.body.addEventListener(
     'htmx:afterOnLoad',
     function (event) {
+      console.log('AA htmx:afterOnLoad event triggered');
       if (event.detail.target.id === `main-div`) {
         // Format the json result
         const element = document.querySelector(`#response-main`);
@@ -35,7 +36,6 @@ function updateToolContent(divId) {
 function closeToolContent(divId) {
   document.querySelector(`#display-${divId}`).classList.add('hidden');
 }
-
 
 function updateSidebarSelected() {
   document.body.addEventListener(
