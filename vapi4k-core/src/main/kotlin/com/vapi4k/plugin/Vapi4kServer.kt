@@ -25,7 +25,7 @@ import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
-import com.vapi4k.common.CssNames.MAIN_DIV
+import com.vapi4k.common.CssNames.LOG_DIV
 import com.vapi4k.common.Endpoints.ADMIN_CONSOLE_ENDPOINT
 import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
 import com.vapi4k.common.Endpoints.ADMIN_PATH
@@ -206,7 +206,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
                 val reset =
                   html {
                     div {
-                      attributes["hx-swap-oob"] = "innerHTML:#$MAIN_DIV"
+                      attributes["hx-swap-oob"] = "innerHTML:#$LOG_DIV"
                       +""
                     }
                   }
@@ -220,7 +220,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
                       val html =
                         html {
                           div {
-                            attributes["hx-swap-oob"] = "beforeend:#$MAIN_DIV"
+                            attributes["hx-swap-oob"] = "beforeend:#$LOG_DIV"
                             +"$line\n"
                           }
                         }

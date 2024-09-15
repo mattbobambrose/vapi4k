@@ -26,7 +26,7 @@ function scrollToBottom() {
     behavior: 'smooth'
   });
 
-  const mainDiv = document.querySelector('#main-div');
+  const mainDiv = document.querySelector('#log-div');
   let lines = mainDiv.innerText.split('\n');
   const numLines = lines.length;
   if (numLines > maxSize) {
@@ -54,7 +54,7 @@ function toggleScrolling() {
 document.body.addEventListener(
   'htmx:oobAfterSwap',
   function (event) {
-    if (event.detail.target.id === `main-div`) {
+    if (event.detail.target.id === `log-div`) {
       if (isScrolling) {
         scrollToBottom();
       }

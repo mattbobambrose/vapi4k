@@ -20,7 +20,7 @@ import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.HTMX_WS_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
-import com.vapi4k.common.CssNames.MAIN_DIV
+import com.vapi4k.common.CssNames.LOG_DIV
 import com.vapi4k.common.Endpoints.ADMIN_CONSOLE_ENDPOINT
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.HtmlUtils.attribs
@@ -182,14 +182,9 @@ internal object ConsolePage {
         div {
           classes = setOf("container-fluid", "overflow-auto")
           id = "scrolling-div"
-//          button {
-//            attributes["onclick"] = "scrollToBottom()"
-//            style = "position:fixed;"
-//            +"Live Tail"
-//          }
 
           pre {
-            id = MAIN_DIV
+            id = LOG_DIV
             attribs(
               "hx-ext" to "ws",
               "ws-connect" to ADMIN_CONSOLE_ENDPOINT,

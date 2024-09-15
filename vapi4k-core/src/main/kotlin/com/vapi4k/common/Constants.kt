@@ -79,6 +79,7 @@ object Endpoints {
 object CssNames {
   const val MAIN_DIV = "main-div"
   const val TOOLS_DIV = "tools-div"
+  const val LOG_DIV = "log-div"
 
   const val MESSAGE_RESPONSE = "message-response"
   const val SERVICE_TOOLS = "service-tools"
