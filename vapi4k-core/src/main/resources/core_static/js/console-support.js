@@ -15,20 +15,35 @@
  */
 
 function scrollToBottom() {
-  const element = document.querySelector('#scrolling-div');
-  // element.scrollTop = element.scrollHeight;
-  element.scroll({
-    top: element.scrollHeight,
-    left: 0,
-    behavior: 'smooth'
-  });
+  if (isScrolling) {
+    const element = document.querySelector('#scrolling-div');
+    // element.scrollTop = element.scrollHeight;
+    element.scroll({
+      top: element.scrollHeight,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+}
+
+var isScrolling = true;
+
+function toggleScrolling() {
+  const element = document.querySelector('#live-tail-button');
+  if (element.innerHTML === "Paused") {
+    element.innerHTML = "Live Tail";
+    isScrolling = true;
+    scrollToBottom();
+  } else {
+    element.innerHTML = "Paused";
+    isScrolling = false;
+  }
 }
 
 document.body.addEventListener(
   'htmx:oobAfterSwap',
   function (event) {
     if (event.detail.target.id === `main-div`) {
-      // console.log('calling scrolling to bottom');
       scrollToBottom();
     }
   }
