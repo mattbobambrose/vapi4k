@@ -14,19 +14,30 @@
  *
  */
 
-function scrollToBottom() {
-  if (isScrolling) {
-    const element = document.querySelector('#scrolling-div');
-    // element.scrollTop = element.scrollHeight;
-    element.scroll({
-      top: element.scrollHeight,
-      left: 0,
-      behavior: 'smooth'
-    });
-  }
-}
-
 var isScrolling = true;
+const maxSize = 5000;
+const trimSize = 500;
+
+function scrollToBottom() {
+  const scrollingDiv = document.querySelector('#scrolling-div');
+  scrollingDiv.scroll({
+    top: scrollingDiv.scrollHeight,
+    left: 0,
+    behavior: 'smooth'
+  });
+
+  const mainDiv = document.querySelector('#main-div');
+  let lines = mainDiv.innerText.split('\n');
+  const numLines = lines.length;
+  if (numLines > maxSize) {
+    // Remove the first trimSize lines
+    lines.splice(0, trimSize);
+    mainDiv.innerText = lines.join('\n');
+    console.log(`Trimmed ${trimSize} lines`);
+  }
+
+  // console.log(`Before length = ${numLines}`);
+}
 
 function toggleScrolling() {
   const element = document.querySelector('#live-tail-button');
@@ -44,7 +55,9 @@ document.body.addEventListener(
   'htmx:oobAfterSwap',
   function (event) {
     if (event.detail.target.id === `main-div`) {
-      scrollToBottom();
+      if (isScrolling) {
+        scrollToBottom();
+      }
     }
   }
 );
