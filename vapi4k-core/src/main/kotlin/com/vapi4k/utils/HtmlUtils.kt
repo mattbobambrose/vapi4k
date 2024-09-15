@@ -69,4 +69,18 @@ object HtmlUtils {
         """,
     )
   }
+
+  fun String.encodeForHtml() =
+    buildString {
+      for (char in this@encodeForHtml) {
+        when (char) {
+          '&' -> append("&amp;")
+          '<' -> append("&lt;")
+          '>' -> append("&gt;")
+          '"' -> append("&quot;")
+          '\'' -> append("&#39;")
+          else -> append(char)
+        }
+      }
+    }
 }

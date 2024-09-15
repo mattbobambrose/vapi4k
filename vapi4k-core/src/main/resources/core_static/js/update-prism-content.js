@@ -6,6 +6,7 @@ function updateMainResponseContent() {
         // Format the json result
         const element = document.querySelector(`#response-main`);
         // This is added here because the line-numbers class was getting deleted on the 2nd selection
+
         element.classList.add("line-numbers");
         Prism.highlightElement(element);
       }

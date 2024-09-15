@@ -29,10 +29,14 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.path
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
+import io.ktor.server.websocket.WebSockets
+import io.ktor.server.websocket.pingPeriod
+import io.ktor.server.websocket.timeout
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonBuilder
 import org.slf4j.event.Level
+import java.time.Duration
 
 fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry) {
   val pregistry = pluginRegistry
@@ -59,11 +63,21 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
     install(CallLogging) {
       level = Level.INFO
       filter { call -> call.request.path().startsWith("/") }
+      disableDefaultColors()
     }
   }
 
   if (!pregistry.contains(Routing.key)) {
     install(Routing)
+  }
+
+  if (!pregistry.contains(WebSockets.key)) {
+    install(WebSockets) {
+      pingPeriod = Duration.ofSeconds(15)
+      timeout = Duration.ofSeconds(15)
+      maxFrameSize = Long.MAX_VALUE
+      masking = false
+    }
   }
 
 //  if (!pregistry.contains(MicrometerMetrics.key)) {

@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dashboard
+package com.vapi4k.pages
 
 import com.vapi4k.common.ApplicationName.Companion.toApplicationName
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
@@ -30,16 +30,15 @@ import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.Version.Companion.versionDesc
-import com.vapi4k.dashboard.ValidateAssistant.navBar
-import com.vapi4k.dashboard.ValidateAssistant.singleNavItem
-import com.vapi4k.dashboard.ValidateAssistant.validateAssistant
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
-import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
+import com.vapi4k.pages.ValidateAssistant.navBar
+import com.vapi4k.pages.ValidateAssistant.singleNavItem
+import com.vapi4k.pages.ValidateAssistant.validateAssistant
 import com.vapi4k.plugin.Vapi4kServer
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
@@ -232,7 +231,7 @@ internal object ValidateApplication {
       headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
       if (secret.isNotEmpty())
         headers.append(VAPI_SECRET_HEADER, secret)
-      val jsonBody = if (application.applicationType == ApplicationType.INBOUND_CALL) request else EMPTY_JSON_ELEMENT
+      val jsonBody = if (application.applicationType == INBOUND_CALL) request else EMPTY_JSON_ELEMENT
       setBody(jsonBody)
     }.run { status to bodyAsText() }
 

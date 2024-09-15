@@ -14,18 +14,15 @@
  *
  */
 
-package com.vapi4k.dashboard
+document.addEventListener('htmx:wsOpen', function (event) {
+  console.log('WebSocket connection opened:', event.detail);
+});
 
-import com.vapi4k.api.assistant.enums.AssistantServerMessageType
-import com.vapi4k.api.assistant.enums.AssistantServerMessageType.FUNCTION_CALL
-import com.vapi4k.api.assistant.enums.AssistantServerMessageType.TOOL_CALLS
+document.addEventListener('htmx:wsClose', function (event) {
+  console.log('WebSocket connection closed:', event.detail);
+});
 
-enum class ToolType(
-  val messageType: AssistantServerMessageType,
-  val funcName: String,
-  val paramName: String,
-) {
-  FUNCTION(FUNCTION_CALL, "functionCall", "parameters"),
-  SERVICE_TOOL(TOOL_CALLS, "function", "arguments"),
-  MANUAL_TOOL(TOOL_CALLS, "function", "arguments"),
-}
+document.addEventListener('htmx:wsError', function (event) {
+  console.error('WebSocket error:', event.detail.error);
+});
+

@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dashboard
+package com.vapi4k.pages
 
 import com.vapi4k.common.CssNames.ERROR_MSG
 import com.vapi4k.common.CssNames.FUNCTIONS
@@ -22,8 +22,8 @@ import com.vapi4k.common.CssNames.MANUAL_TOOLS
 import com.vapi4k.common.CssNames.MESSAGE_RESPONSE
 import com.vapi4k.common.CssNames.SERVICE_TOOLS
 import com.vapi4k.common.CssNames.VALIDATION_DATA
-import com.vapi4k.dashboard.ValidateTools.displayTools
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
+import com.vapi4k.pages.ValidateTools.displayTools
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.html

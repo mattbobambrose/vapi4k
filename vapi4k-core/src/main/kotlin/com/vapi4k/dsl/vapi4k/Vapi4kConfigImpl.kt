@@ -23,7 +23,6 @@ import com.vapi4k.api.vapi4k.OutboundCallApplication
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.common.ApplicationId
-import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
@@ -40,7 +39,7 @@ typealias PipelineCall = PipelineContext<Unit, ApplicationCall>
 
 class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   init {
-    AssistantImpl.config = this
+    config = this
   }
 
   internal lateinit var applicationConfig: ApplicationConfig
@@ -120,4 +119,8 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   internal fun getApplicationById(applicationId: ApplicationId): AbstractApplicationImpl =
     allApplications.firstOrNull { it.applicationId == applicationId }
       ?: error("Application not found for applicationId: $applicationId")
+
+  companion object {
+    internal lateinit var config: Vapi4kConfigImpl
+  }
 }

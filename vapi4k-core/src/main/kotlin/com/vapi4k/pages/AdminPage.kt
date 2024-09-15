@@ -14,14 +14,16 @@
  *
  */
 
-package com.vapi4k.dashboard
+package com.vapi4k.pages
 
 import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
+import com.vapi4k.common.Constants.HTMX_WS_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CssNames.MAIN_DIV
 import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
 import com.vapi4k.common.Endpoints.ADMIN_VERSION_PATH
+import com.vapi4k.common.Endpoints.CONSOLE_LOG_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
@@ -78,7 +80,9 @@ internal object AdminPage {
 
       js(
         HTMX_SOURCE_URL,
+        HTMX_WS_SOURCE_URL,
         "$STATIC_BASE/js/update-prism-content.js",
+        "$STATIC_BASE/js/ws-events.js",
         "$STATIC_BASE/js/prism.js",
         "$STATIC_BASE/js/color-modes.js",
       )
@@ -136,7 +140,6 @@ internal object AdminPage {
             span("spinner-border text-primary p-1 htmx-indicator") {
               id = "spinner"
               role = "status"
-              // span("visually-hidden") { +"Loading..." }
             }
           }
 
@@ -170,6 +173,12 @@ internal object AdminPage {
             displayApplications("InboundCall Applications", config.inboundCallApplications, "inbound-collapse")
             displayApplications("OutboundCall Applications", config.outboundCallApplications, "outbound-collapse")
             displayApplications("Web Applications", config.webApplications, "web-collapse")
+
+            button(classes = "btn d-inline-flex align-items-center rounded border-0 sidebar-menu-item") {
+              clickAction(CONSOLE_LOG_PATH)
+              svg("bi pe-none me-2") { details(16, 16, "table") }
+              +"System Log"
+            }
 
             button(classes = "btn d-inline-flex align-items-center rounded border-0 sidebar-menu-item") {
               clickAction(ADMIN_ENV_PATH)

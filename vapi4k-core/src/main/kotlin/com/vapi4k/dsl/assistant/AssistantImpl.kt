@@ -18,7 +18,6 @@ package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.dtos.assistant.AssistantDto
 import com.vapi4k.dtos.assistant.AssistantOverridesDto
 import com.vapi4k.server.RequestContextImpl
@@ -51,8 +50,4 @@ class AssistantImpl internal constructor(
       assistantIdSource,
       assistantOverridesDto,
     ).apply(block)
-
-  companion object {
-    internal lateinit var config: Vapi4kConfigImpl
-  }
 }

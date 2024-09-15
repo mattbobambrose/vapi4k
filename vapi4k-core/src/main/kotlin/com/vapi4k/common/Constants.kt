@@ -19,7 +19,8 @@ package com.vapi4k.common
 import com.vapi4k.common.Constants.FUNCTION_NAME
 
 object Constants {
-  const val HTMX_SOURCE_URL = "https://unpkg.com/htmx.org@2.0.2"
+  const val HTMX_SOURCE_URL = "https://unpkg.com/htmx.org@2.0.1"
+  const val HTMX_WS_SOURCE_URL = "https://unpkg.com/htmx-ext-ws@2.0.1/ws.js"
 
   const val UNSPECIFIED_DEFAULT = "unspecified"
   const val UNKNOWN = "unknown"
@@ -66,10 +67,13 @@ object Endpoints {
   const val CACHES_PATH = "/caches"
   const val CLEAR_CACHES_PATH = "/clear-caches"
   const val ADMIN_PATH = "/admin"
+  const val CONSOLE_PATH = "/console"
   const val VALIDATE_PATH = "/validate"
   const val ADMIN_ENV_PATH = "/admin-env-vars"
   const val ADMIN_VERSION_PATH = "/admin-version"
+  const val CONSOLE_LOG_PATH = "/console-log"
   const val INVOKE_TOOL_PATH = "/invokeTool"
+  const val ADMIN_CONSOLE_ENDPOINT = "/admin-console"
 }
 
 object CssNames {

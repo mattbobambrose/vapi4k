@@ -48,6 +48,7 @@ dependencies {
 
     api(libs.ktor.server.core)
     api(libs.ktor.server.cio)
+    api(libs.ktor.server.websockets)
     api(libs.ktor.server.compression)
     api(libs.ktor.server.content.negotiation)
     api(libs.ktor.server.call.logging)
