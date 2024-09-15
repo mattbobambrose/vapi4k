@@ -15,7 +15,7 @@
  */
 
 var isScrolling = true;
-const maxSize = 5000;
+const maxSize = 4000;
 const trimSize = 500;
 
 function scrollToBottom() {
