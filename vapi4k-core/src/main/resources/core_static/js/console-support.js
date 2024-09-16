@@ -14,9 +14,14 @@
  *
  */
 
-var isScrolling = true;
 const maxSize = 4000;
 const trimSize = 500;
+let isScrolling = true;
+let liveTailTooltip = new bootstrap.Tooltip(document.querySelector('#live-tail-button'));
+
+function setLiveTailTooltip(title) {
+  liveTailTooltip.setContent({'.tooltip-inner': title});
+}
 
 function scrollToBottom() {
   const scrollingDiv = document.querySelector('#console-div');
@@ -39,15 +44,20 @@ function scrollToBottom() {
 }
 
 function toggleScrolling() {
-  const element = document.querySelector('#live-tail-button');
-  if (element.innerHTML === "Paused") {
-    element.innerHTML = "Live Tail";
+  const icon = document.querySelector('#live-tail-icon');
+  if (isScrolling === false) {
+    setLiveTailTooltip('Live tail');
+    icon.classList.remove('bi-play-fill');
+    icon.classList.add('bi-pause-fill');
     isScrolling = true;
     scrollToBottom();
   } else {
-    element.innerHTML = "Paused";
+    setLiveTailTooltip('Paused. Click to resume live tail.');
+    icon.classList.remove('bi-pause-fill');
+    icon.classList.add('bi-play-fill');
     isScrolling = false;
   }
+  //setupTooltips();
 }
 
 document.body.addEventListener(
@@ -83,4 +93,11 @@ function displaySysInfo() {
   document.querySelector('#main-div').classList.add('hidden');
   document.querySelector('#console-div').classList.add('hidden');
   document.querySelector('#live-tail-div').classList.add('hidden');
+}
+
+function setupTooltips() {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
 }

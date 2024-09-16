@@ -51,6 +51,7 @@ import kotlinx.html.hr
 import kotlinx.html.id
 import kotlinx.html.img
 import kotlinx.html.li
+import kotlinx.html.link
 import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.pre
@@ -88,6 +89,11 @@ internal object AdminPage {
         "$STATIC_BASE/js/prism.js",
         "$STATIC_BASE/js/color-modes.js",
       )
+
+      link {
+        rel = "stylesheet"
+        href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
+      }
 
       title { +"Vapi4k Admin" }
     }
@@ -397,11 +403,20 @@ internal object AdminPage {
       classes = setOf("position-fixed", "top-0", "end-0", "mb-3", "mt-2", "me-4", "bd-mode-toggle")
       id = "live-tail-div"
       button {
-        classes = setOf("btn", "btn-bd-primary", "py-2", "d-flex", "align-items-center")
+        classes = setOf("rounded", "btn", "btn-bd-primary", "m-0", "p-0", "d-flex", "align-items-center")
         id = "live-tail-button"
         type = ButtonType.button
-        attribs("onclick" to "toggleScrolling()")
-        +"Live Tail"
+        attribs(
+          "data-bs-toggle" to "tooltip",
+          "data-bs-placement" to "left",
+          "title" to "Live tail",
+          "onclick" to "toggleScrolling()"
+        )
+        rawHtml(
+          """
+            <i class="bi bi-pause-fill fs-2 m-0 px-2" id="live-tail-icon"></i>
+          """
+        )
       }
     }
   }
