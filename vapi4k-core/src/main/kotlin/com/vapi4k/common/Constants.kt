@@ -26,6 +26,7 @@ object Constants {
   const val UNKNOWN = "unknown"
   const val STATIC_BASE = "/core_static"
   const val BS_BASE = "/bootstrap"
+  const val PRISM_BASE = "/prism"
 
   const val FUNCTION_NAME = "functionName"
 
@@ -86,9 +87,11 @@ object CssNames {
   const val FUNCTIONS = "functions"
 
   const val VALIDATION_DATA = "validation-data"
+  const val ERROR_MSG = "error-msg"
   const val HIDDEN = "hidden"
   const val ACTIVE = "active"
-  const val ERROR_MSG = "error-msg"
+  const val ROUNDED = "rounded"
+  const val COLLAPSED = "collapsed"
 
   const val CONNECT_ERROR = "connect-error"
 }

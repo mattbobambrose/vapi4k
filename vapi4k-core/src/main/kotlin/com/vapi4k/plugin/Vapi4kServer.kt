@@ -21,6 +21,7 @@ import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE
 import com.vapi4k.common.Constants.BS_BASE
+import com.vapi4k.common.Constants.PRISM_BASE
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
@@ -150,6 +151,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
       routing {
         staticResources(STATIC_BASE, "core_static")
         staticResources(BS_BASE, "bootstrap")
+        staticResources(PRISM_BASE, "prism")
 
         get(PING_PATH) { call.respondText("pong") }
 

@@ -59,16 +59,20 @@ function toggleScrolling() {
   //setupTooltips();
 }
 
-document.body.addEventListener(
-  'htmx:oobAfterSwap',
-  function (event) {
-    if (event.detail.target.id === `log-div`) {
-      if (isScrolling) {
-        scrollToBottom();
+(() => {
+  'use strict'
+
+  document.body.addEventListener(
+    'htmx:oobAfterSwap',
+    function (event) {
+      if (event.detail.target.id === `log-div`) {
+        if (isScrolling) {
+          scrollToBottom();
+        }
       }
     }
-  }
-);
+  );
+})()
 
 function displayLogging() {
   document.querySelector('#console-div').classList.remove('hidden');

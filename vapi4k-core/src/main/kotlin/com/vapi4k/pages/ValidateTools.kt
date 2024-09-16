@@ -24,6 +24,7 @@ import com.vapi4k.common.Constants.FUNCTION_NAME
 import com.vapi4k.common.CssNames.FUNCTIONS
 import com.vapi4k.common.CssNames.HIDDEN
 import com.vapi4k.common.CssNames.MANUAL_TOOLS
+import com.vapi4k.common.CssNames.ROUNDED
 import com.vapi4k.common.CssNames.SERVICE_TOOLS
 import com.vapi4k.common.CssNames.TOOLS_DIV
 import com.vapi4k.common.CssNames.VALIDATION_DATA
@@ -34,6 +35,7 @@ import com.vapi4k.common.QueryParams.APPLICATION_ID
 import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.TOOL_TYPE
+import com.vapi4k.dsl.functions.FunctionDetails
 import com.vapi4k.dsl.functions.ToolCallInfo.Companion.ID_SEPARATOR
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
@@ -174,42 +176,8 @@ object ValidateTools {
           val divId = getRandomString()
 
           div {
-            classes += TOOLS_DIV
-            if (header.isNotBlank()) h6 { +header }
-            h6 { +functionDetails.toolCallInfo.llmDescription }
-            div { +"${functionDetails.fqNameWithParams}: ${functionDetails.returnType}" }
-            form {
-              setHtmxTags(ToolType.SERVICE_TOOL, newRequestContext, divId)
-              addHiddenFields(newRequestContext, toolName, false)
-
-              table {
-                tbody {
-                  functionDetails.params
-                    .filter { it.second.isNotRequestContextClass() }
-                    .forEach { functionDetail ->
-                      tr {
-                        td { +"${functionDetail.first}:" }
-                        td {
-                          input {
-                            id = "tools-input"
-                            type =
-                              when (functionDetail.second.asKClass()) {
-                                String::class -> InputType.text
-                                Int::class -> InputType.number
-                                Double::class -> InputType.number
-                                Boolean::class -> InputType.checkBox
-                                else -> InputType.text
-                              }
-                            name = functionDetail.first
-                          }
-                        }
-                        td { +"(${functionDetail.second.paramAnnotationWithDefault})" }
-                      }
-                    }
-                  addInvokeToolOption("Tool")
-                }
-              }
-            }
+            addToolHeader(header, functionDetails)
+            addToolParams(ToolType.SERVICE_TOOL, "Tool", newRequestContext, divId, toolName, functionDetails)
             addToolResponse(divId)
           }
         }
@@ -243,7 +211,7 @@ object ValidateTools {
                       td { +"$propertyName:" }
                       td {
                         input {
-                          id = "tools-input"
+                          classes += "tools-input"
                           type =
                             when (propertyDesc.type) {
                               "string" -> InputType.text
@@ -258,7 +226,7 @@ object ValidateTools {
                       td { +"(${propertyDesc.description})" }
                     }
                   }
-                addInvokeToolOption("Tool")
+                addInvokeButton("Tool")
               }
             }
           }
@@ -287,46 +255,64 @@ object ValidateTools {
           val divId = getRandomString()
 
           div {
-            classes += TOOLS_DIV
-            if (header.isNotBlank()) h6 { +header }
-            h6 { +functionDetails.toolCallInfo.llmDescription }
-            div { +"${functionDetails.fqNameWithParams}: ${functionDetails.returnType}" }
-            form {
-              setHtmxTags(ToolType.FUNCTION, newRequestContext, divId)
-              addHiddenFields(newRequestContext, funcName, false)
-
-              table {
-                tbody {
-                  functionDetails.params
-                    .filter { it.second.isNotRequestContextClass() }
-                    .forEach { functionDetail ->
-                      tr {
-                        td { +"${functionDetail.first}:" }
-                        td {
-                          input {
-                            id = "tools-input"
-                            type =
-                              when (functionDetail.second.asKClass()) {
-                                String::class -> InputType.text
-                                Int::class -> InputType.number
-                                Double::class -> InputType.number
-                                Boolean::class -> InputType.checkBox
-                                else -> InputType.text
-                              }
-                            name = functionDetail.first
-                          }
-                        }
-                        td { +"(${functionDetail.second.paramAnnotationWithDefault})" }
-                      }
-                    }
-                  addInvokeToolOption("Function")
-                }
-              }
-            }
+            addToolHeader(header, functionDetails)
+            addToolParams(ToolType.FUNCTION, "Function", newRequestContext, divId, funcName, functionDetails)
             addToolResponse(divId)
           }
         }
       }
+  }
+
+  private fun DIV.addToolHeader(
+    header: String,
+    functionDetails: FunctionDetails,
+  ) {
+    classes += TOOLS_DIV
+    if (header.isNotBlank()) h6 { +header }
+    h6 { +functionDetails.toolCallInfo.llmDescription }
+    div { +"${functionDetails.fqNameWithParams}: ${functionDetails.returnType}" }
+  }
+
+  private fun DIV.addToolParams(
+    toolType: ToolType,
+    invokeText: String,
+    newRequestContext: RequestContextImpl,
+    divId: String,
+    toolName: FunctionName,
+    functionDetails: FunctionDetails,
+  ) {
+    form {
+      setHtmxTags(toolType, newRequestContext, divId)
+      addHiddenFields(newRequestContext, toolName, false)
+
+      table {
+        tbody {
+          functionDetails.params
+            .filter { it.second.isNotRequestContextClass() }
+            .forEach { functionDetail ->
+              tr {
+                td { +"${functionDetail.first}:" }
+                td {
+                  input {
+                    classes += "tools-input"
+                    type =
+                      when (functionDetail.second.asKClass()) {
+                        String::class -> InputType.text
+                        Int::class -> InputType.number
+                        Double::class -> InputType.number
+                        Boolean::class -> InputType.checkBox
+                        else -> InputType.text
+                      }
+                    name = functionDetail.first
+                  }
+                }
+                td { +"(${functionDetail.second.paramAnnotationWithDefault})" }
+              }
+            }
+          addInvokeButton(invokeText)
+        }
+      }
+    }
   }
 
   private fun getAssistantName(
@@ -336,7 +322,6 @@ object ValidateTools {
     runCatching {
       assistantElement.stringValue("assistant.name")
     }.getOrElse { "Unnamed-$index" }
-
 
   private fun FORM.setHtmxTags(
     toolType: ToolType,
@@ -379,12 +364,11 @@ object ValidateTools {
     }
   }
 
-  private fun TBODY.addInvokeToolOption(name: String) {
+  private fun TBODY.addInvokeButton(name: String) {
     tr {
       td {
         input {
-          classes =
-            setOf("btn", "btn-primary", "d-inline-flex", "align-items-center", "rounded", "border-0", "fs-6")
+          classes = setOf("btn", "btn-primary", "d-inline-flex", "align-items-center", ROUNDED, "border-0", "fs-6")
           style = "text-align: left;"
           id = "invoke-input"
           type = InputType.submit

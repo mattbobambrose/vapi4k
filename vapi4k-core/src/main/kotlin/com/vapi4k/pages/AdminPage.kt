@@ -19,11 +19,14 @@ package com.vapi4k.pages
 import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.HTMX_WS_SOURCE_URL
+import com.vapi4k.common.Constants.PRISM_BASE
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CssNames.ACTIVE
+import com.vapi4k.common.CssNames.COLLAPSED
 import com.vapi4k.common.CssNames.HIDDEN
 import com.vapi4k.common.CssNames.LOG_DIV
 import com.vapi4k.common.CssNames.MAIN_DIV
+import com.vapi4k.common.CssNames.ROUNDED
 import com.vapi4k.common.CssNames.SYS_INFO_DIV
 import com.vapi4k.common.Endpoints.ADMIN_CONSOLE_ENDPOINT
 import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
@@ -73,21 +76,20 @@ internal object AdminPage {
       css(
         // "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
         "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css",
-        "$BS_BASE/dist/css/bootstrap.min.css",
+        "$BS_BASE/css/bootstrap.min.css",
+        "$PRISM_BASE/css/prism.css",
         "$STATIC_BASE/css/sidebars2.css",
         "$STATIC_BASE/css/sidebars.css",
         "$STATIC_BASE/css/styles.css",
-        "$STATIC_BASE/css/prism.css",
         "$STATIC_BASE/css/validator.css",
       )
 
       js(
         HTMX_SOURCE_URL,
         HTMX_WS_SOURCE_URL,
+        "$PRISM_BASE/js/prism.js",
         "$STATIC_BASE/js/ws-events.js",
-        "$STATIC_BASE/js/prism.js",
         "$STATIC_BASE/js/color-modes.js",
-        "$STATIC_BASE/js/fade-events.js",
       )
 
       title { +"Vapi4k Admin" }
@@ -180,7 +182,7 @@ internal object AdminPage {
                 "btn",
                 "d-inline-flex",
                 "align-items-center",
-                "rounded",
+                ROUNDED,
                 "border-0",
                 "sidebar-menu-item",
                 "fs-5",
@@ -203,7 +205,7 @@ internal object AdminPage {
                 "btn",
                 "d-inline-flex",
                 "align-items-center",
-                "rounded",
+                ROUNDED,
                 "border-0",
                 "fs-5",
               )
@@ -225,7 +227,7 @@ internal object AdminPage {
 
             button {
               classes =
-                setOf("btn", "d-inline-flex", "align-items-center", "rounded", "border-0", "sidebar-menu-item", "fs-5")
+                setOf("btn", "d-inline-flex", "align-items-center", ROUNDED, "border-0", "sidebar-menu-item", "fs-5")
               clickAction(ADMIN_ENV_PATH, SYS_INFO_DIV)
               rawHtml(
                 """
@@ -241,7 +243,7 @@ internal object AdminPage {
 
             button {
               classes =
-                setOf("btn", "d-inline-flex", "align-items-center", "rounded", "border-0", "sidebar-menu-item", "fs-5")
+                setOf("btn", "d-inline-flex", "align-items-center", ROUNDED, "border-0", "sidebar-menu-item", "fs-5")
               clickAction(ADMIN_VERSION_PATH, SYS_INFO_DIV)
               rawHtml(
                 """
@@ -289,8 +291,9 @@ internal object AdminPage {
       }
 
       js(
-        "$BS_BASE/dist/js/bootstrap.bundle.min.js",
-        "$STATIC_BASE/js/sidebars.js",
+        "$BS_BASE/js/bootstrap.bundle.min.js",
+        "$STATIC_BASE/js/fade-events.js",
+        "$STATIC_BASE/js/init-tooltips.js",
         "$STATIC_BASE/js/admin-support.js",
         "$STATIC_BASE/js/console-support.js",
       )
@@ -318,7 +321,7 @@ internal object AdminPage {
       classes += "mb-1"
       button {
         classes =
-          setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "rounded", "border-0", "ms-3", "collapsed")
+          setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "border-0", "ms-3", ROUNDED, COLLAPSED)
         attribs(
           "data-bs-toggle" to "collapse",
           "data-bs-target" to "#$target",
@@ -344,7 +347,7 @@ internal object AdminPage {
       classes = setOf("ms-4")
       a {
         classes =
-          setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", "rounded", "pb-1", "sidebar-menu-item")
+          setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", ROUNDED, "pb-1", "sidebar-menu-item")
         clickAction("$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}", MAIN_DIV)
         +app.serverPath.ensureStartsWith("/")
       }
@@ -404,7 +407,7 @@ internal object AdminPage {
       classes = setOf("position-fixed", "top-0", "end-0", "mb-3", "mt-2", "me-4", "bd-mode-toggle")
       id = "live-tail-div"
       button {
-        classes = setOf("rounded", "btn", "btn-bd-primary", "m-0", "p-0", "d-flex", "align-items-center")
+        classes = setOf("btn", "btn-bd-primary", "m-0", "p-0", "d-flex", ROUNDED, "align-items-center")
         id = "live-tail-button"
         type = ButtonType.button
         attribs(
