@@ -86,7 +86,7 @@ object ValidateAssistant {
       classes = setOf("collapse", "navbar-collapse")
       id = "navbarNav"
       ul {
-        //classes += "navbar-nav"
+        // classes += "navbar-nav"
         classes = setOf("nav", "nav-tabs")
         li {
           classes += "nav-item"
@@ -177,7 +177,6 @@ object ValidateAssistant {
     }
   }
 
-
   private fun TagConsumer<*>.displayError(
     application: AbstractApplicationImpl,
     status: HttpStatusCode,
@@ -222,6 +221,4 @@ object ValidateAssistant {
       }
     }
   }
-
-
 }

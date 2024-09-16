@@ -153,9 +153,7 @@ internal object AdminPage {
             }
             span {
               classes += "fs-4"
-              //rawHtml("&nbsp;&nbsp;")
               +"Vapi4k Admin"
-              //rawHtml("&nbsp;&nbsp;&nbsp;&nbsp;")
             }
             span("spinner-border text-primary p-1 htmx-indicator") {
               id = "spinner"
@@ -208,7 +206,7 @@ internal object AdminPage {
                     <path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9M3.854 4.146a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708z"/>
                     <path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/>
                   </svg>
-                  """
+                  """,
               )
               +"Console Log"
             }
@@ -229,7 +227,7 @@ internal object AdminPage {
                     <path d="M2.5 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1m2-.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m1 .5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
                     <path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm13 2v2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1M2 14a1 1 0 0 1-1-1V6h14v7a1 1 0 0 1-1 1z"/>
                   </svg>
-                  """
+                  """,
               )
               +"Applications"
             }
@@ -249,7 +247,7 @@ internal object AdminPage {
                   <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
                   <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
                 </svg>
-              """
+              """,
               )
               +"Environment Vars"
             }
@@ -265,13 +263,11 @@ internal object AdminPage {
                   <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
                   <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5z"/>
                 </svg>
-              """
+              """,
               )
-//              img {
-//                classes = setOf("bi", "bi-calendar2-date")
-//                src = "$BS_BASE/dist/icons/calendar2-date.svg"
+//              i {
+//                classes = setOf( "bi", "bi-calendar2-date", "me-2",)
 //              }
-
               +"System Version"
             }
 
@@ -341,7 +337,6 @@ internal object AdminPage {
           "data-bs-target" to "#$target-collapse",
           "aria-expanded" to "true",
         )
-//      svg("bi pe-none me-2") { details(16, 16, "table") }
         +header
       }
 
@@ -350,13 +345,13 @@ internal object AdminPage {
         id = "$target-collapse"
         ul {
           classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
-          applications.forEach { displayApplicationItems(it) }
+          applications.forEach { addApplicationItems(it) }
         }
       }
     }
   }
 
-  private fun UL.displayApplicationItems(app: AbstractApplicationImpl) {
+  private fun UL.addApplicationItems(app: AbstractApplicationImpl) {
     li {
       classes = setOf("ms-4")
       a {
@@ -428,7 +423,7 @@ internal object AdminPage {
           "data-bs-toggle" to "tooltip",
           "data-bs-placement" to "left",
           "title" to "Live tail",
-          "onclick" to "toggleScrolling()"
+          "onclick" to "toggleScrolling()",
         )
         i {
           classes = setOf("bi", "bi-pause-fill", "fs-2", "m-0", "ps-2", "pe-1", "pt-0", "pb-1")

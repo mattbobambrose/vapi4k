@@ -191,7 +191,6 @@ internal object ValidateApplication {
       }
     }
 
-
   private fun getNewRequest(): JsonElement {
     val request = runCatching {
       resourceFile(REQUEST_VALIDATION_FILENAME.value)

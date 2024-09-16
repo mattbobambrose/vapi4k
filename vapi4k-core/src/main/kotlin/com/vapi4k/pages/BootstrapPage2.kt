@@ -73,7 +73,6 @@ internal object BootstrapPage2 {
       }
     }
     body {
-
       div {
         classes += "wrapper"
         aside {

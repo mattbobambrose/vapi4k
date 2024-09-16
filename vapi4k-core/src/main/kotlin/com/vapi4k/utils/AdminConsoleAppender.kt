@@ -35,9 +35,7 @@ class AdminConsoleAppender : ConsoleAppender<ILoggingEvent>() {
     runBlocking {
       val msg = encoder.encode(eventObject).decodeToString()
       consoleFlow.emit(msg)
-
-    }// [2024-09-14 23:25:44,212] INFO  k.application - 200 OK: GET - /bootstrap/dist/js/bootstrap.bundle.min.js in 72ms
-
+    }
   }
 }
 
