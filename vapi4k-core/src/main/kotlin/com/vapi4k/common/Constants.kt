@@ -87,6 +87,7 @@ object CssNames {
 
   const val VALIDATION_DATA = "validation-data"
   const val HIDDEN = "hidden"
+  const val ACTIVE = "active"
   const val ERROR_MSG = "error-msg"
 
   const val CONNECT_ERROR = "connect-error"

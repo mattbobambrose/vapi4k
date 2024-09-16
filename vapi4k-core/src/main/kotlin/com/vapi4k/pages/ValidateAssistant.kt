@@ -16,6 +16,7 @@
 
 package com.vapi4k.pages
 
+import com.vapi4k.common.CssNames.ACTIVE
 import com.vapi4k.common.CssNames.ERROR_MSG
 import com.vapi4k.common.CssNames.FUNCTIONS
 import com.vapi4k.common.CssNames.MANUAL_TOOLS
@@ -90,7 +91,7 @@ object ValidateAssistant {
         li {
           classes += "nav-item"
           a {
-            classes = setOf("nav-link", "active")
+            classes = setOf("nav-link", ACTIVE)
             id = "$MESSAGE_RESPONSE-tab"
             attribs("hx-on:click" to "selectApplicationTab('$MESSAGE_RESPONSE')")
             attributes["aria-current"] = "page"
@@ -140,7 +141,7 @@ object ValidateAssistant {
         li {
           classes += "nav-item"
           a {
-            classes = setOf("nav-link", "active")
+            classes = setOf("nav-link", ACTIVE)
             id = "$MESSAGE_RESPONSE-tab"
             attributes["aria-current"] = "page"
             +msg

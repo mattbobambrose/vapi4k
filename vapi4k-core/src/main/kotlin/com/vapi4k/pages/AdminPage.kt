@@ -20,6 +20,7 @@ import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
 import com.vapi4k.common.Constants.HTMX_WS_SOURCE_URL
 import com.vapi4k.common.Constants.STATIC_BASE
+import com.vapi4k.common.CssNames.ACTIVE
 import com.vapi4k.common.CssNames.HIDDEN
 import com.vapi4k.common.CssNames.LOG_DIV
 import com.vapi4k.common.CssNames.MAIN_DIV
@@ -51,7 +52,6 @@ import kotlinx.html.hr
 import kotlinx.html.id
 import kotlinx.html.img
 import kotlinx.html.li
-import kotlinx.html.link
 import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.pre
@@ -72,6 +72,7 @@ internal object AdminPage {
 
       css(
         // "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
+        "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css",
         "$BS_BASE/dist/css/bootstrap.min.css",
         "$STATIC_BASE/css/sidebars2.css",
         "$STATIC_BASE/css/sidebars.css",
@@ -88,11 +89,6 @@ internal object AdminPage {
         "$STATIC_BASE/js/color-modes.js",
         "$STATIC_BASE/js/fade-events.js",
       )
-
-      link {
-        rel = "stylesheet"
-        href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
-      }
 
       title { +"Vapi4k Admin" }
     }
@@ -123,7 +119,8 @@ internal object AdminPage {
 
       declareSvgs()
 
-      main("d-flex flex-nowrap") {
+      main {
+        classes = setOf("d-flex", "flex-nowrap")
         div {
           classes = setOf("d-flex", "flex-column", "flex-shrink-0", "p-2", "bg-body-tertiary", "sidebar")
           style = "width: 280px;"
@@ -187,7 +184,7 @@ internal object AdminPage {
                 "border-0",
                 "sidebar-menu-item",
                 "fs-5",
-                "active",
+                ACTIVE,
               )
               attribs("onclick" to "displayLogging()")
               rawHtml(
@@ -255,6 +252,11 @@ internal object AdminPage {
                 </svg>
               """
               )
+//              img {
+//                classes = setOf("bi", "bi-calendar2-date")
+//                src = "$BS_BASE/dist/icons/calendar2-date.svg"
+//              }
+
               +"System Version"
             }
 
@@ -441,13 +443,21 @@ internal object AdminPage {
         }
       }
 
+      val check = """
+                  <svg class="bi ms-auto d-none" width="1em" height="1em">
+                      <use href="#check2"></use>
+                  </svg>
+                """
       ul("dropdown-menu dropdown-menu-end shadow") {
         attributes["aria-labelledby"] = "bd-theme-text"
         li {
-          button(classes = "dropdown-item d-flex align-items-center") {
+          button {
+            classes = setOf("dropdown-item", "d-flex", "align-items-center")
             type = ButtonType.button
-            attributes["data-bs-theme-value"] = "light"
-            attributes["aria-pressed"] = "false"
+            attribs(
+              "data-bs-theme-value" to "light",
+              "aria-pressed" to "false",
+            )
             rawHtml(
               """
                   <svg class="bi me-2 opacity-50" width="1em" height="1em">
@@ -456,21 +466,18 @@ internal object AdminPage {
                 """,
             )
             +"Light"
-            rawHtml(
-              """
-                  <svg class="bi ms-auto d-none" width="1em" height="1em">
-                      <use href="#check2"></use>
-                  </svg>
-                """,
-            )
+            rawHtml(check)
           }
         }
 
         li {
-          button(classes = "dropdown-item d-flex align-items-center") {
+          button {
+            classes = setOf("dropdown-item", "d-flex", "align-items-center")
             type = ButtonType.button
-            attributes["data-bs-theme-value"] = "dark"
-            attributes["aria-pressed"] = "false"
+            attribs(
+              "data-bs-theme-value" to "dark",
+              "aria-pressed" to "false",
+            )
             rawHtml(
               """
                   <svg class="bi me-2 opacity-50" width="1em" height="1em">
@@ -479,20 +486,17 @@ internal object AdminPage {
                 """,
             )
             +"Dark"
-            rawHtml(
-              """
-                  <svg class="bi ms-auto d-none" width="1em" height="1em">
-                      <use href="#check2"></use>
-                  </svg>
-                """,
-            )
+            rawHtml(check)
           }
         }
         li {
-          button(classes = "dropdown-item d-flex align-items-center active") {
+          button {
+            classes = setOf("dropdown-item", "d-flex", "align-items-center", ACTIVE)
             type = ButtonType.button
-            attributes["data-bs-theme-value"] = "auto"
-            attributes["aria-pressed"] = "true"
+            attribs(
+              "data-bs-theme-value" to "auto",
+              "aria-pressed" to "true",
+            )
             rawHtml(
               """
                   <svg class="bi me-2 opacity-50" width="1em" height="1em">
@@ -501,13 +505,7 @@ internal object AdminPage {
                 """,
             )
             +"Auto"
-            rawHtml(
-              """
-                  <svg class="bi ms-auto d-none" width="1em" height="1em">
-                      <use href="#check2"></use>
-                  </svg>
-                """,
-            )
+            rawHtml(check)
           }
         }
       }
