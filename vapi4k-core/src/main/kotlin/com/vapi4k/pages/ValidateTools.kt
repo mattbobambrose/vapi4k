@@ -383,6 +383,8 @@ object ValidateTools {
     tr {
       td {
         input {
+          classes =
+            setOf("btn", "btn-primary", "d-inline-flex", "align-items-center", "rounded", "border-0", "fs-6")
           style = "text-align: left;"
           id = "invoke-input"
           type = InputType.submit
