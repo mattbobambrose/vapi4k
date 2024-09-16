@@ -32,7 +32,6 @@ import com.vapi4k.common.Endpoints.ADMIN_PATH
 import com.vapi4k.common.Endpoints.ADMIN_VERSION_PATH
 import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
-import com.vapi4k.common.Endpoints.CONSOLE_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
 import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
 import com.vapi4k.common.Endpoints.METRICS_PATH
@@ -44,7 +43,6 @@ import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.pages.AdminPage.adminPage
 import com.vapi4k.pages.BootstrapPage2.bootstrapPage2
-import com.vapi4k.pages.ConsolePage.consolePage
 import com.vapi4k.pages.InvokeTool.invokeTool
 import com.vapi4k.pages.ValidateApplication.appEnvVars
 import com.vapi4k.pages.ValidateApplication.systemInfo
@@ -188,8 +186,6 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
           }
 
           get(ADMIN_PATH) { call.respondHtml { adminPage(config) } }
-
-          get(CONSOLE_PATH) { call.respondHtml { consolePage(config) } }
 
           get(ADMIN_ENV_PATH) { call.respondText(appEnvVars()) }
 

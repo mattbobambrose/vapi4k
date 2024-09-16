@@ -1,23 +1,21 @@
-function updateMainResponseContent() {
-  document.body.addEventListener(
-    'htmx:afterOnLoad',
-    function (event) {
-      // console.log('htmx:afterOnLoad event triggered');
-      if (event.detail.target.id === `main-div`) {
-        displayAdmin();
-        // Format the json result
-        const element = document.querySelector(`#response-main`);
-        // This is added here because the line-numbers class was getting deleted on the 2nd selection
-        element.classList.add("line-numbers");
-        Prism.highlightElement(element);
-      }
-
-      if (event.detail.target.id === `sys-info-div`) {
-        displaySysInfo();
-      }
+document.body.addEventListener(
+  'htmx:afterOnLoad',
+  function (event) {
+    // console.log('htmx:afterOnLoad event triggered');
+    if (event.detail.target.id === `main-div`) {
+      displayAdmin();
+      // Format the json result
+      const element = document.querySelector(`#response-main`);
+      // This is added here because the line-numbers class was getting deleted on the 2nd selection
+      element.classList.add("line-numbers");
+      Prism.highlightElement(element);
     }
-  );
-}
+
+    if (event.detail.target.id === `sys-info-div`) {
+      displaySysInfo();
+    }
+  }
+);
 
 function updateToolContent(divId) {
   document.body.addEventListener(
@@ -41,19 +39,17 @@ function closeToolContent(divId) {
   document.querySelector(`#display-${divId}`).classList.add('hidden');
 }
 
-function updateSidebarSelected() {
-  document.body.addEventListener(
-    'click',
-    function (event) {
-      if (event.target.classList.contains('sidebar-menu-item')) {
-        document.querySelectorAll('.sidebar-menu-item').forEach(item => {
-          item.classList.remove('active');
-        });
-        event.target.classList.add('active');
-      }
+document.body.addEventListener(
+  'click',
+  function (event) {
+    if (event.target.classList.contains('sidebar-menu-item')) {
+      document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      event.target.classList.add('active');
     }
-  );
-}
+  }
+);
 
 function selectApplicationTab(name) {
   document.querySelectorAll('.nav-link').forEach(item => {

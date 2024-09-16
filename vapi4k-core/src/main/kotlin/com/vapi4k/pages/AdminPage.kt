@@ -56,7 +56,6 @@ import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.pre
 import kotlinx.html.role
-import kotlinx.html.script
 import kotlinx.html.span
 import kotlinx.html.strong
 import kotlinx.html.style
@@ -84,10 +83,10 @@ internal object AdminPage {
       js(
         HTMX_SOURCE_URL,
         HTMX_WS_SOURCE_URL,
-        "$STATIC_BASE/js/admin-support.js",
         "$STATIC_BASE/js/ws-events.js",
         "$STATIC_BASE/js/prism.js",
         "$STATIC_BASE/js/color-modes.js",
+        "$STATIC_BASE/js/fade-events.js",
       )
 
       link {
@@ -138,7 +137,7 @@ internal object AdminPage {
               "link-body-emphasis",
               "text-decoration-none",
             )
-            style = "padding-top: 5px; padding-left: 20px;"
+            id = "title-span"
             // svg("bi pe-none me-2") { details(40, 32, "bootstrap") }
             span {
               classes += "fs-4"
@@ -211,6 +210,7 @@ internal object AdminPage {
                 "border-0",
                 "fs-5",
               )
+              style = "cursor: default;"
               rawHtml(
                 """
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-2 bi bi-window" viewBox="0 0 16 16">
@@ -286,13 +286,10 @@ internal object AdminPage {
         }
       }
 
-      script { rawHtml("updateMainResponseContent();\n") }
-      script { rawHtml("updateSidebarSelected();\n") }
-
       js(
         "$BS_BASE/dist/js/bootstrap.bundle.min.js",
         "$STATIC_BASE/js/sidebars.js",
-        "$STATIC_BASE/js/fade-events.js",
+        "$STATIC_BASE/js/admin-support.js",
         "$STATIC_BASE/js/console-support.js",
       )
     }

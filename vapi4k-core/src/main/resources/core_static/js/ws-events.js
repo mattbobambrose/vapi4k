@@ -25,4 +25,3 @@ document.addEventListener('htmx:wsClose', function (event) {
 document.addEventListener('htmx:wsError', function (event) {
   console.error('WebSocket error:', event.detail.error);
 });
-

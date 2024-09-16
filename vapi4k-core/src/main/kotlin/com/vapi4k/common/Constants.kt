@@ -67,11 +67,9 @@ object Endpoints {
   const val CACHES_PATH = "/caches"
   const val CLEAR_CACHES_PATH = "/clear-caches"
   const val ADMIN_PATH = "/admin"
-  const val CONSOLE_PATH = "/console"
   const val VALIDATE_PATH = "/validate"
   const val ADMIN_ENV_PATH = "/admin-env-vars"
   const val ADMIN_VERSION_PATH = "/admin-version"
-  const val CONSOLE_LOG_PATH = "/console-log"
   const val INVOKE_TOOL_PATH = "/invokeTool"
   const val ADMIN_CONSOLE_ENDPOINT = "/admin-console"
 }

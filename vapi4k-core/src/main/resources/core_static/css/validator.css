@@ -95,5 +95,11 @@
 }
 
 #console-div {
-    padding: 0 5px;
+    padding: 5px 5px;
+}
+
+#title-span {
+    padding-top: 5px;
+    padding-left: 20px;
+    cursor: default;
 }
