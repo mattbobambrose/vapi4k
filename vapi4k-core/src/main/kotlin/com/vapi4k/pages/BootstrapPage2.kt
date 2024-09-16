@@ -67,6 +67,10 @@ internal object BootstrapPage2 {
         rel = "stylesheet"
         href = "$STATIC_BASE/css/styles2.css"
       }
+      link {
+        rel = "stylesheet"
+        href = "$STATIC_BASE/css/sidebar-toggle.css"
+      }
     }
     body {
 
@@ -246,7 +250,7 @@ internal object BootstrapPage2 {
         integrity = "sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       }
 
-      script { src = "$STATIC_BASE/js/script2.js" }
+      script { src = "$STATIC_BASE/js/sidebar-toggle.js" }
     }
   }
 }

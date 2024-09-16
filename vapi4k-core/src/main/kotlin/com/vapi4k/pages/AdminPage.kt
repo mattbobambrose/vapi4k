@@ -52,6 +52,7 @@ import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.head
 import kotlinx.html.hr
+import kotlinx.html.i
 import kotlinx.html.id
 import kotlinx.html.img
 import kotlinx.html.li
@@ -75,12 +76,14 @@ internal object AdminPage {
 
       css(
         // "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
+        "https://cdn.lineicons.com/4.0/lineicons.css",
         "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css",
         "$BS_BASE/css/bootstrap.min.css",
         "$PRISM_BASE/css/prism.css",
         "$STATIC_BASE/css/sidebars2.css",
         "$STATIC_BASE/css/sidebars.css",
         "$STATIC_BASE/css/styles.css",
+        "$STATIC_BASE/css/sidebar-toggle.css",
         "$STATIC_BASE/css/validator.css",
       )
 
@@ -124,7 +127,8 @@ internal object AdminPage {
       main {
         classes = setOf("d-flex", "flex-nowrap")
         div {
-          classes = setOf("d-flex", "flex-column", "flex-shrink-0", "p-2", "bg-body-tertiary", "sidebar")
+          classes = setOf("d-flex", "flex-column", "flex-shrink-0", "bg-body-tertiary")
+          id = "sidebar"
           style = "width: 280px;"
           span {
             classes = setOf(
@@ -137,12 +141,21 @@ internal object AdminPage {
               "text-decoration-none",
             )
             id = "title-span"
+            // style = "border: 1px solid red;"
             // svg("bi pe-none me-2") { details(40, 32, "bootstrap") }
+            button {
+              classes = setOf("toggle-btn")
+              type = ButtonType.button
+              // style = "border: 1px solid blue;"
+              i {
+                classes = setOf("lni", "lni-phone", "ps-1", "pt-2", "pb-0")
+              }
+            }
             span {
               classes += "fs-4"
-              rawHtml("&nbsp;&nbsp;")
+              //rawHtml("&nbsp;&nbsp;")
               +"Vapi4k Admin"
-              rawHtml("&nbsp;&nbsp;&nbsp;&nbsp;")
+              //rawHtml("&nbsp;&nbsp;&nbsp;&nbsp;")
             }
             span("spinner-border text-primary p-1 htmx-indicator") {
               id = "spinner"
@@ -221,13 +234,13 @@ internal object AdminPage {
               +"Applications"
             }
 
-            displayApplications("InboundCall Applications", config.inboundCallApplications, "inbound-collapse")
-            displayApplications("OutboundCall Applications", config.outboundCallApplications, "outbound-collapse")
-            displayApplications("Web Applications", config.webApplications, "web-collapse")
+            displayApplications("InboundCall Applications", config.inboundCallApplications, "inbound")
+            displayApplications("OutboundCall Applications", config.outboundCallApplications, "outbound")
+            displayApplications("Web Applications", config.webApplications, "web")
 
             button {
               classes =
-                setOf("btn", "d-inline-flex", "align-items-center", ROUNDED, "border-0", "sidebar-menu-item", "fs-5")
+                setOf("btn", "d-inline-flex", "align-items-center", "border-0", "sidebar-menu-item", "fs-5", ROUNDED)
               clickAction(ADMIN_ENV_PATH, SYS_INFO_DIV)
               rawHtml(
                 """
@@ -243,7 +256,7 @@ internal object AdminPage {
 
             button {
               classes =
-                setOf("btn", "d-inline-flex", "align-items-center", ROUNDED, "border-0", "sidebar-menu-item", "fs-5")
+                setOf("btn", "d-inline-flex", "align-items-center", "border-0", "sidebar-menu-item", "fs-5", ROUNDED)
               clickAction(ADMIN_VERSION_PATH, SYS_INFO_DIV)
               rawHtml(
                 """
@@ -296,6 +309,7 @@ internal object AdminPage {
         "$STATIC_BASE/js/init-tooltips.js",
         "$STATIC_BASE/js/admin-support.js",
         "$STATIC_BASE/js/console-support.js",
+        //  "$STATIC_BASE/js/sidebar-toggle.js",
       )
     }
   }
@@ -324,7 +338,7 @@ internal object AdminPage {
           setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "border-0", "ms-3", ROUNDED, COLLAPSED)
         attribs(
           "data-bs-toggle" to "collapse",
-          "data-bs-target" to "#$target",
+          "data-bs-target" to "#$target-collapse",
           "aria-expanded" to "true",
         )
 //      svg("bi pe-none me-2") { details(16, 16, "table") }
@@ -333,7 +347,7 @@ internal object AdminPage {
 
       div {
         classes = setOf("collapse", "show")
-        id = target
+        id = "$target-collapse"
         ul {
           classes = setOf("btn-toggle-nav", "list-unstyled", "fw-normal", "pb-1", "small")
           applications.forEach { displayApplicationItems(it) }
@@ -407,7 +421,7 @@ internal object AdminPage {
       classes = setOf("position-fixed", "top-0", "end-0", "mb-3", "mt-2", "me-4", "bd-mode-toggle")
       id = "live-tail-div"
       button {
-        classes = setOf("btn", "btn-bd-primary", "m-0", "p-0", "d-flex", ROUNDED, "align-items-center")
+        classes = setOf("btn", "btn-bd-primary", "m-0", "p-0", "d-flex", ROUNDED)
         id = "live-tail-button"
         type = ButtonType.button
         attribs(
@@ -416,11 +430,10 @@ internal object AdminPage {
           "title" to "Live tail",
           "onclick" to "toggleScrolling()"
         )
-        rawHtml(
-          """
-            <i class="bi bi-pause-fill fs-2 m-0 px-2" id="live-tail-icon"></i>
-          """
-        )
+        i {
+          classes = setOf("bi", "bi-pause-fill", "fs-2", "m-0", "ps-2", "pe-1", "pt-0", "pb-1")
+          id = "live-tail-icon"
+        }
       }
     }
   }

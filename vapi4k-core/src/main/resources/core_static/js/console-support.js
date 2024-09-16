@@ -46,14 +46,14 @@ function toggleScrolling() {
   const icon = document.querySelector('#live-tail-icon');
   if (isScrolling === false) {
     setLiveTailTooltip('Live tail');
-    icon.classList.remove('bi-play-fill');
-    icon.classList.add('bi-pause-fill');
+    icon.classList.toggle('bi-play-fill');
+    icon.classList.toggle('bi-pause-fill');
     isScrolling = true;
     scrollToBottom();
   } else {
     setLiveTailTooltip('Paused. Click to resume live tail.');
-    icon.classList.remove('bi-pause-fill');
-    icon.classList.add('bi-play-fill');
+    icon.classList.toggle('bi-pause-fill');
+    icon.classList.toggle('bi-play-fill');
     isScrolling = false;
   }
   //setupTooltips();
