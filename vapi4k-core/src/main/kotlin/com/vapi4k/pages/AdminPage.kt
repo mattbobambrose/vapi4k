@@ -318,7 +318,7 @@ internal object AdminPage {
       classes += "mb-1"
       button {
         classes =
-          setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "rounded", "border-0", "collapsed")
+          setOf("btn", "btn-toggle", "d-inline-flex", "align-items-center", "rounded", "border-0", "ms-3", "collapsed")
         attribs(
           "data-bs-toggle" to "collapse",
           "data-bs-target" to "#$target",
@@ -341,6 +341,7 @@ internal object AdminPage {
 
   private fun UL.displayApplicationItems(app: AbstractApplicationImpl) {
     li {
+      classes += "ms-4"
       a {
         classes = setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", "rounded", "sidebar-menu-item")
         clickAction("$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}", MAIN_DIV)
