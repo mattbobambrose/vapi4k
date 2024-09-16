@@ -341,9 +341,10 @@ internal object AdminPage {
 
   private fun UL.displayApplicationItems(app: AbstractApplicationImpl) {
     li {
-      classes += "ms-4"
+      classes = setOf("ms-4")
       a {
-        classes = setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", "rounded", "sidebar-menu-item")
+        classes =
+          setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", "rounded", "pb-1", "sidebar-menu-item")
         clickAction("$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}", MAIN_DIV)
         +app.serverPath.ensureStartsWith("/")
       }
