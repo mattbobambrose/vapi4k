@@ -34,9 +34,6 @@ class AdminConsoleAppender : ConsoleAppender<ILoggingEvent>() {
     // super.append(eventObject)
     runBlocking {
       val msg = encoder.encode(eventObject).decodeToString()
-//      println(msg)
-//      for (c in msg.toList())
-//        println("$c and ${c.toChar().code}")
       consoleFlow.emit(msg)
 
     }// [2024-09-14 23:25:44,212] INFO  k.application - 200 OK: GET - /bootstrap/dist/js/bootstrap.bundle.min.js in 72ms
@@ -46,7 +43,6 @@ class AdminConsoleAppender : ConsoleAppender<ILoggingEvent>() {
 
 class SharedData {
   companion object {
-    var ppp = -4
     val consoleFlow = MutableSharedFlow<String>(replay = 1000)
   }
 }

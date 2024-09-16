@@ -92,7 +92,7 @@ object ValidateAssistant {
           a {
             classes = setOf("nav-link", "active")
             id = "$MESSAGE_RESPONSE-tab"
-            attribs("hx-on:click" to "selectTab('$MESSAGE_RESPONSE')")
+            attribs("hx-on:click" to "selectApplicationTab('$MESSAGE_RESPONSE')")
             attributes["aria-current"] = "page"
             +"Message Response"
           }
@@ -103,7 +103,7 @@ object ValidateAssistant {
           a {
             classes = setOf("nav-link", if (requestContext.application.hasServiceTools()) "" else "disabled")
             id = "$SERVICE_TOOLS-tab"
-            attribs("hx-on:click" to "selectTab('$SERVICE_TOOLS')")
+            attribs("hx-on:click" to "selectApplicationTab('$SERVICE_TOOLS')")
             +"Service Tools"
           }
         }
@@ -113,7 +113,7 @@ object ValidateAssistant {
           a {
             classes = setOf("nav-link", if (requestContext.application.hasManualTools()) "" else "disabled")
             id = "$MANUAL_TOOLS-tab"
-            attribs("hx-on:click" to "selectTab('$MANUAL_TOOLS')")
+            attribs("hx-on:click" to "selectApplicationTab('$MANUAL_TOOLS')")
             +"Manual Tools"
           }
         }
@@ -123,7 +123,7 @@ object ValidateAssistant {
           a {
             classes = setOf("nav-link", if (requestContext.application.hasFunctions()) "" else "disabled")
             id = "$FUNCTIONS-tab"
-            attribs("hx-on:click" to "selectTab('$FUNCTIONS')")
+            attribs("hx-on:click" to "selectApplicationTab('$FUNCTIONS')")
             +"Functions"
           }
         }

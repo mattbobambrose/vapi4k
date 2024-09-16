@@ -2,14 +2,18 @@ function updateMainResponseContent() {
   document.body.addEventListener(
     'htmx:afterOnLoad',
     function (event) {
-      console.log('AA htmx:afterOnLoad event triggered');
+      // console.log('htmx:afterOnLoad event triggered');
       if (event.detail.target.id === `main-div`) {
+        displayAdmin();
         // Format the json result
         const element = document.querySelector(`#response-main`);
         // This is added here because the line-numbers class was getting deleted on the 2nd selection
-
         element.classList.add("line-numbers");
         Prism.highlightElement(element);
+      }
+
+      if (event.detail.target.id === `sys-info-div`) {
+        displaySysInfo();
       }
     }
   );
@@ -51,7 +55,7 @@ function updateSidebarSelected() {
   );
 }
 
-function selectTab(name) {
+function selectApplicationTab(name) {
   document.querySelectorAll('.nav-link').forEach(item => {
     item.classList.remove('active');
   });

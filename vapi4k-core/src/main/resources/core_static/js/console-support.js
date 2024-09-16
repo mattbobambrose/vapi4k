@@ -19,7 +19,7 @@ const maxSize = 4000;
 const trimSize = 500;
 
 function scrollToBottom() {
-  const scrollingDiv = document.querySelector('#scrolling-div');
+  const scrollingDiv = document.querySelector('#console-div');
   scrollingDiv.scroll({
     top: scrollingDiv.scrollHeight,
     left: 0,
@@ -35,7 +35,6 @@ function scrollToBottom() {
     mainDiv.innerText = lines.join('\n');
     console.log(`Trimmed ${trimSize} lines`);
   }
-
   // console.log(`Before length = ${numLines}`);
 }
 
@@ -61,3 +60,27 @@ document.body.addEventListener(
     }
   }
 );
+
+function displayLogging() {
+  document.querySelector('#console-div').classList.remove('hidden');
+  document.querySelector('#live-tail-div').classList.remove('hidden');
+  document.querySelector('#main-div').classList.add('hidden');
+  document.querySelector('#sys-info-div').classList.add('hidden');
+
+  if (isScrolling)
+    scrollToBottom();
+}
+
+function displayAdmin() {
+  document.querySelector('#main-div').classList.remove('hidden');
+  document.querySelector('#sys-info-div').classList.add('hidden');
+  document.querySelector('#console-div').classList.add('hidden');
+  document.querySelector('#live-tail-div').classList.add('hidden');
+}
+
+function displaySysInfo() {
+  document.querySelector('#sys-info-div').classList.remove('hidden');
+  document.querySelector('#main-div').classList.add('hidden');
+  document.querySelector('#console-div').classList.add('hidden');
+  document.querySelector('#live-tail-div').classList.add('hidden');
+}

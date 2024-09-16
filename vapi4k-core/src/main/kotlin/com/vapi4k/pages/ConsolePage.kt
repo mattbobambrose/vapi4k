@@ -181,7 +181,7 @@ internal object ConsolePage {
 
         div {
           classes = setOf("container-fluid", "overflow-auto")
-          id = "scrolling-div"
+          id = "console-div"
 
           pre {
             id = LOG_DIV
@@ -209,27 +209,9 @@ internal object ConsolePage {
         classes = setOf("btn", "btn-bd-primary", "py-2", "d-flex", "align-items-center")
         id = "live-tail-button"
         type = ButtonType.button
-        attribs(
-          // "aria-expanded" to "false",
-          // "data-bs-toggle" to "dropdown",
-          // "aria-label" to "Toggle theme (auto)",
-        )
         attributes["onclick"] = "toggleScrolling()"
 
         +"Live Tail"
-
-//        rawHtml(
-//          """
-//                  <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
-//                      <use href="#circle-half"></use>
-//                  </svg>
-//                """,
-//        )
-
-//        span("visually-hidden") {
-//          id = "bd-live-tail-text"
-//          +"Toggle theme"
-//        }
       }
     }
   }
