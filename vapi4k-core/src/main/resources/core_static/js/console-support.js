@@ -40,7 +40,6 @@ function scrollToBottom() {
     mainDiv.innerText = lines.join('\n');
     console.log(`Trimmed ${trimSize} lines`);
   }
-  // console.log(`Before length = ${numLines}`);
 }
 
 function toggleScrolling() {
