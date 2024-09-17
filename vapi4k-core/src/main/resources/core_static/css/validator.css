@@ -115,9 +115,6 @@
     border: 0;
     padding-right: 10px;
 / / padding: 1 rem 1.5 rem;
-}
-
-.toggle-btn i {
     font-size: 1.5rem;
     color: #FFF;
 }
@@ -129,4 +126,11 @@
     display: flex; /* Use flexbox for centering */
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
+}
+
+.title-icon {
+    font-size: 1.5rem;
+/ / color: red;
+    padding-right: 5px;
+    margin-bottom: 10px;
 }

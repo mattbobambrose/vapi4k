@@ -76,7 +76,7 @@ internal object AdminPage {
 
       css(
         // "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
-        "https://cdn.lineicons.com/4.0/lineicons.css",
+        // "https://cdn.lineicons.com/4.0/lineicons.css",
         "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css",
         "$BS_BASE/css/bootstrap.min.css",
         "$PRISM_BASE/css/prism.css",
@@ -120,13 +120,13 @@ internal object AdminPage {
               "text-decoration-none",
             )
             id = "title-span"
-            button {
-              classes = setOf("toggle-btn")
-              type = ButtonType.button
-              i { classes = setOf("lni", "lni-phone", "ps-1", "pt-2", "pb-0") }
-            }
+//            button {
+//              classes = setOf("toggle-btn")
+//              type = ButtonType.button
+//            }
+            i { classes = setOf("bi", "bi-telephone", "ps-1", "pt-2", "pb-0", "title-icon") }
             span {
-              classes += "fs-4"
+              classes = setOf("fs-4", "me-2")
               +"Vapi4k Admin"
             }
             span("spinner-border text-primary p-1 htmx-indicator") {
@@ -350,7 +350,7 @@ internal object AdminPage {
       classes = setOf("position-fixed", "top-0", "end-0", "mb-3", "mt-2", "me-4", "bd-mode-toggle")
       id = "live-tail-div"
       button {
-        classes = setOf("btn", "btn-bd-primary", "m-0", "py-0", "px-0", "d-flex", "btn-circle") // ROUNDED
+        classes += setOf("btn", "btn-bd-primary", "m-0", "py-0", "px-0", "d-flex", "btn-circle") // ROUNDED
         id = "live-tail-button"
         type = ButtonType.button
         attribs(
