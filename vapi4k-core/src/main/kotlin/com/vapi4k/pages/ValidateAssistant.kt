@@ -103,7 +103,8 @@ object ValidateAssistant {
         li {
           classes += "nav-item"
           a {
-            classes = setOf("nav-link", if (requestContext.application.hasServiceTools()) "" else "disabled")
+            val hasServiceTools = requestContext.application.hasServiceTools()
+            classes = setOf("nav-link", if (hasServiceTools) "" else "disabled")
             id = "$SERVICE_TOOLS-tab"
             attribs("hx-on:click" to "selectApplicationTab('$SERVICE_TOOLS')")
             +"Service Tools"
@@ -113,7 +114,8 @@ object ValidateAssistant {
         li {
           classes += "nav-item"
           a {
-            classes = setOf("nav-link", if (requestContext.application.hasManualTools()) "" else "disabled")
+            val hasManualTools = requestContext.application.hasManualTools()
+            classes = setOf("nav-link", if (hasManualTools) "" else "disabled")
             id = "$MANUAL_TOOLS-tab"
             attribs("hx-on:click" to "selectApplicationTab('$MANUAL_TOOLS')")
             +"Manual Tools"
@@ -123,7 +125,8 @@ object ValidateAssistant {
         li {
           classes += "nav-item"
           a {
-            classes = setOf("nav-link", if (requestContext.application.hasFunctions()) "" else "disabled")
+            val hasFunctions = requestContext.application.hasFunctions()
+            classes = setOf("nav-link", if (hasFunctions) "" else "disabled")
             id = "$FUNCTIONS-tab"
             attribs("hx-on:click" to "selectApplicationTab('$FUNCTIONS')")
             +"Functions"
@@ -157,8 +160,7 @@ object ValidateAssistant {
     responseBody: String,
   ) {
     div {
-      classes = setOf(VALIDATION_DATA)
-      id = "$MESSAGE_RESPONSE-data"
+      classes = setOf(VALIDATION_DATA, "$MESSAGE_RESPONSE-data")
       div {
         id = "response-header"
         +"Vapi Server URL: "
@@ -184,8 +186,7 @@ object ValidateAssistant {
     responseBody: String,
   ) {
     div {
-      classes += VALIDATION_DATA
-      id = "$MESSAGE_RESPONSE-data"
+      classes = setOf(VALIDATION_DATA, "$MESSAGE_RESPONSE-data")
 
       div {
         classes += ERROR_MSG

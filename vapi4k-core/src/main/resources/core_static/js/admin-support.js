@@ -56,19 +56,26 @@ function closeToolContent(divId) {
 }
 
 function selectApplicationTab(name) {
-  document.querySelectorAll('.nav-link').forEach(item => {
-    item.classList.remove('active');
-  });
+  document.querySelectorAll('.nav-link')
+    .forEach(item => {
+      item.classList.remove('active');
+    });
 
   document.querySelector(`#${name}-tab`).classList.add('active');
 
+  // Hide all validation-data divs
   document.querySelectorAll('.validation-data')
     .forEach(item => {
         item.classList.add('hidden');
       }
     );
 
-  document.querySelector(`#${name}-data`).classList.remove('hidden');
+  // Show the selected validation-data divs
+  document.querySelectorAll(`.${name}-data`)
+    .forEach(item => {
+        item.classList.remove('hidden');
+      }
+    );
 }
 
 function updateServerBaseUrl() {

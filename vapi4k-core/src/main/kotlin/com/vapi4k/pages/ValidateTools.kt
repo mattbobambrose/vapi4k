@@ -133,24 +133,21 @@ object ValidateTools {
 
     if (requestContext.application.hasServiceTools()) {
       div {
-        classes = setOf(VALIDATION_DATA, HIDDEN)
-        id = "$SERVICE_TOOLS-data"
+        classes = setOf(VALIDATION_DATA, "$SERVICE_TOOLS-data", HIDDEN)
         displayServiceTools(requestContext, toolNames, header)
       }
     }
 
     if (requestContext.application.hasManualTools()) {
       div {
-        classes = setOf(VALIDATION_DATA, HIDDEN)
-        id = "$MANUAL_TOOLS-data"
+        classes = setOf(VALIDATION_DATA, "$MANUAL_TOOLS-data", HIDDEN)
         displayManualTools(requestContext, toolNames, header)
       }
     }
 
     if (requestContext.application.hasFunctions()) {
       div {
-        classes = setOf(VALIDATION_DATA, HIDDEN)
-        id = "$FUNCTIONS-data"
+        classes = setOf(VALIDATION_DATA, "$FUNCTIONS-data", HIDDEN)
         displayFunctions(requestContext, funcNames, header)
       }
     }
