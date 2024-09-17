@@ -59,6 +59,7 @@ import com.vapi4k.server.OutboundCallAndWebActions.buildRequestArg
 import com.vapi4k.server.OutboundCallAndWebActions.outboundCallAndWebRequest
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.server.installContentNegotiation
+import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.html
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.MiscUtils.removeEnds
@@ -204,21 +205,21 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
                 val reset =
                   html {
                     div {
-                      attributes["hx-swap-oob"] = "innerHTML:#$LOG_DIV"
+                      attribs("hx-swap-oob" to "innerHTML:#$LOG_DIV")
                       +""
                     }
                   }
                 outgoing.send(Frame.Text(reset))
 
                 SharedDataLoader.accessSharedFlow()
-                  .onStart { logger.info { "Starting to listen for console updates" } }
+                  .onStart { logger.info { "Listening for console updates" } }
                   .onEach { msg ->
                     val s = if (msg.isBlank()) msg else msg.removeEnds("\n")
                     s.split("\n").forEach { line ->
                       val html =
                         html {
                           div {
-                            attributes["hx-swap-oob"] = "beforeend:#$LOG_DIV"
+                            attribs("hx-swap-oob" to "beforeend:#$LOG_DIV")
                             +"$line\n"
                           }
                         }

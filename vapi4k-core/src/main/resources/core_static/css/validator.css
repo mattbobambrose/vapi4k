@@ -123,8 +123,8 @@
 }
 
 .btn-circle {
-    width: 50px; /* Set width */
-    height: 50px; /* Set height */
+    width: 50px;
+    height: 50px;
     border-radius: 50%; /* Make it circular */
     display: flex; /* Use flexbox for centering */
     align-items: center; /* Center vertically */

@@ -44,7 +44,6 @@ import kotlinx.html.pre
 import kotlinx.html.span
 import kotlinx.html.style
 import kotlinx.html.ul
-import kotlin.collections.set
 
 object ValidateAssistant {
   fun validateAssistant(
@@ -93,8 +92,10 @@ object ValidateAssistant {
           a {
             classes = setOf("nav-link", ACTIVE)
             id = "$MESSAGE_RESPONSE-tab"
-            attribs("hx-on:click" to "selectApplicationTab('$MESSAGE_RESPONSE')")
-            attributes["aria-current"] = "page"
+            attribs(
+              "hx-on:click" to "selectApplicationTab('$MESSAGE_RESPONSE')",
+              "aria-current" to "page",
+            )
             +"Message Response"
           }
         }
@@ -143,7 +144,7 @@ object ValidateAssistant {
           a {
             classes = setOf("nav-link", ACTIVE)
             id = "$MESSAGE_RESPONSE-tab"
-            attributes["aria-current"] = "page"
+            attribs("aria-current" to "page")
             +msg
           }
         }
