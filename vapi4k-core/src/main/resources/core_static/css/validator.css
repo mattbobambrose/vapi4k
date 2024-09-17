@@ -121,3 +121,12 @@
     font-size: 1.5rem;
     color: #FFF;
 }
+
+.btn-circle {
+    width: 50px; /* Set width */
+    height: 50px; /* Set height */
+    border-radius: 50%; /* Make it circular */
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
