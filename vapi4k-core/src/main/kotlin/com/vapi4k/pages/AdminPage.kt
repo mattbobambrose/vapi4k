@@ -129,7 +129,8 @@ internal object AdminPage {
               classes = setOf("fs-4", "me-2")
               +"Vapi4k Admin"
             }
-            span("spinner-border text-primary p-1 htmx-indicator") {
+            span {
+              classes = setOf("spinner-border", "text-primary", "p-1", "mb-1", "htmx-indicator")
               id = "spinner"
               role = "status"
             }
@@ -162,24 +163,17 @@ internal object AdminPage {
 //              +"Environment Vars"
 //            }
 
+            val commonStyles = setOf("btn", "d-inline-flex", "align-items-center", "border-0", "fs-5", ROUNDED)
+
             button {
-              classes = setOf(
-                "btn",
-                "d-inline-flex",
-                "align-items-center",
-                ROUNDED,
-                "border-0",
-                "sidebar-menu-item",
-                "fs-5",
-                ACTIVE,
-              )
+              classes = commonStyles + setOf("sidebar-menu-item", ACTIVE)
               attribs("onclick" to "displayLogging()")
               i { classes = setOf("bi", "bi-terminal", "nav-icon", "me-2") }
               +"Console Log"
             }
 
             button {
-              classes = setOf("btn", "d-inline-flex", "align-items-center", "border-0", "fs-5", ROUNDED)
+              classes = commonStyles
               style = "cursor: default;"
               i { classes = setOf("bi", "bi-window", "nav-icon", "me-2") }
               +"Applications"
@@ -190,16 +184,14 @@ internal object AdminPage {
             displayApplications("Web", "web", config.webApplications)
 
             button {
-              classes =
-                setOf("btn", "d-inline-flex", "align-items-center", "border-0", "sidebar-menu-item", "fs-5", ROUNDED)
+              classes = commonStyles + setOf("sidebar-menu-item")
               clickAction(ADMIN_ENV_PATH, SYS_INFO_DIV)
               i { classes = setOf("bi", "bi-clipboard-check", "nav-icon", "me-2") }
               +"Environment Vars"
             }
 
             button {
-              classes =
-                setOf("btn", "d-inline-flex", "align-items-center", "border-0", "sidebar-menu-item", "fs-5", ROUNDED)
+              classes = commonStyles + setOf("sidebar-menu-item")
               clickAction(ADMIN_VERSION_PATH, SYS_INFO_DIV)
               i { classes = setOf("bi", "bi-calendar2-date", "nav-icon", "me-2") }
               +"System Version"
@@ -290,7 +282,7 @@ internal object AdminPage {
       classes = setOf("ms-4")
       a {
         classes =
-          setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", ROUNDED, "pb-1", "sidebar-menu-item")
+          setOf("link-body-emphasis", "d-inline-flex", "text-decoration-none", "pb-1", "sidebar-menu-item", ROUNDED)
         clickAction("$VALIDATE_PATH/${app.fullServerPathWithSecretAsQueryParam}", MAIN_DIV)
         +app.serverPath.ensureStartsWith("/")
       }
