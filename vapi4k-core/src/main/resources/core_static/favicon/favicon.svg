@@ -1,22 +1,6 @@
-<!--
-  - Copyright © 2024 Matthew Ambrose (mattbobambrose@gmail.com)
-  -
-  - Licensed under the Apache License, Version 2.0 (the "License");
-  - you may not use this file except in compliance with the License.
-  - You may obtain a copy of the License at
-  -
-  - http://www.apache.org/licenses/LICENSE-2.0
-  -
-  - Unless required by applicable law or agreed to in writing, software
-  - distributed under the License is distributed on an "AS IS" BASIS,
-  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  - See the License for the specific language governing permissions and limitations under the License.
-  -
-  -->
-
 <svg xmlns="http://www.w3.org/2000/svg"
      version="1.1" width="1000" height="1000">
-    <rect width="1000" height="1000" rx="200" ry="200" fill="#0d6efd"></rect>
+    <rect width="1000" height="1000" rx="200" ry="200" fill="#1d9bf0"></rect>
     <g transform="matrix(50,0,0,50,100.01077548437752,100.0049373965303)">
         <svg xmlns="http://www.w3.org/2000/svg"
              version="1.1" width="16" height="16">
