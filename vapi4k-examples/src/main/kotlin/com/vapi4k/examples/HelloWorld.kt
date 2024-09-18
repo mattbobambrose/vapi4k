@@ -27,7 +27,7 @@ import io.ktor.server.engine.embeddedServer
 
 fun main() {
   // Start a ktor server on port 8080
-  embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::helloWorld)
+  embeddedServer(CIO, port = 8080, host = "localhost", module = Application::helloWorld)
     .start(wait = true)
 }
 

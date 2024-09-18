@@ -27,7 +27,7 @@ fun main() {
   embeddedServer(
     factory = CIO,
     port = 8080,
-    host = "0.0.0.0",
+    host = "localhost",
     module = Application::demoModule,
   ).start(wait = true)
 }
