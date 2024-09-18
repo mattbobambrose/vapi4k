@@ -43,9 +43,9 @@ import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.pages.AdminPage.adminPage
 import com.vapi4k.pages.BootstrapPage2.bootstrapPage2
+import com.vapi4k.pages.ConsoleInfo.envVarsInfo
+import com.vapi4k.pages.ConsoleInfo.versionInfo
 import com.vapi4k.pages.InvokeTool.invokeTool
-import com.vapi4k.pages.ValidateApplication.appEnvVars
-import com.vapi4k.pages.ValidateApplication.systemInfo
 import com.vapi4k.pages.ValidateApplication.validateApplication
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
@@ -186,13 +186,13 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
 
           get(ADMIN_PATH) { call.respondHtml { adminPage(config) } }
 
-          get(ADMIN_ENV_PATH) { call.respondText(appEnvVars()) }
-
-          get(ADMIN_VERSION_PATH) { call.respondText(systemInfo()) }
-
           get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { call.respondText(validateApplication(config)) }
 
           get(INVOKE_TOOL_PATH) { call.respondText(invokeTool(config)) }
+
+          get(ADMIN_ENV_PATH) { call.respondText(envVarsInfo()) }
+
+          get(ADMIN_VERSION_PATH) { call.respondText(versionInfo()) }
 
           webSocket(ADMIN_CONSOLE_ENDPOINT) {
             coroutineScope {

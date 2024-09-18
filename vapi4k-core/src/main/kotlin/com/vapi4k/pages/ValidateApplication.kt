@@ -29,7 +29,6 @@ import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
-import com.vapi4k.common.Version.Companion.versionDesc
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
@@ -39,7 +38,6 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.pages.ValidateAssistant.navBar
 import com.vapi4k.pages.ValidateAssistant.singleNavItem
 import com.vapi4k.pages.ValidateAssistant.validateAssistant
-import com.vapi4k.plugin.Vapi4kServer
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
@@ -53,9 +51,7 @@ import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.common.Utils.isNotNull
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.common.Utils.toErrorString
-import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -67,59 +63,16 @@ import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.h2
-import kotlinx.html.h5
 import kotlinx.html.id
 import kotlinx.html.p
 import kotlinx.html.script
 import kotlinx.html.span
-import kotlinx.html.table
-import kotlinx.html.tbody
-import kotlinx.html.td
-import kotlinx.html.th
-import kotlinx.html.thead
-import kotlinx.html.tr
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.jsonObject
 import java.io.IOException
 
 internal object ValidateApplication {
-  fun appEnvVars(): String =
-    html {
-      navBar { singleNavItem("Environment Variables") }
-      table {
-        classes += "table"
-        id = "envTable"
-        thead {
-          tr {
-            th { +"Environment Variable" }
-            th { +"Value" }
-          }
-        }
-        tbody {
-          jsonEnvVarValues().forEach { (key, value) ->
-            tr {
-              td { +key }
-              td { +value.toJsonString(false) }
-            }
-          }
-        }
-      }
-    }
-
-  fun systemInfo(): String =
-    html {
-      navBar { singleNavItem("System Info") }
-      div {
-        id = "version-info"
-        val json = Vapi4kServer::class.versionDesc(true).toJsonElement()
-        for ((key, value) in json.jsonObject) {
-          h5 { +"$key: $value" }
-        }
-      }
-    }
-
   suspend fun PipelineCall.validateApplication(config: Vapi4kConfigImpl): String =
     runCatching {
       val appType = call.parameters[APP_TYPE].orEmpty()
