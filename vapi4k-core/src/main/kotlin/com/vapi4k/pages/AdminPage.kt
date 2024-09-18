@@ -354,7 +354,16 @@ internal object AdminPage {
       classes = setOf("position-fixed", "top-0", "end-0", "mb-3", "mt-2", "me-4", "bd-mode-toggle")
       id = "live-tail-div"
       button {
-        classes += setOf("btn", "btn-bd-primary", "m-0", "py-0", "px-0", "d-flex", "btn-circle") // ROUNDED
+        classes += setOf(
+          "btn",
+          "btn-bd-primary",
+          "m-0",
+          "py-0",
+          "px-0",
+          "d-flex",
+          "btn-circle",
+          "btn-green-border"
+        ) // ROUNDED
         id = "live-tail-button"
         type = ButtonType.button
         attribs(
@@ -372,8 +381,10 @@ internal object AdminPage {
   }
 
   private fun BODY.addToggleThemeButton() {
-    div("dropdown position-fixed bottom-0 end-0 mb-3 me-4 bd-mode-toggle") {
-      button(classes = "btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center") {
+    div {
+      classes = setOf("dropdown", "position-fixed", "bottom-0", "end-0", "mb-3", "me-4", "bd-mode-toggle")
+      button {
+        classes = setOf("btn", "btn-bd-primary", "py-2", "dropdown-toggle", "d-flex", "align-items-center")
         id = "bd-theme"
         type = ButtonType.button
         attribs(
