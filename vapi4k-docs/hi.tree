@@ -7,10 +7,17 @@
                   start-page="Overview.md">
 
     <toc-element topic="Overview.md"/>
+    <toc-element topic="GettingStarted.md"/>
     <toc-element topic="Installation.md"/>
     <toc-element topic="Quickstart.md"/>
     <toc-element topic="Tutorial.md"/>
     <toc-element topic="PageTest.md"/>
     <toc-element topic="How-to.md"/>
     <toc-element topic="Reference.md"/>
+    <toc-element topic="DeploymentOptions.md"/>
+    <toc-element topic="KtorConfiguration.md"/>
+    <toc-element topic="AssistansAndSquads.md"/>
+    <toc-element topic="ToolsAndFunctions.md"/>
+    <toc-element topic="OutboundApplications.md"/>
+    <toc-element topic="JsonElementUsage.md"/>
 </instance-profile>
