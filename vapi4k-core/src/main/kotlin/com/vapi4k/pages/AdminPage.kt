@@ -81,6 +81,7 @@ internal object AdminPage {
         type = ContentType.Image.SVG.contentType
         href = "$STATIC_BASE/favicon/favicon.svg"
       }
+
       link {
         rel = "icon"
         type = ContentType.Image.PNG.contentType
