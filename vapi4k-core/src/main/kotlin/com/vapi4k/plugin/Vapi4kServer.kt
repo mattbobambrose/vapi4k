@@ -35,7 +35,6 @@ import com.vapi4k.common.Endpoints.CACHES_PATH
 import com.vapi4k.common.Endpoints.CLEAR_CACHES_PATH
 import com.vapi4k.common.Endpoints.ENV_PATH
 import com.vapi4k.common.Endpoints.INVOKE_TOOL_PATH
-import com.vapi4k.common.Endpoints.METRICS_PATH
 import com.vapi4k.common.Endpoints.PING_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
@@ -102,7 +101,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.html.div
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 
 @Version(
@@ -168,15 +166,13 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
               prettyPrint = true
               prettyPrintIndent = "  "
             }
-            get {
-              call.respond<JsonObject>(jsonEnvVarValues())
-            }
+            get { call.respond(jsonEnvVarValues()) }
           }
 
-          route(METRICS_PATH) {
-            installContentNegotiation()
-            get { call.respond(appMicrometerRegistry.scrape()) }
-          }
+//          route(METRICS_PATH) {
+//            installContentNegotiation()
+//            get { call.respond(appMicrometerRegistry.scrape()) }
+//          }
 
           route(CACHES_PATH) {
             installContentNegotiation()

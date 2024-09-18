@@ -39,6 +39,7 @@ import com.vapi4k.utils.HtmlUtils.css
 import com.vapi4k.utils.HtmlUtils.js
 import com.vapi4k.utils.HtmlUtils.rawHtml
 import com.vapi4k.utils.common.Utils.ensureStartsWith
+import io.ktor.http.ContentType
 import kotlinx.html.BODY
 import kotlinx.html.ButtonType
 import kotlinx.html.DIV
@@ -56,6 +57,7 @@ import kotlinx.html.i
 import kotlinx.html.id
 import kotlinx.html.img
 import kotlinx.html.li
+import kotlinx.html.link
 import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.pre
@@ -74,9 +76,18 @@ internal object AdminPage {
         content = "width=device-width, initial-scale=1"
       }
 
+      link {
+        rel = "icon"
+        type = ContentType.Image.SVG.contentType
+        href = "$STATIC_BASE/favicon/favicon.svg"
+      }
+      link {
+        rel = "icon"
+        type = ContentType.Image.PNG.contentType
+        href = "$STATIC_BASE/favicon/favicon.png"
+      }
+
       css(
-        // "https://cdn.jsdelivr.net/npm/@docsearch/css@3",
-        // "https://cdn.lineicons.com/4.0/lineicons.css",
         "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css",
         "$BS_BASE/css/bootstrap.min.css",
         "$PRISM_BASE/css/prism.css",
