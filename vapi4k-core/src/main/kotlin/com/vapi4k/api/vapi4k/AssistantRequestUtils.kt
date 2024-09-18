@@ -31,22 +31,22 @@ object AssistantRequestUtils {
   /**
   Check if the JsonElement is an assistant response.
    */
-  val JsonElement.isAssistantResponse get() = containsKey("messageResponse.assistant")
+  fun JsonElement.isAssistantResponse() = containsKey("messageResponse.assistant")
 
   /**
   Check if the JsonElement is an assistant id response.
    */
-  val JsonElement.isAssistantIdResponse get() = containsKey("messageResponse.assistantId")
+  fun JsonElement.isAssistantIdResponse() = containsKey("messageResponse.assistantId")
 
   /**
   Check if the JsonElement is a squad response.
    */
-  val JsonElement.isSquadResponse get() = containsKey("messageResponse.squad")
+  fun JsonElement.isSquadResponse() = containsKey("messageResponse.squad")
 
   /**
   Check if the JsonElement is a squad id response.
    */
-  val JsonElement.isSquadIdResponse get() = containsKey("messageResponse.squadId")
+  fun JsonElement.isSquadIdResponse() = containsKey("messageResponse.squadId")
 
   /**
   Extract the id from a JsonElement.
@@ -90,7 +90,7 @@ object AssistantRequestUtils {
   Extract the function name from a function call and throws an error if the JsonElement is not a function call.
    */
   val JsonElement.functionName
-    get() = if (isFunctionCall)
+    get() = if (isFunctionCall())
       stringValue("message.functionCall.name").toFunctionName()
     else
       error("JsonElement is not a function call")
@@ -99,7 +99,7 @@ object AssistantRequestUtils {
   Extract the function parameters from a function call and throws an error if the JsonElement is not a function call.
    */
   val JsonElement.functionParameters
-    get() = if (isFunctionCall)
+    get() = if (isFunctionCall())
       this["message.functionCall.parameters"]
     else
       error("JsonElement is not a function call")
@@ -108,12 +108,12 @@ object AssistantRequestUtils {
   Extract the assistant request error message from a status update message and throws an error if the JsonElement is not a status update message.
    */
   val JsonElement.statusUpdateError: String
-    get() = if (isStatusUpdate) {
+    get() = if (isStatusUpdate()) {
       runCatching {
         stringValue("message.inboundPhoneCallDebuggingArtifacts.assistantRequestError")
       }.getOrElse { "" }
     } else {
-      error("Not a status update message. Use .isStatusUpdate before calling .statusUpdateError")
+      error("Not a status update message. Use .isStatusUpdate() to determine if .statusUpdateError is appropriate")
     }
 
   /**

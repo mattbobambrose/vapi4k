@@ -44,17 +44,17 @@ enum class ServerRequestType(
 
     val JsonElement.serverRequestType get() = ServerRequestType.fromString(stringValue("message.type"))
 
-    val JsonElement.isAssistantRequest get() = serverRequestType == ASSISTANT_REQUEST
-    val JsonElement.isConversationUpdate get() = serverRequestType == CONVERSATION_UPDATE
-    val JsonElement.isEndOfCallReport get() = serverRequestType == END_OF_CALL_REPORT
-    val JsonElement.isFunctionCall get() = serverRequestType == FUNCTION_CALL
-    val JsonElement.isHang get() = serverRequestType == HANG
-    val JsonElement.isPhoneCallControl get() = serverRequestType == PHONE_CALL_CONTROL
-    val JsonElement.isSpeechUpdate get() = serverRequestType == SPEECH_UPDATE
-    val JsonElement.isStatusUpdate get() = serverRequestType == STATUS_UPDATE
-    val JsonElement.isToolCall get() = serverRequestType == TOOL_CALL
-    val JsonElement.isTransferDestinationRequest get() = serverRequestType == TRANSFER_DESTINATION_REQUEST
-    val JsonElement.isUserInterrupted get() = serverRequestType == USER_INTERRUPTED
+    fun JsonElement.isAssistantRequest() = serverRequestType == ASSISTANT_REQUEST
+    fun JsonElement.isConversationUpdate() = serverRequestType == CONVERSATION_UPDATE
+    fun JsonElement.isEndOfCallReport() = serverRequestType == END_OF_CALL_REPORT
+    fun JsonElement.isFunctionCall() = serverRequestType == FUNCTION_CALL
+    fun JsonElement.isHang() = serverRequestType == HANG
+    fun JsonElement.isPhoneCallControl() = serverRequestType == PHONE_CALL_CONTROL
+    fun JsonElement.isSpeechUpdate() = serverRequestType == SPEECH_UPDATE
+    fun JsonElement.isStatusUpdate() = serverRequestType == STATUS_UPDATE
+    fun JsonElement.isToolCall() = serverRequestType == TOOL_CALL
+    fun JsonElement.isTransferDestinationRequest() = serverRequestType == TRANSFER_DESTINATION_REQUEST
+    fun JsonElement.isUserInterrupted() = serverRequestType == USER_INTERRUPTED
 
     private fun fromString(desc: String) =
       try {
