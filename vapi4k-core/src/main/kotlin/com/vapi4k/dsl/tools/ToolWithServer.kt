@@ -17,9 +17,9 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.api.tools.Server
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface ToolWithServer : BaseTool {
   /**
   <p>This is the server that will be hit when this tool is requested by the model.

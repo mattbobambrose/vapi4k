@@ -20,12 +20,12 @@ import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is the `assistant` response that is expected from the server to the message.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface InboundCallAssistantResponse {
   /**
   <p>This is the error if the call shouldn't be accepted. This is spoken to the customer.

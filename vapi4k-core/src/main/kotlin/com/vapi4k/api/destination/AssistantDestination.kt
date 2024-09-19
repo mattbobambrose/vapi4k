@@ -17,13 +17,13 @@
 package com.vapi4k.api.destination
 
 import com.vapi4k.api.destination.enums.AssistantTransferMode
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.destination.CommonDestination
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is the assistant destination you'd like the call to be transferred to.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface AssistantDestination : CommonDestination {
   /**
   This is the assistant to transfer the call to.

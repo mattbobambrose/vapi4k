@@ -16,12 +16,12 @@
 
 package com.vapi4k.api.squad
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 Adds an assistant to the squad that's defined in the dashboard.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface AssistantId {
   /**
   The id of the assistant to add to the squad.

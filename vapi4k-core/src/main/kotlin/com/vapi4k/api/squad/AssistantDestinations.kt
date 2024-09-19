@@ -17,12 +17,12 @@
 package com.vapi4k.api.squad
 
 import com.vapi4k.api.destination.AssistantDestination
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 Possible assistants to transfer to from an assistant in a squad.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface AssistantDestinations {
   /**
   Adds a destination to the squad.

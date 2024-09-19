@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolWithMetaData
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface MakeTool : ToolWithMetaData

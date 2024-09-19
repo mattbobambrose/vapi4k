@@ -16,11 +16,11 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.BaseTool
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import kotlin.reflect.KFunction
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface Tools {
   /**
   Uses kotlin methods for implementing tool actions.

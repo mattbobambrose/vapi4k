@@ -19,10 +19,10 @@ package com.vapi4k.api.tools
 import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolWithServer
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface TransferTool : ToolWithServer {
   /**
   Transfers the call to an assistant.

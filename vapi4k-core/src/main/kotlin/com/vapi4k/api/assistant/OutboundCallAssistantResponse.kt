@@ -18,9 +18,9 @@ package com.vapi4k.api.assistant
 
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface OutboundCallAssistantResponse {
   /**
   <p>This is the assistant that will be used for the call. To use an existing assistant, use <code>assistantId</code> instead.

@@ -17,13 +17,13 @@
 package com.vapi4k.api.assistant
 
 import com.vapi4k.dsl.assistant.AnalysisPlanProperties
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.StructuredDataSchema
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is the plan for analysis of assistant's calls. Stored in `call.analysis`.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface AnalysisPlan : AnalysisPlanProperties {
   /**
   This enforces the schema of the structured data. This output is stored in call.analysis.structuredData.

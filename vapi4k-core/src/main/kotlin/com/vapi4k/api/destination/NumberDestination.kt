@@ -16,10 +16,10 @@
 
 package com.vapi4k.api.destination
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.destination.CommonDestination
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface NumberDestination : CommonDestination {
   /**
   This is the phone number to transfer the call to.

@@ -16,11 +16,11 @@
 
 package com.vapi4k.api.model
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.CommonModel
 import com.vapi4k.dsl.model.OpenAIModelProperties
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface OpenAIModel :
   OpenAIModelProperties,
   CommonModel

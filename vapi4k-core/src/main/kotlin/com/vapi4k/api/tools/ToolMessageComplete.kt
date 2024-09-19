@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageCompleteProperties
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 <p>This message is triggered when the tool call is complete.
@@ -26,5 +26,5 @@ import com.vapi4k.dsl.tools.ToolMessageCompleteProperties
 <br>If this message is provided, only this message will be spoken and the model will not be requested to come up with a response. It's an exclusive OR
 </p>
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface ToolMessageComplete : ToolMessageCompleteProperties

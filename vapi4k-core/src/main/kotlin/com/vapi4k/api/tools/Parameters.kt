@@ -16,7 +16,7 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 <p>These are the parameters the functions accepts, described as a JSON Schema object.
@@ -24,7 +24,7 @@ import com.vapi4k.dsl.assistant.AssistantDslMarker
 <br>Omitting parameters defines a function with an empty parameter list.
 </p>
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface Parameters {
   /**
   This adds a parameter to the list of parameters.

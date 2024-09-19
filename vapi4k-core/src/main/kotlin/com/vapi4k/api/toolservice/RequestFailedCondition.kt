@@ -17,13 +17,13 @@
 package com.vapi4k.api.toolservice
 
 import com.vapi4k.api.tools.ToolMessageFailed
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is a condition that the tool call arguments must meet in order for this message to be triggered.
  */
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface RequestFailedCondition {
   /**
   This is the content that the assistant says when this message is triggered.

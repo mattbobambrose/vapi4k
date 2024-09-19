@@ -16,12 +16,12 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is a condition that the tool call arguments must meet in order for a message to be triggered.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface ToolCondition {
   /**
   Creates a request start message and adds it to the messages in the tool.

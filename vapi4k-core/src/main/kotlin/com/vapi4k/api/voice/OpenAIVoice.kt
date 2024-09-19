@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.voice
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dsl.voice.OpenAIVoiceProperties
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface OpenAIVoice : OpenAIVoiceProperties

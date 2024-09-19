@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageDelayedProperties
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 <p>This message is triggered when the tool call is delayed.
@@ -29,5 +29,5 @@ import com.vapi4k.dsl.tools.ToolMessageDelayedProperties
 </ol>
 </p>
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface ToolMessageDelayed : ToolMessageDelayedProperties

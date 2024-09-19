@@ -17,12 +17,12 @@
 package com.vapi4k.api.squad
 
 import com.vapi4k.api.assistant.Assistant
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 A member of the squad.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface Member {
   /**
   This is the assistant that will be used for the call. To use a transient assistant, use `assistant` instead.

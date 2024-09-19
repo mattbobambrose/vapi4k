@@ -17,11 +17,11 @@
 package com.vapi4k.api.call
 
 import com.vapi4k.api.web.MethodType
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.OutboundCallProperties
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import kotlinx.serialization.json.JsonElement
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface OutboundCall : OutboundCallProperties {
   var serverPath: String
   var serverSecret: String

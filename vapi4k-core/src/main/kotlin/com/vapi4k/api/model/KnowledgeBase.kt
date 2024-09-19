@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.model
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.model.KnowledgeBaseProperties
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface KnowledgeBase : KnowledgeBaseProperties

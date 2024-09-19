@@ -16,12 +16,12 @@
 
 package com.vapi4k.api.assistant
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is the assistant that will be used for the call. To use a transient assistant, use `assistant` instead.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface AssistantId {
   /**
   This is the id of the assistant that will be used for the call.

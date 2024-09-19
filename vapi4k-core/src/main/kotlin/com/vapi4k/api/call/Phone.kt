@@ -17,14 +17,14 @@
 package com.vapi4k.api.call
 
 import com.vapi4k.common.QueryParams.SESSION_ID
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.OutboundCallImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dtos.api.OutboundCallRequestDto
 import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.MiscUtils.appendQueryParams
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 class Phone {
   private val duplicateChecker = DuplicateInvokeChecker()
 

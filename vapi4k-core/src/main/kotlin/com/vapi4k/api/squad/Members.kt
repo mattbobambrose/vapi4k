@@ -16,14 +16,14 @@
 
 package com.vapi4k.api.squad
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 <p>This is the list of assistants that make up the squad.
 <br>The call will start with the first assistant in the list.
 </p>
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface Members {
   /**
   Adds a member to the squad.

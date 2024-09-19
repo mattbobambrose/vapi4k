@@ -21,10 +21,10 @@ import com.vapi4k.api.tools.ToolMessageComplete
 import com.vapi4k.api.tools.ToolMessageDelayed
 import com.vapi4k.api.tools.ToolMessageFailed
 import com.vapi4k.api.tools.ToolMessageStart
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dtos.tools.ToolMessageCondition
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface BaseTool {
   /**
   <p>Adds a ToolMessageStart to the messages in the tool.

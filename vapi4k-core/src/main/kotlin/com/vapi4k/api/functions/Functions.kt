@@ -16,10 +16,10 @@
 
 package com.vapi4k.api.functions
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import kotlin.reflect.KFunction
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface Functions {
   fun function(
     obj: Any,

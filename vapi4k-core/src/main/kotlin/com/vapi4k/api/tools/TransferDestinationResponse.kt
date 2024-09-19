@@ -20,12 +20,12 @@ import com.vapi4k.api.destination.AssistantDestination
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.api.destination.StepDestination
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is the destination you'd like the call to be transferred to.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface TransferDestinationResponse {
   /**
   Transfers the call to an assistant.

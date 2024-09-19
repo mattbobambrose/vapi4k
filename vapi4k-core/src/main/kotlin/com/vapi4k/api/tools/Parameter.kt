@@ -16,13 +16,13 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import kotlin.reflect.KClass
 
 /**
 This is a parameter that the function accepts.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface Parameter {
   /**
   This is the name of the parameter

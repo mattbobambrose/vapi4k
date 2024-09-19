@@ -19,12 +19,12 @@ package com.vapi4k.api.assistant
 import com.vapi4k.api.buttons.ButtonConfig
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is the `assistant` response that is expected from the server to the message.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface WebAssistantResponse {
   /**
   <p>This is the assistant that will be used for the call. To use an existing assistant, use <code>assistantId</code> instead.

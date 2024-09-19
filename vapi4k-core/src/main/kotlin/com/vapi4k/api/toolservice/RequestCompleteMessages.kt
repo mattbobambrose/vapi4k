@@ -17,7 +17,7 @@
 package com.vapi4k.api.toolservice
 
 import com.vapi4k.api.tools.ToolMessageComplete
-import com.vapi4k.dsl.assistant.AssistantDslMarker
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dtos.tools.ToolMessageCondition
 
 /**
@@ -28,7 +28,7 @@ import com.vapi4k.dtos.tools.ToolMessageCondition
 </ol>
 </p>
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface RequestCompleteMessages {
   /**
   <p>This message is triggered when the tool call is complete.

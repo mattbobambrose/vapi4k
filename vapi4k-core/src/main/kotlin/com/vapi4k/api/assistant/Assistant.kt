@@ -16,16 +16,16 @@
 
 package com.vapi4k.api.assistant
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.assistant.AssistantProperties
 import com.vapi4k.dsl.assistant.CommonAssistantFunctions
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 <p>This is the assistant that will be used for the call. To use an existing assistant, use `assistantId` instead.
 <br><br>If you're unsure why you're getting an invalid assistant, try logging your response and send the JSON blob to POST /assistant which will return the validation errors.
 </p>
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface Assistant :
   AssistantProperties,
   CommonAssistantFunctions {

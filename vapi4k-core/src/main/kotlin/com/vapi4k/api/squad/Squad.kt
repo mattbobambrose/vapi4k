@@ -17,13 +17,13 @@
 package com.vapi4k.api.squad
 
 import com.vapi4k.api.assistant.AssistantOverrides
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.squad.SquadProperties
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 This is a squad that will be used for the call. To use an existing squad, use `squadId` instead.
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface Squad : SquadProperties {
   /**
   <p>This is the list of assistants that make up the squad.

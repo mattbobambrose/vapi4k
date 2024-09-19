@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.tools
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.tools.ToolMessageStartProperties
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 <p>This message is triggered when the tool call starts.
@@ -25,5 +25,5 @@ import com.vapi4k.dsl.tools.ToolMessageStartProperties
 <br>If this message is not provided, one of the default filler messages "Hold on a sec", "One moment", "Just a sec", "Give me a moment" or "This'll just take a sec" will be used.
 </p>
  */
-@AssistantDslMarker
+@Vapi4KDslMarker
 interface ToolMessageStart : ToolMessageStartProperties

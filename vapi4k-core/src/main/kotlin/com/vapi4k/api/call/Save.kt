@@ -16,11 +16,11 @@
 
 package com.vapi4k.api.call
 
-import com.vapi4k.dsl.assistant.AssistantDslMarker
 import com.vapi4k.dsl.call.OutboundCallImpl
+import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 import com.vapi4k.dtos.api.OutboundCallRequestDto
 
-@AssistantDslMarker
+@Vapi4KDslMarker
 class Save {
   fun call(block: OutboundCall.() -> Unit): OutboundCall = OutboundCallImpl(OutboundCallRequestDto()).apply(block)
 }
