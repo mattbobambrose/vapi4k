@@ -37,52 +37,45 @@ abstract class AbstractAssistantResponseImpl(
   internal val duplicateChecker = DuplicateInvokeChecker()
   internal val assistantRequestResponse = AssistantMessageResponse()
 
+  internal val messageResponse get() = assistantRequestResponse.messageResponse
   internal val isAssigned get() = duplicateChecker.wasCalled
 
   fun assistant(block: Assistant.() -> Unit): Assistant {
     duplicateChecker.check("assistant{} was already called")
-    return assistantRequestResponse.run {
-      val assistantIdSource = AssistantIdSource()
-      AssistantImpl(
-        requestContext,
-        assistantIdSource,
-        messageResponse.assistantDto,
-        messageResponse.assistantOverridesDto,
-      ).apply(block)
-        .apply {
-          with(messageResponse.assistantDto) {
-            verifyValues()
+    val assistantIdSource = AssistantIdSource()
+    return AssistantImpl(
+      requestContext,
+      assistantIdSource,
+      messageResponse.assistantDto,
+      messageResponse.assistantOverridesDto,
+    ).apply(block)
+      .apply {
+        with(messageResponse.assistantDto) {
+          verifyValues()
 
-            serverUrl = requestContext.application.serverUrl.appendQueryParams(
-              APPLICATION_ID to requestContext.application.applicationId.value,
-              SESSION_ID to requestContext.sessionId.value,
-              ASSISTANT_ID to assistantId.value,
-            )
-          }
+          serverUrl = requestContext.application.serverUrl.appendQueryParams(
+            APPLICATION_ID to requestContext.application.applicationId.value,
+            SESSION_ID to requestContext.sessionId.value,
+            ASSISTANT_ID to assistantId.value,
+          )
         }
-    }
+      }
   }
 
   fun assistantId(block: AssistantId.() -> Unit): AssistantId {
     duplicateChecker.check("assistantId{} was already called")
-    return assistantRequestResponse.run {
-      val assistantIdSource = AssistantIdSource()
-      AssistantIdImpl(requestContext, assistantIdSource, messageResponse).apply(block)
-    }
+    val assistantIdSource = AssistantIdSource()
+    return AssistantIdImpl(requestContext, assistantIdSource, messageResponse).apply(block)
   }
 
   fun squad(block: Squad.() -> Unit): Squad {
     duplicateChecker.check("squad{} was already called")
-    return assistantRequestResponse.run {
-      val assistantIdSource = AssistantIdSource()
-      SquadImpl(requestContext, assistantIdSource, messageResponse.squadDto).apply(block)
-    }
+    val assistantIdSource = AssistantIdSource()
+    return SquadImpl(requestContext, assistantIdSource, messageResponse.squadDto).apply(block)
   }
 
   fun squadId(block: SquadId.() -> Unit): SquadId {
     duplicateChecker.check("squadId{} was already called")
-    return assistantRequestResponse.run {
-      SquadIdImpl(requestContext, messageResponse).apply(block)
-    }
+    return SquadIdImpl(requestContext, messageResponse).apply(block)
   }
 }

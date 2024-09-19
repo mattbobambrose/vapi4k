@@ -30,8 +30,6 @@ class WebAssistantResponseImpl(
 
   override fun buttonConfig(block: ButtonConfig.() -> Unit): ButtonConfig {
     buttonConfigDuplicateChecker.check("buttonConfig{} was already called")
-    return assistantRequestResponse.run {
-      ButtonConfigImpl(messageResponse.buttonConfigDto).apply(block)
-    }
+    return ButtonConfigImpl(messageResponse.buttonConfigDto).apply(block)
   }
 }
