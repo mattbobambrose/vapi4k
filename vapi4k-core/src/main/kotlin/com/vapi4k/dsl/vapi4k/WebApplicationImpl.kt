@@ -30,7 +30,7 @@ class WebApplicationImpl internal constructor() :
   AbstractApplicationImpl(ApplicationType.WEB),
   WebApplication {
   private var assistantRequest: (suspend WebAssistantResponse.(RequestContext) -> Unit)? = null
-  private var buttonConfigBlock: ButtonConfig.() -> Unit = {}
+  private var buttonConfigBlock: ButtonConfig.(RequestContext) -> Unit = {}
 
   override fun onAssistantRequest(block: suspend WebAssistantResponse.(RequestContext) -> Unit) {
     if (assistantRequest.isNull())
@@ -47,20 +47,23 @@ class WebApplicationImpl internal constructor() :
         val assistantResponse = WebAssistantResponseImpl(requestContext)
         func.invoke(assistantResponse, requestContext)
         if (assistantResponse.isAssigned) {
-          assignButtonConfig(assistantResponse)
+          assignButtonConfig(assistantResponse, requestContext)
           assistantResponse.assistantRequestResponse
         } else
           error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
       }
     }
 
-  private fun assignButtonConfig(assistantResponse: WebAssistantResponseImpl) {
+  private fun assignButtonConfig(
+    assistantResponse: WebAssistantResponseImpl,
+    requestContext: RequestContextImpl,
+  ) {
     val buttonConfigDuplicateChecker = DuplicateInvokeChecker()
     buttonConfigDuplicateChecker.check("buttonConfig{} was already called")
-    ButtonConfigImpl(assistantResponse.messageResponse.buttonConfigDto).apply(buttonConfigBlock)
+    ButtonConfigImpl(assistantResponse.messageResponse.buttonConfigDto).apply { buttonConfigBlock(requestContext) }
   }
 
-  override fun buttonConfig(block: ButtonConfig.() -> Unit) {
+  override fun buttonConfig(block: ButtonConfig.(RequestContext) -> Unit) {
     buttonConfigBlock = block
   }
 }

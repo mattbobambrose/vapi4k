@@ -48,5 +48,5 @@ interface WebApplication : CommonCallbacks {
   /**
   This is the button config block used by browser clients.
    */
-  fun buttonConfig(block: ButtonConfig.() -> Unit)
+  fun buttonConfig(block: ButtonConfig.(RequestContext) -> Unit)
 }
