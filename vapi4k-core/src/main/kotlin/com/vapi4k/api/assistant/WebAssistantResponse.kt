@@ -16,7 +16,6 @@
 
 package com.vapi4k.api.assistant
 
-import com.vapi4k.api.buttons.ButtonConfig
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
@@ -46,9 +45,4 @@ interface WebAssistantResponse {
   This is the squad that will be used for the call. To use a transient squad, use `squad` instead.
    */
   fun squadId(block: SquadId.() -> Unit): SquadId
-
-  /**
-  This is the button config block used by browser clients.
-   */
-  fun buttonConfig(block: ButtonConfig.() -> Unit): ButtonConfig
 }

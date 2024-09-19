@@ -17,6 +17,7 @@
 package com.vapi4k.api.vapi4k
 
 import com.vapi4k.api.assistant.WebAssistantResponse
+import com.vapi4k.api.buttons.ButtonConfig
 import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.dsl.vapi4k.CommonCallbacks
@@ -43,4 +44,9 @@ interface WebApplication : CommonCallbacks {
   Whenever a TransferDestinationRequest is made, the contents of the onTransferDestinationRequest{} block will be executed.
    */
   fun onTransferDestinationRequest(block: suspend TransferDestinationResponse.(RequestContext) -> Unit)
+
+  /**
+  This is the button config block used by browser clients.
+   */
+  fun buttonConfig(block: ButtonConfig.() -> Unit)
 }

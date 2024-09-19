@@ -17,16 +17,20 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.assistant.WebAssistantResponse
+import com.vapi4k.api.buttons.ButtonConfig
 import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.dsl.assistant.WebAssistantResponseImpl
+import com.vapi4k.dsl.buttons.ButtonConfigImpl
 import com.vapi4k.server.RequestContextImpl
+import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.common.Utils.isNull
 
 class WebApplicationImpl internal constructor() :
   AbstractApplicationImpl(ApplicationType.WEB),
   WebApplication {
   private var assistantRequest: (suspend WebAssistantResponse.(RequestContext) -> Unit)? = null
+  private var buttonConfigBlock: ButtonConfig.() -> Unit = {}
 
   override fun onAssistantRequest(block: suspend WebAssistantResponse.(RequestContext) -> Unit) {
     if (assistantRequest.isNull())
@@ -42,10 +46,21 @@ class WebApplicationImpl internal constructor() :
       } else {
         val assistantResponse = WebAssistantResponseImpl(requestContext)
         func.invoke(assistantResponse, requestContext)
-        if (assistantResponse.isAssigned)
+        if (assistantResponse.isAssigned) {
+          assignButtonConfig(assistantResponse)
           assistantResponse.assistantRequestResponse
-        else
+        } else
           error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
       }
     }
+
+  private fun assignButtonConfig(assistantResponse: WebAssistantResponseImpl) {
+    val buttonConfigDuplicateChecker = DuplicateInvokeChecker()
+    buttonConfigDuplicateChecker.check("buttonConfig{} was already called")
+    ButtonConfigImpl(assistantResponse.messageResponse.buttonConfigDto).apply(buttonConfigBlock)
+  }
+
+  override fun buttonConfig(block: ButtonConfig.() -> Unit) {
+    buttonConfigBlock = block
+  }
 }

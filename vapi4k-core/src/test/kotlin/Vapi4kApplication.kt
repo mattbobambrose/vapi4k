@@ -52,7 +52,7 @@ fun main() {
   embeddedServer(
     factory = CIO,
     port = 8080,
-    host = "localhost",
+    host = "0.0.0.0",
     module = Application::module,
   ).start(wait = true)
 }
@@ -138,36 +138,36 @@ fun Application.module() {
             modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
           }
         }
+      }
 
-        buttonConfig {
-          position = ButtonPosition.BOTTOM_LEFT
-          offset = "40px"
-          width = "50px"
-          height = "50px"
+      buttonConfig {
+        position = ButtonPosition.BOTTOM_LEFT
+        offset = "40px"
+        width = "50px"
+        height = "50px"
 
-          idle {
-            color = ButtonColor(93, 254, 202)
-            type = ButtonType.PILL
-            title = "Have a quick question?"
-            subtitle = "Talk with our AI assistant"
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg"
-          }
+        idle {
+          color = ButtonColor(93, 254, 202)
+          type = ButtonType.PILL
+          title = "Have a quick question?"
+          subtitle = "Talk with our AI assistant"
+          icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg"
+        }
 
-          loading {
-            color = ButtonColor(93, 124, 202)
-            type = ButtonType.PILL
-            title = "Connecting..."
-            subtitle = "Please wait"
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg"
-          }
+        loading {
+          color = ButtonColor(93, 124, 202)
+          type = ButtonType.PILL
+          title = "Connecting..."
+          subtitle = "Please wait"
+          icon = "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg"
+        }
 
-          active {
-            color = ButtonColor(255, 0, 0)
-            type = ButtonType.PILL
-            title = "Call is in progress..."
-            subtitle = "End the call."
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg"
-          }
+        active {
+          color = ButtonColor(255, 0, 0)
+          type = ButtonType.PILL
+          title = "Call is in progress..."
+          subtitle = "End the call."
+          icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg"
         }
       }
     }
@@ -191,36 +191,36 @@ fun Application.module() {
             }
           }
         }
+      }
 
-        buttonConfig {
-          position = ButtonPosition.BOTTOM_LEFT
-          offset = "40px"
-          width = "50px"
-          height = "50px"
+      buttonConfig {
+        position = ButtonPosition.BOTTOM_LEFT
+        offset = "40px"
+        width = "50px"
+        height = "50px"
 
-          idle {
-            color = ButtonColor(93, 254, 202)
-            type = ButtonType.PILL
-            title = "Have a quick question?"
-            subtitle = "Talk with our AI assistant"
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg"
-          }
+        idle {
+          color = ButtonColor(93, 254, 202)
+          type = ButtonType.PILL
+          title = "Have a quick question?"
+          subtitle = "Talk with our AI assistant"
+          icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg"
+        }
 
-          loading {
-            color = ButtonColor(93, 124, 202)
-            type = ButtonType.PILL
-            title = "Connecting..."
-            subtitle = "Please wait"
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg"
-          }
+        loading {
+          color = ButtonColor(93, 124, 202)
+          type = ButtonType.PILL
+          title = "Connecting..."
+          subtitle = "Please wait"
+          icon = "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg"
+        }
 
-          active {
-            color = ButtonColor(255, 0, 0)
-            type = ButtonType.PILL
-            title = "Call is in progress..."
-            subtitle = "End the call."
-            icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg"
-          }
+        active {
+          color = ButtonColor(255, 0, 0)
+          type = ButtonType.PILL
+          title = "Call is in progress..."
+          subtitle = "End the call."
+          icon = "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg"
         }
       }
     }
