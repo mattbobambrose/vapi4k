@@ -19,6 +19,7 @@ package com.vapi4k.dsl.web
 import com.vapi4k.api.web.MethodType
 import com.vapi4k.api.web.TalkButton
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
+import com.vapi4k.common.CoreEnvVars.vapiPublicKey
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.utils.JsonUtils
 import com.vapi4k.utils.MiscUtils.removeEnds
@@ -27,7 +28,7 @@ import kotlinx.serialization.json.JsonElement
 class TalkButtonProperties(
   override var serverPath: String = "",
   override var serverSecret: String = "",
-  override var vapiPublicApiKey: String = "",
+  override var vapiPublicApiKey: String = vapiPublicKey,
   override var method: MethodType = MethodType.POST,
   override var postArgs: JsonElement = JsonUtils.EMPTY_JSON_ELEMENT,
 ) : TalkButton {

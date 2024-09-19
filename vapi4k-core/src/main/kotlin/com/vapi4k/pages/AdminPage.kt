@@ -362,7 +362,7 @@ internal object AdminPage {
           "px-0",
           "d-flex",
           "btn-circle",
-          "btn-green-border"
+          "btn-green-border",
         ) // ROUNDED
         id = "live-tail-button"
         type = ButtonType.button

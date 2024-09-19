@@ -45,15 +45,25 @@ enum class ServerRequestType(
     val JsonElement.serverRequestType get() = ServerRequestType.fromString(stringValue("message.type"))
 
     fun JsonElement.isAssistantRequest() = serverRequestType == ASSISTANT_REQUEST
+
     fun JsonElement.isConversationUpdate() = serverRequestType == CONVERSATION_UPDATE
+
     fun JsonElement.isEndOfCallReport() = serverRequestType == END_OF_CALL_REPORT
+
     fun JsonElement.isFunctionCall() = serverRequestType == FUNCTION_CALL
+
     fun JsonElement.isHang() = serverRequestType == HANG
+
     fun JsonElement.isPhoneCallControl() = serverRequestType == PHONE_CALL_CONTROL
+
     fun JsonElement.isSpeechUpdate() = serverRequestType == SPEECH_UPDATE
+
     fun JsonElement.isStatusUpdate() = serverRequestType == STATUS_UPDATE
+
     fun JsonElement.isToolCall() = serverRequestType == TOOL_CALL
+
     fun JsonElement.isTransferDestinationRequest() = serverRequestType == TRANSFER_DESTINATION_REQUEST
+
     fun JsonElement.isUserInterrupted() = serverRequestType == USER_INTERRUPTED
 
     private fun fromString(desc: String) =
