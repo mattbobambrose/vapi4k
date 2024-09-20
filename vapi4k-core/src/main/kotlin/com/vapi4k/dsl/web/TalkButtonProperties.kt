@@ -25,7 +25,7 @@ import com.vapi4k.utils.JsonUtils
 import com.vapi4k.utils.MiscUtils.removeEnds
 import kotlinx.serialization.json.JsonElement
 
-class TalkButtonProperties(
+internal class TalkButtonProperties(
   override var serverPath: String = "",
   override var serverSecret: String = "",
   override var vapiPublicApiKey: String = vapiPublicKey,

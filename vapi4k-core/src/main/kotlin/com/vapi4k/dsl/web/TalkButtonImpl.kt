@@ -18,6 +18,6 @@ package com.vapi4k.dsl.web
 
 import com.vapi4k.api.web.TalkButton
 
-class TalkButtonImpl internal constructor(
-  private val dto: TalkButtonProperties,
-) : TalkButton by dto
+internal class TalkButtonImpl(
+  private val props: TalkButtonProperties,
+) : TalkButton by props
