@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.transcriber
 
 import com.vapi4k.api.transcriber.TalkscriberTranscriber
+import com.vapi4k.api.transcriber.TalkscriberTranscriberProperties
 import com.vapi4k.dtos.transcriber.TalkscriberTranscriberDto
 
 class TalkscriberTranscriberImpl internal constructor(

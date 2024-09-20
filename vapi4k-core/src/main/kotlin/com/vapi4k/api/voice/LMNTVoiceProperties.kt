@@ -14,9 +14,23 @@
  *
  */
 
-package com.vapi4k.dsl.model
+package com.vapi4k.api.voice
 
-interface KnowledgeBaseProperties {
-  val fileIds: MutableSet<String>
-  var topK: Double
+import com.vapi4k.api.voice.enums.LMNTVoiceIdType
+
+interface LMNTVoiceProperties : CommonVoiceProperties {
+  /**
+  This enables specifying a voice that doesn't already exist as an LMNTVoiceIdType enum.
+   */
+  var customVoiceId: String
+
+  /**
+  This is the speed multiplier that will be used.
+   */
+  var speed: Double
+
+  /**
+  This is the provider-specific ID that will be used.
+   */
+  var voiceIdType: LMNTVoiceIdType
 }

@@ -22,7 +22,7 @@ import com.vapi4k.dsl.functions.FunctionDetails
 import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
 import com.vapi4k.dsl.functions.ToolCallInfo
-import com.vapi4k.dsl.model.AbstractModel
+import com.vapi4k.dsl.model.AbstractModelImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.common.Utils.ensureStartsWith
@@ -44,7 +44,7 @@ internal class ServiceCache(
   fun isNotEmpty() = cacheMap.isNotEmpty()
 
   fun addToCache(
-    model: AbstractModel,
+    model: AbstractModelImpl,
     obj: Any,
     function: KFunction<*>,
   ) {

@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.transcriber
 
 import com.vapi4k.api.transcriber.GladiaTranscriber
+import com.vapi4k.api.transcriber.GladiaTranscriberProperties
 import com.vapi4k.dtos.transcriber.GladiaTranscriberDto
 
 class GladiaTranscriberImpl internal constructor(

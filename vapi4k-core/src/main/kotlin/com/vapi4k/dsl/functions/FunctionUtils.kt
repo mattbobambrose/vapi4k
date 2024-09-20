@@ -16,9 +16,9 @@
 
 package com.vapi4k.dsl.functions
 
+import com.vapi4k.api.model.AbstractModelProperties
 import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.dsl.assistant.ToolCall
-import com.vapi4k.dsl.model.AbstractModelProperties
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.functions.FunctionPropertyDescDto
 import com.vapi4k.utils.ReflectionUtils.asKClass

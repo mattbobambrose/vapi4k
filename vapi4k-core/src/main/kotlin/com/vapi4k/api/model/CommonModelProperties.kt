@@ -14,13 +14,12 @@
  *
  */
 
-package com.vapi4k.dsl.model
+package com.vapi4k.api.model
 
 import com.vapi4k.api.functions.Functions
-import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.tools.Tools
 
-interface CommonModel {
+interface CommonModelProperties {
   /**
   This is the starting state for the conversation for the **system** role.
    */

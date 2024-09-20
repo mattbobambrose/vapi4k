@@ -14,23 +14,18 @@
  *
  */
 
-package com.vapi4k.dsl.voice
+package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.AzureVoiceIdType
+import com.vapi4k.api.voice.enums.NeetsVoiceIdType
 
-interface AzureVoiceProperties : CommonVoiceProperties {
+interface NeetsVoiceProperties : CommonVoiceProperties {
   /**
-  This enables specifying a voice that doesn't already exist as an AzureVoiceIdType enum.
+  This enables specifying a voice that doesn't already exist as an NeetsVoiceIdType enum.
    */
   var customVoiceId: String
 
   /**
-  This is the speed multiplier that will be used.
-   */
-  var speed: Double
-
-  /**
   This is the provider-specific ID that will be used.
    */
-  var voiceIdType: AzureVoiceIdType
+  var voiceIdType: NeetsVoiceIdType
 }

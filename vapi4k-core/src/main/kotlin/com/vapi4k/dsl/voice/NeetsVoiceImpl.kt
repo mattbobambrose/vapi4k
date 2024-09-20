@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.NeetsVoice
+import com.vapi4k.api.voice.NeetsVoiceProperties
 import com.vapi4k.dtos.voice.NeetsVoiceDto
 
 class NeetsVoiceImpl internal constructor(

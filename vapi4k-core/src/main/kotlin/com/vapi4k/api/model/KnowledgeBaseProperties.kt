@@ -14,24 +14,9 @@
  *
  */
 
-package com.vapi4k.dsl.model
+package com.vapi4k.api.model
 
-import com.vapi4k.common.AssistantId
-import com.vapi4k.dtos.functions.FunctionDto
-import com.vapi4k.dtos.model.RoleMessageDto
-import com.vapi4k.dtos.tools.ToolDto
-
-interface AbstractModelProperties {
-  val modelUnion: ModelUnion
-  val assistantId: AssistantId
-  val messages: MutableList<RoleMessageDto>
-  val toolDtos: MutableList<ToolDto>
-  val functionDtos: MutableList<FunctionDto>
-
-  val application get() = modelUnion.requestContext.application
-
-  fun message(
-    role: MessageRoleType,
-    content: String,
-  )
+interface KnowledgeBaseProperties {
+  val fileIds: MutableSet<String>
+  var topK: Double
 }

@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.transcriber
 
 import com.vapi4k.api.transcriber.DeepgramTranscriber
+import com.vapi4k.api.transcriber.DeepgramTranscriberProperties
 import com.vapi4k.dtos.transcriber.DeepgramTranscriberDto
 
 class DeepgramTranscriberImpl internal constructor(

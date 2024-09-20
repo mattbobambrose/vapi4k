@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.voice
+package com.vapi4k.api.voice
 
 import com.vapi4k.api.voice.enums.PunctuationType
 

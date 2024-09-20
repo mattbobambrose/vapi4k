@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.DeepgramVoice
+import com.vapi4k.api.voice.DeepgramVoiceProperties
 import com.vapi4k.dtos.voice.DeepgramVoiceDto
 
 class DeepgramVoiceImpl internal constructor(

@@ -16,6 +16,7 @@
 
 package com.vapi4k.dsl.model
 
+import com.vapi4k.api.model.AbstractModelProperties
 import kotlin.reflect.KProperty
 
 internal class ModelMessageDelegate(

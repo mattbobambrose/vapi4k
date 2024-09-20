@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.PlayHTVoice
+import com.vapi4k.api.voice.PlayHTVoiceProperties
 import com.vapi4k.dtos.voice.PlayHTVoiceDto
 
 class PlayHTVoiceImpl internal constructor(

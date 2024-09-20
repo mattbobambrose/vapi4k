@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.functions.Functions
+import com.vapi4k.api.model.AbstractModelProperties
 import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.common.FunctionName
@@ -28,7 +29,7 @@ import com.vapi4k.dtos.model.RoleMessageDto
 import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.common.Utils.trimLeadingSpaces
 
-abstract class AbstractModel(
+abstract class AbstractModelImpl(
   override val modelUnion: ModelUnion,
   private val dto: CommonModelDto,
 ) : AbstractModelProperties {

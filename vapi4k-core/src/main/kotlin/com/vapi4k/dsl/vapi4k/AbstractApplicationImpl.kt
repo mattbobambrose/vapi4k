@@ -26,7 +26,7 @@ import com.vapi4k.common.CoreEnvVars.defaultServerPath
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.FunctionName
 import com.vapi4k.common.QueryParams.SECRET_PARAM
-import com.vapi4k.dsl.model.AbstractModel
+import com.vapi4k.dsl.model.AbstractModelImpl
 import com.vapi4k.dsl.tools.ManualToolCache
 import com.vapi4k.dsl.tools.ServiceCache
 import com.vapi4k.dsl.tools.ToolWithServerImpl
@@ -93,7 +93,7 @@ abstract class AbstractApplicationImpl(
   }
 
   internal fun addServiceToolToCache(
-    model: AbstractModel,
+    model: AbstractModelImpl,
     obj: Any,
     function: KFunction<*>,
   ) = serviceToolCache.addToCache(model, obj, function)
@@ -104,7 +104,7 @@ abstract class AbstractApplicationImpl(
   ) = manualToolCache.addToCache(funcName, manualToolImpl)
 
   internal fun addFunctionToCache(
-    model: AbstractModel,
+    model: AbstractModelImpl,
     obj: Any,
     function: KFunction<*>,
   ) = functionCache.addToCache(model, obj, function)

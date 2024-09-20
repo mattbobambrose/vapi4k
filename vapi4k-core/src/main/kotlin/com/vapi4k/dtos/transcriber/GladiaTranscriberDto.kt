@@ -16,10 +16,10 @@
 
 package com.vapi4k.dtos.transcriber
 
+import com.vapi4k.api.transcriber.GladiaTranscriberProperties
 import com.vapi4k.api.transcriber.enums.GladiaLanguageType
 import com.vapi4k.api.transcriber.enums.GladiaModelType
 import com.vapi4k.api.transcriber.enums.TranscriberType
-import com.vapi4k.dsl.transcriber.GladiaTranscriberProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

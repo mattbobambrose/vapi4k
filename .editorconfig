@@ -17,6 +17,9 @@ indent_size = 4
 [*.js]
 indent_size = 2
 
+[*.md]
+indent_size = 2
+
 [*.kt]
 indent_size = 2
 # ktlint_standard_property-naming = disabled

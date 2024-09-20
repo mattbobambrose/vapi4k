@@ -16,10 +16,10 @@
 
 package com.vapi4k.dtos.transcriber
 
+import com.vapi4k.api.transcriber.TalkscriberTranscriberProperties
 import com.vapi4k.api.transcriber.enums.TalkscriberLanguageType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 import com.vapi4k.api.transcriber.enums.TranscriberType
-import com.vapi4k.dsl.transcriber.TalkscriberTranscriberProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

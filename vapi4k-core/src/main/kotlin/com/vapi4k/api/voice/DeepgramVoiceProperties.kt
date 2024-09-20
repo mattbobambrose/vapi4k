@@ -14,18 +14,18 @@
  *
  */
 
-package com.vapi4k.dsl.voice
+package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.NeetsVoiceIdType
+import com.vapi4k.api.voice.enums.DeepGramVoiceIdType
 
-interface NeetsVoiceProperties : CommonVoiceProperties {
+interface DeepgramVoiceProperties : CommonVoiceProperties {
   /**
-  This enables specifying a voice that doesn't already exist as an NeetsVoiceIdType enum.
+  This enables specifying a voice that doesn't already exist as an DeepGramVoiceIdType enum.
    */
   var customVoiceId: String
 
   /**
   This is the provider-specific ID that will be used.
    */
-  var voiceIdType: NeetsVoiceIdType
+  var voiceIdType: DeepGramVoiceIdType
 }

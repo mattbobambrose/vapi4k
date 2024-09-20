@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.KnowledgeBase
+import com.vapi4k.api.model.KnowledgeBaseProperties
 import com.vapi4k.dtos.model.KnowledgeBaseDto
 import com.vapi4k.server.RequestContextImpl
 

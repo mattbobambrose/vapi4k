@@ -16,11 +16,11 @@
 
 package com.vapi4k.dtos.voice
 
+import com.vapi4k.api.voice.PlayHTVoiceProperties
 import com.vapi4k.api.voice.enums.PlayHTVoiceEmotionType
 import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.api.voice.enums.PunctuationType
 import com.vapi4k.api.voice.enums.VoiceProviderType
-import com.vapi4k.dsl.voice.PlayHTVoiceProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

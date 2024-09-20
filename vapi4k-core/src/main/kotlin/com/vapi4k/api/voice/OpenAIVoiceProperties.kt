@@ -14,13 +14,13 @@
  *
  */
 
-package com.vapi4k.dsl.voice
+package com.vapi4k.api.voice
 
-import com.vapi4k.api.voice.enums.LMNTVoiceIdType
+import com.vapi4k.api.voice.enums.OpenAIVoiceIdType
 
-interface LMNTVoiceProperties : CommonVoiceProperties {
+interface OpenAIVoiceProperties : CommonVoiceProperties {
   /**
-  This enables specifying a voice that doesn't already exist as an LMNTVoiceIdType enum.
+  This enables specifying a voice that doesn't already exist as an OpenAIVoiceIdType enum.
    */
   var customVoiceId: String
 
@@ -32,5 +32,5 @@ interface LMNTVoiceProperties : CommonVoiceProperties {
   /**
   This is the provider-specific ID that will be used.
    */
-  var voiceIdType: LMNTVoiceIdType
+  var voiceIdType: OpenAIVoiceIdType
 }

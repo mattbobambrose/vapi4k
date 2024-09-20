@@ -24,8 +24,11 @@ import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.dsl.web.VapiWeb.vapiTalkButton
 import com.vapi4k.plugin.Vapi4k
 import io.ktor.server.application.Application
+import io.ktor.server.application.call
 import io.ktor.server.application.install
-import kotlinx.html.HTML
+import io.ktor.server.html.respondHtml
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import kotlinx.html.body
 import kotlinx.html.h1
 import kotlinx.html.head
@@ -84,16 +87,21 @@ object WebCall {
           }
         }
       }
-    }
 
-    fun HTML.talkPage() {
-      head {
-        title { +"Talk Button Demo" }
-      }
-      body {
-        h1 { +"Talk Button Demo" }
-        vapiTalkButton {
-          serverPath = "/webApp"
+      // Create a route for the talk page
+      routing {
+        get("/talk") {
+          call.respondHtml {
+            head {
+              title { +"Talk Button Demo" }
+            }
+            body {
+              h1 { +"Talk Button Demo" }
+              vapiTalkButton {
+                serverPath = "/webApp"
+              }
+            }
+          }
         }
       }
     }

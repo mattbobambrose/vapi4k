@@ -16,7 +16,6 @@
 
 package com.vapi4k.api.transcriber
 
-import com.vapi4k.dsl.transcriber.GladiaTranscriberProperties
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 @Vapi4KDslMarker
