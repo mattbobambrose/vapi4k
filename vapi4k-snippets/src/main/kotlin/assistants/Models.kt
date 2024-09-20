@@ -84,5 +84,4 @@ object Models {
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
-
 }
