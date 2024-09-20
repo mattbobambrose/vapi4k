@@ -49,8 +49,9 @@ class WebApplicationImpl internal constructor() :
         if (assistantResponse.isAssigned) {
           assignButtonConfig(assistantResponse, requestContext)
           assistantResponse.assistantRequestResponse
-        } else
+        } else {
           error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
+        }
       }
     }
 

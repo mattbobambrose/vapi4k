@@ -24,7 +24,7 @@ import java.lang.reflect.Field
 import kotlin.reflect.full.declaredMemberProperties
 
 class AdminConsoleAppender : ConsoleAppender<ILoggingEvent>() {
-  val consoleFlow: MutableSharedFlow<String>
+  private val consoleFlow: MutableSharedFlow<String>
 
   init {
     consoleFlow = SharedDataLoader.accessSharedFlow()

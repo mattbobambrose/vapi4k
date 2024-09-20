@@ -104,7 +104,7 @@ class VapiApiImpl private constructor(
         authString.ifBlank {
           getSystemValue(vapiPrivateKey, PRIVATE_KEY_PROPERTY) {
             "VAPI private api key needs to be assigned with $PRIVATE_KEY_PROPERTY in application.conf, " +
-              "VAPI_PRIVATE_KEY, or passing an authString argument in vapiApi()"
+              "VAPI_PRIVATE_KEY env var, or passing an authString argument in vapiApi()"
           }
         }
 

@@ -76,7 +76,7 @@ object JsonElementUtils {
 
   fun JsonElement.jsonElementListOrNull(vararg keys: String) = getOrNull(*keys)?.toJsonElementList()
 
-  internal fun JsonElement.elementOrNull(key: String) = jsonObject.get(key)
+  private fun JsonElement.elementOrNull(key: String) = jsonObject.get(key)
 
   internal fun JsonElement.element(key: String) =
     elementOrNull(key) ?: throw IllegalArgumentException("""JsonElement key "$key" not found""")
