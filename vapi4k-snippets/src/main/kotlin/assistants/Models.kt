@@ -25,6 +25,9 @@ object Models {
   fun Assistant.anthropicModel() {
     anthropicModel {
       modelType = AnthropicModelType.CLAUDE_3_HAIKU
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
@@ -32,20 +35,30 @@ object Models {
   fun Assistant.anyscaleModel() {
     anyscaleModel {
       model = "Model_Description"
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
 
   fun Assistant.customLLMModel() {
-    anthropicModel {
-      modelType = AnthropicModelType.CLAUDE_3_HAIKU
+    customLLMModel {
+      model = "Model_Description"
+      url = "Model_URL"
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
 
   fun Assistant.deepInfraModel() {
-    anthropicModel {
-      modelType = AnthropicModelType.CLAUDE_3_HAIKU
+    deepInfraModel {
+      model = "Model_Description"
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
@@ -53,6 +66,9 @@ object Models {
   fun Assistant.groqModel() {
     groqModel {
       modelType = GroqModelType.LLAMA3_70B
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
@@ -73,6 +89,13 @@ object Models {
 
   fun Assistant.perplexityAIModel() {
     perplexityAIModel {
+      model = "Model_Description"
+      systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
+    }
+  }
+
+  fun Assistant.togetherAIModel() {
+    togetherAIModel {
       model = "Model_Description"
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }

@@ -28,6 +28,11 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class AnthropicModelDto(
+  var model: String = "",
+  @Transient
+  override var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED,
+  @Transient
+  override var customModel: String = "",
   override var temperature: Double = -1.0,
   override var maxTokens: Int = -1,
   override var emotionRecognitionEnabled: Boolean? = null,
@@ -38,11 +43,6 @@ data class AnthropicModelDto(
   override val tools: MutableList<ToolDto> = mutableListOf(),
   override val toolIds: MutableSet<String> = mutableSetOf(),
   override val functions: MutableList<FunctionDto> = mutableListOf(),
-  var model: String = "",
-  @Transient
-  override var modelType: AnthropicModelType = AnthropicModelType.UNSPECIFIED,
-  @Transient
-  override var customModel: String = "",
 ) : AnthropicModelProperties,
   CommonModelDto {
   @EncodeDefault

@@ -57,7 +57,6 @@ interface OpenAIModelProperties {
   Default is 0.
    */
   var numFastTurns: Int
-  var semanticCachingEnabled: Boolean?
 
   /**
   This is the temperature that will be used for calls.
@@ -69,4 +68,6 @@ interface OpenAIModelProperties {
   Both `tools` and `toolIds` can be used together.
    */
   val toolIds: MutableSet<String>
+
+  var semanticCachingEnabled: Boolean?
 }

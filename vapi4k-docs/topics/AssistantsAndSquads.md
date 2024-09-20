@@ -32,6 +32,9 @@ it is present in all the application descriptions.
   <tab title="PerplexityAI">
     <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="perplexityAIModel"/>
   </tab>
+  <tab title="TogetherAI">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="togetherAIModel"/>
+  </tab>
   <tab title="Vapi">
     <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="vapiModel"/>
   </tab>

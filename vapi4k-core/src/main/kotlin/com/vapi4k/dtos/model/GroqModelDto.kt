@@ -28,6 +28,11 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class GroqModelDto(
+  var model: String = "",
+  @Transient
+  override var modelType: GroqModelType = GroqModelType.UNSPECIFIED,
+  @Transient
+  override var customModel: String = "",
   override var temperature: Double = -1.0,
   override var maxTokens: Int = -1,
   override var emotionRecognitionEnabled: Boolean? = null,
@@ -38,11 +43,6 @@ data class GroqModelDto(
   override val tools: MutableList<ToolDto> = mutableListOf(),
   override val toolIds: MutableSet<String> = mutableSetOf(),
   override val functions: MutableList<FunctionDto> = mutableListOf(),
-  var model: String = "",
-  @Transient
-  override var modelType: GroqModelType = GroqModelType.UNSPECIFIED,
-  @Transient
-  override var customModel: String = "",
 ) : GroqModelProperties,
   CommonModelDto {
   @EncodeDefault

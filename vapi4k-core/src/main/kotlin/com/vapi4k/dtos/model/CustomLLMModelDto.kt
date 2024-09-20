@@ -27,6 +27,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CustomLLMModelDto(
+  override var model: String = "",
+  override var url: String = "",
   override var temperature: Double = -1.0,
   override var maxTokens: Int = -1,
   override var emotionRecognitionEnabled: Boolean? = null,
@@ -37,8 +39,6 @@ data class CustomLLMModelDto(
   override val tools: MutableList<ToolDto> = mutableListOf(),
   override val toolIds: MutableSet<String> = mutableSetOf(),
   override val functions: MutableList<FunctionDto> = mutableListOf(),
-  override var model: String = "",
-  override var url: String = "",
   override var metadataSendMode: MetaDataSendModeType = MetaDataSendModeType.UNSPECIFIED,
 ) : CustomLLMModelProperties,
   CommonModelDto {

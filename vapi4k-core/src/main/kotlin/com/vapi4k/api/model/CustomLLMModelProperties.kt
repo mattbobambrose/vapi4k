@@ -29,7 +29,7 @@ interface CustomLLMModelProperties {
   <br>Default `false` because the model is usually good at understanding the user's emotion from text.
   </p>
    */
-  val emotionRecognitionEnabled: Boolean?
+  var emotionRecognitionEnabled: Boolean?
 
   /**
   This is the max number of tokens that the assistant will be allowed to generate in each turn of the conversation. Default is 250.
