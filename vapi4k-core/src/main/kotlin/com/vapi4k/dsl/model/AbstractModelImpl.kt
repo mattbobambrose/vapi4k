@@ -29,7 +29,7 @@ import com.vapi4k.dtos.model.RoleMessageDto
 import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.common.Utils.trimLeadingSpaces
 
-abstract class AbstractModelImpl(
+internal abstract class AbstractModelImpl(
   override val modelUnion: ModelUnion,
   private val dto: CommonModelDto,
 ) : AbstractModelProperties {

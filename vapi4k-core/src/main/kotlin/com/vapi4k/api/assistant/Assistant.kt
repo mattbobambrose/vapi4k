@@ -17,7 +17,6 @@
 package com.vapi4k.api.assistant
 
 import com.vapi4k.dsl.assistant.AssistantProperties
-import com.vapi4k.dsl.assistant.CommonAssistantFunctions
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**

@@ -19,7 +19,7 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.api.assistant.OutboundCallAssistantResponse
 import com.vapi4k.server.RequestContextImpl
 
-class OutboundCallAssistantResponseImpl(
+class OutboundCallAssistantResponseImpl internal constructor(
   requestContext: RequestContextImpl,
 ) : AbstractAssistantResponseImpl(requestContext),
   OutboundCallAssistantResponse

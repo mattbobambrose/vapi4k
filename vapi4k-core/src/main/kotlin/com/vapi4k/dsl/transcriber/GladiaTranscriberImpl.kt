@@ -20,7 +20,7 @@ import com.vapi4k.api.transcriber.GladiaTranscriber
 import com.vapi4k.api.transcriber.GladiaTranscriberProperties
 import com.vapi4k.dtos.transcriber.GladiaTranscriberDto
 
-class GladiaTranscriberImpl internal constructor(
+internal class GladiaTranscriberImpl(
   private val dto: GladiaTranscriberDto,
 ) : GladiaTranscriberProperties by dto,
   GladiaTranscriber

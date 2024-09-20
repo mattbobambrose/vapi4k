@@ -17,6 +17,7 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.VoicemailDetection
+import com.vapi4k.api.assistant.VoicemailDetectionProperties
 import com.vapi4k.dtos.assistant.VoicemailDetectionDto
 
 class VoicemailDetectionImpl internal constructor(

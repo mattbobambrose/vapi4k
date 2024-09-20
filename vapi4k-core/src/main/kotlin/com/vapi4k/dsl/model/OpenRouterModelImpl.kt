@@ -20,7 +20,7 @@ import com.vapi4k.api.model.OpenRouterModel
 import com.vapi4k.api.model.OpenRouterModelProperties
 import com.vapi4k.dtos.model.OpenRouterModelDto
 
-class OpenRouterModelImpl(
+internal class OpenRouterModelImpl(
   modelUnion: ModelUnion,
   modelDto: OpenRouterModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

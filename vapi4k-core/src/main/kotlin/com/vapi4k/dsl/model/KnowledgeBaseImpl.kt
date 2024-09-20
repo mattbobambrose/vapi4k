@@ -21,7 +21,7 @@ import com.vapi4k.api.model.KnowledgeBaseProperties
 import com.vapi4k.dtos.model.KnowledgeBaseDto
 import com.vapi4k.server.RequestContextImpl
 
-class KnowledgeBaseImpl internal constructor(
+internal class KnowledgeBaseImpl(
   internal val requestContext: RequestContextImpl,
   private val dto: KnowledgeBaseDto,
 ) : KnowledgeBaseProperties by dto,

@@ -20,7 +20,7 @@ import com.vapi4k.api.voice.LMNTVoice
 import com.vapi4k.api.voice.LMNTVoiceProperties
 import com.vapi4k.dtos.voice.LMNTVoiceDto
 
-class LMNTVoiceImpl internal constructor(
+internal class LMNTVoiceImpl(
   private val dto: LMNTVoiceDto,
 ) : LMNTVoiceProperties by dto,
   LMNTVoice

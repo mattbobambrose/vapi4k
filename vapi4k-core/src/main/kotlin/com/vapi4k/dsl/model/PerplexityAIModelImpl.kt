@@ -20,7 +20,7 @@ import com.vapi4k.api.model.PerplexityAIModel
 import com.vapi4k.api.model.PerplexityAIModelProperties
 import com.vapi4k.dtos.model.PerplexityAIModelDto
 
-class PerplexityAIModelImpl(
+internal class PerplexityAIModelImpl(
   modelUnion: ModelUnion,
   modelDto: PerplexityAIModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

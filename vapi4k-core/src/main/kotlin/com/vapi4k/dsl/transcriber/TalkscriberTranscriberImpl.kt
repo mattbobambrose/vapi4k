@@ -20,7 +20,7 @@ import com.vapi4k.api.transcriber.TalkscriberTranscriber
 import com.vapi4k.api.transcriber.TalkscriberTranscriberProperties
 import com.vapi4k.dtos.transcriber.TalkscriberTranscriberDto
 
-class TalkscriberTranscriberImpl internal constructor(
+internal class TalkscriberTranscriberImpl(
   private val dto: TalkscriberTranscriberDto,
 ) : TalkscriberTranscriberProperties by dto,
   TalkscriberTranscriber

@@ -20,7 +20,7 @@ import com.vapi4k.api.transcriber.DeepgramTranscriber
 import com.vapi4k.api.transcriber.DeepgramTranscriberProperties
 import com.vapi4k.dtos.transcriber.DeepgramTranscriberDto
 
-class DeepgramTranscriberImpl internal constructor(
+internal class DeepgramTranscriberImpl(
   private val dto: DeepgramTranscriberDto,
 ) : DeepgramTranscriberProperties by dto,
   DeepgramTranscriber

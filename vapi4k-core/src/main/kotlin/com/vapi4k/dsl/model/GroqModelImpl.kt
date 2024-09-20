@@ -20,7 +20,7 @@ import com.vapi4k.api.model.GroqModel
 import com.vapi4k.api.model.GroqModelProperties
 import com.vapi4k.dtos.model.GroqModelDto
 
-class GroqModelImpl(
+internal class GroqModelImpl(
   modelUnion: ModelUnion,
   modelDto: GroqModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

@@ -20,7 +20,7 @@ import com.vapi4k.api.model.AnthropicModel
 import com.vapi4k.api.model.AnthropicModelProperties
 import com.vapi4k.dtos.model.AnthropicModelDto
 
-class AnthropicModelImpl(
+internal class AnthropicModelImpl(
   modelUnion: ModelUnion,
   modelDto: AnthropicModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

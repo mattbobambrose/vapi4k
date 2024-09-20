@@ -20,7 +20,7 @@ import com.vapi4k.api.voice.CartesiaVoice
 import com.vapi4k.api.voice.CartesiaVoiceProperties
 import com.vapi4k.dtos.voice.CartesiaVoiceDto
 
-class CartesiaVoiceImpl internal constructor(
+internal class CartesiaVoiceImpl(
   private val dto: CartesiaVoiceDto,
 ) : CartesiaVoiceProperties by dto,
   CartesiaVoice

@@ -20,7 +20,7 @@ import com.vapi4k.api.voice.ElevenLabsVoice
 import com.vapi4k.api.voice.ElevenLabsVoiceProperties
 import com.vapi4k.dtos.voice.ElevenLabsVoiceDto
 
-class ElevenLabsVoiceImpl internal constructor(
+internal class ElevenLabsVoiceImpl(
   private val dto: ElevenLabsVoiceDto,
 ) : ElevenLabsVoiceProperties by dto,
   ElevenLabsVoice

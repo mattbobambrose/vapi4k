@@ -19,7 +19,7 @@ package com.vapi4k.dsl.assistant
 import com.vapi4k.api.assistant.WebAssistantResponse
 import com.vapi4k.server.RequestContextImpl
 
-class WebAssistantResponseImpl(
+class WebAssistantResponseImpl internal constructor(
   requestContext: RequestContextImpl,
 ) : AbstractAssistantResponseImpl(requestContext),
   WebAssistantResponse

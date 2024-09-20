@@ -20,7 +20,7 @@ import com.vapi4k.api.model.VapiModel
 import com.vapi4k.api.model.VapiModelProperties
 import com.vapi4k.dtos.model.VapiModelDto
 
-class VapiModelImpl(
+internal class VapiModelImpl(
   modelUnion: ModelUnion,
   modelDto: VapiModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

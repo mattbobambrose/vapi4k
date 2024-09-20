@@ -14,11 +14,8 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.api.assistant
 
-import com.vapi4k.api.assistant.AnalysisPlan
-import com.vapi4k.api.assistant.ArtifactPlan
-import com.vapi4k.api.assistant.VoicemailDetection
 import com.vapi4k.api.model.AnthropicModel
 import com.vapi4k.api.model.AnyscaleModel
 import com.vapi4k.api.model.CustomLLMModel
@@ -41,6 +38,8 @@ import com.vapi4k.api.voice.NeetsVoice
 import com.vapi4k.api.voice.OpenAIVoice
 import com.vapi4k.api.voice.PlayHTVoice
 import com.vapi4k.api.voice.RimeAIVoice
+import com.vapi4k.dsl.assistant.AnalysisPlanImpl
+import com.vapi4k.dsl.assistant.ArtifactPlanImpl
 
 interface CommonAssistantFunctions {
   /**

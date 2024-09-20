@@ -65,22 +65,22 @@ object Models {
   }
 
   fun Assistant.openRouterModel() {
-    anthropicModel {
-      modelType = AnthropicModelType.CLAUDE_3_HAIKU
+    openRouterModel {
+      model = "Model_Description"
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
 
   fun Assistant.perplexityAIModel() {
-    anthropicModel {
-      modelType = AnthropicModelType.CLAUDE_3_HAIKU
+    perplexityAIModel {
+      model = "Model_Description"
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
 
   fun Assistant.vapiModel() {
-    anthropicModel {
-      modelType = AnthropicModelType.CLAUDE_3_HAIKU
+    vapiModel {
+      model = "Model_Description"
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }

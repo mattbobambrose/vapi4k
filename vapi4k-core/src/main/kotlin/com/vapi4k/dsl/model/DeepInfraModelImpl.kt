@@ -20,7 +20,7 @@ import com.vapi4k.api.model.DeepInfraModel
 import com.vapi4k.api.model.DeepInfraModelProperties
 import com.vapi4k.dtos.model.DeepInfraModelDto
 
-class DeepInfraModelImpl(
+internal class DeepInfraModelImpl(
   modelUnion: ModelUnion,
   modelDto: DeepInfraModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

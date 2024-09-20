@@ -20,7 +20,7 @@ import com.vapi4k.api.voice.RimeAIVoice
 import com.vapi4k.api.voice.RimeAIVoiceProperties
 import com.vapi4k.dtos.voice.RimeAIVoiceDto
 
-class RimeAIVoiceImpl internal constructor(
+internal class RimeAIVoiceImpl(
   private val dto: RimeAIVoiceDto,
 ) : RimeAIVoiceProperties by dto,
   RimeAIVoice

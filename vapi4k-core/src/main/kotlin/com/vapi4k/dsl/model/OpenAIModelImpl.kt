@@ -20,7 +20,7 @@ import com.vapi4k.api.model.OpenAIModel
 import com.vapi4k.api.model.OpenAIModelProperties
 import com.vapi4k.dtos.model.OpenAIModelDto
 
-class OpenAIModelImpl(
+internal class OpenAIModelImpl(
   modelUnion: ModelUnion,
   modelDto: OpenAIModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

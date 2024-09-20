@@ -17,13 +17,11 @@
 package com.vapi4k.api.assistant
 
 import com.vapi4k.dsl.assistant.AssistantOverridesProperties
-import com.vapi4k.dsl.assistant.CommonAssistantFunctions
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**
 These are the overrides for the `assistant` or `assistantId`'s settings and template variables.
  */
-
 @Vapi4KDslMarker
 interface AssistantOverrides :
   AssistantOverridesProperties,

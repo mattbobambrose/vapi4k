@@ -31,7 +31,7 @@ import com.vapi4k.utils.AssistantIdSource
 import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.MiscUtils.appendQueryParams
 
-abstract class AbstractAssistantResponseImpl(
+abstract class AbstractAssistantResponseImpl internal constructor(
   internal val requestContext: RequestContextImpl,
 ) {
   internal val duplicateChecker = DuplicateInvokeChecker()

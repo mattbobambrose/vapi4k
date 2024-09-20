@@ -16,7 +16,7 @@
 
 package com.vapi4k.dtos.assistant
 
-import com.vapi4k.dsl.assistant.ArtifactPlanProperties
+import com.vapi4k.api.assistant.ArtifactPlanProperties
 import kotlinx.serialization.Serializable
 
 /**

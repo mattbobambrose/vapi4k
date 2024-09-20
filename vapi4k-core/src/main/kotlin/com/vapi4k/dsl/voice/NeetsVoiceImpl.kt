@@ -20,7 +20,7 @@ import com.vapi4k.api.voice.NeetsVoice
 import com.vapi4k.api.voice.NeetsVoiceProperties
 import com.vapi4k.dtos.voice.NeetsVoiceDto
 
-class NeetsVoiceImpl internal constructor(
+internal class NeetsVoiceImpl(
   private val dto: NeetsVoiceDto,
 ) : NeetsVoiceProperties by dto,
   NeetsVoice

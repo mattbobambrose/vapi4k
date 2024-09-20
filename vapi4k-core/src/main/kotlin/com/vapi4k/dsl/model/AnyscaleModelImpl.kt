@@ -20,7 +20,7 @@ import com.vapi4k.api.model.AnyscaleModel
 import com.vapi4k.api.model.AnyscaleModelProperties
 import com.vapi4k.dtos.model.AnyscaleModelDto
 
-class AnyscaleModelImpl(
+internal class AnyscaleModelImpl(
   modelUnion: ModelUnion,
   modelDto: AnyscaleModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

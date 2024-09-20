@@ -23,7 +23,7 @@ import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
 import com.vapi4k.dsl.toolservice.RequestFailedMessagesImpl
 import com.vapi4k.responses.ToolCallResult
 
-class ManualToolCallResponseImpl(
+class ManualToolCallResponseImpl internal constructor(
   private val completeMessages: RequestCompleteMessagesImpl,
   private val failedMessages: RequestFailedMessagesImpl,
   private val toolCallResult: ToolCallResult,

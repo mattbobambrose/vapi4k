@@ -25,7 +25,7 @@ import com.vapi4k.dtos.api.destination.NumberDestinationDto
 import com.vapi4k.dtos.api.destination.SipDestinationDto
 import com.vapi4k.server.RequestContextImpl
 
-class InboundCallAssistantResponseImpl(
+class InboundCallAssistantResponseImpl internal constructor(
   requestContext: RequestContextImpl,
 ) : AbstractAssistantResponseImpl(requestContext),
   InboundCallAssistantResponse {

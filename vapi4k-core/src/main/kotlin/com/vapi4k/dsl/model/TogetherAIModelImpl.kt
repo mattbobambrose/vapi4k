@@ -20,7 +20,7 @@ import com.vapi4k.api.model.TogetherAIModel
 import com.vapi4k.api.model.TogetherAIModelProperties
 import com.vapi4k.dtos.model.TogetherAIModelDto
 
-class TogetherAIModelImpl(
+internal class TogetherAIModelImpl(
   modelUnion: ModelUnion,
   modelDto: TogetherAIModelDto,
 ) : AbstractModelImpl(modelUnion, modelDto),

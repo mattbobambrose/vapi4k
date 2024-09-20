@@ -20,7 +20,7 @@ import com.vapi4k.api.voice.DeepgramVoice
 import com.vapi4k.api.voice.DeepgramVoiceProperties
 import com.vapi4k.dtos.voice.DeepgramVoiceDto
 
-class DeepgramVoiceImpl internal constructor(
+internal class DeepgramVoiceImpl(
   private val dto: DeepgramVoiceDto,
 ) : DeepgramVoiceProperties by dto,
   DeepgramVoice

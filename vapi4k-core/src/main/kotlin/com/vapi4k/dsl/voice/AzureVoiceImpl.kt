@@ -20,7 +20,7 @@ import com.vapi4k.api.voice.AzureVoice
 import com.vapi4k.api.voice.AzureVoiceProperties
 import com.vapi4k.dtos.voice.AzureVoiceDto
 
-class AzureVoiceImpl internal constructor(
+internal class AzureVoiceImpl(
   private val dto: AzureVoiceDto,
 ) : AzureVoiceProperties by dto,
   AzureVoice
