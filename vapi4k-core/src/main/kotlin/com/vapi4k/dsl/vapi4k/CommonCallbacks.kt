@@ -27,7 +27,7 @@ interface CommonCallbacks {
   fun onAllRequests(block: suspend (requestContext: RequestContext) -> Unit)
 
   /**
-  Whenever a request is made, the contents of the onRequest{} block will be executed.
+  Whenever a request is made for the specified type(s), the contents of the onRequest{} block will be executed.
    */
   fun onRequest(
     requestType: ServerRequestType,
@@ -41,7 +41,7 @@ interface CommonCallbacks {
   fun onAllResponses(block: suspend (responseContext: ResponseContext) -> Unit)
 
   /**
-  Whenever a response is received, the contents of the onResponse{} block will be executed.
+  Whenever a response of the specified type(s) is received, the contents of the onResponse{} block will be executed.
    */
   fun onResponse(
     requestType: ServerRequestType,

@@ -48,4 +48,4 @@ publish:
 	./gradlew publishToMavenLocal
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=8.10 --distribution-type=bin
+	./gradlew wrapper --gradle-version=8.10.1 --distribution-type=bin

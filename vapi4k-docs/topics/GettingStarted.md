@@ -5,7 +5,7 @@
 In order to develop Vapi4k applications, you need to have IntelliJ installed on your machine.
 You can download the Community Edition from the [JetBrains Toolbox App](https://www.jetbrains.com/toolbox-app/).
 
-## Create a new vapi4k repository
+## Create a vapi4k repository
 
 <procedure title="Create a vapi4k repository ">
     <step>
@@ -22,7 +22,7 @@ You can download the Community Edition from the [JetBrains Toolbox App](https://
     </step>
 </procedure>
 
-## Clone your new repository
+## Clone your vapi4k repository
 
 You can clone your new repository within IntelliJ or from the command line:
 
@@ -131,25 +131,31 @@ Copy the ngrok `Forwarding` url into your copy buffer. You will need this url wh
         <p>Choose the <shortcut>New</shortcut> <shortcut>File</shortcut></p>
     </step>
     <step>
-        <p>Create a file named <b>secrets.env</b> and add these contents:</p>
+        <p>Create a file named <b>secrets.env</b>.</p>
     </step>
 
-The secrets.env file should contain env var decls for:
+The secrets.env file should contain values for these env vars:
 
 * VAPI_PRIVATE_KEY
+* VAPI_PUBLIC_KEY
 * VAPI_PHONE_NUMBER_ID
 * VAPI4K_BASE_URL
 
 It should look something like this:
 
+```bash
 VAPI_PRIVATE_KEY=f3ff6277-8d9b-8873-eec7-743786e2aa42
+VAPI_PUBLIC_KEY=l9lf6233-9s9f-9173-egc1-433786e2aa98
 VAPI_PHONE_NUMBER_ID=8b151b80-5fff-4df9-ad67-993189409d4c
 VAPI4K_BASE_URL=https://fdee-73-71-109-432.ngrok-free.app
-
-Make sure this file is not added to your repository. Add it to your .gitignore file.
-
-```bash
-
 ```
+
+> **Keeping secrets.env private**
+>
+> Make sure `secrets.env` is not added to your repository. The `secrets` folder is already in the .gitignore file.
+>
+>
+{style="warning"}
+
 
 </procedure>
