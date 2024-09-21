@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.OpenAIVoice
-import com.vapi4k.api.voice.OpenAIVoiceProperties
 import com.vapi4k.dtos.voice.OpenAIVoiceDto
 
 internal class OpenAIVoiceImpl(

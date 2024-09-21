@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.AnthropicModel
-import com.vapi4k.api.model.AnthropicModelProperties
 import com.vapi4k.dtos.model.AnthropicModelDto
 
 internal class AnthropicModelImpl(

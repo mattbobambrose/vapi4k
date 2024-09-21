@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.GroqModel
-import com.vapi4k.api.model.GroqModelProperties
 import com.vapi4k.dtos.model.GroqModelDto
 
 internal class GroqModelImpl(

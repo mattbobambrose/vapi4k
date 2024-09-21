@@ -14,14 +14,18 @@
  *
  */
 
-package com.vapi4k.dsl.model
+package com.vapi4k.dsl.voice
 
-import com.vapi4k.api.model.PerplexityAIModel
-import com.vapi4k.dtos.model.PerplexityAIModelDto
+import com.vapi4k.api.voice.enums.NeetsVoiceIdType
 
-internal class PerplexityAIModelImpl(
-  modelUnion: ModelUnion,
-  modelDto: PerplexityAIModelDto,
-) : AbstractModelImpl(modelUnion, modelDto),
-  PerplexityAIModelProperties by modelDto,
-  PerplexityAIModel
+interface NeetsVoiceProperties : CommonVoiceProperties {
+  /**
+  This is the provider-specific ID that will be used.
+   */
+  var voiceIdType: NeetsVoiceIdType
+
+  /**
+  This enables specifying a voice that doesn't already exist as an NeetsVoiceIdType enum.
+   */
+  var customVoiceId: String
+}

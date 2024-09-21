@@ -17,6 +17,7 @@
 package com.vapi4k.api.voice
 
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
+import com.vapi4k.dsl.voice.PlayHTVoiceProperties
 
 @Vapi4KDslMarker
 interface PlayHTVoice : PlayHTVoiceProperties

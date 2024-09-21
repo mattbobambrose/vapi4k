@@ -3,9 +3,7 @@
 The `onAssistantRequest{}` function is used to define the behavior of an application.
 it is present in all the application descriptions.
 
-## DSL
-
-### Models
+## Models
 
 <tabs>
   <tab title="Anthropic">
@@ -40,7 +38,7 @@ it is present in all the application descriptions.
   </tab>
 </tabs>
 
-### Voices
+## Voices
 
 <tabs>
   <tab title="Azure">
@@ -72,7 +70,7 @@ it is present in all the application descriptions.
   </tab>
 </tabs>
 
-### Transcribers
+## Transcribers
 
 <tabs>
   <tab title="Deepgram">

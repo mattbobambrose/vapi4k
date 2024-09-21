@@ -16,7 +16,7 @@
 
 package com.vapi4k.dtos.model
 
-import com.vapi4k.api.model.KnowledgeBaseProperties
+import com.vapi4k.dsl.model.KnowledgeBaseProperties
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 

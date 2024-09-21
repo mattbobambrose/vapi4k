@@ -14,9 +14,9 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.model
 
-interface VapiModelProperties {
+interface PerplexityAIModelProperties {
   /**
   This is the name of the model.
    */

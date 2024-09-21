@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.LMNTVoice
-import com.vapi4k.api.voice.LMNTVoiceProperties
 import com.vapi4k.dtos.voice.LMNTVoiceDto
 
 internal class LMNTVoiceImpl(

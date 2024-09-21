@@ -14,9 +14,10 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.model
 
 import com.vapi4k.api.functions.Functions
+import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.tools.Tools
 
 interface CommonModelProperties {

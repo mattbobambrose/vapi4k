@@ -14,13 +14,31 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.model
 
-interface TogetherAIModelProperties {
+import com.vapi4k.api.model.enums.OpenAIModelType
+
+interface OpenAIModelProperties {
   /**
   This is the name of the model.
    */
-  var model: String
+  var modelType: OpenAIModelType
+
+  /**
+  This enables specifying a model that doesn't already exist as an OpenAIModelType enum.
+   */
+  var customModel: String
+
+  /**
+  These are the fallback models that will be used if the primary model fails. This shouldn't be specified unless you
+  have a specific reason to do so. Vapi will automatically find the fastest fallbacks that make sense.
+   */
+  val fallbackModelTypes: MutableList<OpenAIModelType>
+
+  /**
+  This enables specifying a fallback model that doesn't already exist as an OpenAIModelType enum.
+   */
+  val customFallbackModels: MutableList<String>
 
   /**
   This determines whether we detect user's emotion while they speak and send it as an additional info to model.
@@ -50,4 +68,6 @@ interface TogetherAIModelProperties {
   Both `tools` and `toolIds` can be used together.
    */
   val toolIds: MutableSet<String>
+
+  var semanticCachingEnabled: Boolean?
 }

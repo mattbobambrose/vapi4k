@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.OpenAIModel
-import com.vapi4k.api.model.OpenAIModelProperties
 import com.vapi4k.dtos.model.OpenAIModelDto
 
 internal class OpenAIModelImpl(

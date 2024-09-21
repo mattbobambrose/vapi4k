@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.CartesiaVoice
-import com.vapi4k.api.voice.CartesiaVoiceProperties
 import com.vapi4k.dtos.voice.CartesiaVoiceDto
 
 internal class CartesiaVoiceImpl(

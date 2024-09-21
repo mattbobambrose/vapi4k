@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos.model
 
-import com.vapi4k.api.model.OpenAIModelProperties
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.dsl.model.OpenAIModelProperties
 import com.vapi4k.dsl.model.enums.ModelType
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.tools.ToolDto

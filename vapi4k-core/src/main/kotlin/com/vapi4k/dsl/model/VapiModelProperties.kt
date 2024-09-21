@@ -14,9 +14,9 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.model
 
-interface DeepInfraModelProperties {
+interface VapiModelProperties {
   /**
   This is the name of the model.
    */
@@ -47,7 +47,6 @@ interface DeepInfraModelProperties {
 
   /**
   These are the tools that the assistant can use during the call. To use transient tools, use `tools`.
-
   Both `tools` and `toolIds` can be used together.
    */
   val toolIds: MutableSet<String>

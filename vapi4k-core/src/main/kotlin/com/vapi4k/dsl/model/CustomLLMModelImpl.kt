@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.CustomLLMModel
-import com.vapi4k.api.model.CustomLLMModelProperties
 import com.vapi4k.dtos.model.CustomLLMModelDto
 
 internal class CustomLLMModelImpl(

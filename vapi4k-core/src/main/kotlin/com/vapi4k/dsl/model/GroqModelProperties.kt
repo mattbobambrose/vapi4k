@@ -14,13 +14,20 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.model
 
-interface OpenRouterModelProperties {
+import com.vapi4k.api.model.enums.GroqModelType
+
+interface GroqModelProperties {
   /**
   This is the name of the model.
    */
-  var model: String
+  var modelType: GroqModelType
+
+  /**
+  This enables specifying a model that doesn't already exist as an GroqModelType enum.
+   */
+  var customModel: String
 
   /**
   This determines whether we detect user's emotion while they speak and send it as an additional info to model.

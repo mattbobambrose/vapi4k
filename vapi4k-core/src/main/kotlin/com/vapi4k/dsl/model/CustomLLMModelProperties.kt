@@ -14,24 +14,20 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.model
 
-import com.vapi4k.api.model.enums.AnthropicModelType
+import com.vapi4k.api.model.enums.MetaDataSendModeType
 
-interface AnthropicModelProperties {
+interface CustomLLMModelProperties {
   /**
   This is the name of the model.
    */
-  var modelType: AnthropicModelType
+  var model: String
 
   /**
-  This enables specifying a model that doesn't already exist as an AnthropicModelType enum.
-   */
-  var customModel: String
-
-  /**
-  This determines whether we detect user's emotion while they speak and send it as an additional info to model.
-  Default `false` because the model is usually good at understanding the user's emotion from text.
+  <p>This determines whether we detect user's emotion while they speak and send it as an additional info to model.
+  <br>Default `false` because the model is usually good at understanding the user's emotion from text.
+  </p>
    */
   var emotionRecognitionEnabled: Boolean?
 
@@ -41,8 +37,20 @@ interface AnthropicModelProperties {
   var maxTokens: Int
 
   /**
+  <p>This determines whether metadata is sent in requests to the custom provider.
+  <li><code>off</code> will not send any metadata. Payload will look like <code>{ messages }</code>
+  <li><code>variable</code> will send <code>assistant.metadata</code> as a variable on the payload. Payload will look like <code>{ messages, metadata }</code>
+  <li><code>destructured</code> will send <code>assistant.metadata</code> fields directly on the payload. Payload will look like <code>{ messages, ...metadata }</code>
+  <br>Further, <code>variable</code> and <code>destructured</code> will send <code>call</code>, <code>phoneNumber</code>, and <code>customer</code> objects in the payload.
+  <br>Default is <code>variable</code>.
+  </p>
+   */
+  var metadataSendMode: MetaDataSendModeType
+
+  /**
   This sets how many turns at the start of the conversation to use a smaller, faster model from the same provider
   before switching to the primary model. Example, gpt-3.5-turbo if provider is openai.
+  Default is 0.
    */
   var numFastTurns: Int
 
@@ -56,4 +64,9 @@ interface AnthropicModelProperties {
   Both `tools` and `toolIds` can be used together.
    */
   val toolIds: MutableSet<String>
+
+  /**
+  This is the URL we'll use for the OpenAI client's `baseURL`.
+   */
+  var url: String
 }

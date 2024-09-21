@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.OpenRouterModel
-import com.vapi4k.api.model.OpenRouterModelProperties
 import com.vapi4k.dtos.model.OpenRouterModelDto
 
 internal class OpenRouterModelImpl(

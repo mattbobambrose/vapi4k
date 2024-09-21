@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.VapiModel
-import com.vapi4k.api.model.VapiModelProperties
 import com.vapi4k.dtos.model.VapiModelDto
 
 internal class VapiModelImpl(

@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.DeepInfraModel
-import com.vapi4k.api.model.DeepInfraModelProperties
 import com.vapi4k.dtos.model.DeepInfraModelDto
 
 internal class DeepInfraModelImpl(

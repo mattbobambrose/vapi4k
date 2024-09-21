@@ -14,23 +14,25 @@
  *
  */
 
-package com.vapi4k.api.voice
+package com.vapi4k.dsl.model
 
-import com.vapi4k.api.voice.enums.AzureVoiceIdType
+import com.vapi4k.common.AssistantId
+import com.vapi4k.dsl.model.enums.MessageRoleType
+import com.vapi4k.dtos.functions.FunctionDto
+import com.vapi4k.dtos.model.RoleMessageDto
+import com.vapi4k.dtos.tools.ToolDto
 
-interface AzureVoiceProperties : CommonVoiceProperties {
-  /**
-  This is the provider-specific ID that will be used.
-   */
-  var voiceIdType: AzureVoiceIdType
+interface AbstractModelProperties {
+  val modelUnion: ModelUnion
+  val assistantId: AssistantId
+  val messages: MutableList<RoleMessageDto>
+  val toolDtos: MutableList<ToolDto>
+  val functionDtos: MutableList<FunctionDto>
 
-  /**
-  This enables specifying a voice that doesn't already exist as an AzureVoiceIdType enum.
-   */
-  var customVoiceId: String
+  val application get() = modelUnion.requestContext.application
 
-  /**
-  This is the speed multiplier that will be used.
-   */
-  var speed: Double
+  fun message(
+    role: MessageRoleType,
+    content: String,
+  )
 }

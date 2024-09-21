@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.ElevenLabsVoice
-import com.vapi4k.api.voice.ElevenLabsVoiceProperties
 import com.vapi4k.dtos.voice.ElevenLabsVoiceDto
 
 internal class ElevenLabsVoiceImpl(

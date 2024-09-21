@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.voice
 
 import com.vapi4k.api.voice.RimeAIVoice
-import com.vapi4k.api.voice.RimeAIVoiceProperties
 import com.vapi4k.dtos.voice.RimeAIVoiceDto
 
 internal class RimeAIVoiceImpl(

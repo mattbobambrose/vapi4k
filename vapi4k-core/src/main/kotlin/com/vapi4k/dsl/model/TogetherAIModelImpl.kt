@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.TogetherAIModel
-import com.vapi4k.api.model.TogetherAIModelProperties
 import com.vapi4k.dtos.model.TogetherAIModelDto
 
 internal class TogetherAIModelImpl(

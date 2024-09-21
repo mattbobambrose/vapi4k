@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.model
 
 import com.vapi4k.api.model.AnyscaleModel
-import com.vapi4k.api.model.AnyscaleModelProperties
 import com.vapi4k.dtos.model.AnyscaleModelDto
 
 internal class AnyscaleModelImpl(

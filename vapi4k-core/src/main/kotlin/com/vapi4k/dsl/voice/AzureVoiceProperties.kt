@@ -14,18 +14,18 @@
  *
  */
 
-package com.vapi4k.api.voice
+package com.vapi4k.dsl.voice
 
-import com.vapi4k.api.voice.enums.LMNTVoiceIdType
+import com.vapi4k.api.voice.enums.AzureVoiceIdType
 
-interface LMNTVoiceProperties : CommonVoiceProperties {
+interface AzureVoiceProperties : CommonVoiceProperties {
   /**
   This is the provider-specific ID that will be used.
    */
-  var voiceIdType: LMNTVoiceIdType
+  var voiceIdType: AzureVoiceIdType
 
   /**
-  This enables specifying a voice that doesn't already exist as an LMNTVoiceIdType enum.
+  This enables specifying a voice that doesn't already exist as an AzureVoiceIdType enum.
    */
   var customVoiceId: String
 

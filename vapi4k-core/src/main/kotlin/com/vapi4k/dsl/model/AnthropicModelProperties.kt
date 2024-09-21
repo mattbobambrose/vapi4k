@@ -14,18 +14,18 @@
  *
  */
 
-package com.vapi4k.api.model
+package com.vapi4k.dsl.model
 
-import com.vapi4k.api.model.enums.GroqModelType
+import com.vapi4k.api.model.enums.AnthropicModelType
 
-interface GroqModelProperties {
+interface AnthropicModelProperties {
   /**
   This is the name of the model.
    */
-  var modelType: GroqModelType
+  var modelType: AnthropicModelType
 
   /**
-  This enables specifying a model that doesn't already exist as an GroqModelType enum.
+  This enables specifying a model that doesn't already exist as an AnthropicModelType enum.
    */
   var customModel: String
 
@@ -43,7 +43,6 @@ interface GroqModelProperties {
   /**
   This sets how many turns at the start of the conversation to use a smaller, faster model from the same provider
   before switching to the primary model. Example, gpt-3.5-turbo if provider is openai.
-  Default is 0.
    */
   var numFastTurns: Int
 

@@ -14,18 +14,9 @@
  *
  */
 
-package com.vapi4k.api.voice
+package com.vapi4k.dsl.model
 
-import com.vapi4k.api.voice.enums.NeetsVoiceIdType
-
-interface NeetsVoiceProperties : CommonVoiceProperties {
-  /**
-  This is the provider-specific ID that will be used.
-   */
-  var voiceIdType: NeetsVoiceIdType
-
-  /**
-  This enables specifying a voice that doesn't already exist as an NeetsVoiceIdType enum.
-   */
-  var customVoiceId: String
+interface KnowledgeBaseProperties {
+  val fileIds: MutableSet<String>
+  var topK: Double
 }

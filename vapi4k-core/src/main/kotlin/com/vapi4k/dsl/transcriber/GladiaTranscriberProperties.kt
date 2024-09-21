@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.api.transcriber
+package com.vapi4k.dsl.transcriber
 
 import com.vapi4k.api.transcriber.enums.GladiaLanguageType
 import com.vapi4k.api.transcriber.enums.GladiaModelType
