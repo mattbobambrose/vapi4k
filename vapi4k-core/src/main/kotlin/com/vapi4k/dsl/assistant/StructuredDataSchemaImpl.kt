@@ -21,4 +21,5 @@ import com.vapi4k.dtos.assistant.StructuredDataSchemaDto
 
 class StructuredDataSchemaImpl internal constructor(
   private val dto: StructuredDataSchemaDto,
-) : StructuredDataSchemaProperties by dto, StructuredDataSchema
+) : StructuredDataSchemaProperties by dto,
+  StructuredDataSchema

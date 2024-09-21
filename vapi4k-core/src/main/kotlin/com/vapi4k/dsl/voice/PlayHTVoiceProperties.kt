@@ -65,5 +65,4 @@ interface PlayHTVoiceProperties : CommonVoiceProperties {
   A number between 1 and 6. Use lower numbers to reduce how unique your chosen voice will be compared to other voices.
    */
   var voiceGuidance: Double
-
 }

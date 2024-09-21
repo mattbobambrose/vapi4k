@@ -36,4 +36,3 @@ interface Assistant :
    */
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }
-
