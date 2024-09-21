@@ -25,7 +25,8 @@ interface OutboundCallAssistantResponse {
   /**
   <p>This is the assistant that will be used for the call. To use an existing assistant, use <code>assistantId</code> instead.
   <br>If you're unsure why you're getting an invalid assistant, try logging your response and send the JSON blob to POST /assistant which will return the validation errors.
-  </p> */
+  </p>
+   */
   fun assistant(block: Assistant.() -> Unit): Assistant
 
   /**

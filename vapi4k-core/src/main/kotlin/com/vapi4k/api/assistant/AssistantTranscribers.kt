@@ -16,16 +16,23 @@
 
 package com.vapi4k.api.assistant
 
-import com.vapi4k.dsl.assistant.AssistantOverridesProperties
-import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
+import com.vapi4k.api.transcriber.DeepgramTranscriber
+import com.vapi4k.api.transcriber.GladiaTranscriber
+import com.vapi4k.api.transcriber.TalkscriberTranscriber
 
-/**
-These are the overrides for the `assistant` or `assistantId`'s settings and template variables.
- */
-@Vapi4KDslMarker
-interface AssistantOverrides :
-  AssistantOverridesProperties,
-  AssistantModels,
-  AssistantVoices,
-  AssistantTranscribers,
-  AssistantFunctions
+interface AssistantTranscribers {
+  /**
+  Builder for the Deepgram transcriber.
+   */
+  fun deepgramTranscriber(block: DeepgramTranscriber.() -> Unit): DeepgramTranscriber
+
+  /**
+  Builder for the Gladia transcriber.
+   */
+  fun gladiaTranscriber(block: GladiaTranscriber.() -> Unit): GladiaTranscriber
+
+  /**
+  Builder for the Talkscriber transcriber.
+   */
+  fun talkscriberTranscriber(block: TalkscriberTranscriber.() -> Unit): TalkscriberTranscriber
+}

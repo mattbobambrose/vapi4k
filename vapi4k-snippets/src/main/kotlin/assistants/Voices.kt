@@ -14,18 +14,14 @@
  *
  */
 
-package com.vapi4k.api.assistant
+package assistants
 
-import com.vapi4k.dsl.assistant.AssistantOverridesProperties
-import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
+import com.vapi4k.api.assistant.Assistant
 
-/**
-These are the overrides for the `assistant` or `assistantId`'s settings and template variables.
- */
-@Vapi4KDslMarker
-interface AssistantOverrides :
-  AssistantOverridesProperties,
-  AssistantModels,
-  AssistantVoices,
-  AssistantTranscribers,
-  AssistantFunctions
+object Voices {
+  fun Assistant.azurecExample() {
+    azureVoice {
+    }
+  }
+
+}

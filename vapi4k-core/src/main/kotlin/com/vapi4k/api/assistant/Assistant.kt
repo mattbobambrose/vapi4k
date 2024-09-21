@@ -27,9 +27,13 @@ import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 @Vapi4KDslMarker
 interface Assistant :
   AssistantProperties,
-  CommonAssistantFunctions {
+  AssistantModels,
+  AssistantVoices,
+  AssistantTranscribers,
+  AssistantFunctions {
   /**
    * These are the overrides for the `assistant`'s settings and template variables.
    */
   fun assistantOverrides(block: AssistantOverrides.() -> Unit): AssistantOverrides
 }
+
