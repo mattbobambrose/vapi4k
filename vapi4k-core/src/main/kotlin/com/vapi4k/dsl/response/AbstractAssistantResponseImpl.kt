@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.response
 
 import com.vapi4k.api.assistant.Assistant
 import com.vapi4k.api.assistant.AssistantId
@@ -23,6 +23,8 @@ import com.vapi4k.api.squad.SquadId
 import com.vapi4k.common.QueryParams.APPLICATION_ID
 import com.vapi4k.common.QueryParams.ASSISTANT_ID
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.dsl.assistant.AssistantIdImpl
+import com.vapi4k.dsl.assistant.AssistantImpl
 import com.vapi4k.dsl.squad.SquadIdImpl
 import com.vapi4k.dsl.squad.SquadImpl
 import com.vapi4k.responses.AssistantMessageResponse

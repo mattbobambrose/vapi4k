@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.api.assistant
+package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.enums.SuccessEvaluationRubricType
 

@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.AnalysisPlan
-import com.vapi4k.api.assistant.AnalysisPlanProperties
 import com.vapi4k.api.assistant.StructuredDataSchema
 import com.vapi4k.dtos.assistant.AnalysisPlanDto
 

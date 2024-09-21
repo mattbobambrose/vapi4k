@@ -16,12 +16,12 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.api.assistant.WebAssistantResponse
 import com.vapi4k.api.buttons.ButtonConfig
+import com.vapi4k.api.reponse.WebAssistantResponse
 import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.vapi4k.WebApplication
-import com.vapi4k.dsl.assistant.WebAssistantResponseImpl
 import com.vapi4k.dsl.buttons.ButtonConfigImpl
+import com.vapi4k.dsl.response.WebAssistantResponseImpl
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.common.Utils.isNull

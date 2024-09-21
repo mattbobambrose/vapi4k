@@ -16,10 +16,9 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.api.assistant.OutboundCallAssistantResponse
-import com.vapi4k.server.RequestContextImpl
-
-class OutboundCallAssistantResponseImpl internal constructor(
-  requestContext: RequestContextImpl,
-) : AbstractAssistantResponseImpl(requestContext),
-  OutboundCallAssistantResponse
+interface ArtifactPlanProperties {
+  /**
+  This determines whether the video is recorded during the call. Default is false. Only relevant for `webCall` type.
+   */
+  var videoRecordingEnabled: Boolean?
+}

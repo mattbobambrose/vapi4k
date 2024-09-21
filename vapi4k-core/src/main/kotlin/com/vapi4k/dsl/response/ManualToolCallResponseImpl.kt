@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.dsl.response
 
 import com.vapi4k.api.assistant.ManualToolCallResponse
 import com.vapi4k.api.toolservice.RequestCompleteMessages

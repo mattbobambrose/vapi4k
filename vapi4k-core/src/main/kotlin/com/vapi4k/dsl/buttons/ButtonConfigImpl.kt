@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.buttons
 
 import com.vapi4k.api.buttons.ButtonConfig
-import com.vapi4k.api.buttons.ButtonConfigProperties
 import com.vapi4k.api.buttons.ButtonState
 import com.vapi4k.dtos.buttons.ButtonConfigDto
 

@@ -26,9 +26,9 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = ButtonColorSerializer::class)
 class ButtonColor {
-  val red: Int
-  val green: Int
-  val blue: Int
+  internal val red: Int
+  internal val green: Int
+  internal val blue: Int
 
   constructor(
     red: Int,

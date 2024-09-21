@@ -14,8 +14,10 @@
  *
  */
 
-package com.vapi4k.api.assistant
+package com.vapi4k.api.reponse
 
+import com.vapi4k.api.assistant.Assistant
+import com.vapi4k.api.assistant.AssistantId
 import com.vapi4k.api.destination.NumberDestination
 import com.vapi4k.api.destination.SipDestination
 import com.vapi4k.api.squad.Squad

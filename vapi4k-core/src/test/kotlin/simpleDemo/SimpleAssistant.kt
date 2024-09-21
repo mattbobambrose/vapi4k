@@ -16,10 +16,10 @@
 
 package simpleDemo
 
-import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.reponse.InboundCallAssistantResponse
 import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.tools.enums.ToolMessageRoleType
 import com.vapi4k.dsl.assistant.ToolCall

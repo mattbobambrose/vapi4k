@@ -16,6 +16,7 @@
 
 package com.vapi4k.api.assistant
 
+import com.vapi4k.dsl.assistant.ArtifactPlanProperties
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
 /**

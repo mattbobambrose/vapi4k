@@ -14,14 +14,12 @@
  *
  */
 
-package com.vapi4k.api.buttons
+package com.vapi4k.dsl.response
 
-import com.vapi4k.api.buttons.enums.ButtonType
+import com.vapi4k.api.reponse.WebAssistantResponse
+import com.vapi4k.server.RequestContextImpl
 
-interface ButtonStateProperties {
-  var color: ButtonColor?
-  var type: ButtonType
-  var title: String
-  var subtitle: String
-  var icon: String
-}
+class WebAssistantResponseImpl internal constructor(
+  requestContext: RequestContextImpl,
+) : AbstractAssistantResponseImpl(requestContext),
+  WebAssistantResponse

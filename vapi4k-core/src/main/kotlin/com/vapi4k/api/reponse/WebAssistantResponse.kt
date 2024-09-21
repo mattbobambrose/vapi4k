@@ -14,8 +14,10 @@
  *
  */
 
-package com.vapi4k.api.assistant
+package com.vapi4k.api.reponse
 
+import com.vapi4k.api.assistant.Assistant
+import com.vapi4k.api.assistant.AssistantId
 import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker

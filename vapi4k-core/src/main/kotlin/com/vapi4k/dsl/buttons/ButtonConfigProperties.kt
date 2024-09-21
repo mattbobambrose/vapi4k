@@ -14,11 +14,17 @@
  *
  */
 
-package com.vapi4k.api.assistant
+package com.vapi4k.dsl.buttons
 
-interface ArtifactPlanProperties {
-  /**
-  This determines whether the video is recorded during the call. Default is false. Only relevant for `webCall` type.
-   */
-  var videoRecordingEnabled: Boolean?
+import com.vapi4k.api.buttons.enums.ButtonPosition
+import com.vapi4k.dtos.buttons.ButtonStateDto
+
+interface ButtonConfigProperties {
+  var position: ButtonPosition
+  var offset: String
+  var width: String
+  var height: String
+  var idle: ButtonStateDto
+  var loading: ButtonStateDto
+  var active: ButtonStateDto
 }

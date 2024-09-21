@@ -17,7 +17,6 @@
 package com.vapi4k.dsl.assistant
 
 import com.vapi4k.api.assistant.ArtifactPlan
-import com.vapi4k.api.assistant.ArtifactPlanProperties
 import com.vapi4k.dtos.assistant.ArtifactPlanDto
 
 class ArtifactPlanImpl internal constructor(

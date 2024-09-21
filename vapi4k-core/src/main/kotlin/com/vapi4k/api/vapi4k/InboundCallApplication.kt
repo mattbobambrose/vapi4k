@@ -16,7 +16,7 @@
 
 package com.vapi4k.api.vapi4k
 
-import com.vapi4k.api.assistant.InboundCallAssistantResponse
+import com.vapi4k.api.reponse.InboundCallAssistantResponse
 import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.tools.TransferDestinationResponse
 import com.vapi4k.dsl.vapi4k.CommonCallbacks

@@ -47,7 +47,7 @@ class VapiApiImpl private constructor(
 
   internal fun test(block: Phone.() -> OutboundCall) =
     runBlocking {
-      Phone().runCatching(block)
+      PhoneImpl().runCatching(block)
         .onSuccess { logger.info { "Created call request: ${it.toJsonString()}" } }
         .onFailure { e -> logger.error { "Failed to create call request: ${e.errorMsg}" } }
         .getOrThrow()

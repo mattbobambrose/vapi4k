@@ -16,9 +16,9 @@
 
 package simpleDemo
 
-import com.vapi4k.api.assistant.InboundCallAssistantResponse
 import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.reponse.InboundCallAssistantResponse
 import simpleDemo.Coasts.EAST
 import simpleDemo.Coasts.WEST
 

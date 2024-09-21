@@ -16,6 +16,8 @@
 
 package com.vapi4k.api.buttons
 
+import com.vapi4k.dsl.buttons.ButtonConfigProperties
+
 interface ButtonConfig : ButtonConfigProperties {
   fun idle(block: ButtonState.() -> Unit)
 

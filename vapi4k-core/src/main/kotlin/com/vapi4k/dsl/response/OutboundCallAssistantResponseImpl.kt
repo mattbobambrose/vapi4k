@@ -14,17 +14,12 @@
  *
  */
 
-package com.vapi4k.api.buttons
+package com.vapi4k.dsl.response
 
-import com.vapi4k.api.buttons.enums.ButtonPosition
-import com.vapi4k.dtos.buttons.ButtonStateDto
+import com.vapi4k.api.reponse.OutboundCallAssistantResponse
+import com.vapi4k.server.RequestContextImpl
 
-interface ButtonConfigProperties {
-  var position: ButtonPosition
-  var offset: String
-  var width: String
-  var height: String
-  var idle: ButtonStateDto
-  var loading: ButtonStateDto
-  var active: ButtonStateDto
-}
+class OutboundCallAssistantResponseImpl internal constructor(
+  requestContext: RequestContextImpl,
+) : AbstractAssistantResponseImpl(requestContext),
+  OutboundCallAssistantResponse

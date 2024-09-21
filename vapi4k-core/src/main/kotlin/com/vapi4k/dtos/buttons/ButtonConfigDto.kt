@@ -16,8 +16,8 @@
 
 package com.vapi4k.dtos.buttons
 
-import com.vapi4k.api.buttons.ButtonConfigProperties
 import com.vapi4k.api.buttons.enums.ButtonPosition
+import com.vapi4k.dsl.buttons.ButtonConfigProperties
 import kotlinx.serialization.Serializable
 
 @Serializable

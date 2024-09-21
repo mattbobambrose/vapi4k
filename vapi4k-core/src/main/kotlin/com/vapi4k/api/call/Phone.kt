@@ -16,25 +16,9 @@
 
 package com.vapi4k.api.call
 
-import com.vapi4k.common.QueryParams.SESSION_ID
-import com.vapi4k.dsl.call.OutboundCallImpl
-import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
-import com.vapi4k.dtos.api.OutboundCallRequestDto
-import com.vapi4k.utils.DuplicateInvokeChecker
-import com.vapi4k.utils.MiscUtils.appendQueryParams
 
 @Vapi4KDslMarker
-class Phone {
-  private val duplicateChecker = DuplicateInvokeChecker()
-
-  fun outboundCall(block: OutboundCall.() -> Unit): OutboundCall {
-    duplicateChecker.check("outboundCall{} was already called")
-    return OutboundCallImpl(OutboundCallRequestDto())
-      .apply(block)
-      .apply {
-        verifyValues()
-        serverPath = serverPath.appendQueryParams(SESSION_ID to OUTBOUND_CALL.getRandomSessionId().value)
-      }
-  }
+interface Phone {
+  fun outboundCall(block: OutboundCall.() -> Unit): OutboundCall
 }

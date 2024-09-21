@@ -16,4 +16,6 @@
 
 package com.vapi4k.api.buttons
 
+import com.vapi4k.dsl.buttons.ButtonStateProperties
+
 interface ButtonState : ButtonStateProperties

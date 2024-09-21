@@ -17,10 +17,10 @@
 package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
-import com.vapi4k.api.assistant.InboundCallAssistantResponse
+import com.vapi4k.api.reponse.InboundCallAssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.common.CoreEnvVars.defaultServerPath
-import com.vapi4k.dsl.assistant.InboundCallAssistantResponseImpl
+import com.vapi4k.dsl.response.InboundCallAssistantResponseImpl
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType
 import com.vapi4k.dtos.tools.ToolMessageCondition

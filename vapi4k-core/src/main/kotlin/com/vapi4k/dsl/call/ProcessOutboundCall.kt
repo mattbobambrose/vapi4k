@@ -52,9 +52,8 @@ object ProcessOutboundCall {
     block: Phone.() -> OutboundCall,
   ): HttpResponse =
     runBlocking {
-      val phone = Phone()
       val outboundCall =
-        phone.runCatching(block)
+        PhoneImpl().runCatching(block)
           .onFailure { e -> logger.error { "Failed to create outbound call: ${e.errorMsg}" } }
           .getOrThrow()
 
