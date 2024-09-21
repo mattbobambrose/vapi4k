@@ -26,12 +26,6 @@ import com.vapi4k.dtos.voice.CommonVoiceDto
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DuplicateInvokeChecker
 
-interface ModelDtoUnion {
-  var transcriberDto: CommonTranscriberDto?
-  var modelDto: CommonModelDto?
-  var voiceDto: CommonVoiceDto?
-}
-
 interface ModelUnion {
   val requestContext: RequestContextImpl
   val assistantId: AssistantId
@@ -42,4 +36,10 @@ interface ModelUnion {
   val voicemailDetectionDto: VoicemailDetectionDto
   val transcriberChecker: DuplicateInvokeChecker
   val voiceChecker: DuplicateInvokeChecker
+}
+
+interface ModelDtoUnion {
+  var transcriberDto: CommonTranscriberDto?
+  var modelDto: CommonModelDto?
+  var voiceDto: CommonVoiceDto?
 }

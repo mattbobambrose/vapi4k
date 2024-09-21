@@ -14,25 +14,14 @@
  *
  */
 
-package com.vapi4k.dsl.model
+package com.vapi4k.dsl.model.enums
 
-import com.vapi4k.api.model.AbstractModelProperties
-import kotlin.reflect.KProperty
-
-internal class ModelMessageDelegate(
-  private val messageRoleType: MessageRoleType,
+enum class MessageRoleType(
+  val desc: String,
 ) {
-  operator fun getValue(
-    model: AbstractModelProperties,
-    property: KProperty<*>,
-  ): String {
-    val msgs = model.messages.filter { it.role == messageRoleType.desc }
-    return if (msgs.isEmpty()) "" else (msgs.joinToString("") { it.content })
-  }
-
-  operator fun setValue(
-    model: AbstractModelProperties,
-    property: KProperty<*>,
-    newVal: String,
-  ) = model.message(messageRoleType, newVal)
+  SYSTEM("system"),
+  USER("user"),
+  ASSISTANT("assistant"),
+  TOOL("tool"),
+  FUNCTION("function"),
 }

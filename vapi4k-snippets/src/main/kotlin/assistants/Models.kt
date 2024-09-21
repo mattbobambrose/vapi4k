@@ -22,7 +22,7 @@ import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.api.model.enums.OpenAIModelType
 
 object Models {
-  fun Assistant.anthropicModel() {
+  fun Assistant.anthropicExample() {
     anthropicModel {
       modelType = AnthropicModelType.CLAUDE_3_HAIKU
       emotionRecognitionEnabled = true
@@ -32,7 +32,7 @@ object Models {
     }
   }
 
-  fun Assistant.anyscaleModel() {
+  fun Assistant.anyscaleExample() {
     anyscaleModel {
       model = "Model_Description"
       emotionRecognitionEnabled = true
@@ -42,7 +42,7 @@ object Models {
     }
   }
 
-  fun Assistant.customLLMModel() {
+  fun Assistant.customLLMExample() {
     customLLMModel {
       model = "Model_Description"
       url = "Model_URL"
@@ -53,7 +53,7 @@ object Models {
     }
   }
 
-  fun Assistant.deepInfraModel() {
+  fun Assistant.deepInfraExample() {
     deepInfraModel {
       model = "Model_Description"
       emotionRecognitionEnabled = true
@@ -63,7 +63,7 @@ object Models {
     }
   }
 
-  fun Assistant.groqModel() {
+  fun Assistant.groqExample() {
     groqModel {
       modelType = GroqModelType.LLAMA3_70B
       emotionRecognitionEnabled = true
@@ -73,37 +73,54 @@ object Models {
     }
   }
 
-  fun Assistant.openAIModel() {
+  fun Assistant.openAIExample() {
     openAIModel {
       modelType = OpenAIModelType.GPT_4_TURBO
+      semanticCachingEnabled = true
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
+      fallbackModelTypes += OpenAIModelType.GPT_4O
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
 
-  fun Assistant.openRouterModel() {
+  fun Assistant.openRouterExample() {
     openRouterModel {
       model = "Model_Description"
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
 
-  fun Assistant.perplexityAIModel() {
+  fun Assistant.perplexityAIExample() {
     perplexityAIModel {
       model = "Model_Description"
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
 
-  fun Assistant.togetherAIModel() {
+  fun Assistant.togetherAIExample() {
     togetherAIModel {
       model = "Model_Description"
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }
 
-  fun Assistant.vapiModel() {
+  fun Assistant.vapiExample() {
     vapiModel {
       model = "Model_Description"
+      emotionRecognitionEnabled = true
+      maxTokens = 250
+      temperature = 0.5
       systemMessage = "You're a polite AI assistant named Vapi who is fun to talk with."
     }
   }

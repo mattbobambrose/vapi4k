@@ -26,7 +26,7 @@ interface OpenRouterModelProperties {
   This determines whether we detect user's emotion while they speak and send it as an additional info to model.
   Default `false` because the model is usually good at understanding the user's emotion from text.
    */
-  val emotionRecognitionEnabled: Boolean?
+  var emotionRecognitionEnabled: Boolean?
 
   /**
   This is the max number of tokens that the assistant will be allowed to generate in each turn of the conversation. Default is 250.

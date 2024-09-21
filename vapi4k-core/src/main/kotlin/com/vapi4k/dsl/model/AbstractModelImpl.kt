@@ -22,12 +22,14 @@ import com.vapi4k.api.model.KnowledgeBase
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.common.FunctionName
 import com.vapi4k.dsl.functions.FunctionsImpl
+import com.vapi4k.dsl.model.enums.MessageRoleType
 import com.vapi4k.dsl.tools.ToolsImpl
 import com.vapi4k.dtos.model.CommonModelDto
 import com.vapi4k.dtos.model.KnowledgeBaseDto
 import com.vapi4k.dtos.model.RoleMessageDto
 import com.vapi4k.utils.DuplicateInvokeChecker
 import com.vapi4k.utils.common.Utils.trimLeadingSpaces
+import kotlin.reflect.KProperty
 
 internal abstract class AbstractModelImpl(
   override val modelUnion: ModelUnion,
@@ -74,4 +76,22 @@ internal abstract class AbstractModelImpl(
     // Use trimLeadingSpaces() instead of trimIndent() because trimIndent() doesn't work with += operator
     messages += RoleMessageDto(role.desc, content.trimLeadingSpaces())
   }
+}
+
+internal class ModelMessageDelegate(
+  private val messageRoleType: MessageRoleType,
+) {
+  operator fun getValue(
+    model: AbstractModelProperties,
+    property: KProperty<*>,
+  ): String {
+    val msgs = model.messages.filter { it.role == messageRoleType.desc }
+    return if (msgs.isEmpty()) "" else (msgs.joinToString("") { it.content })
+  }
+
+  operator fun setValue(
+    model: AbstractModelProperties,
+    property: KProperty<*>,
+    newVal: String,
+  ) = model.message(messageRoleType, newVal)
 }

@@ -15,34 +15,41 @@ it is present in all the application descriptions.
     <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="anyscaleModel"/>
   </tab>
   <tab title="CustomLLM">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="customLLMModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="customLLMExample"/>
   </tab>
   <tab title="DeepInfra">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="deepInfraModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="deepInfraExample"/>
   </tab>
   <tab title="Groq">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="groqModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="groqExample"/>
   </tab>
   <tab title="OpenAI">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="openAIModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="openAIExample"/>
   </tab>
   <tab title="OpenRouter">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="openRouterModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="openRouterExample"/>
   </tab>
   <tab title="PerplexityAI">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="perplexityAIModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="perplexityAIExample"/>
   </tab>
   <tab title="TogetherAI">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="togetherAIModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="togetherAIExample"/>
   </tab>
   <tab title="Vapi">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="vapiModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="vapiExample"/>
+  </tab>
+</tabs>
+
+
+### Voices
+
+<tabs>
+  <tab title="Anthropic">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="anthropicModel"/>
   </tab>
 </tabs>
 
 ### Transcribers
-
-### Voices
 
 ### start/complete/delayed/failed messages and conditions
 

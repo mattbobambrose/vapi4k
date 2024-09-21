@@ -17,8 +17,8 @@
 package com.vapi4k.api.model
 
 import com.vapi4k.common.AssistantId
-import com.vapi4k.dsl.model.MessageRoleType
 import com.vapi4k.dsl.model.ModelUnion
+import com.vapi4k.dsl.model.enums.MessageRoleType
 import com.vapi4k.dtos.functions.FunctionDto
 import com.vapi4k.dtos.model.RoleMessageDto
 import com.vapi4k.dtos.tools.ToolDto
