@@ -1,7 +1,19 @@
-# Assistants and Squads
+# Assistants
 
 The `onAssistantRequest{}` function is used to define the behavior of an application.
 it is present in all the application descriptions.
+
+## Assistants
+
+<chapter title="Assistant Example" id="assistant" collapsible="false">
+<code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="assistantExample"/>
+</chapter>
+
+## Squads
+
+<chapter title="Squad Example" id="squad" collapsible="false">
+<code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="squadExample"/>
+</chapter>
 
 ## AssistantIds
 
@@ -14,15 +26,11 @@ The `assistantOverrides{}` function is used to override the default assistant se
 <code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="assistantIdExample"/>
 </chapter>
 
-## Assistants
-
 ## SquadIds
-
-## Squads
 
 An `squadId{}` declares a static squad defined in the [vapi dashboard](https://dashboard.vapi.ai/assistants).
 
-<chapter title="Squad Id Example" id="squad" collapsible="false">
+<chapter title="Squad Id Example" id="squadId" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="squadIdExample"/>
 </chapter>
 

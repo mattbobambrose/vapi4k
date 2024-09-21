@@ -16,6 +16,7 @@
 
 package assistants
 
+import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.reponse.InboundCallAssistantResponse
 
 object Assistants {
@@ -24,7 +25,46 @@ object Assistants {
       id = "41ba80bc-807c-4cf5-a8c3-0a88a5a5882g"
 
       assistantOverrides {
-        // Declare the assistant overrides here
+        // Define the assistant overrides here
+      }
+    }
+  }
+
+  fun InboundCallAssistantResponse.assistantExample() {
+    assistant {
+      openAIModel {
+        modelType = OpenAIModelType.GPT_4O
+        systemMessage = "You are a helpful agent."
+      }
+      firstMessage = "Hello, how can I help you today?"
+    }
+  }
+
+  fun InboundCallAssistantResponse.squadExample() {
+    squad {
+      members {
+        member {
+          assistant {
+            name = "Assistant 1"
+            // Define assistant1 here
+          }
+          destinations {
+            destination {
+              assistantName = "Assistant 2"
+            }
+          }
+        }
+        member {
+          assistant {
+            name = "Assistant 2"
+            // Define assistant2 here
+          }
+          destinations {
+            destination {
+              assistantName = "Assistant 1"
+            }
+          }
+        }
       }
     }
   }
