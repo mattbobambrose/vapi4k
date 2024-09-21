@@ -16,16 +16,9 @@
 
 package com.vapi4k.dsl.assistant
 
-import com.vapi4k.api.assistant.AnalysisPlan
-import com.vapi4k.api.assistant.AnalysisPlanProperties
 import com.vapi4k.api.assistant.StructuredDataSchema
-import com.vapi4k.dtos.assistant.AnalysisPlanDto
+import com.vapi4k.dtos.assistant.StructuredDataSchemaDto
 
-class AnalysisPlanImpl internal constructor(
-  private val dto: AnalysisPlanDto,
-) : AnalysisPlanProperties by dto,
-  AnalysisPlan {
-  override fun structuredDataSchema(block: StructuredDataSchema.() -> Unit) {
-    StructuredDataSchemaImpl(dto.structuredDataSchema).apply(block)
-  }
-}
+class StructuredDataSchemaImpl internal constructor(
+  private val dto: StructuredDataSchemaDto,
+) : StructuredDataSchemaProperties by dto, StructuredDataSchema

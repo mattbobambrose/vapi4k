@@ -22,9 +22,6 @@ import com.vapi4k.api.squad.Squad
 import com.vapi4k.api.squad.SquadId
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-/**
-This is the `assistant` response that is expected from the server to the message.
- */
 @Vapi4KDslMarker
 interface InboundCallAssistantResponse {
   /**

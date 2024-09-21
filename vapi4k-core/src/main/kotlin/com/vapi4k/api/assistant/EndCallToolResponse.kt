@@ -20,9 +20,6 @@ import com.vapi4k.api.toolservice.RequestCompleteMessages
 import com.vapi4k.api.toolservice.RequestFailedMessages
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 
-/**
-This is the `Tool` response that is expected from the server to the message.
- */
 @Vapi4KDslMarker
 interface EndCallToolResponse {
   /**
