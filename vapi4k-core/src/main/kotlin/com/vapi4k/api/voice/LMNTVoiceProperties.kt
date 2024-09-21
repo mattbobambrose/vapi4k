@@ -20,6 +20,11 @@ import com.vapi4k.api.voice.enums.LMNTVoiceIdType
 
 interface LMNTVoiceProperties : CommonVoiceProperties {
   /**
+  This is the provider-specific ID that will be used.
+   */
+  var voiceIdType: LMNTVoiceIdType
+
+  /**
   This enables specifying a voice that doesn't already exist as an LMNTVoiceIdType enum.
    */
   var customVoiceId: String
@@ -28,9 +33,4 @@ interface LMNTVoiceProperties : CommonVoiceProperties {
   This is the speed multiplier that will be used.
    */
   var speed: Double
-
-  /**
-  This is the provider-specific ID that will be used.
-   */
-  var voiceIdType: LMNTVoiceIdType
 }

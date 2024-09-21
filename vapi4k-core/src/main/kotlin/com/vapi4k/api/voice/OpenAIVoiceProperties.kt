@@ -20,6 +20,11 @@ import com.vapi4k.api.voice.enums.OpenAIVoiceIdType
 
 interface OpenAIVoiceProperties : CommonVoiceProperties {
   /**
+  This is the provider-specific ID that will be used.
+   */
+  var voiceIdType: OpenAIVoiceIdType
+
+  /**
   This enables specifying a voice that doesn't already exist as an OpenAIVoiceIdType enum.
    */
   var customVoiceId: String
@@ -28,9 +33,4 @@ interface OpenAIVoiceProperties : CommonVoiceProperties {
   This is the speed multiplier that will be used.
    */
   var speed: Double
-
-  /**
-  This is the provider-specific ID that will be used.
-   */
-  var voiceIdType: OpenAIVoiceIdType
 }

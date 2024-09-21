@@ -21,6 +21,11 @@ import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 
 interface PlayHTVoiceProperties : CommonVoiceProperties {
   /**
+  This is the provider-specific ID that will be used.
+   */
+  var voiceIdType: PlayHTVoiceIdType
+
+  /**
   This enables specifying a voice that doesn't already exist as an PlayHTVoiceIdType enum.
    */
   var customVoiceId: String
@@ -61,8 +66,4 @@ interface PlayHTVoiceProperties : CommonVoiceProperties {
    */
   var voiceGuidance: Double
 
-  /**
-  This is the provider-specific ID that will be used.
-   */
-  var voiceIdType: PlayHTVoiceIdType
 }

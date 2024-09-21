@@ -21,14 +21,9 @@ import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
 
 interface CartesiaVoiceProperties : CommonVoiceProperties {
   /**
-  This enables specifying a language that doesn't already exist as an CartesiaVoiceLanguageType enum.
+  This is the model that will be used. This is optional and will default to the correct model for the voiceId.
    */
-  var customLanguage: String
-
-  /**
-  This enables specifying a model that doesn't already exist as an CartesiaVoiceModelType enum.
-   */
-  var customModel: String
+  var modelType: CartesiaVoiceModelType
 
   /**
   This is the language that will be used. This is optional and will default to the correct language for the voiceId.
@@ -36,9 +31,14 @@ interface CartesiaVoiceProperties : CommonVoiceProperties {
   var languageType: CartesiaVoiceLanguageType
 
   /**
-  This is the model that will be used. This is optional and will default to the correct model for the voiceId.
+  This enables specifying a model that doesn't already exist as an CartesiaVoiceModelType enum.
    */
-  var modelType: CartesiaVoiceModelType
+  var customModel: String
+
+  /**
+  This enables specifying a language that doesn't already exist as an CartesiaVoiceLanguageType enum.
+   */
+  var customLanguage: String
 
   /**
   This is the provider-specific ID that will be used.

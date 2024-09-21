@@ -17,11 +17,70 @@
 package assistants
 
 import com.vapi4k.api.assistant.Assistant
+import com.vapi4k.api.voice.enums.AzureVoiceIdType
+import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
+import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
+import com.vapi4k.api.voice.enums.DeepGramVoiceIdType
+import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
+import com.vapi4k.api.voice.enums.LMNTVoiceIdType
+import com.vapi4k.api.voice.enums.NeetsVoiceIdType
+import com.vapi4k.api.voice.enums.OpenAIVoiceIdType
+import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
+import com.vapi4k.api.voice.enums.RimeAIVoiceModelType
 
 object Voices {
-  fun Assistant.azurecExample() {
+  fun Assistant.azureExample() {
     azureVoice {
+      voiceIdType = AzureVoiceIdType.BRIAN
     }
   }
 
+  fun Assistant.cartesiaExample() {
+    cartesiaVoice {
+      modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+      languageType = CartesiaVoiceLanguageType.ENGLISH
+    }
+  }
+
+  fun Assistant.deepgramExample() {
+    deepgramVoice {
+      voiceIdType = DeepGramVoiceIdType.ASTERIA
+    }
+  }
+
+  fun Assistant.elevenLabsExample() {
+    elevenLabsVoice {
+      modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2_5
+    }
+  }
+
+  fun Assistant.lmntExample() {
+    lmntVoice {
+      voiceIdType = LMNTVoiceIdType.DANIEL
+    }
+  }
+
+  fun Assistant.neetsExample() {
+    neetsVoice {
+      voiceIdType = NeetsVoiceIdType.VITS
+    }
+  }
+
+  fun Assistant.openAIExample() {
+    openAIVoice {
+      voiceIdType = OpenAIVoiceIdType.ONYX
+    }
+  }
+
+  fun Assistant.playHTExample() {
+    playHTVoice {
+      voiceIdType = PlayHTVoiceIdType.DONNA
+    }
+  }
+
+  fun Assistant.rimeAIExample() {
+    rimeAIVoice {
+      modelType = RimeAIVoiceModelType.MIST
+    }
+  }
 }

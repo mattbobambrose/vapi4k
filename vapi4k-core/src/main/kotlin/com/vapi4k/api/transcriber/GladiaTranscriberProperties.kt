@@ -21,9 +21,19 @@ import com.vapi4k.api.transcriber.enums.GladiaModelType
 
 interface GladiaTranscriberProperties {
   /**
-  If true, audio will be pre-processed to improve accuracy but latency will increase. Default value is false.
+  This is the Gladia model that will be used. Default is 'fast'
    */
-  var audioEnhancer: Boolean?
+  var transcriberModel: GladiaModelType
+
+  /**
+  Defines the language to use for the transcription. Required when languageBehaviour is 'manual'.
+   */
+  var transcriberLanguage: GladiaLanguageType
+
+  /**
+  This enables specifying a model that doesn't already exist as an GladiaModelType enum.
+   */
+  var customModel: String
 
   /**
   This enables specifying a language that doesn't already exist as an GladiaLanguageType enum.
@@ -31,9 +41,9 @@ interface GladiaTranscriberProperties {
   var customLanguage: String
 
   /**
-  This enables specifying a model that doesn't already exist as an GladiaModelType enum.
+  If true, audio will be pre-processed to improve accuracy but latency will increase. Default value is false.
    */
-  var customModel: String
+  var audioEnhancer: Boolean?
 
   /**
   Defines how the transcription model detects the audio language. Default value is 'automatic single language'.
@@ -44,16 +54,6 @@ interface GladiaTranscriberProperties {
   If prosody is true, you will get a transcription that can contain prosodies i.e. (laugh) (giggles) (malefic laugh) (toss) (music)… Default value is false.
    */
   var prosody: Boolean?
-
-  /**
-  Defines the language to use for the transcription. Required when languageBehaviour is 'manual'.
-   */
-  var transcriberLanguage: GladiaLanguageType
-
-  /**
-  This is the Gladia model that will be used. Default is 'fast'
-   */
-  var transcriberModel: GladiaModelType
 
   /**
   Provides a custom vocabulary to the model to improve accuracy of transcribing context specific words, technical terms,

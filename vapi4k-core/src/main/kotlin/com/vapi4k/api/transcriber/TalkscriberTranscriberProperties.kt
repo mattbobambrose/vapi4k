@@ -21,14 +21,9 @@ import com.vapi4k.api.transcriber.enums.TalkscriberModelType
 
 interface TalkscriberTranscriberProperties {
   /**
-  This enables specifying a language that doesn't already exist as an TalkscriberLanguageType enum.
+  This is the model that will be used for the transcription.
    */
-  var customLanguage: String
-
-  /**
-  This enables specifying a model that doesn't already exist as an TalkscriberModelType enum.
-   */
-  var customModel: String
+  var transcriberModel: TalkscriberModelType
 
   /**
   This is the language that will be set for the transcription. The list of languages Whisper supports can be found
@@ -37,7 +32,12 @@ interface TalkscriberTranscriberProperties {
   var transcriberLanguage: TalkscriberLanguageType
 
   /**
-  This is the model that will be used for the transcription.
+  This enables specifying a model that doesn't already exist as an TalkscriberModelType enum.
    */
-  var transcriberModel: TalkscriberModelType
+  var customModel: String
+
+  /**
+  This enables specifying a language that doesn't already exist as an TalkscriberLanguageType enum.
+   */
+  var customLanguage: String
 }

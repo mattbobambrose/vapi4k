@@ -9,10 +9,10 @@ it is present in all the application descriptions.
 
 <tabs>
   <tab title="Anthropic">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="anthropicModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="anthropicExample"/>
   </tab>
   <tab title="Anyscale">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="anyscaleModel"/>
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="anyscaleExample"/>
   </tab>
   <tab title="CustomLLM">
     <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="customLLMExample"/>
@@ -40,22 +40,57 @@ it is present in all the application descriptions.
   </tab>
 </tabs>
 
-
 ### Voices
 
 <tabs>
-  <tab title="Anthropic">
-    <code-block lang="kotlin" src="src/main/kotlin/assistants/Models.kt" include-symbol="anthropicModel"/>
+  <tab title="Azure">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="azureExample"/>
+  </tab>
+  <tab title="Cartesia">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="cartesiaExample"/>
+  </tab>
+  <tab title="Deepgram">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="deepgramExample"/>
+  </tab>
+  <tab title="ElevenLabs">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="elevenLabsExample"/>
+  </tab>
+  <tab title="LMNT">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="lmntExample"/>
+  </tab>
+  <tab title="Neets">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="neetsExample"/>
+  </tab>
+  <tab title="OpenAI">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="openAIExample"/>
+  </tab>
+  <tab title="PlayHT">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="playHTExample"/>
+  </tab>
+  <tab title="RimeAI">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Voices.kt" include-symbol="rimeAIExample"/>
   </tab>
 </tabs>
 
 ### Transcribers
 
+<tabs>
+  <tab title="Deepgram">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Transcribers.kt" include-symbol="deepgramExample"/>
+  </tab>
+  <tab title="Gladia">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Transcribers.kt" include-symbol="gladiaExample"/>
+  </tab>
+  <tab title="Talkscriber">
+    <code-block lang="kotlin" src="src/main/kotlin/assistants/Transcribers.kt" include-symbol="talkscriberExample"/>
+  </tab>
+</tabs>
+
 ### start/complete/delayed/failed messages and conditions
 
 ### TransferDestinationRequests
 
-#### Destinations
+### Destinations
 
 * AssistantDestination
 * NumberDestination

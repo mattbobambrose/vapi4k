@@ -20,6 +20,11 @@ import com.vapi4k.api.voice.enums.AzureVoiceIdType
 
 interface AzureVoiceProperties : CommonVoiceProperties {
   /**
+  This is the provider-specific ID that will be used.
+   */
+  var voiceIdType: AzureVoiceIdType
+
+  /**
   This enables specifying a voice that doesn't already exist as an AzureVoiceIdType enum.
    */
   var customVoiceId: String
@@ -28,9 +33,4 @@ interface AzureVoiceProperties : CommonVoiceProperties {
   This is the speed multiplier that will be used.
    */
   var speed: Double
-
-  /**
-  This is the provider-specific ID that will be used.
-   */
-  var voiceIdType: AzureVoiceIdType
 }

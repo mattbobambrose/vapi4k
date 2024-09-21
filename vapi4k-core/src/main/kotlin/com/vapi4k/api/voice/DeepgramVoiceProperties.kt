@@ -20,12 +20,12 @@ import com.vapi4k.api.voice.enums.DeepGramVoiceIdType
 
 interface DeepgramVoiceProperties : CommonVoiceProperties {
   /**
-  This enables specifying a voice that doesn't already exist as an DeepGramVoiceIdType enum.
-   */
-  var customVoiceId: String
-
-  /**
   This is the provider-specific ID that will be used.
    */
   var voiceIdType: DeepGramVoiceIdType
+
+  /**
+  This enables specifying a voice that doesn't already exist as an DeepGramVoiceIdType enum.
+   */
+  var customVoiceId: String
 }
