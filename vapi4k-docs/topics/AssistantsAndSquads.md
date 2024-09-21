@@ -3,7 +3,43 @@
 The `onAssistantRequest{}` function is used to define the behavior of an application.
 it is present in all the application descriptions.
 
-## Models
+## AssistantIds
+
+An `assistantId{}` declares a static assistant defined in the [vapi dashboard](https://dashboard.vapi.ai/assistants).
+
+The `assistantOverrides{}` function is used to override the default assistant settings and its argument has a
+[`AssistantOverrides`](%base_url%.assistant/-assistant-overrides/index.html) context.
+
+<chapter title="Assistant Id Example" id="assistantId" collapsible="false">
+<code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="assistantIdExample"/>
+</chapter>
+
+## Assistants
+
+## SquadIds
+
+## Squads
+
+An `squadId{}` declares a static squad defined in the [vapi dashboard](https://dashboard.vapi.ai/assistants).
+
+<chapter title="Squad Id Example" id="squad" collapsible="false">
+<code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="squadIdExample"/>
+</chapter>
+
+### Models
+
+* [Anthropic](%base_url%.model/-anthropic-model/index.html)
+* [Anyscale](%base_url%.model/-anyscale-model/index.html)
+* [CustomLLM](%base_url%.model/-custom-l-l-m-model/index.html)
+* [DeepInfra](%base_url%.model/-deep-infra-model/index.html)
+* [Groq](%base_url%.model/-groq-model/index.html)
+* [OpenAI](%base_url%.model/-open-a-i-model/index.html)
+* [OpenRouter](%base_url%.model/-open-router-model/index.html)
+* [PerplexityAI](%base_url%.model/-perplexity-a-i-model/index.html)
+* [TogetherAI](%base_url%.model/-together-a-i-model/index.html)
+* [Vapi](%base_url%.model/-vapi-model/index.html)
+
+#### Model Examples
 
 <tabs>
   <tab title="Anthropic">
@@ -38,7 +74,19 @@ it is present in all the application descriptions.
   </tab>
 </tabs>
 
-## Voices
+### Voices
+
+* [Azure](%base_url%.voice/-azure-voice/index.html)
+* [Cartesia](%base_url%.voice/-cartesia-voice/index.html)
+* [Deepgram](%base_url%.voice/-deepgram-voice/index.html)
+* [ElevenLabs](%base_url%.voice/-eleven-labs-voice/index.html)
+* [LMNT](%base_url%.voice/-l-m-n-t-voice/index.html)
+* [Neets](%base_url%.voice/-neets-voice/index.html)
+* [OpenAI](%base_url%.voice/-open-a-i-voice/index.html)
+* [PlayHT](%base_url%.voice/-play-h-t-voice/index.html)
+* [RimeAI](%base_url%.voice/-rime-a-i-voice/index.html)
+
+#### Voice Examples
 
 <tabs>
   <tab title="Azure">
@@ -70,7 +118,13 @@ it is present in all the application descriptions.
   </tab>
 </tabs>
 
-## Transcribers
+### Transcribers
+
+* [Deepgram](%base_url%.transcriber/-deepgram-transcriber/index.html)
+* [Gladia](%base_url%.transcriber/-gladia-transcriber/index.html)
+* [Talkscriber](%base_url%.transcriber/-talkscriber-transcriber/index.html)
+
+#### Transciber Examples
 
 <tabs>
   <tab title="Deepgram">
