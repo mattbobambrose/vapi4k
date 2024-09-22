@@ -1,12 +1,17 @@
-# Vapi4k Deployment Options
+# Deployment Options
 
 ## ngrok
+
+Using [`ngrok`]() for local development makes it easy to test your application.
+
+1) Download and install `ngrok` from [ngrok.com](https://ngrok.com)
+2) Run `ngrok http 8080` to expose your local server to the internet
+3) Assign `VAPI4K_BASE_URL` to the ngrok `Forwarding` URL
+4) Run your application
 
 ## Dockerfile and Digital Ocean
 
 ## Heroku
-
-## Deploying to Heroku
 
 1) `brew tap heroku/brew && brew install heroku`
 2) `heroku login`
@@ -17,8 +22,4 @@
 error.
 
 system.properties must match the version in
-
-## AWS
-
-## Google Cloud
 
