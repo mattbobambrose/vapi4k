@@ -33,6 +33,7 @@ Install the Heroku CLI with these [instructions](https://devcenter.heroku.com/ar
 >
 > If you get an **IP address mismatch** error when trying to login to Heroku from OSX, try
 > disabling the iCloud Private Relay option in `System Settings`➡️`Apple Account`️️➡️`iCloud+ Features`.
+> You might have to restart your browser after making this change.
 >
 {style="warning"}
 
@@ -43,6 +44,10 @@ Install the Heroku CLI with these [instructions](https://devcenter.heroku.com/ar
 >
 {style="note"}
 
-## Dockerfile and Digital Ocean
+## Dockerfile
+
+You can deploy your vapi4k application using a Docker container.
+
+## Digital Ocean
 
 
