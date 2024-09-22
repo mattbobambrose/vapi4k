@@ -74,7 +74,7 @@ git clone <repository_url>
 
 The [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) plugin allows you to load environment variables from a
 file when running your applications. It simplifies
-local development with ```ngrok```.
+local development with `ngrok`.
 
 <procedure title="Install the EnvFile plugin">
     <step>
@@ -96,8 +96,8 @@ local development with ```ngrok```.
 
 ### Install ngrok
 
-[ngrok](https://ngrok.com/) is a tool that allows you to expose your local server to the
-internet. It is very useful for developing vapi4k apps because it greatly decreases your iteration time.
+The [ngrok](https://ngrok.com/) proxy allows you to expose your local vapi4k ktor server to the internet.
+It is very useful for developing vapi4k apps because it greatly decreases your iteration time.
 It is also useful for watching the traffic between your app and the vapi.ai platform.
 To install ngrok, go to the [ngrok download page](https://ngrok.com/download) and follow the instructions for
 your operating system.
@@ -134,14 +134,16 @@ Copy the ngrok `Forwarding` url into your copy buffer. You will need this url wh
         <p>Create a file named <b>secrets.env</b>.</p>
     </step>
 
-The secrets.env file should contain values for these env vars:
+The `secrets.env` file should contain values for these env vars:
 
 * VAPI_PRIVATE_KEY
 * VAPI_PUBLIC_KEY
 * VAPI_PHONE_NUMBER_ID
 * VAPI4K_BASE_URL
 
-It should look something like this:
+The first three values are obtained from the vapi.ai platform. The last value is the ngrok `Forwarding` url.
+
+The `secrets/secrets.env` should look something like this:
 
 ```bash
 VAPI_PRIVATE_KEY=f3ff6277-8d9b-8873-eec7-743786e2aa42
