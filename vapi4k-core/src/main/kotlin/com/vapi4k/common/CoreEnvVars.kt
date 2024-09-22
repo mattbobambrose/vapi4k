@@ -27,6 +27,7 @@ object CoreEnvVars {
 
   private val VAPI4K_BASE_URL = EnvVar("VAPI4K_BASE_URL", getWithDefault("http://localhost:8080"))
   private val VAPI_BASE_URL = EnvVar("VAPI_BASE_URL", getWithDefault("https://api.vapi.ai"))
+  internal val PING_LOGGING_ENABLED = EnvVar("PING_LOGGING_ENABLED", getWithDefault(false))
 
   private val VAPI_PRIVATE_KEY = EnvVar(
     name = "VAPI_PRIVATE_KEY",

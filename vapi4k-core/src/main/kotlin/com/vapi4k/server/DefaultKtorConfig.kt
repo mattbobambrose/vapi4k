@@ -16,6 +16,8 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.common.CoreEnvVars.PING_LOGGING_ENABLED
+import com.vapi4k.common.Endpoints.PING_PATH
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -62,7 +64,10 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
   if (!pregistry.contains(CallLogging.key)) {
     install(CallLogging) {
       level = Level.INFO
-      filter { call -> call.request.path().startsWith("/") }
+      filter { call ->
+        val logPing = if (PING_LOGGING_ENABLED.toBoolean()) true else call.request.path() != PING_PATH
+        call.request.path().startsWith("/") && logPing
+      }
       disableDefaultColors()
     }
   }
