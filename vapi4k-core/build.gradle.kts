@@ -43,6 +43,7 @@ dependencies {
 
     api(libs.ktor.client.core)
     api(libs.ktor.client.cio)
+    api(libs.ktor.client.websockets)
     api(libs.ktor.client.encoding)
     api(libs.ktor.client.content.negotiation)
 

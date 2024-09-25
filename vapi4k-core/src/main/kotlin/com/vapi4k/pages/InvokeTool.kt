@@ -31,7 +31,7 @@ import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomString
 import com.vapi4k.utils.HttpUtils.getQueryParam
-import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
@@ -69,10 +69,13 @@ object InvokeTool {
           )
         }
 
-      val response = httpClient.post(url) {
-        headers.append(com.vapi4k.common.Headers.VAPI_SECRET_HEADER, requestContext.application.serverSecret)
-        setBody((requestContext.request as JsonObject).toJsonString<JsonObject>(false))
-      }
+      val response =
+        jsonHttpClient().use { client ->
+          client.post(url) {
+            headers.append(com.vapi4k.common.Headers.VAPI_SECRET_HEADER, requestContext.application.serverSecret)
+            setBody((requestContext.request as JsonObject).toJsonString<JsonObject>(false))
+          }
+        }
       response.bodyAsText().toJsonString()
     }.getOrElse { e ->
       logger.error(e) { "Error validating tool invoke request" }

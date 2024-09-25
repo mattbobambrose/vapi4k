@@ -17,7 +17,7 @@
 package simpleDemo
 
 import com.vapi4k.dsl.assistant.ToolCall
-import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
@@ -36,8 +36,8 @@ class WeatherLookupService {
     val currentTemperature =
       runBlocking {
         val response =
-          httpClient
-            .get {
+          jsonHttpClient().use { client ->
+            client.get {
               url {
                 protocol = URLProtocol.HTTP
                 host = "api.openweathermap.org"
@@ -49,14 +49,16 @@ class WeatherLookupService {
                 }
               }
             }
-        val je = response
-          .bodyAsText()
-          .toJsonElement()
-          .toJsonElementList()
-          .first()
+          }
+        val je =
+          response
+            .bodyAsText()
+            .toJsonElement()
+            .toJsonElementList()
+            .first()
 
-        httpClient
-          .get {
+        jsonHttpClient().use { client ->
+          client.get {
             url {
               protocol = URLProtocol.HTTPS
               host = "api.open-meteo.com"
@@ -69,7 +71,8 @@ class WeatherLookupService {
                 append("current", "temperature_1000hPa")
               }
             }
-          }.bodyAsText()
+          }
+        }.bodyAsText()
           .toJsonElement()
           .stringValue("current.temperature_1000hPa")
       }

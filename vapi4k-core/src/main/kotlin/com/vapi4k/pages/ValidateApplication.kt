@@ -44,7 +44,7 @@ import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.HtmlUtils.html
 import com.vapi4k.utils.HttpUtils.getHeader
 import com.vapi4k.utils.HttpUtils.getQueryParam
-import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.JsonUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.MiscUtils.appendQueryParams
@@ -179,13 +179,15 @@ internal object ValidateApplication {
     secret: String,
     url: String,
   ): Pair<HttpStatusCode, String> =
-    httpClient.post(url) {
-      contentType(Application.Json)
-      headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
-      if (secret.isNotEmpty())
-        headers.append(VAPI_SECRET_HEADER, secret)
-      val jsonBody = if (application.applicationType == INBOUND_CALL) request else EMPTY_JSON_ELEMENT
-      setBody(jsonBody)
+    jsonHttpClient().use { client ->
+      client.post(url) {
+        contentType(Application.Json)
+        headers.append(VALIDATE_HEADER, VALIDATE_VALUE)
+        if (secret.isNotEmpty())
+          headers.append(VAPI_SECRET_HEADER, secret)
+        val jsonBody = if (application.applicationType == INBOUND_CALL) request else EMPTY_JSON_ELEMENT
+        setBody(jsonBody)
+      }
     }.run { status to bodyAsText() }
 
   private const val ASSISTANT_REQUEST_JSON = """

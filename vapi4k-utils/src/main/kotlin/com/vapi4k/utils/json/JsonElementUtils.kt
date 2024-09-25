@@ -16,6 +16,7 @@
 
 package com.vapi4k.utils.json
 
+import com.vapi4k.utils.common.JsonContentUtils.defaultJson
 import com.vapi4k.utils.json.JsonElementUtils.element
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -35,12 +36,7 @@ operator fun JsonElement.get(vararg keys: String): JsonElement =
     .fold(this) { acc, key -> acc.element(key) }
 
 object JsonElementUtils {
-  val prettyFormat by lazy {
-    Json {
-      prettyPrint = true
-      prettyPrintIndent = "  "
-    }
-  }
+  val prettyFormat by lazy { defaultJson() }
   val rawFormat by lazy { Json { prettyPrint = false } }
 
   fun JsonElement.getOrNull(vararg keys: String): JsonElement? = if (containsKey(*keys)) get(*keys) else null

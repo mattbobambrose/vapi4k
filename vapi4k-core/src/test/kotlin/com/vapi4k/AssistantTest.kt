@@ -34,14 +34,14 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
-import com.vapi4k.utils.JsonUtils.assistantClientMessages
-import com.vapi4k.utils.JsonUtils.assistantServerMessages
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.firstMessageOfType
 import com.vapi4k.utils.json.JsonElementUtils.intValue
+import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
 import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.withTestApplication
+import kotlinx.serialization.json.JsonElement
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import kotlin.test.Test
@@ -65,6 +65,9 @@ class AssistantTest {
   private val chicagoIllinoisCompleteMessage = "This is the Chicago Illinois request complete message"
   private val chicagoIllinoisFailedMessage = "This is the Chicago Illinois request failed message"
   private val chicagoIllinoisDelayedMessage = "This is the Chicago Illinois request delayed message"
+
+  val JsonElement.assistantClientMessages get() = jsonElementList("messageResponse.assistant.clientMessages")
+  val JsonElement.assistantServerMessages get() = jsonElementList("messageResponse.assistant.serverMessages")
 
   @Test
   fun testRegular() {

@@ -59,22 +59,37 @@ object AssistantRequestUtils {
   val JsonElement.messageCallId get() = stringValue("message.call.id")
 
   /**
-  Extract the request type of JsonElement.
+  Extract the request type from a JsonElement.
    */
   val JsonElement.requestType get() = stringValue("message.type")
 
   /**
-  Extract the phone number from a JsonElement and throws an error if the JsonElement is not a phone number.
+  Extract the phone number from a JsonElement.
    */
   val JsonElement.phoneNumber get() = stringValue("message.call.customer.number")
 
   /**
-  Extract the tool call name from a tool call and throws an error if the JsonElement is not a tool call.
+  Extract the tool call name from a JsonElement.
    */
   val JsonElement.toolCallName get() = stringValue("function.name").toFunctionName()
 
   /**
-  Extract the tool call arguments from a tool call and throws an error if the JsonElement is not a tool call.
+  Extract the listenUrl value from a JsonElement.
+   */
+  val JsonElement.listenUrl get() = stringValue("message.call.monitor.listenUrl")
+
+  /**
+  Extract the controlUrl value from a JsonElement.
+   */
+  val JsonElement.controlUrl get() = stringValue("message.call.monitor.controlUrl")
+
+  /**
+  Extract the webCallUrl value from a JsonElement.
+   */
+  val JsonElement.webCallUrl get() = stringValue("message.call.webCallUrl")
+
+  /**
+  Extract the tool call arguments from a JsonElement.
    */
   val JsonElement.toolCallArguments: JsonElement get() = this["function.arguments"]
 //    get() {
@@ -87,7 +102,7 @@ object AssistantRequestUtils {
 //    }
 
   /**
-  Extract the function name from a function call and throws an error if the JsonElement is not a function call.
+  Extract the function name from a function call from a JsonElement.
    */
   val JsonElement.functionName
     get() = if (isFunctionCall())
@@ -96,7 +111,7 @@ object AssistantRequestUtils {
       error("JsonElement is not a function call")
 
   /**
-  Extract the function parameters from a function call and throws an error if the JsonElement is not a function call.
+  Extract the function parameters from a function call from a JsonElement.
    */
   val JsonElement.functionParameters
     get() = if (isFunctionCall())
@@ -105,7 +120,7 @@ object AssistantRequestUtils {
       error("JsonElement is not a function call")
 
   /**
-  Extract the assistant request error message from a status update message and throws an error if the JsonElement is not a status update message.
+  Extract the assistant request error message from a status update message.
    */
   val JsonElement.statusUpdateError: String
     get() = if (isStatusUpdate()) {

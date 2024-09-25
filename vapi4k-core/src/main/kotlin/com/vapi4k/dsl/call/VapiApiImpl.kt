@@ -26,7 +26,7 @@ import com.vapi4k.common.CoreEnvVars.vapiBaseUrl
 import com.vapi4k.common.CoreEnvVars.vapiPrivateKey
 import com.vapi4k.dsl.call.ProcessOutboundCall.processOutboundCall
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.envvar.EnvVar.Companion.getSystemValue
 import com.vapi4k.utils.json.JsonElementUtils.toJsonString
@@ -62,9 +62,11 @@ class VapiApiImpl private constructor(
           .getOrThrow()
 
       runCatching {
-        httpClient.post("$vapiBaseUrl/call") {
-          configCall(authString)
-          setBody(callRequest)
+        jsonHttpClient().use { client ->
+          client.post("$vapiBaseUrl/call") {
+            configCall(authString)
+            setBody(callRequest)
+          }
         }
       }.onSuccess { logger.info { "Call saved successfully" } }
         .onFailure { e -> logger.error { "Failed to save call: ${e.errorMsg}" } }
@@ -75,7 +77,9 @@ class VapiApiImpl private constructor(
     runBlocking {
       runCatching {
         runCatching {
-          httpClient.get("$vapiBaseUrl/${objectType.endpoint}") { configCall(authString) }
+          jsonHttpClient().use { client ->
+            client.get("$vapiBaseUrl/${objectType.endpoint}") { configCall(authString) }
+          }
         }.onSuccess { logger.info { "$objectType objects fetched successfully" } }
           .onFailure { e -> logger.error { "Failed to fetch $objectType objects: ${e.errorMsg}" } }
           .getOrThrow()
@@ -86,7 +90,9 @@ class VapiApiImpl private constructor(
     runBlocking {
       runCatching {
         runCatching {
-          httpClient.get("$vapiBaseUrl/call/$callId") { configCall(authString) }
+          jsonHttpClient().use { client ->
+            client.get("$vapiBaseUrl/call/$callId") { configCall(authString) }
+          }
         }.onSuccess { logger.info { "Call deleted successfully" } }
           .onFailure { e -> logger.error { "Failed to delete call: ${e.errorMsg}" } }
           .getOrThrow()

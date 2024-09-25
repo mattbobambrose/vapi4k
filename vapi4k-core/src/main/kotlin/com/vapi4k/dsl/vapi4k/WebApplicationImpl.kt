@@ -40,12 +40,12 @@ class WebApplicationImpl internal constructor() :
   }
 
   override suspend fun getAssistantResponse(requestContext: RequestContextImpl) =
-    assistantRequest.let { func ->
-      if (func.isNull()) {
+    assistantRequest.let { requestCB ->
+      if (requestCB.isNull()) {
         error("onAssistantRequest{} not called")
       } else {
         val assistantResponse = WebAssistantResponseImpl(requestContext)
-        func.invoke(assistantResponse, requestContext)
+        requestCB.invoke(assistantResponse, requestContext)
         if (assistantResponse.isAssigned) {
           assignButtonConfig(assistantResponse, requestContext)
           assistantResponse.assistantRequestResponse

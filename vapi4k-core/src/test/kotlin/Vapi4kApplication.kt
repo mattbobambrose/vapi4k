@@ -47,6 +47,10 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+
 
 fun main() {
   embeddedServer(
@@ -56,6 +60,13 @@ fun main() {
     module = Application::module,
   ).start(wait = true)
 }
+
+@Serializable
+data class OutboundMsg @OptIn(ExperimentalSerializationApi::class) constructor(
+  val message: String,
+  @EncodeDefault
+  val type: String = "say",
+)
 
 fun Application.module() {
   val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
@@ -68,6 +79,29 @@ fun Application.module() {
   }
 
   install(Vapi4k) {
+//    onRequest(STATUS_UPDATE) { requestContext ->
+//      val listenUrl = requestContext.request.listenUrl
+//      val controlUrl = requestContext.request.controlUrl
+////      val webCallUrl = requestContext.request.webCallUrl
+//
+//      logger.info { "listenUrl = $listenUrl" }
+//      logger.info { "controlUrl = $controlUrl" }
+////      logger.info { "webCallUrl = $webCallUrl" }
+//
+////      delay(2000)
+////      val msg = OutboundMsg("Hello! Can you hear me?")
+////      println(msg.toJsonString())
+////      val resp =
+////        httpClient.post(controlUrl) {
+////          contentType(ContentType.Application.Json)
+////          setBody(msg)
+////        }
+////      println("Response: ${resp.bodyAsText()}")
+//
+//
+//      listenTo(listenUrl)
+//    }
+
     webApplication {
       serverPath = "/talkapp"
       serverSecret = "12345"
@@ -81,7 +115,8 @@ fun Application.module() {
       }
 
       onAssistantRequest { args ->
-        assistant {
+
+      assistant {
           firstMessage = "Hi, I am Beth how can I assist you today?"
 
           openAIModel {

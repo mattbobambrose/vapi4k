@@ -16,23 +16,22 @@
 
 package com.vapi4k.utils
 
+import com.vapi4k.utils.common.JsonContentUtils.defaultJson
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.ApplicationCall
-import kotlinx.serialization.json.Json
+import java.time.Duration
 
 object HttpUtils {
   val httpClient by lazy {
     HttpClient(CIO) {
       install(ContentNegotiation) {
-        json(
-          Json {
-            prettyPrint = true
-            prettyPrintIndent = "  "
-          },
-        )
+        json(defaultJson())
       }
 
       // TODO: Look into this
@@ -42,6 +41,31 @@ object HttpUtils {
 //      }
     }
   }
+
+  fun jsonHttpClient(block: HttpClientConfig<CIOEngineConfig>.() -> Unit = {}) =
+    HttpClient(CIO) {
+      install(ContentNegotiation) {
+        json(defaultJson())
+      }
+
+      block()
+
+      // TODO: Look into this
+//      install(ContentEncoding) {
+//        deflate(1.0F)
+//        gzip(0.9F)
+//      }
+    }
+
+  fun wsHttpClient(block: HttpClientConfig<CIOEngineConfig>.() -> Unit = {}) =
+    HttpClient(CIO) {
+      install(WebSockets) {
+        pingInterval = Duration.ofSeconds(15).toMillis()
+        maxFrameSize = Long.MAX_VALUE
+      }
+
+      block()
+    }
 
   internal fun String.stripQueryParams() = split("?").first()
 

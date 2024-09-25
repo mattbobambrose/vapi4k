@@ -63,6 +63,7 @@ import com.vapi4k.utils.HtmlUtils.html
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.SharedDataLoader
+import com.vapi4k.utils.common.JsonContentUtils.defaultJsonConfig
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
 import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
@@ -162,10 +163,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
           get("/") { call.respondRedirect(ADMIN_PATH) }
 
           route(ENV_PATH) {
-            installContentNegotiation {
-              prettyPrint = true
-              prettyPrintIndent = "  "
-            }
+            installContentNegotiation { defaultJsonConfig() }
             get { call.respond(jsonEnvVarValues()) }
           }
 

@@ -37,12 +37,12 @@ class OutboundCallApplicationImpl internal constructor() :
   }
 
   override suspend fun getAssistantResponse(requestContext: RequestContextImpl): AssistantMessageResponse =
-    assistantRequest.let { func ->
-      if (func.isNull()) {
+    assistantRequest.let { requestCB ->
+      if (requestCB.isNull()) {
         error("onAssistantRequest{} not called")
       } else {
         val assistantResponse = OutboundCallAssistantResponseImpl(requestContext)
-        func.invoke(assistantResponse, requestContext)
+        requestCB.invoke(assistantResponse, requestContext)
         if (!assistantResponse.isAssigned)
           error("onAssistantRequest{} is missing a call to assistant{}, assistantId{}, squad{}, or squadId{}")
         else

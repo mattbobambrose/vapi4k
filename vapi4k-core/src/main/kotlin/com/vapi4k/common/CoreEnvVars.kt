@@ -54,6 +54,12 @@ object CoreEnvVars {
       reportOnBoot = false,
     )
 
+  private val DEEPGRAM_PRIVATE_KEY = EnvVar(
+    name = "DEEPGRAM_PRIVATE_KEY",
+    src = getWithDefault(""),
+    maskFunc = obfuscate(1),
+  )
+
   internal val TOOL_CACHE_CLEAN_PAUSE_MINS =
     EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", getWithDefault(30), reportOnBoot = false)
   internal val TOOL_CACHE_MAX_AGE_MINS =
@@ -67,9 +73,10 @@ object CoreEnvVars {
   val isProduction: Boolean = IS_PRODUCTION.toBoolean()
   val vapi4kBaseUrl: String = VAPI4K_BASE_URL.value.removeSuffix("/")
   val vapiBaseUrl: String = VAPI_BASE_URL.value.removeSuffix("/")
-  val vapiPublicKey: String = VAPI_PUBLIC_KEY.value
   val vapiPrivateKey: String = VAPI_PRIVATE_KEY.value
+  val vapiPublicKey: String = VAPI_PUBLIC_KEY.value
   val vapiPhoneNumberId: String = VAPI_PHONE_NUMBER_ID.value
+  val deepGramVoiceIdType: String = DEEPGRAM_PRIVATE_KEY.value
 
   fun loadCoreEnvVars() = Unit
 }

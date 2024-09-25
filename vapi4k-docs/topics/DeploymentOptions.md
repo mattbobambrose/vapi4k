@@ -47,7 +47,31 @@ Install the Heroku CLI with these [instructions](https://devcenter.heroku.com/ar
 ## Dockerfile
 
 You can deploy your vapi4k application using a Docker container.
+The `vapi4k-template` project includes a `Dockerfile` that you can use to build a Docker image.
+
+Install and run Docker Desktop following these [instructions](https://www.docker.com/products/docker-desktop/).
+
+Create a Docker account [here](https://app.docker.com/signup).
+
+Assign your docker username and image name to the `IMAGE_NAME` variable in the `Dockerfile`.
+
+The default jar filename is `vapi4k-template.jar` but you can change it to whatever name you like.
+The name has to be changed in the `Dockerfile` and `build.gradle.kts` file.
+
+Create a Docker image with the following command:
+
+```bash
+make build-docker
+```
+
+Push the Docker image with the following command:
+
+```bash
+make push-docker
+```
 
 ## Digital Ocean
 
+[Digital Ocean](https://www.digitalocean.com)  makes it easy to deploy a Docker container
+with their [App Platform](https://www.digitalocean.com/products/app-platform) product.
 

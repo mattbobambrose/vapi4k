@@ -61,9 +61,6 @@ object JsonUtils {
     else
       error("JsonElement is not a tool call request")
 
-  val JsonElement.assistantClientMessages get() = jsonElementList("messageResponse.assistant.clientMessages")
-  val JsonElement.assistantServerMessages get() = jsonElementList("messageResponse.assistant.serverMessages")
-
   val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
 
   fun emptyJsonElement() = EMPTY_JSON_ELEMENT

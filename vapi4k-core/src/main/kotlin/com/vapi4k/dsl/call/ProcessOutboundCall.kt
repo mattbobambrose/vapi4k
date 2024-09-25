@@ -25,7 +25,7 @@ import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.configCall
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.utils.HttpUtils.httpClient
+import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.HttpUtils.stripQueryParams
 import com.vapi4k.utils.MiscUtils.removeEnds
 import com.vapi4k.utils.common.Utils.ensureStartsWith
@@ -60,16 +60,18 @@ object ProcessOutboundCall {
       val url = "$vapi4kBaseUrl/${OUTBOUND_CALL.pathPrefix}/${outboundCall.serverPath.removeEnds("/")}"
       val assistantResponse =
         runCatching {
-          if (outboundCall.method.isPost()) {
-            httpClient.post(url) {
-              contentType(Application.Json)
-              addVapiSecret(outboundCall)
-              setBody(outboundCall.postArgs)
-            }
-          } else {
-            httpClient.get(url) {
-              contentType(Application.Json)
-              addVapiSecret(outboundCall)
+          jsonHttpClient().use { client ->
+            if (outboundCall.method.isPost()) {
+              client.post(url) {
+                contentType(Application.Json)
+                addVapiSecret(outboundCall)
+                setBody(outboundCall.postArgs)
+              }
+            } else {
+              client.get(url) {
+                contentType(Application.Json)
+                addVapiSecret(outboundCall)
+              }
             }
           }
         }.onFailure { e -> logger.error { "Failed to fetch assistant from vapi4k server: ${e.errorMsg}" } }
@@ -106,9 +108,11 @@ object ProcessOutboundCall {
 
       val vapiResponse =
         runCatching {
-          httpClient.post("$vapiBaseUrl/call/phone") {
-            configCall(authString)
-            setBody(requestJson)
+          jsonHttpClient().use { client ->
+            client.post("$vapiBaseUrl/call/phone") {
+              configCall(authString)
+              setBody(requestJson)
+            }
           }
         }.onFailure { e -> logger.error { "Failed calling $vapiBaseUrl: ${e.errorMsg}" } }
           .getOrThrow()
