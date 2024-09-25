@@ -85,7 +85,7 @@ fun main() {
   }
 }
 
-object Listen {
+object SpeachListener {
   val websocketActions = ConcurrentHashMap<String, Thread>()
 
   fun listenTo(listenUrl: String) {
@@ -100,7 +100,7 @@ object Listen {
 
               launch {
                 runCatching {
-                  listen(listenUrl, dataChannel)
+                  connectToVapiWS(listenUrl, dataChannel)
                 }.onFailure {
                   logger.error(it) { "Error listening to $listenUrl" }
                 }
@@ -108,77 +108,9 @@ object Listen {
 
               launch {
                 runCatching {
-
-                  println("Deepgram connection taking place")
-                  wsHttpClient {
-                    install(ContentNegotiation) { json(defaultJson()) }
-                  }.use { client ->
-                    // "wss://api.deepgram.com/v1/listen"
-                    runCatching {
-                      // utterance_end_ms=1000&vad_events=true&interim_results=true
-                      client.webSocket("wss://api.deepgram.com/v1/listen?model=nova-2&smart_format=true&encoding=linear16&channels=2&sample_rate=16000&multichannel=true",
-                        // method = io.ktor.http.HttpMethod.Post,
-                        request = {
-//                        //   method = io.ktor.http.HttpMethod.Post
-//                        url.protocol = URLProtocol.WSS
-//                        url.host = "api.deepgram.com"
-//                        url.encodedPath = "/v1/listen"
-
-                          //   contentType(Application.Json)
-                          headers.append(HttpHeaders.Authorization, "Token $deepGramVoiceIdType")
-//                        val props = DeepGramProperties()
-//                        setBody(props)
-
-                        }) {
-
-                        println("Deepgram WebSocket connection established")
-
-                        coroutineScope {
-                          launch {
-                            var total = 0
-                            for (data in dataChannel) {
-                              total += data.second.size
-                              println("Sending DG binary data ${data.second.size} / $total")
-                              outgoing.send(Frame.Binary(data.first, data.second))
-                            }
-                          }
-
-                          launch {
-                            for (frame in incoming) {
-                              when (frame) {
-                                is Frame.Binary -> {
-                                  val data = frame.readBytes()
-                                  println("Received DG binary data")
-                                }
-
-                                is Frame.Text -> {
-                                  println("Received DG message: ${frame.readText().toJsonString()}")
-                                }
-
-                                is Frame.Ping -> {
-                                  println("Received DG ping")
-                                }
-
-                                is Frame.Pong -> {
-                                  println("Received DG pong")
-                                }
-
-                                is Frame.Close -> {
-                                  println("Connection DG closed")
-                                  break
-                                }
-                              }
-                            }
-                            println("Deepgram WebSocket connection closed")
-                          }
-                        }
-                      }
-                    }.onFailure {
-                      logger.error(it) { "DG1 Error ${it.message} ${it.cause?.message.orEmpty()} ${it.cause?.cause?.message.orEmpty()}" }
-                    }
-                  }
+                  connectToDeepgramWS(dataChannel)
                 }.onFailure {
-                  logger.error(it) { "DG2 Error ${it.message}" }
+                  logger.error(it) { "DG Error ${it.message}" }
                 }
               }
             }
@@ -188,8 +120,7 @@ object Listen {
     }
   }
 
-
-  suspend fun listen(
+  private suspend fun connectToVapiWS(
     url: String,
     dataChannel: Channel<Pair<Boolean, ByteArray>>,
   ) {
@@ -233,6 +164,71 @@ object Listen {
           val audioData = pcmBuffer.map { it.toList() }.flatten().toByteArray()
           File("audio.pcm").writeBytes(audioData)
           println("Audio data saved to audio.pcm")
+        }
+      }
+    }
+  }
+
+  private suspend fun connectToDeepgramWS(dataChannel: Channel<Pair<Boolean, ByteArray>>) {
+    println("Deepgram connection taking place")
+    wsHttpClient {
+      install(ContentNegotiation) { json(defaultJson()) }
+    }.use { client ->
+      // "wss://api.deepgram.com/v1/listen"
+      // utterance_end_ms=1000&vad_events=true&interim_results=true
+      client.webSocket("wss://api.deepgram.com/v1/listen?model=nova-2&smart_format=true&encoding=linear16&channels=2&sample_rate=16000&multichannel=true",
+        // method = io.ktor.http.HttpMethod.Post,
+        request = {
+          // //   method = io.ktor.http.HttpMethod.Post
+          // url.protocol = URLProtocol.WSS
+          // url.host = "api.deepgram.com"
+          // url.encodedPath = "/v1/listen"
+
+          //   contentType(Application.Json)
+          headers.append(HttpHeaders.Authorization, "Token $deepGramVoiceIdType")
+          // val props = DeepGramProperties()
+          // setBody(props)
+
+        }) {
+        println("Deepgram WebSocket connection established")
+        coroutineScope {
+          launch {
+            var total = 0
+            for (data in dataChannel) {
+              total += data.second.size
+              println("Sending DG binary data ${data.second.size} / $total")
+              outgoing.send(Frame.Binary(data.first, data.second))
+            }
+          }
+
+          launch {
+            for (frame in incoming) {
+              when (frame) {
+                is Frame.Binary -> {
+                  val data = frame.readBytes()
+                  println("Received DG binary data")
+                }
+
+                is Frame.Text -> {
+                  println("Received DG message: ${frame.readText().toJsonString()}")
+                }
+
+                is Frame.Ping -> {
+                  println("Received DG ping")
+                }
+
+                is Frame.Pong -> {
+                  println("Received DG pong")
+                }
+
+                is Frame.Close -> {
+                  println("Connection DG closed")
+                  break
+                }
+              }
+            }
+            println("Deepgram WebSocket connection closed")
+          }
         }
       }
     }

@@ -14,6 +14,7 @@
  *
  */
 
+import SpeachListener.listenTo
 import TalkPage.talkPage
 import com.vapi4k.FavoriteFoodService
 import com.vapi4k.WeatherLookupByAreaCodeService
@@ -26,6 +27,8 @@ import com.vapi4k.api.functions.Functions
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.squad.Member
 import com.vapi4k.api.tools.Tools
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.controlUrl
+import com.vapi4k.api.vapi4k.AssistantRequestUtils.listenUrl
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.plugin.Vapi4k
@@ -79,29 +82,6 @@ fun Application.module() {
   }
 
   install(Vapi4k) {
-//    onRequest(STATUS_UPDATE) { requestContext ->
-//      val listenUrl = requestContext.request.listenUrl
-//      val controlUrl = requestContext.request.controlUrl
-////      val webCallUrl = requestContext.request.webCallUrl
-//
-//      logger.info { "listenUrl = $listenUrl" }
-//      logger.info { "controlUrl = $controlUrl" }
-////      logger.info { "webCallUrl = $webCallUrl" }
-//
-////      delay(2000)
-////      val msg = OutboundMsg("Hello! Can you hear me?")
-////      println(msg.toJsonString())
-////      val resp =
-////        httpClient.post(controlUrl) {
-////          contentType(ContentType.Application.Json)
-////          setBody(msg)
-////        }
-////      println("Response: ${resp.bodyAsText()}")
-//
-//
-//      listenTo(listenUrl)
-//    }
-
     webApplication {
       serverPath = "/talkapp"
       serverSecret = "12345"
@@ -304,6 +284,28 @@ fun Application.module() {
 
       onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { requestContext ->
         logger.info { requestContext }
+      }
+
+      onRequest(ServerRequestType.STATUS_UPDATE) { requestContext ->
+        val listenUrl = requestContext.request.listenUrl
+        val controlUrl = requestContext.request.controlUrl
+//      val webCallUrl = requestContext.request.webCallUrl
+
+        logger.info { "listenUrl = $listenUrl" }
+        logger.info { "controlUrl = $controlUrl" }
+        //      logger.info { "webCallUrl = $webCallUrl" }
+
+        //      delay(2000)
+        //      val msg = OutboundMsg("Hello! Can you hear me?")
+        //      println(msg.toJsonString())
+        //      val resp =
+        //        httpClient.post(controlUrl) {
+        //          contentType(ContentType.Application.Json)
+        //          setBody(msg)
+        //        }
+        //      println("Response: ${resp.bodyAsText()}")
+
+        listenTo(listenUrl)
       }
 
       onAssistantRequest { args ->
