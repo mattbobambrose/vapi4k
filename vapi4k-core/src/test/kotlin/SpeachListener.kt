@@ -197,7 +197,7 @@ object SpeachListener {
             for (data in dataChannel) {
               total += data.second.size
               println("Sending DG binary data ${data.second.size} / $total")
-              outgoing.send(Frame.Binary(data.first, data.second))
+              send(Frame.Binary(data.first, data.second))
             }
           }
 
