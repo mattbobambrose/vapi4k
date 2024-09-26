@@ -16,12 +16,17 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.common.Constants.AUTH_BASIC
 import com.vapi4k.common.CoreEnvVars.PING_LOGGING_ENABLED
+import com.vapi4k.common.CoreEnvVars.adminPassword
 import com.vapi4k.common.Endpoints.PING_PATH
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.application.pluginRegistry
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.basic
 import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.compression.Compression
 import io.ktor.server.plugins.compression.deflate
@@ -41,15 +46,14 @@ import org.slf4j.event.Level
 import java.time.Duration
 
 fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry) {
-  val pregistry = pluginRegistry
 
-//  if (!pregistry.contains(ContentNegotiation.key)) {
+//  if (!pluginRegistry.contains(ContentNegotiation.key)) {
 //    install(ContentNegotiation) {
 //      json(Json { ignoreUnknownKeys = true })
 //    }
 //  }
 
-  if (!pregistry.contains(Compression.key)) {
+  if (!pluginRegistry.contains(Compression.key)) {
     install(Compression) {
       gzip {
         priority = 1.0
@@ -61,7 +65,7 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
     }
   }
 
-  if (!pregistry.contains(CallLogging.key)) {
+  if (!pluginRegistry.contains(CallLogging.key)) {
     install(CallLogging) {
       level = Level.INFO
       filter { call ->
@@ -72,11 +76,11 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
     }
   }
 
-  if (!pregistry.contains(Routing.key)) {
+  if (!pluginRegistry.contains(Routing.key)) {
     install(Routing)
   }
 
-  if (!pregistry.contains(WebSockets.key)) {
+  if (!pluginRegistry.contains(WebSockets.key)) {
     install(WebSockets) {
       pingPeriod = Duration.ofSeconds(15)
       timeout = Duration.ofSeconds(15)
@@ -85,7 +89,24 @@ fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry
     }
   }
 
-//  if (!pregistry.contains(MicrometerMetrics.key)) {
+  if (!pluginRegistry.contains(Authentication.key)) {
+    install(Authentication) {
+      basic(AUTH_BASIC) {
+        realm = "Access to the '/admin' path"
+        validate { credentials ->
+          if (credentials.name == "admin" && credentials.password == adminPassword) {
+            UserIdPrincipal(credentials.name)
+          } else {
+            null
+          }
+        }
+      }
+    }
+  } else {
+    error("Authentication plugin already installed")
+  }
+
+//  if (!pluginRegistry.contains(MicrometerMetrics.key)) {
 //    install(MicrometerMetrics) {
 //      registry = appMicrometerRegistry
 //      meterBinders = emptyList()

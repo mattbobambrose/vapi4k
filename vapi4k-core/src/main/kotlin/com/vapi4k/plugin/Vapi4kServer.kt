@@ -20,15 +20,15 @@ import com.github.mattbobambrose.vapi4k.BuildConfig
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE
+import com.vapi4k.common.Constants.AUTH_BASIC
 import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.PRISM_BASE
 import com.vapi4k.common.Constants.STATIC_BASE
 import com.vapi4k.common.CoreEnvVars.isProduction
 import com.vapi4k.common.CoreEnvVars.loadCoreEnvVars
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
-import com.vapi4k.common.CssNames.LOG_DIV
-import com.vapi4k.common.Endpoints.ADMIN_CONSOLE_ENDPOINT
 import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
+import com.vapi4k.common.Endpoints.ADMIN_LOG_ENDPOINT
 import com.vapi4k.common.Endpoints.ADMIN_PATH
 import com.vapi4k.common.Endpoints.ADMIN_VERSION_PATH
 import com.vapi4k.common.Endpoints.CACHES_PATH
@@ -40,13 +40,15 @@ import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
+import com.vapi4k.console.AdminPage.adminPage
+import com.vapi4k.console.BootstrapPage2.bootstrapPage2
+import com.vapi4k.console.ConsoleInfo.envVarsInfo
+import com.vapi4k.console.ConsoleInfo.versionInfo
+import com.vapi4k.console.ConsoleLog.consoleLogWs
+import com.vapi4k.console.InvokeTool.invokeTool
+import com.vapi4k.console.ValidateApplication.validateApplication
+import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl.Companion.containsPath
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.pages.AdminPage.adminPage
-import com.vapi4k.pages.BootstrapPage2.bootstrapPage2
-import com.vapi4k.pages.ConsoleInfo.envVarsInfo
-import com.vapi4k.pages.ConsoleInfo.versionInfo
-import com.vapi4k.pages.InvokeTool.invokeTool
-import com.vapi4k.pages.ValidateApplication.validateApplication
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.AdminJobs.startCacheCleaningThread
 import com.vapi4k.server.AdminJobs.startCallbackThread
@@ -58,11 +60,8 @@ import com.vapi4k.server.OutboundCallAndWebActions.buildRequestArg
 import com.vapi4k.server.OutboundCallAndWebActions.outboundCallAndWebRequest
 import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.server.installContentNegotiation
-import com.vapi4k.utils.HtmlUtils.attribs
-import com.vapi4k.utils.HtmlUtils.html
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.MiscUtils.removeEnds
-import com.vapi4k.utils.SharedDataLoader
 import com.vapi4k.utils.common.JsonContentUtils.defaultJsonConfig
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
@@ -79,6 +78,7 @@ import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
+import io.ktor.server.auth.authenticate
 import io.ktor.server.html.respondHtml
 import io.ktor.server.http.content.staticResources
 import io.ktor.server.request.path
@@ -91,17 +91,9 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.websocket.webSocket
-import io.ktor.websocket.Frame
-import io.ktor.websocket.readText
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
-import kotlinx.html.div
 import kotlinx.serialization.json.buildJsonObject
 
 @Version(
@@ -182,7 +174,9 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
             get { clearCaches(config) }
           }
 
-          get(ADMIN_PATH) { call.respondHtml { adminPage(config) } }
+          authenticate(AUTH_BASIC) {
+            get(ADMIN_PATH) { call.respondHtml { adminPage(config) } }
+          }
 
           get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { call.respondText(validateApplication(config)) }
 
@@ -192,47 +186,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
 
           get(ADMIN_VERSION_PATH) { call.respondText(versionInfo()) }
 
-          webSocket(ADMIN_CONSOLE_ENDPOINT) {
-            coroutineScope {
-              launch {
-                // Clear div on client after a server restart
-                val reset =
-                  html {
-                    div {
-                      attribs("hx-swap-oob" to "innerHTML:#$LOG_DIV")
-                      +""
-                    }
-                  }
-                outgoing.send(Frame.Text(reset))
-
-                SharedDataLoader.accessSharedFlow()
-                  .onStart { logger.info { "Listening for console updates" } }
-                  .onEach { msg ->
-                    val s = if (msg.isBlank()) msg else msg.removeEnds("\n")
-                    s.split("\n").forEach { line ->
-                      val html =
-                        html {
-                          div {
-                            attribs("hx-swap-oob" to "beforeend:#$LOG_DIV")
-                            +"$line\n"
-                          }
-                        }
-                      outgoing.send(Frame.Text(html))
-                    }
-                  }
-                  .collect()
-              }
-
-              launch {
-                for (frame in incoming) {
-                  if (frame is Frame.Text) {
-                    val text = frame.readText()
-                    // println("Received: $text")
-                  }
-                }
-              }
-            }
-          }
+          webSocket(ADMIN_LOG_ENDPOINT) { consoleLogWs() }
         }
 
         // Process Inbound Call requests
@@ -271,14 +225,12 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
         if (call.response.status() == HttpStatusCode.NotFound) {
           // See if user forgot the inboundCall prefix in the path
           val path = call.request.path().removeEnds("/")
-          val match = config.inboundCallApplications.any { application ->
-            application.serverPathNoSlash == path
-          }
-          if (match)
+          if (config.inboundCallApplications.containsPath(path)) {
             logger.info {
               "/$path is a valid inboundCallApplication{} serverPath value. " +
                 "Did you mean to use \"/inboundCall/$path\" instead of \"/$path\" as the Vapi Server URL in the Vapi dashboard?"
             }
+          }
         }
       }
     }

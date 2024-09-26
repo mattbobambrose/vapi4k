@@ -50,12 +50,11 @@ class Vapi4kConfigImpl internal constructor() : Vapi4kConfig {
   internal val globalAllResponses = mutableListOf<ResponseArgs>()
   internal val globalPerResponses = mutableListOf<Pair<ServerRequestType, ResponseArgs>>()
 
-  internal val webApplications = mutableListOf<AbstractApplicationImpl>()
   internal val inboundCallApplications = mutableListOf<AbstractApplicationImpl>()
   internal val outboundCallApplications = mutableListOf<AbstractApplicationImpl>()
+  internal val webApplications = mutableListOf<AbstractApplicationImpl>()
 
-  internal val allWebAndInboundApplications get() = webApplications + inboundCallApplications
-  internal val allApplications get() = webApplications + inboundCallApplications + outboundCallApplications
+  internal val allApplications get() = inboundCallApplications + outboundCallApplications + webApplications
 
   private fun verifyServerPath(
     serverPath: String,

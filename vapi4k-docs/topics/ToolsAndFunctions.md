@@ -15,8 +15,8 @@ The vapi4k DSL allows you to assign tools and functions to assistants and implem
 
 ## Manual Tools
 
-## External Tool
+### External Tool
 
-## TransferTool
+### TransferTool
 
 

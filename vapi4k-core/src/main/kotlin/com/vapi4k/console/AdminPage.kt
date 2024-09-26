@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.pages
+package com.vapi4k.console
 
 import com.vapi4k.common.Constants.BS_BASE
 import com.vapi4k.common.Constants.HTMX_SOURCE_URL
@@ -28,8 +28,8 @@ import com.vapi4k.common.CssNames.LOG_DIV
 import com.vapi4k.common.CssNames.MAIN_DIV
 import com.vapi4k.common.CssNames.ROUNDED
 import com.vapi4k.common.CssNames.SYS_INFO_DIV
-import com.vapi4k.common.Endpoints.ADMIN_CONSOLE_ENDPOINT
 import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
+import com.vapi4k.common.Endpoints.ADMIN_LOG_ENDPOINT
 import com.vapi4k.common.Endpoints.ADMIN_VERSION_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
@@ -221,7 +221,7 @@ internal object AdminPage {
             id = LOG_DIV
             attribs(
               "hx-ext" to "ws",
-              "ws-connect" to ADMIN_CONSOLE_ENDPOINT,
+              "ws-connect" to ADMIN_LOG_ENDPOINT,
             )
           }
         }

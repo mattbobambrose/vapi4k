@@ -60,6 +60,12 @@ object CoreEnvVars {
     maskFunc = obfuscate(1),
   )
 
+  private val ADMIN_PASSWORD = EnvVar(
+    name = "ADMIN_PASSWORD",
+    src = getWithDefault("admin"),
+    maskFunc = obfuscate(1),
+  )
+
   internal val TOOL_CACHE_CLEAN_PAUSE_MINS =
     EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", getWithDefault(30), reportOnBoot = false)
   internal val TOOL_CACHE_MAX_AGE_MINS =
@@ -77,6 +83,7 @@ object CoreEnvVars {
   val vapiPublicKey: String = VAPI_PUBLIC_KEY.value
   val vapiPhoneNumberId: String = VAPI_PHONE_NUMBER_ID.value
   val deepGramVoiceIdType: String = DEEPGRAM_PRIVATE_KEY.value
+  val adminPassword: String = ADMIN_PASSWORD.value
 
   fun loadCoreEnvVars() = Unit
 }

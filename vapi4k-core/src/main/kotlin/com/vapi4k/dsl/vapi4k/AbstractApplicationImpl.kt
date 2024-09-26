@@ -209,4 +209,8 @@ abstract class AbstractApplicationImpl(
       }
     }
   }
+
+  companion object {
+    fun List<AbstractApplicationImpl>.containsPath(path: String) = any { it.serverPathNoSlash == path }
+  }
 }

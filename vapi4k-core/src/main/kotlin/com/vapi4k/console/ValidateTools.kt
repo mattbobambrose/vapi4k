@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.pages
+package com.vapi4k.console
 
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID

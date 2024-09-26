@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.pages
+package com.vapi4k.console
 
 import com.vapi4k.common.ApplicationName.Companion.toApplicationName
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
@@ -29,15 +29,15 @@ import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.console.ValidateAssistant.navBar
+import com.vapi4k.console.ValidateAssistant.singleNavItem
+import com.vapi4k.console.ValidateAssistant.validateAssistant
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.pages.ValidateAssistant.navBar
-import com.vapi4k.pages.ValidateAssistant.singleNavItem
-import com.vapi4k.pages.ValidateAssistant.validateAssistant
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret

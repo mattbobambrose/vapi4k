@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.pages
+package com.vapi4k.console
 
 import com.vapi4k.common.CssNames.ACTIVE
 import com.vapi4k.common.CssNames.ERROR_MSG
@@ -23,8 +23,8 @@ import com.vapi4k.common.CssNames.MANUAL_TOOLS
 import com.vapi4k.common.CssNames.MESSAGE_RESPONSE
 import com.vapi4k.common.CssNames.SERVICE_TOOLS
 import com.vapi4k.common.CssNames.VALIDATION_DATA
+import com.vapi4k.console.ValidateTools.displayTools
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
-import com.vapi4k.pages.ValidateTools.displayTools
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.html

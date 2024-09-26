@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.pages
+package com.vapi4k.console
 
 import com.vapi4k.common.Constants.STATIC_BASE
 import kotlinx.html.ButtonType

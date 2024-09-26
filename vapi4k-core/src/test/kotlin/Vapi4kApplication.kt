@@ -33,7 +33,6 @@ import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.utils.enums.ServerRequestType
 import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
@@ -48,8 +47,6 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.html.respondHtml
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
-import io.micrometer.prometheusmetrics.PrometheusConfig
-import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -72,8 +69,8 @@ data class OutboundMsg @OptIn(ExperimentalSerializationApi::class) constructor(
 )
 
 fun Application.module() {
-  val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
-  defaultKtorConfig(appMicrometerRegistry)
+//  val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
+//  defaultKtorConfig(appMicrometerRegistry)
 
   routing {
     get("/talk") {

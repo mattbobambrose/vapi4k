@@ -40,6 +40,8 @@ object Constants {
   const val POST_ARGS = "postArgs"
 
   const val ASSISTANT_ID_WIDTH = 3
+
+  const val AUTH_BASIC = "auth-basic"
 }
 
 object QueryParams {
@@ -70,7 +72,7 @@ object Endpoints {
   const val ADMIN_PATH = "/admin"
   const val VALIDATE_PATH = "/validate"
   const val INVOKE_TOOL_PATH = "/invokeTool"
-  const val ADMIN_CONSOLE_ENDPOINT = "/admin-console"
+  const val ADMIN_LOG_ENDPOINT = "/admin-log"
   const val ADMIN_ENV_PATH = "/admin-env-vars"
   const val ADMIN_VERSION_PATH = "/admin-version"
 }

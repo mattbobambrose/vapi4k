@@ -14,11 +14,11 @@
  *
  */
 
-package com.vapi4k.pages
+package com.vapi4k.console
 
 import com.vapi4k.common.Version.Companion.versionDesc
-import com.vapi4k.pages.ValidateAssistant.navBar
-import com.vapi4k.pages.ValidateAssistant.singleNavItem
+import com.vapi4k.console.ValidateAssistant.navBar
+import com.vapi4k.console.ValidateAssistant.singleNavItem
 import com.vapi4k.plugin.Vapi4kServer
 import com.vapi4k.utils.HtmlUtils.html
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
