@@ -40,11 +40,11 @@ import com.vapi4k.common.Endpoints.VALIDATE_PATH
 import com.vapi4k.common.Endpoints.VERSION_PATH
 import com.vapi4k.common.Version
 import com.vapi4k.common.Version.Companion.versionDesc
+import com.vapi4k.console.AdminLog.adminLogWs
 import com.vapi4k.console.AdminPage.adminPage
 import com.vapi4k.console.BootstrapPage2.bootstrapPage2
 import com.vapi4k.console.ConsoleInfo.envVarsInfo
 import com.vapi4k.console.ConsoleInfo.versionInfo
-import com.vapi4k.console.ConsoleLog.consoleLogWs
 import com.vapi4k.console.InvokeTool.invokeTool
 import com.vapi4k.console.ValidateApplication.validateApplication
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl.Companion.containsPath
@@ -186,7 +186,7 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
 
           get(ADMIN_VERSION_PATH) { call.respondText(versionInfo()) }
 
-          webSocket(ADMIN_LOG_ENDPOINT) { consoleLogWs() }
+          webSocket(ADMIN_LOG_ENDPOINT) { adminLogWs() }
         }
 
         // Process Inbound Call requests

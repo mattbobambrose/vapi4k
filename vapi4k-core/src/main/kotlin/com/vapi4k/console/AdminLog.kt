@@ -32,22 +32,15 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.html.div
 
-object ConsoleLog {
-  internal suspend fun DefaultWebSocketServerSession.consoleLogWs() {
+object AdminLog {
+  internal suspend fun DefaultWebSocketServerSession.adminLogWs() {
     coroutineScope {
       launch {
         // Clear div on client after a server restart
-        val reset =
-          html {
-            div {
-              attribs("hx-swap-oob" to "innerHTML:#$LOG_DIV")
-              +""
-            }
-          }
-        outgoing.send(Frame.Text(reset))
+        outgoing.send(Frame.Text(RESET_HTML))
 
         SharedDataLoader.accessSharedFlow()
-          .onStart { logger.info { "Listening for console updates" } }
+          .onStart { logger.info { "Listening for log updates" } }
           .onEach { msg ->
             val s = if (msg.isBlank()) msg else msg.removeEnds("\n")
             s.split("\n").forEach { line ->
@@ -74,4 +67,12 @@ object ConsoleLog {
       }
     }
   }
+
+  private val RESET_HTML =
+    html {
+      div {
+        attribs("hx-swap-oob" to "innerHTML:#$LOG_DIV")
+        +""
+      }
+    }
 }
