@@ -16,17 +16,39 @@
 
 package tools
 
-import com.vapi4k.dsl.model.CommonModelProperties
-import tools.ToolCalls.AbsoluteValue
-import tools.ToolCalls.AddTwoNumbers
-import tools.ToolCalls.MultiplyTwoNumbers
+import com.vapi4k.dsl.assistant.Param
+import com.vapi4k.dsl.assistant.ToolCall
+import kotlin.math.absoluteValue
 
-object Functions {
-  fun CommonModelProperties.functionExample() {
-    functions {
-      function(AddTwoNumbers())
-      function(MultiplyTwoNumbers())
-      function(AbsoluteValue)
+object ToolCalls {
+  class AddTwoNumbers {
+    fun addTwoNumbers(
+      a: Int,
+      b: Int,
+    ): Int {
+      return a + b
+    }
+  }
+
+  class MultiplyTwoNumbers {
+    @ToolCall("Multiply two numbers")
+    fun add(
+      @Param("First number to multiply")
+      a: Int,
+      @Param("Second number to Multiply")
+      b: Int,
+    ): Int {
+      return a + b
+    }
+  }
+
+  object AbsoluteValue {
+    @ToolCall("Absolute value of a number")
+    fun absolute(
+      @Param("Number")
+      a: Int,
+    ): Int {
+      return a.absoluteValue
     }
   }
 }

@@ -28,7 +28,7 @@ import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.HttpUtils.queryParams
-import com.vapi4k.utils.JsonUtils.emptyJsonElement
+import com.vapi4k.utils.JsonUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.json.JsonElementUtils.containsKey
 import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
@@ -105,7 +105,7 @@ fun withTestApplication(
       if (response!!.status == HttpStatusCode.OK)
         response!!.bodyAsText().toJsonElement()
       else
-        emptyJsonElement()
+        EMPTY_JSON_ELEMENT
   }
   return response!! to je!!
 }

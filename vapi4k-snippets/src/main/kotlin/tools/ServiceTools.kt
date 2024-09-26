@@ -21,12 +21,12 @@ import tools.ToolCalls.AbsoluteValue
 import tools.ToolCalls.AddTwoNumbers
 import tools.ToolCalls.MultiplyTwoNumbers
 
-object Functions {
-  fun CommonModelProperties.functionExample() {
-    functions {
-      function(AddTwoNumbers())
-      function(MultiplyTwoNumbers())
-      function(AbsoluteValue)
+object ServiceTools {
+  fun CommonModelProperties.serviceToolExample() {
+    tools {
+      serviceTool(AddTwoNumbers())
+      serviceTool(MultiplyTwoNumbers())
+      serviceTool(AbsoluteValue)
     }
   }
 }

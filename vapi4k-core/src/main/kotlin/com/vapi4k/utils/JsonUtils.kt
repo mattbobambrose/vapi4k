@@ -63,8 +63,6 @@ object JsonUtils {
 
   val EMPTY_JSON_ELEMENT = "{}".toJsonElement()
 
-  fun emptyJsonElement() = EMPTY_JSON_ELEMENT
-
   internal fun JsonElement.getToolNames(key: String) =
     if (containsKey("$key.tools"))
       jsonElementList(key, "tools").mapNotNull { it.stringValueOrNull("function.name") }
