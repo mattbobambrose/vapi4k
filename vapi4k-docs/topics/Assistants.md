@@ -1,3 +1,5 @@
+<show-structure depth="2"/>
+
 # Assistants and Squads
 
 The `onAssistantRequest{}` function is used to define the behavior of an application.

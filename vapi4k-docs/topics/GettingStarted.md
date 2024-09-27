@@ -1,3 +1,5 @@
+<show-structure depth="1"/>
+
 # Getting Started
 
 ## Create a Vapi.ai Account
