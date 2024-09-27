@@ -188,9 +188,9 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
 ```
 </procedure>
 
-## Run your vapi4k-template app
+## Run the vapi4k-template applications
 
-<procedure title="Run your app">
+<procedure title="Run the inbound call application">
     <step>
         <p>Open <b>src/main/kotlin/com/myapp/Application.kt</b>.</p>
     </step>
@@ -215,6 +215,39 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
     <step>
         <p>Click on the VAPI4K_BASE_URL value in the log to open the vapi4k admin page.</p>
     </step>
+    <step>
+        <p>You should now be able to make a call to your vapi.ai phone number and see the call in the admin log.</p>
+    </step>
+    <step>
+        <p>To see a tool call, ask "What is the weather in "Dallas, Texas?"</p>
+    </step>
 </procedure>
 
-You should now be able to make a call to your vapi.ai phone number and see the call in the admin log.
+<procedure title="Run the outbound call application">
+    <step>
+        <p>Run the vapi4k server as described above.</p>
+    </step>
+    <step>
+        <p>Open <b>src/main/kotlin/com/myapp/CallCustomer.kt</b> and edit the phone number appropriately.</p>
+    </step>
+    <step>
+        <p>Click on the green arrow to the left of <code>fun main()</code> to create the call.</p>
+    </step>
+    <step>
+        <p>You should now receive a phone call to the specified number.</p>
+    </step>
+</procedure>
+
+<procedure title="Run the web application">
+    <step>
+        <p>Run the vapi4k server as described above.</p>
+    </step>
+    <step>
+        <p>Open the <b>$VAPI4K_BASE_URL/talk</b> URL in your browser.</p>
+    </step>
+    <step>
+        <p>Click on the talk button and ask "What is the weather in "Miami, Florida?"</p>
+    </step>
+</procedure>
+
+
