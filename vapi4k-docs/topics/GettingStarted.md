@@ -219,7 +219,7 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
         <p>You should now be able to make a call to your vapi.ai phone number and see the call in the admin log.</p>
     </step>
     <step>
-        <p>To see a tool call, ask "What is the weather in "Dallas, Texas?"</p>
+        <p>To see a tool call, ask the assistant "What is the weather in "Dallas, Texas?"</p>
     </step>
 </procedure>
 
@@ -236,6 +236,9 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
     <step>
         <p>You should now receive a phone call to the specified number.</p>
     </step>
+    <step>
+        <p>Ask the assistant "What is the weather in Los Angeles, California?"</p>
+    </step>
 </procedure>
 
 <procedure title="Run the web application">
@@ -246,7 +249,7 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
         <p>Open the <b>$VAPI4K_BASE_URL/talk</b> URL in your browser.</p>
     </step>
     <step>
-        <p>Click on the talk button and ask "What is the weather in "Miami, Florida?"</p>
+        <p>Click on the talk button and ask the assistant "What is the weather in "Miami, Florida?"</p>
     </step>
 </procedure>
 

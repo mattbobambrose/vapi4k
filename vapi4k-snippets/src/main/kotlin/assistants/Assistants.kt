@@ -17,61 +17,78 @@
 package assistants
 
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.api.reponse.InboundCallAssistantResponse
+import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.vapi4k.Vapi4kConfig
 
 object Assistants {
-  fun InboundCallAssistantResponse.assistantIdExample() {
-    assistantId {
-      id = "41ba80bc-807c-4cf5-a8c3-0a88a5a5882g"
+  fun Vapi4kConfig.assistantIdExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistantId {
+          id = "41ba80bc-807c-4cf5-a8c3-0a88a5a5882g"
 
-      assistantOverrides {
-        // Define the assistant overrides here
-      }
-    }
-  }
-
-  fun InboundCallAssistantResponse.assistantExample() {
-    assistant {
-      openAIModel {
-        modelType = OpenAIModelType.GPT_4O
-        systemMessage = "You are a helpful agent."
-      }
-      firstMessage = "Hello, how can I help you today?"
-    }
-  }
-
-  fun InboundCallAssistantResponse.squadExample() {
-    squad {
-      members {
-        member {
-          assistant {
-            name = "Assistant 1"
-            // Define assistant1 here
-          }
-          destinations {
-            destination {
-              assistantName = "Assistant 2"
-            }
-          }
-        }
-        member {
-          assistant {
-            name = "Assistant 2"
-            // Define assistant2 here
-          }
-          destinations {
-            destination {
-              assistantName = "Assistant 1"
-            }
+          assistantOverrides {
+            // Define the assistant overrides here
           }
         }
       }
     }
   }
 
-  fun InboundCallAssistantResponse.squadIdExample() {
-    squadId {
-      id = "51ba90bc-807c-4cf5-a8c4-1a88a5a5882h"
+  fun Vapi4kConfig.assistantExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          openAIModel {
+            modelType = OpenAIModelType.GPT_4O
+            systemMessage = "You are a helpful agent."
+          }
+          firstMessage = "Hello, how can I help you today?"
+        }
+      }
+    }
+  }
+
+  fun Vapi4kConfig.squadExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        squad {
+          members {
+            member {
+              assistant {
+                name = "Assistant 1"
+                // Define assistant1 here
+              }
+              destinations {
+                destination {
+                  assistantName = "Assistant 2"
+                }
+              }
+            }
+            member {
+              assistant {
+                name = "Assistant 2"
+                // Define assistant2 here
+              }
+              destinations {
+                destination {
+                  assistantName = "Assistant 1"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  fun Vapi4kConfig.squadIdExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        squadId {
+          id = "51ba90bc-807c-4cf5-a8c4-1a88a5a5882h"
+        }
+      }
     }
   }
 }

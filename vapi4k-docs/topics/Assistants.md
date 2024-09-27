@@ -1,9 +1,13 @@
-# Assistants
+# Assistants and Squads
 
 The `onAssistantRequest{}` function is used to define the behavior of an application.
-it is present in all the application descriptions.
+Calling the function is required in all application descriptions. A call to `onAssistantRequest{}`
+should define a single `assistant{}`, `squad{}`, `assistantId{}`, or a `squadId{}`.
+Calls to `assistant{}` and `assistantId{}` can also include a call to `assistantOverrides{}`.
 
 ## Assistants
+
+An `assistant{}` call creates a temporary assistant that lasts for the duration of the call.
 
 <chapter title="Assistant Example" id="assistant" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="assistantExample"/>
@@ -11,13 +15,16 @@ it is present in all the application descriptions.
 
 ## Squads
 
+A `squad{}` call creates a temporary squad that lasts for the duration of the call.
+
 <chapter title="Squad Example" id="squad" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="squadExample"/>
 </chapter>
 
 ## AssistantIds
 
-An `assistantId{}` declares a static assistant defined in the [vapi dashboard](https://dashboard.vapi.ai/assistants).
+An `assistantId{}` call references a static assistant defined in
+the [vapi dashboard](https://dashboard.vapi.ai/assistants).
 
 The `assistantOverrides{}` function is used to override the default assistant settings and its argument has a
 [`AssistantOverrides`](%base_url%.assistant/-assistant-overrides/index.html) context.
@@ -28,13 +35,13 @@ The `assistantOverrides{}` function is used to override the default assistant se
 
 ## SquadIds
 
-An `squadId{}` declares a static squad defined in the [vapi dashboard](https://dashboard.vapi.ai/assistants).
+A `squadId{}` call references a static squad defined in the [vapi dashboard](https://dashboard.vapi.ai/assistants).
 
 <chapter title="Squad Id Example" id="squadId" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="squadIdExample"/>
 </chapter>
 
-### Models
+## Models
 
 * [Anthropic](%base_url%.model/-anthropic-model/index.html)
 * [Anyscale](%base_url%.model/-anyscale-model/index.html)
@@ -47,7 +54,7 @@ An `squadId{}` declares a static squad defined in the [vapi dashboard](https://d
 * [TogetherAI](%base_url%.model/-together-a-i-model/index.html)
 * [Vapi](%base_url%.model/-vapi-model/index.html)
 
-#### Model Examples
+### Model Examples
 
 <tabs>
   <tab title="Anthropic">
@@ -82,7 +89,7 @@ An `squadId{}` declares a static squad defined in the [vapi dashboard](https://d
   </tab>
 </tabs>
 
-### Voices
+## Voices
 
 * [Azure](%base_url%.voice/-azure-voice/index.html)
 * [Cartesia](%base_url%.voice/-cartesia-voice/index.html)
@@ -94,7 +101,7 @@ An `squadId{}` declares a static squad defined in the [vapi dashboard](https://d
 * [PlayHT](%base_url%.voice/-play-h-t-voice/index.html)
 * [RimeAI](%base_url%.voice/-rime-a-i-voice/index.html)
 
-#### Voice Examples
+### Voice Examples
 
 <tabs>
   <tab title="Azure">
@@ -126,13 +133,13 @@ An `squadId{}` declares a static squad defined in the [vapi dashboard](https://d
   </tab>
 </tabs>
 
-### Transcribers
+## Transcribers
 
 * [Deepgram](%base_url%.transcriber/-deepgram-transcriber/index.html)
 * [Gladia](%base_url%.transcriber/-gladia-transcriber/index.html)
 * [Talkscriber](%base_url%.transcriber/-talkscriber-transcriber/index.html)
 
-#### Transciber Examples
+### Transcriber Examples
 
 <tabs>
   <tab title="Deepgram">
