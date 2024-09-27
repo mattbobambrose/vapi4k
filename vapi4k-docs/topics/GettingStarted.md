@@ -68,7 +68,7 @@ git clone <repository_url>
 
 </procedure>
 
-## Configuring IntelliJ
+## Configure IntelliJ
 
 ### Install the EnvFile plugin
 
@@ -115,9 +115,11 @@ exchanged between your app and the vapi.ai platform.
 
 Copy the ngrok `Forwarding` url into your copy buffer. You will need this url when you run your vapi4k app.
 
-#### Create a `secrets.env` file
+#### Create a file with env var values
 
-<procedure title="Create secrets.env file">
+The vapi4k server requires some environment variables to be defined to connect to the vapi.ai platform.
+
+<procedure title="Create a secrets.env file">
     <step>
         <p>Start IntelliJ</p>
     </step>
@@ -134,7 +136,7 @@ Copy the ngrok `Forwarding` url into your copy buffer. You will need this url wh
         <p>Create a file named <b>secrets.env</b>.</p>
     </step>
 
-The `secrets.env` file should contain values for these env vars:
+The `secrets.env` file should contain values for these environment variables:
 
 * VAPI_PRIVATE_KEY
 * VAPI_PUBLIC_KEY
@@ -159,5 +161,70 @@ VAPI4K_BASE_URL=https://fdee-73-71-109-432.ngrok-free.app
 >
 {style="warning"}
 
+</procedure>
+
+### Configure vapi.ai
+
+<procedure title="Create a vapi.ai account">
+    <step>
+        <p>Create a <a href = "https://dashboard.vapi.ai">vapi account</a>.</p>
+    </step>
+    <step>
+        <p>Go to the <a href = "https://dashboard.vapi.ai">vapi dashboard</a>.</p>
+    </step>
+    <step>
+        <p>Click on <shortcut>Platform</shortcut> <shortcut>Phone Numbers</shortcut> and then
+            <shortcut>Buy Number</shortcut> to get a phone number.</p>
+    </step>
+    <step>
+        <p>Click on the green organization button in the lower left.</p>
+    </step>
+    <step>
+        <p>Click on the <shortcut>Settings</shortcut> option and assign the <shortcut>Server URL</shortcut>.</p>
+    </step>
+
+The `Server URL` is a combination of the `VAPI4K_BASE_URL` value and an `/inboundCall/serverPath` value.
+
+The `/inboundCall` indicates that the url corresponds to a vapi4k `inboundCallApplication{}` declaration.
+
+The `serverPath` value is defined in the `inboundCallApplication{}` declaration and
+defaults to `/vapi4k`.
+
+The `Sever URL` should look something like this:
+
+```bash
+https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/vapi4k
+```
 
 </procedure>
+
+### Run your vapi4k-template app
+
+<procedure title="Run your app">
+    <step>
+        <p>Open <b>src/main/kotlin/com/myapp/Application.kt</b>.</p>
+    </step>
+    <step>
+        <p>Click on the green arrow to the left of <code>fun main()</code> to run the server.</p>
+    </step>
+    <step>
+        <p>Now run the server with the secrets.env by clicking on the 3 vertical dots in the Run
+          panel and click on <shortcut>Modify Run Configuration...</shortcut>.</p>
+    </step>
+    <step>
+        <p>Check the <shortcut>Enable Env File</shortcut> option and assign the <shortcut>Server URL</shortcut>.</p>
+    </step>
+    <step>
+        <p>Scroll down and click on the <shortcut>➕</shortcut> button, then click on <shortcut>.env file</shortcut>
+          and then select the <shortcut>secrets.env</shortcut> created above.</p>
+    </step>
+    <step>
+        <p>Restart the server and you should see the log saying the <shortcut>Vapi4kServer is started at</shortcut>
+          with the ngrok VAPI4K_BASE_URL value.</p>
+    </step>
+    <step>
+        <p>Click on the VAPI4K_BASE_URL value to open the vapi4k admin page.</p>
+    </step>
+</procedure>
+
+You should now be able to make a call to your vapi.ai phone number and see the call in the admin log.
