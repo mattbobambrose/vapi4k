@@ -16,5 +16,5 @@ If you have any questions, comments, or suggestions, please feel free to reach o
 [pambrose@gmail.com](mailto:pambrose@gmail.com).
 
 If you go through the [Getting Started](https://mattbobambrose.github.io/vapi4k/gettingstarted.html) guide, you should
-be up and running with an example application less than 15 minutes.
+be up and running with an example application in less than 15 minutes.
 
