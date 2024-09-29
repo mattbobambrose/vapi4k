@@ -16,33 +16,52 @@
 
 package assistants
 
-import com.vapi4k.api.assistant.Assistant
+import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
 import com.vapi4k.api.transcriber.enums.DeepgramModelType
 import com.vapi4k.api.transcriber.enums.GladiaLanguageType
 import com.vapi4k.api.transcriber.enums.GladiaModelType
 import com.vapi4k.api.transcriber.enums.TalkscriberLanguageType
 import com.vapi4k.api.transcriber.enums.TalkscriberModelType
+import com.vapi4k.api.vapi4k.Vapi4kConfig
 
 object Transcribers {
-  fun Assistant.deepgramExample() {
-    deepgramTranscriber {
-      transcriberModel = DeepgramModelType.NOVA_MEDICAL
-      transcriberLanguage = DeepgramLanguageType.INDONESIAN
+  fun Vapi4kConfig.deepgramExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          deepgramTranscriber {
+            transcriberModel = DeepgramModelType.NOVA_MEDICAL
+            transcriberLanguage = DeepgramLanguageType.INDONESIAN
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.gladiaExample() {
-    gladiaTranscriber {
-      transcriberModel = GladiaModelType.FAST
-      transcriberLanguage = GladiaLanguageType.ICELANDIC
+  fun Vapi4kConfig.gladiaExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          gladiaTranscriber {
+            transcriberModel = GladiaModelType.FAST
+            transcriberLanguage = GladiaLanguageType.ICELANDIC
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.talkscriberExample() {
-    talkscriberTranscriber {
-      transcriberModel = TalkscriberModelType.WHISPER
-      transcriberLanguage = TalkscriberLanguageType.VIETNAMESE
+  fun Vapi4kConfig.talkscriberExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          talkscriberTranscriber {
+            transcriberModel = TalkscriberModelType.WHISPER
+            transcriberLanguage = TalkscriberLanguageType.VIETNAMESE
+          }
+        }
+      }
     }
   }
 }

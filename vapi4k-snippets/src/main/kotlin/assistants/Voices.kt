@@ -16,7 +16,8 @@
 
 package assistants
 
-import com.vapi4k.api.assistant.Assistant
+import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.voice.enums.AzureVoiceIdType
 import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
@@ -29,58 +30,112 @@ import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.api.voice.enums.RimeAIVoiceModelType
 
 object Voices {
-  fun Assistant.azureExample() {
-    azureVoice {
-      voiceIdType = AzureVoiceIdType.BRIAN
+  fun Vapi4kConfig.azureExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          azureVoice {
+            voiceIdType = AzureVoiceIdType.BRIAN
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.cartesiaExample() {
-    cartesiaVoice {
-      modelType = CartesiaVoiceModelType.SONIC_ENGLISH
-      languageType = CartesiaVoiceLanguageType.ENGLISH
+  fun Vapi4kConfig.cartesiaExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          cartesiaVoice {
+            modelType = CartesiaVoiceModelType.SONIC_ENGLISH
+            languageType = CartesiaVoiceLanguageType.ENGLISH
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.deepgramExample() {
-    deepgramVoice {
-      voiceIdType = DeepGramVoiceIdType.ASTERIA
+  fun Vapi4kConfig.deepgramExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          deepgramVoice {
+            voiceIdType = DeepGramVoiceIdType.ASTERIA
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.elevenLabsExample() {
-    elevenLabsVoice {
-      modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2_5
+  fun Vapi4kConfig.elevenLabsExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          elevenLabsVoice {
+            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2_5
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.lmntExample() {
-    lmntVoice {
-      voiceIdType = LMNTVoiceIdType.DANIEL
+  fun Vapi4kConfig.lmntExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          lmntVoice {
+            voiceIdType = LMNTVoiceIdType.DANIEL
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.neetsExample() {
-    neetsVoice {
-      voiceIdType = NeetsVoiceIdType.VITS
+  fun Vapi4kConfig.neetsExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          neetsVoice {
+            voiceIdType = NeetsVoiceIdType.VITS
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.openAIExample() {
-    openAIVoice {
-      voiceIdType = OpenAIVoiceIdType.ONYX
+  fun Vapi4kConfig.openAIExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          openAIVoice {
+            voiceIdType = OpenAIVoiceIdType.ONYX
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.playHTExample() {
-    playHTVoice {
-      voiceIdType = PlayHTVoiceIdType.DONNA
+  fun Vapi4kConfig.playHTExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          playHTVoice {
+            voiceIdType = PlayHTVoiceIdType.DONNA
+          }
+        }
+      }
     }
   }
 
-  fun Assistant.rimeAIExample() {
-    rimeAIVoice {
-      modelType = RimeAIVoiceModelType.MIST
+  fun Vapi4kConfig.rimeAIExample() {
+    inboundCallApplication {
+      onAssistantRequest { requestContext: RequestContext ->
+        assistant {
+          rimeAIVoice {
+            modelType = RimeAIVoiceModelType.MIST
+          }
+        }
+      }
     }
   }
 }
