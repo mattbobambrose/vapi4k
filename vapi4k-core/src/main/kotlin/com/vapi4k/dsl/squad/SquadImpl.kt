@@ -26,7 +26,7 @@ import com.vapi4k.utils.AssistantIdSource
 
 interface SquadProperties {
   /**
-  This is the name of the squad.
+  The name of the squad.
    */
   var name: String
 }

@@ -14,12 +14,21 @@
  *
  */
 
-package com.vapi4k.dsl.vapi4k
+package tools
 
-import com.vapi4k.api.tools.Server
-import com.vapi4k.dtos.tools.ServerDto
+import com.vapi4k.dsl.model.CommonModelProperties
 
-class ServerImpl internal constructor(
-  internal val dto: ServerDto,
-) : ServerProperties by dto,
-  Server
+object ExternalTools {
+  fun CommonModelProperties.externalToolExample() {
+    tools {
+      externalTool {
+        server {
+          url = "http://localhost:8080"
+          secret = "456"
+          timeoutSeconds = 5
+        }
+      }
+    }
+
+  }
+}

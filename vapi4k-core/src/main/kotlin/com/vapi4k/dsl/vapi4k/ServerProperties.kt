@@ -16,10 +16,23 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.api.tools.Server
-import com.vapi4k.dtos.tools.ServerDto
+interface ServerProperties {
+  /**
+  API endpoint to send requests to.
+   */
+  var url: String
 
-class ServerImpl internal constructor(
-  internal val dto: ServerDto,
-) : ServerProperties by dto,
-  Server
+  /**
+  <p>This is the secret you can set that Vapi will send with every request to your server. Will be sent as a header called x-vapi-secret.
+  <br>Same precedence logic as server.
+  </p>
+   */
+  var secret: String
+
+  /**
+  <p>This is the timeout in seconds for the request to your server. Defaults to 20 seconds.
+  <br>@default 20
+  </p>
+   */
+  var timeoutSeconds: Int
+}

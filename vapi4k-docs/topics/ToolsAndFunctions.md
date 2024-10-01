@@ -18,7 +18,8 @@ The `tools{}` lambda can contain `serviceTool()`, `manualTool()`, `externalTool(
 
 ### ManualTool
 
-A `manualTool()` is defined within the vapi4k DSL. A `manualTool()` is not associated with a specific Kotlin object.
+A `manualTool()` is defined within the vapi4k DSL. The parameters are manually extracted from the `args` JsonElement,
+which is the JSON object included in the LLM request. A `manualTool()` is not associated with a specific Kotlin object.
 
 <chapter title="" id="manualTool" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/tools/ManualTools.kt" include-symbol="manualToolExample"/>
