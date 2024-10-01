@@ -14,9 +14,9 @@
  *
  */
 
-package com.vapi4k.utils.enums
+package com.vapi4k.utils.api.vapi4k.enums
 
-import com.vapi4k.utils.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.json.JsonElement
 
@@ -40,9 +40,6 @@ enum class ServerRequestType(
 
   companion object {
     internal val logger = KotlinLogging.logger {}
-    internal val ServerRequestType.isToolCall get() = this == TOOL_CALL
-
-    val JsonElement.serverRequestType get() = ServerRequestType.fromString(stringValue("message.type"))
 
     fun JsonElement.isAssistantRequest() = serverRequestType == ASSISTANT_REQUEST
 
@@ -66,12 +63,15 @@ enum class ServerRequestType(
 
     fun JsonElement.isUserInterrupted() = serverRequestType == USER_INTERRUPTED
 
-    private fun fromString(desc: String) =
-      try {
-        ServerRequestType.entries.first { it.desc == desc }
-      } catch (e: Exception) {
-        logger.error { "Invalid ServerMessageType: $desc" }
-        UNKNOWN_REQUEST_TYPE
+    val JsonElement.serverRequestType: ServerRequestType
+      get() {
+        val desc = stringValue("message.type")
+        return try {
+          entries.first { it.desc == desc }
+        } catch (e: Exception) {
+          logger.error { "Invalid ServerMessageType: ${desc}" }
+          UNKNOWN_REQUEST_TYPE
+        }
       }
   }
 }

@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dsl.assistant
+package com.vapi4k.api.tools
 
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER

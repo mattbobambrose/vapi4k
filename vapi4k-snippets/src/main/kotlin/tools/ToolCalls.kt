@@ -16,8 +16,8 @@
 
 package tools
 
-import com.vapi4k.dsl.assistant.Param
-import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.api.tools.Param
+import com.vapi4k.api.tools.ToolCall
 import kotlin.math.absoluteValue
 
 object ToolCalls {

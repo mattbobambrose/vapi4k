@@ -18,7 +18,7 @@ package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.buttons.ButtonConfig
 import com.vapi4k.api.reponse.WebAssistantResponse
-import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.vapi4k.WebApplication
 import com.vapi4k.dsl.buttons.ButtonConfigImpl
 import com.vapi4k.dsl.response.WebAssistantResponseImpl

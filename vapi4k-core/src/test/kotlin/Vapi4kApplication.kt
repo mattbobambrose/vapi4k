@@ -33,12 +33,12 @@ import com.vapi4k.api.voice.enums.ElevenLabsVoiceIdType
 import com.vapi4k.api.voice.enums.ElevenLabsVoiceModelType
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.utils.enums.ServerRequestType
-import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
-import com.vapi4k.utils.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.json.JsonElementUtils.toJsonString
+import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.TOOL_CALL
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.install
@@ -93,8 +93,13 @@ fun Application.module() {
 
       onAssistantRequest { args ->
 
-      assistant {
+        assistant {
           firstMessage = "Hi, I am Beth how can I assist you today?"
+
+          elevenLabsVoice {
+            voiceIdType = ElevenLabsVoiceIdType.PAULA
+            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
+          }
 
           openAIModel {
             modelType = OpenAIModelType.GPT_4_TURBO
@@ -143,11 +148,6 @@ fun Application.module() {
                 }
               }
             }
-          }
-
-          elevenLabsVoice {
-            voiceIdType = ElevenLabsVoiceIdType.PAULA
-            modelType = ElevenLabsVoiceModelType.ELEVEN_TURBO_V2
           }
         }
       }

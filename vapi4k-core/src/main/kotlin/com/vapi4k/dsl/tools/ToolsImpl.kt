@@ -25,7 +25,6 @@ import com.vapi4k.api.tools.ManualTool
 import com.vapi4k.api.tools.Tools
 import com.vapi4k.api.tools.TransferTool
 import com.vapi4k.api.tools.VoiceMailTool
-import com.vapi4k.api.tools.enums.ToolType
 import com.vapi4k.common.FunctionName.Companion.toFunctionName
 import com.vapi4k.dsl.functions.FunctionUtils.populateFunctionDto
 import com.vapi4k.dsl.functions.FunctionUtils.verifyIsToolCall
@@ -33,6 +32,7 @@ import com.vapi4k.dsl.functions.FunctionUtils.verifyIsValidReturnType
 import com.vapi4k.dsl.functions.FunctionUtils.verifyObjectHasOnlyOneToolCall
 import com.vapi4k.dsl.functions.ToolCallInfo.Companion.appendAssistantId
 import com.vapi4k.dsl.model.AbstractModelImpl
+import com.vapi4k.dsl.tools.enums.ToolType
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.toolCallFunction
@@ -69,6 +69,11 @@ class ToolsImpl internal constructor(
     val toolDto = ToolDto(ToolType.FUNCTION).also { model.toolDtos += it }
     ExternalToolImpl("externalTool", toolDto).apply(block).checkIfServerCalled()
     if (toolDto.functionDto.name.isBlank()) error("externalTool{} parameter name is required")
+  }
+
+  override fun transferTool(block: TransferTool.() -> Unit) {
+    val toolDto = ToolDto(ToolType.TRANSFER_CALL).also { model.toolDtos += it }
+    TransferToolImpl("transferTool", toolDto).apply(block)
   }
 
   override fun dtmfTool(block: DtmfTool.() -> Unit) {
@@ -124,11 +129,6 @@ class ToolsImpl internal constructor(
   override fun makeTool(block: MakeTool.() -> Unit) {
     val toolDto = ToolDto(ToolType.MAKE).also { model.toolDtos += it }
     ToolWithMetaDataImpl("makeTool", toolDto).apply(block).checkIfServerCalled()
-  }
-
-  override fun transferTool(block: TransferTool.() -> Unit) {
-    val toolDto = ToolDto(ToolType.TRANSFER_CALL).also { model.toolDtos += it }
-    TransferToolImpl("transferTool", toolDto).apply(block)
   }
 
   private fun processServiceTool(

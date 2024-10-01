@@ -17,7 +17,6 @@
 package com.vapi4k.api.vapi4k
 
 import com.vapi4k.api.reponse.OutboundCallAssistantResponse
-import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.dsl.vapi4k.CommonCallbacks
 import com.vapi4k.dsl.vapi4k.Vapi4KDslMarker
 

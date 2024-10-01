@@ -45,6 +45,9 @@ local development with `ngrok`.
     <step>
         <p>Enable the <shortcut>EnvFile</shortcut> option.</p>
     </step>
+    <step>
+        <p>Restart IntelliJ.</p>
+    </step>
 </procedure>
 
 ## Create a vapi4k-template repository

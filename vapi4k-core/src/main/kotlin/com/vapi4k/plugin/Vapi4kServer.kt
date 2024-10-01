@@ -62,10 +62,10 @@ import com.vapi4k.server.defaultKtorConfig
 import com.vapi4k.server.installContentNegotiation
 import com.vapi4k.utils.MiscUtils.getBanner
 import com.vapi4k.utils.MiscUtils.removeEnds
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.common.JsonContentUtils.defaultJsonConfig
 import com.vapi4k.utils.envvar.EnvVar.Companion.jsonEnvVarValues
 import com.vapi4k.utils.envvar.EnvVar.Companion.logEnvVarValues
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode

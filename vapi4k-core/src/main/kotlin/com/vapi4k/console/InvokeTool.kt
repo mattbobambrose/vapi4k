@@ -36,9 +36,9 @@ import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
 import com.vapi4k.utils.MiscUtils.appendQueryParams
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.common.Utils.isNotNull
 import com.vapi4k.utils.common.Utils.toErrorString
-import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText

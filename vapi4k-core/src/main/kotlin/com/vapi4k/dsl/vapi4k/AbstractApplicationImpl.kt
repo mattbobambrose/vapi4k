@@ -16,9 +16,9 @@
 
 package com.vapi4k.dsl.vapi4k
 
-import com.vapi4k.api.tools.RequestContext
-import com.vapi4k.api.tools.ResponseContext
 import com.vapi4k.api.tools.TransferDestinationResponse
+import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.ResponseContext
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.CacheKey.Companion.cacheKeyValue
@@ -37,9 +37,9 @@ import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.MiscUtils.removeEnds
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.utils.common.Utils.isNull
-import com.vapi4k.utils.enums.ServerRequestType
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import kotlin.reflect.KFunction
 import kotlin.time.Duration
 

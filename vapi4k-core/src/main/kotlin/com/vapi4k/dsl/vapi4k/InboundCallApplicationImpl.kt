@@ -17,8 +17,8 @@
 package com.vapi4k.dsl.vapi4k
 
 import com.vapi4k.api.reponse.InboundCallAssistantResponse
-import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.vapi4k.InboundCallApplication
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.dsl.response.InboundCallAssistantResponseImpl
 import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.server.RequestContextImpl

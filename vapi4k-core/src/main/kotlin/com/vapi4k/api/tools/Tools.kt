@@ -41,6 +41,11 @@ interface Tools {
    */
   fun externalTool(block: ExternalTool.() -> Unit)
 
+  /**
+  Transfers the call to another destination.
+   */
+  fun transferTool(block: TransferTool.() -> Unit = {})
+
   fun dtmfTool(block: DtmfTool.() -> Unit)
 
   fun endCallTool(block: EndCallTool.() -> Unit)
@@ -50,9 +55,4 @@ interface Tools {
   fun ghlTool(block: GhlTool.() -> Unit)
 
   fun makeTool(block: MakeTool.() -> Unit)
-
-  /**
-  Transfers the call to another destination.
-   */
-  fun transferTool(block: TransferTool.() -> Unit = {})
 }

@@ -14,9 +14,9 @@
  *
  */
 
-package com.vapi4k.api.tools
+package com.vapi4k.api.vapi4k
 
-import com.vapi4k.utils.enums.ServerRequestType
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 

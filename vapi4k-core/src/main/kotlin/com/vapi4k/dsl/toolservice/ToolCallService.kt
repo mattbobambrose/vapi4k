@@ -16,9 +16,9 @@
 
 package com.vapi4k.dsl.toolservice
 
-import com.vapi4k.api.tools.RequestContext
 import com.vapi4k.api.toolservice.RequestCompleteMessages
 import com.vapi4k.api.toolservice.RequestFailedMessages
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.dsl.assistant.ToolMessageCompleteImpl
 import com.vapi4k.dsl.assistant.ToolMessageFailedImpl
 

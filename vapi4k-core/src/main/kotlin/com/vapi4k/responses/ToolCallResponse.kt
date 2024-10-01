@@ -27,8 +27,8 @@ import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.JsonUtils.toolCallList
+import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
 import com.vapi4k.utils.common.Utils.errorMsg
-import com.vapi4k.utils.json.JsonElementUtils.stringValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -53,12 +53,15 @@ data class ToolCallResponseDto(
                       .also { toolCallResult ->
                         val funcName = toolCall.toolCallName
                         val invokeArgs = toolCall.toolCallArguments
+
                         toolCallResult.toolCallId = toolCall.id
                         toolCallResult.name = funcName.value
+
                         val errorAction = { errorMsg: String ->
                           toolCallResult.error = errorMsg
                           errorMessage = errorMsg
                         }
+
                         with(requestContext) {
                           runCatching {
                             when {

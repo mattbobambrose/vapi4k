@@ -17,10 +17,10 @@
 package com.vapi4k
 
 import com.vapi4k.api.conditions.eq
-import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.tools.Param
+import com.vapi4k.api.tools.ToolCall
 import com.vapi4k.api.tools.enums.ToolMessageRoleType
-import com.vapi4k.dsl.assistant.Param
-import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.plugin.Vapi4kServer.logger
 

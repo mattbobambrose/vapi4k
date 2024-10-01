@@ -24,8 +24,8 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestResponseCallback.Companion.requestCallback
 import com.vapi4k.server.RequestResponseCallback.Companion.responseCallback
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
 import com.vapi4k.utils.common.Utils.errorMsg
-import com.vapi4k.utils.enums.ServerRequestType.Companion.serverRequestType
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

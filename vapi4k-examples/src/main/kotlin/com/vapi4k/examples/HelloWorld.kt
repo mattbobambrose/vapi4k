@@ -17,7 +17,7 @@
 package com.vapi4k.examples
 
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.dsl.assistant.ToolCall
+import com.vapi4k.api.tools.ToolCall
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.plugin.Vapi4kServer.logger
 import io.ktor.server.application.Application

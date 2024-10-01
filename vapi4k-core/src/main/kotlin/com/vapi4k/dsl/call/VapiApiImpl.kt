@@ -27,9 +27,9 @@ import com.vapi4k.common.CoreEnvVars.vapiPrivateKey
 import com.vapi4k.dsl.call.ProcessOutboundCall.processOutboundCall
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.jsonHttpClient
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.common.Utils.errorMsg
 import com.vapi4k.utils.envvar.EnvVar.Companion.getSystemValue
-import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get

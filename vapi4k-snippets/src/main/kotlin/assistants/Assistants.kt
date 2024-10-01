@@ -17,7 +17,7 @@
 package assistants
 
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 
 object Assistants {

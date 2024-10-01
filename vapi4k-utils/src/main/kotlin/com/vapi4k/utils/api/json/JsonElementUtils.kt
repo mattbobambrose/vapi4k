@@ -14,10 +14,10 @@
  *
  */
 
-package com.vapi4k.utils.json
+package com.vapi4k.utils.api.json
 
+import com.vapi4k.utils.api.json.JsonElementUtils.element
 import com.vapi4k.utils.common.JsonContentUtils.defaultJson
-import com.vapi4k.utils.json.JsonElementUtils.element
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray

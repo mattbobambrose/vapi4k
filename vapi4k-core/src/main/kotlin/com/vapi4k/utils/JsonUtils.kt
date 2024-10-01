@@ -16,13 +16,13 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.utils.enums.ServerRequestType.Companion.isToolCall
-import com.vapi4k.utils.json.JsonElementUtils.containsKey
-import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
-import com.vapi4k.utils.json.JsonElementUtils.stringValueOrNull
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElementList
-import com.vapi4k.utils.json.get
+import com.vapi4k.utils.api.json.JsonElementUtils.containsKey
+import com.vapi4k.utils.api.json.JsonElementUtils.jsonElementList
+import com.vapi4k.utils.api.json.JsonElementUtils.stringValueOrNull
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElementList
+import com.vapi4k.utils.api.json.get
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.Companion.isToolCall
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement

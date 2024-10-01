@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.api.tools.enums
+package com.vapi4k.dsl.tools.enums
 
 import com.vapi4k.common.Constants.UNSPECIFIED_DEFAULT
 import kotlinx.serialization.KSerializer

@@ -34,12 +34,12 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
+import com.vapi4k.utils.api.json.JsonElementUtils.intValue
+import com.vapi4k.utils.api.json.JsonElementUtils.jsonElementList
+import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.firstMessageOfType
-import com.vapi4k.utils.json.JsonElementUtils.intValue
-import com.vapi4k.utils.json.JsonElementUtils.jsonElementList
-import com.vapi4k.utils.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.withTestApplication
 import kotlinx.serialization.json.JsonElement
 import org.junit.Assert.assertEquals

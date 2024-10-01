@@ -48,10 +48,10 @@ import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.JsonUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.MiscUtils.appendQueryParams
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.common.Utils.isNotNull
 import com.vapi4k.utils.common.Utils.resourceFile
 import com.vapi4k.utils.common.Utils.toErrorString
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText

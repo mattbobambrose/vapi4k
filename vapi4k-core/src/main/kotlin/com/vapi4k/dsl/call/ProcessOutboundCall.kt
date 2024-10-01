@@ -28,11 +28,11 @@ import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.HttpUtils.stripQueryParams
 import com.vapi4k.utils.MiscUtils.removeEnds
+import com.vapi4k.utils.api.json.JsonElementUtils.keys
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.utils.api.json.get
 import com.vapi4k.utils.common.Utils.ensureStartsWith
 import com.vapi4k.utils.common.Utils.errorMsg
-import com.vapi4k.utils.json.JsonElementUtils.keys
-import com.vapi4k.utils.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.json.get
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.post

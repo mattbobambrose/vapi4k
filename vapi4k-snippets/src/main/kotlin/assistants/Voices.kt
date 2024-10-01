@@ -16,7 +16,7 @@
 
 package assistants
 
-import com.vapi4k.api.tools.RequestContext
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.voice.enums.AzureVoiceIdType
 import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType

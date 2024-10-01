@@ -20,9 +20,9 @@ import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.voice.enums.DeepGramVoiceIdType
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.utils.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.utils.enums.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.utils.enums.ServerRequestType.TOOL_CALL
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.TOOL_CALL
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 

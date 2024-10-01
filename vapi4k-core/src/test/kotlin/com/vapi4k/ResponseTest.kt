@@ -20,8 +20,8 @@ import com.vapi4k.AssistantTest.Companion.newRequestContext
 import com.vapi4k.api.model.enums.AnthropicModelType
 import com.vapi4k.api.transcriber.enums.DeepgramModelType
 import com.vapi4k.dtos.api.destination.SipDestinationDto
+import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
 import com.vapi4k.utils.assistantResponse
-import com.vapi4k.utils.json.JsonElementUtils.toJsonString
 import kotlin.test.Test
 
 class ResponseTest {
