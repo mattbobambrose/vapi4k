@@ -19,7 +19,7 @@ package simpleDemo
 import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.api.reponse.InboundCallAssistantResponse
 import com.vapi4k.api.tools.ToolCall
-import com.vapi4k.dsl.toolservice.ToolCallService
+import com.vapi4k.api.toolservice.ToolCallService
 
 object SimpleSquad {
   fun InboundCallAssistantResponse.doubleToolAssistant2() =

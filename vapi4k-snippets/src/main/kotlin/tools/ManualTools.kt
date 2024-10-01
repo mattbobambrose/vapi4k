@@ -62,6 +62,5 @@ object ManualTools {
         }
       }
     }
-
   }
 }

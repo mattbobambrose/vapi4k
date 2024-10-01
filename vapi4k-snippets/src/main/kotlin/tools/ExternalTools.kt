@@ -22,13 +22,38 @@ object ExternalTools {
   fun CommonModelProperties.externalToolExample() {
     tools {
       externalTool {
+        name = "manualWeatherLookup"
+        description = "Look up the weather for a city and state"
+
+        parameters {
+          parameter {
+            name = "city"
+            description = "The city to look up"
+          }
+          parameter {
+            name = "state"
+            description = "The state to look up"
+          }
+        }
+
         server {
-          url = "http://localhost:8080"
+          url = "https://your_endpoint.com/weather"
           secret = "456"
           timeoutSeconds = 5
         }
+
+        requestStartMessage {
+          content = "This is the manual weather lookup start message"
+        }
+
+        requestCompleteMessage {
+          content = "This is the manual weather lookup complete message"
+        }
+
+        requestFailedMessage {
+          content = "This is the manual weather lookup failed message"
+        }
       }
     }
-
   }
 }

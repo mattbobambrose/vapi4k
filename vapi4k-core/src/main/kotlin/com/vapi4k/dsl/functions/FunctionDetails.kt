@@ -16,8 +16,8 @@
 
 package com.vapi4k.dsl.functions
 
+import com.vapi4k.api.toolservice.ToolCallService
 import com.vapi4k.api.vapi4k.RequestContext
-import com.vapi4k.dsl.toolservice.ToolCallService
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
