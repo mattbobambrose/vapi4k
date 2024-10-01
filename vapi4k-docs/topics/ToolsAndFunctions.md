@@ -88,10 +88,8 @@ A `transferTool{}` describes a tool that transfers a user to an assistant or a p
 
 ## Functions
 
-vapi4k functions declarations map LLM function calls to Kotlin function invocations.
-
 The `functions{}` lambda contains `function()` declarations.
-The `function()` argument can be either an object instance or a reference to a Kotlin singleton object.
+The `function()` argument is the same as `serviceTool()` calls.
 
 <chapter title="Function Declaration" id="function" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/tools/Functions.kt" include-symbol="functionExample"/>
