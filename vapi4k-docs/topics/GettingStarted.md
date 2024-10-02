@@ -69,9 +69,11 @@ local development with `ngrok`.
 
 ## Clone your vapi4k-template repository
 
-You can now clone your new vapi4k-template repository from the command line or within IntelliJ.
+You can now clone your new vapi4k-template repository to your local machine from within IntelliJ or using
+`git clone <repository-url>`
+on the command line.
 
-<procedure title="Clone your new vapi4k-template repository within IntelliJ">
+<procedure title="Clone the vapi4k-template repository within IntelliJ">
     <step>
         <p>Go to your newly created vapi4k-template repository page on Github.</p>
     </step>
@@ -79,7 +81,7 @@ You can now clone your new vapi4k-template repository from the command line or w
         <p>Click on the <shortcut>Code</shortcut> option.</p>
     </step>
     <step>
-        <p>Copy either the <shortcut>HTTPS</shortcut> or <shortcut>SSH</shortcut> repository url. </p>
+        <p>Copy either the <shortcut>HTTPS</shortcut> or <shortcut>SSH</shortcut> repository URL. </p>
     </step>
     <step>
         <p>Open IntelliJ</p>
@@ -88,7 +90,7 @@ You can now clone your new vapi4k-template repository from the command line or w
         <p>Click on the <shortcut>File</shortcut> <shortcut>New</shortcut> <shortcut>Project from Version Control...</shortcut> options</p>
     </step>
     <step>
-        <p>Paste the repository url and choose the desired <shortcut>Directory</shortcut>.</p>
+        <p>Paste the repository URL and choose the desired <shortcut>Directory</shortcut>.</p>
     </step>
 </procedure>
 
@@ -108,12 +110,12 @@ To run ngrok, open a terminal window and type:
 ngrok http 8080
 ```
 
-Copy the ngrok `Web Interface` url and paste it into your browser. You will see the ngrok dashboard and all messages
+Copy the ngrok `Web Interface` URL and paste it into your browser. You will see the ngrok dashboard and all messages
 exchanged between your app and the Vapi platform.
 
-Copy the ngrok `Forwarding` url into your copy buffer. You will need this url in the next step.
+Copy the ngrok `Forwarding` URL into your copy buffer. You will need this URL in the next step.
 
-## Create a file with env var values
+## Create a secrets file
 
 The Vapi4k server requires some environment variables to be defined to connect to the Vapi platform.
 
@@ -145,7 +147,7 @@ The first three values can be found on the Vapi dashboard.
 The keys are found by clicking on the organization button on the lower left
 and the phone number id is found in the `Platform` `Phone Number` section.
 
-The VAPI4K_BASE_URL value is the ngrok `Forwarding` url.
+The VAPI4K_BASE_URL value is the ngrok `Forwarding` URL.
 
 The `secrets/secrets.env` should look something like this:
 
@@ -165,37 +167,12 @@ VAPI4K_BASE_URL=https://fdee-73-71-109-432.ngrok-free.app
 
 </procedure>
 
-## Configure Vapi
+## Config IntelliJ to use secrets.env
 
 <procedure title="">
     <step>
-        <p>Go to the <a href = "https://dashboard.vapi.ai">Vapi dashboard</a>.</p>
+        <p>Start IntelliJ.</p>
     </step>
-    <step>
-        <p>Click on the green organization button on the lower left.</p>
-    </step>
-    <step>
-        <p>Click on the <shortcut>Settings</shortcut> option and assign the <shortcut>Server URL</shortcut>.</p>
-    </step>
-
-The <shortcut>Server URL</shortcut> is a combination of the `VAPI4K_BASE_URL` value and an `/inboundCall/serverPath`
-value.
-
-The `/inboundCall` indicates that the url corresponds to a Vapi4k `inboundCallApplication{}` declaration.
-
-The `serverPath` value is defined in the `inboundCallApplication{}` declaration and
-defaults to `/vapi4k`.
-
-The <shortcut>Sever URL</shortcut> should look something like this:
-
-```bash
-https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/vapi4k
-```
-</procedure>
-
-## Run the vapi4k-template applications
-
-<procedure title="Run the inbound call application">
     <step>
         <p>Open <b>src/main/kotlin/com/myapp/Application.kt</b>.</p>
     </step>
@@ -207,7 +184,7 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
           panel and click on <shortcut>Modify Run Configuration...</shortcut>.</p>
     </step>
     <step>
-        <p>Check the <shortcut>Enable Env File</shortcut> option and assign the <shortcut>Server URL</shortcut>.</p>
+        <p>Scroll down and check the <shortcut>Enable Env File</shortcut> option and assign the <shortcut>Server URL</shortcut>.</p>
     </step>
     <step>
         <p>Scroll down and click on the <shortcut>➕</shortcut> button, then click on <shortcut>.env file</shortcut>
@@ -220,42 +197,7 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
     <step>
         <p>Click on the VAPI4K_BASE_URL value in the log to open the Vapi4k admin page.</p>
     </step>
-    <step>
-        <p>You should now be able to make a call to your Vapi phone number and see the call in the admin log.</p>
-    </step>
-    <step>
-        <p>To see a tool call, ask the assistant "What is the weather in "Dallas, Texas?"</p>
-    </step>
-</procedure>
-
-<procedure title="Run the outbound call application">
-    <step>
-        <p>Run the Vapi4k server as described above.</p>
-    </step>
-    <step>
-        <p>Open <b>src/main/kotlin/com/myapp/CallCustomer.kt</b> and edit the phone number appropriately.</p>
-    </step>
-    <step>
-        <p>Click on the green arrow to the left of <code>fun main()</code> to create the call.</p>
-    </step>
-    <step>
-        <p>You should now receive a phone call to the specified number.</p>
-    </step>
-    <step>
-        <p>Ask the assistant "What is the weather in Los Angeles, California?"</p>
-    </step>
-</procedure>
-
-<procedure title="Run the web application">
-    <step>
-        <p>Run the Vapi4k server as described above.</p>
-    </step>
-    <step>
-        <p>Open the <b>$VAPI4K_BASE_URL/talk</b> URL in your browser.</p>
-    </step>
-    <step>
-        <p>Click on the talk button and ask the assistant "What is the weather in "Miami, Florida?"</p>
-    </step>
 </procedure>
 
 
+You are now ready to run a Vapi4k application.

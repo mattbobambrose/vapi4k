@@ -8,6 +8,7 @@
 
     <toc-element topic="Overview.md"/>
     <toc-element topic="GettingStarted.md"/>
+    <toc-element topic="RunTheApplications.md"/>
     <toc-element topic="Applications.md"/>
     <toc-element topic="Assistants.md"/>
     <toc-element topic="ToolsAndFunctions.md"/>

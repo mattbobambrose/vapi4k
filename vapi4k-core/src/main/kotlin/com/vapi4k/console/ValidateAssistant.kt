@@ -96,7 +96,7 @@ object ValidateAssistant {
               "hx-on:click" to "selectApplicationTab('$MESSAGE_RESPONSE')",
               "aria-current" to "page",
             )
-            +"Message Response"
+            +"Assistant Response"
           }
         }
 
