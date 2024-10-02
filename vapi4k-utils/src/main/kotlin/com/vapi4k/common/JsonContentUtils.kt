@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.utils.common
+package com.vapi4k.common
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonBuilder

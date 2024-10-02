@@ -16,8 +16,14 @@
 
 package com.vapi4k.dsl.functions
 
+import com.vapi4k.api.json.JsonElementUtils.booleanValue
+import com.vapi4k.api.json.JsonElementUtils.doubleValue
+import com.vapi4k.api.json.JsonElementUtils.intValue
+import com.vapi4k.api.json.JsonElementUtils.keys
+import com.vapi4k.api.json.JsonElementUtils.stringValue
 import com.vapi4k.api.toolservice.ToolCallService
 import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.common.Utils.errorMsg
 import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
@@ -29,12 +35,6 @@ import com.vapi4k.utils.ReflectionUtils.isUnitReturnType
 import com.vapi4k.utils.ReflectionUtils.parameterSignature
 import com.vapi4k.utils.ReflectionUtils.toolCallAnnotation
 import com.vapi4k.utils.ReflectionUtils.valueParameters
-import com.vapi4k.utils.api.json.JsonElementUtils.booleanValue
-import com.vapi4k.utils.api.json.JsonElementUtils.doubleValue
-import com.vapi4k.utils.api.json.JsonElementUtils.intValue
-import com.vapi4k.utils.api.json.JsonElementUtils.keys
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.common.Utils.errorMsg
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import java.lang.reflect.InvocationTargetException

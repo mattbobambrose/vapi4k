@@ -16,9 +16,9 @@
 
 package com.vapi4k.dbms
 
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
+import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.vapi4k.enums.ServerRequestType
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
 import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction

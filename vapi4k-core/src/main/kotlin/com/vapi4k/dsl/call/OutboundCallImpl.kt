@@ -21,8 +21,8 @@ import com.vapi4k.api.web.MethodType
 import com.vapi4k.common.Constants.PHONE_NUMBER_ID_PROPERTY
 import com.vapi4k.common.CoreEnvVars.vapiPhoneNumberId
 import com.vapi4k.dtos.api.OutboundCallRequestDto
+import com.vapi4k.envvar.EnvVar.Companion.getSystemValue
 import com.vapi4k.utils.JsonUtils
-import com.vapi4k.utils.envvar.EnvVar.Companion.getSystemValue
 import kotlinx.serialization.json.JsonElement
 
 class OutboundCallImpl internal constructor(

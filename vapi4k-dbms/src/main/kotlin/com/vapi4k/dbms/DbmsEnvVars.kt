@@ -16,9 +16,9 @@
 
 package com.vapi4k.dbms
 
-import com.vapi4k.utils.envvar.EnvVar
-import com.vapi4k.utils.envvar.EnvVar.Companion.getWithDefault
-import com.vapi4k.utils.envvar.EnvVar.Companion.obfuscate
+import com.vapi4k.envvar.EnvVar
+import com.vapi4k.envvar.EnvVar.Companion.getWithDefault
+import com.vapi4k.envvar.EnvVar.Companion.obfuscate
 
 object DbmsEnvVars {
   val DBMS_DRIVER_CLASSNAME =

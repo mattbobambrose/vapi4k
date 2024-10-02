@@ -17,9 +17,9 @@
 package com.vapi4k.server
 
 import com.vapi4k.common.Endpoints.CACHES_PATH
+import com.vapi4k.common.Utils.ensureStartsWith
 import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
-import com.vapi4k.utils.common.Utils.ensureStartsWith
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect

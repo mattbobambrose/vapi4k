@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.utils.common
+package com.vapi4k.common
 
 import java.net.URLDecoder
 import java.net.URLEncoder

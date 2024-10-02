@@ -17,15 +17,15 @@
 package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.newRequestContext
+import com.vapi4k.api.json.JsonElementUtils.jsonElementList
+import com.vapi4k.api.json.JsonElementUtils.stringValue
+import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.get
 import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.api.voice.enums.CartesiaVoiceModelType
 import com.vapi4k.api.voice.enums.PlayHTVoiceEmotionType
 import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
-import com.vapi4k.utils.api.json.JsonElementUtils.jsonElementList
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.api.json.get
 import com.vapi4k.utils.assistantResponse
 import kotlinx.serialization.json.jsonArray
 import org.junit.Assert.assertThrows

@@ -17,12 +17,12 @@
 package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.newRequestContext
+import com.vapi4k.api.json.JsonElementUtils.booleanValue
+import com.vapi4k.api.json.JsonElementUtils.keys
+import com.vapi4k.api.json.JsonElementUtils.stringValue
+import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.get
 import com.vapi4k.api.model.enums.OpenAIModelType
-import com.vapi4k.utils.api.json.JsonElementUtils.booleanValue
-import com.vapi4k.utils.api.json.JsonElementUtils.keys
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.api.json.get
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.tools
 import org.junit.Assert.assertFalse

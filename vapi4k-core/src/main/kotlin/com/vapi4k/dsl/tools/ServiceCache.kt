@@ -18,6 +18,8 @@ package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.CacheKey
 import com.vapi4k.common.CacheKey.Companion.cacheKeyValue
+import com.vapi4k.common.Utils.ensureStartsWith
+import com.vapi4k.common.Utils.isNull
 import com.vapi4k.dsl.functions.FunctionDetails
 import com.vapi4k.dsl.functions.FunctionInfo
 import com.vapi4k.dsl.functions.FunctionInfoDto
@@ -25,8 +27,6 @@ import com.vapi4k.dsl.functions.ToolCallInfo
 import com.vapi4k.dsl.model.AbstractModelImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
-import com.vapi4k.utils.common.Utils.ensureStartsWith
-import com.vapi4k.utils.common.Utils.isNull
 import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap

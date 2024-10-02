@@ -16,6 +16,7 @@
 
 package com.vapi4k.console
 
+import com.vapi4k.api.json.JsonElementUtils.toJsonString
 import com.vapi4k.common.ApplicationId.Companion.toApplicationId
 import com.vapi4k.common.AssistantId.Companion.toAssistantId
 import com.vapi4k.common.Constants.FUNCTION_NAME
@@ -25,6 +26,8 @@ import com.vapi4k.common.QueryParams.SESSION_ID
 import com.vapi4k.common.QueryParams.SYSTEM_IDS
 import com.vapi4k.common.QueryParams.TOOL_TYPE
 import com.vapi4k.common.SessionId.Companion.toSessionId
+import com.vapi4k.common.Utils.isNotNull
+import com.vapi4k.common.Utils.toErrorString
 import com.vapi4k.dsl.vapi4k.PipelineCall
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.plugin.Vapi4kServer.logger
@@ -36,9 +39,6 @@ import com.vapi4k.utils.HttpUtils.missingQueryParam
 import com.vapi4k.utils.JsonUtils.toJsonArray
 import com.vapi4k.utils.JsonUtils.toJsonObject
 import com.vapi4k.utils.MiscUtils.appendQueryParams
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
-import com.vapi4k.utils.common.Utils.isNotNull
-import com.vapi4k.utils.common.Utils.toErrorString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText

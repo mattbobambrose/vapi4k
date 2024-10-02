@@ -14,9 +14,9 @@
  *
  */
 
-package com.vapi4k.utils.api.vapi4k.enums
+package com.vapi4k.api.vapi4k.enums
 
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
+import com.vapi4k.api.json.JsonElementUtils.stringValue
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.json.JsonElement
 

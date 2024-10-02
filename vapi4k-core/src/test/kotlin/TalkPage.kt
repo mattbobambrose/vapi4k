@@ -1,6 +1,6 @@
+import com.vapi4k.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.api.web.MethodType
 import com.vapi4k.dsl.web.VapiWeb.vapiTalkButton
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
 import kotlinx.html.HTML
 import kotlinx.html.body
 import kotlinx.html.h1

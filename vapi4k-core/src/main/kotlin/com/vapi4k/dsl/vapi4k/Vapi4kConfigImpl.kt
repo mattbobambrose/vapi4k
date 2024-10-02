@@ -22,12 +22,12 @@ import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.vapi4k.ResponseContext
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.api.vapi4k.WebApplication
+import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.ApplicationId
 import com.vapi4k.dsl.vapi4k.ApplicationType.INBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.dsl.vapi4k.ApplicationType.WEB
 import com.vapi4k.server.RequestResponseCallback
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.config.ApplicationConfig
 import io.ktor.util.pipeline.PipelineContext

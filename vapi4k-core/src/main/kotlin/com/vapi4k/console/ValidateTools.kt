@@ -16,6 +16,12 @@
 
 package com.vapi4k.console
 
+import com.vapi4k.api.json.JsonElementUtils.containsKey
+import com.vapi4k.api.json.JsonElementUtils.jsonElementList
+import com.vapi4k.api.json.JsonElementUtils.keys
+import com.vapi4k.api.json.JsonElementUtils.stringValue
+import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.get
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.AssistantId.Companion.getAssistantIdFromSuffix
@@ -48,12 +54,6 @@ import com.vapi4k.utils.MiscUtils.appendQueryParams
 import com.vapi4k.utils.ReflectionUtils.asKClass
 import com.vapi4k.utils.ReflectionUtils.isNotRequestContextClass
 import com.vapi4k.utils.ReflectionUtils.paramAnnotationWithDefault
-import com.vapi4k.utils.api.json.JsonElementUtils.containsKey
-import com.vapi4k.utils.api.json.JsonElementUtils.jsonElementList
-import com.vapi4k.utils.api.json.JsonElementUtils.keys
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.api.json.get
 import kotlinx.html.ButtonType
 import kotlinx.html.DIV
 import kotlinx.html.FORM

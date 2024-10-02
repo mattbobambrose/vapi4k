@@ -1,4 +1,4 @@
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.JsonElementUtils.toJsonString
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

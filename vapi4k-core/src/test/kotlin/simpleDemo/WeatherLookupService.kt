@@ -16,11 +16,11 @@
 
 package simpleDemo
 
+import com.vapi4k.api.json.JsonElementUtils.stringValue
+import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.JsonElementUtils.toJsonElementList
 import com.vapi4k.api.tools.ToolCall
 import com.vapi4k.utils.HttpUtils.jsonHttpClient
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElementList
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.URLProtocol

@@ -16,6 +16,7 @@
 
 package com.vapi4k.console
 
+import com.vapi4k.api.json.JsonElementUtils.toJsonString
 import com.vapi4k.common.CssNames.ACTIVE
 import com.vapi4k.common.CssNames.ERROR_MSG
 import com.vapi4k.common.CssNames.FUNCTIONS
@@ -28,7 +29,6 @@ import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.html
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
 import io.ktor.http.HttpStatusCode
 import kotlinx.html.DIV
 import kotlinx.html.TagConsumer

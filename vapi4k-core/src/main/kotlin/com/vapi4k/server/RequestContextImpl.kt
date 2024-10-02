@@ -16,16 +16,16 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.api.json.JsonElementUtils.toJsonString
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError
 import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.enums.ServerRequestType
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.SessionId
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonElement

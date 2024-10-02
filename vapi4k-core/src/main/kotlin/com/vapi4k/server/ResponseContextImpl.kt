@@ -16,11 +16,11 @@
 
 package com.vapi4k.server
 
+import com.vapi4k.api.json.JsonElementUtils.toJsonString
 import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.vapi4k.ResponseContext
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
+import com.vapi4k.api.vapi4k.enums.ServerRequestType
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration
 

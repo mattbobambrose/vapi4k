@@ -16,8 +16,8 @@
 
 package tools
 
+import com.vapi4k.api.json.JsonElementUtils.stringValue
 import com.vapi4k.dsl.model.CommonModelProperties
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
 import kotlinx.serialization.json.JsonElement
 
 object ManualTools {

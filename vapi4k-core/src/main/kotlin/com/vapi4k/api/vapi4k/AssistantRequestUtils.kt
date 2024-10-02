@@ -16,12 +16,12 @@
 
 package com.vapi4k.api.vapi4k
 
+import com.vapi4k.api.json.JsonElementUtils.containsKey
+import com.vapi4k.api.json.JsonElementUtils.stringValue
+import com.vapi4k.api.json.get
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.Companion.isFunctionCall
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.Companion.isStatusUpdate
 import com.vapi4k.common.FunctionName.Companion.toFunctionName
-import com.vapi4k.utils.api.json.JsonElementUtils.containsKey
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.api.json.get
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.Companion.isFunctionCall
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.Companion.isStatusUpdate
 import kotlinx.serialization.json.JsonElement
 
 /**

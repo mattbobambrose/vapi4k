@@ -140,7 +140,7 @@ tasks.dokkaHtml.configure {
 
             // Include specific packages
             perPackageOption {
-                matchingRegex.set("com.vapi4k.utils.api.*") // will match kotlin and all sub-packages of it
+                matchingRegex.set("com.vapi4k.api.*") // will match kotlin and all sub-packages of it
                 includeNonPublic.set(false)
                 reportUndocumented.set(false)
                 skipDeprecated.set(false)

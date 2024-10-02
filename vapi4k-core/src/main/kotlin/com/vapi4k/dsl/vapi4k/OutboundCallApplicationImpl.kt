@@ -19,10 +19,10 @@ package com.vapi4k.dsl.vapi4k
 import com.vapi4k.api.reponse.OutboundCallAssistantResponse
 import com.vapi4k.api.vapi4k.OutboundCallApplication
 import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.common.Utils.isNull
 import com.vapi4k.dsl.response.OutboundCallAssistantResponseImpl
 import com.vapi4k.responses.AssistantMessageResponse
 import com.vapi4k.server.RequestContextImpl
-import com.vapi4k.utils.common.Utils.isNull
 
 class OutboundCallApplicationImpl internal constructor() :
   AbstractApplicationImpl(ApplicationType.OUTBOUND_CALL),

@@ -18,21 +18,21 @@ package com.vapi4k.dsl.call
 
 import com.vapi4k.api.call.OutboundCall
 import com.vapi4k.api.call.Phone
+import com.vapi4k.api.json.JsonElementUtils.keys
+import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.get
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.CoreEnvVars.vapiBaseUrl
 import com.vapi4k.common.ErrorMessages.INVALID_BASE_URL
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
+import com.vapi4k.common.Utils.ensureStartsWith
+import com.vapi4k.common.Utils.errorMsg
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.configCall
 import com.vapi4k.dsl.vapi4k.ApplicationType.OUTBOUND_CALL
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.HttpUtils.stripQueryParams
 import com.vapi4k.utils.MiscUtils.removeEnds
-import com.vapi4k.utils.api.json.JsonElementUtils.keys
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.api.json.get
-import com.vapi4k.utils.common.Utils.ensureStartsWith
-import com.vapi4k.utils.common.Utils.errorMsg
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.post

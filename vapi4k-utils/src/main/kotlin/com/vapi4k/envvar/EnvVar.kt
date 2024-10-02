@@ -14,12 +14,12 @@
  *
  */
 
-package com.vapi4k.utils.envvar
+package com.vapi4k.envvar
 
 import com.typesafe.config.ConfigFactory
-import com.vapi4k.utils.common.Utils.isNull
-import com.vapi4k.utils.common.Utils.lambda
-import com.vapi4k.utils.common.Utils.obfuscate
+import com.vapi4k.common.Utils.isNull
+import com.vapi4k.common.Utils.lambda
+import com.vapi4k.common.Utils.obfuscate
 import io.ktor.server.config.HoconApplicationConfig
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject

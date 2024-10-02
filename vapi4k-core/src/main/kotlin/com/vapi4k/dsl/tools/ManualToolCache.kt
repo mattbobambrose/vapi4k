@@ -17,9 +17,9 @@
 package com.vapi4k.dsl.tools
 
 import com.vapi4k.common.FunctionName
+import com.vapi4k.common.Utils.ensureStartsWith
 import com.vapi4k.dtos.tools.ToolDto
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.utils.common.Utils.ensureStartsWith
 import kotlinx.serialization.Serializable
 
 internal class ManualToolCache(

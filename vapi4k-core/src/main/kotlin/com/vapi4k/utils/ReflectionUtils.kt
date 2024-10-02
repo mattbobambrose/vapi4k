@@ -19,7 +19,7 @@ package com.vapi4k.utils
 import com.vapi4k.api.tools.Param
 import com.vapi4k.api.tools.ToolCall
 import com.vapi4k.api.vapi4k.RequestContext
-import com.vapi4k.utils.common.Utils.isNotNull
+import com.vapi4k.common.Utils.isNotNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter

@@ -18,9 +18,9 @@ package com.vapi4k.responses
 
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionName
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.functionParameters
+import com.vapi4k.common.Utils.errorMsg
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
-import com.vapi4k.utils.common.Utils.errorMsg
 import kotlinx.serialization.Serializable
 
 @Serializable

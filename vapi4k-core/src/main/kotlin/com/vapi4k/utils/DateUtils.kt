@@ -16,10 +16,10 @@
 
 package com.vapi4k.utils
 
-import com.vapi4k.utils.common.Utils.capitalizeFirstChar
-import com.vapi4k.utils.common.Utils.isNotNull
-import com.vapi4k.utils.common.Utils.lpad
-import com.vapi4k.utils.common.Utils.rpad
+import com.vapi4k.common.Utils.capitalizeFirstChar
+import com.vapi4k.common.Utils.isNotNull
+import com.vapi4k.common.Utils.lpad
+import com.vapi4k.common.Utils.rpad
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate

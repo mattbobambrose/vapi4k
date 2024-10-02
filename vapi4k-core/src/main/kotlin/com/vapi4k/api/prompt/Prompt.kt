@@ -16,7 +16,7 @@
 
 package com.vapi4k.api.prompt
 
-import com.vapi4k.utils.common.Utils.trimLeadingSpaces
+import com.vapi4k.common.Utils.trimLeadingSpaces
 
 class Prompt {
   val stringBuilder = StringBuilder()

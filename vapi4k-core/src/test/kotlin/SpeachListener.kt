@@ -1,9 +1,9 @@
+import com.vapi4k.api.json.JsonElementUtils.toJsonString
 import com.vapi4k.common.CoreEnvVars.deepGramVoiceIdType
+import com.vapi4k.common.JsonContentUtils.defaultJson
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.HttpUtils.wsHttpClient
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonString
-import com.vapi4k.utils.common.JsonContentUtils.defaultJson
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.post

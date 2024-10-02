@@ -16,6 +16,7 @@
 
 package com.vapi4k.console
 
+import com.vapi4k.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.common.ApplicationName.Companion.toApplicationName
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.Constants.APP_NAME
@@ -29,6 +30,9 @@ import com.vapi4k.common.Headers.VALIDATE_VALUE
 import com.vapi4k.common.Headers.VAPI_SECRET_HEADER
 import com.vapi4k.common.QueryParams.SECRET_PARAM
 import com.vapi4k.common.QueryParams.SESSION_ID
+import com.vapi4k.common.Utils.isNotNull
+import com.vapi4k.common.Utils.resourceFile
+import com.vapi4k.common.Utils.toErrorString
 import com.vapi4k.console.ValidateAssistant.navBar
 import com.vapi4k.console.ValidateAssistant.singleNavItem
 import com.vapi4k.console.ValidateAssistant.validateAssistant
@@ -48,10 +52,6 @@ import com.vapi4k.utils.HttpUtils.jsonHttpClient
 import com.vapi4k.utils.JsonUtils.EMPTY_JSON_ELEMENT
 import com.vapi4k.utils.JsonUtils.modifyObjectWith
 import com.vapi4k.utils.MiscUtils.appendQueryParams
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
-import com.vapi4k.utils.common.Utils.isNotNull
-import com.vapi4k.utils.common.Utils.resourceFile
-import com.vapi4k.utils.common.Utils.toErrorString
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText

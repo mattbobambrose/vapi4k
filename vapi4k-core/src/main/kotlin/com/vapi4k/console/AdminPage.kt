@@ -32,13 +32,13 @@ import com.vapi4k.common.Endpoints.ADMIN_ENV_PATH
 import com.vapi4k.common.Endpoints.ADMIN_LOG_ENDPOINT
 import com.vapi4k.common.Endpoints.ADMIN_VERSION_PATH
 import com.vapi4k.common.Endpoints.VALIDATE_PATH
+import com.vapi4k.common.Utils.ensureStartsWith
 import com.vapi4k.dsl.vapi4k.AbstractApplicationImpl
 import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.utils.HtmlUtils.attribs
 import com.vapi4k.utils.HtmlUtils.css
 import com.vapi4k.utils.HtmlUtils.js
 import com.vapi4k.utils.HtmlUtils.rawHtml
-import com.vapi4k.utils.common.Utils.ensureStartsWith
 import io.ktor.http.ContentType
 import kotlinx.html.BODY
 import kotlinx.html.ButtonType

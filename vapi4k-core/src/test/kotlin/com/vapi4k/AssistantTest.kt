@@ -20,6 +20,10 @@ import com.vapi4k.api.assistant.enums.AssistantClientMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.api.conditions.eq
+import com.vapi4k.api.json.JsonElementUtils.intValue
+import com.vapi4k.api.json.JsonElementUtils.jsonElementList
+import com.vapi4k.api.json.JsonElementUtils.stringValue
+import com.vapi4k.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
@@ -34,10 +38,6 @@ import com.vapi4k.dsl.vapi4k.Vapi4kConfigImpl
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.DslUtils.getRandomSecret
 import com.vapi4k.utils.JsonFilenames.JSON_ASSISTANT_REQUEST
-import com.vapi4k.utils.api.json.JsonElementUtils.intValue
-import com.vapi4k.utils.api.json.JsonElementUtils.jsonElementList
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.utils.assistantResponse
 import com.vapi4k.utils.firstMessageOfType
 import com.vapi4k.utils.withTestApplication

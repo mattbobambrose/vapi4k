@@ -16,8 +16,8 @@
 
 package com.vapi4k.api.vapi4k
 
+import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.common.SessionId
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Duration

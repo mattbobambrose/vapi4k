@@ -20,11 +20,11 @@ import com.vapi4k.WeatherLookupService1
 import com.vapi4k.WeatherLookupService2
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.conditions.eq
+import com.vapi4k.api.json.JsonElementUtils.stringValue
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.reponse.InboundCallAssistantResponse
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
 import com.vapi4k.api.vapi4k.RequestContext
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
 
 fun InboundCallAssistantResponse.myAssistantRequest(requestContext: RequestContext) =
   when (requestContext.request.phoneNumber) {

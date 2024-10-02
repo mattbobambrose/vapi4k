@@ -16,10 +16,10 @@
 
 package com.vapi4k.common
 
+import com.vapi4k.envvar.EnvVar
+import com.vapi4k.envvar.EnvVar.Companion.getWithDefault
+import com.vapi4k.envvar.EnvVar.Companion.obfuscate
 import com.vapi4k.utils.MiscUtils.removeEnds
-import com.vapi4k.utils.envvar.EnvVar
-import com.vapi4k.utils.envvar.EnvVar.Companion.getWithDefault
-import com.vapi4k.utils.envvar.EnvVar.Companion.obfuscate
 
 object CoreEnvVars {
   private val IS_PRODUCTION = EnvVar("IS_PRODUCTION", getWithDefault(false))

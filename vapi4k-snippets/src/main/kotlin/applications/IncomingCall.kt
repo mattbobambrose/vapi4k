@@ -17,12 +17,13 @@
 package applications
 
 import com.vapi4k.api.model.enums.OpenAIModelType
+import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
+import com.vapi4k.api.vapi4k.enums.ServerRequestType.TOOL_CALL
 import com.vapi4k.api.voice.enums.DeepGramVoiceIdType
 import com.vapi4k.plugin.Vapi4k
 import com.vapi4k.plugin.Vapi4kServer.logger
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.FUNCTION_CALL
-import com.vapi4k.utils.api.vapi4k.enums.ServerRequestType.TOOL_CALL
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 
@@ -33,7 +34,7 @@ object IncomingCall {
         serverPath = "/inboundApp"
         serverSecret = "12345"
 
-        onAssistantRequest { requestContext ->
+        onAssistantRequest { requestContext: RequestContext ->
           // Describe the assistant or squad
           assistant {
             firstMessage = "Hello! How can I help you today?"
@@ -50,7 +51,7 @@ object IncomingCall {
         }
 
         // Log the ASSISTANT_REQUEST, FUNCTION_CALL, and TOOL_CALL requests
-        onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { requestContext ->
+        onRequest(ASSISTANT_REQUEST, FUNCTION_CALL, TOOL_CALL) { requestContext: RequestContext ->
           logger.info { requestContext }
         }
       }

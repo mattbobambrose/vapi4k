@@ -20,6 +20,7 @@ import com.vapi4k.api.buttons.ButtonColor
 import com.vapi4k.api.buttons.enums.ButtonPosition
 import com.vapi4k.api.buttons.enums.ButtonType
 import com.vapi4k.api.model.enums.GroqModelType
+import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.voice.enums.PlayHTVoiceIdType
 import com.vapi4k.dsl.web.VapiWeb.vapiTalkButton
 import com.vapi4k.plugin.Vapi4k
@@ -40,7 +41,7 @@ object WebCall {
       webApplication {
         serverPath = "/webApp"
 
-        onAssistantRequest { requestContext ->
+        onAssistantRequest { requestContext: RequestContext ->
           assistant {
             firstMessage = "Hello! How can I help you today?"
 
@@ -56,7 +57,7 @@ object WebCall {
         }
 
         // Describe the button configuration
-        buttonConfig { requestContext ->
+        buttonConfig { requestContext: RequestContext ->
           position = ButtonPosition.TOP
           offset = "40px"
           width = "50px"

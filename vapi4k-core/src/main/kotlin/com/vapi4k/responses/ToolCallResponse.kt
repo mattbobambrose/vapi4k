@@ -16,9 +16,11 @@
 
 package com.vapi4k.responses
 
+import com.vapi4k.api.json.JsonElementUtils.stringValue
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.id
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.toolCallArguments
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.toolCallName
+import com.vapi4k.common.Utils.errorMsg
 import com.vapi4k.dsl.response.ManualToolCallResponseImpl
 import com.vapi4k.dsl.tools.ManualToolImpl
 import com.vapi4k.dsl.toolservice.RequestCompleteMessagesImpl
@@ -27,8 +29,6 @@ import com.vapi4k.dtos.tools.CommonToolMessageDto
 import com.vapi4k.plugin.Vapi4kServer.logger
 import com.vapi4k.server.RequestContextImpl
 import com.vapi4k.utils.JsonUtils.toolCallList
-import com.vapi4k.utils.api.json.JsonElementUtils.stringValue
-import com.vapi4k.utils.common.Utils.errorMsg
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
