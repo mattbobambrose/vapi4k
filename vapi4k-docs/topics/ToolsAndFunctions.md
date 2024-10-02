@@ -88,12 +88,9 @@ A `transferTool{}` describes a tool that transfers a user to an assistant or a p
 
 ## Functions
 
-The `functions{}` lambda contains `function()` declarations.
+The `functions{}` lambda contains `function()` calls.
 The `function()` argument is the same as `serviceTool()` calls.
 
 <chapter title="Function Declaration" id="function" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/tools/Functions.kt" include-symbol="functionExample"/>
 </chapter>
-
-
-

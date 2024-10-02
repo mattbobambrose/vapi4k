@@ -1,10 +1,5 @@
 # Deployment Options
 
-## ngrok
-
-Using [`ngrok`](https://ngrok.com/) for local development makes it easy to test your application.
-Instructions for using `ngrok` are in the [Setup](Setup.md) guide.
-
 ## Heroku
 
 [Heroku](https://www.heroku.com) is a cloud platform where you can deploy your Vapi4k applications.

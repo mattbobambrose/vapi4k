@@ -45,12 +45,23 @@ The `serverSecret` property is optional.
 
 ## Application Functions
 
-All applications require a call to `onAssistantRequest{}`. Its contents will define
+All applications require a call to `onAssistantRequest{}`. Its lambda will define
 the desired assistant, assistantId, squad or squadId for the request.
 
 All applications allow you define callbacks for requests and responses using the `onAllRequest{}`,
-`onRequest{}`, `onAllResponse{}` and `onResponse{}` functions. These functions are also available globally
-within the [`Vapi4kConfig` context](%core_url%.vapi4k/-vapi4k-config/index.html).
-
+`onRequest{}`, `onAllResponse{}` and `onResponse{}` functions.
 The arguments for `onRequest{}` and `onResponse{}` are of type
 [ServerRequestType](%utils_url%.vapi4k.enums/-server-request-type/index.html).
+
+These functions are also available globally
+in the [`Vapi4kConfig` context](%core_url%.vapi4k/-vapi4k-config/index.html).
+
+All applications can optionally call `onTransferDestinationRequest{}` to define a transfer destination.
+
+[AssistantRequestUtils](%core_url%.vapi4k/-assistant-request-utils/index.html) provides useful utility functions for
+working with assistant requests.
+
+When writing applications, you are likely to reference the
+[RequestContext](%core_url%.vapi4k/-request-context/index.html) object. It contains all the request data. The
+raw JSON request is available in the `request` property and can be accessed with the `JSONElement` utilities
+described [here](JsonElement.md).

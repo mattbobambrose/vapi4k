@@ -2,8 +2,8 @@
 
 # Assistants and Squads
 
-The `onAssistantRequest{}` function is used to define the behavior of an application.
-Calling the function is required in all application descriptions. A call to `onAssistantRequest{}`
+A `onAssistantRequest{}` call is used to define the behavior of an application.
+It is required in all application descriptions. A call to `onAssistantRequest{}`
 should define a single `assistant{}`, `squad{}`, `assistantId{}`, or a `squadId{}`.
 Calls to `assistant{}` and `assistantId{}` can also include a call to `assistantOverrides{}`.
 
@@ -28,7 +28,7 @@ A `squad{}` call creates a temporary squad that lasts for the duration of the ca
 An `assistantId{}` call references a static assistant defined in
 the [Vapi dashboard](https://dashboard.vapi.ai/assistants).
 
-The `assistantOverrides{}` function is used to override the default assistant settings and its argument has a
+A `assistantOverrides{}` call is used to override the default assistant settings and its argument has a
 [`AssistantOverrides`](%core_url%.assistant/-assistant-overrides/index.html) context.
 
 <chapter title="Assistant Id Example" id="assistantId" collapsible="false">
@@ -154,13 +154,3 @@ A `squadId{}` call references a static squad defined in the [Vapi dashboard](htt
     <code-block lang="kotlin" src="src/main/kotlin/assistants/Transcribers.kt" include-symbol="talkscriberExample"/>
   </tab>
 </tabs>
-
-### start/complete/delayed/failed messages and conditions
-
-### TransferDestinationRequests
-
-### Destinations
-
-* AssistantDestination
-* NumberDestination
-* SipDestination
