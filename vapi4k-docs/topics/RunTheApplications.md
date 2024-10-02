@@ -2,7 +2,7 @@
 
 # Run the Template Applications
 
-If you completed the steps in the  [Getting Started](https://mattbobambrose.github.io/vapi4k/gettingstarted.html) guide,
+If you completed the steps in the [Setup](https://mattbobambrose.github.io/vapi4k/setup.html) guide,
 you are now ready to run the template applications.
 
 ## Verify the Applications

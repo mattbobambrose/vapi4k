@@ -17,7 +17,7 @@ Vapi4k is a work in progress. We are actively developing it and would love to he
 If you have any questions, comments, or suggestions, please feel free to reach out to us at
 [pambrose@gmail.com](mailto:pambrose@gmail.com).
 
-If you go through the [Getting Started](https://mattbobambrose.github.io/vapi4k/gettingstarted.html) guide, you should
+If you go through the [Setup](https://mattbobambrose.github.io/vapi4k/setup.html) guide, you should
 be up and running with an example application in less than 15 minutes.
 
 The Vapi4k GitHub repo can be found [here](https://github.com/mattbobambrose/vapi4k).

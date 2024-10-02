@@ -3,7 +3,7 @@
 ## ngrok
 
 Using [`ngrok`](https://ngrok.com/) for local development makes it easy to test your application.
-Instructions for using `ngrok` are in the [Getting Started](GettingStarted.md) guide.
+Instructions for using `ngrok` are in the [Setup](Setup.md) guide.
 
 ## Heroku
 

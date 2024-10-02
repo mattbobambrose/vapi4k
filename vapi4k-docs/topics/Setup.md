@@ -1,6 +1,6 @@
 <show-structure depth="1"/>
 
-# Getting Started
+# Setup
 
 ## Create a Vapi Account
 
