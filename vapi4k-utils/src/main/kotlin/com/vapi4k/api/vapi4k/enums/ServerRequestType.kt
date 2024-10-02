@@ -69,7 +69,7 @@ enum class ServerRequestType(
         return try {
           entries.first { it.desc == desc }
         } catch (e: Exception) {
-          logger.error { "Invalid ServerMessageType: ${desc}" }
+          logger.error { "Invalid ServerMessageType: $desc" }
           UNKNOWN_REQUEST_TYPE
         }
       }

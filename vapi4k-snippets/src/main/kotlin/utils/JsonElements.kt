@@ -68,8 +68,8 @@ object JsonElements {
     println(city) // Tulsa
 
     println(je.toJsonString())
-    // Outputs:
     /*
+      Outputs:
       {
         "person": {
           "first": "Bill",
@@ -80,6 +80,6 @@ object JsonElements {
           }
         }
       }
-    */
+     */
   }
 }

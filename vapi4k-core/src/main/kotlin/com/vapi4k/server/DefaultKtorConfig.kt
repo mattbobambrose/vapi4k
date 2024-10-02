@@ -46,7 +46,6 @@ import org.slf4j.event.Level
 import java.time.Duration
 
 fun Application.defaultKtorConfig(appMicrometerRegistry: PrometheusMeterRegistry) {
-
 //  if (!pluginRegistry.contains(ContentNegotiation.key)) {
 //    install(ContentNegotiation) {
 //      json(Json { ignoreUnknownKeys = true })

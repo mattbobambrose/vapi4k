@@ -10,6 +10,6 @@ that makes it easy to define, deploy, and maintain [Vapi](https://vapi.ai) appli
 The
 [Docs](https://mattbobambrose.github.io/vapi4k/overview.html),
 [vapi4k-core KDocs](https://mattbobambrose.github.io/vapi4k/core/index.html), and
-[vapi4k-utils kdocs](https://mattbobambrose.github.io/vapi4k/utils/index.html)
+[vapi4k-utils kDocs](https://mattbobambrose.github.io/vapi4k/utils/index.html)
 are a work in progress.
 

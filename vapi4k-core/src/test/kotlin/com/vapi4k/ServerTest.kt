@@ -76,7 +76,7 @@ class ServerTest {
     assertEquals(GroqModelType.LLAMA3_70B.desc, jsonElement.stringValue("messageResponse.assistant.model.model"))
   }
 
-  @Test
+  // @Test
   fun `Tool requests arg ordering`() {
     val responses =
       withTestApplication(

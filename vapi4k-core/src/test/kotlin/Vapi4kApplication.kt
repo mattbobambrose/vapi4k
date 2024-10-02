@@ -51,7 +51,6 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
-
 fun main() {
   embeddedServer(
     factory = CIO,
@@ -62,7 +61,8 @@ fun main() {
 }
 
 @Serializable
-data class OutboundMsg @OptIn(ExperimentalSerializationApi::class) constructor(
+@OptIn(ExperimentalSerializationApi::class)
+data class OutboundMsg(
   val message: String,
   @EncodeDefault
   val type: String = "say",

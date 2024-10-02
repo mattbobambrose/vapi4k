@@ -22,6 +22,7 @@ import com.vapi4k.api.tools.ToolCall
 import com.vapi4k.api.tools.enums.ToolMessageRoleType
 import com.vapi4k.api.toolservice.ToolCallService
 import com.vapi4k.api.vapi4k.RequestContext
+import com.vapi4k.dsl.assistant.ToolMessageCompleteImpl
 import kotlin.math.absoluteValue
 
 object ToolCalls {
@@ -29,7 +30,7 @@ object ToolCalls {
     fun addTwoNumbers(
       a: Int,
       b: Int,
-      requestContext: RequestContext,  // This is optional
+      requestContext: RequestContext, // This is optional
     ): Int {
       return a + b
     }
@@ -70,7 +71,7 @@ object ToolCalls {
     override fun onToolCallComplete(
       requestContext: RequestContext,
       result: String,
-    ) =
+    ): List<ToolMessageCompleteImpl> =
       requestCompleteMessages {
         condition("city" eq "Chicago", "state" eq "Illinois") {
           requestCompleteMessage {

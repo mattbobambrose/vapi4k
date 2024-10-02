@@ -1,3 +1,4 @@
+
 import com.vapi4k.api.json.toJsonString
 import com.vapi4k.common.CoreEnvVars.deepGramVoiceIdType
 import com.vapi4k.common.JsonContentUtils.defaultJson
@@ -97,7 +98,6 @@ object SpeachListener {
             delay(1000)
             val dataChannel = Channel<Pair<Boolean, ByteArray>>()
             coroutineScope {
-
               launch {
                 runCatching {
                   connectToVapiWS(listenUrl, dataChannel)
@@ -176,7 +176,10 @@ object SpeachListener {
     }.use { client ->
       // "wss://api.deepgram.com/v1/listen"
       // utterance_end_ms=1000&vad_events=true&interim_results=true
-      client.webSocket("wss://api.deepgram.com/v1/listen?model=nova-2&smart_format=true&encoding=linear16&channels=2&sample_rate=16000&multichannel=true",
+      val url = "wss://api.deepgram.com/v1/listen"
+      val args = "model=nova-2&smart_format=true&encoding=linear16&channels=2&sample_rate=16000&multichannel=true"
+      client.webSocket(
+        urlString = "$url?$args",
         // method = io.ktor.http.HttpMethod.Post,
         request = {
           // //   method = io.ktor.http.HttpMethod.Post
@@ -188,8 +191,8 @@ object SpeachListener {
           headers.append(HttpHeaders.Authorization, "Token $deepGramVoiceIdType")
           // val props = DeepGramProperties()
           // setBody(props)
-
-        }) {
+        },
+      ) {
         println("Deepgram WebSocket connection established")
         coroutineScope {
           launch {
