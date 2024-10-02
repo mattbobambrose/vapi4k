@@ -17,13 +17,13 @@
 package com.vapi4k.utils
 
 import com.vapi4k.ServerTest.Companion.configPost
-import com.vapi4k.api.json.JsonElementUtils.containsKey
-import com.vapi4k.api.json.JsonElementUtils.jsonElementList
-import com.vapi4k.api.json.JsonElementUtils.stringValue
-import com.vapi4k.api.json.JsonElementUtils.toJsonElement
-import com.vapi4k.api.json.JsonElementUtils.toJsonElementList
-import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.containsKey
 import com.vapi4k.api.json.get
+import com.vapi4k.api.json.jsonElementList
+import com.vapi4k.api.json.stringValue
+import com.vapi4k.api.json.toJsonElement
+import com.vapi4k.api.json.toJsonElementList
+import com.vapi4k.api.json.toJsonString
 import com.vapi4k.api.reponse.InboundCallAssistantResponse
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.common.CoreEnvVars.defaultServerPath

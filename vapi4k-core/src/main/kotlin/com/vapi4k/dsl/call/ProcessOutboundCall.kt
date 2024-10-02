@@ -18,9 +18,9 @@ package com.vapi4k.dsl.call
 
 import com.vapi4k.api.call.OutboundCall
 import com.vapi4k.api.call.Phone
-import com.vapi4k.api.json.JsonElementUtils.keys
-import com.vapi4k.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.api.json.get
+import com.vapi4k.api.json.keys
+import com.vapi4k.api.json.toJsonElement
 import com.vapi4k.common.CoreEnvVars.vapi4kBaseUrl
 import com.vapi4k.common.CoreEnvVars.vapiBaseUrl
 import com.vapi4k.common.ErrorMessages.INVALID_BASE_URL

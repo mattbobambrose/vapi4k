@@ -17,7 +17,7 @@
 package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.newRequestContext
-import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.toJsonString
 import com.vapi4k.api.model.enums.AnthropicModelType
 import com.vapi4k.api.transcriber.enums.DeepgramModelType
 import com.vapi4k.dtos.api.destination.SipDestinationDto

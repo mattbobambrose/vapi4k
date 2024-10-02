@@ -17,10 +17,10 @@
 package com.vapi4k
 
 import com.vapi4k.AssistantTest.Companion.newRequestContext
-import com.vapi4k.api.json.JsonElementUtils.jsonElementList
-import com.vapi4k.api.json.JsonElementUtils.stringValue
-import com.vapi4k.api.json.JsonElementUtils.toJsonElement
 import com.vapi4k.api.json.get
+import com.vapi4k.api.json.jsonElementList
+import com.vapi4k.api.json.stringValue
+import com.vapi4k.api.json.toJsonElement
 import com.vapi4k.api.model.enums.GroqModelType
 import com.vapi4k.api.voice.enums.CartesiaVoiceLanguageType
 import com.vapi4k.api.voice.enums.CartesiaVoiceModelType

@@ -16,12 +16,12 @@
 
 package com.vapi4k.console
 
-import com.vapi4k.api.json.JsonElementUtils.containsKey
-import com.vapi4k.api.json.JsonElementUtils.jsonElementList
-import com.vapi4k.api.json.JsonElementUtils.keys
-import com.vapi4k.api.json.JsonElementUtils.stringValue
-import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.containsKey
 import com.vapi4k.api.json.get
+import com.vapi4k.api.json.jsonElementList
+import com.vapi4k.api.json.keys
+import com.vapi4k.api.json.stringValue
+import com.vapi4k.api.json.toJsonElement
 import com.vapi4k.common.AssistantId
 import com.vapi4k.common.AssistantId.Companion.EMPTY_ASSISTANT_ID
 import com.vapi4k.common.AssistantId.Companion.getAssistantIdFromSuffix

@@ -16,7 +16,7 @@
 
 package com.vapi4k.common
 
-import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.toJsonString
 import com.vapi4k.common.Constants.UNKNOWN
 import com.vapi4k.utils.DateUtils.TIME_ZONE
 import com.vapi4k.utils.DateUtils.toFullDateString

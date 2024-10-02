@@ -17,7 +17,7 @@
 package com.vapi4k.plugin
 
 import com.github.mattbobambrose.vapi4k.BuildConfig
-import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.toJsonElement
 import com.vapi4k.api.vapi4k.Vapi4kConfig
 import com.vapi4k.common.Constants.APP_NAME
 import com.vapi4k.common.Constants.APP_TYPE

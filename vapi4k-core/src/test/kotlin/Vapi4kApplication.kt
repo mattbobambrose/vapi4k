@@ -24,8 +24,8 @@ import com.vapi4k.api.buttons.enums.ButtonPosition
 import com.vapi4k.api.buttons.enums.ButtonType
 import com.vapi4k.api.destination.enums.AssistantTransferMode
 import com.vapi4k.api.functions.Functions
-import com.vapi4k.api.json.JsonElementUtils.stringValue
-import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.stringValue
+import com.vapi4k.api.json.toJsonString
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.squad.Member
 import com.vapi4k.api.tools.Tools

@@ -1,4 +1,4 @@
-import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.toJsonString
 import com.vapi4k.common.CoreEnvVars.deepGramVoiceIdType
 import com.vapi4k.common.JsonContentUtils.defaultJson
 import com.vapi4k.plugin.Vapi4kServer.logger

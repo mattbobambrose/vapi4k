@@ -14,7 +14,7 @@
  *
  */
 
-import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.toJsonElement
 import com.vapi4k.dsl.call.VapiApiImpl.Companion.vapiApi
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking

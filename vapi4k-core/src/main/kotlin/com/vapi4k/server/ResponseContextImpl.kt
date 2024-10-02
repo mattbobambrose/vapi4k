@@ -16,7 +16,7 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.toJsonString
 import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.api.vapi4k.ResponseContext
 import com.vapi4k.api.vapi4k.enums.ServerRequestType

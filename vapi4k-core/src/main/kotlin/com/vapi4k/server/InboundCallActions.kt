@@ -16,7 +16,7 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.toJsonElement
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.ASSISTANT_REQUEST
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.END_OF_CALL_REPORT

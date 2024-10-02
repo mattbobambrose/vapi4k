@@ -18,3 +18,8 @@ If you have any questions, comments, or suggestions, please feel free to reach o
 If you go through the [Getting Started](https://mattbobambrose.github.io/vapi4k/gettingstarted.html) guide, you should
 be up and running with an example application in less than 15 minutes.
 
+The vapi4k GitHub repo can be found [here](https://github.com/mattbobambrose/vapi4k).
+
+The vapi4k-core package KDocs can be found [here](https://mattbobambrose.github.io/vapi4k/core/index.html).
+
+The vapi4k-utils package KDocs can be found [here](https://mattbobambrose.github.io/vapi4k/utils/index.html).

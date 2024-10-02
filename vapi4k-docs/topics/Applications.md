@@ -35,7 +35,7 @@ Responses are specified using the [`webCallApplication{}`](%core_url%.vapi4k/-we
 <code-block lang="kotlin" src="src/main/kotlin/applications/WebCall.kt" include-symbol="module"/>
 </chapter>
 
-## Common Application Properties and Functions
+## Application Properties
 
 A vapi4k configuration can include multiple application decls. The default `serverPath` value is `/vapi4k`.
 If there is more than one application of a given type, you will need to specify a unique `serverPath` property value
@@ -43,11 +43,14 @@ for each application.
 
 The `serverSecret` property is optional.
 
-All applications require a `onAssistantRequest{}` definition. Its argument will define
-the desired assistant, assistantId, squad or squadId.
+## Application Functions
+
+All applications require a call to `onAssistantRequest{}`. Its contents will define
+the desired assistant, assistantId, squad or squadId for the request.
 
 All applications allow you define callbacks for requests and responses using the `onAllRequest{}`,
 `onRequest{}`, `onAllResponse{}` and `onResponse{}` functions. These functions are also available globally
 within the [`Vapi4kConfig` context](%core_url%.vapi4k/-vapi4k-config/index.html).
-The arguments for `onRequest{}` are type [ServerRequestType](%utils_url%.vapi4k/-server-request-type/index.html).
-The arguments for `onResponse{}` are type [ServerResponseType]
+
+The arguments for `onRequest{}` and `onResponse{}` are of type
+[ServerRequestType](%utils_url%.vapi4k.enums/-server-request-type/index.html).

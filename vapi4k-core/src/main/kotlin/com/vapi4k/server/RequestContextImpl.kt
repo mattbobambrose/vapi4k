@@ -16,7 +16,7 @@
 
 package com.vapi4k.server
 
-import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.toJsonString
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.hasStatusUpdateError
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.phoneNumber
 import com.vapi4k.api.vapi4k.AssistantRequestUtils.statusUpdateError

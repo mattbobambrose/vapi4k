@@ -16,7 +16,7 @@
 
 package com.vapi4k.dbms
 
-import com.vapi4k.api.json.JsonElementUtils.toJsonString
+import com.vapi4k.api.json.toJsonString
 import com.vapi4k.api.vapi4k.enums.ServerRequestType
 import com.vapi4k.api.vapi4k.enums.ServerRequestType.Companion.serverRequestType
 import kotlinx.serialization.json.JsonElement

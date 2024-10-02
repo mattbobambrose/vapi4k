@@ -16,11 +16,11 @@
 
 package com.vapi4k.dsl.functions
 
-import com.vapi4k.api.json.JsonElementUtils.booleanValue
-import com.vapi4k.api.json.JsonElementUtils.doubleValue
-import com.vapi4k.api.json.JsonElementUtils.intValue
-import com.vapi4k.api.json.JsonElementUtils.keys
-import com.vapi4k.api.json.JsonElementUtils.stringValue
+import com.vapi4k.api.json.booleanValue
+import com.vapi4k.api.json.doubleValue
+import com.vapi4k.api.json.intValue
+import com.vapi4k.api.json.keys
+import com.vapi4k.api.json.stringValue
 import com.vapi4k.api.toolservice.ToolCallService
 import com.vapi4k.api.vapi4k.RequestContext
 import com.vapi4k.common.Utils.errorMsg

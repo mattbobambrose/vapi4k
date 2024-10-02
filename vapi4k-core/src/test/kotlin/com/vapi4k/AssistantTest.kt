@@ -20,10 +20,10 @@ import com.vapi4k.api.assistant.enums.AssistantClientMessageType
 import com.vapi4k.api.assistant.enums.AssistantServerMessageType
 import com.vapi4k.api.assistant.enums.FirstMessageModeType.ASSISTANT_SPEAKS_FIRST_WITH_MODEL_GENERATED_MODEL
 import com.vapi4k.api.conditions.eq
-import com.vapi4k.api.json.JsonElementUtils.intValue
-import com.vapi4k.api.json.JsonElementUtils.jsonElementList
-import com.vapi4k.api.json.JsonElementUtils.stringValue
-import com.vapi4k.api.json.JsonElementUtils.toJsonElement
+import com.vapi4k.api.json.intValue
+import com.vapi4k.api.json.jsonElementList
+import com.vapi4k.api.json.stringValue
+import com.vapi4k.api.json.toJsonElement
 import com.vapi4k.api.model.enums.OpenAIModelType
 import com.vapi4k.api.tools.enums.ToolMessageType
 import com.vapi4k.api.transcriber.enums.DeepgramLanguageType
