@@ -2,15 +2,15 @@
 
 # Getting Started
 
-## Create a Vapi.ai Account
+## Create a Vapi Account
 
-Create a Vapi.ai account by going [here](https://dashboard.vapi.ai).
+Create a Vapi account by going [here](https://dashboard.vapi.ai).
 
-## Get a Vapi.ai Phone Number
+## Get a Vapi Phone Number
 
 <procedure>
     <step>
-        <p>Go to the <a href = "https://dashboard.vapi.ai">vapi dashboard</a>.</p>
+        <p>Go to the <a href = "https://dashboard.vapi.ai">Vapi dashboard</a>.</p>
     </step>
     <step>
         <p>Click on <shortcut>Platform</shortcut> <shortcut>Phone Numbers</shortcut> and then
@@ -94,9 +94,9 @@ You can now clone your new vapi4k-template repository from the command line or w
 
 ## Install ngrok
 
-The [ngrok](https://ngrok.com/) proxy allows you to expose your local vapi4k ktor server to the internet.
-It is very useful for developing vapi4k apps because it greatly decreases your iteration time.
-It is also useful for watching the traffic between your app and the vapi.ai platform.
+The [ngrok](https://ngrok.com/) proxy allows you to expose your local Vapi4k Ktor server to the internet.
+It is very useful for developing Vapi4k apps because it greatly decreases your iteration time.
+It is also useful for watching the traffic between your app and the Vapi platform.
 To install ngrok, go to the [ngrok download page](https://ngrok.com/download) and follow the instructions for
 your operating system.
 
@@ -109,13 +109,13 @@ ngrok http 8080
 ```
 
 Copy the ngrok `Web Interface` url and paste it into your browser. You will see the ngrok dashboard and all messages
-exchanged between your app and the vapi.ai platform.
+exchanged between your app and the Vapi platform.
 
 Copy the ngrok `Forwarding` url into your copy buffer. You will need this url in the next step.
 
 ## Create a file with env var values
 
-The vapi4k server requires some environment variables to be defined to connect to the vapi.ai platform.
+The Vapi4k server requires some environment variables to be defined to connect to the Vapi platform.
 
 <procedure title="Create a secrets.env file">
     <step>
@@ -141,7 +141,7 @@ The `secrets.env` file should contain values for these environment variables:
 * VAPI_PHONE_NUMBER_ID
 * VAPI4K_BASE_URL
 
-The first three values can be found on the vapi.ai dashboard.
+The first three values can be found on the Vapi dashboard.
 The keys are found by clicking on the organization button on the lower left
 and the phone number id is found in the `Platform` `Phone Number` section.
 
@@ -165,11 +165,11 @@ VAPI4K_BASE_URL=https://fdee-73-71-109-432.ngrok-free.app
 
 </procedure>
 
-## Configure vapi.ai
+## Configure Vapi
 
 <procedure title="">
     <step>
-        <p>Go to the <a href = "https://dashboard.vapi.ai">vapi dashboard</a>.</p>
+        <p>Go to the <a href = "https://dashboard.vapi.ai">Vapi dashboard</a>.</p>
     </step>
     <step>
         <p>Click on the green organization button on the lower left.</p>
@@ -181,7 +181,7 @@ VAPI4K_BASE_URL=https://fdee-73-71-109-432.ngrok-free.app
 The <shortcut>Server URL</shortcut> is a combination of the `VAPI4K_BASE_URL` value and an `/inboundCall/serverPath`
 value.
 
-The `/inboundCall` indicates that the url corresponds to a vapi4k `inboundCallApplication{}` declaration.
+The `/inboundCall` indicates that the url corresponds to a Vapi4k `inboundCallApplication{}` declaration.
 
 The `serverPath` value is defined in the `inboundCallApplication{}` declaration and
 defaults to `/vapi4k`.
@@ -218,10 +218,10 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
           with the ngrok VAPI4K_BASE_URL value.</p>
     </step>
     <step>
-        <p>Click on the VAPI4K_BASE_URL value in the log to open the vapi4k admin page.</p>
+        <p>Click on the VAPI4K_BASE_URL value in the log to open the Vapi4k admin page.</p>
     </step>
     <step>
-        <p>You should now be able to make a call to your vapi.ai phone number and see the call in the admin log.</p>
+        <p>You should now be able to make a call to your Vapi phone number and see the call in the admin log.</p>
     </step>
     <step>
         <p>To see a tool call, ask the assistant "What is the weather in "Dallas, Texas?"</p>
@@ -230,7 +230,7 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
 
 <procedure title="Run the outbound call application">
     <step>
-        <p>Run the vapi4k server as described above.</p>
+        <p>Run the Vapi4k server as described above.</p>
     </step>
     <step>
         <p>Open <b>src/main/kotlin/com/myapp/CallCustomer.kt</b> and edit the phone number appropriately.</p>
@@ -248,7 +248,7 @@ https://c7dc-2601-644-8722-6250-a138-5443-c3c5-eb1d.ngrok-free.app/inboundCall/v
 
 <procedure title="Run the web application">
     <step>
-        <p>Run the vapi4k server as described above.</p>
+        <p>Run the Vapi4k server as described above.</p>
     </step>
     <step>
         <p>Open the <b>$VAPI4K_BASE_URL/talk</b> URL in your browser.</p>

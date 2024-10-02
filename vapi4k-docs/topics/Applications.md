@@ -1,6 +1,6 @@
 # Applications
 
-The vapi4k ktor plugin allows you to define three types of applications:
+The Vapi4k Ktor plugin allows you to define three types of applications:
 
 * InboundCall
 * OutboundCall
@@ -37,7 +37,7 @@ Responses are specified using the [`webCallApplication{}`](%core_url%.vapi4k/-we
 
 ## Application Properties
 
-A vapi4k configuration can include multiple application decls. The default `serverPath` value is `/vapi4k`.
+A Vapi4k configuration can include multiple application decls. The default `serverPath` value is `/vapi4k`.
 If there is more than one application of a given type, you will need to specify a unique `serverPath` property value
 for each application.
 

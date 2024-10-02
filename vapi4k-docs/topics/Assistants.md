@@ -26,7 +26,7 @@ A `squad{}` call creates a temporary squad that lasts for the duration of the ca
 ## AssistantIds
 
 An `assistantId{}` call references a static assistant defined in
-the [vapi dashboard](https://dashboard.vapi.ai/assistants).
+the [Vapi dashboard](https://dashboard.vapi.ai/assistants).
 
 The `assistantOverrides{}` function is used to override the default assistant settings and its argument has a
 [`AssistantOverrides`](%core_url%.assistant/-assistant-overrides/index.html) context.
@@ -37,7 +37,7 @@ The `assistantOverrides{}` function is used to override the default assistant se
 
 ## SquadIds
 
-A `squadId{}` call references a static squad defined in the [vapi dashboard](https://dashboard.vapi.ai/assistants).
+A `squadId{}` call references a static squad defined in the [Vapi dashboard](https://dashboard.vapi.ai/assistants).
 
 <chapter title="Squad Id Example" id="squadId" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/assistants/Assistants.kt" include-symbol="squadIdExample"/>

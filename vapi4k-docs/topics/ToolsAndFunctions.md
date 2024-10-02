@@ -3,7 +3,7 @@
 # Tools and Functions
 
 Tools and functions
-The vapi4k DSL allows you to assign tools and functions to assistants, which allows
+The Vapi4k DSL allows you to assign tools and functions to assistants, which allows
 an LLM to perform tasks and calculations.
 
 ## Tools
@@ -58,7 +58,7 @@ A `tool{}` implmentation object can also inherit from `ToolCallService()`
 
 ### ManualTool
 
-A `manualTool()` describes a function where the implementation is within the vapi4k DSL. The parameters are manually
+A `manualTool()` describes a function where the implementation is within the Vapi4k DSL. The parameters are manually
 extracted from the `args` JsonElement, which is the JSON object included in the LLM request.
 A `manualTool()` is not associated with a specific Kotlin object.
 

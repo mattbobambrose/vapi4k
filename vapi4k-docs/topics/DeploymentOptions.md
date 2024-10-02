@@ -7,13 +7,13 @@ Instructions for using `ngrok` are in the [Getting Started](GettingStarted.md) g
 
 ## Heroku
 
-[Heroku](https://www.heroku.com) is a cloud platform where you can deploy your vapi4k applications.
+[Heroku](https://www.heroku.com) is a cloud platform where you can deploy your Vapi4k applications.
 
 Install the Heroku CLI with these [instructions](https://devcenter.heroku.com/articles/heroku-cli).
 
 <procedure title="Create a Heroku Application">
     <step>
-        <p>Open a terminal window and go to the root directory of your vapi4k application. </p>
+        <p>Open a terminal window and go to the root directory of your Vapi4k application. </p>
     </step>
     <step>
         <p>Log in to Heroku with the command <code>heroku login</code>. </p>
@@ -46,7 +46,7 @@ Install the Heroku CLI with these [instructions](https://devcenter.heroku.com/ar
 
 ## Dockerfile
 
-You can deploy your vapi4k application using a Docker container.
+You can deploy your Vapi4k application using a Docker container.
 The `vapi4k-template` project includes a `Dockerfile` that you can use to build a Docker image.
 
 Install and run Docker Desktop following these [instructions](https://www.docker.com/products/docker-desktop/).
