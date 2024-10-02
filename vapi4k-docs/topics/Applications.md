@@ -9,7 +9,7 @@ The vapi4k ktor plugin allows you to define three types of applications:
 ## InboundCall Applications
 
 InboundCall applications are used to handle requests from the Vapi platform resulting from calls to Vapi.
-Responses are specified using the [`inboundCallApplication{}`](%base_url%.vapi4k/-inbound-call-application/index.html)
+Responses are specified using the [`inboundCallApplication{}`](%core_url%.vapi4k/-inbound-call-application/index.html)
 function.
 
 <chapter title="InboundCall Application Ktor Config" id="inboundApp" collapsible="false">
@@ -19,7 +19,7 @@ function.
 ## OutboundCall Applications
 
 OutboundCall applications are used to make outgoing calls from the Vapi platform.
-Responses are specified using the [`outboundCallApplication{}`](%base_url%.vapi4k/-outbound-call-application/index.html)
+Responses are specified using the [`outboundCallApplication{}`](%core_url%.vapi4k/-outbound-call-application/index.html)
 function.
 
 <chapter title="OutboundCall Application Ktor Config" id="outboundApp" collapsible="false">
@@ -29,7 +29,7 @@ function.
 ## Web Applications
 
 Web applications are used to create webpage-based conversations.
-Responses are specified using the [`webCallApplication{}`](%base_url%.vapi4k/-web-application/index.html) function.
+Responses are specified using the [`webCallApplication{}`](%core_url%.vapi4k/-web-application/index.html) function.
 
 <chapter title="Web Application Ktor Config" id="webAppKtor" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/applications/WebCall.kt" include-symbol="module"/>
@@ -48,4 +48,6 @@ the desired assistant, assistantId, squad or squadId.
 
 All applications allow you define callbacks for requests and responses using the `onAllRequest{}`,
 `onRequest{}`, `onAllResponse{}` and `onResponse{}` functions. These functions are also available globally
-in the [`Vapi4kConfig` context](%base_url%.vapi4k/-vapi4k-config/index.html).
+within the [`Vapi4kConfig` context](%core_url%.vapi4k/-vapi4k-config/index.html).
+The arguments for `onRequest{}` are type [ServerRequestType](%utils_url%.vapi4k/-server-request-type/index.html).
+The arguments for `onResponse{}` are type [ServerResponseType]

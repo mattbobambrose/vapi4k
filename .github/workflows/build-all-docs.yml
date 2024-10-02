@@ -58,7 +58,6 @@ jobs:
           path: vapi4k-utils/build/dokka/
           retention-days: 7
 
-
   deploy:
     environment:
       name: github-pages
@@ -76,7 +75,7 @@ jobs:
       - name: Unzip artifact
         run: unzip -O UTF-8 -qq ${{ env.ARTIFACT }} -d wsdocs
 
-      - name: Download core kdocs artifact
+      - name: Download core-kdocs artifact
         uses: actions/download-artifact@v4
         with:
           name: core-kdocs
@@ -84,7 +83,7 @@ jobs:
       - name: Move core-kdocs into wsdocs
         run: mv ./html wsdocs/core
 
-      - name: Download utils kdocs artifact
+      - name: Download utils-kdocs artifact
         uses: actions/download-artifact@v4
         with:
           name: utils-kdocs
