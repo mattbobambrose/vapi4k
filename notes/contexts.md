@@ -10,14 +10,12 @@ RequestContexts are created:
 * Every assistant (AssistantOverrides and AssistantOverrides) is assigned a unique assistantId via
   `assistantIdSource.nextAssistantId()`
 
-## serverUrl assignments
+## ServerUrl Assignments
 
-ServerUrls are assigned in:
+The ServerUrls are assigned in:
 
 * AbstractAssistantResponseImpl.assistant{} -- values assigned from requestContext
 * MemberImpl.assistant{} -- values assigned from requestContext
-
-
 * Phone.outboundCall{} -- sessionId assigned a random value
 * VapiHtmlImpl.talkButton -- sessionId assigned a random value
 * validateToolInvokeRequest
