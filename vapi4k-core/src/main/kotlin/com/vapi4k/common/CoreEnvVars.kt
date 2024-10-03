@@ -22,12 +22,30 @@ import com.vapi4k.envvar.EnvVar.Companion.obfuscate
 import com.vapi4k.utils.MiscUtils.removeEnds
 
 object CoreEnvVars {
-  private val IS_PRODUCTION = EnvVar("IS_PRODUCTION", getWithDefault(false))
-  private val DEFAULT_SERVER_PATH = EnvVar("DEFAULT_SERVER_PATH", getWithDefault("/vapi4k"))
+  private val IS_PRODUCTION = EnvVar(
+    name = "IS_PRODUCTION",
+    src = getWithDefault(false),
+  )
 
-  private val VAPI4K_BASE_URL = EnvVar("VAPI4K_BASE_URL", getWithDefault("http://localhost:8080"))
-  private val VAPI_BASE_URL = EnvVar("VAPI_BASE_URL", getWithDefault("https://api.vapi.ai"))
-  internal val PING_LOGGING_ENABLED = EnvVar("PING_LOGGING_ENABLED", getWithDefault(false))
+  private val DEFAULT_SERVER_PATH = EnvVar(
+    name = "DEFAULT_SERVER_PATH",
+    src = getWithDefault("/vapi4k"),
+  )
+
+  private val VAPI4K_BASE_URL = EnvVar(
+    name = "VAPI4K_BASE_URL",
+    src = getWithDefault("http://localhost:8080"),
+  )
+
+  private val VAPI_BASE_URL = EnvVar(
+    name = "VAPI_BASE_URL",
+    src = getWithDefault("https://api.vapi.ai"),
+  )
+
+  internal val PING_LOGGING_ENABLED = EnvVar(
+    name = "PING_LOGGING_ENABLED",
+    src = getWithDefault(false),
+  )
 
   private val VAPI_PRIVATE_KEY = EnvVar(
     name = "VAPI_PRIVATE_KEY",
@@ -47,12 +65,11 @@ object CoreEnvVars {
     maskFunc = obfuscate(3),
   )
 
-  internal val REQUEST_VALIDATION_FILENAME =
-    EnvVar(
-      name = "REQUEST_VALIDATION_FILENAME",
-      src = getWithDefault("/json/AssistantRequestValidation.json"),
-      reportOnBoot = false,
-    )
+  internal val REQUEST_VALIDATION_FILENAME = EnvVar(
+    name = "REQUEST_VALIDATION_FILENAME",
+    src = getWithDefault("/json/AssistantRequestValidation.json"),
+    reportOnBoot = false,
+  )
 
   private val DEEPGRAM_PRIVATE_KEY = EnvVar(
     name = "DEEPGRAM_PRIVATE_KEY",
@@ -66,19 +83,33 @@ object CoreEnvVars {
     maskFunc = obfuscate(1),
   )
 
-  internal val TOOL_CACHE_CLEAN_PAUSE_MINS =
-    EnvVar("TOOL_CACHE_CLEAN_PAUSE_MINS", getWithDefault(30), reportOnBoot = false)
-  internal val TOOL_CACHE_MAX_AGE_MINS =
-    EnvVar("TOOL_CACHE_MAX_AGE_MINS", getWithDefault(60), reportOnBoot = false)
+  internal val TOOL_CACHE_CLEAN_PAUSE_MINS = EnvVar(
+    name = "TOOL_CACHE_CLEAN_PAUSE_MINS",
+    src = getWithDefault(30),
+    reportOnBoot = false,
+  )
 
-  internal val defaultServerPath: String by lazy { DEFAULT_SERVER_PATH.value.removeEnds("/") }
+  internal val TOOL_CACHE_MAX_AGE_MINS = EnvVar(
+    name = "TOOL_CACHE_MAX_AGE_MINS",
+    src = getWithDefault(60),
+    reportOnBoot = false,
+  )
 
-  val PORT = EnvVar("PORT", getWithDefault(8080))
-  val HOST = EnvVar("HOST", getWithDefault("unknown"), reportOnBoot = false)
+  val PORT = EnvVar(
+    name = "PORT",
+    src = getWithDefault(8080),
+  )
+
+  val HOST = EnvVar(
+    name = "HOST",
+    src = getWithDefault("unknown"),
+    reportOnBoot = false,
+  )
 
   val isProduction: Boolean = IS_PRODUCTION.toBoolean()
   val vapi4kBaseUrl: String = VAPI4K_BASE_URL.value.removeSuffix("/")
   val vapiBaseUrl: String = VAPI_BASE_URL.value.removeSuffix("/")
+  val defaultServerPath: String = DEFAULT_SERVER_PATH.value.removeEnds("/")
   val vapiPrivateKey: String = VAPI_PRIVATE_KEY.value
   val vapiPublicKey: String = VAPI_PUBLIC_KEY.value
   val deepGramVoiceIdType: String = DEEPGRAM_PRIVATE_KEY.value

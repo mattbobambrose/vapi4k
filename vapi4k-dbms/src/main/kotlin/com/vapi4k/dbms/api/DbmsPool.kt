@@ -14,8 +14,9 @@
  *
  */
 
-package com.vapi4k.dbms
+package com.vapi4k.dbms.api
 
+import com.vapi4k.dbms.DbmsEnvVars
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database

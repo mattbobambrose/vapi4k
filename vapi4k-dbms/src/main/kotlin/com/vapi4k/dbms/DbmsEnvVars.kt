@@ -21,17 +21,36 @@ import com.vapi4k.envvar.EnvVar.Companion.getWithDefault
 import com.vapi4k.envvar.EnvVar.Companion.obfuscate
 
 object DbmsEnvVars {
-  val DBMS_DRIVER_CLASSNAME =
-    EnvVar("DBMS_DRIVER_CLASSNAME", getWithDefault("com.impossibl.postgres.jdbc.PGDriver"))
-  val DBMS_URL = EnvVar("DBMS_URL", getWithDefault("jdbc:pgsql://localhost:5432/postgres"))
-  val DBMS_USERNAME = EnvVar("DBMS_USERNAME", getWithDefault("postgres"))
+  val DBMS_DRIVER_CLASSNAME = EnvVar(
+    name = "DBMS_DRIVER_CLASSNAME",
+    src = getWithDefault("com.impossibl.postgres.jdbc.PGDriver"),
+  )
+
+  val DBMS_URL = EnvVar(
+    name = "DBMS_URL",
+    src = getWithDefault("jdbc:pgsql://localhost:5432/postgres"),
+  )
+
+  val DBMS_USERNAME = EnvVar(
+    name = "DBMS_USERNAME",
+    src = getWithDefault("postgres"),
+  )
+
   val DBMS_PASSWORD = EnvVar(
     name = "DBMS_PASSWORD",
     src = getWithDefault("docker"),
     maskFunc = obfuscate(1),
   )
-  val DBMS_MAX_POOL_SIZE = EnvVar("DBMS_MAX_POOL_SIZE", getWithDefault(10))
-  val DBMS_MAX_LIFETIME_MINS = EnvVar("DBMS_MAX_LIFETIME_MINS", getWithDefault(30))
+
+  val DBMS_MAX_POOL_SIZE = EnvVar(
+    name = "DBMS_MAX_POOL_SIZE",
+    src = getWithDefault(10),
+  )
+
+  val DBMS_MAX_LIFETIME_MINS = EnvVar(
+    name = "DBMS_MAX_LIFETIME_MINS",
+    src = getWithDefault(30),
+  )
 
   fun loadDbmsEnvVars() = Unit
 }

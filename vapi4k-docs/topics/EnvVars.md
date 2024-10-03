@@ -1,5 +1,8 @@
+<show-structure depth="2"/>
+
 # Vapi4k Env Vars
 
+## vapi4k-core
 <table>
     <tr>
         <td width="200">Name</td>
@@ -45,5 +48,45 @@
         <td>DEFAULT_SERVER_PATH</td>
         <td>Default value for application <shortcut>serverPath</shortcut>value</td>
         <td><shortcut>/vapi4k</shortcut></td>
+    </tr>
+</table>
+
+## vapi4k-dbms
+
+<table>
+    <tr>
+        <td width="200">Name</td>
+        <td width="400">Description</td>
+        <td width="200">Default Value</td>
+    </tr>
+    <tr>
+        <td>DBMS_DRIVER_CLASSNAME</td>
+        <td>JDBC classname</td>
+        <td><shortcut>com.impossibl.postgres.jdbc.PGDriver</shortcut></td>
+    </tr>
+    <tr>
+        <td>DBMS_URL</td>
+        <td>JDBC URL</td>
+        <td><shortcut>jdbc:pgsql://localhost:5432/postgres</shortcut></td>
+    </tr>
+    <tr>
+        <td>DBMS_USERNAME</td>
+        <td>Database username</td>
+        <td><shortcut>docker</shortcut></td>
+    </tr>
+    <tr>
+        <td>DBMS_PASSWORD</td>
+        <td>DBMS password</td>
+        <td><shortcut>docker</shortcut></td>
+    </tr>
+    <tr>
+        <td>DBMS_MAX_POOL_SIZE</td>
+        <td>Max DBMS connection pool size</td>
+        <td><shortcut>10</shortcut></td>
+    </tr>
+    <tr>
+        <td>DBMS_MAX_LIFETIME_MINS</td>
+        <td>Max DBMS connection lifetime</td>
+        <td><shortcut>30</shortcut></td>
     </tr>
 </table>
