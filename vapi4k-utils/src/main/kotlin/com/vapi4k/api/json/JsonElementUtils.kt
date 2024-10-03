@@ -16,7 +16,8 @@
 
 package com.vapi4k.api.json
 
-import com.vapi4k.common.JsonContentUtils.defaultJson
+import com.vapi4k.common.Utils.prettyFormat
+import com.vapi4k.common.Utils.rawFormat
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -28,9 +29,6 @@ import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-
-val prettyFormat by lazy { defaultJson() }
-val rawFormat by lazy { Json { prettyPrint = false } }
 
 val JsonElement.keys get() = jsonObject.keys
 

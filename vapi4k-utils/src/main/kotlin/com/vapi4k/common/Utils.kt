@@ -16,6 +16,8 @@
 
 package com.vapi4k.common
 
+import com.vapi4k.common.JsonContentUtils.defaultJson
+import kotlinx.serialization.json.Json
 import java.net.URLDecoder
 import java.net.URLEncoder
 import kotlin.contracts.ExperimentalContracts
@@ -23,6 +25,9 @@ import kotlin.contracts.contract
 import kotlin.text.Charsets.UTF_8
 
 object Utils {
+  val prettyFormat by lazy { defaultJson() }
+  val rawFormat by lazy { Json { prettyPrint = false } }
+
   fun <T> lambda(block: T) = block
 
   fun String.ensureStartsWith(s: String) = if (startsWith(s)) this else s + this
