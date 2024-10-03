@@ -27,8 +27,8 @@ Install the Heroku CLI with these [instructions](https://devcenter.heroku.com/ar
       <p>Go to [Heroku](https://www.heroku.com) and select the newly created application.</p>
     </step>
     <step>
-      <p>Select the <shortcut>Settings</shortcut> tab and click on the <shortcut>Reveal Config Vars</shortcut> button and assign the env vars found in your
-        secrets.env file. Assign VAPI4K_BASE_URL to the URL seen above.</p>
+      <p>Select the <shortcut>Settings</shortcut> tab and click on the <shortcut>Reveal Config Vars</shortcut> button
+        and assign the env vars found in your secrets.env file. Assign VAPI4K_BASE_URL to the URL seen above.</p>
     </step>
     <step>
       <p>Refresh your browser window after the dyno restarts.</p>

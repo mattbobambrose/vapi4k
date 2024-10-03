@@ -44,6 +44,9 @@ kdocs:
 mddocs:
 	./gradlew dokkaGfm
 
+updatedocs:
+	./bin/update-docs.sh
+
 publish:
 	./gradlew publishToMavenLocal
 
