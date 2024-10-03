@@ -21,6 +21,7 @@ import com.vapi4k.api.json.keys
 import com.vapi4k.api.json.stringValue
 import com.vapi4k.api.json.toJsonElement
 import com.vapi4k.api.json.toJsonString
+import kotlinx.serialization.json.JsonElement
 
 object JsonElements {
   @JvmStatic
@@ -43,7 +44,7 @@ object JsonElements {
     """
 
     // Convert the json string to a JsonElement
-    val je = json.toJsonElement()
+    val je: JsonElement = json.toJsonElement()
 
     println(je.keys) // [person]
 
@@ -51,21 +52,17 @@ object JsonElements {
 
     println(je["person.address"].keys) // [street, city]
 
-    // Get the value of the "first" key using the stringValue extension property
-    val first = je["person.first"].stringValue
-    println(first) // Bill
+    // Get the value of the "person.first" key using the stringValue extension property
+    println(je["person.first"].stringValue) // Bill
 
-    // Get the value of the "last" key using the stringValue extension function
-    val last = je.stringValue("person.last")
-    println(last) // Lambert
+    // Get the value of the "person.last" key using the stringValue extension function
+    println(je.stringValue("person.last")) // Lambert
 
-    // Get the value of the "address.street" key
-    val street = je.stringValue("person.address.street")
-    println(street) // 123 Main
+    // Get the value of the "person.address.street" key
+    println(je.stringValue("person.address.street")) // 123 Main
 
-    // Get the value of the "address.street" key using the get function and the vararg keys parameter
-    val city = je["person", "address", "city"].stringValue
-    println(city) // Tulsa
+    // Get the value of the "person.address.street" key using the get function and the vararg keys parameter
+    println(je["person", "address", "city"].stringValue) // Tulsa
 
     println(je.toJsonString())
     /*

@@ -42,5 +42,4 @@ fun outboundCallExample() {
     println("Call status: ${response.status}")
     println("Call response: ${response.bodyAsText().toJsonElement()}")
   }
-
 }

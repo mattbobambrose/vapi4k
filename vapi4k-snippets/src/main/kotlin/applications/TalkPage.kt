@@ -29,7 +29,6 @@ import kotlinx.html.head
 import kotlinx.html.title
 
 object TalkPage {
-
   fun Application.talkPage() {
     routing {
       get("/talk") {

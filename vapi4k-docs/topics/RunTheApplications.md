@@ -2,9 +2,6 @@
 
 # Run the Template Applications
 
-If you completed the steps in the [Setup](https://mattbobambrose.github.io/vapi4k/setup.html) guide,
-you are now ready to run the template applications.
-
 ## Verify the Applications
 
 Before running the applications, verify that the assistant request responses and tool calls for each

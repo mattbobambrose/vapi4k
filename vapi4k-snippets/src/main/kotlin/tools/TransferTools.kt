@@ -37,9 +37,9 @@ object TransferTools {
     tools {
       transferTool {
         numberDestination {
-          number = "4155551212"
+          number = "+14155551212"
           message = "This is the number destination message"
-          description = "Transfer the call to ohine number"
+          description = "Transfer the call to a phone number"
         }
       }
     }
