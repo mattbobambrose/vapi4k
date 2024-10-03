@@ -25,3 +25,5 @@ The Vapi4k GitHub repo can be found [here](https://github.com/mattbobambrose/vap
 The vapi4k-core package KDocs can be found [here](https://mattbobambrose.github.io/vapi4k/core/index.html).
 
 The vapi4k-utils package KDocs can be found [here](https://mattbobambrose.github.io/vapi4k/utils/index.html).
+
+The vapi4k-dbms package KDocs can be found [here](https://mattbobambrose.github.io/vapi4k/dbms/index.html).
