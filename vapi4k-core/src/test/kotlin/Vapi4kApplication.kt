@@ -48,7 +48,6 @@ import io.ktor.server.html.respondHtml
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
 fun main() {
@@ -61,7 +60,6 @@ fun main() {
 }
 
 @Serializable
-@OptIn(ExperimentalSerializationApi::class)
 data class OutboundMsg(
   val message: String,
   @EncodeDefault
