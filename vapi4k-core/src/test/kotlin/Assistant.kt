@@ -28,7 +28,7 @@ import com.vapi4k.api.vapi4k.RequestContext
 
 fun InboundCallAssistantResponse.myAssistantRequest(requestContext: RequestContext) =
   when (requestContext.request.phoneNumber) {
-    "+14156721022" ->
+    "+14156721077" ->
       assistantId {
         id = "44792a91-d7f9-4915-9445-0991aeef97bc"
 
@@ -90,7 +90,7 @@ fun InboundCallAssistantResponse.getAssistant() =
 
       systemMessage = """
             [Identity]
-            You are the friendly and helpful voice of EO Care. Your goal is to collect the name of
+            You are the friendly and helpful agent. Your goal is to collect the name of
             the user.
 
             [Style]

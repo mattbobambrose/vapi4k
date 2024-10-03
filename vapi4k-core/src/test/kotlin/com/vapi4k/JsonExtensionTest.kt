@@ -97,7 +97,7 @@ class JsonExtensionTest {
         ],
         "call": {
           "id": "6b38c32e-6d5c-4d10-bce5-951581ddcd77",
-          "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+          "orgId": "379a13ec-f40d-4055-8959-797c4ee1694s",
           "createdAt": "2024-07-04T05:38:46.478Z",
           "updatedAt": "2024-07-04T05:38:46.478Z",
           "type": "inboundPhoneCall",
@@ -105,9 +105,9 @@ class JsonExtensionTest {
           "phoneCallProvider": "twilio",
           "phoneCallProviderId": "CAe519bb3b2aa4c6177f0bb5d8054422a3",
           "phoneCallTransport": "pstn",
-          "phoneNumberId": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+          "phoneNumberId": "4a5a04dc-dcbe-45b1-8f64-fd32a253d136",
           "customer": {
-            "number": "+19256836490"
+            "number": "+14566836490"
           },
           "assistant": {
             "model": {
@@ -162,18 +162,18 @@ class JsonExtensionTest {
           }
         },
         "phoneNumber": {
-          "id": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
-          "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+          "id": "4a5a04dc-dcbe-45b1-8f64-fd32a253d136",
+          "orgId": "379a13ec-f40d-4055-8959-797c4ee1694s",
           "number": "+19254207621",
           "createdAt": "2024-06-29T03:03:00.576Z",
           "updatedAt": "2024-06-29T03:04:32.131Z",
-          "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33cFxM9B7",
+          "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33dFxM9B8",
           "stripeSubscriptionStatus": "active",
           "stripeSubscriptionCurrentPeriodStart": "2024-06-29T03:02:56.000Z",
           "provider": "twilio"
         },
         "customer": {
-          "number": "+19256836490"
+          "number": "+14566836490"
         },
         "artifact": {
           "messages": [

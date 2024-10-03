@@ -22,14 +22,14 @@
         <td></td>
     </tr>
     <tr>
-        <td>VAPI_BASE_URL</td>
-        <td>Base URL of Vapi API Server. Used by outbound call applications.</td>
-        <td><shortcut>https://api.vapi.ai</shortcut></td>
-    </tr>
-    <tr>
         <td>VAPI_PHONE_NUMBER_ID</td>
         <td>Vapi phone number id. Used by outbound call applications.</td>
         <td></td>
+    </tr>
+    <tr>
+        <td>VAPI_BASE_URL</td>
+        <td>Base URL of Vapi API Server. Used by outbound call applications.</td>
+        <td><shortcut>https://api.vapi.ai</shortcut></td>
     </tr>
     <tr>
         <td>IS_PRODUCTION</td>

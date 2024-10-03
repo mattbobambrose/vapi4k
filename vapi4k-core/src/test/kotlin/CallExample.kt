@@ -27,7 +27,7 @@ object CallExample {
         .phone {
           outboundCall {
             serverPath = "/outboundRequest1"
-            phoneNumber = "+14156721042"
+            phoneNumber = "+14155551212"
           }
         }
 

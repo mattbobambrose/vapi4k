@@ -53,7 +53,7 @@
         },
         "async": false,
         "server": {
-          "url": "https://eocare-app-fiqm5.ondigitalocean.app/vapi4k",
+          "url": "https://app-fiqm5.ondigitalocean.app/vapi4k",
           "secret": "12345"
         },
         "messages": [],
@@ -72,17 +72,17 @@
     ],
     "call": {
       "id": "b1223960-1b4d-4585-91b8-a69b0f57ec2f",
-      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "orgId": "379a13ec-f40d-4055-8959-797c4ee1694s",
       "createdAt": "2024-07-26T22:20:46.422Z",
       "updatedAt": "2024-07-26T22:20:46.422Z",
       "type": "inboundPhoneCall",
       "status": "ringing",
       "phoneCallProvider": "twilio",
-      "phoneCallProviderId": "CA6b6c5e52e5cdda6cad7405af7b66f0c6",
+      "phoneCallProviderId": "CA6b6c5e52e5cdda6cad7405ff7b66f0d6",
       "phoneCallTransport": "pstn",
-      "phoneNumberId": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
+      "phoneNumberId": "4a5a04dc-dcbe-45b1-8f64-fd32a253d136",
       "customer": {
-        "number": "+19256836490"
+        "number": "+14566836490"
       },
       "squad": {
         "members": [
@@ -116,7 +116,7 @@
                       }
                     },
                     "server": {
-                      "url": "https://eocare-app-fiqm5.ondigitalocean.app/vapi4k",
+                      "url": "https://app-fiqm5.ondigitalocean.app/vapi4k",
                       "secret": "12345"
                     },
                     "type": "function"
@@ -165,7 +165,7 @@
                       }
                     },
                     "server": {
-                      "url": "https://eocare-app-fiqm5.ondigitalocean.app/vapi4k",
+                      "url": "https://app-fiqm5.ondigitalocean.app/vapi4k",
                       "secret": "12345"
                     },
                     "type": "function"
@@ -188,18 +188,18 @@
       }
     },
     "phoneNumber": {
-      "id": "5a5a04dc-dcbe-45b1-8f64-fd32a253d135",
-      "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b",
+      "id": "4a5a04dc-dcbe-45b1-8f64-fd32a253d136",
+      "orgId": "379a13ec-f40d-4055-8959-797c4ee1694s",
       "number": "+19254207621",
       "createdAt": "2024-06-29T03:03:00.576Z",
       "updatedAt": "2024-07-20T04:24:05.533Z",
-      "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33cFxM9B7",
+      "stripeSubscriptionId": "sub_1PWrYyCRkod4mKy33dFxM9B8",
       "stripeSubscriptionStatus": "active",
       "stripeSubscriptionCurrentPeriodStart": "2024-06-29T03:02:56.000Z",
       "provider": "twilio"
     },
     "customer": {
-      "number": "+19256836490"
+      "number": "+14566836490"
     },
     "artifact": {
       "messages": [

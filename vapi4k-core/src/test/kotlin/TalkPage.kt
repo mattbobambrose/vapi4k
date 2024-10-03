@@ -17,7 +17,6 @@ object TalkPage {
       vapiTalkButton {
         serverPath = "/talkSquad"
         serverSecret = "12345"
-        vapiPublicApiKey = "c1492df9-e59f-4e06-a9ab-54f44df44f66"
         method = MethodType.POST
         postArgs = mapOf(
           "x" to "1",

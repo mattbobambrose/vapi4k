@@ -759,7 +759,7 @@ class AssistantTest {
         "type": "assistant-request",
         "call": {
             "id": "00dbe917-37fd-4d3f-8cc0-ac6be0923f40",
-            "orgId": "679a13ec-f40d-4055-8959-797c4ee1694b"
+            "orgId": "379a13ec-f40d-4055-8959-797c4ee1694s"
         },
         "timestamp": "2024-07-13T21:27:59.870Z"
       }

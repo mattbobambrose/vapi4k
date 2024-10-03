@@ -38,7 +38,7 @@ object CoreEnvVars {
   private val VAPI_PUBLIC_KEY = EnvVar(
     name = "VAPI_PUBLIC_KEY",
     src = getWithDefault(""),
-    maskFunc = obfuscate(1),
+    maskFunc = obfuscate(3),
   )
 
   internal val VAPI_PHONE_NUMBER_ID = EnvVar(
