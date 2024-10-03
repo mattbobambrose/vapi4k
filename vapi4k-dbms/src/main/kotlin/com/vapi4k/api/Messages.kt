@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dbms.api
+package com.vapi4k.api
 
 import com.vapi4k.api.json.toJsonString
 import com.vapi4k.api.vapi4k.enums.ServerRequestType

@@ -102,9 +102,7 @@ tasks.withType<DokkaTask>().configureEach {
             suppress.set(true)
         }
     }
-}
 
-tasks.withType<DokkaTask>().configureEach {
 //      "customAssets": ["${file("assets/my-image.png")}"],
 //      "customStyleSheets": ["${file("assets/my-styles.css")}"],
 //      "separateInheritedMembers": false,
@@ -125,7 +123,6 @@ tasks.withType<DokkaTask>().configureEach {
 
 tasks.dokkaHtml.configure {
 //    outputDirectory.set(buildDir.resolve("dokka"))
-
     dokkaSourceSets {
         named("main") {
             //displayName.set("Vapi4k")

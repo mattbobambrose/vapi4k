@@ -40,7 +40,7 @@ jobs:
             artifacts/${{ env.ARTIFACT }}
           retention-days: 7
 
-      # Build kdocs
+      # Build all kdocs
       - name: Build kdocs
         run: ./gradlew dokkaHtml
 
@@ -49,6 +49,13 @@ jobs:
         with:
           name: core-kdocs
           path: vapi4k-core/build/dokka/
+          retention-days: 7
+
+      - name: Save dbms kdocs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbms-kdocs
+          path: vapi4k-dbms/build/dokka/
           retention-days: 7
 
       - name: Save utils kdocs artifact
@@ -75,6 +82,7 @@ jobs:
       - name: Unzip artifact
         run: unzip -O UTF-8 -qq ${{ env.ARTIFACT }} -d wsdocs
 
+      # core-kdocs
       - name: Download core-kdocs artifact
         uses: actions/download-artifact@v4
         with:
@@ -83,6 +91,16 @@ jobs:
       - name: Move core-kdocs into wsdocs
         run: mv ./html wsdocs/core
 
+      # dbms-kdocs
+      - name: Download dbms-kdocs artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dbms-kdocs
+
+      - name: Move dbms-kdocs into wsdocs
+        run: mv ./html wsdocs/dbms
+
+      # utils-kdocs
       - name: Download utils-kdocs artifact
         uses: actions/download-artifact@v4
         with:

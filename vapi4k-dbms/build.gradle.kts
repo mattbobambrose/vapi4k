@@ -1,6 +1,10 @@
+import org.jetbrains.dokka.DokkaConfiguration.Visibility
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     alias(libs.plugins.jvm)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.dokka)
     `java-library`
 }
 
@@ -60,4 +64,63 @@ kotlinter {
     failBuildWhenCannotAutoFormat = false
     ignoreFailures = true
     reporters = arrayOf("checkstyle", "plain")
+}
+
+tasks.withType<DokkaTask>().configureEach {
+    dokkaSourceSets.configureEach {
+        documentedVisibilities.set(
+            setOf(
+                Visibility.PUBLIC,
+                // Visibility.PROTECTED,
+            )
+        )
+
+        perPackageOption {
+            matchingRegex.set(".*internal.*")
+            suppress.set(true)
+        }
+    }
+
+//      "customAssets": ["${file("assets/my-image.png")}"],
+//      "customStyleSheets": ["${file("assets/my-styles.css")}"],
+//      "separateInheritedMembers": false,
+//      "templatesDir": "${file("dokka/templates")}",
+//      "mergeImplicitExpectActualDeclarations": false
+    val dokkaBaseConfiguration = """
+    {
+      "footerMessage": "Vapi4k"
+    }
+    """
+    pluginsMapConfiguration.set(
+        mapOf(
+            // fully qualified plugin name to json configuration
+            "org.jetbrains.dokka.base.DokkaBase" to dokkaBaseConfiguration
+        )
+    )
+}
+
+tasks.dokkaHtml.configure {
+//    outputDirectory.set(buildDir.resolve("dokka"))
+    dokkaSourceSets {
+        named("main") {
+            //displayName.set("Vapi4k")
+            noStdlibLink.set(true)
+            noJdkLink.set(true)
+
+            // Exclude everything first
+            perPackageOption {
+                matchingRegex.set("com.vapi4k.*") // will match kotlin and all sub-packages of it
+                suppress.set(true)
+            }
+
+            // Include specific packages
+            perPackageOption {
+                matchingRegex.set("com.vapi4k.api.*") // will match kotlin and all sub-packages of it
+                includeNonPublic.set(false)
+                reportUndocumented.set(false)
+                skipDeprecated.set(false)
+                suppress.set(false)
+            }
+        }
+    }
 }

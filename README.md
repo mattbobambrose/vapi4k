@@ -8,7 +8,8 @@ Vapi4k is a [Ktor](https://ktor.io) plugin and a [Kotlin DSL](https://kotlinlang
 that makes it easy to define, deploy, and maintain [Vapi](https://vapi.ai) applications.
 
 The [Vapi4k Docs](https://mattbobambrose.github.io/vapi4k/overview.html),
-[vapi4k-core KDocs](https://mattbobambrose.github.io/vapi4k/core/index.html), and
-[vapi4k-utils kDocs](https://mattbobambrose.github.io/vapi4k/utils/index.html)
-are a work in progress.
+[vapi4k-core](https://mattbobambrose.github.io/vapi4k/core/index.html), and
+[vapi4k-dbms](https://mattbobambrose.github.io/vapi4k/dbms/index.html), and
+[vapi4k-utils](https://mattbobambrose.github.io/vapi4k/utils/index.html)
+KDocs are a work in progress.
 

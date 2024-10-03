@@ -14,7 +14,7 @@
  *
  */
 
-package com.vapi4k.dbms.api
+package com.vapi4k.api
 
 import com.vapi4k.dbms.DbmsEnvVars
 import com.zaxxer.hikari.HikariConfig
@@ -23,6 +23,8 @@ import org.jetbrains.exposed.sql.Database
 import kotlin.time.Duration.Companion.minutes
 
 object DbmsPool {
+  fun connectToDbms() = database
+
   private val database: Database by lazy {
     Database.connect(
       HikariDataSource(
@@ -39,6 +41,4 @@ object DbmsPool {
       ),
     )
   }
-
-  fun connectToDbms() = database
 }
