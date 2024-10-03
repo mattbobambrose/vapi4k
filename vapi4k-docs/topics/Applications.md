@@ -26,6 +26,10 @@ function.
 <code-block lang="kotlin" src="src/main/kotlin/applications/OutgoingCall.kt" include-symbol="module"/>
 </chapter>
 
+<chapter title="OutboundCall Client" id="outboundClient" collapsible="false">
+<code-block lang="kotlin" src="src/main/kotlin/applications/CallCustomer.kt" include-symbol="outboundCallExample"/>
+</chapter>
+
 ## Web Applications
 
 Web applications are used to create webpage-based conversations.
@@ -33,6 +37,10 @@ Responses are specified using the [`webCallApplication{}`](%core_url%.vapi4k/-we
 
 <chapter title="Web Application Ktor Config" id="webAppKtor" collapsible="false">
 <code-block lang="kotlin" src="src/main/kotlin/applications/WebCall.kt" include-symbol="module"/>
+</chapter>
+
+<chapter title="Web Application HTML Page" id="webPage" collapsible="false">
+<code-block lang="kotlin" src="src/main/kotlin/applications/TalkPage.kt" include-symbol="talkPage"/>
 </chapter>
 
 ## Application Properties

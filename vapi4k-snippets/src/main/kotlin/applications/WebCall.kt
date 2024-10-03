@@ -39,7 +39,7 @@ object WebCall {
   fun Application.module() {
     install(Vapi4k) {
       webApplication {
-        serverPath = "/webApp"
+        serverPath = "/talkApp"
 
         onAssistantRequest { requestContext: RequestContext ->
           assistant {

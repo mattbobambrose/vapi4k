@@ -27,7 +27,7 @@ object OutgoingCall {
   fun Application.module() {
     install(Vapi4k) {
       outboundCallApplication {
-        serverPath = "/outboundApp"
+        serverPath = "/callCustomer"
         serverSecret = "12345"
 
         onAssistantRequest { args ->
