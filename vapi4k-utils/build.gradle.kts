@@ -89,20 +89,6 @@ kotlinter {
 }
 
 tasks.dokkaHtml.configure {
-    dokkaSourceSets.configureEach {
-        documentedVisibilities.set(
-            setOf(
-                Visibility.PUBLIC,
-                // Visibility.PROTECTED,
-            )
-        )
-
-        perPackageOption {
-            matchingRegex.set(".*internal.*")
-            suppress.set(true)
-        }
-    }
-
 //      "customAssets": ["${file("assets/my-image.png")}"],
 //      "customStyleSheets": ["${file("assets/my-styles.css")}"],
 //      "separateInheritedMembers": false,
@@ -132,6 +118,8 @@ tasks.dokkaHtml.configure {
                 matchingRegex.set("com.vapi4k.*")
                 suppress.set(true)
             }
+
+            documentedVisibilities.set(setOf(Visibility.PUBLIC))
 
             // Include specific packages
             perPackageOption {
