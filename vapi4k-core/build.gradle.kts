@@ -1,6 +1,6 @@
+
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.dokka.DokkaConfiguration.Visibility
-import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     alias(libs.plugins.jvm)
@@ -123,7 +123,7 @@ kotlinter {
     reporters = arrayOf("checkstyle", "plain")
 }
 
-tasks.withType<DokkaTask>().configureEach {
+tasks.dokkaHtml.configure {
     dokkaSourceSets.configureEach {
         documentedVisibilities.set(
             setOf(
@@ -154,10 +154,8 @@ tasks.withType<DokkaTask>().configureEach {
             "org.jetbrains.dokka.base.DokkaBase" to dokkaBaseConfiguration
         )
     )
-}
 
-tasks.dokkaHtml.configure {
-//    outputDirectory.set(buildDir.resolve("dokka"))
+    //    outputDirectory.set(buildDir.resolve("dokka"))
 
     dokkaSourceSets {
         named("main") {
