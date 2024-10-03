@@ -46,5 +46,4 @@
         <td>Default value for application <shortcut>serverPath</shortcut>value</td>
         <td><shortcut>/vapi4k</shortcut></td>
     </tr>
-
 </table>
