@@ -19,7 +19,7 @@ package com.vapi4k.dsl.call
 import com.vapi4k.api.call.OutboundCall
 import com.vapi4k.api.web.MethodType
 import com.vapi4k.common.Constants.PHONE_NUMBER_ID_PROPERTY
-import com.vapi4k.common.CoreEnvVars.vapiPhoneNumberId
+import com.vapi4k.common.CoreEnvVars.VAPI_PHONE_NUMBER_ID
 import com.vapi4k.dtos.api.OutboundCallRequestDto
 import com.vapi4k.envvar.EnvVar.Companion.getSystemValue
 import com.vapi4k.utils.JsonUtils
@@ -46,7 +46,7 @@ class OutboundCallImpl internal constructor(
 
     if (outboundCallRequestDto.phoneNumberId.isBlank())
       outboundCallRequestDto.phoneNumberId =
-        getSystemValue(vapiPhoneNumberId, PHONE_NUMBER_ID_PROPERTY) {
+        getSystemValue(VAPI_PHONE_NUMBER_ID.value, PHONE_NUMBER_ID_PROPERTY) {
           "Missing phoneNumberId value. It can be defined with $PHONE_NUMBER_ID_PROPERTY in " +
             "application.conf, VAPI_PHONE_NUMBER_ID, or by assigning phoneNumberId in outboundCall{}"
         }

@@ -176,17 +176,17 @@ val Vapi4k: ApplicationPlugin<Vapi4kConfig> =
 
           authenticate(AUTH_BASIC) {
             get(ADMIN_PATH) { call.respondHtml { adminPage(config) } }
+
+            get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { call.respondText(validateApplication(config)) }
+
+            get(INVOKE_TOOL_PATH) { call.respondText(invokeTool(config)) }
+
+            get(ADMIN_ENV_PATH) { call.respondText(envVarsInfo()) }
+
+            get(ADMIN_VERSION_PATH) { call.respondText(versionInfo()) }
+
+            webSocket(ADMIN_LOG_ENDPOINT) { adminLogWs() }
           }
-
-          get("$VALIDATE_PATH/{$APP_TYPE}/{$APP_NAME}") { call.respondText(validateApplication(config)) }
-
-          get(INVOKE_TOOL_PATH) { call.respondText(invokeTool(config)) }
-
-          get(ADMIN_ENV_PATH) { call.respondText(envVarsInfo()) }
-
-          get(ADMIN_VERSION_PATH) { call.respondText(versionInfo()) }
-
-          webSocket(ADMIN_LOG_ENDPOINT) { adminLogWs() }
         }
 
         // Process Inbound Call requests

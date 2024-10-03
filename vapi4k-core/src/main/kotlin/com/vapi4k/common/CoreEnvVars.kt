@@ -41,7 +41,7 @@ object CoreEnvVars {
     maskFunc = obfuscate(1),
   )
 
-  private val VAPI_PHONE_NUMBER_ID = EnvVar(
+  internal val VAPI_PHONE_NUMBER_ID = EnvVar(
     name = "VAPI_PHONE_NUMBER_ID",
     src = getWithDefault(""),
     maskFunc = obfuscate(3),
@@ -81,7 +81,6 @@ object CoreEnvVars {
   val vapiBaseUrl: String = VAPI_BASE_URL.value.removeSuffix("/")
   val vapiPrivateKey: String = VAPI_PRIVATE_KEY.value
   val vapiPublicKey: String = VAPI_PUBLIC_KEY.value
-  val vapiPhoneNumberId: String = VAPI_PHONE_NUMBER_ID.value
   val deepGramVoiceIdType: String = DEEPGRAM_PRIVATE_KEY.value
   val adminPassword: String = ADMIN_PASSWORD.value
 

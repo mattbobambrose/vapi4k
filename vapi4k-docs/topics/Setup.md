@@ -188,14 +188,15 @@ VAPI4K_BASE_URL=https://fdee-73-71-109-432.ngrok-free.app
     </step>
     <step>
         <p>Scroll down and click on the <shortcut>➕</shortcut> button, then click on <shortcut>.env file</shortcut>
-          and then select the <shortcut>secrets.env</shortcut> created above.</p>
+            and then select the <shortcut>secrets.env</shortcut> created above.</p>
     </step>
     <step>
         <p>Restart the server and you should see the log saying the <shortcut>Vapi4kServer is started at</shortcut>
-          with the ngrok VAPI4K_BASE_URL value.</p>
+            with the ngrok VAPI4K_BASE_URL value.</p>
     </step>
     <step>
-        <p>Click on the VAPI4K_BASE_URL value in the log to open the Vapi4k admin page.</p>
+        <p>Click on the VAPI4K_BASE_URL value in the log to open the Vapi4k admin page.
+            Use the username/password values of admin/admin</p>
     </step>
 </procedure>
 
